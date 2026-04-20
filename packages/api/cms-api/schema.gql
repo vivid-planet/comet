@@ -53,7 +53,7 @@ type UserPermissionsUser {
   email: String!
   permissionsCount: Int!
   contentScopesCount: Int!
-  impersonationAllowed: Boolean!
+  impersonationNotAllowedByPermissions: [UserPermissionsPermissionMismatch!]!
 }
 
 type CurrentUserPermission {
@@ -253,6 +253,11 @@ type FileUpload {
   downloadUrl: String!
   previewUrl: String!
   imageUrl(resizeWidth: Int!): String
+}
+
+type UserPermissionsPermissionMismatch {
+  permission: Permission!
+  missingContentScopes: [JSONObject!]!
 }
 
 type UserPermissionPaginatedUserList {

@@ -266,7 +266,7 @@ export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
 export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
-export { AbstractAccessControlService } from "./user-permissions/access-control.service";
+export { AbstractAccessControlService, type PermissionMismatch } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
 export { AffectedScope } from "./user-permissions/decorators/affected-scope.decorator";
 export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";

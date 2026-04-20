@@ -39,6 +39,121 @@ describe("AbstractAccessControlService", () => {
         });
     });
 
+    describe("getPermissionMismatches", () => {
+        it("should return missing permission when permission does not exist", () => {
+            expect(AbstractAccessControlService.getPermissionMismatches([], [{ permission: permissions.p1, contentScopes: [] }])).toEqual([
+                { permission: permissions.p1, missingContentScopes: [] },
+            ]);
+        });
+
+        it("should return missing permission when one of multiple permissions is missing", () => {
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [] }],
+                    [
+                        { permission: permissions.p1, contentScopes: [] },
+                        { permission: permissions.p2, contentScopes: [] },
+                    ],
+                ),
+            ).toEqual([{ permission: permissions.p2, missingContentScopes: [] }]);
+        });
+
+        it("should return missing content scopes when permission exists but content scopes are missing", () => {
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [] }],
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }] }],
+                ),
+            ).toEqual([{ permission: permissions.p1, missingContentScopes: [{ domain: "main" }] }]);
+        });
+
+        it("should return only missing content scopes when some are present", () => {
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }] }],
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }, { domain: "secondary" }] }],
+                ),
+            ).toEqual([{ permission: permissions.p1, missingContentScopes: [{ domain: "secondary" }] }]);
+        });
+
+        it("should return mismatches for wrong content scopes", () => {
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }] }],
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "secondary" }] }],
+                ),
+            ).toEqual([{ permission: permissions.p1, missingContentScopes: [{ domain: "secondary" }] }]);
+        });
+
+        it("should return mismatches when content scope dimensions differ", () => {
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }] }],
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main", language: "english" }] }],
+                ),
+            ).toEqual([{ permission: permissions.p1, missingContentScopes: [{ domain: "main", language: "english" }] }]);
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main", language: "english" }] }],
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }] }],
+                ),
+            ).toEqual([{ permission: permissions.p1, missingContentScopes: [{ domain: "main" }] }]);
+        });
+
+        it("should return multiple mismatches for different permissions", () => {
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }] }],
+                    [
+                        { permission: permissions.p1, contentScopes: [{ domain: "secondary" }] },
+                        { permission: permissions.p2, contentScopes: [{ domain: "main" }] },
+                    ],
+                ),
+            ).toEqual([
+                { permission: permissions.p1, missingContentScopes: [{ domain: "secondary" }] },
+                { permission: permissions.p2, missingContentScopes: [] },
+            ]);
+        });
+
+        it("should return empty array for equal permissions", () => {
+            expect(AbstractAccessControlService.getPermissionMismatches([], [])).toEqual([]);
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [] }],
+                    [{ permission: permissions.p1, contentScopes: [] }],
+                ),
+            ).toEqual([]);
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }] }],
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }] }],
+                ),
+            ).toEqual([]);
+        });
+
+        it("should return empty array when user has more permissions", () => {
+            expect(AbstractAccessControlService.getPermissionMismatches([{ permission: permissions.p1, contentScopes: [] }], [])).toEqual([]);
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }, { domain: "secondary" }] }],
+                    [{ permission: permissions.p1, contentScopes: [{ domain: "main" }] }],
+                ),
+            ).toEqual([]);
+            expect(
+                AbstractAccessControlService.getPermissionMismatches(
+                    [
+                        { permission: permissions.p1, contentScopes: [{ domain: "main" }, { domain: "secondary" }] },
+                        { permission: permissions.p2, contentScopes: [{ domain: "main" }, { domain: "secondary" }] },
+                    ],
+                    [
+                        { permission: permissions.p1, contentScopes: [{ domain: "main" }, { domain: "secondary" }] },
+                        { permission: permissions.p2, contentScopes: [{ domain: "secondary" }] },
+                    ],
+                ),
+            ).toEqual([]);
+        });
+    });
+
     describe("isEqualOrMorePermissions", () => {
         it("should be false on fewer permissions", () => {
             expect(AbstractAccessControlService.isEqualOrMorePermissions([], [{ permission: permissions.p1, contentScopes: [] }])).toBe(false);

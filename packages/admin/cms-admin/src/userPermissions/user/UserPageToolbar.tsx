@@ -1,7 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import { CrudMoreActionsMenu, FillSpace, Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import { CrudMoreActionsMenu, FillSpace, Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarTitleItem, Tooltip } from "@comet/admin";
 import { ImpersonateUser, Reset } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
+import { useIntl } from "react-intl";
 
 import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
@@ -12,6 +13,7 @@ import { type GQLUserPageQuery, type GQLUserPageQueryVariables } from "./UserPag
 export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) => {
     const currentUser = useCurrentUser();
     const isAllowed = useUserPermissionCheck();
+    const intl = useIntl();
 
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
@@ -19,7 +21,10 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                 user: userPermissionsUserById(id: $id) {
                     name
                     email
-                    impersonationAllowed
+                    impersonationNotAllowedByPermissions {
+                        permission
+                        missingContentScopes
+                    }
                 }
             }
         `,
@@ -35,6 +40,19 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
     if (loading || !data) {
         return <Loading />;
     }
+
+    const permissionMismatches = data.user.impersonationNotAllowedByPermissions;
+    const impersonationAllowed = permissionMismatches.length === 0;
+
+    const tooltipTitle = !impersonationAllowed
+        ? intl.formatMessage(
+              {
+                  id: "comet.userPermissions.cannotImpersonateMissingPermissions",
+                  defaultMessage: "Missing permissions: {permissions}",
+              },
+              { permissions: permissionMismatches.map((m) => m.permission).join(", ") },
+          )
+        : "";
 
     return (
         <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
@@ -55,9 +73,13 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                                       onClick: () => stopImpersonation(),
                                   }
                                 : {
-                                      label: commonImpersonationMessages.startImpersonation,
+                                      label: (
+                                          <Tooltip title={tooltipTitle}>
+                                              <span>{commonImpersonationMessages.startImpersonation}</span>
+                                          </Tooltip>
+                                      ),
                                       icon: <ImpersonateUser />,
-                                      disabled: !data.user.impersonationAllowed,
+                                      disabled: !impersonationAllowed,
                                       onClick: () => startImpersonation(userId),
                                   },
                         ]}

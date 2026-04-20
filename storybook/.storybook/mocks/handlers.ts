@@ -155,7 +155,12 @@ type UserPermissionsUser {
   email: String!
   permissionsCount: Int!
   contentScopesCount: Int!
-  impersonationAllowed: Boolean!
+  impersonationNotAllowedByPermissions: [UserPermissionsPermissionMismatch!]!
+}
+
+type UserPermissionsPermissionMismatch {
+  permission: Permission!
+  missingContentScopes: [JSONObject!]!
 }
 
 type ContentScopeWithLabel {

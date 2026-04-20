@@ -219,12 +219,11 @@ export class UserPermissionsService {
             if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
                     const user = await this.getUser(request?.cookies["comet-impersonate-user-id"]);
-                    if (
-                        await AbstractAccessControlService.isEqualOrMorePermissions(
-                            await this.getPermissionsAndContentScopes(authenticatedUser),
-                            await this.getPermissionsAndContentScopes(user),
-                        )
-                    ) {
+                    const mismatches = AbstractAccessControlService.getPermissionMismatches(
+                        await this.getPermissionsAndContentScopes(authenticatedUser),
+                        await this.getPermissionsAndContentScopes(user),
+                    );
+                    if (mismatches.length === 0) {
                         return user;
                     }
                 } catch {

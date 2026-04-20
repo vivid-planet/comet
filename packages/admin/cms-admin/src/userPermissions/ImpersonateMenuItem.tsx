@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import { RowActionsItem } from "@comet/admin";
+import { RowActionsItem, Tooltip } from "@comet/admin";
 import { ImpersonateUser, Reset } from "@comet/admin-icons";
 import { CircularProgress } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";
 import { useCurrentUser } from "./hooks/currentUser";
@@ -13,7 +13,10 @@ const userImpersonationCheckQuery = gql`
     query UserImpersonationCheck($id: String!) {
         user: userPermissionsUserById(id: $id) {
             id
-            impersonationAllowed
+            impersonationNotAllowedByPermissions {
+                permission
+                missingContentScopes
+            }
         }
     }
 `;
@@ -34,13 +37,15 @@ export function ImpersonateMenuItem({ userId }: { userId: string }) {
 
 function StartImpersonationMenuItem({ userId }: { userId: string }) {
     const currentUser = useCurrentUser();
+    const intl = useIntl();
     const isSelf = currentUser.id === userId;
 
     const { data, loading } = useQuery<GQLUserImpersonationCheckQuery, GQLUserImpersonationCheckQueryVariables>(userImpersonationCheckQuery, {
         variables: { id: userId },
         skip: isSelf,
     });
-    const impersonationAllowed = data?.user.impersonationAllowed ?? false;
+    const permissionMismatches = data?.user.impersonationNotAllowedByPermissions ?? [];
+    const impersonationAllowed = permissionMismatches.length === 0;
 
     const label = loading ? (
         <FormattedMessage id="comet.userPermissions.evaluatingPermissions" defaultMessage="Evaluating permissions" />
@@ -52,13 +57,28 @@ function StartImpersonationMenuItem({ userId }: { userId: string }) {
         commonImpersonationMessages.startImpersonation
     );
 
+    const tooltipTitle =
+        !loading && !isSelf && !impersonationAllowed
+            ? intl.formatMessage(
+                  {
+                      id: "comet.userPermissions.cannotImpersonateMissingPermissions",
+                      defaultMessage: "Missing permissions: {permissions}",
+                  },
+                  { permissions: permissionMismatches.map((m) => m.permission).join(", ") },
+              )
+            : "";
+
     return (
-        <RowActionsItem
-            icon={loading ? <CircularProgress size={16} /> : <ImpersonateUser />}
-            disabled={loading || !impersonationAllowed || isSelf}
-            onClick={() => startImpersonation(userId)}
-        >
-            {label}
-        </RowActionsItem>
+        <Tooltip title={tooltipTitle}>
+            <span>
+                <RowActionsItem
+                    icon={loading ? <CircularProgress size={16} /> : <ImpersonateUser />}
+                    disabled={loading || !impersonationAllowed || isSelf}
+                    onClick={() => startImpersonation(userId)}
+                >
+                    {label}
+                </RowActionsItem>
+            </span>
+        </Tooltip>
     );
 }
