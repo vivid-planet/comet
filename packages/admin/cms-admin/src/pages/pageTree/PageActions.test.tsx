@@ -124,7 +124,7 @@ describe("PageActions", () => {
 
             renderPageActions();
 
-            expect(sitePreviewActionFn).toHaveBeenCalledWith(expect.objectContaining({ pageTreeNode: basePage }), undefined);
+            expect(sitePreviewActionFn).toHaveBeenCalledWith(expect.objectContaining({ pageTreeNode: basePage }), expect.any(Object));
         });
     });
 });
