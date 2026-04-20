@@ -15,6 +15,15 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .action(async (options) => {
         const configFile = `${process.cwd()}/${options.siteConfigFile || "site-configs.ts"}`;
         const getSiteConfigs: (env: string) => BaseSiteConfig[] = (await import(configFile)).default;
+        const siteConfigsCache = new Map<string, BaseSiteConfig[]>();
+        const getCachedSiteConfigs = async (env: string): Promise<BaseSiteConfig[]> => {
+            let cached = siteConfigsCache.get(env);
+            if (!cached) {
+                cached = await getSiteConfigs(env);
+                siteConfigsCache.set(env, cached);
+            }
+            return cached;
+        };
 
         console.log(`inject-site-configs: Replace site-configs in ${options.inFile}`);
 
@@ -45,7 +54,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
         };
         str = str.replace(/"({{ site:\/\/configs\/.*\/.* }})"/g, "'$1'"); // convert to single quotes
         str = await replaceAsync(str, RegExp(`{{ site://configs/(.*)/(.*) }}`, "g"), async (substr, type, env) => {
-            const siteConfigs = await getSiteConfigs(env);
+            const siteConfigs = await getCachedSiteConfigs(env);
             console.log(`inject-site-configs: - ${substr} (${siteConfigs.length} sites)`);
             if (replacerFunctions[type] == undefined) {
                 console.error(`inject-site-configs: ERROR: type must be ${Object.keys(replacerFunctions).join("|")} (got ${type})`);
@@ -61,7 +70,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
 
         str = str.replace(/"({{ site:\/\/domains\/.*\/.* }})"/g, "$1"); // remove quotes in array
         str = await replaceAsync(str, /{{ site:\/\/domains\/(site|prelogin)\/(.*) }}/g, async (substr, type, env) => {
-            const siteConfigs = await getSiteConfigs(env);
+            const siteConfigs = await getCachedSiteConfigs(env);
             console.log(`inject-site-domains: - ${substr} (${siteConfigs.length} sites)`);
             if (type === "site") {
                 const filteredSiteConfigs = siteConfigs.filter((d) => !d.preloginEnabled);
@@ -94,11 +103,16 @@ export const resolveOpReferences = (input: string): string => {
         );
     }
 
+    const opCache = new Map<string, string>();
     let result = input;
     for (const ref of opRefs) {
         const opUri = ref.replace("{{ ", "").replace(" }}", "");
         try {
-            const secret = execSync(`op read "${opUri}"`, { encoding: "utf-8" }).trim();
+            let secret = opCache.get(opUri);
+            if (!secret) {
+                secret = execSync(`op read "${opUri}"`, { encoding: "utf-8" }).trim();
+                opCache.set(opUri, secret);
+            }
             console.log(`inject-site-configs: - Resolved ${ref}`);
             result = result.replace(ref, secret);
         } catch (e) {
