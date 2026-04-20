@@ -1,5 +1,56 @@
 # @comet/cms-admin
 
+## 8.21.0
+
+### Minor Changes
+
+- 1ffc664: Add `SitePreviewAction` to `DocumentInterface`
+
+    Allows overriding the site preview button in the page tree row actions on a per-document-type basis. When set, the provided component replaces the default preview `RowActionsItem`, enabling custom preview URL construction (e.g., using additional GraphQL queries or scope data).
+
+    **Example**
+
+    ```tsx
+    import { RowActionsItem } from "@comet/admin";
+    import { Preview } from "@comet/admin-icons";
+    import { type DocumentInterface, openSitePreviewWindow, type SitePreviewActionProps } from "@comet/cms-admin";
+
+    function PageSitePreviewAction({ pageTreeNode }: SitePreviewActionProps) {
+        // Use hooks to construct a custom preview URL
+        const previewPath = useCustomPreviewPath(pageTreeNode);
+
+        return (
+            <RowActionsItem
+                icon={<Preview />}
+                disabled={!previewPath}
+                onClick={() => {
+                    if (previewPath) {
+                        openSitePreviewWindow(previewPath, "/custom-root");
+                    }
+                }}
+            >
+                Open preview
+            </RowActionsItem>
+        );
+    }
+
+    export const Page: DocumentInterface = {
+        // ...
+        SitePreviewAction: PageSitePreviewAction,
+    };
+    ```
+
+- 2491e24: Make DataGrid columns in DAM sortable
+
+    Make Name, Type/Format, Info, Creation, and Latest Change columns in the `FolderDataGrid` sortable via column header clicks, using the standard `muiGridSortToGql` pattern from generated grids. Remove the separate Sort dropdown from the toolbar. Sort state is now stored in URL params instead of localStorage.
+
+### Patch Changes
+
+- @comet/admin@8.21.0
+- @comet/admin-date-time@8.21.0
+- @comet/admin-icons@8.21.0
+- @comet/admin-rte@8.21.0
+
 ## 8.20.4
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @comet/cli
 
+## 8.21.0
+
+### Patch Changes
+
+- d3904b9: Cache `getSiteConfigs` and `op read` calls to avoid redundant execution
+
+    When a template contains multiple placeholders for the same environment, `getSiteConfigs(env)` and `op read` were called repeatedly with identical arguments. Both are now cached per invocation so each unique `env` and each unique `op://` URI is resolved only once.
+
 ## 8.20.4
 
 ## 8.20.3
