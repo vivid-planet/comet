@@ -26,8 +26,8 @@ sh ./demo/site/intl-update.sh
 # Build the packages CLI and eslint-plugin to be used for dev startup
 pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
 
-# Install agent skills
-pnpm run install-agent-skills
+# Install agent features (skills and rules)
+pnpm run install-agent-features
 
 # Install open-spec skills in packages
 pnpm --filter '@comet/mail-react' run openspec:install-skills
