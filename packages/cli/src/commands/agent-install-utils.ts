@@ -105,11 +105,23 @@ function listFolders(directory: string, filterInternal: boolean): string[] {
 }
 
 function listMarkdownFiles(directory: string, filterInternal: boolean): string[] {
-    return fs
-        .readdirSync(directory)
-        .filter((entry) => entry.endsWith(".md") && fs.statSync(path.join(directory, entry)).isFile())
-        .filter((file) => !filterInternal || !isInternalMarkdown(path.join(directory, file)))
-        .sort();
+    const results: string[] = [];
+    const walk = (currentDir: string, relativePath: string): void => {
+        for (const entry of fs.readdirSync(currentDir)) {
+            const fullPath = path.join(currentDir, entry);
+            const relPath = relativePath ? path.join(relativePath, entry) : entry;
+            const stat = fs.statSync(fullPath);
+            if (stat.isDirectory()) {
+                walk(fullPath, relPath);
+            } else if (stat.isFile() && entry.endsWith(".md")) {
+                if (!filterInternal || !isInternalMarkdown(fullPath)) {
+                    results.push(relPath);
+                }
+            }
+        }
+    };
+    walk(directory, "");
+    return results.sort();
 }
 
 function symlinkOrCopy(src: string, dest: string, symlink: boolean): "symlinked" | "copied" {
@@ -158,6 +170,7 @@ export function installItems(sources: AgentInstallSource[], targetDirs: string[]
                     if (pathExists(destPath)) {
                         fs.rmSync(destPath, { recursive: true, force: true });
                     }
+                    fs.mkdirSync(path.dirname(destPath), { recursive: true });
                     const action = symlinkOrCopy(srcPath, destPath, symlink);
                     console.log(`  ${action === "symlinked" ? "Symlinked" : "Copied"}: ${item}`);
                 }

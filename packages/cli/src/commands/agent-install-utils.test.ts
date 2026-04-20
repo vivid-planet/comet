@@ -12,6 +12,7 @@ const targetDirs = [".agents/x", ".claude/x"];
 vi.mock("fs");
 
 beforeEach(() => {
+    vi.mocked(fs.mkdirSync).mockImplementation(() => undefined);
     vi.mocked(fs.symlinkSync).mockImplementation(() => undefined);
     vi.mocked(fs.cpSync).mockImplementation(() => undefined);
     vi.mocked(fs.rmSync).mockImplementation(() => undefined);
@@ -155,6 +156,27 @@ describe("installItems – file discovery", () => {
         expect(fs.cpSync).toHaveBeenCalledTimes(2);
         expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/src/files/public.md"), expect.any(String), expect.any(Object));
         expect(fs.cpSync).not.toHaveBeenCalledWith(path.resolve("/src/files/internal.md"), expect.any(String), expect.any(Object));
+    });
+
+    it("walks subdirectories and installs nested .md files preserving relative paths", () => {
+        mockFilesystem({
+            listings: {
+                "/src/files": ["top.md", "nested"],
+                "/src/files/nested": ["deep.md", "deeper"],
+                "/src/files/nested/deeper": ["innermost.md"],
+            },
+        });
+
+        installItems([fileSource()], targetDirs, defaultOptions);
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/src/files/top.md"), path.join(".agents/x", "top.md"));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/src/files/nested/deep.md"), path.join(".agents/x", "nested", "deep.md"));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/src/files/nested/deeper/innermost.md"),
+            path.join(".agents/x", "nested", "deeper", "innermost.md"),
+        );
+        expect(fs.mkdirSync).toHaveBeenCalledWith(path.join(".agents/x", "nested"), { recursive: true });
+        expect(fs.mkdirSync).toHaveBeenCalledWith(path.join(".agents/x", "nested", "deeper"), { recursive: true });
     });
 });
 

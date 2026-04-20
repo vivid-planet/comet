@@ -58,12 +58,16 @@ The `SKILL.md` file contains markdown-formatted instructions that the agent foll
 
 ## What is a rule?
 
-A rule is a single markdown file inside `rules/`. The filename (including `.md`) is the rule name. For example:
+A rule is a markdown file inside `rules/`. The relative path from `rules/` is the rule name. Rules may be organized into subdirectories — the command walks the tree recursively and preserves the nested layout in each target directory. For example:
 
 ```
 rules/
 ├── naming-conventions.md
-└── testing-policy.md
+├── testing-policy.md
+├── backend/
+│   └── api-patterns.md
+└── frontend/
+    └── component-structure.md
 ```
 
 Rules are a lightweight complement to skills: use a rule for short, always-on guidance (a single-file set of instructions) and a skill for a larger bundle of instructions plus supporting files. Rules may begin with an optional YAML frontmatter block (see [Internal rules and skills](#internal-rules-and-skills)).
