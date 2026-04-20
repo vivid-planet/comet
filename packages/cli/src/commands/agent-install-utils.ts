@@ -170,7 +170,7 @@ export function installItems(sources: AgentInstallSource[], targetDirs: string[]
     return totalInstalled;
 }
 
-export interface AgentInstallConfig {
+interface AgentInstallConfig {
     repos?: string[];
 }
 
