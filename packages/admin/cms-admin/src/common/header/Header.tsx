@@ -1,7 +1,7 @@
 import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type PropsWithChildren, type ReactNode } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 
 const LogoWrapper = styled("div")`
     ${({ theme }) => theme.breakpoints.up("md")} {

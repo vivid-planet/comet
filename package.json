@@ -36,10 +36,12 @@
         "intl:extract": "formatjs extract './packages/admin/**/*.{ts,tsx}' --out-file 'lang/en.json' --ignore '**/*.{test,spec}.{ts,tsx}' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",
         "lint:ci": "pnpm lint:root && pnpm --recursive run lint:ci && pnpm lint:knip",
+        "lint:fix": "pnpm --recursive run lint:fix && pnpm lint:fix:root",
+        "lint:fix:root": "pnpm exec prettier --write './!(demo|docs|packages|storybook)/**/*.{ts,js,json,md,yml,yaml}'",
         "lint:root": "pnpm exec prettier --check './!(demo|docs|packages|storybook)/**/*.{ts,js,json,md,yml,yaml}' && pnpm cspell .changeset/*.md",
         "lint:eslint": "pnpm --recursive run lint:eslint",
         "lint:tsc": "pnpm --recursive run lint:tsc",
-        "lint:knip": "pnpm --recursive run api-generator && pnpm --recursive run gql:types && pnpm --recursive run build:preBuild && pnpm --recursive run build-server && knip --exports --files --dependencies --tags=-knipignore --no-gitignore --exclude enumMembers",
+        "lint:knip": "pnpm --recursive run api-generator && pnpm --recursive run gql:types && pnpm --recursive run build-server && knip --exports --files --dependencies --tags=-knipignore --no-gitignore --exclude enumMembers",
         "start-oidc-provider": "dotenv -- dev-oidc-provider",
         "storybook": "dev-pm start @storybook",
         "test": "pnpm --recursive run test",
@@ -62,7 +64,7 @@
         "@comet/dev-oidc-provider": "^1.2.1",
         "@comet/dev-process-manager": "^3.1.0",
         "@formatjs/cli": "^6.7.2",
-        "@types/node": "^24.12.0",
+        "@types/node": "^24.12.2",
         "cspell": "^9.0.0",
         "dotenv-cli": "^9.0.0",
         "husky": "^9.1.7",
@@ -74,10 +76,10 @@
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3"
     },
-    "packageManager": "pnpm@10.17.0",
+    "packageManager": "pnpm@10.33.0",
     "engines": {
         "node": "24",
-        "pnpm": "10.17.0"
+        "pnpm": "10.33.0"
     },
     "pnpm": {
         "peerDependencyRules": {

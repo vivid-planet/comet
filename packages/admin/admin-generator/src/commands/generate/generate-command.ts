@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFile, writeFile } from "node:fs/promises";
 
-import { type ApolloClient } from "@apollo/client";
-import { type GridColDef } from "@comet/admin";
-import { type IconName } from "@comet/admin-icons";
-import { type BlockInterface, type ContentScope, type FinalFormFileUploadProps } from "@comet/cms-admin";
+import type { ApolloClient } from "@apollo/client";
+import type { GridColDef } from "@comet/admin";
+import type { IconName } from "@comet/admin-icons";
+import type { BlockInterface, ContentScope, FinalFormFileUploadProps } from "@comet/cms-admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
-import { type IconProps } from "@mui/material";
-import {
-    type GridCellParams,
-    type GridFilterItem,
-    type GridFilterOperator,
-    type GridRenderCellParams,
-    type GridSortDirection,
-    type GridValidRowModel,
+import type { IconProps } from "@mui/material";
+import type {
+    GridCellParams,
+    GridFilterItem,
+    GridFilterOperator,
+    GridRenderCellParams,
+    GridSortDirection,
+    GridValidRowModel,
 } from "@mui/x-data-grid";
 import { Command } from "commander";
-import { type FieldValidator, type FormApi } from "final-form";
+import type { FieldValidator, FormApi } from "final-form";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -29,8 +29,8 @@ import type { FormattedMessage, MessageDescriptor } from "react-intl";
 import { parseConfig } from "./config/parseConfig";
 import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
-import { type UsableFields, type UsableFormFields } from "./generateGrid/usableFields";
-import { type ColumnVisibleOption } from "./utils/columnVisibility";
+import type { UsableFields, UsableFormFields } from "./generateGrid/usableFields";
+import type { ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
 export type FormattedMessageElement = ReactElement<MessageDescriptor, typeof FormattedMessage>;
@@ -360,7 +360,9 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         await fs.rm(codeOuputFilename, { force: true });
 
         const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
-        if (!exportName) throw new Error("Can not determine exportName");
+        if (!exportName) {
+            throw new Error("Can not determine exportName");
+        }
 
         let generated: GeneratorReturn;
         if (config.type == "form") {

@@ -1,7 +1,7 @@
 import { Button, Tooltip } from "@comet/admin";
 import { Add, StatusErrorSolid, StatusSuccessSolid, StatusWarningSolid } from "@comet/admin-icons";
 import { Box, Chip, Stack, Typography } from "@mui/material";
-import { type Decorator } from "@storybook/react-webpack5";
+import type { Decorator } from "@storybook/react-webpack5";
 import { useEffect, useState } from "react";
 
 export default {

@@ -10,7 +10,7 @@ import { BlockAdminComponentSectionGroup } from "../common/BlockAdminComponentSe
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
 import { useBlockContext } from "../context/useBlockContext";
 import { composeBlocks, type CompositeBlockInterface } from "../helpers/composeBlocks/composeBlocks";
-import { type BlockInterfaceWithOptions } from "../helpers/composeBlocks/types";
+import type { BlockInterfaceWithOptions } from "../helpers/composeBlocks/types";
 import { normalizedBlockConfig } from "../helpers/composeBlocks/utils";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { isBlockInterface } from "../helpers/isBlockInterface";
@@ -229,7 +229,9 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     hiddenForState,
                 } = blockConfigNormalized[blockKey];
 
-                if (hiddenForState?.(state)) return null;
+                if (hiddenForState?.(state)) {
+                    return null;
+                }
 
                 const sectionVariant = group.paper ? "dense" : "normal";
                 const showDivider = divider && (isInPaper || group.paper);

@@ -39,17 +39,17 @@ import { FormattedMessage } from "react-intl";
 import { useRouteMatch } from "react-router";
 
 import { useBrevoConfig } from "../../common/BrevoConfigProvider";
-import { type GQLEmailCampaignInput } from "../../graphql.generated";
+import type { GQLEmailCampaignInput } from "../../graphql.generated";
 import { ConfigFields } from "./ConfigFields";
 import { createEmailCampaignMutation, emailCampaignFormQuery, updateEmailCampaignMutation } from "./EmailCampaignForm.gql";
-import {
-    type GQLCreateEmailCampaignMutation,
-    type GQLCreateEmailCampaignMutationVariables,
-    type GQLEmailCampaignFormFragment,
-    type GQLEmailCampaignFormQuery,
-    type GQLEmailCampaignFormQueryVariables,
-    type GQLUpdateEmailCampaignMutation,
-    type GQLUpdateEmailCampaignMutationVariables,
+import type {
+    GQLCreateEmailCampaignMutation,
+    GQLCreateEmailCampaignMutationVariables,
+    GQLEmailCampaignFormFragment,
+    GQLEmailCampaignFormQuery,
+    GQLEmailCampaignFormQueryVariables,
+    GQLUpdateEmailCampaignMutation,
+    GQLUpdateEmailCampaignMutationVariables,
 } from "./EmailCampaignForm.gql.generated";
 import { SendManagerFields } from "./SendManagerFields";
 import { SendManagerWrapper } from "./SendManagerWrapper";
@@ -139,7 +139,9 @@ export function EmailCampaignForm({ id, EmailCampaignContentBlock, scope }: Form
         saveConflict,
         mode,
         validate: async () => {
-            if (!state) return false;
+            if (!state) {
+                return false;
+            }
 
             const validateBlocks = await parallelAsyncEvery(
                 Object.entries(rootBlocks) as Array<[keyof typeof rootBlocks, BlockInterface]>,
@@ -164,7 +166,9 @@ export function EmailCampaignForm({ id, EmailCampaignContentBlock, scope }: Form
             throw new Error("Conflicts detected");
         }
 
-        if (!output) throw new Error("Output is required");
+        if (!output) {
+            throw new Error("Output is required");
+        }
 
         if (mode === "edit") {
             if (!id) {
@@ -199,7 +203,9 @@ export function EmailCampaignForm({ id, EmailCampaignContentBlock, scope }: Form
         return null;
     }
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

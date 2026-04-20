@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-rte",
-    "version": "9.0.0-beta.1",
+    "version": "9.0.0-beta.2",
     "description": "Comet Admin Rich Text Editor component",
     "repository": {
         "directory": "packages/admin/admin-rte",
@@ -30,6 +30,9 @@
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
         "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
+        "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
+        "lint:fix:eslint": "pnpm run lint:eslint --fix",
+        "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "run-p start:babel start:types",
@@ -59,7 +62,7 @@
         "draft-js": "^0.11.7",
         "eslint": "^9.39.2",
         "final-form": "^4.20.10",
-        "jsdom": "^28.0.0",
+        "jsdom": "^28.1.0",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "react": "^19.2.4",

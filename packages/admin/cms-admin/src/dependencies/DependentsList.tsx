@@ -23,10 +23,10 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
-import { type GQLDependency } from "../graphql.generated";
+import type { GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
 import { getDisplayNameString } from "./getDisplayNameString";
-import { type DependencyInterface } from "./types";
+import type { DependencyInterface } from "./types";
 
 type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "visible" | "rootColumnName" | "jsonPath"> & {
     id: string;
@@ -210,7 +210,9 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
         },
     });
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     const rowCount = useBufferedRowCount(data?.item.dependents?.totalCount);
     const rows =

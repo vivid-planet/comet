@@ -1,6 +1,6 @@
 ---
-name: dx-mail-react
-description: Guide for building HTML emails with @comet/mail-react and MJML. Use whenever working on email templates, mail markup, MJML components, email theming, email styling, responsive emails, or anything involving @comet/mail-react or HTML email development — even for seemingly simple tasks, since email client compatibility is a minefield that requires specific patterns and research before implementing.
+name: comet-mail-react
+description: Guide for building HTML emails with @comet/mail-react and MJML. Use whenever working on email templates, mail markup, MJML components, email theming, email styling, responsive emails, column layouts, multi-column email sections, or anything involving @comet/mail-react or HTML email development — even for seemingly simple tasks like putting content side-by-side in columns, since email client compatibility is a minefield that requires specific patterns and research before implementing.
 ---
 
 # Building HTML Emails with @comet/mail-react
@@ -66,6 +66,32 @@ Content components placed outside this hierarchy produce MJML validation warning
     </MjmlColumn>
 </MjmlSection>
 ```
+
+### Multi-Column Layouts
+
+MJML has no `gap` property. Column padding reduces the content area _inside_ the column — it doesn't add space between column cells. To create a visual gap between columns, apply padding to the inner edges of adjacent columns (`paddingRight` on the left column, `paddingLeft` on the right column). Their sum becomes the visible gap.
+
+For two equal columns, apply half the desired gap to each column's inner edge. Both columns have the same total padding, so MJML's equal-width split produces equal content areas without explicit `width` props:
+
+```tsx
+const columnGap = 20;
+const halfGap = columnGap / 2;
+
+<MjmlSection indent className="twoColumnsSection">
+    <MjmlColumn className="twoColumnsSection__leftColumn" paddingRight={halfGap}>
+        <MjmlText>Left column</MjmlText>
+    </MjmlColumn>
+    <MjmlColumn className="twoColumnsSection__rightColumn" paddingLeft={halfGap}>
+        <MjmlText>Right column</MjmlText>
+    </MjmlColumn>
+</MjmlSection>;
+```
+
+**Do not** apply equal padding on all sides of every column — this adds extra outer-edge spacing that compounds with `indent`/`contentIndentation`, pushing content inward beyond the theme's intended margins.
+
+On mobile, reset the gap padding so content stretches full-width, and add a vertical margin between the stacked columns. Column padding compiles to an inner `<td>`, so target it via `.className > table > tbody > tr > td`.
+
+→ For complete two-column patterns (equal-width and fixed+fluid) with responsive styles, CSS targeting rules, and the `direction="rtl"` technique for controlling mobile stack order, read [`references/layout-patterns.md`](references/layout-patterns.md).
 
 ### Ending Tags
 

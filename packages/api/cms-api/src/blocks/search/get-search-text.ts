@@ -1,6 +1,6 @@
-import { type WeightedFullTextValue } from "@mikro-orm/postgresql";
+import type { WeightedFullTextValue } from "@mikro-orm/postgresql";
 
-import { type BlockDataInterface } from "../block";
+import type { BlockDataInterface } from "../block";
 import { FlatBlocks } from "../flat-blocks/flat-blocks";
 
 export interface WeightedSearchText {

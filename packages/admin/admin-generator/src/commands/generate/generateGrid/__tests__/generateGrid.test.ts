@@ -1,7 +1,7 @@
 import { buildSchema, type GraphQLSchema, introspectionFromSchema, type IntrospectionQuery } from "graphql";
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { type GridConfig } from "../../generate-command";
+import type { GridConfig } from "../../generate-command";
 import { generateGrid } from "../generateGrid";
 
 describe("generateGrid", () => {

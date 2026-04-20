@@ -27,7 +27,7 @@ import { WarningActions } from "./WarningActions";
 import { WarningMessage } from "./WarningMessage";
 import { useWarningsConfig } from "./warningsConfig";
 import { WarningSeverity } from "./WarningSeverity";
-import { type GQLWarningsGridQuery, type GQLWarningsGridQueryVariables, type GQLWarningsListFragment } from "./WarningsGrid.generated";
+import type { GQLWarningsGridQuery, GQLWarningsGridQueryVariables, GQLWarningsListFragment } from "./WarningsGrid.generated";
 
 const warningsFragment = gql`
     fragment WarningsList on Warning {
@@ -222,7 +222,9 @@ export function WarningsGrid() {
         },
     });
     const rowCount = useBufferedRowCount(data?.warnings.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.warnings.nodes ?? [];
 
     return (

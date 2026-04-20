@@ -41,7 +41,7 @@ import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { type BlockDependency, type BlockInterface, type BlockState, type PreviewContent } from "../types";
+import type { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 

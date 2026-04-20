@@ -32,7 +32,7 @@ import { AppMasterMenu, AppMasterMenuRoutes, pageTreeDocumentTypes } from "./com
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
-import { type GQLPermission } from "./graphql.generated";
+import type { GQLPermission } from "./graphql.generated";
 import { getMessages } from "./lang";
 import { NewsDetailBlock } from "./news/blocks/NewsDetailBlock";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
@@ -109,7 +109,9 @@ export function App() {
                         return config.scope.domain === scope.domain;
                     });
 
-                    if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                    if (!siteConfig) {
+                        throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                    }
                     return {
                         url: siteConfig.url,
                         preloginEnabled: siteConfig.preloginEnabled || false,

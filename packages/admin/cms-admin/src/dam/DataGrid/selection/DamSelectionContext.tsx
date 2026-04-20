@@ -5,17 +5,17 @@ import { createContext, type Dispatch, type ReactNode, type SetStateAction, useC
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { MoveDamItemDialog } from "../../MoveDamItemDialog/MoveDamItemDialog";
-import { type DamItemSelectionMap } from "../FolderDataGrid";
-import {
-    type GQLArchiveFilesMutation,
-    type GQLArchiveFilesMutationVariables,
-    type GQLDamFileDownloadInfoFragment,
-    type GQLDeleteDamFileMutation,
-    type GQLDeleteDamFileMutationVariables,
-    type GQLDeleteDamFolderMutation,
-    type GQLDeleteDamFolderMutationVariables,
-    type GQLRestoreFilesMutation,
-    type GQLRestoreFilesMutationVariables,
+import type { DamItemSelectionMap } from "../FolderDataGrid";
+import type {
+    GQLArchiveFilesMutation,
+    GQLArchiveFilesMutationVariables,
+    GQLDamFileDownloadInfoFragment,
+    GQLDeleteDamFileMutation,
+    GQLDeleteDamFileMutationVariables,
+    GQLDeleteDamFolderMutation,
+    GQLDeleteDamFolderMutationVariables,
+    GQLRestoreFilesMutation,
+    GQLRestoreFilesMutationVariables,
 } from "./DamSelectionContext.generated";
 
 const damFileDownloadInfoFragment = gql`

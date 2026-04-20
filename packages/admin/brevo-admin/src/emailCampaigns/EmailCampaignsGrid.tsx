@@ -19,21 +19,21 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Statistics, Visible } from "@comet/admin-icons";
-import { type BlockInterface, type ContentScope } from "@comet/cms-admin";
+import type { BlockInterface, ContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { isBefore } from "date-fns";
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import {
-    type GQLCreateEmailCampaignMutation,
-    type GQLCreateEmailCampaignMutationVariables,
-    type GQLDeleteEmailCampaignMutation,
-    type GQLDeleteEmailCampaignMutationVariables,
-    type GQLEmailCampaignsGridQuery,
-    type GQLEmailCampaignsGridQueryVariables,
-    type GQLEmailCampaignsListFragment,
+import type {
+    GQLCreateEmailCampaignMutation,
+    GQLCreateEmailCampaignMutationVariables,
+    GQLDeleteEmailCampaignMutation,
+    GQLDeleteEmailCampaignMutationVariables,
+    GQLEmailCampaignsGridQuery,
+    GQLEmailCampaignsGridQueryVariables,
+    GQLEmailCampaignsListFragment,
 } from "./EmailCampaignsGrid.generated";
 import { SendingStateColumn } from "./SendingStateColumn";
 
@@ -247,7 +247,9 @@ export function EmailCampaignsGrid({
         },
     });
     const rowCount = useBufferedRowCount(data?.brevoEmailCampaigns.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.brevoEmailCampaigns.nodes ?? [];
 
     return (

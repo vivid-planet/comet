@@ -5,11 +5,11 @@ import { Box } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { defineMessage, FormattedMessage } from "react-intl";
 
-import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
+import type { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { FileField } from "../form/file/FileField";
 import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
-import { type GQLVideoBlockDamFileQuery, type GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import type { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
@@ -146,8 +146,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     extractTextContents: (state) => {
         const contents = [];
 
-        if (state.damFile?.altText) contents.push(state.damFile.altText);
-        if (state.damFile?.title) contents.push(state.damFile.title);
+        if (state.damFile?.altText) {
+            contents.push(state.damFile.altText);
+        }
+        if (state.damFile?.title) {
+            contents.push(state.damFile.title);
+        }
 
         return contents;
     },

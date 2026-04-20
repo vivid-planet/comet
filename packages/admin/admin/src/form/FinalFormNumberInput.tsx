@@ -1,6 +1,6 @@
 import { InputBase, type InputBaseProps } from "@mui/material";
 import { type ChangeEvent, type FocusEvent, useCallback, useEffect, useState } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
@@ -104,12 +104,8 @@ export function FinalFormNumberInput({
             endAdornment={
                 (endAdornment || clearable) && (
                     <>
-                        {clearable && (
-                            <ClearInputAdornment
-                                position="end"
-                                hasClearableContent={typeof input.value === "number"}
-                                onClick={() => input.onChange(undefined)}
-                            />
+                        {clearable && typeof input.value === "number" && (
+                            <ClearInputAdornment position="end" onClick={() => input.onChange(undefined)} />
                         )}
                         {endAdornment}
                     </>

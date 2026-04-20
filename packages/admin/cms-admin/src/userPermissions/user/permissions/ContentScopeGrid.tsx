@@ -25,9 +25,9 @@ import { type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-import { type GQLContentScopesQuery, type GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
+import type { GQLContentScopesQuery, GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
 import { SelectScopesDialogContent } from "./selectScopesDialogContent/SelectScopesDialogContent";
-import { type GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
+import type { GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
 
 type ContentScope = {
     [key: string]: string;
@@ -66,7 +66,9 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         },
     );
 
-    if (error) throw new Error(error.message);
+    if (error) {
+        throw new Error(error.message);
+    }
 
     if (!data) {
         return <Loading />;

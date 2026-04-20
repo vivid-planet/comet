@@ -16,14 +16,14 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add, Block, Check, Delete, Edit } from "@comet/admin-icons";
-import { type ContentScope } from "@comet/cms-admin";
+import type { ContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 
 import { useContactImportFromCsv } from "../common/contactImport/useContactImportFromCsv";
-import { type GQLEmailCampaignContentScopeInput } from "../graphql.generated";
+import type { GQLEmailCampaignContentScopeInput } from "../graphql.generated";
 import {
     type GQLBrevoContactsGridQuery,
     type GQLBrevoContactsGridQueryVariables,
@@ -214,7 +214,9 @@ export function BrevoContactsGrid({
     });
 
     const rowCount = useBufferedRowCount(data?.brevoContacts.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.brevoContacts.nodes ?? [];
 
     return (

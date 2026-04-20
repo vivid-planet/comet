@@ -17,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add, Close, Remove, Save } from "@comet/admin-icons";
-import { type ContentScope } from "@comet/cms-admin";
+import type { ContentScope } from "@comet/cms-admin";
 import { DialogActions, DialogTitle, IconButton, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
@@ -26,7 +26,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { MemoryRouter } from "react-router";
 
 import { useContactImportFromCsv } from "../../common/contactImport/useContactImportFromCsv";
-import { type GQLEmailCampaignContentScopeInput } from "../../graphql.generated";
+import type { GQLEmailCampaignContentScopeInput } from "../../graphql.generated";
 import { targetGroupFormNamedOperations } from "../TargetGroupForm";
 import {
     addBrevoContactsToTargetGroupMutation,
@@ -154,7 +154,9 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
     });
 
     const onDeleteClick = (contactId: number) => {
-        if (!id) return;
+        if (!id) {
+            return;
+        }
         removeContacts({ variables: { id, input: { brevoContactId: contactId } } });
     };
 
@@ -247,7 +249,9 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
     const assignedContactsRowCount = useBufferedRowCount(assignedContactsData?.manuallyAssignedBrevoContacts.totalCount);
     const assignableContactsRowCount = useBufferedRowCount(assignableContactsData?.brevoContacts.totalCount);
 
-    if (assignedContactsError || assignableContactsError) throw assignedContactsError ?? assignableContactsError;
+    if (assignedContactsError || assignableContactsError) {
+        throw assignedContactsError ?? assignableContactsError;
+    }
 
     return (
         <>

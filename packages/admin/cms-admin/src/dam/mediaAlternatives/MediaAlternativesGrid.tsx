@@ -23,15 +23,15 @@ import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x
 import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type GQLDamMediaAlternativeType } from "../../graphql.generated";
+import type { GQLDamMediaAlternativeType } from "../../graphql.generated";
 import { VideoPreviewCaptionsQueryName } from "../FileForm/previews/VideoPreview";
 import { MediaAlternativeForm } from "./MediaAlternativeForm";
-import {
-    type GQLDamMediaAlternativeGridFragment,
-    type GQLDamMediaAlternativesQuery,
-    type GQLDamMediaAlternativesQueryVariables,
-    type GQLDeleteDamMediaAlternativeMutation,
-    type GQLDeleteDamMediaAlternativeMutationVariables,
+import type {
+    GQLDamMediaAlternativeGridFragment,
+    GQLDamMediaAlternativesQuery,
+    GQLDamMediaAlternativesQueryVariables,
+    GQLDeleteDamMediaAlternativeMutation,
+    GQLDeleteDamMediaAlternativeMutationVariables,
 } from "./MediaAlternativesGrid.generated";
 
 const damMediaAlternativeFragment = gql`
@@ -183,7 +183,9 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
         },
     });
     const rowCount = useBufferedRowCount(data?.damMediaAlternatives.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.damMediaAlternatives.nodes ?? [];
 
     return (
