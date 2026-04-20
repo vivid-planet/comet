@@ -79,7 +79,7 @@ npm install
 
 ### API Generator: Remove the `targetDirectory` option
 
-The `targetDirectory` option of the `@CrudGenerator` decorator has been removed.
+The `targetDirectory` option of the `@CrudGenerator` and `@CrudSingleGenerator` decorators has been removed.
 Generated files are now always written to `${__dirname}/../generated/`, which was a commonly used default.
 
 ```diff title="api/src/products/entities/product.entity.ts"
@@ -88,6 +88,14 @@ Generated files are now always written to `${__dirname}/../generated/`, which wa
     requiredPermission: ["products"],
 })
 export class Product extends BaseEntity {}
+```
+
+```diff title="api/src/footers/entities/footer.entity.ts"
+@CrudSingleGenerator({
+-   targetDirectory: `${__dirname}/../generated/`,
+    requiredPermission: "pageTree",
+})
+export class Footer extends BaseEntity {}
 ```
 
 ### Enable MikroORM dataloader for generated CRUD resolvers
@@ -736,12 +744,28 @@ See the official React 19 [migration guide](https://react.dev/blog/2024/04/25/re
 
 ### Change to Next.js Async Request APIs
 
-Multiple Next.js APIs (e.g., `headers()`) are now asynchronous.
+Multiple Next.js APIs are now asynchronous and must be `await`ed. This applies to:
+
+- `headers()`
+- `cookies()`
+- `draftMode()`
+- `params` and `searchParams` on pages, layouts, and route handlers
+
 Update your usages to support the asynchronous APIs.
 Use the new props helper types.
 Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-16#async-request-apis-breaking-change) for more information.
 
 #### Examples
+
+```diff title="site/src/app/[visibility]/[domain]/[language]/layout.tsx"
+- const isDraftModeEnabled = draftMode().isEnabled;
++ const isDraftModeEnabled = (await draftMode()).isEnabled;
+```
+
+```diff title="site/src/app/api/example/route.ts"
+- const cookieStore = cookies();
++ const cookieStore = await cookies();
+```
 
 ```diff title="site/src/app/[visibility]/[domain]/[language]/[[...path]]/page.tsx"
 - type PageProps = {
