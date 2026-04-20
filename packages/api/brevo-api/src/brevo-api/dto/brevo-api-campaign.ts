@@ -1,4 +1,4 @@
-import { type GetEmailCampaignsCampaignsInner } from "@getbrevo/brevo";
+import type { GetEmailCampaignsCampaignsInner } from "@getbrevo/brevo";
 
 interface BrevoStatistics {
     uniqueClicks: number;

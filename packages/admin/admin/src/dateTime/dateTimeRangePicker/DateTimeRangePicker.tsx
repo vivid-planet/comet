@@ -1,6 +1,6 @@
 import { Calendar } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
-import { type DateTimeRangePickerProps as MuiDateTimeRangePickerProps } from "@mui/x-date-pickers-pro";
+import type { DateTimeRangePickerProps as MuiDateTimeRangePickerProps } from "@mui/x-date-pickers-pro";
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -8,7 +8,7 @@ import { ClearInputAdornment as CometClearInputAdornment } from "../../common/Cl
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { isValidDate } from "../utils";
 
 /**

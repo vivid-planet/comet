@@ -1,7 +1,7 @@
 import { Field, FilterBar, FilterBarPopoverFilter, FinalFormSearchTextField, type IFilterApi, SwitchField, TableFilterFinalForm } from "@comet/admin";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type DamFilter } from "../../DamTable";
+import type { DamFilter } from "../../DamTable";
 
 interface DamTableFilterProps {
     hideArchiveFilter?: boolean;

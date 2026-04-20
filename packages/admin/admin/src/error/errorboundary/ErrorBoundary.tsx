@@ -6,7 +6,7 @@ import { Component, type ErrorInfo, type PropsWithChildren, type ReactNode } fro
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type ErrorBoundaryClassKey =
     | "alert"

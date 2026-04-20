@@ -4,8 +4,8 @@ import { type Editor, type EditorState, RichUtils } from "draft-js";
 import { type RefObject, useCallback, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type SupportedThings } from "../Rte";
-import { type CustomInlineStyles, type IFeatureConfig, type InlineStyleType } from "../types";
+import type { SupportedThings } from "../Rte";
+import type { CustomInlineStyles, IFeatureConfig, InlineStyleType } from "../types";
 
 const browser = detectBrowser.detect();
 

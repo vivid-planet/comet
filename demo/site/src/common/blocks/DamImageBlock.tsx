@@ -1,7 +1,7 @@
 "use client";
 import { PixelImageBlock, PreviewSkeleton, type PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
-import { type DamImageBlockData, type PixelImageBlockData, type SvgImageBlockData } from "@src/blocks.generated";
-import { type ImageProps as NextImageProps } from "next/image";
+import type { DamImageBlockData, PixelImageBlockData, SvgImageBlockData } from "@src/blocks.generated";
+import type { ImageProps as NextImageProps } from "next/image";
 
 type DamImageProps = Omit<NextImageProps, "src" | "width" | "height" | "alt"> & {
     aspectRatio: string | "inherit";

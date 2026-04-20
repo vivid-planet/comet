@@ -13,7 +13,7 @@ import FolderDataGrid, {
     type GQLDamFolderQueryVariables,
     type GQLDamFolderTableFragment,
 } from "./DataGrid/FolderDataGrid";
-import { type RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
+import type { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 

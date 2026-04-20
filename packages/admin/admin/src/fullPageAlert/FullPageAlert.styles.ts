@@ -2,7 +2,7 @@ import { Card, css, Divider, Typography } from "@mui/material";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { InlineAlert } from "../inlineAlert/InlineAlert";
-import { type FullPageAlertClassKey } from "./FullPageAlert";
+import type { FullPageAlertClassKey } from "./FullPageAlert";
 import { FullPageAlertBackground } from "./FullPageAlertBackground";
 
 export const Root = createComponentSlot("div")<FullPageAlertClassKey>({

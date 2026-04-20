@@ -19,11 +19,11 @@ import {
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
-import {
-    type GQLDeleteManufacturerMutation,
-    type GQLDeleteManufacturerMutationVariables,
-    type GQLManufacturersListQuery,
-    type GQLManufacturersListQueryVariables,
+import type {
+    GQLDeleteManufacturerMutation,
+    GQLDeleteManufacturerMutationVariables,
+    GQLManufacturersListQuery,
+    GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";

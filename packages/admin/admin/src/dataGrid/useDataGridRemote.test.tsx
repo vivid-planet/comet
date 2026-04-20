@@ -1,4 +1,4 @@
-import { type GridApi, type GridFilterModel, type GridSortDirection } from "@mui/x-data-grid";
+import type { GridApi, GridFilterModel, GridSortDirection } from "@mui/x-data-grid";
 import { createMemoryHistory } from "history";
 import queryString from "query-string";
 import { Router } from "react-router";

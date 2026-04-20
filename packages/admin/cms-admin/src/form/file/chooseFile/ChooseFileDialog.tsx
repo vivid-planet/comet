@@ -1,6 +1,6 @@
 import { Button, Dialog, StackLink, SubRoute } from "@comet/admin";
 import { styled } from "@mui/material/styles";
-import { type SyntheticEvent } from "react";
+import type { SyntheticEvent } from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
@@ -8,9 +8,9 @@ import { useDamConfig } from "../../../dam/config/damConfig";
 import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
 import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
-import { type GQLDamFileTableFragment, type GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
+import type { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
-import { type RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
+import type { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
 import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation";
 

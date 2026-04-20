@@ -2,9 +2,9 @@ import { MockedProvider } from "@apollo/client/testing";
 import { cleanup, render, screen } from "test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { type DocumentInterface } from "../../documents/types";
+import type { DocumentInterface } from "../../documents/types";
 import PageActions from "./PageActions";
-import { type PageTreePage } from "./usePageTree";
+import type { PageTreePage } from "./usePageTree";
 
 const mockActivatePage = vi.fn();
 const mockOpenSitePreviewWindow = vi.fn();

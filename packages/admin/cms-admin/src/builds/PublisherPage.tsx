@@ -11,7 +11,7 @@ import { useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { JobRuntime } from "../cronJobs/JobRuntime";
 import { PublishButton } from "./PublishButton";
-import { type GQLBuildsQuery } from "./PublisherPage.generated";
+import type { GQLBuildsQuery } from "./PublisherPage.generated";
 
 const buildsQuery = gql`
     query Builds {

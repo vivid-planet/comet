@@ -1,6 +1,6 @@
 import { defineConfig } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
-import { type GQLNews } from "@src/graphql.generated";
+import type { GQLNews } from "@src/graphql.generated";
 
 import { NewsContentBlock } from "./blocks/NewsContentBlock";
 

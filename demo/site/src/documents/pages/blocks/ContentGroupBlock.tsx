@@ -1,5 +1,5 @@
 import { BlocksBlock, type PropsWithData, type SupportedBlocks, withPreview } from "@comet/site-nextjs";
-import { type ContentGroupBlockData, type ContentGroupContentBlockData } from "@src/blocks.generated";
+import type { ContentGroupBlockData, ContentGroupContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { PageContentMediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
