@@ -303,9 +303,15 @@ export class FoldersService {
     async getFolderPosition(folderId: string, args: Omit<DamFolderListPositionArgs, "scope">, scope?: DamScopeInterface): Promise<number> {
         const isSizeSort = args.sortColumnName === "size";
         const effectiveSortColumn = args.sortColumnName === "mimetype" ? "name" : args.sortColumnName;
+        const sortDirection = args.sortDirection === SortDirection.DESC ? SortDirection.DESC : SortDirection.ASC;
+
+        if (!effectiveSortColumn || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(effectiveSortColumn)) {
+            throw new Error("Invalid sort column");
+        }
+
         const rowNumberExpr = isSizeSort
-            ? raw(`ROW_NUMBER() OVER( ORDER BY (COUNT(DISTINCT children.id) + COUNT(DISTINCT files.id)) ${args.sortDirection} ) AS row_number`)
-            : raw(`ROW_NUMBER() OVER( ORDER BY folder."${effectiveSortColumn}" ${args.sortDirection} ) AS row_number`);
+            ? raw(`ROW_NUMBER() OVER( ORDER BY (COUNT(DISTINCT children.id) + COUNT(DISTINCT files.id)) ${sortDirection} ) AS row_number`)
+            : raw(`ROW_NUMBER() OVER( ORDER BY folder."${effectiveSortColumn}" ${sortDirection} ) AS row_number`);
 
         let baseQb = this.foldersRepository.createQueryBuilder("folder").select(["folder.id", rowNumberExpr]);
 
