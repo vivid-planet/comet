@@ -74,16 +74,20 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     >
                         <FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />
                     </RowActionsItem>,
-                    <RowActionsItem
-                        key="preview"
-                        icon={documentType.hasNoSitePreview ? <PreviewUnavailable /> : <Preview />}
-                        onClick={() => {
-                            openSitePreviewWindow(page.path, contentScopeMatch.url);
-                        }}
-                        disabled={documentType.hasNoSitePreview}
-                    >
-                        <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
-                    </RowActionsItem>,
+                    documentType.SitePreviewAction ? (
+                        <documentType.SitePreviewAction key="preview" pageTreeNode={page} />
+                    ) : (
+                        <RowActionsItem
+                            key="preview"
+                            icon={documentType.hasNoSitePreview ? <PreviewUnavailable /> : <Preview />}
+                            onClick={() => {
+                                openSitePreviewWindow(page.path, contentScopeMatch.url);
+                            }}
+                            disabled={documentType.hasNoSitePreview}
+                        >
+                            <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
+                        </RowActionsItem>
+                    ),
                 ]}
                 <RowActionsMenu>
                     {page.visibility !== "Archived" && [
