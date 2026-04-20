@@ -45,13 +45,21 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
     const impersonationAllowed = permissionMismatches.length === 0;
 
     const tooltipTitle = !impersonationAllowed
-        ? intl.formatMessage(
-              {
-                  id: "comet.userPermissions.cannotImpersonateMissingPermissions",
-                  defaultMessage: "Missing permissions: {permissions}",
-              },
-              { permissions: permissionMismatches.map((m) => m.permission).join(", ") },
-          )
+        ? permissionMismatches
+              .map((m) => {
+                  if (m.missingContentScopes.length === 0) {
+                      return m.permission;
+                  }
+                  const scopes = m.missingContentScopes.map((cs: Record<string, unknown>) => Object.values(cs).join("/")).join(", ");
+                  return intl.formatMessage(
+                      {
+                          id: "comet.userPermissions.permissionWithMissingScopes",
+                          defaultMessage: "{permission} (missing scopes: {scopes})",
+                      },
+                      { permission: m.permission, scopes },
+                  );
+              })
+              .join(", ")
         : "";
 
     return (
