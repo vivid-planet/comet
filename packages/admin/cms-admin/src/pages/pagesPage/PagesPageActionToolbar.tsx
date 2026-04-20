@@ -9,7 +9,7 @@ import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeleteP
 import { PageDeleteDialog } from "../pageTree/PageDeleteDialog";
 import { traverse, type TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
 import { useCopyPastePages } from "../pageTree/useCopyPastePages";
-import { type GQLPageTreePageFragment, type PageTreeSelectionState } from "../pageTree/usePageTree";
+import type { GQLPageTreePageFragment, PageTreeSelectionState } from "../pageTree/usePageTree";
 import { usePageTreeContext } from "../pageTree/usePageTreeContext";
 import { areAllSubTreesFullSelected } from "./areAllSubTreesFullSelected";
 import { ConfirmPageActionDialog } from "./ConfirmPageActionDialog";

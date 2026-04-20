@@ -1,7 +1,7 @@
 import { css, MjmlGroup, MjmlSection, MjmlStyle } from "@comet/mail-react";
 import { theme } from "@src/brevo/util/theme";
 import clsx from "clsx";
-import { type ComponentProps, type ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 interface IndentedSectionGroupProps extends ComponentProps<typeof MjmlSection> {
     children?: ReactNode;

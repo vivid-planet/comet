@@ -2,14 +2,14 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { DataGridToolbar, Field, FillSpace, FinalForm, type GridColDef, GridToolbarQuickFilter, Loading, useFormApiRef } from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
-import { type FunctionComponent, type PropsWithChildren } from "react";
+import type { FunctionComponent, PropsWithChildren } from "react";
 
 import { generateGridColumnsFromContentScopeProperties } from "../ContentScopeGrid";
-import { type GQLContentScopesQuery } from "../ContentScopeGrid.generated";
-import {
-    type GQLAvailableContentScopesQuery,
-    type GQLUpdateContentScopesMutation,
-    type GQLUpdateContentScopesMutationVariables,
+import type { GQLContentScopesQuery } from "../ContentScopeGrid.generated";
+import type {
+    GQLAvailableContentScopesQuery,
+    GQLUpdateContentScopesMutation,
+    GQLUpdateContentScopesMutationVariables,
 } from "./SelectScopesDialogContent.generated";
 
 interface SelectScopesDialogContentProps {

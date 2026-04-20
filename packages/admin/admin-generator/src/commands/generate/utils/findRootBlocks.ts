@@ -1,5 +1,5 @@
 import { existsSync } from "fs";
-import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
+import type { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
 const fallbackLibraryBlocks: { [key: string]: string } = {
     AnchorBlock: "@comet/cms-admin",

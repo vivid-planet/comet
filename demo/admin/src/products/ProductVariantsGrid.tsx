@@ -18,14 +18,14 @@ import { IconButton } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { FormattedMessage } from "react-intl";
 
-import {
+import type {
     //GQLCreateProductMutation,
     //GQLCreateProductMutationVariables,
     //GQLDeleteProductMutation,
     //GQLDeleteProductMutationVariables,
-    type GQLProductVariantsListFragment,
-    type GQLProductVariantsListQuery,
-    type GQLProductVariantsListQueryVariables,
+    GQLProductVariantsListFragment,
+    GQLProductVariantsListQuery,
+    GQLProductVariantsListQueryVariables,
     //GQLUpdateProductVisibilityMutation,
     //GQLUpdateProductVisibilityMutationVariables,
 } from "./ProductVariantsGrid.generated";

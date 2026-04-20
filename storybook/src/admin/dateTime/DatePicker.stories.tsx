@@ -1,6 +1,6 @@
 import { DatePicker, DatePickerField, FieldContainer } from "@comet/admin";
 import { Grid } from "@mui/material";
-import { type Meta, type StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import { useState } from "react";
 import { Form } from "react-final-form";
 
