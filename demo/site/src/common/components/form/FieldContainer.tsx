@@ -1,8 +1,9 @@
-import { SvgUse } from "@src/common/helpers/SvgUse";
 import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { ErrorText } from "./ErrorText";
 import styles from "./FieldContainer.module.scss";
+import { HelperText } from "./HelperText";
 
 type FieldContainerProps = {
     label?: ReactNode;
@@ -31,14 +32,7 @@ export const FieldContainer: React.FC<FieldContainerProps> = ({ label, required,
                 </div>
             )}
             {children}
-            {errorText ? (
-                <div className={styles.errorWrapper}>
-                    <SvgUse href="/assets/icons/error.svg#root" width={16} height={16} />
-                    {errorText}
-                </div>
-            ) : helperText ? (
-                <div className={styles.helperText}>{helperText}</div>
-            ) : null}
+            {errorText ? <ErrorText>{errorText}</ErrorText> : helperText ? <HelperText>{helperText}</HelperText> : null}
         </div>
     );
 };
