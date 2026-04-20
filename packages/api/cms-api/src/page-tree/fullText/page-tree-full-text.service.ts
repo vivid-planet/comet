@@ -23,7 +23,9 @@ export class PageTreeFullTextService {
             // Find all tsvector (FullTextType) columns
             const fulltextColumns = metadata.props.filter((prop) => prop.columnTypes && prop.columnTypes.some((ct) => ct === "tsvector"));
 
-            if (fulltextColumns.length === 0) continue;
+            if (fulltextColumns.length === 0) {
+                continue;
+            }
 
             const fulltextExpr = fulltextColumns.map((col) => `COALESCE("${metadata.tableName}"."${col.fieldNames[0]}", ''::tsvector)`).join(" || ");
 
@@ -78,7 +80,9 @@ export class PageTreeFullTextService {
             const fulltextColumns = metadata.props
                 .filter((prop) => prop.columnTypes && prop.columnTypes.some((ct) => ct === "tsvector"))
                 .filter((prop) => prop.nullable); //only nullable
-            if (fulltextColumns.length === 0) continue;
+            if (fulltextColumns.length === 0) {
+                continue;
+            }
 
             const pageSize = 100;
             let updatedCount = 0;
