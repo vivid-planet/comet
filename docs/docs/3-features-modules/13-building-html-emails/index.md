@@ -5,7 +5,7 @@ title: Building HTML Emails
 `@comet/mail-react` lets you build responsive, themed HTML emails using React components. Under the hood it uses [MJML](https://documentation.mjml.io/) to generate cross-client-compatible HTML. On top of the raw MJML components the library provides a theme system, higher-level wrapper components, a style utility layer, and Storybook integration for live previewing emails during development.
 
 :::tip 🤖 Agent Skill `dx-mail-react`
-An agent skill for building HTML emails with `@comet/mail-react` is available. It provides AI coding agents with email development best practices, component patterns, and cross-client compatibility guidance. See [Installing Agent Skills](../../4-guides/5-installing-agent-skills.md) for setup instructions.
+An agent skill for building HTML emails with `@comet/mail-react` is available. It provides AI coding agents with email development best practices, component patterns, and cross-client compatibility guidance. See [Installing Agent Features](../../4-guides/5-installing-agent-features.md) for setup instructions.
 :::
 
 :::info
