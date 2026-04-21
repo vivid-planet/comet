@@ -70,6 +70,7 @@ export interface CreateTipTapRichTextBlockOptions {
     blockStyles?: TipTapApiBlockStyle[];
     indexSearchText?: boolean;
     link?: Block;
+    listLevelMax?: number;
 }
 
 function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlockStyle[], hasLink: boolean): Extensions {
@@ -168,7 +169,26 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: ValidationOptions) {
+function getMaxListNestingDepth(content: TipTapContent, currentDepth = 0): number {
+    if (!content || typeof content !== "object") {
+        return 0;
+    }
+
+    const isListNode = content.type === "bulletList" || content.type === "orderedList";
+    const depth = isListNode ? currentDepth + 1 : currentDepth;
+
+    if (!Array.isArray(content.content)) {
+        return depth;
+    }
+
+    let maxDepth = depth;
+    for (const child of content.content) {
+        maxDepth = Math.max(maxDepth, getMaxListNestingDepth(child, depth));
+    }
+    return maxDepth;
+}
+
+function IsTipTapContent(schema: Schema, linkBlock?: Block, listLevelMax?: number, validationOptions?: ValidationOptions) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
@@ -188,6 +208,14 @@ function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: 
                         }
                         const node = ProseMirrorNode.fromJSON(schema, value);
                         node.check();
+
+                        // Validate list nesting depth
+                        if (listLevelMax !== undefined) {
+                            const maxDepth = getMaxListNestingDepth(value as TipTapContent);
+                            if (maxDepth > listLevelMax) {
+                                return false;
+                            }
+                        }
 
                         // Validate link mark data
                         if (linkBlock) {
@@ -236,7 +264,7 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
 }
 
 export function createTipTapRichTextBlock(
-    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock }: CreateTipTapRichTextBlockOptions = {},
+    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock, listLevelMax }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
@@ -279,7 +307,7 @@ export function createTipTapRichTextBlock(
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, LinkBlock)
+        @IsTipTapContent(schema, LinkBlock, listLevelMax)
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 

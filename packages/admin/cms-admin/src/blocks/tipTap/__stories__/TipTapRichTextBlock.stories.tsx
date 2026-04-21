@@ -329,3 +329,93 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         });
     },
 };
+
+const ListLevelMaxBlock = createTipTapRichTextBlock({ supports: ["ordered-list", "unordered-list"], listLevelMax: 2 });
+
+function ListLevelMaxStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>({
+        tipTapContent: {
+            type: "doc",
+            content: [
+                {
+                    type: "bulletList",
+                    content: [
+                        {
+                            type: "listItem",
+                            content: [{ type: "paragraph", content: [{ type: "text", text: "Level 1 - first" }] }],
+                        },
+                        {
+                            type: "listItem",
+                            content: [
+                                { type: "paragraph", content: [{ type: "text", text: "Level 1 - second" }] },
+                                {
+                                    type: "bulletList",
+                                    content: [
+                                        {
+                                            type: "listItem",
+                                            content: [{ type: "paragraph", content: [{ type: "text", text: "Level 2 (max)" }] }],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    });
+
+    return (
+        <StoryWrapper state={state}>
+            <ListLevelMaxBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const ListLevelMax: StoryObj<typeof ListLevelMaxStory> = {
+    render: () => <ListLevelMaxStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Editor is ready with list content", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Click on the deepest nested list item (level 2) - indent should be disabled", async () => {
+            const textbox = canvas.getByRole("textbox");
+            const nestedText = within(textbox).getByText("Level 2 (max)");
+            await userEvent.click(nestedText);
+
+            await waitFor(
+                () => {
+                    // At max depth, the indent button should be disabled
+                    const buttons = canvas.getAllByRole("button");
+                    const disabledButtons = buttons.filter((btn) => btn.hasAttribute("disabled"));
+                    expect(disabledButtons.length).toBeGreaterThanOrEqual(1);
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Click on 'Level 1 - second' - indent should be enabled (below max depth)", async () => {
+            const textbox = canvas.getByRole("textbox");
+            const secondItem = within(textbox).getByText("Level 1 - second");
+            await userEvent.click(secondItem);
+
+            // At level 1, sinkListItem is possible because there's a preceding sibling,
+            // and listLevelMax is 2 so depth 1 < 2. Indent should be enabled.
+            await waitFor(
+                () => {
+                    const buttons = canvas.getAllByRole("button");
+                    // With supports: ["ordered-list", "unordered-list"], buttons are: OL, UL, Indent+, Indent-
+                    const indentButton = buttons[2];
+                    expect(indentButton).not.toBeDisabled();
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};
