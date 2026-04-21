@@ -43,7 +43,7 @@
         "@golevelup/nestjs-discovery": "^5.0.1",
         "@hapi/accept": "^6.0.3",
         "@nestjs/mapped-types": "^2.1.0",
-        "@opentelemetry/api": "^1.9.0",
+        "@opentelemetry/api": "^1.9.1",
         "base64url": "^3.0.1",
         "cron-parser": "^3.5.0",
         "dataloader": "^2.2.3",
