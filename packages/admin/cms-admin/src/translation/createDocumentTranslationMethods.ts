@@ -1,5 +1,5 @@
-import { type BlockInterface } from "../blocks/types";
-import { type TranslatableInterface } from "./TranslatableInterface";
+import type { BlockInterface } from "../blocks/types";
+import type { TranslatableInterface } from "./TranslatableInterface";
 
 export function createDocumentTranslationMethods<
     DocumentInput extends Record<string, unknown> = Record<string, unknown>,

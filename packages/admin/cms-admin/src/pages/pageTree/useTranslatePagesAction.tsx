@@ -5,11 +5,11 @@ import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { type DocumentInterface, type GQLDocument } from "../../documents/types";
-import { type TranslatableInterface } from "../../translation/TranslatableInterface";
+import type { DocumentInterface, GQLDocument } from "../../documents/types";
+import type { TranslatableInterface } from "../../translation/TranslatableInterface";
 import { findAvailableSlug } from "./findAvailableSlug";
 import { transformToSlug } from "./transformToSlug";
-import { type PageTreePage } from "./usePageTree";
+import type { PageTreePage } from "./usePageTree";
 import { useProgressDialog } from "./useProgressDialog";
 
 function isTranslatable(
