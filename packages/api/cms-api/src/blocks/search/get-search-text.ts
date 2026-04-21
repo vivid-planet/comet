@@ -30,23 +30,6 @@ export function getSearchTextFromBlock(block: BlockDataInterface): WeightedSearc
     return weightedSearchText;
 }
 
-export function mikroOrmFullText(fields: WeightedFullTextValue, ...blocks: BlockDataInterface[]): string | WeightedFullTextValue {
-    const result: WeightedFullTextValue = { ...fields };
-    for (const block of blocks) {
-        const blockFullText = blockToMikroOrmFullText(block);
-        if (typeof blockFullText !== "string") {
-            for (const [key, value] of Object.entries(blockFullText)) {
-                const weight = key as keyof WeightedFullTextValue;
-                result[weight] = [result[weight], value].filter(Boolean).join(" ");
-            }
-        }
-    }
-    if (Object.keys(result).length === 0) {
-        return " ";
-    }
-    return result;
-}
-
 export function blockToMikroOrmFullText(block: BlockDataInterface): string | WeightedFullTextValue {
     const weightToPostgresWeight: Record<string, "A" | "B" | "C" | "D"> = {
         h1: "A",

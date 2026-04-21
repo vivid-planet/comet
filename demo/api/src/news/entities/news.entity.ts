@@ -4,7 +4,7 @@ import {
     CrudGenerator,
     DamImageBlock,
     EntityInfo,
-    mikroOrmFullText,
+    entityToMikroOrmFullText,
     RootBlock,
     RootBlockDataScalar,
     RootBlockEntity,
@@ -127,7 +127,7 @@ export class News extends BaseEntity {
     @Property<News>({
         nullable: true,
         type: new FullTextType(),
-        onUpdate: (news) => mikroOrmFullText({ A: news.title, D: news.slug }, news.content),
+        onUpdate: (news) => entityToMikroOrmFullText({ A: news.title, D: news.slug }, news.content),
     })
     fullText?: string;
 }
