@@ -1,16 +1,16 @@
 import { generateImageUrl, gql } from "@comet/site-nextjs";
 import { Breadcrumbs } from "@src/common/components/breadcrumbs/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/breadcrumbs/Breadcrumbs.fragment";
-import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import type { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import { type Metadata, type ResolvingMetadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { StageBlock } from "./blocks/StageBlock";
-import { type GQLPageQuery, type GQLPageQueryVariables } from "./Page.generated";
+import type { GQLPageQuery, GQLPageQueryVariables } from "./Page.generated";
 
 const pageQuery = gql`
     query Page($pageTreeNodeId: ID!) {

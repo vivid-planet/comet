@@ -1,20 +1,20 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { filterByFragment, Loading, RHFForm, RHFTextField } from "@comet/admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useSaveConflict } from "@comet/cms-admin";
-import { type GQLProductInput, type GQLProductMutationErrorCode } from "@src/graphql.generated";
+import type { GQLProductInput, GQLProductMutationErrorCode, GQLProductMutationErrorCode } from "@src/graphql.generated";
 import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { defineMessage, FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
 
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
-import {
-    type GQLCreateProductMutation,
-    type GQLCreateProductMutationVariables,
-    type GQLProductFormManualFragment,
-    type GQLProductQuery,
-    type GQLProductQueryVariables,
-    type GQLUpdateProductMutation,
-    type GQLUpdateProductMutationVariables,
+import type {
+    GQLCreateProductMutation,
+    GQLCreateProductMutationVariables,
+    GQLProductFormManualFragment,
+    GQLProductQuery,
+    GQLProductQueryVariables,
+    GQLUpdateProductMutation,
+    GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
 
 const rootBlocks = {

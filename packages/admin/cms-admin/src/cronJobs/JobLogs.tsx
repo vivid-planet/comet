@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { type GQLKubernetesJobWithLogsQuery, type GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";
+import type { GQLKubernetesJobWithLogsQuery, GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";
 
 const LogsContainer = styled("pre")`
     margin: 0;

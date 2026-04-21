@@ -101,7 +101,7 @@ export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
-export { getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
+export { blockToMikroOrmFullText, getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
@@ -247,6 +247,7 @@ export {
     PageTreeNodeBaseUpdateInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./page-tree/dto/page-tree-node.input";
+export { PaginatedPageTreeNodesFactory } from "./page-tree/dto/paginated-page-tree-nodes.factory";
 export { AttachedDocument } from "./page-tree/entities/attached-document.entity";
 export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entity";
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";

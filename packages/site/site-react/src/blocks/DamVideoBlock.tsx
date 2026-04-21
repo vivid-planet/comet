@@ -3,14 +3,14 @@
 import clsx from "clsx";
 import { type ComponentType, type ReactElement, type ReactNode, useCallback, useState } from "react";
 
-import { type DamVideoBlockData } from "../blocks.generated";
+import type { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import styles from "./DamVideoBlock.module.scss";
 import { PlayPauseButton, type PlayPauseButtonProps } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
-import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
-import { type PropsWithData } from "./PropsWithData";
+import type { VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import type { PropsWithData } from "./PropsWithData";
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;

@@ -6,10 +6,10 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../contentScope/Provider";
 import { DashboardWidgetRoot } from "../dashboard/widgets/DashboardWidgetRoot";
-import {
-    type GQLLatestWarningsListFragment,
-    type GQLLatestWarningsQuery,
-    type GQLLatestWarningsQueryVariables,
+import type {
+    GQLLatestWarningsListFragment,
+    GQLLatestWarningsQuery,
+    GQLLatestWarningsQueryVariables,
 } from "./LatestWarningsDashboardWidget.generated";
 import { WarningActions } from "./WarningActions";
 import { WarningMessage } from "./WarningMessage";

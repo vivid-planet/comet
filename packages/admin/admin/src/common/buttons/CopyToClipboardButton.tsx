@@ -3,7 +3,7 @@ import { type ComponentsOverrides, css, Grow, IconButton, type Theme, useThemePr
 import { type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export interface CopyToClipboardButtonProps
     extends ThemedComponentBaseProps<{

@@ -22,11 +22,11 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { useUserPermissionCheck } from "./hooks/currentUser";
 import { ImpersonateMenuItem } from "./ImpersonateMenuItem";
-import {
-    type GQLUserAvailablePermissionsAndContentScopesQuery,
-    type GQLUserForGridFragment,
-    type GQLUserGridQuery,
-    type GQLUserGridQueryVariables,
+import type {
+    GQLUserAvailablePermissionsAndContentScopesQuery,
+    GQLUserForGridFragment,
+    GQLUserGridQuery,
+    GQLUserGridQueryVariables,
 } from "./UserGrid.generated";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {

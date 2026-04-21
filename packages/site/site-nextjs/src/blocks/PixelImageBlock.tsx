@@ -12,7 +12,7 @@ import {
 // eslint-disable-next-line no-restricted-imports
 import NextImage, { type ImageProps } from "next/image";
 
-import { type PixelImageBlockData } from "../blocks.generated";
+import type { PixelImageBlockData } from "../blocks.generated";
 import styles from "./PixelImageBlock.module.scss";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {

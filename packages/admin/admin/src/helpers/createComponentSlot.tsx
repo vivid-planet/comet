@@ -1,4 +1,4 @@
-import { type StyledComponent } from "@emotion/styled";
+import type { StyledComponent } from "@emotion/styled";
 import {
     css,
     generateUtilityClass,
@@ -6,7 +6,7 @@ import {
     styled,
     type Theme,
 } from "@mui/material";
-import { type CSSProperties } from "@mui/material/styles";
+import type { CSSProperties } from "@mui/material/styles";
 import { type ComponentProps, type ElementType, forwardRef, type JSX } from "react";
 
 const classNamePrefix = "CometAdmin";

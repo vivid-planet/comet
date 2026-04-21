@@ -4,7 +4,7 @@ import { Command } from "commander";
 import fs from "fs";
 import { resolve } from "path";
 
-import { type BaseSiteConfig, type ExtractPrivateSiteConfig, type ExtractPublicSiteConfig } from "../site-configs.types";
+import type { BaseSiteConfig, ExtractPrivateSiteConfig, ExtractPublicSiteConfig } from "../site-configs.types";
 
 export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .description("Inject site-configs into a file")

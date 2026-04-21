@@ -18,7 +18,7 @@ import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
 import { ToolbarFillSpace } from "./common/toolbar/fillspace/ToolbarFillSpace";
 import { StackToolbar } from "./common/toolbar/StackToolbar";
 import { EditDialog } from "./EditDialog";
-import { type IEditDialogApi } from "./EditDialogApiContext";
+import type { IEditDialogApi } from "./EditDialogApiContext";
 import { FinalForm } from "./FinalForm";
 import { TextField } from "./form/fields/TextField";
 import { SaveBoundary } from "./saveBoundary/SaveBoundary";

@@ -1,4 +1,4 @@
-import { type GraphQLResolveInfo } from "graphql";
+import type { GraphQLResolveInfo } from "graphql";
 import { parseResolveInfo, type ResolveTree } from "graphql-parse-resolve-info";
 
 export function extractGraphqlFields(info: GraphQLResolveInfo, options: { root?: string } = {}): string[] {

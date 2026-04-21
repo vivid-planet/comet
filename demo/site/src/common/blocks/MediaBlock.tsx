@@ -7,7 +7,7 @@ import {
     VimeoVideoBlock,
     withPreview,
 } from "@comet/site-nextjs";
-import { type MediaBlockData } from "@src/blocks.generated";
+import type { MediaBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 
 import { PlayPauseButton } from "../helpers/PlayPauseButton";
