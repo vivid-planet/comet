@@ -1,7 +1,7 @@
 import { CheckboxField, Field, FinalFormInput } from "@comet/admin";
 import { FormattedMessage } from "react-intl";
 
-import { type ExternalLinkBlockData, type ExternalLinkBlockInput } from "../blocks.generated";
+import type { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
 import { isLinkTarget } from "../validation/isLinkTarget";
 import { validateLinkTarget } from "../validation/validateLinkTarget";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";

@@ -8,15 +8,15 @@ import { FormattedMessage } from "react-intl";
 
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { type DamFileDetails } from "./EditFile";
+import type { DamFileDetails } from "./EditFile";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
-import {
-    type GQLArchiveFileMutation,
-    type GQLArchiveFileMutationVariables,
-    type GQLDeleteDamFileMutation,
-    type GQLDeleteDamFileMutationVariables,
-    type GQLRestoreFileMutation,
-    type GQLRestoreFileMutationVariables,
+import type {
+    GQLArchiveFileMutation,
+    GQLArchiveFileMutationVariables,
+    GQLDeleteDamFileMutation,
+    GQLDeleteDamFileMutationVariables,
+    GQLRestoreFileMutation,
+    GQLRestoreFileMutationVariables,
 } from "./FilePreview.gql.generated";
 import { AudioPreview } from "./previews/AudioPreview";
 import { DefaultFilePreview } from "./previews/DefaultFilePreview";

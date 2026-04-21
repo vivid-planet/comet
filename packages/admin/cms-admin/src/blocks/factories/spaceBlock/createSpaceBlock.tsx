@@ -1,6 +1,6 @@
 import { SelectField } from "@comet/admin";
 import { MenuItem } from "@mui/material";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";

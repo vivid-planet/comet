@@ -1,7 +1,7 @@
 import { TextField, type TextFieldProps } from "@comet/admin";
 
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
-import { type BlockMethods } from "../types";
+import type { BlockMethods } from "../types";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
 
 interface Options extends Partial<TextFieldProps> {

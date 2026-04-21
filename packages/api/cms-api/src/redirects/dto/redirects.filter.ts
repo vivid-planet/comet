@@ -6,10 +6,10 @@ import { BooleanFilter } from "../../common/filter/boolean.filter";
 import { DateTimeFilter } from "../../common/filter/date-time.filter";
 import { createEnumFilter } from "../../common/filter/enum.filter.factory";
 import { StringFilter } from "../../common/filter/string.filter";
-import { RedirectSourceTypeValues } from "../redirects.enum";
+import { RedirectSourceType } from "../redirects.enum";
 
 @InputType()
-class RedirectSourceTypeEnumFilter extends createEnumFilter(RedirectSourceTypeValues) {}
+class RedirectSourceTypeEnumFilter extends createEnumFilter(RedirectSourceType) {}
 
 @InputType()
 export class RedirectFilter {

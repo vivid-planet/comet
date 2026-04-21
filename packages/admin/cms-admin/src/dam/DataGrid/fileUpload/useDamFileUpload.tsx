@@ -1,11 +1,11 @@
 import { useApolloClient } from "@apollo/client";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
-import { type Accept, type FileRejection } from "react-dropzone";
+import type { Accept, FileRejection } from "react-dropzone";
 
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
 import { useCometConfig } from "../../../config/CometConfigContext";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
-import { type GQLLicenseInput } from "../../../graphql.generated";
+import type { GQLLicenseInput } from "../../../graphql.generated";
 import { useDamBasePath, useDamConfig } from "../../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
@@ -29,11 +29,11 @@ import {
 } from "./fileUploadErrorMessages";
 import { ProgressDialog } from "./ProgressDialog";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useDamFileUpload.gql";
-import {
-    type GQLDamFolderByNameAndParentIdQuery,
-    type GQLDamFolderByNameAndParentIdQueryVariables,
-    type GQLDamFolderForFolderUploadMutation,
-    type GQLDamFolderForFolderUploadMutationVariables,
+import type {
+    GQLDamFolderByNameAndParentIdQuery,
+    GQLDamFolderByNameAndParentIdQueryVariables,
+    GQLDamFolderForFolderUploadMutation,
+    GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
 export interface FileWithDamUploadMetadata extends File {

@@ -7,6 +7,7 @@ import {
     GridCellContent,
     type GridColDef,
     type IFilterApi,
+    muiGridSortToGql,
     PrettyBytes,
     ToolbarActions,
     ToolbarItem,
@@ -31,11 +32,11 @@ import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import { type GQLDamItemType } from "../../graphql.generated";
+import type { GQLDamItemType } from "../../graphql.generated";
 import { useDamConfig } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../config/useDamScope";
-import { type DamConfig, type DamFilter } from "../DamTable";
+import type { DamConfig, DamFilter } from "../DamTable";
 import { licenseTypeLabels } from "../FileForm/licenseType";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
@@ -47,15 +48,15 @@ import { UploadFilesButton } from "./fileUpload/UploadFilesButton";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { DamTableFilter } from "./filter/DamTableFilter";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
-import {
-    type GQLDamFileTableFragment,
-    type GQLDamFolderQuery,
-    type GQLDamFolderQueryVariables,
-    type GQLDamFolderTableFragment,
-    type GQLDamItemListPositionQuery,
-    type GQLDamItemListPositionQueryVariables,
-    type GQLDamItemsListQuery,
-    type GQLDamItemsListQueryVariables,
+import type {
+    GQLDamFileTableFragment,
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamFolderTableFragment,
+    GQLDamItemListPositionQuery,
+    GQLDamItemListPositionQueryVariables,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
 import { DamUploadFooter } from "./footer/UploadFooter";
@@ -168,7 +169,7 @@ const FolderDataGrid = ({
         setUploadTargetFolderName(undefined);
     };
 
-    const dataGridProps = useDataGridRemote({ pageSize: 20 });
+    const dataGridProps = useDataGridRemote({ pageSize: 20, initialSort: [{ field: "name", sort: "asc" }] });
 
     const { data: currentFolderData } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
@@ -180,6 +181,236 @@ const FolderDataGrid = ({
 
     const apiRef = useGridApiRef();
 
+    const dataGridColumns: GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[] = [
+        {
+            field: "name",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.name",
+                defaultMessage: "Name",
+            }),
+            flex: 1,
+            minWidth: 300,
+            renderCell: ({ row }) => {
+                return (
+                    <DamItemLabelColumn
+                        item={row}
+                        renderDamLabel={renderDamLabel}
+                        matches={matches}
+                        filterApi={filterApi}
+                        isSearching={isSearching}
+                        fileUploadApi={fileUploadApi}
+                        footerApi={{
+                            show: showUploadFooter,
+                            hide: hideUploadFooter,
+                        }}
+                        hoverApi={{
+                            showHoverStyles,
+                            hideHoverStyles,
+                            isHovered: hoveredId === row.id,
+                        }}
+                        scrollIntoView={fileUploadApi.newlyUploadedItems[0]?.id === row.id}
+                    />
+                );
+            },
+            disableColumnMenu: true,
+        },
+        {
+            field: "importSourceType",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.importSourceType",
+                defaultMessage: "Source",
+            }),
+            renderCell: ({ row }) => {
+                if (isFile(row) && row.importSourceType && importSources?.[row.importSourceType]) {
+                    return importSources[row.importSourceType].label;
+                }
+            },
+            // TODO enable sorting/filtering in API
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
+            field: "type",
+            sortBy: "mimetype",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.fileType",
+                defaultMessage: "Type/Format",
+            }),
+            headerAlign: "left",
+            align: "left",
+            minWidth: 140,
+            renderCell: ({ row }) => {
+                if (isFile(row) && row.mimetype) {
+                    return row.mimetype;
+                } else if (isFolder(row)) {
+                    return intl.formatMessage({
+                        id: "comet.dam.file.fileType.folder",
+                        defaultMessage: "Folder",
+                    });
+                }
+            },
+            disableColumnMenu: true,
+        },
+        {
+            field: "info",
+            sortBy: "size",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.info",
+                defaultMessage: "Info",
+            }),
+            align: "right",
+            minWidth: 100,
+            renderCell: ({ row }) => {
+                if (isFile(row)) {
+                    return <PrettyBytes value={row.size} />;
+                } else {
+                    return (
+                        <FormattedMessage
+                            id="comet.dam.folderSize"
+                            defaultMessage="{number} {number, plural, one {item} other {items}}"
+                            values={{
+                                number: row.numberOfFiles + row.numberOfChildFolders,
+                            }}
+                        />
+                    );
+                }
+            },
+            disableColumnMenu: true,
+        },
+        ...(enableLicenseFeature
+            ? ([
+                  {
+                      field: "license",
+                      headerName: intl.formatMessage({
+                          id: "comet.dam.file.license",
+                          defaultMessage: "License",
+                      }),
+                      headerAlign: "left",
+                      align: "left",
+                      minWidth: 200,
+                      renderCell: ({ row }) => {
+                          if (isFile(row) && row.license && row.license.type) {
+                              return (
+                                  <GridCellContent
+                                      primaryText={licenseTypeLabels[row.license.type]}
+                                      secondaryText={
+                                          row.license.expiresWithinThirtyDays || row.license.hasExpired ? (
+                                              <LicenseValidityTags
+                                                  {...row.license}
+                                                  expirationDate={row.license.expirationDate ? new Date(row.license.expirationDate) : undefined}
+                                              />
+                                          ) : (
+                                              <>
+                                                  <FormattedMessage id="comet.dam.file.license.validUntil" defaultMessage="Valid until:" />{" "}
+                                                  {row.license.durationTo ? (
+                                                      <FormattedDate value={row.license.durationTo} dateStyle="medium" />
+                                                  ) : (
+                                                      <FormattedMessage id="comet.dam.file.license.unlimited" defaultMessage="Unlimited" />
+                                                  )}
+                                              </>
+                                          )
+                                      }
+                                  />
+                              );
+                          }
+                      },
+                      sortable: false,
+                      hideSortIcons: true,
+                      disableColumnMenu: true,
+                  },
+              ] satisfies GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[])
+            : []),
+        {
+            field: "usages",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.usages",
+                defaultMessage: "Usages",
+            }),
+            headerAlign: "right",
+            align: "right",
+            minWidth: 100,
+            renderHeader: (props) => {
+                return (
+                    <>
+                        <GridColumnHeaderTitle
+                            label={intl.formatMessage({
+                                id: "comet.dam.file.usages",
+                                defaultMessage: "Usages",
+                            })}
+                            columnWidth={150}
+                        />
+                        <Tooltip
+                            title={
+                                <FormattedMessage
+                                    id="comet.dam.file.usages.tooltip"
+                                    defaultMessage="Cached for performance, can be slightly outdated"
+                                />
+                            }
+                        >
+                            <InfoIcon sx={{ marginLeft: 1 }} />
+                        </Tooltip>
+                    </>
+                );
+            },
+            renderCell: ({ row }) => {
+                if (isFile(row)) {
+                    return row.dependents.totalCount;
+                }
+            },
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
+            field: "createdAt",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.creationDate",
+                defaultMessage: "Creation",
+            }),
+            headerAlign: "left",
+            align: "left",
+            minWidth: 180,
+            valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+            disableColumnMenu: true,
+        },
+        {
+            field: "updatedAt",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.changeDate",
+                defaultMessage: "Latest change",
+            }),
+            headerAlign: "left",
+            align: "left",
+            minWidth: 180,
+            valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+            disableColumnMenu: true,
+        },
+        {
+            field: "actions",
+            headerName: "",
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: 52,
+            renderCell: ({ row }) => {
+                return isFile(row) ? (
+                    <DamContextMenu file={row} openMoveDialog={openMoveDialog} />
+                ) : (
+                    <DamContextMenu folder={row} openMoveDialog={openMoveDialog} />
+                );
+            },
+            renderHeader: () => null,
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+    ];
+
+    const gqlSort = muiGridSortToGql(dataGridProps.sortModel, dataGridColumns);
+    const sortColumnName = gqlSort?.[0]?.field;
+    const sortDirection = gqlSort?.[0]?.direction;
+
     const { data: dataGridData, loading } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
             folderId: currentFolderId,
@@ -188,8 +419,8 @@ const FolderDataGrid = ({
                 mimetypes: props.allowedMimetypes,
                 searchText: filterApi.current.searchText,
             },
-            sortColumnName: filterApi.current.sort?.columnName,
-            sortDirection: filterApi.current.sort?.direction,
+            sortColumnName,
+            sortDirection,
             limit: dataGridProps.paginationModel.pageSize,
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             scope,
@@ -270,8 +501,8 @@ const FolderDataGrid = ({
                         mimetypes: props.allowedMimetypes,
                         searchText: filterApi.current.searchText,
                     },
-                    sortColumnName: filterApi.current.sort?.columnName,
-                    sortDirection: filterApi.current.sort?.direction,
+                    sortColumnName,
+                    sortDirection,
                     scope,
                 },
             });
@@ -406,241 +637,6 @@ const FolderDataGrid = ({
 
         return "";
     };
-
-    const dataGridColumns: GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[] = [
-        {
-            field: "name",
-            headerName: intl.formatMessage({
-                id: "comet.dam.file.name",
-                defaultMessage: "Name",
-            }),
-            flex: 1,
-            minWidth: 300,
-            renderCell: ({ row }) => {
-                return (
-                    <DamItemLabelColumn
-                        item={row}
-                        renderDamLabel={renderDamLabel}
-                        matches={matches}
-                        filterApi={filterApi}
-                        isSearching={isSearching}
-                        fileUploadApi={fileUploadApi}
-                        footerApi={{
-                            show: showUploadFooter,
-                            hide: hideUploadFooter,
-                        }}
-                        hoverApi={{
-                            showHoverStyles,
-                            hideHoverStyles,
-                            isHovered: hoveredId === row.id,
-                        }}
-                        scrollIntoView={fileUploadApi.newlyUploadedItems[0]?.id === row.id}
-                    />
-                );
-            },
-            sortable: false,
-            hideSortIcons: true,
-            disableColumnMenu: true,
-        },
-        {
-            field: "importSourceType",
-            headerName: intl.formatMessage({
-                id: "comet.dam.file.importSourceType",
-                defaultMessage: "Source",
-            }),
-            renderCell: ({ row }) => {
-                if (isFile(row) && row.importSourceType && importSources?.[row.importSourceType]) {
-                    return importSources[row.importSourceType].label;
-                }
-            },
-            // TODO enable sorting/filtering in API
-            sortable: false,
-            hideSortIcons: true,
-            disableColumnMenu: true,
-        },
-        {
-            field: "type",
-            headerName: intl.formatMessage({
-                id: "comet.dam.file.fileType",
-                defaultMessage: "Type/Format",
-            }),
-            headerAlign: "left",
-            align: "left",
-            minWidth: 140,
-            renderCell: ({ row }) => {
-                if (isFile(row) && row.mimetype) {
-                    return row.mimetype;
-                } else if (isFolder(row)) {
-                    return intl.formatMessage({
-                        id: "comet.dam.file.fileType.folder",
-                        defaultMessage: "Folder",
-                    });
-                }
-            },
-            sortable: false,
-            hideSortIcons: true,
-            disableColumnMenu: true,
-        },
-        {
-            field: "info",
-            headerName: intl.formatMessage({
-                id: "comet.dam.file.info",
-                defaultMessage: "Info",
-            }),
-            headerAlign: "right",
-            align: "right",
-            minWidth: 100,
-            renderCell: ({ row }) => {
-                if (isFile(row)) {
-                    return <PrettyBytes value={row.size} />;
-                } else {
-                    return (
-                        <FormattedMessage
-                            id="comet.dam.folderSize"
-                            defaultMessage="{number} {number, plural, one {item} other {items}}"
-                            values={{
-                                number: row.numberOfFiles + row.numberOfChildFolders,
-                            }}
-                        />
-                    );
-                }
-            },
-            sortable: false,
-            hideSortIcons: true,
-            disableColumnMenu: true,
-        },
-        ...(enableLicenseFeature
-            ? ([
-                  {
-                      field: "license",
-                      headerName: intl.formatMessage({
-                          id: "comet.dam.file.license",
-                          defaultMessage: "License",
-                      }),
-                      headerAlign: "left",
-                      align: "left",
-                      minWidth: 200,
-                      renderCell: ({ row }) => {
-                          if (isFile(row) && row.license && row.license.type) {
-                              return (
-                                  <GridCellContent
-                                      primaryText={licenseTypeLabels[row.license.type]}
-                                      secondaryText={
-                                          row.license.expiresWithinThirtyDays || row.license.hasExpired ? (
-                                              <LicenseValidityTags
-                                                  {...row.license}
-                                                  expirationDate={row.license.expirationDate ? new Date(row.license.expirationDate) : undefined}
-                                              />
-                                          ) : (
-                                              <>
-                                                  <FormattedMessage id="comet.dam.file.license.validUntil" defaultMessage="Valid until:" />{" "}
-                                                  {row.license.durationTo ? (
-                                                      <FormattedDate value={row.license.durationTo} dateStyle="medium" />
-                                                  ) : (
-                                                      <FormattedMessage id="comet.dam.file.license.unlimited" defaultMessage="Unlimited" />
-                                                  )}
-                                              </>
-                                          )
-                                      }
-                                  />
-                              );
-                          }
-                      },
-                      sortable: false,
-                      hideSortIcons: true,
-                      disableColumnMenu: true,
-                  },
-              ] satisfies GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[])
-            : []),
-        {
-            field: "usages",
-            headerName: intl.formatMessage({
-                id: "comet.dam.file.usages",
-                defaultMessage: "Usages",
-            }),
-            headerAlign: "right",
-            align: "right",
-            minWidth: 100,
-            renderHeader: (props) => {
-                return (
-                    <>
-                        <GridColumnHeaderTitle
-                            label={intl.formatMessage({
-                                id: "comet.dam.file.usages",
-                                defaultMessage: "Usages",
-                            })}
-                            columnWidth={150}
-                        />
-                        <Tooltip
-                            title={
-                                <FormattedMessage
-                                    id="comet.dam.file.usages.tooltip"
-                                    defaultMessage="Cached for performance, can be slightly outdated"
-                                />
-                            }
-                        >
-                            <InfoIcon sx={{ marginLeft: 1 }} />
-                        </Tooltip>
-                    </>
-                );
-            },
-            renderCell: ({ row }) => {
-                if (isFile(row)) {
-                    return row.dependents.totalCount;
-                }
-            },
-            sortable: false,
-            hideSortIcons: true,
-            disableColumnMenu: true,
-        },
-        {
-            field: "createdAt",
-            headerName: intl.formatMessage({
-                id: "comet.dam.file.creationDate",
-                defaultMessage: "Creation",
-            }),
-            headerAlign: "left",
-            align: "left",
-            minWidth: 180,
-            valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-            sortable: false,
-            hideSortIcons: true,
-            disableColumnMenu: true,
-        },
-        {
-            field: "updatedAt",
-            headerName: intl.formatMessage({
-                id: "comet.dam.file.changeDate",
-                defaultMessage: "Latest change",
-            }),
-            headerAlign: "left",
-            align: "left",
-            minWidth: 180,
-            valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-            sortable: false,
-            hideSortIcons: true,
-            disableColumnMenu: true,
-        },
-        {
-            field: "actions",
-            headerName: "",
-            type: "actions",
-            align: "right",
-            pinned: "right",
-            width: 52,
-            renderCell: ({ row }) => {
-                return isFile(row) ? (
-                    <DamContextMenu file={row} openMoveDialog={openMoveDialog} />
-                ) : (
-                    <DamContextMenu folder={row} openMoveDialog={openMoveDialog} />
-                );
-            },
-            renderHeader: () => null,
-            sortable: false,
-            hideSortIcons: true,
-            disableColumnMenu: true,
-        },
-    ];
 
     const uploadFilters = {
         allowedMimetypes: props.allowedMimetypes,

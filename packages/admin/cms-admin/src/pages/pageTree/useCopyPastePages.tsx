@@ -4,14 +4,14 @@ import { type ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCometConfig } from "../../config/CometConfigContext";
-import { type ContentScope } from "../../contentScope/Provider";
+import type { ContentScope } from "../../contentScope/Provider";
 import { useDamBasePath } from "../../dam/config/damConfig";
 import { useDamScope } from "../../dam/config/useDamScope";
-import { type GQLDocument, type GQLPageQuery, type GQLPageQueryVariables } from "../../documents/types";
+import type { GQLDocument, GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
 import { usePageTreeScope } from "../config/usePageTreeScope";
 import { usePageTreeConfig } from "../pageTreeConfig";
 import { sendPages, type SendPagesOptions } from "./useCopyPastePages/sendPages";
-import { type GQLPageTreePageFragment } from "./usePageTree";
+import type { GQLPageTreePageFragment } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 import { useProgressDialog } from "./useProgressDialog";
 

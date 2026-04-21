@@ -2,9 +2,9 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CheckboxField, ErrorScope, Field, FieldContainer, FinalForm, FinalFormInput, FinalFormSelect, Loading, Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { Box, Divider, IconButton, MenuItem, Typography } from "@mui/material";
-import { type Mutator } from "final-form";
+import type { Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
-import { type DocumentNode } from "graphql";
+import type { DocumentNode } from "graphql";
 import debounce from "p-debounce";
 import { type JSX, type ReactNode, useCallback, useEffect, useState } from "react";
 import { FormSpy } from "react-final-form";
@@ -12,24 +12,24 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
 import { useContentLanguage } from "../contentLanguage/useContentLanguage";
-import { type DocumentInterface, type DocumentType } from "../documents/types";
+import type { DocumentInterface, DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
-import { type GQLSlugAvailability } from "../graphql.generated";
+import type { GQLSlugAvailability } from "../graphql.generated";
 import { useRedirectsScope } from "../redirects/redirectsConfig";
 import { usePageTreeScope } from "./config/usePageTreeScope";
-import {
-    type GQLCreatePageNodeMutation,
-    type GQLCreatePageNodeMutationVariables,
-    type GQLEditPageNodeQuery,
-    type GQLEditPageNodeQueryVariables,
-    type GQLEditPageParentNodeQuery,
-    type GQLEditPageParentNodeQueryVariables,
-    type GQLIsPathAvailableQuery,
-    type GQLIsPathAvailableQueryVariables,
-    type GQLRedirectSourceAvailableQuery,
-    type GQLRedirectSourceAvailableQueryVariables,
-    type GQLUpdatePageNodeMutation,
-    type GQLUpdatePageNodeMutationVariables,
+import type {
+    GQLCreatePageNodeMutation,
+    GQLCreatePageNodeMutationVariables,
+    GQLEditPageNodeQuery,
+    GQLEditPageNodeQueryVariables,
+    GQLEditPageParentNodeQuery,
+    GQLEditPageParentNodeQueryVariables,
+    GQLIsPathAvailableQuery,
+    GQLIsPathAvailableQueryVariables,
+    GQLRedirectSourceAvailableQuery,
+    GQLRedirectSourceAvailableQueryVariables,
+    GQLUpdatePageNodeMutation,
+    GQLUpdatePageNodeMutationVariables,
 } from "./createEditPageNode.generated";
 import { transformToSlug } from "./pageTree/transformToSlug";
 

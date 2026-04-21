@@ -10,7 +10,7 @@ import stream from "stream";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 
-import { type FileUploadInput } from "./file-upload.input";
+import type { FileUploadInput } from "./file-upload.input";
 import { FILE_UPLOAD_FIELD } from "./files.constants";
 
 const pipeline = promisify(stream.pipeline);

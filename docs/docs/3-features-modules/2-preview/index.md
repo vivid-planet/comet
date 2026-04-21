@@ -70,6 +70,8 @@ The site preview is an overview of the entire website in preview mode, as seen i
 
 So what are the advantages of the site preview? The site preview is always live, while the current website may not be built yet. The menu bar in the site preview works just like the [menu bar in the block preview](#menuBarButtons). If you still want to view the website directly, you can find the URL to your website in the left area of the menu bar.
 
+For a detailed explanation of how the Site Preview is implemented under the hood — including the JWT handshake, cookie storage, and scope resolution — see [How Site Preview Works](how-site-preview-works).
+
 ### Implementation
 
 But what steps need to be taken to make the block preview work as described?

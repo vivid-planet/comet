@@ -11,8 +11,8 @@ import {
     type TranslatableInterface,
 } from "@comet/cms-admin";
 import { Chip } from "@mui/material";
-import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
-import { type GQLPage, type GQLPageInput } from "@src/graphql.generated";
+import type { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
+import type { GQLPage, GQLPageInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import { FormattedMessage } from "react-intl";
 

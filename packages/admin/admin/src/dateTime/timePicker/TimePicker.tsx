@@ -9,7 +9,7 @@ import { ClearInputAdornment as CometClearInputAdornment } from "../../common/Cl
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment";
 
@@ -152,12 +152,13 @@ export const TimePicker = (inProps: TimePickerProps) => {
                             endAdornment: (
                                 <>
                                     <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={dateValue !== null && !required && !disabled && !readOnly}
-                                        onClick={() => onChange?.(undefined)}
-                                        {...slotProps?.clearInputAdornment}
-                                    />
+                                    {dateValue !== null && !required && !disabled && !readOnly && (
+                                        <ClearInputAdornment
+                                            position="end"
+                                            onClick={() => onChange?.(undefined)}
+                                            {...slotProps?.clearInputAdornment}
+                                        />
+                                    )}
                                 </>
                             ),
                         },

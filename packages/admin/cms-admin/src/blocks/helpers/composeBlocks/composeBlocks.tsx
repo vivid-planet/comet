@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { type Dispatch, type SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
 import { BlockPreviewContent } from "../../common/blockRow/BlockPreviewContent";
-import { type BlockContext } from "../../context/BlockContext";
-import { type BlockDependency, type BlockInterface, type BlockMethods, type PreviewContent } from "../../types";
+import type { BlockContext } from "../../context/BlockContext";
+import type { BlockDependency, BlockInterface, BlockMethods, PreviewContent } from "../../types";
 import { resolveNewState } from "../../utils";
 import { deduplicateBlockDependencies } from "../deduplicateBlockDependencies";
 import { isBlockInterface } from "../isBlockInterface";
-import {
-    type AdminComponentPropsMap,
-    type AdminComponentsMap,
-    type ChildBlockCountMap,
-    type CompositeBlocksConfig,
-    type DataMapInputApi,
-    type DataMapOutputApi,
-    type DataMapState,
-    type IsValidMap,
-    type PreviewMap,
-    type StateMap,
+import type {
+    AdminComponentPropsMap,
+    AdminComponentsMap,
+    ChildBlockCountMap,
+    CompositeBlocksConfig,
+    DataMapInputApi,
+    DataMapOutputApi,
+    DataMapState,
+    IsValidMap,
+    PreviewMap,
+    StateMap,
 } from "./types";
 import { applyToCompositeBlocks, applyToCompositeBlocksAsync, createPackData, createPickFlattedData } from "./utils";
 
