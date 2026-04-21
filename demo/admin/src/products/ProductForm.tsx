@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { filterByFragment, Loading, RHFForm, RHFTextField } from "@comet/admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useSaveConflict } from "@comet/cms-admin";
-import type { GQLProductInput, GQLProductMutationErrorCode, GQLProductMutationErrorCode } from "@src/graphql.generated";
+import type { GQLProductInput, GQLProductMutationErrorCode } from "@src/graphql.generated";
 import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { defineMessage, FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
