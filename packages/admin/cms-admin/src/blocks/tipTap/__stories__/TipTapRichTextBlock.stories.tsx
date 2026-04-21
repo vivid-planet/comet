@@ -179,6 +179,19 @@ export const BlockStyles: StoryObj<typeof BlockStylesStory> = {
                 { timeout: 3000 },
             );
         });
+
+        await step("Typing into a styled block preserves character order (cursor does not jump to start)", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.click(editor);
+            await userEvent.keyboard("hello");
+
+            await waitFor(
+                () => {
+                    expect(editor).toHaveTextContent("hello");
+                },
+                { timeout: 3000 },
+            );
+        });
     },
 };
 

@@ -1,13 +1,8 @@
 import Heading from "@tiptap/extension-heading";
 import { NodeViewContent, NodeViewWrapper, type ReactNodeViewProps, ReactNodeViewRenderer } from "@tiptap/react";
-import { type ComponentType, type HTMLAttributes, useContext } from "react";
+import { useContext } from "react";
 
 import { BlockStyleContext } from "../BlockStyleContext";
-
-function createNodeViewElement(Element: ComponentType<HTMLAttributes<HTMLElement>>) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return ({ as: _as, style: _style, ...props }: any) => <Element {...props} />;
-}
 
 function BlockStyleHeadingView({ node }: ReactNodeViewProps) {
     const blockStyles = useContext(BlockStyleContext);
@@ -16,10 +11,12 @@ function BlockStyleHeadingView({ node }: ReactNodeViewProps) {
     const tag = `h${node.attrs.level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
     if (config) {
-        const Wrapper = createNodeViewElement(config.element);
+        const Element = config.element;
         return (
-            <NodeViewWrapper as={Wrapper} data-block-style={styleName}>
-                <NodeViewContent />
+            <NodeViewWrapper>
+                <Element data-block-style={styleName}>
+                    <NodeViewContent />
+                </Element>
             </NodeViewWrapper>
         );
     }
@@ -49,8 +46,6 @@ export const BlockStyleHeading = Heading.extend({
     },
 
     addNodeView() {
-        // contentDOMElementTag is a valid runtime option but missing from TipTap's type definitions
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return ReactNodeViewRenderer(BlockStyleHeadingView, { contentDOMElementTag: "span" } as any);
+        return ReactNodeViewRenderer(BlockStyleHeadingView);
     },
 });
