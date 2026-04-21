@@ -36,6 +36,7 @@ import { FormattedMessage } from "react-intl";
 
 import { type BlockInterface, type LinkBlockInterface } from "../types";
 import { type TipTapBlockStyle, type TipTapBlockType, type TipTapSupports } from "./createTipTapRichTextBlock";
+import { getListDepth } from "./extensions/getListDepth";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {
@@ -189,15 +190,7 @@ export const TipTapToolbar = ({
 
             let canIndent = e.can().sinkListItem("listItem");
             if (canIndent && listLevelMax !== undefined) {
-                const { $from } = e.state.selection;
-                let listDepth = 0;
-                for (let d = $from.depth; d > 0; d--) {
-                    const nodeName = $from.node(d).type.name;
-                    if (nodeName === "bulletList" || nodeName === "orderedList") {
-                        listDepth++;
-                    }
-                }
-                canIndent = listDepth < listLevelMax;
+                canIndent = getListDepth(e) < listLevelMax;
             }
 
             return {
