@@ -14,6 +14,7 @@ import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
+import { Placeholder } from "./extensions/Placeholder";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 import { TipTapToolbar } from "./TipTapToolbar";
 
@@ -66,9 +67,15 @@ interface TipTapRichTextBlockInput {
     tipTapContent: JSONContent;
 }
 
+export interface TipTapPlaceholder {
+    name: string;
+    label: ReactNode;
+}
+
 export interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
+    placeholders?: TipTapPlaceholder[];
     link?: BlockInterface & LinkBlockInterface;
 }
 
@@ -140,16 +147,19 @@ const TipTapEditor = ({
     updateState,
     supports,
     blockStyles,
+    placeholders,
     linkBlock,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
+    placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
+    const hasPlaceholders = placeholders.length > 0;
 
     const editor = useEditor({
         extensions: [
@@ -171,6 +181,7 @@ const TipTapEditor = ({
             ...(supports.includes("sub") ? [Subscript] : []),
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
+            ...(hasPlaceholders ? [Placeholder] : []),
             ...(hasLink ? [CmsLink] : []),
         ],
         content: state.tipTapContent,
@@ -186,7 +197,7 @@ const TipTapEditor = ({
     return (
         <BlockStyleContext.Provider value={blockStyles}>
             <Box sx={{ border: `1px solid ${grey[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />
+                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} placeholders={placeholders} linkBlock={linkBlock} />
                 <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
                     <EditorContent editor={editor} />
                 </Box>
@@ -203,6 +214,7 @@ export const createTipTapRichTextBlock = (
 ): BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> => {
     let supports = options?.supports ?? defaultSupports;
     const blockStyles = options?.blockStyles ?? [];
+    const placeholders = options?.placeholders ?? [];
     const linkBlock = options?.link;
 
     // Auto-enable link support when a link block is provided
@@ -257,7 +269,16 @@ export const createTipTapRichTextBlock = (
         },
 
         AdminComponent: ({ state, updateState }) => {
-            return <TipTapEditor state={state} updateState={updateState} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />;
+            return (
+                <TipTapEditor
+                    state={state}
+                    updateState={updateState}
+                    supports={supports}
+                    blockStyles={blockStyles}
+                    placeholders={placeholders}
+                    linkBlock={linkBlock}
+                />
+            );
         },
 
         previewContent: (state) => {
