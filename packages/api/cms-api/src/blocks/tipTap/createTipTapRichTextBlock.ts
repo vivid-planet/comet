@@ -47,7 +47,7 @@ export type TipTapSupports =
 
 export type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
 
-export interface TipTapApiBlockStyle {
+export interface TipTapBlockStyle {
     name: string;
     appliesTo?: TipTapBlockType[];
 }
@@ -67,12 +67,12 @@ const defaultSupports: TipTapSupports[] = [
 
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
-    blockStyles?: TipTapApiBlockStyle[];
+    blockStyles?: TipTapBlockStyle[];
     indexSearchText?: boolean;
     link?: Block;
 }
 
-function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlockStyle[], hasLink: boolean): Extensions {
+function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockStyle[], hasLink: boolean): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
     return [
         StarterKit.configure({
