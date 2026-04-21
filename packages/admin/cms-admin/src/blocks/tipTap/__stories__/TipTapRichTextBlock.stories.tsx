@@ -141,16 +141,14 @@ export const BlockStyles: StoryObj<typeof BlockStylesStory> = {
     render: () => <BlockStylesStory />,
     play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready with block style dropdown", async () => {
+            // Both heading select and block style select show "Default"
             await waitFor(
                 () => {
-                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                    const comboboxes = canvas.getAllByRole("combobox");
+                    expect(comboboxes).toHaveLength(2);
                 },
                 { timeout: 5000 },
             );
-
-            // Both heading select and block style select show "Default"
-            const comboboxes = canvas.getAllByRole("combobox");
-            expect(comboboxes).toHaveLength(2);
 
             const defaults = canvas.getAllByText("Default");
             expect(defaults.length).toBeGreaterThanOrEqual(2);
@@ -163,14 +161,12 @@ export const BlockStyles: StoryObj<typeof BlockStylesStory> = {
 
             await waitFor(
                 () => {
-                    const introOption = within(document.body).getByText("Intro Text");
-                    expect(introOption).toBeInTheDocument();
+                    expect(within(document.body).getByRole("option", { name: "Intro Text" })).toBeInTheDocument();
                 },
                 { timeout: 3000 },
             );
 
-            const introOption = within(document.body).getByText("Intro Text");
-            await userEvent.click(introOption);
+            await userEvent.click(within(document.body).getByRole("option", { name: "Intro Text" }));
 
             await waitFor(
                 () => {

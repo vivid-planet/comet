@@ -1,5 +1,5 @@
+import { greyPalette } from "@comet/admin";
 import { Box } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
@@ -185,7 +185,7 @@ const TipTapEditor = ({
 
     return (
         <BlockStyleContext.Provider value={blockStyles}>
-            <Box sx={{ border: `1px solid ${grey[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
+            <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
                 <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />
                 <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
                     <EditorContent editor={editor} />

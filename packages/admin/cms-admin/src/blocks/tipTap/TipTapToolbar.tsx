@@ -1,4 +1,4 @@
-import { Tooltip } from "@comet/admin";
+import { greyPalette, Tooltip } from "@comet/admin";
 import {
     MoreHorizontal,
     RteBold,
@@ -29,7 +29,6 @@ import {
     selectClasses,
     type SvgIconProps,
 } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import { type Editor, useEditorState } from "@tiptap/react";
 import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type RefAttributes, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -49,13 +48,13 @@ const toolbarButtonSx = {
     border: "1px solid transparent",
     boxSizing: "border-box",
     transition: "background-color 200ms, border-color 200ms, color 200ms",
-    color: grey[600],
+    color: greyPalette[600],
     "&:hover": {
-        backgroundColor: grey[200],
-        borderColor: grey[400],
+        backgroundColor: greyPalette[200],
+        borderColor: greyPalette[400],
     },
     "&:disabled": {
-        color: grey[300],
+        color: greyPalette[300],
         "&, &:hover": {
             backgroundColor: "transparent",
             borderColor: "transparent",
@@ -65,7 +64,7 @@ const toolbarButtonSx = {
 
 const toolbarButtonSelectedSx = {
     "&:not(:disabled), &:not(:disabled):hover": {
-        borderColor: grey[400],
+        borderColor: greyPalette[400],
         backgroundColor: "white",
     },
 } as const;
@@ -114,7 +113,7 @@ const toolbarSlotSx = {
     py: "5px",
     pr: "6px",
     mr: "5px",
-    borderRight: `1px solid ${grey[300]}`,
+    borderRight: `1px solid ${greyPalette[300]}`,
     "&:last-child": {
         mr: 0,
         pr: 0,
@@ -137,7 +136,7 @@ const selectFormControlSx = {
 const selectSx = {
     [`& .${selectClasses.select}.${inputBaseClasses.input}`]: {
         minHeight: 0,
-        color: grey[600],
+        color: greyPalette[600],
         minWidth: 180,
         lineHeight: "24px",
         fontSize: 14,
@@ -249,8 +248,8 @@ export const TipTapToolbar = ({
             sx={{
                 display: "flex",
                 flexWrap: "wrap",
-                borderTop: `1px solid ${grey[100]}`,
-                backgroundColor: grey[100],
+                borderTop: `1px solid ${greyPalette[100]}`,
+                backgroundColor: greyPalette[100],
                 px: "6px",
             }}
         >
