@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { ArrayType, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { FullTextType } from "@mikro-orm/postgresql";
 import { Field, ObjectType } from "@nestjs/graphql";
 
@@ -29,4 +29,7 @@ export class EntityInfoObject {
 
     @Property({ type: FullTextType })
     fullText: string;
+
+    @Property({ type: ArrayType, nullable: true })
+    requiredPermission?: string[];
 }

@@ -94,6 +94,7 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
 @EntityInfo<Manufacturer>({
     name: "name",
     fullText: "fullText",
+    requiredPermission: "manufacturers",
 })
 @Entity()
 @ObjectType()
