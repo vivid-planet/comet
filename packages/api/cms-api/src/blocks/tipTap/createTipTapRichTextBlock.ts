@@ -26,6 +26,7 @@ import { type SearchText, type WeightedSearchText } from "../search/get-search-t
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
+import { InlineStyle } from "./extensions/InlineStyle";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 
@@ -52,6 +53,10 @@ export interface TipTapApiBlockStyle {
     appliesTo?: TipTapBlockType[];
 }
 
+export interface TipTapApiInlineStyle {
+    name: string;
+}
+
 const defaultSupports: TipTapSupports[] = [
     "bold",
     "italic",
@@ -68,12 +73,19 @@ const defaultSupports: TipTapSupports[] = [
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapApiBlockStyle[];
+    inlineStyles?: TipTapApiInlineStyle[];
     indexSearchText?: boolean;
     link?: Block;
 }
 
-function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlockStyle[], hasLink: boolean): Extensions {
+function buildExtensions(
+    supports: TipTapSupports[],
+    blockStyles: TipTapApiBlockStyle[],
+    inlineStyles: TipTapApiInlineStyle[],
+    hasLink: boolean,
+): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
+    const hasInlineStyles = inlineStyles.length > 0;
     return [
         StarterKit.configure({
             bold: supports.includes("bold") ? {} : false,
@@ -89,6 +101,7 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlock
         }),
         ...(hasBlockStyles ? [BlockStyleParagraph] : []),
         ...(hasBlockStyles && supports.includes("heading") ? [BlockStyleHeading] : []),
+        ...(hasInlineStyles ? [InlineStyle] : []),
         ...(supports.includes("sup") ? [Superscript] : []),
         ...(supports.includes("sub") ? [Subscript] : []),
         ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
@@ -236,14 +249,20 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
 }
 
 export function createTipTapRichTextBlock(
-    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock }: CreateTipTapRichTextBlockOptions = {},
+    {
+        supports = defaultSupports,
+        blockStyles = [],
+        inlineStyles = [],
+        indexSearchText = true,
+        link: LinkBlock,
+    }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, blockStyles, hasLink);
+    const extensions = buildExtensions(supports, blockStyles, inlineStyles, hasLink);
     const schema = getSchema(extensions);
 
     @BlockDataMigrationVersion(migrate.version)

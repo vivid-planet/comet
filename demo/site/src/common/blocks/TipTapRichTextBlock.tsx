@@ -33,6 +33,17 @@ function renderMark(mark: { type: string; attrs?: Record<string, any> }, childre
             ) : (
                 <>{children}</>
             );
+        case "inlineStyle": {
+            const inlineStyleType = mark.attrs?.type as string | undefined;
+            switch (inlineStyleType) {
+                case "highlight":
+                    return <span style={{ backgroundColor: "#fff3cd" }}>{children}</span>;
+                case "small":
+                    return <span style={{ fontSize: 12 }}>{children}</span>;
+                default:
+                    return <>{children}</>;
+            }
+        }
         default:
             return children;
     }

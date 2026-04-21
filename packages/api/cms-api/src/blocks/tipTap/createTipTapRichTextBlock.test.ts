@@ -342,6 +342,90 @@ describe("createTipTapRichTextBlock validation", () => {
         });
     });
 
+    describe("schema with inline styles", () => {
+        const block = createTipTapRichTextBlock(
+            {
+                supports: ["bold"],
+                inlineStyles: [{ name: "highlight" }, { name: "small" }],
+            },
+            "TestInlineStyles",
+        );
+
+        it("should accept text with an inlineStyle mark", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [{ type: "text", marks: [{ type: "inlineStyle", attrs: { type: "highlight" } }], text: "Styled text" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept text with inlineStyle and bold marks combined", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [
+                                {
+                                    type: "text",
+                                    marks: [{ type: "bold" }, { type: "inlineStyle", attrs: { type: "small" } }],
+                                    text: "Bold and small",
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept text with inlineStyle mark with null type", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [{ type: "text", marks: [{ type: "inlineStyle", attrs: { type: null } }], text: "Default" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+    });
+
+    describe("schema without inline styles rejects inlineStyle mark", () => {
+        const block = createTipTapRichTextBlock({ supports: ["bold"] }, "TestNoInlineStyles");
+
+        it("should reject an inlineStyle mark when inlineStyles is not configured", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [{ type: "text", marks: [{ type: "inlineStyle", attrs: { type: "highlight" } }], text: "Styled" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+    });
+
     describe("minimal schema (no supports)", () => {
         const block = createTipTapRichTextBlock({ supports: [] }, "TestMinimal");
 

@@ -329,3 +329,104 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         });
     },
 };
+
+const InlineStylesBlock = createTipTapRichTextBlock({
+    inlineStyles: [
+        {
+            name: "highlight",
+            label: "Highlight",
+            render: (props: HTMLAttributes<HTMLElement>) => <span style={{ backgroundColor: "#fff3cd" }} {...props} />,
+        },
+        {
+            name: "small",
+            label: "Small Text",
+            render: (props: HTMLAttributes<HTMLElement>) => <span style={{ fontSize: 12 }} {...props} />,
+        },
+        {
+            name: "code",
+            label: "Code",
+            render: (props: HTMLAttributes<HTMLElement>) => (
+                <code style={{ backgroundColor: "#f0f0f0", padding: "2px 4px", borderRadius: 2, fontFamily: "monospace" }} {...props} />
+            ),
+        },
+    ],
+});
+
+function InlineStylesStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(InlineStylesBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <InlineStylesBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const InlineStyles: StoryObj<typeof InlineStylesStory> = {
+    render: () => <InlineStylesStory />,
+    play: async ({ canvas, step }) => {
+        await step("Editor is ready with inline style dropdown", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+
+            // Inline style select shows "Default"
+            const comboboxes = canvas.getAllByRole("combobox");
+            expect(comboboxes.length).toBeGreaterThanOrEqual(1);
+        });
+    },
+};
+
+const InlineStylesWithBlockStylesBlock = createTipTapRichTextBlock({
+    blockStyles: [
+        {
+            name: "intro",
+            label: "Intro Text",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 20, fontStyle: "italic" }} {...props} />,
+        },
+    ],
+    inlineStyles: [
+        {
+            name: "highlight",
+            label: "Highlight",
+            render: (props: HTMLAttributes<HTMLElement>) => <span style={{ backgroundColor: "#fff3cd" }} {...props} />,
+        },
+        {
+            name: "small",
+            label: "Small Text",
+            render: (props: HTMLAttributes<HTMLElement>) => <span style={{ fontSize: 12 }} {...props} />,
+        },
+    ],
+});
+
+function InlineStylesWithBlockStylesStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(InlineStylesWithBlockStylesBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <InlineStylesWithBlockStylesBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const InlineStylesWithBlockStyles: StoryObj<typeof InlineStylesWithBlockStylesStory> = {
+    render: () => <InlineStylesWithBlockStylesStory />,
+    play: async ({ canvas, step }) => {
+        await step("Editor is ready with both block style and inline style dropdowns", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+
+            // Should have heading select, block style select, and inline style select
+            const comboboxes = canvas.getAllByRole("combobox");
+            expect(comboboxes.length).toBeGreaterThanOrEqual(3);
+        });
+    },
+};
