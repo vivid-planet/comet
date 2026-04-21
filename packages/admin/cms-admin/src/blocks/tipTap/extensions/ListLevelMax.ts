@@ -4,7 +4,7 @@ import { type EditorView } from "@tiptap/pm/view";
 
 import { getListDepth } from "./getListDepth";
 
-function stripListNesting(html: string, maxLevels: number): string {
+function stripListNesting(html: string, allowedAdditionalLevels: number): string {
     if (typeof document === "undefined") {
         return html;
     }
@@ -15,7 +15,7 @@ function stripListNesting(html: string, maxLevels: number): string {
     function processElement(element: Element, listDepth: number): void {
         Array.from(element.children).forEach((child) => {
             const isListNode = child.tagName === "UL" || child.tagName === "OL";
-            if (isListNode && listDepth >= maxLevels) {
+            if (isListNode && listDepth >= allowedAdditionalLevels) {
                 child.remove();
             } else {
                 processElement(child, isListNode ? listDepth + 1 : listDepth);
