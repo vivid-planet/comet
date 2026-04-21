@@ -1,6 +1,6 @@
 import Paragraph from "@tiptap/extension-paragraph";
 import { NodeViewContent, NodeViewWrapper, type ReactNodeViewProps, ReactNodeViewRenderer } from "@tiptap/react";
-import { type ComponentType, type HTMLAttributes, useContext } from "react";
+import { type ComponentType, type HTMLAttributes, useContext, useMemo } from "react";
 
 import { BlockStyleContext } from "../BlockStyleContext";
 
@@ -17,8 +17,12 @@ function BlockStyleParagraphView({ node }: ReactNodeViewProps) {
     const styleName = node.attrs.blockStyle as string | null;
     const config = styleName ? blockStyles.find((s) => s.name === styleName) : undefined;
 
-    if (config) {
-        const Wrapper = createNodeViewElement(config.element);
+    // Memoize to keep a stable component reference so React doesn't remount the
+    // wrapper element on every re-render (which would reset the cursor position).
+    const element = config?.element;
+    const Wrapper = useMemo(() => (element ? createNodeViewElement(element) : undefined), [element]);
+
+    if (Wrapper) {
         return (
             <NodeViewWrapper as={Wrapper} data-block-style={styleName}>
                 <NodeViewContent />
