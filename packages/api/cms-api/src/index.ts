@@ -204,6 +204,8 @@ export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
 export { EntityInfo } from "./entity-info/entity-info.decorator";
+export type { EntityInfoModuleOptions } from "./entity-info/entity-info.module";
+export { EntityInfoModule } from "./entity-info/entity-info.module";
 export { FileUpload } from "./file-uploads/entities/file-upload.entity";
 export { FileUploadsModule } from "./file-uploads/file-uploads.module";
 export { FileUploadsService } from "./file-uploads/file-uploads.service";

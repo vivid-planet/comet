@@ -11,6 +11,7 @@ import {
     CronJobsModule,
     DamModule,
     DependenciesModule,
+    EntityInfoModule,
     FileUploadsModule,
     ImgproxyModule,
     KubernetesModule,
@@ -134,6 +135,7 @@ export class AppModule {
                 }),
                 BlocksModule,
                 DependenciesModule,
+                EntityInfoModule,
                 KubernetesModule.register({
                     helmRelease: config.helmRelease,
                 }),

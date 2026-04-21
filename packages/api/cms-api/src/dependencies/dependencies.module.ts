@@ -1,7 +1,6 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Global, Module } from "@nestjs/common";
 
-import { EntityInfoModule } from "../entity-info/entity-info.module";
 import { DependenciesService } from "./dependencies.service";
 import { DiscoverService } from "./discover.service";
 import { BlockIndexDependencyObject } from "./entities/block-index-dependency.object";
@@ -9,7 +8,7 @@ import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 
 @Global()
 @Module({
-    imports: [MikroOrmModule.forFeature([BlockIndexRefresh, BlockIndexDependencyObject]), EntityInfoModule],
+    imports: [MikroOrmModule.forFeature([BlockIndexRefresh, BlockIndexDependencyObject])],
     providers: [DiscoverService, DependenciesService],
     exports: [DiscoverService, DependenciesService],
 })

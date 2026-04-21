@@ -1,5 +1,5 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Module } from "@nestjs/common";
+import { DynamicModule, Global, Module } from "@nestjs/common";
 
 import { EntityInfoObject } from "./entity-info.object";
 import { EntityInfoService } from "./entity-info.service";
@@ -9,6 +9,7 @@ export interface EntityInfoModuleOptions {
     fullText?: boolean;
 }
 
+@Global()
 @Module({
     imports: [MikroOrmModule.forFeature([EntityInfoObject])],
     providers: [EntityInfoService],
