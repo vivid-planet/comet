@@ -329,3 +329,54 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         });
     },
 };
+
+const MaxBlocksBlock = createTipTapRichTextBlock({ maxBlocks: 1, supports: ["bold"] });
+
+function MaxBlocksStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(MaxBlocksBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <MaxBlocksBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const MaxBlocks: StoryObj<typeof MaxBlocksStory> = {
+    render: () => <MaxBlocksStory />,
+    play: async ({ canvas, step }) => {
+        await step("Editor is ready", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Type text and press Enter — new block should be removed (maxBlocks: 1)", async () => {
+            const textbox = canvas.getByRole("textbox");
+            textbox.focus();
+            document.execCommand("insertText", false, "First block");
+
+            // Simulate Enter to create a new block
+            const enterEvent = new KeyboardEvent("keydown", { key: "Enter", code: "Enter", bubbles: true });
+            textbox.dispatchEvent(enterEvent);
+
+            // Wait for the editor to process
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            // Verify state still has only 1 top-level block
+            await waitFor(
+                () => {
+                    const statePreview = canvas.getByText(/"type":\s*"doc"/, { exact: false });
+                    const stateText = statePreview.textContent ?? "";
+                    const parsed = JSON.parse(stateText);
+                    const tipTapContent = parsed.tipTapContent;
+                    expect(tipTapContent.content.length).toBeLessThanOrEqual(1);
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};

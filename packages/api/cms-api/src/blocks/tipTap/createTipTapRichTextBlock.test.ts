@@ -551,4 +551,73 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(1);
         });
     });
+
+    describe("maxBlocks constraint", () => {
+        const block = createTipTapRichTextBlock({ maxBlocks: 2 }, "TestMaxBlocks");
+
+        it("should accept content within the maxBlocks limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "First" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Second" }] },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept content with fewer blocks than the limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [{ type: "paragraph", content: [{ type: "text", text: "Only one" }] }],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should reject content exceeding the maxBlocks limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "First" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Second" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Third" }] },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+            expect(errors[0].property).toBe("tipTapContent");
+        });
+
+        it("should accept an empty document (1 empty paragraph) with maxBlocks: 1", async () => {
+            const singleBlock = createTipTapRichTextBlock({ maxBlocks: 1 }, "TestMaxBlocksSingle");
+            const input = singleBlock.blockInputFactory({
+                tipTapContent: { type: "doc", content: [{ type: "paragraph" }] },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should reject two blocks when maxBlocks is 1", async () => {
+            const singleBlock = createTipTapRichTextBlock({ maxBlocks: 1 }, "TestMaxBlocksSingle2");
+            const input = singleBlock.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "First" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Second" }] },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+    });
 });

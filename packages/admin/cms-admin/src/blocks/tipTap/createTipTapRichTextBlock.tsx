@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { grey } from "@mui/material/colors";
+import { Extension } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
@@ -70,6 +71,7 @@ interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
     link?: BlockInterface & LinkBlockInterface;
+    maxBlocks?: number;
 }
 
 function getPlainTextFromContent(content: JSONContent): string {
@@ -141,12 +143,14 @@ const TipTapEditor = ({
     supports,
     blockStyles,
     linkBlock,
+    maxBlocks,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    maxBlocks?: number;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
@@ -172,6 +176,33 @@ const TipTapEditor = ({
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasLink ? [CmsLink] : []),
+            ...(maxBlocks !== undefined
+                ? [
+                      Extension.create({
+                          name: "maxBlocks",
+                          addStorage() {
+                              return { limit: maxBlocks };
+                          },
+                          onTransaction({ transaction }) {
+                              if (!transaction.docChanged) {
+                                  return;
+                              }
+                              const { doc } = transaction;
+                              const limit = this.storage.limit as number;
+                              if (doc.childCount > limit) {
+                                  // Calculate position after the last allowed block
+                                  const tr = this.editor.state.tr;
+                                  let pos = 0;
+                                  for (let i = 0; i < limit; i++) {
+                                      pos += doc.child(i).nodeSize;
+                                  }
+                                  tr.delete(pos, doc.content.size);
+                                  this.editor.view.dispatch(tr);
+                              }
+                          },
+                      }),
+                  ]
+                : []),
         ],
         content: state.tipTapContent,
         onUpdate: ({ editor }) => {
@@ -204,6 +235,7 @@ export const createTipTapRichTextBlock = (
     let supports = options?.supports ?? defaultSupports;
     const blockStyles = options?.blockStyles ?? [];
     const linkBlock = options?.link;
+    const maxBlocks = options?.maxBlocks;
 
     // Auto-enable link support when a link block is provided
     if (linkBlock && !supports.includes("link")) {
@@ -257,7 +289,16 @@ export const createTipTapRichTextBlock = (
         },
 
         AdminComponent: ({ state, updateState }) => {
-            return <TipTapEditor state={state} updateState={updateState} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />;
+            return (
+                <TipTapEditor
+                    state={state}
+                    updateState={updateState}
+                    supports={supports}
+                    blockStyles={blockStyles}
+                    linkBlock={linkBlock}
+                    maxBlocks={maxBlocks}
+                />
+            );
         },
 
         previewContent: (state) => {

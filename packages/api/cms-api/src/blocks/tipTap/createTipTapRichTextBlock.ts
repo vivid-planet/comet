@@ -70,6 +70,7 @@ export interface CreateTipTapRichTextBlockOptions {
     blockStyles?: TipTapApiBlockStyle[];
     indexSearchText?: boolean;
     link?: Block;
+    maxBlocks?: number;
 }
 
 function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapApiBlockStyle[], hasLink: boolean): Extensions {
@@ -168,7 +169,7 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: ValidationOptions) {
+function IsTipTapContent(schema: Schema, { linkBlock, maxBlocks }: { linkBlock?: Block; maxBlocks?: number }, validationOptions?: ValidationOptions) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
@@ -188,6 +189,11 @@ function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: 
                         }
                         const node = ProseMirrorNode.fromJSON(schema, value);
                         node.check();
+
+                        // Check maxBlocks constraint on top-level content nodes
+                        if (maxBlocks !== undefined && node.childCount > maxBlocks) {
+                            return false;
+                        }
 
                         // Validate link mark data
                         if (linkBlock) {
@@ -236,7 +242,7 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
 }
 
 export function createTipTapRichTextBlock(
-    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock }: CreateTipTapRichTextBlockOptions = {},
+    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock, maxBlocks }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
@@ -279,7 +285,7 @@ export function createTipTapRichTextBlock(
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, LinkBlock)
+        @IsTipTapContent(schema, { linkBlock: LinkBlock, maxBlocks })
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 
