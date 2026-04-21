@@ -45,7 +45,16 @@ const defaultSupports: TipTapSupports[] = [
     "soft-hyphen",
 ];
 
-export type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
+export type TipTapBlockType =
+    | "paragraph"
+    | "heading-1"
+    | "heading-2"
+    | "heading-3"
+    | "heading-4"
+    | "heading-5"
+    | "heading-6"
+    | "ordered-list"
+    | "unordered-list";
 
 export interface TipTapBlockStyle {
     name: string;

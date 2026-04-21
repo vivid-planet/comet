@@ -176,6 +176,12 @@ export const TipTapToolbar = ({
                 return "paragraph";
             })();
             const activeTipTapBlockType: TipTapBlockType = (() => {
+                if (e.isActive("orderedList")) {
+                    return "ordered-list";
+                }
+                if (e.isActive("bulletList")) {
+                    return "unordered-list";
+                }
                 for (let level = 1; level <= 6; level++) {
                     if (e.isActive("heading", { level })) {
                         return `heading-${level}` as TipTapBlockType;

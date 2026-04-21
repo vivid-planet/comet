@@ -329,3 +329,192 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         });
     },
 };
+
+const ListBlockStylesBlock = createTipTapRichTextBlock({
+    supports: ["bold", "ordered-list", "unordered-list", "heading"],
+    blockStyles: [
+        {
+            name: "intro",
+            label: "Intro Text",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 20, fontStyle: "italic" }} {...props} />,
+        },
+        {
+            name: "list-large",
+            label: "List Large",
+            appliesTo: ["ordered-list", "unordered-list"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 18, lineHeight: "26px" }} {...props} />,
+        },
+        {
+            name: "list-small",
+            label: "List Small",
+            appliesTo: ["ordered-list", "unordered-list"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 14, lineHeight: "20px" }} {...props} />,
+        },
+        {
+            name: "ol-only",
+            label: "Numbered Style",
+            appliesTo: ["ordered-list"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 16, fontWeight: 600 }} {...props} />,
+        },
+        {
+            name: "universal",
+            label: "Universal",
+            element: (props: HTMLAttributes<HTMLElement>) => <div style={{ backgroundColor: "#e8f5e9", padding: 4 }} {...props} />,
+        },
+    ],
+});
+
+function ListBlockStylesStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(ListBlockStylesBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <ListBlockStylesBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
+    render: () => <ListBlockStylesStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Editor is ready with two comboboxes", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                    expect(canvas.getAllByRole("combobox")).toHaveLength(2);
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Paragraph mode: block style dropdown shows paragraph-applicable styles only", async () => {
+            const blockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(blockStyleSelect);
+
+            await waitFor(
+                () => {
+                    const body = within(document.body);
+                    expect(body.getByText("Intro Text")).toBeInTheDocument();
+                    expect(body.getByText("Universal")).toBeInTheDocument();
+                    expect(body.queryByText("List Large")).not.toBeInTheDocument();
+                    expect(body.queryByText("List Small")).not.toBeInTheDocument();
+                    expect(body.queryByText("Numbered Style")).not.toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+
+            await userEvent.keyboard("{Escape}");
+        });
+
+        await step("Click the editor, then type text so list toggle works", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.click(editor);
+            await userEvent.keyboard("List item text");
+        });
+
+        await step("Toggle bullet list via keyboard shortcut", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.click(editor);
+            // Ctrl+Shift+8 toggles bullet list in TipTap
+            await userEvent.keyboard("{Control>}{Shift>}8{/Shift}{/Control}");
+
+            await waitFor(
+                () => {
+                    expect(editor.querySelector("ul")).toBeTruthy();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Unordered list mode: block style dropdown shows UL-applicable styles", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getAllByRole("combobox").length).toBeGreaterThanOrEqual(2);
+                },
+                { timeout: 3000 },
+            );
+
+            const blockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(blockStyleSelect);
+
+            await waitFor(
+                () => {
+                    const body = within(document.body);
+                    expect(body.getByText("List Large")).toBeInTheDocument();
+                    expect(body.getByText("List Small")).toBeInTheDocument();
+                    expect(body.getByText("Universal")).toBeInTheDocument();
+                    expect(body.queryByText("Intro Text")).not.toBeInTheDocument();
+                    expect(body.queryByText("Numbered Style")).not.toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+
+            await userEvent.keyboard("{Escape}");
+        });
+
+        await step("Switch to ordered list via keyboard shortcut", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.click(editor);
+            // Ctrl+Shift+7 toggles ordered list in TipTap
+            await userEvent.keyboard("{Control>}{Shift>}7{/Shift}{/Control}");
+
+            await waitFor(
+                () => {
+                    expect(editor.querySelector("ol")).toBeTruthy();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Ordered list mode: block style dropdown includes OL-only style", async () => {
+            const blockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(blockStyleSelect);
+
+            await waitFor(
+                () => {
+                    const body = within(document.body);
+                    expect(body.getByText("List Large")).toBeInTheDocument();
+                    expect(body.getByText("List Small")).toBeInTheDocument();
+                    expect(body.getByText("Universal")).toBeInTheDocument();
+                    expect(body.getByText("Numbered Style")).toBeInTheDocument();
+                    expect(body.queryByText("Intro Text")).not.toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+
+            await userEvent.keyboard("{Escape}");
+        });
+
+        await step("Select 'List Large' style", async () => {
+            const blockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(blockStyleSelect);
+
+            await waitFor(
+                () => {
+                    expect(within(document.body).getByText("List Large")).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+
+            await userEvent.click(within(document.body).getByText("List Large"));
+
+            await waitFor(
+                () => {
+                    expect(canvas.getAllByRole("combobox")[1]).toHaveTextContent("List Large");
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Verify 'list-large' block style attribute is applied in the editor", async () => {
+            await waitFor(
+                () => {
+                    const styledEl = document.querySelector('[data-block-style="list-large"]');
+                    expect(styledEl).toBeTruthy();
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};

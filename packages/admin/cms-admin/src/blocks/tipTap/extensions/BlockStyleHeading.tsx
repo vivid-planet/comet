@@ -1,6 +1,6 @@
 import Heading from "@tiptap/extension-heading";
 import { NodeViewContent, NodeViewWrapper, type ReactNodeViewProps, ReactNodeViewRenderer } from "@tiptap/react";
-import { type ComponentType, type HTMLAttributes, useContext } from "react";
+import { type ComponentType, type HTMLAttributes, useContext, useMemo } from "react";
 
 import { BlockStyleContext } from "../BlockStyleContext";
 
@@ -15,8 +15,12 @@ function BlockStyleHeadingView({ node }: ReactNodeViewProps) {
     const config = styleName ? blockStyles.find((s) => s.name === styleName) : undefined;
     const tag = `h${node.attrs.level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
-    if (config) {
-        const Wrapper = createNodeViewElement(config.element);
+    // Memoize to keep a stable component reference so React doesn't remount the
+    // wrapper element on every re-render (which would reset the cursor position).
+    const element = config?.element;
+    const Wrapper = useMemo(() => (element ? createNodeViewElement(element) : undefined), [element]);
+
+    if (Wrapper) {
         return (
             <NodeViewWrapper as={Wrapper} data-block-style={styleName}>
                 <NodeViewContent />
