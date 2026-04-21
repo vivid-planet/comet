@@ -148,8 +148,10 @@ function GlobalSearch() {
             history.push(url);
             setOpen(false);
             setSearchText("");
-        } catch {
-            // Could not resolve path
+        } catch (error) {
+            if (process.env.NODE_ENV === "development") {
+                console.error(`Could not resolve path for ${entityName} (${id}):`, error);
+            }
         }
     };
 
