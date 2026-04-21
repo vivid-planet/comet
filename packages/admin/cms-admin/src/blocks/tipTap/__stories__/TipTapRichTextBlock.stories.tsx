@@ -364,7 +364,7 @@ function InlineStylesStory() {
 
 export const InlineStyles: StoryObj<typeof InlineStylesStory> = {
     render: () => <InlineStylesStory />,
-    play: async ({ canvas, step }) => {
+    play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready with inline style dropdown", async () => {
             await waitFor(
                 () => {
@@ -376,6 +376,92 @@ export const InlineStyles: StoryObj<typeof InlineStylesStory> = {
             // Inline style select shows "Default"
             const comboboxes = canvas.getAllByRole("combobox");
             expect(comboboxes.length).toBeGreaterThanOrEqual(1);
+        });
+
+        await step("Inline style dropdown is disabled when selection is empty", async () => {
+            // The last combobox is the inline style select
+            const comboboxes = canvas.getAllByRole("combobox");
+            const inlineStyleSelect = comboboxes[comboboxes.length - 1];
+            expect(inlineStyleSelect).toHaveAttribute("aria-disabled", "true");
+        });
+
+        await step("Type text and select it", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.click(editor);
+            await userEvent.type(editor, "Hello World");
+
+            // Select all text with keyboard
+            await userEvent.keyboard("{Control>}a{/Control}");
+        });
+
+        await step("Inline style dropdown is enabled after selecting text", async () => {
+            await waitFor(
+                () => {
+                    const comboboxes = canvas.getAllByRole("combobox");
+                    const inlineStyleSelect = comboboxes[comboboxes.length - 1];
+                    expect(inlineStyleSelect).not.toHaveAttribute("aria-disabled", "true");
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Select 'Highlight' inline style", async () => {
+            const comboboxes = canvas.getAllByRole("combobox");
+            const inlineStyleSelect = comboboxes[comboboxes.length - 1];
+            await userEvent.click(inlineStyleSelect);
+
+            await waitFor(
+                () => {
+                    expect(within(document.body).getByText("Highlight")).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+            await userEvent.click(within(document.body).getByText("Highlight"));
+
+            await waitFor(
+                () => {
+                    const comboboxes = canvas.getAllByRole("combobox");
+                    const inlineStyleSelect = comboboxes[comboboxes.length - 1];
+                    expect(inlineStyleSelect).toHaveTextContent("Highlight");
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Verify highlight inline style is applied via data attribute", async () => {
+            await waitFor(
+                () => {
+                    const styledEl = document.querySelector('[data-inline-style="highlight"]');
+                    expect(styledEl).toBeTruthy();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Reset to Default inline style", async () => {
+            const comboboxes = canvas.getAllByRole("combobox");
+            const inlineStyleSelect = comboboxes[comboboxes.length - 1];
+            await userEvent.click(inlineStyleSelect);
+
+            await waitFor(
+                () => {
+                    // Find the "Default" option in the inline style dropdown
+                    const defaults = within(document.body).getAllByText("Default");
+                    expect(defaults.length).toBeGreaterThanOrEqual(1);
+                },
+                { timeout: 3000 },
+            );
+
+            // Click the last "Default" option (from inline style dropdown)
+            const defaults = within(document.body).getAllByText("Default");
+            await userEvent.click(defaults[defaults.length - 1]);
+
+            await waitFor(
+                () => {
+                    expect(document.querySelector('[data-inline-style="highlight"]')).toBeNull();
+                },
+                { timeout: 3000 },
+            );
         });
     },
 };
