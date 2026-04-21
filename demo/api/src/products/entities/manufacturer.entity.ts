@@ -93,7 +93,7 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
 
 @EntityInfo<Manufacturer>({
     name: "name",
-    fullText: "searchable",
+    fullText: "fullText",
 })
 @Entity()
 @ObjectType()
@@ -139,5 +139,5 @@ export class Manufacturer extends BaseEntity {
             };
         },
     })
-    searchable?: string;
+    fullText?: string;
 }

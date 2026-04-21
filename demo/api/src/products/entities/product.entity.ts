@@ -93,7 +93,7 @@ export class ProductPriceRange {
     name: "title",
     secondaryInformation: "manufacturer.name",
     visible: { status: { $eq: ProductStatus.Published } },
-    fullText: "searchable",
+    fullText: "fullText",
 })
 @ObjectType()
 @Entity()
@@ -256,5 +256,5 @@ export class Product extends BaseEntity implements ImportTargetInterface {
             };
         },
     })
-    searchable?: string;
+    fullText?: string;
 }

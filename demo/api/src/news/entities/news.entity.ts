@@ -61,7 +61,7 @@ export class NewsContentScope {
     language: string;
 }
 
-@EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } }, fullText: "searchable" })
+@EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } }, fullText: "fullText" })
 @RootBlockEntity()
 @ObjectType()
 @Entity()
@@ -129,5 +129,5 @@ export class News extends BaseEntity {
         type: new FullTextType(),
         onUpdate: (news) => mikroOrmFullText({ A: news.title, D: news.slug }, news.content),
     })
-    searchable?: string;
+    fullText?: string;
 }
