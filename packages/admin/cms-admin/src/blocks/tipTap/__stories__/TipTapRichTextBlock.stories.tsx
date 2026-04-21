@@ -456,5 +456,27 @@ export const ListLevelMax: StoryObj<typeof ListLevelMaxStory> = {
                 { timeout: 3000 },
             );
         });
+
+        await step("Clipboard paste does not create list nesting exceeding max depth", async () => {
+            const textbox = canvas.getByRole("textbox");
+            // Click the max-depth item
+            const nestedText = within(textbox).getByText("Level 2 (max)");
+            await userEvent.click(nestedText);
+
+            // Dispatch a paste event containing nested list HTML that would exceed the max depth
+            const clipboardData = new DataTransfer();
+            clipboardData.setData("text/html", "<ul><li>pasted<ul><li>would be level 3</li></ul></li></ul>");
+            clipboardData.setData("text/plain", "pasted would be level 3");
+            textbox.dispatchEvent(new ClipboardEvent("paste", { clipboardData, bubbles: true, cancelable: true }));
+
+            await waitFor(
+                () => {
+                    // Triple-nested lists (ul/ol > ul/ol > ul/ol) must not appear
+                    const tripleNested = textbox.querySelectorAll("ul ul ul, ol ol ol, ul ul ol, ul ol ul, ol ul ul, ol ul ol, ol ol ul");
+                    expect(tripleNested.length).toBe(0);
+                },
+                { timeout: 3000 },
+            );
+        });
     },
 };
