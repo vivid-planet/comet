@@ -13,6 +13,7 @@ import { BlockStyleContext } from "./BlockStyleContext";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
+import { ListLevelMax } from "./extensions/ListLevelMax";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 import { TipTapToolbar } from "./TipTapToolbar";
@@ -175,6 +176,7 @@ const TipTapEditor = ({
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasLink ? [CmsLink] : []),
+            ...(listLevelMax !== undefined ? [ListLevelMax.configure({ listLevelMax })] : []),
         ],
         content: state.tipTapContent,
         onUpdate: ({ editor }) => {

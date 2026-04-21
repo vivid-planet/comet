@@ -400,6 +400,27 @@ export const ListLevelMax: StoryObj<typeof ListLevelMaxStory> = {
             );
         });
 
+        await step("Tab key does not indent at max depth", async () => {
+            const textbox = canvas.getByRole("textbox");
+            // Ensure we're still on the max-depth item
+            const nestedText = within(textbox).getByText("Level 2 (max)");
+            await userEvent.click(nestedText);
+
+            // Count nested lists before Tab (should be 2 levels: outer bulletList > inner bulletList)
+            const nestedListsBefore = textbox.querySelectorAll("ul ul, ol ol, ul ol, ol ul").length;
+
+            await userEvent.keyboard("{Tab}");
+
+            // After Tab, nesting should not have increased
+            await waitFor(
+                () => {
+                    const nestedListsAfter = textbox.querySelectorAll("ul ul, ol ol, ul ol, ol ul").length;
+                    expect(nestedListsAfter).toBe(nestedListsBefore);
+                },
+                { timeout: 3000 },
+            );
+        });
+
         await step("Click on 'Level 1 - second' - indent should be enabled (below max depth)", async () => {
             const textbox = canvas.getByRole("textbox");
             const secondItem = within(textbox).getByText("Level 1 - second");
@@ -413,6 +434,24 @@ export const ListLevelMax: StoryObj<typeof ListLevelMaxStory> = {
                     // With supports: ["ordered-list", "unordered-list"], buttons are: OL, UL, Indent+, Indent-
                     const indentButton = buttons[2];
                     expect(indentButton).not.toBeDisabled();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Tab key indents at level below max", async () => {
+            const textbox = canvas.getByRole("textbox");
+
+            // Count nested lists before Tab
+            const nestedListsBefore = textbox.querySelectorAll("ul ul, ol ol, ul ol, ol ul").length;
+
+            await userEvent.keyboard("{Tab}");
+
+            // After Tab, nesting should have increased by 1
+            await waitFor(
+                () => {
+                    const nestedListsAfter = textbox.querySelectorAll("ul ul, ol ol, ul ol, ol ul").length;
+                    expect(nestedListsAfter).toBe(nestedListsBefore + 1);
                 },
                 { timeout: 3000 },
             );
