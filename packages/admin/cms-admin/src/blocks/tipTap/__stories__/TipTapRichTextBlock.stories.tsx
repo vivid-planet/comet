@@ -344,7 +344,7 @@ function MaxBlocksStory() {
 
 export const MaxBlocks: StoryObj<typeof MaxBlocksStory> = {
     render: () => <MaxBlocksStory />,
-    play: async ({ canvas, step }) => {
+    play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready", async () => {
             await waitFor(
                 () => {
@@ -356,12 +356,8 @@ export const MaxBlocks: StoryObj<typeof MaxBlocksStory> = {
 
         await step("Type text and press Enter — new block should be removed (maxBlocks: 1)", async () => {
             const textbox = canvas.getByRole("textbox");
-            textbox.focus();
-            document.execCommand("insertText", false, "First block");
-
-            // Simulate Enter to create a new block
-            const enterEvent = new KeyboardEvent("keydown", { key: "Enter", code: "Enter", bubbles: true });
-            textbox.dispatchEvent(enterEvent);
+            await userEvent.click(textbox);
+            await userEvent.type(textbox, "First block{enter}Second block");
 
             // Wait for the editor to process
             await new Promise((resolve) => setTimeout(resolve, 500));

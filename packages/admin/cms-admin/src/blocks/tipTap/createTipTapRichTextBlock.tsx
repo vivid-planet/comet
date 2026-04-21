@@ -3,6 +3,7 @@ import { grey } from "@mui/material/colors";
 import { Extension } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
+import { Plugin } from "@tiptap/pm/state";
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { type ComponentType, type HTMLAttributes, type ReactNode } from "react";
@@ -180,25 +181,24 @@ const TipTapEditor = ({
                 ? [
                       Extension.create({
                           name: "maxBlocks",
-                          addStorage() {
-                              return { limit: maxBlocks };
-                          },
-                          onTransaction({ transaction }) {
-                              if (!transaction.docChanged) {
-                                  return;
-                              }
-                              const { doc } = transaction;
-                              const limit = this.storage.limit as number;
-                              if (doc.childCount > limit) {
-                                  // Calculate position after the last allowed block
-                                  const tr = this.editor.state.tr;
-                                  let pos = 0;
-                                  for (let i = 0; i < limit; i++) {
-                                      pos += doc.child(i).nodeSize;
-                                  }
-                                  tr.delete(pos, doc.content.size);
-                                  this.editor.view.dispatch(tr);
-                              }
+                          addProseMirrorPlugins() {
+                              const limit = maxBlocks;
+                              return [
+                                  new Plugin({
+                                      appendTransaction(_transactions, _oldState, newState) {
+                                          const { doc } = newState;
+                                          if (doc.childCount <= limit) {
+                                              return null;
+                                          }
+                                          // Calculate position after the last allowed block
+                                          let pos = 0;
+                                          for (let i = 0; i < limit; i++) {
+                                              pos += doc.child(i).nodeSize;
+                                          }
+                                          return newState.tr.delete(pos, doc.content.size);
+                                      },
+                                  }),
+                              ];
                           },
                       }),
                   ]
