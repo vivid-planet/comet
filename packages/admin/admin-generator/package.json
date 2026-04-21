@@ -62,7 +62,7 @@
         "@types/pluralize": "^0.0.33",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
-        "eslint": "^9.39.2",
+        "eslint": "^9.39.4",
         "final-form": "^4.20.10",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
