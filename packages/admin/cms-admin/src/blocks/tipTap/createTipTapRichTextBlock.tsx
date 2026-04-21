@@ -66,7 +66,7 @@ interface TipTapRichTextBlockInput {
     tipTapContent: JSONContent;
 }
 
-export interface TipTapRichTextBlockFactoryOptions {
+interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
     link?: BlockInterface & LinkBlockInterface;
