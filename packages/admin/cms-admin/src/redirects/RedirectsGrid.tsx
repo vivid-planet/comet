@@ -1,8 +1,10 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
     Button,
+    CrudMoreActionsMenu,
     dataGridDateTimeColumn,
     DataGridToolbar,
+    DeleteDialog,
     FillSpace,
     type GridColDef,
     GridFilterButton,
@@ -21,8 +23,15 @@ import {
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, getGridSingleSelectOperators } from "@mui/x-data-grid";
-import type { JSX } from "react";
+import {
+    DataGrid,
+    type DataGridProps,
+    getGridSingleSelectOperators,
+    type GridRowSelectionModel,
+    type GridSlotsComponent,
+    type GridToolbarProps,
+} from "@mui/x-data-grid";
+import { type JSX, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { BlockPreviewContent } from "../blocks/common/blockRow/BlockPreviewContent";
@@ -36,12 +45,27 @@ interface Props {
     scope: Record<string, unknown>;
 }
 
-function RedirectsGridToolbar() {
+interface RedirectsGridToolbarProps extends GridToolbarProps {
+    selectedIds?: string[];
+    onDeleteSelected?: () => void;
+}
+
+function RedirectsGridToolbar({ selectedIds = [], onDeleteSelected }: RedirectsGridToolbarProps) {
     return (
         <DataGridToolbar>
             <GridToolbarQuickFilter />
             <GridFilterButton />
             <FillSpace />
+            <CrudMoreActionsMenu
+                selectionSize={selectedIds.length}
+                selectiveActions={[
+                    {
+                        label: <FormattedMessage id="comet.pages.redirects.deleteSelected" defaultMessage="Delete" />,
+                        icon: <DeleteIcon />,
+                        onClick: onDeleteSelected,
+                    },
+                ]}
+            />
             <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                 <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />
             </Button>
@@ -51,6 +75,22 @@ function RedirectsGridToolbar() {
 
 export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
     const intl = useIntl();
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+    const [deleteRedirect] = useMutation(deleteRedirectMutation, {
+        refetchQueries: [namedOperations.Query.PaginatedRedirects],
+    });
+
+    const handleDeleteSelected = () => {
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        await Promise.all(selectedIds.map((id) => deleteRedirect({ variables: { id } })));
+        setSelectedIds([]);
+        setDeleteDialogOpen(false);
+    };
 
     const typeOptions = [
         {
@@ -163,7 +203,15 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
         },
     ];
 
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("RedirectsGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote(),
+        ...usePersistentColumnState("RedirectsGrid"),
+        rowSelectionModel: { type: "include", ids: new Set(selectedIds) } as DataGridProps["rowSelectionModel"],
+        onRowSelectionModelChange: (model: GridRowSelectionModel) => setSelectedIds([...model.ids] as string[]),
+        checkboxSelection: true,
+        keepNonExistentRowsSelected: true,
+        disableRowSelectionExcludeModel: true,
+    };
     const sortModel = dataGridProps.sortModel;
 
     const { data, loading, error } = useQuery<GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables>(paginatedRedirectsQuery, {
@@ -191,9 +239,16 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                slots={{ toolbar: RedirectsGridToolbar }}
+                slots={{ toolbar: RedirectsGridToolbar as GridSlotsComponent["toolbar"] }}
+                slotProps={{
+                    toolbar: {
+                        selectedIds,
+                        onDeleteSelected: handleDeleteSelected,
+                    } as RedirectsGridToolbarProps,
+                }}
                 showToolbar
             />
+            <DeleteDialog dialogOpen={deleteDialogOpen} onDelete={handleDeleteConfirm} onCancel={() => setDeleteDialogOpen(false)} />
         </MainContent>
     );
 }
