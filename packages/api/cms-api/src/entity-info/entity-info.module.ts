@@ -3,11 +3,10 @@ import { Module } from "@nestjs/common";
 
 import { EntityInfoObject } from "./entity-info.object";
 import { EntityInfoService } from "./entity-info.service";
-import { FullTextSearchResolver } from "./full-text-search.resolver";
 
 @Module({
     imports: [MikroOrmModule.forFeature([EntityInfoObject])],
-    providers: [EntityInfoService, FullTextSearchResolver],
+    providers: [EntityInfoService],
     exports: [EntityInfoService],
 })
 export class EntityInfoModule {}

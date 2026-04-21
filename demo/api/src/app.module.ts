@@ -12,6 +12,7 @@ import {
     DamModule,
     DependenciesModule,
     FileUploadsModule,
+    FullTextSearchModule,
     ImgproxyModule,
     KubernetesModule,
     MailerModule,
@@ -231,6 +232,7 @@ export class AppModule {
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
                 WarningsModule,
+                FullTextSearchModule,
                 BrevoModule.register({
                     brevo: {
                         resolveConfig: (scope: EmailCampaignContentScope) => {
