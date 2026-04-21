@@ -89,7 +89,9 @@ const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
@@ -110,7 +112,9 @@ function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONCon
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function mapLinkMarksDataAsync(content: JSONContent, fn: (data: any) => Promise<any>): Promise<JSONContent> {
-    if (!content || typeof content !== "object") return content;
+    if (!content || typeof content !== "object") {
+        return content;
+    }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {

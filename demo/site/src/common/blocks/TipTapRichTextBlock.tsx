@@ -112,7 +112,9 @@ function renderNode(node: TipTapNode, index: number): ReactNode {
 
 function hasTipTapContent(data: TipTapRichTextBlockData): boolean {
     const content = data.tipTapContent as TipTapNode;
-    if (!content?.content || !Array.isArray(content.content)) return false;
+    if (!content?.content || !Array.isArray(content.content)) {
+        return false;
+    }
     return content.content.some((node: TipTapNode) => node.type !== "paragraph" || (node.content && node.content.length > 0));
 }
 
