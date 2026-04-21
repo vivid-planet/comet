@@ -189,7 +189,11 @@ By default, MJML stacks columns in source order on mobile. If you need a column 
         <MjmlColumn className="layout__smallColumn" width={`${SMALL_COLUMN_WIDTH}px`}>
             <MjmlImage src="..." alt="..." width={SMALL_COLUMN_WIDTH} />
         </MjmlColumn>
-        <MjmlColumn className="layout__fluidColumn" width={`${fluidColumnWidth}px`} paddingRight={`${COLUMN_GAP}px`}>
+        <MjmlColumn
+            className="layout__fluidColumn"
+            width={`${fluidColumnWidth}px`}
+            paddingRight={`${COLUMN_GAP}px`}
+        >
             <MjmlText>This appears on the left on desktop, below the image on mobile.</MjmlText>
         </MjmlColumn>
     </MjmlSection>
@@ -200,3 +204,28 @@ Two important details:
 
 1. **`MjmlWrapper` replaces `indent`** — when using `direction="rtl"`, applying `indent` directly on the section causes a 1px line artifact in Outlook. Instead, wrap the section in `MjmlWrapper` and apply the indentation as padding. Set the `backgroundColor` on the wrapper to match the content background.
 2. **Source order = mobile stack order** — the small column is first in the JSX, so it stacks on top on mobile. `direction="rtl"` only affects the visual (left-to-right) order on desktop.
+
+## Grouping Sections with a Shared Background
+
+When multiple sections need to share a background — for example, a multi-row footer with its own color — wrap them in `MjmlWrapper`. The wrapper owns the background; inner `MjmlSection`s suppress their own theme-default `backgroundColor` so the wrapper's color shows through.
+
+```tsx
+<MjmlWrapper backgroundColor="#2d4a6e">
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Footer row 1</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Footer row 2</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+</MjmlWrapper>
+```
+
+A few things worth knowing:
+
+- `MjmlWrapper` applies `theme.colors.background.content` as its default background when a theme is present, so the `backgroundColor` prop is only needed when the wrapper should differ from the theme default.
+- An explicit `backgroundColor` on an inner `MjmlSection` still wins — use that only when a single section inside the wrapper needs to stand out.
+- For a region that also needs different default text color or variants, combine `MjmlWrapper` with a scoped `ThemeProvider` (see [Scoped Theming](./2-components-and-theme.md#scoped-theming)). Text components pick up the scoped theme while the wrapper provides the background.
