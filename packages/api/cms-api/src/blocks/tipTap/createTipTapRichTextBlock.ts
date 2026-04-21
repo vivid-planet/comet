@@ -181,7 +181,23 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: ValidationOptions) {
+function collectPlaceholderNames(content: TipTapContent): string[] {
+    const names: string[] = [];
+
+    if (content.type === "placeholder" && content.attrs?.name) {
+        names.push(content.attrs.name as string);
+    }
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            names.push(...collectPlaceholderNames(child));
+        }
+    }
+
+    return names;
+}
+
+function IsTipTapContent(schema: Schema, linkBlock?: Block, allowedPlaceholderNames?: string[], validationOptions?: ValidationOptions) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
@@ -212,6 +228,16 @@ function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: 
                                     whitelist: true,
                                 });
                                 if (validationErrors.length > 0) {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        // Validate placeholder names
+                        if (allowedPlaceholderNames) {
+                            const usedNames = collectPlaceholderNames(value as TipTapContent);
+                            for (const name of usedNames) {
+                                if (!allowedPlaceholderNames.includes(name)) {
                                     return false;
                                 }
                             }
@@ -297,8 +323,10 @@ export function createTipTapRichTextBlock(
         }
     }
 
+    const allowedPlaceholderNames = placeholders.length > 0 ? placeholders.map((p) => p.name) : undefined;
+
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, LinkBlock)
+        @IsTipTapContent(schema, LinkBlock, allowedPlaceholderNames)
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 

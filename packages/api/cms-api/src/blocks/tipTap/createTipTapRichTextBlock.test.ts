@@ -551,4 +551,71 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(1);
         });
     });
+
+    describe("schema with placeholders", () => {
+        const block = createTipTapRichTextBlock(
+            {
+                supports: ["bold"],
+                placeholders: [{ name: "firstName" }, { name: "lastName" }],
+            },
+            "TestPlaceholders",
+        );
+
+        it("should accept a placeholder with a valid name", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [
+                                { type: "text", text: "Hello " },
+                                { type: "placeholder", attrs: { name: "firstName" } },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should reject a placeholder with a non-existing name", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [{ type: "placeholder", attrs: { name: "unknownField" } }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+            expect(errors[0].property).toBe("tipTapContent");
+        });
+    });
+
+    describe("schema without placeholders", () => {
+        const block = createTipTapRichTextBlock({ supports: ["bold"] }, "TestNoPlaceholders");
+
+        it("should reject a placeholder node when no placeholders are configured", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [{ type: "placeholder", attrs: { name: "firstName" } }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+            expect(errors[0].property).toBe("tipTapContent");
+        });
+    });
 });
