@@ -46,10 +46,7 @@ export function TipTapLinkDialog({ editor, linkBlock: LinkBlock, onClose }: TipT
         onClose();
     };
 
-    const selectedText = (() => {
-        const { from, to } = editor.state.selection;
-        return editor.state.doc.textBetween(from, to, "");
-    })();
+    const selectedText = editor.state.doc.textBetween(editor.state.selection.from, editor.state.selection.to, "");
 
     return (
         <Dialog onClose={onClose} open={true}>
