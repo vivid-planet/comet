@@ -37,8 +37,14 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { BlockPreviewContent } from "../blocks/common/blockRow/BlockPreviewContent";
 import { type BlockInterface } from "../blocks/types";
 import RedirectActiveness from "./RedirectActiveness";
-import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
-import { type GQLPaginatedRedirectsQuery, type GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";
+import { deleteRedirectMutation, deleteRedirectsMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
+import {
+    type GQLDeleteRedirectsMutation,
+    type GQLDeleteRedirectsMutationVariables,
+    type GQLPaginatedRedirectsQuery,
+    type GQLPaginatedRedirectsQueryVariables,
+    namedOperations,
+} from "./RedirectsGrid.gql.generated";
 
 interface Props {
     linkBlock: BlockInterface;
@@ -78,7 +84,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    const [deleteRedirect] = useMutation(deleteRedirectMutation, {
+    const [deleteRedirects] = useMutation<GQLDeleteRedirectsMutation, GQLDeleteRedirectsMutationVariables>(deleteRedirectsMutation, {
         refetchQueries: [namedOperations.Query.PaginatedRedirects],
     });
 
@@ -87,7 +93,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
     };
 
     const handleDeleteConfirm = async () => {
-        await Promise.all(selectedIds.map((id) => deleteRedirect({ variables: { id } })));
+        await deleteRedirects({ variables: { ids: selectedIds } });
         setSelectedIds([]);
         setDeleteDialogOpen(false);
     };
