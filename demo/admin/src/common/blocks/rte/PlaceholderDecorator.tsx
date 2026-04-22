@@ -1,4 +1,4 @@
-import { type ContentBlock, type ContentState, type DraftDecorator } from "draft-js";
+import type { ContentBlock, ContentState, DraftDecorator } from "draft-js";
 import type { ReactNode } from "react";
 
 import { PLACEHOLDER_ENTITY_TYPE } from "../placeholder/constants";

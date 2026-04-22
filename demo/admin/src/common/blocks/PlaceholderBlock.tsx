@@ -1,7 +1,7 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { AsyncAutocompleteField } from "@comet/admin";
 import { type BlockContext, BlocksFinalForm, createBlockSkeleton, createCompositeBlockSelectField } from "@comet/cms-admin";
-import { type PlaceholderBlockData } from "@src/blocks.generated";
+import type { PlaceholderBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
 import { formatPrice } from "./placeholder/formatPrice";

@@ -40,8 +40,12 @@ function findPlaceholderAtCursor(editorState: EditorState) {
                 // Find the full range of this entity
                 let start = o;
                 let end = o + 1;
-                while (start > 0 && block.getEntityAt(start - 1) === entityKey) start--;
-                while (end < block.getLength() && block.getEntityAt(end) === entityKey) end++;
+                while (start > 0 && block.getEntityAt(start - 1) === entityKey) {
+                    start--;
+                }
+                while (end < block.getLength() && block.getEntityAt(end) === entityKey) {
+                    end++;
+                }
 
                 const entitySelection = new SelectionState({
                     anchorKey: blockKey,
@@ -106,7 +110,9 @@ function PlaceholderDialog({ onClose, placeholderEntity, savedSelection, editorS
     const handleUpdate = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
-            if (!state.productId) return;
+            if (!state.productId) {
+                return;
+            }
             const contentState = editorState.getCurrentContent();
 
             const label = getPlaceholderLabel(state);
