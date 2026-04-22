@@ -51,7 +51,7 @@
         "eslint-plugin-formatjs": "^5.4.2",
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-jsonc": "^2.21.1",
-        "eslint-plugin-package-json": "^0.88.2",
+        "eslint-plugin-package-json": "^0.91.1",
         "eslint-plugin-prettier": "^5.5.5",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^5.2.0",
@@ -62,7 +62,7 @@
         "typescript-eslint": "^8.53.0"
     },
     "devDependencies": {
-        "eslint": "^9.39.2",
+        "eslint": "^9.39.4",
         "prettier": "^3.6.2",
         "typescript": "^5.9.3"
     },
