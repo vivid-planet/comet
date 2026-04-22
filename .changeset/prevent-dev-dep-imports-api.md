@@ -1,6 +1,6 @@
 ---
 "@comet/eslint-config": minor
-"@comet/brevo-api": patch
+"@comet/brevo-api": major
 ---
 
 Prevent importing dev dependencies in the API
