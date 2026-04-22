@@ -156,6 +156,7 @@ export class AppModule {
                         }
                         return config.sitePreviewSecret;
                     },
+                    fullText: true,
                 }),
 
                 RedirectsModule.register({

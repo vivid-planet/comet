@@ -1,4 +1,4 @@
-import { type ComponentsOverrides } from "@mui/material";
+import type { ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type GridDensity, Toolbar, type ToolbarProps, useGridApiContext } from "@mui/x-data-grid";
 

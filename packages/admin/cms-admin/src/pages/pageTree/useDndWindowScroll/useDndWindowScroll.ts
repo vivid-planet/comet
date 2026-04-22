@@ -1,6 +1,6 @@
 import { type RefObject, useCallback, useRef } from "react";
 import { useDragDropManager } from "react-dnd";
-import { type ListOnScrollProps } from "react-window";
+import type { ListOnScrollProps } from "react-window";
 
 import ScrollManager from "./ScrollManager";
 import useAnimationFrame from "./useAnimationFrame";

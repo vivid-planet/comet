@@ -1,13 +1,13 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect, type GridColDef, TextField } from "@comet/admin";
-import { type EditBrevoContactFormValues } from "@comet/brevo-admin";
+import type { EditBrevoContactFormValues } from "@comet/brevo-admin";
 import { MenuItem } from "@mui/material";
-import { type GQLBrevoContactBranch, type GQLBrevoContactSalutation } from "@src/graphql.generated";
-import { type DocumentNode } from "graphql";
-import { type ReactNode } from "react";
+import type { GQLBrevoContactBranch, GQLBrevoContactSalutation } from "@src/graphql.generated";
+import type { DocumentNode } from "graphql";
+import type { ReactNode } from "react";
 import { FormattedMessage, type IntlShape } from "react-intl";
 
-import { type GQLBrevoContactAttributesFragmentFragment } from "./brevoContactsPageAttributesConfig.generated";
+import type { GQLBrevoContactAttributesFragmentFragment } from "./brevoContactsPageAttributesConfig.generated";
 
 const attributesFragment = gql`
     fragment BrevoContactAttributesFragment on BrevoContact {

@@ -6,7 +6,7 @@ import { useIntl } from "react-intl";
 
 import { PageLayout } from "../PageLayout";
 import { DesktopMenu } from "./DesktopMenu";
-import { type GQLHeaderFragment } from "./Header.fragment.generated";
+import type { GQLHeaderFragment } from "./Header.fragment.generated";
 import styles from "./Header.module.scss";
 import { MobileMenu } from "./MobileMenu";
 

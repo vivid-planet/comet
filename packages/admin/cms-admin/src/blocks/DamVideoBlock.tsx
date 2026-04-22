@@ -5,11 +5,11 @@ import { Box } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { defineMessage, FormattedMessage } from "react-intl";
 
-import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
+import type { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { FileField } from "../form/file/FileField";
 import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
-import { type GQLVideoBlockDamFileQuery, type GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import type { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";

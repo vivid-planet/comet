@@ -9,11 +9,11 @@ import {
     Typography,
 } from "@mui/material";
 import type { ReactNode } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { type AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
+import type { AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
 
 export type FinalFormAutocompleteProps<
     T extends Record<string, any>,
@@ -102,7 +102,7 @@ export const FinalFormAutocomplete = <
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}
-                            {clearable && <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />}
+                            {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
                             {loadingError && <Error color="error" />}
                             {params.InputProps.endAdornment}
                         </InputAdornment>

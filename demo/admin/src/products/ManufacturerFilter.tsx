@@ -6,7 +6,7 @@ import { type ChangeEvent, useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
-import { type GQLManufacturersFilterQuery, type GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
+import type { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
 
 const manufacturersQuery = gql`
     query ManufacturersFilter($offset: Int!, $limit: Int!, $search: String) {
@@ -85,11 +85,7 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
                             ...params.InputProps,
                             endAdornment: (
                                 <>
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={Boolean(item.value)}
-                                        onClick={() => handleApplyValue(undefined)}
-                                    />
+                                    {item.value && <ClearInputAdornment position="end" onClick={() => handleApplyValue(undefined)} />}
                                     {params.InputProps.endAdornment}
                                 </>
                             ),

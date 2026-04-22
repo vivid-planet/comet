@@ -1,5 +1,5 @@
-import { type DamFileImage } from "../files/entities/file-image.entity";
-import { type ImageCropArea } from "./entities/image-crop-area.entity";
+import type { DamFileImage } from "../files/entities/file-image.entity";
+import type { ImageCropArea } from "./entities/image-crop-area.entity";
 
 /**
  * Calculate a DAM image's aspect ratio based on a specified crop area.

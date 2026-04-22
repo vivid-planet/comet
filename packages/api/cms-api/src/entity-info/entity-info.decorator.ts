@@ -1,4 +1,4 @@
-import { type AnyEntity, type AutoPath, type ObjectQuery, type PopulatePath } from "@mikro-orm/postgresql";
+import type { AnyEntity, AutoPath, ObjectQuery, PopulatePath } from "@mikro-orm/postgresql";
 
 export const ENTITY_INFO_METADATA_KEY = "data:entity-info";
 

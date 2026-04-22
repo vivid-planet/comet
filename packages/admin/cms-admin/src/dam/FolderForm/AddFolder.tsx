@@ -4,7 +4,7 @@ import { FinalForm } from "@comet/admin";
 import { useDamScope } from "../config/useDamScope";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { createDamFolderMutation } from "./AddFolder.gql";
-import { type GQLCreateDamFolderMutation, type GQLCreateDamFolderMutationVariables } from "./AddFolder.gql.generated";
+import type { GQLCreateDamFolderMutation, GQLCreateDamFolderMutationVariables } from "./AddFolder.gql.generated";
 import { FolderFormFields, type FolderFormValues } from "./FolderFormFields";
 
 interface AddFolderProps {
