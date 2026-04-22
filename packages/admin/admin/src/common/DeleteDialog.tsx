@@ -15,12 +15,13 @@ import { FeedbackButton } from "./buttons/feedback/FeedbackButton";
 interface DeleteDialogProps {
     dialogOpen: boolean;
     deleteType?: "delete" | "remove";
+    selectedCount?: number;
     onDelete: () => Promise<void>;
     onCancel: () => void;
 }
 
 export const DeleteDialog = (props: DeleteDialogProps) => {
-    const { dialogOpen, deleteType = "delete", onDelete, onCancel } = props;
+    const { dialogOpen, deleteType = "delete", selectedCount, onDelete, onCancel } = props;
 
     return (
         <Dialog open={dialogOpen} onClose={onCancel} maxWidth="sm">
@@ -34,7 +35,15 @@ export const DeleteDialog = (props: DeleteDialogProps) => {
             <DialogContent sx={{ gap: (theme) => theme.spacing(2), display: "flex", alignItems: "center" }}>
                 <WarningSolid color="error" />
                 {deleteType === "delete" ? (
-                    <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="You are about to delete this item permanently." />
+                    selectedCount !== undefined && selectedCount > 1 ? (
+                        <FormattedMessage
+                            id="comet.table.deleteDialog.contentMultiple"
+                            defaultMessage="You are about to delete {count} items permanently."
+                            values={{ count: selectedCount }}
+                        />
+                    ) : (
+                        <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="You are about to delete this item permanently." />
+                    )
                 ) : (
                     <FormattedMessage id="comet.common.deleteDialog.contentRemove" defaultMessage="You are about to remove this item." />
                 )}

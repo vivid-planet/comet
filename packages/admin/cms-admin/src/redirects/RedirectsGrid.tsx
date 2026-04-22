@@ -254,7 +254,12 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 }}
                 showToolbar
             />
-            <DeleteDialog dialogOpen={deleteDialogOpen} onDelete={handleDeleteConfirm} onCancel={() => setDeleteDialogOpen(false)} />
+            <DeleteDialog
+                dialogOpen={deleteDialogOpen}
+                selectedCount={selectedIds.length}
+                onDelete={handleDeleteConfirm}
+                onCancel={() => setDeleteDialogOpen(false)}
+            />
         </MainContent>
     );
 }
