@@ -1,4 +1,4 @@
 [build]
-  command = "cd .. && pnpm install --frozen-lockfile && pnpm build:docs"
+  command = "cd .. && pnpm install --frozen-lockfile && pnpm setup:ci && pnpm build:docs"
   publish = "build"
   ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ../storybook/ ../packages/admin/"
