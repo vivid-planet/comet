@@ -9,5 +9,5 @@
         }
     ],
     "dictionaries": ["cspellignore"],
-    "ignorePaths": ["node_modules", "/.cspellignore"]
+    "ignorePaths": ["node_modules", "/.cspellignore", "**/*.svg", "**/*.d2"]
 }

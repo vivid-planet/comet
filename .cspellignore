@@ -73,3 +73,5 @@ roundrect
 arcsize
 shakability
 fulltext
+hostnames
+HMAC

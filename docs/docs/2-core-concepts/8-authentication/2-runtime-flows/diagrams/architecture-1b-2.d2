@@ -1,0 +1,165 @@
+direction: right
+
+classes: {
+  leaf: {
+    style: {
+      font-size: 20
+    }
+  }
+  zone: {
+    style: {
+      font-size: 28
+      bold: true
+      stroke-width: 2
+    }
+  }
+  group: {
+    style: {
+      font-size: 22
+      bold: true
+    }
+  }
+  origin: {
+    style: {
+      font-size: 20
+      bold: true
+      stroke-dash: 3
+    }
+  }
+}
+
+editor: Editor {
+  shape: person
+  class: leaf
+  width: 90
+  height: 130
+  style.fill: "#fff4e6"
+  style.stroke: "#e67e22"
+  style.stroke-width: 2
+}
+
+client: "🧑‍💻 Client side" {
+  class: zone
+  style.fill: "#fff4e6"
+  style.stroke: "#e67e22"
+  height: 650
+
+  browser: "Editor's browser tab" {
+    class: group
+    style.fill: "#ffffff"
+    style.stroke: "#e67e22"
+
+    spa: "Admin (SPA)" {
+      class: group
+      style.fill: "#fff4e6"
+      style.stroke: "#e67e22"
+
+      app: Application {
+        class: leaf
+        style.fill: "#ffffff"
+        style.stroke: "#e67e22"
+      }
+
+      iframe: IFrameBridge {
+        class: group
+        style.fill: "#fde0ec"
+        style.stroke: "#c2255c"
+        style.stroke-dash: 4
+
+        iframe_tag: "<iframe>\nsrc=preview.comet-dxp.com/block-preview/…" {
+          class: leaf
+          style.fill: "#ffffff"
+          style.stroke: "#c2255c"
+        }
+      }
+
+      app -> iframe: "uses" {style.font-size: 16}
+    }
+  }
+}
+
+middle: {
+  style.opacity: 0
+  style.fill: "#ffffff"
+  style.stroke-width: 0
+  direction: down
+
+  oap: "🛡️  OAuth2-Proxy" {
+    class: leaf
+    width: 600
+    height: 300
+    style.font-size: 22
+    style.bold: true
+    style.fill: "#ffa8a8"
+    style.stroke: "#c92a2a"
+    style.stroke-width: 4
+  }
+
+  public: "🌐 Server side — public" {
+    class: zone
+    style.fill: "#f2fbf5"
+    style.stroke: "#2f9e44"
+    width: 600
+
+    site: "Site container (preview.comet-dxp.com)" {
+      class: group
+      style.fill: "#ffffff"
+      style.stroke: "#2f9e44"
+
+      bridge_route: "/block-preview/[scope]/[block]" {
+        class: group
+        style.fill: "#e6f7ea"
+        style.stroke: "#2f9e44"
+
+        iframe_bridge: IFrameBridge {
+          class: leaf
+          width: 340
+          height: 220
+          style.fill: "#fde0ec"
+          style.stroke: "#c2255c"
+          style.stroke-dash: 4
+        }
+
+        rendered: "Rendered block preview\n(HTML built from received JSON)" {
+          class: leaf
+          style.fill: "#ffffff"
+          style.stroke: "#2f9e44"
+        }
+
+        iframe_bridge -> rendered: "renders" {style.font-size: 16}
+      }
+    }
+  }
+}
+
+admin_flow: "🔗 Admin → API" {
+  class: leaf
+  style.fill: "#f5f6f7"
+  style.stroke: "#546e7a"
+  style.font-size: 20
+  style.stroke-dash: 4
+}
+
+editor -> client.browser.spa.app: opens Admin {style.font-size: 18}
+
+client.browser.spa.app -> client.browser.spa.iframe: "renders iframe src=preview.comet-dxp.com/block-preview/…" {style.font-size: 18; style.stroke-dash: 4}
+client.browser.spa.iframe -> middle.public.site.bridge_route.iframe_bridge: |md
+  3\. **postMessage**: block data (JSON)
+| {style.font-size: 18; style.stroke-dash: 4}
+
+client.browser.spa.iframe -> middle.public.site.bridge_route.iframe_bridge: |md
+  4\. **postMessage**: preview events (hover, click, …)
+| {
+  style.font-size: 18
+  style.stroke-dash: 4
+  source-arrowhead.shape: triangle
+  target-arrowhead.shape: none
+}
+
+client.browser.spa.app -> middle.oap: "1. fetches data (GraphQL)" {style.font-size: 18}
+middle.oap -> admin_flow: {style.font-size: 18}
+
+client.browser.spa.app -> client.browser.spa.iframe: |md
+  2\. **window.postMessage**
+  block data gets sent as JSON
+| {style.font-size: 18}
