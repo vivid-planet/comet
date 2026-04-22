@@ -51,7 +51,7 @@ export interface TipTapBlockStyle {
     name: string;
     label: ReactNode;
     /**
-     * Limits the block style to the provided block types. 
+     * Limits the block style to the provided block types.
      * If none is specified, the block style is allowed for all block types.
      */
     appliesTo?: TipTapBlockType[];
