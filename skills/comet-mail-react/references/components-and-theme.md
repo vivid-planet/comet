@@ -8,10 +8,11 @@ Detailed reference for all `@comet/mail-react` components, the theme system, mod
 2. [Module Augmentation Interfaces](#module-augmentation-interfaces)
 3. [MjmlMailRoot](#mjmlmailroot)
 4. [MjmlSection](#mjmlsection)
-5. [Text Components](#text-components)
-6. [HtmlInlineLink](#htmlinlinelink)
-7. [Scoped Theming](#scoped-theming)
-8. [MJML Component Re-exports](#mjml-component-re-exports)
+5. [MjmlWrapper](#mjmlwrapper)
+6. [Text Components](#text-components)
+7. [HtmlInlineLink](#htmlinlinelink)
+8. [Scoped Theming](#scoped-theming)
+9. [MJML Component Re-exports](#mjml-component-re-exports)
 
 ---
 
@@ -201,6 +202,40 @@ Full-width horizontal row with theme integration.
 
 Indentation values come from `theme.sizes.contentIndentation`, which supports responsive values.
 
+**Inside `MjmlWrapper`:** the theme-default `backgroundColor` is suppressed so the wrapper's background shows through. An explicit `backgroundColor` prop still wins.
+
+---
+
+## MjmlWrapper
+
+Groups multiple `MjmlSection`s that share a background. Must be a direct child of `MjmlBody`; sections go inside.
+
+**Props** (standard MJML wrapper props):
+
+| Prop              | Type        | Default                           | Description                                                           |
+| ----------------- | ----------- | --------------------------------- | --------------------------------------------------------------------- |
+| `backgroundColor` | `string`    | `theme.colors.background.content` | Background applied to the whole wrapper; shows through inner sections |
+| `children`        | `ReactNode` | —                                 | Sections to group                                                     |
+
+When a theme is present, `MjmlWrapper` applies `theme.colors.background.content` as its default `backgroundColor`. Inner `MjmlSection`s suppress their own theme-default background so the wrapper's color is visible; an explicit `backgroundColor` prop on an inner section still wins.
+
+```tsx
+<MjmlWrapper backgroundColor="#dddddd">
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText>First row</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText>Second row</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+</MjmlWrapper>
+```
+
+Typical uses: multi-section footers with their own color, or grouping sections behind a shared outer padding (e.g., the `direction="rtl"` workaround in [`layout-patterns.md`](layout-patterns.md)). For a region that also needs different default text color or variants, combine `MjmlWrapper` with a scoped `ThemeProvider` — see Scoped Theming below.
+
 ---
 
 ## Text Components
@@ -301,6 +336,8 @@ Use `!important` when setting a custom link color — the responsive reset uses 
 ## Scoped Theming
 
 `ThemeProvider` applies a different theme to a subtree. Common use: dark-background sections.
+
+**Prefer `MjmlWrapper` when only the background color changes.** Reach for `ThemeProvider` when text color, variants, or other theme values also need to differ — cloning a theme is overkill for a background-only change.
 
 ```tsx
 import { ThemeProvider } from "@comet/mail-react";

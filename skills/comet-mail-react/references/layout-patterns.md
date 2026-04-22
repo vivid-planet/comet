@@ -286,3 +286,30 @@ When using `direction="rtl"`:
 
 - **Use `MjmlWrapper` instead of `indent`** — applying `indent` on a `direction="rtl"` section causes a 1px line artifact in Outlook. Wrap the section in `MjmlWrapper` with `padding={`0 ${sectionIndent}px`}` and set `backgroundColor` to match.
 - **Source order = mobile stack order** — the small column is first in the JSX, so it stacks on top on mobile. `direction="rtl"` only affects the visual left-to-right order on desktop.
+
+---
+
+## Grouping Sections with a Shared Background
+
+When multiple sections need to share a background — for example, a multi-row footer with its own color — wrap them in `MjmlWrapper`. The wrapper owns the background; inner `MjmlSection`s suppress their own theme-default `backgroundColor` so the wrapper's color shows through.
+
+```tsx
+<MjmlWrapper backgroundColor="#2d4a6e">
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Footer row 1</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Footer row 2</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+</MjmlWrapper>
+```
+
+Key behaviors:
+
+- `MjmlWrapper` applies `theme.colors.background.content` as its default background when a theme is present, so the `backgroundColor` prop is only needed when the wrapper should differ from the theme default.
+- An explicit `backgroundColor` on an inner `MjmlSection` still wins — use that only when a single section inside the wrapper needs to stand out.
+- For a region that also needs different default text color or variants, combine `MjmlWrapper` with a scoped `ThemeProvider` (see [`components-and-theme.md`](components-and-theme.md) → Scoped Theming). Text components pick up the scoped theme while the wrapper provides the background.

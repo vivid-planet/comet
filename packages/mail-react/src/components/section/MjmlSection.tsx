@@ -7,6 +7,7 @@ import { getDefaultFromResponsiveValue, getResponsiveOverrides } from "../../the
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
 import type { Theme } from "../../theme/themeTypes.js";
 import { css } from "../../utils/css.js";
+import { useIsInsideMjmlWrapper } from "../wrapper/InsideMjmlWrapperContext.js";
 
 export type MjmlSectionProps = IMjmlSectionProps & {
     /** Applies theme-based content indentation with responsive overrides. */
@@ -20,14 +21,15 @@ export type MjmlSectionProps = IMjmlSectionProps & {
     };
 };
 
-/** A section wrapper for email layouts. Must be a direct child of `MjmlBody`. */
+/** A section wrapper for email layouts. Must be a direct child of `MjmlBody` or `MjmlWrapper`. */
 export function MjmlSection({ children, indent, disableResponsiveBehavior, slotProps, className, ...restProps }: MjmlSectionProps): ReactNode {
     const theme = useOptionalTheme();
+    const isInsideWrapper = useIsInsideMjmlWrapper();
 
     const indentProps = indent ? getIndentProps(theme) : {};
     const resolvedClassName = clsx("mjmlSection", indent && "mjmlSection--indented", className);
 
-    const themeBackgroundProps = theme ? { backgroundColor: theme.colors.background.content } : {};
+    const themeBackgroundProps = theme && !isInsideWrapper ? { backgroundColor: theme.colors.background.content } : {};
 
     return (
         <BaseMjmlSection className={resolvedClassName} {...themeBackgroundProps} {...indentProps} {...restProps}>
