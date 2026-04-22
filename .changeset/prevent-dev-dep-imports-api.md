@@ -1,5 +1,5 @@
 ---
-"@comet/eslint-config": minor
+"@comet/eslint-config": major
 "@comet/brevo-api": major
 ---
 
