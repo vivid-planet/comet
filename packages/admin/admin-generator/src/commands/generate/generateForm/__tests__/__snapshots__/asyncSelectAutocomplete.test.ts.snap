@@ -11,9 +11,9 @@ exports[`AsyncSelect autocomplete > generates field with default autocomplete be
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async (search?: string) => {
-                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                         query: gql\`
-    query CategoriesSelect($search: String) {
+    query CategorySelect($search: String) {
         categories(search: $search) {
             nodes { id name }
         }
@@ -42,9 +42,9 @@ exports[`AsyncSelect autocomplete > generates field without autocomplete explici
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
-                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                         query: gql\`
-    query CategoriesSelect {
+    query CategorySelect {
         categories {
             nodes { id name }
         }
