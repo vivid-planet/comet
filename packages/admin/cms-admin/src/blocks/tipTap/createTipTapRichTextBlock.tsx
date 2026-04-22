@@ -50,6 +50,10 @@ export type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading
 export interface TipTapBlockStyle {
     name: string;
     label: ReactNode;
+    /**
+     * Limits the block style to the provided block types. 
+     * If none is specified, the block style is allowed for all block types.
+     */
     appliesTo?: TipTapBlockType[];
     element: ComponentType<HTMLAttributes<HTMLElement>>;
 }
