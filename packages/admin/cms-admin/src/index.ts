@@ -107,6 +107,7 @@ export { PublisherPage } from "./builds/PublisherPage";
 export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";
 export { DropdownMenuItem } from "./common/DropdownMenuItem";
 export { useBuildInformation } from "./common/header/about/build-information/useBuildInformation";
+export { GlobalSearch } from "./common/header/GlobalSearch";
 export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
 export type { TextMatch } from "./common/MarkedMatches";
