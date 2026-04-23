@@ -637,6 +637,8 @@ input EmailCampaignUpdateInput {
 }
 
 type EntityInfo {
+  entityName: String!
+  id: String!
   name: String!
   secondaryInformation: String
 }
@@ -1299,6 +1301,11 @@ type PaginatedEmailCampaigns {
   totalCount: Int!
 }
 
+type PaginatedEntityInfo {
+  nodes: [EntityInfo!]!
+  totalCount: Int!
+}
+
 type PaginatedManufacturerCountries {
   nodes: [ManufacturerCountry!]!
   totalCount: Int!
@@ -1368,6 +1375,7 @@ enum Permission {
   dam
   dependencies
   fileUploads
+  fullTextSearch
   impersonation
   manufacturers
   news
@@ -1938,6 +1946,7 @@ type Query {
   damMediaAlternatives(alternative: ID, for: ID, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DamMediaAlternativeSort!], type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   findCopiesOfFileInScope(id: ID!, imageCropArea: ImageCropAreaInput, scope: DamScopeInput!): [DamFile!]!
   footer(scope: FooterScopeInput!): Footer
+  fullTextSearch(limit: Int! = 25, offset: Int! = 0, search: String!): PaginatedEntityInfo!
   isBrevoConfigDefined(scope: EmailCampaignContentScopeInput!): Boolean!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!

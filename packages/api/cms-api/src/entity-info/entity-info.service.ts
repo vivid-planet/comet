@@ -77,14 +77,21 @@ export class EntityInfoService {
         return `(SELECT ${innerSql} FROM "${targetTableName}" WHERE "${targetTableName}"."${targetPrimaryKey}" = "${tableName}"."${joinColumn}")`;
     }
 
-    async createEntityInfoView(): Promise<void> {
+    async createEntityInfoView(options?: { pageTreeFullText?: boolean }): Promise<void> {
+        const pageTreeFullText = options?.pageTreeFullText ?? false;
         const indexSelects: string[] = [];
         const targetEntities = this.discoverService.discoverTargetEntities();
         for (const targetEntity of targetEntities) {
             const entityInfo = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, targetEntity.entity) as EntityInfo<AnyEntity>;
             if (entityInfo) {
                 if (typeof entityInfo === "string") {
-                    indexSelects.push(entityInfo);
+                    if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
+                        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText"
+                            FROM "PageTreeNodeEntityInfo"
+                            LEFT JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeEntityInfo"."id"::uuid`);
+                    } else {
+                        indexSelects.push(`SELECT sub.*, null::tsvector AS "fullText" FROM (${entityInfo}) sub`);
+                    }
                 } else {
                     const { entityName, metadata } = targetEntity;
                     const primary = metadata.primaryKeys[0];
@@ -110,12 +117,18 @@ export class EntityInfoService {
                         visibleSql = sqlWhereMatch[1];
                     }
 
+                    let fullTextSql = "null::tsvector";
+                    if (entityInfo.fullText) {
+                        fullTextSql = this.resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
+                    }
+
                     const select = `SELECT
                                 ${nameSql} "name",
                                 ${secondaryInformationSql} "secondaryInformation",
                                 ${visibleSql} AS "visible",
                                 "${metadata.tableName}"."${primary}"::text "id",
-                                '${entityName}' "entityName"
+                                '${entityName}' "entityName",
+                                ${fullTextSql} AS "fullText"
                             FROM "${metadata.tableName}"`;
                     indexSelects.push(select);
                 }
@@ -123,10 +136,18 @@ export class EntityInfoService {
         }
 
         // add all PageTreeNode Documents (Page, Link etc) thru PageTreeNodeDocument (no @EntityInfo needed on Page/Link)
-        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName"
-            FROM "PageTreeNodeDocument"
-            JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
-        `);
+        if (pageTreeFullText) {
+            indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", "PageTreeNodeFullText"."fullText"
+                FROM "PageTreeNodeDocument"
+                JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
+                LEFT JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeDocument"."pageTreeNodeId"
+            `);
+        } else {
+            indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", null::tsvector AS "fullText"
+                FROM "PageTreeNodeDocument"
+                JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
+            `);
+        }
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
