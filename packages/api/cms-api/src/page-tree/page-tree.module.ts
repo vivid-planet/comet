@@ -45,6 +45,9 @@ interface PageTreeModuleOptions {
     Scope?: Type<ScopeInterface>;
     reservedPaths?: string[];
     sitePreviewSecret: string | ((scope: ContentScope) => string);
+    /**
+     * @experimental
+     */
     fullText?: boolean;
 }
 
