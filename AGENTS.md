@@ -65,7 +65,7 @@ export PATH="$PWD/node_modules/.bin:$PATH"
 pnpm clean && pnpm intl:compile
 pnpm db:migrate
 pnpm console createBlockIndexViews
-NODE_OPTIONS='--max-old-space-size=1024' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --preserveWatchOutput > /tmp/api-server.log 2>&1 &
+NODE_OPTIONS='--max-old-space-size=1024' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start > /tmp/api-server.log 2>&1 &
 cd ../..
 
 # 6. Wait for API to be ready
