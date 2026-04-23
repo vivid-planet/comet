@@ -1,6 +1,5 @@
 import { gql, useApolloClient, useLazyQuery } from "@apollo/client";
 import { Clear, Search } from "@comet/admin-icons";
-import { type DependencyInterface, findTextMatches, MarkedMatches, useCometConfig, useContentScope } from "@comet/cms-admin";
 import {
     Chip,
     CircularProgress,
@@ -21,6 +20,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
+import { useContentScope } from "../../contentScope/Provider";
+import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
+import type { DependencyInterface } from "../../dependencies/types";
+import { findTextMatches, MarkedMatches } from "../MarkedMatches";
 import type { GQLGlobalSearchQuery, GQLGlobalSearchQueryVariables } from "./GlobalSearch.generated";
 
 const globalSearchQuery = gql`
@@ -54,8 +57,7 @@ function GlobalSearch() {
     const anchorRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
     const apolloClient = useApolloClient();
-    const cometConfig = useCometConfig();
-    const entityDependencyMap = cometConfig.dependencies?.entityDependencyMap ?? {};
+    const { entityDependencyMap } = useDependenciesConfig();
     const contentScope = useContentScope();
     const debounceTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
     const intl = useIntl();
@@ -142,7 +144,7 @@ function GlobalSearch() {
                         <Search fontSize="small" />
                     </SearchIconWrapper>
                     <StyledInputBase
-                        placeholder={intl.formatMessage({ id: "globalSearch.placeholder", defaultMessage: "Search…" })}
+                        placeholder={intl.formatMessage({ id: "comet.globalSearch.placeholder", defaultMessage: "Search…" })}
                         value={searchText}
                         onChange={handleInputChange}
                         onFocus={() => {
@@ -158,7 +160,10 @@ function GlobalSearch() {
                                     <ClearButton
                                         size="small"
                                         onClick={handleClear}
-                                        aria-label={intl.formatMessage({ id: "globalSearch.clear", defaultMessage: "Clear search" })}
+                                        aria-label={intl.formatMessage({
+                                            id: "comet.globalSearch.clear",
+                                            defaultMessage: "Clear search",
+                                        })}
                                     >
                                         <Clear sx={{ fontSize: 16 }} />
                                     </ClearButton>
@@ -183,10 +188,10 @@ function GlobalSearch() {
                             <EmptyState>
                                 <Search sx={{ fontSize: 32, opacity: 0.4 }} />
                                 <Typography variant="body2" color="text.secondary">
-                                    <FormattedMessage id="globalSearch.noResults" defaultMessage="No results found" />
+                                    <FormattedMessage id="comet.globalSearch.noResults" defaultMessage="No results found" />
                                 </Typography>
                                 <Typography variant="caption" color="text.disabled">
-                                    <FormattedMessage id="globalSearch.noResultsHint" defaultMessage="Try a different search term" />
+                                    <FormattedMessage id="comet.globalSearch.noResultsHint" defaultMessage="Try a different search term" />
                                 </Typography>
                             </EmptyState>
                         ) : (
@@ -233,7 +238,7 @@ function GlobalSearch() {
                                         <FooterDivider />
                                         <ResultsFooter>
                                             <FormattedMessage
-                                                id="globalSearch.showingResults"
+                                                id="comet.globalSearch.showingResults"
                                                 defaultMessage="Showing {shown} of {total} results"
                                                 values={{ shown: results.length, total: totalCount }}
                                             />

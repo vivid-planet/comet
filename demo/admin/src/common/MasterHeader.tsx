@@ -1,6 +1,4 @@
-import { BuildEntry, ContentScopeControls, Header, UserHeaderItem } from "@comet/cms-admin";
-
-import { GlobalSearch } from "./GlobalSearch";
+import { BuildEntry, ContentScopeControls, GlobalSearch, Header, UserHeaderItem } from "@comet/cms-admin";
 
 const MasterHeader = () => {
     return (
