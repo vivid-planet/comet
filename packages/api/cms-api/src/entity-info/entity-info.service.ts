@@ -23,8 +23,13 @@ export class EntityInfoService {
     /**
      * Resolves a field path (e.g., "title" or "manufacturer.name") to a SQL expression.
      * Supports direct fields, embeddables, and n-level deep ManyToOne/OneToOne relations using subqueries.
+     *
+     * @param fieldPath - Dot-separated path like "title", "scope.domain", or "manufacturer.name"
+     * @param metadata - MikroORM entity metadata for the source entity
+     * @param tableName - SQL table name (or alias) to use for the source table
+     * @returns SQL expression string
      */
-    resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, tableName: string): string {
+    private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, tableName: string): string {
         const parts = fieldPath.split(".");
 
         // Direct field - find the actual column name

@@ -7,6 +7,7 @@ import { Command, CommandRunner } from "nest-commander";
 import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
+import { resolveSqlPathScopeFromEntity } from "../common/helper/resolve-sql-path-scope.helper";
 import { DiscoverService } from "../dependencies/discover.service";
 import { isScopedEntitySqlPath, SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
@@ -81,7 +82,7 @@ export class WarningCheckerCommand extends CommandRunner {
                                 let scopedEntityScope: ContentScope | ContentScope[];
 
                                 if (isScopedEntitySqlPath(scoped)) {
-                                    scopedEntityScope = await this.resolveSqlPathScope(scoped, rootBlock);
+                                    scopedEntityScope = await resolveSqlPathScopeFromEntity(scoped, rootBlock);
                                 } else if (isInjectableService(scoped)) {
                                     const service = this.moduleRef.get(scoped, { strict: false });
                                     scopedEntityScope = await service.getEntityScope(rootBlock);
@@ -250,62 +251,5 @@ export class WarningCheckerCommand extends CommandRunner {
         }
 
         return rootBlockEntityData.values();
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private async resolveSqlPathScope(sqlPath: string | Record<string, string>, entity: any): Promise<ContentScope> {
-        if (typeof sqlPath === "string") {
-            const parts = sqlPath.split(".");
-            let current = entity;
-            for (const part of parts) {
-                if (current == null) {
-                    break;
-                }
-                if (typeof current.load === "function" && typeof current.unwrap === "function") {
-                    current = await current.load();
-                }
-                if (current[part] !== undefined) {
-                    current = current[part];
-                } else if (typeof current.init === "function") {
-                    current = await current.init();
-                    current = current?.[part];
-                } else {
-                    current = undefined;
-                    break;
-                }
-            }
-            if (current != null && typeof current.load === "function" && typeof current.unwrap === "function") {
-                current = await current.load();
-            }
-            return current as ContentScope;
-        } else {
-            const scope: Record<string, unknown> = {};
-            for (const [scopeField, fieldPath] of Object.entries(sqlPath)) {
-                const parts = fieldPath.split(".");
-                let current = entity;
-                for (const part of parts) {
-                    if (current == null) {
-                        break;
-                    }
-                    if (typeof current.load === "function" && typeof current.unwrap === "function") {
-                        current = await current.load();
-                    }
-                    if (current[part] !== undefined) {
-                        current = current[part];
-                    } else if (typeof current.init === "function") {
-                        current = await current.init();
-                        current = current?.[part];
-                    } else {
-                        current = undefined;
-                        break;
-                    }
-                }
-                if (current != null && typeof current.load === "function" && typeof current.unwrap === "function") {
-                    current = await current.load();
-                }
-                scope[scopeField] = current;
-            }
-            return scope as ContentScope;
-        }
     }
 }
