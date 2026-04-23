@@ -19,7 +19,9 @@ import {
     type BlockState,
     createFinalFormBlock,
     DamImageBlock,
+    FileField,
     FileUploadField,
+    type GQLDamFileFieldFileFragment,
     type GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -76,6 +78,8 @@ type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
     image: BlockState<typeof rootBlocks.image>;
     manufacturerCountry?: { id: string; label: string };
     lastCheckedAt?: Date | null;
+    // Demo-only: exercises the new multi-select FileField. Not persisted.
+    demoRelatedImages?: GQLDamFileFieldFileFragment[];
 };
 
 // TODO should we use a deep partial here?
@@ -137,7 +141,11 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         },
     });
 
-    const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (
+        { manufacturerCountry, demoRelatedImages: _demoRelatedImages, ...formValues }: FormValues,
+        form: FormApi<FormValues>,
+        event: FinalFormSubmitEvent,
+    ) => {
         if (await saveConflict.checkForConflicts()) {
             throw new Error("Conflicts detected");
         }
@@ -383,6 +391,19 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                         maxFileSize={1024 * 1024 * 4} // 4 MB
                         fullWidth
                         layout="grid"
+                    />
+                    <Field
+                        name="demoRelatedImages"
+                        component={FileField}
+                        multiple
+                        fullWidth
+                        label={
+                            <FormattedMessage
+                                id="product.demoRelatedImages"
+                                defaultMessage="Related images (demo: multi-select FileField, not persisted)"
+                            />
+                        }
+                        buttonText={<FormattedMessage id="product.demoRelatedImages.choose" defaultMessage="Choose related images" />}
                     />
                     <DateTimeField
                         label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
