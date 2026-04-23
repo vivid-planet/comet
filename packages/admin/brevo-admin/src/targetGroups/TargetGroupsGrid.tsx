@@ -6,6 +6,7 @@ import {
     downloadFile,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -18,25 +19,25 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Download, Edit } from "@comet/admin-icons";
-import { type ContentScope } from "@comet/cms-admin";
+import type { ContentScope } from "@comet/cms-admin";
 import { DialogContent, IconButton } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { type DocumentNode } from "graphql";
-import { type ReactElement } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import type { DocumentNode } from "graphql";
+import type { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { TargetGroupDialog } from "./TargetGroupDialog";
-import {
-    type GQLCreateTargetGroupMutation,
-    type GQLCreateTargetGroupMutationVariables,
-    type GQLDeleteTargetGroupMutation,
-    type GQLDeleteTargetGroupMutationVariables,
-    type GQLTargetGroupContactItemFragment,
-    type GQLTargetGroupContactsQuery,
-    type GQLTargetGroupContactsQueryVariables,
-    type GQLTargetGroupsGridQuery,
-    type GQLTargetGroupsGridQueryVariables,
-    type GQLTargetGroupsListFragment,
+import type {
+    GQLCreateTargetGroupMutation,
+    GQLCreateTargetGroupMutationVariables,
+    GQLDeleteTargetGroupMutation,
+    GQLDeleteTargetGroupMutationVariables,
+    GQLTargetGroupContactItemFragment,
+    GQLTargetGroupContactsQuery,
+    GQLTargetGroupContactsQueryVariables,
+    GQLTargetGroupsGridQuery,
+    GQLTargetGroupsGridQueryVariables,
+    GQLTargetGroupsListFragment,
 } from "./TargetGroupsGrid.generated";
 
 export type AdditionalContactAttributesType = Record<string, unknown>;
@@ -212,7 +213,9 @@ export function TargetGroupsGrid({
             filterable: false,
             type: "actions",
             renderCell: ({ row }) => {
-                if (row.isMainList) return;
+                if (row.isMainList) {
+                    return;
+                }
                 return (
                     <>
                         <IconButton component={StackLink} pageName="edit" payload={row.id}>
@@ -260,7 +263,9 @@ export function TargetGroupsGrid({
         },
     });
     const rowCount = useBufferedRowCount(data?.brevoTargetGroups.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.brevoTargetGroups.nodes ?? [];
 
     return (
@@ -275,6 +280,7 @@ export function TargetGroupsGrid({
                 slots={{
                     toolbar: TargetGroupsGridToolbar,
                 }}
+                showToolbar
             />
             <EditDialog disableCloseAfterSave componentsProps={{ dialog: { maxWidth: "sm" } }}>
                 <DialogContent>

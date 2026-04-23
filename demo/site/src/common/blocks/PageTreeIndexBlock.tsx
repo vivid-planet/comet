@@ -1,11 +1,11 @@
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
-import { type PageTreeIndexBlockData } from "@src/blocks.generated";
+import type { PageTreeIndexBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import { createSitePath } from "@src/util/createSitePath";
 import NextLink from "next/link";
-import { type JSX } from "react";
+import type { JSX } from "react";
 
-import { type LoadedData, type PageTreeNode } from "./PageTreeIndexBlock.loader";
+import type { LoadedData, PageTreeNode } from "./PageTreeIndexBlock.loader";
 import styles from "./PageTreeIndexBlock.module.scss";
 
 type PageTreeNodeWithChildren = PageTreeNode & { children: PageTreeNodeWithChildren[] };

@@ -1,7 +1,7 @@
 import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
 
-import { type EmailLinkBlockData } from "../blocks.generated";
-import { type PropsWithData } from "./PropsWithData";
+import type { EmailLinkBlockData } from "../blocks.generated";
+import type { PropsWithData } from "./PropsWithData";
 
 interface EmailLinkBlockProps extends PropsWithData<EmailLinkBlockData>, Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
     children: ReactElement;

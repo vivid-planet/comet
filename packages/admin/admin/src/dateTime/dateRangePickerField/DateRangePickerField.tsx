@@ -1,4 +1,4 @@
-import { type FieldRenderProps } from "react-final-form";
+import type { FieldRenderProps } from "react-final-form";
 
 import { Field, type FieldProps } from "../../form/Field";
 import { type DateRange, DateRangePicker, type DateRangePickerProps } from "../dateRangePicker/DateRangePicker";

@@ -1,5 +1,5 @@
 import { defineConfig } from "@comet/admin-generator";
-import { type GQLProduct } from "@src/graphql.generated";
+import type { GQLProduct } from "@src/graphql.generated";
 
 export default defineConfig<GQLProduct>({
     type: "form",

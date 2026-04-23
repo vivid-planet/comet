@@ -20,7 +20,7 @@ import { ArrowLeft } from "@comet/admin-icons";
 import { type ContentScope, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { Card, IconButton } from "@mui/material";
 import { Box } from "@mui/system";
-import { type FormApi } from "final-form";
+import type { FormApi } from "final-form";
 import { type ReactElement, type ReactNode, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -30,15 +30,15 @@ import {
     createBrevoTestContactMutation,
     updateBrevoContactMutation,
 } from "./BrevoTestContactForm.gql";
-import {
-    type GQLBrevoContactFormCheckForChangesQuery,
-    type GQLBrevoContactFormCheckForChangesQueryVariables,
-    type GQLBrevoContactFormQuery,
-    type GQLBrevoContactFormQueryVariables,
-    type GQLCreateBrevoTestContactMutation,
-    type GQLCreateBrevoTestContactMutationVariables,
-    type GQLUpdateBrevoContactMutation,
-    type GQLUpdateBrevoContactMutationVariables,
+import type {
+    GQLBrevoContactFormCheckForChangesQuery,
+    GQLBrevoContactFormCheckForChangesQueryVariables,
+    GQLBrevoContactFormQuery,
+    GQLBrevoContactFormQueryVariables,
+    GQLCreateBrevoTestContactMutation,
+    GQLCreateBrevoTestContactMutationVariables,
+    GQLUpdateBrevoContactMutation,
+    GQLUpdateBrevoContactMutationVariables,
 } from "./BrevoTestContactForm.gql.generated";
 
 export type EditBrevoContactFormValues = {
@@ -159,7 +159,9 @@ export function BrevoTestContactForm({ id, scope, input2State, additionalFormFie
         }
     };
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

@@ -4,7 +4,7 @@ import { matchPath, Prompt } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterContext } from "./Context";
-import { type PromptRoutes } from "./Prompt";
+import type { PromptRoutes } from "./Prompt";
 
 interface PromptHandlerState {
     showConfirmationDialog: boolean;
@@ -26,7 +26,7 @@ function InnerPromptHandler({
         message: "",
         callback: undefined,
     });
-    if (apiRef)
+    if (apiRef) {
         apiRef.current = {
             showDialog: (message: string, callback: (ok: boolean) => void) => {
                 setState({
@@ -36,6 +36,7 @@ function InnerPromptHandler({
                 });
             },
         };
+    }
 
     const promptMessage = (location: History.Location, action: History.Action): boolean | string => {
         for (const id of Object.keys(registeredMessages.current)) {

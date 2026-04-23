@@ -31,7 +31,9 @@ export const ImportFromPicsum = () => {
     };
 
     const handleSave = async () => {
-        if (picsumImage === undefined) return;
+        if (picsumImage === undefined) {
+            return;
+        }
         await uploadFiles(
             { acceptedFiles: [picsumImage.file], fileRejections: [] },
             {

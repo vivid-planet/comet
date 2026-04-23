@@ -1,6 +1,6 @@
 import { DragIndicator } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
-import { type GridColDef, type GridColumnHeaderParams, type GridValidRowModel } from "@mui/x-data-grid";
+import type { GridColDef, GridColumnHeaderParams, GridValidRowModel } from "@mui/x-data-grid";
 import {
     DataGridPro,
     GRID_REORDER_COL_DEF,
@@ -11,8 +11,8 @@ import {
 } from "@mui/x-data-grid-pro";
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
-import { type TableBlockData } from "../../blocks.generated";
-import { type TableBlockState } from "../createTableBlock";
+import type { TableBlockData } from "../../blocks.generated";
+import type { TableBlockState } from "../createTableBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
 import { dataGridStyles } from "./dataGridStyles";
@@ -102,6 +102,9 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
 
     useEffect(() => {
         const handleMoveColumn: GridEventListener<"columnHeaderDragEnd"> = ({ field: columnId }) => {
+            if (!apiRef.current) {
+                return;
+            }
             const targetIndex = apiRef.current.getColumnIndex(columnId) - 1;
 
             updateState((state) => {
@@ -118,7 +121,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             });
         };
 
-        return apiRef.current.subscribeEvent("columnHeaderDragEnd", handleMoveColumn);
+        return apiRef.current?.subscribeEvent("columnHeaderDragEnd", handleMoveColumn);
     }, [apiRef, updateState]);
 
     const dataGridColumns: GridColDef[] = [
@@ -198,7 +201,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                 right: ["actions"],
             }}
             slots={{
-                rowReorderIcon: DragIndicator,
+                rowReorderIcon: ({ color, ...restProps }) => <DragIndicator {...restProps} htmlColor={color} />,
             }}
             sx={dataGridStyles}
             onRowOrderChange={({ targetIndex, row }) => {

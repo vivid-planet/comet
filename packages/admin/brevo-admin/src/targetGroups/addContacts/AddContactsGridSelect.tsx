@@ -8,6 +8,7 @@ import {
     Field,
     FinalForm,
     type GridColDef,
+    GridToolbarQuickFilter,
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
@@ -16,17 +17,16 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add, Close, Remove, Save } from "@comet/admin-icons";
-import { type ContentScope } from "@comet/cms-admin";
+import type { ContentScope } from "@comet/cms-admin";
 import { DialogActions, DialogTitle, IconButton, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import type { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
+import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
 import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { MemoryRouter } from "react-router";
 
 import { useContactImportFromCsv } from "../../common/contactImport/useContactImportFromCsv";
-import { type GQLEmailCampaignContentScopeInput } from "../../graphql.generated";
+import type { GQLEmailCampaignContentScopeInput } from "../../graphql.generated";
 import { targetGroupFormNamedOperations } from "../TargetGroupForm";
 import {
     addBrevoContactsToTargetGroupMutation,
@@ -154,7 +154,9 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
     });
 
     const onDeleteClick = (contactId: number) => {
-        if (!id) return;
+        if (!id) {
+            return;
+        }
         removeContacts({ variables: { id, input: { brevoContactId: contactId } } });
     };
 
@@ -247,7 +249,9 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
     const assignedContactsRowCount = useBufferedRowCount(assignedContactsData?.manuallyAssignedBrevoContacts.totalCount);
     const assignableContactsRowCount = useBufferedRowCount(assignableContactsData?.brevoContacts.totalCount);
 
-    if (assignedContactsError || assignableContactsError) throw assignedContactsError ?? assignableContactsError;
+    if (assignedContactsError || assignableContactsError) {
+        throw assignedContactsError ?? assignableContactsError;
+    }
 
     return (
         <>
@@ -269,6 +273,7 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
                         targetGroupId: id,
                     } as AddContactsGridSelectToolbarProps,
                 }}
+                showToolbar
             />
             <FinalForm<FormProps> mode="edit" onSubmit={submit}>
                 {({ handleSubmit, submitting }) => {
@@ -282,7 +287,7 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
                                     </IconButton>
                                 </DialogTitle>
                                 <Box>
-                                    <Field name="brevoContactIds" fullWidth>
+                                    <Field<number[]> name="brevoContactIds" fullWidth>
                                         {(props) => (
                                             <DataGrid
                                                 {...dataGridAssignableContactsProps}
@@ -294,12 +299,14 @@ export function AddContactsGridSelect({ id, scope, assignedContactsTargetGroupBr
                                                 slots={{
                                                     toolbar: AssignableContactsGridToolbar,
                                                 }}
-                                                rowSelectionModel={props.value}
+                                                rowSelectionModel={{ type: "include", ids: new Set(props.input.value) }}
                                                 onRowSelectionModelChange={(newSelectionModel) => {
-                                                    props.input.onChange(newSelectionModel);
+                                                    props.input.onChange(Array.from(newSelectionModel.ids));
                                                 }}
+                                                disableRowSelectionExcludeModel
                                                 checkboxSelection
                                                 keepNonExistentRowsSelected
+                                                showToolbar
                                             />
                                         )}
                                     </Field>

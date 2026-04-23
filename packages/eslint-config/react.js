@@ -46,6 +46,21 @@ export const restrictedImportPaths = [
         importNames: ["GridColDef"],
         message: "Please use GridColDef from @comet/admin instead",
     },
+    {
+        name: "@mui/x-data-grid",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-pro",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-premium",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
 ];
 
 /** @type {import('eslint')} */

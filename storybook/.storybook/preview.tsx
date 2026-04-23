@@ -2,7 +2,7 @@ import "@fontsource-variable/roboto-flex/full.css";
 
 import { LicenseInfo } from "@mui/x-license";
 import type { Preview } from "@storybook/react-webpack5";
-import { type GlobalTypes } from "storybook/internal/csf";
+import type { GlobalTypes } from "storybook/internal/csf";
 
 import { CometConfigProviderDecorator } from "./decorators/CometConfigProvider.decorator";
 import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
@@ -24,7 +24,6 @@ export const globalTypes: GlobalTypes = {
                 { value: ThemeOption.Comet, right: "🟩", title: "Comet Theme" },
                 { value: ThemeOption.Mui, right: "🟦", title: "Mui Theme" },
             ],
-            showName: true,
             dynamicTitle: true,
         },
     },
@@ -38,7 +37,6 @@ export const globalTypes: GlobalTypes = {
                 { value: LocaleOption.English, title: "English", right: "🇺🇸" },
                 { value: LocaleOption.German, title: "German", right: "🇩🇪" },
             ],
-            showName: true,
             dynamicTitle: true,
         },
     },
@@ -51,7 +49,6 @@ export const globalTypes: GlobalTypes = {
                 { value: LayoutOption.Padded, title: "Padded" },
                 { value: LayoutOption.Default, title: "Default" },
             ],
-            showName: true,
             dynamicTitle: true,
         },
     },

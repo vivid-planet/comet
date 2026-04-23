@@ -67,6 +67,7 @@ export const BasicSingleSelect = {
                                 },
                             },
                         }}
+                        showToolbar
                     />
                 </Box>
             </Box>
@@ -123,6 +124,7 @@ export const WithCustomLabels = {
                                 </DataGridToolbar>
                             ),
                         }}
+                        showToolbar
                     />
                 </Box>
             </Box>
@@ -177,6 +179,7 @@ export const WithLongLabels = {
                                 </DataGridToolbar>
                             ),
                         }}
+                        showToolbar
                     />
                 </Box>
             </Box>
@@ -234,6 +237,7 @@ export const WithManyOptions = {
                                 </DataGridToolbar>
                             ),
                         }}
+                        showToolbar
                     />
                 </Box>
             </Box>
@@ -291,6 +295,7 @@ export const WithCustomCellContent = {
                                 </DataGridToolbar>
                             ),
                         }}
+                        showToolbar
                     />
                 </Box>
             </Box>
@@ -357,6 +362,7 @@ export const MultipleSingleSelectColumns = {
                                 </DataGridToolbar>
                             ),
                         }}
+                        showToolbar
                     />
                 </Box>
             </Box>
@@ -435,6 +441,7 @@ export const DifferentDensityModes = {
                                 </DataGridToolbar>
                             ),
                         }}
+                        showToolbar
                     />
                 </Box>
             </Box>

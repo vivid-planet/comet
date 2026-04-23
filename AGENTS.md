@@ -10,14 +10,14 @@
 
 When running in the cloud/web environment and repo is cloned from scratch, if required you can:
 
-1. Install dependencies
+1. Install dependencies (**only** run if not yet done by eg. pipeline setup, check if `node_modules` exists)
     - `NODE_USE_ENV_PROXY=1 ./install.sh`
-2. Run build for packages you are working on
+2. Run build for packages you are working on (**only** run if build file doesn't exist yet, check if `lib` exists in package)
     - `pnpm --recursive --filter '<package-name>' run build`
 
 **If Docker is available:**
 
-- You can start the full demo application using dev-pm and access it at localhost
+- You can start the full demo application using dev-pm and access it at localhost. Do **not** use docker compose directly, always use dev-pm and start `demo-docker`.
 
 **If Docker is not available:**
 
@@ -29,36 +29,40 @@ When making changes to demo api, either start the api and verify it's running or
 
 Run the appropriate checks after every change and fix all reported errors.
 
-### In a package (`packages/*`) or demo service (`demo/*`)
+### Post-Change Workflow
 
-Run from the package or service folder, or from the repo root using the `--filter` flag:
+After making changes to any package (`packages/*`) or the demo project (`demo/*`), run `lint:fix` to auto-fix ESLint and Prettier issues:
 
 ```bash
-# Auto-fix ESLint issues (also applies prettier formatting via eslint-plugin-prettier)
-pnpm run lint:eslint --fix
+# Fix a single package (from the package folder or repo root)
+pnpm run lint:fix
 # or from repo root:
-pnpm --filter <package-name> run lint:eslint --fix
+pnpm --filter <package-name> run lint:fix
 
-# Fix remaining prettier errors (if any still reported after lint:eslint --fix)
-pnpm exec prettier --write .
-# or from repo root:
-pnpm --filter <package-name> exec prettier --write .
-
-# Verify all checks pass: prettier, eslint, tsc
-pnpm run lint
-# or from repo root:
-pnpm --filter <package-name> run lint
+# Fix all packages at once (from repo root)
+pnpm run lint:fix
 ```
 
-`tsc` errors must be fixed manually. There is no standalone prettier format script — prettier formatting is applied via `lint:eslint --fix`.
+`tsc` errors must be fixed manually — `lint:fix` does not cover type errors.
+
+### `lint:fix` scripts
+
+Every package and demo service exposes these scripts:
+
+- `lint:fix` — runs `lint:fix:eslint` and `lint:fix:prettier` in parallel (plus `lint:fix:style` in `demo/site`)
+- `lint:fix:eslint` — runs ESLint with `--fix` (also applies Prettier formatting via `eslint-plugin-prettier`)
+- `lint:fix:prettier` — runs Prettier with `--write` for any remaining formatting issues
+- `lint:fix:style` — runs Stylelint with `--fix` (`demo/site` only)
+
+The root-level `lint:fix` runs all workspace `lint:fix` scripts recursively, then formats root-level config files.
 
 ### In `docs/`
 
 Run from the `docs/` folder:
 
 ```bash
-# Auto-fix ESLint issues
-pnpm run lint:eslint --fix
+# Auto-fix ESLint + Prettier issues
+pnpm run lint:fix
 
 # Verify all checks pass: prettier, eslint, cspell
 pnpm run lint
@@ -83,21 +87,34 @@ This repository includes a demo application which is showcasing the libraries.
 **Api:**
 Demo backend API (NestJS, PostgreSQL)
 
-- Start using `pnpm exec dev-pm @demo-api`
+- Start using `pnpm exec dev-pm start @demo-api`
 - access at: http://localhost:4000/
 
 **Admin:**
 Demo admin app (Vite, React, Apollo)
 
-- Start using `pnpm exec dev-pm @demo-admin`
+- Start using `pnpm exec dev-pm start @demo-admin`
 - access at: http://localhost:8000/
 - Usually Login as "Admin" in the IDP Login Page
 
 **Site:**
 Demo frontend site (Next.js)
 
-- Start using `pnpm exec dev-pm @demo-site`
+- Start using `pnpm exec dev-pm start @demo-site`
 - access at: http://localhost:3000/
+
+
+### dev-pm
+
+Use dev-pm for managing demo processes:
+- command: `pnpm exec -- dev-pm`
+- config: `dev-pm.config.ts`
+
+Common commands:
+- start script/service: `pnpm exec -- dev-pm start scriptName`
+- start group `pnpm exec -- dev-pm start @group`
+- view status `pnpm exec -- dev-pm status`
+- view logs `pnpm exec -- dev-pm logs --lines 100 scriptName`
 
 ## Packages
 

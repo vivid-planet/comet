@@ -1,7 +1,7 @@
 import { GridCellContent } from "@comet/admin";
 import { defineConfig } from "@comet/admin-generator";
-import { type GQLProduct } from "@src/graphql.generated";
-import { type ReactNode } from "react";
+import type { GQLProduct } from "@src/graphql.generated";
+import type { ReactNode } from "react";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../ProductsGridPreviewAction";

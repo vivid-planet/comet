@@ -9,12 +9,12 @@ import { FormattedMessage } from "react-intl";
 
 import { SendEmailCampaignNowDialog } from "./SendEmailCampaignNowDialog";
 import { sendEmailCampaignNowMutation, targetGroupsSelectQuery } from "./SendManagerFields.gql";
-import {
-    type GQLSendEmailCampaignNowMutation,
-    type GQLSendEmailCampaignNowMutationVariables,
-    type GQLTargetGroupSelectFragment,
-    type GQLTargetGroupsSelectQuery,
-    type GQLTargetGroupsSelectQueryVariables,
+import type {
+    GQLSendEmailCampaignNowMutation,
+    GQLSendEmailCampaignNowMutationVariables,
+    GQLTargetGroupSelectFragment,
+    GQLTargetGroupsSelectQuery,
+    GQLTargetGroupsSelectQueryVariables,
 } from "./SendManagerFields.gql.generated";
 
 interface SendManagerFieldsProps {
@@ -25,7 +25,9 @@ interface SendManagerFieldsProps {
 }
 
 const validateScheduledAt = (value: Date, now: Date) => {
-    if (!value) return;
+    if (!value) {
+        return;
+    }
 
     if (value < now) {
         return (

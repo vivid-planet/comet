@@ -29,6 +29,9 @@ pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
 # Install agent skills
 pnpm run install-agent-skills
 
+# Install open-spec skills in packages
+pnpm --filter '@comet/mail-react' run openspec:install-skills
+
 # create site-config-envs
 pnpm run create-site-configs-env
 

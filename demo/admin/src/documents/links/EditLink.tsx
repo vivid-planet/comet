@@ -6,12 +6,7 @@ import { IconButton } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { useIntl } from "react-intl";
 
-import {
-    type GQLEditLinkQuery,
-    type GQLEditLinkQueryVariables,
-    type GQLUpdateLinkMutation,
-    type GQLUpdateLinkMutationVariables,
-} from "./EditLink.generated";
+import type { GQLEditLinkQuery, GQLEditLinkQueryVariables, GQLUpdateLinkMutation, GQLUpdateLinkMutationVariables } from "./EditLink.generated";
 
 const usePage = createUsePage({
     rootBlocks: {
@@ -83,7 +78,9 @@ export const EditLink = ({ id }: Props) => {
         return <Loading behavior="fillPageHeight" />;
     }
 
-    if (!linkState) return null;
+    if (!linkState) {
+        return null;
+    }
 
     return (
         <>
