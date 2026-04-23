@@ -1,6 +1,6 @@
-import { gql, useApolloClient, useLazyQuery } from "@apollo/client";
+import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
 import { Clear, Search } from "@comet/admin-icons";
-import { type DependencyInterface, findTextMatches, MarkedMatches, useCometConfig, useContentScope } from "@comet/cms-admin";
+import { findTextMatches, MarkedMatches } from "@comet/cms-admin";
 import {
     Chip,
     CircularProgress,
@@ -17,25 +17,8 @@ import {
     Typography,
 } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
-import { useHistory } from "react-router";
-
-import type { GQLGlobalSearchQuery, GQLGlobalSearchQueryVariables } from "./GlobalSearch.generated";
-
-const globalSearchQuery = gql`
-    query GlobalSearch($search: String!, $limit: Int!) {
-        fullTextSearch(search: $search, limit: $limit) {
-            nodes {
-                entityName
-                id
-                name
-                secondaryInformation
-            }
-            totalCount
-        }
-    }
-`;
+import type { Meta } from "@storybook/react-webpack5";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 type SearchResult = {
     entityName: string;
@@ -44,57 +27,71 @@ type SearchResult = {
     secondaryInformation: string | null;
 };
 
-function humanizeEntityName(entityName: string) {
-    return entityName.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase());
-}
+const demoResults: SearchResult[] = [
+    { entityName: "Page", id: "1", name: "Homepage", secondaryInformation: "/en" },
+    { entityName: "Page", id: "2", name: "About us", secondaryInformation: "/en/about" },
+    { entityName: "Page", id: "3", name: "Contact", secondaryInformation: "/en/contact" },
+    { entityName: "News", id: "4", name: "New product launch", secondaryInformation: "Published 2024-02-10" },
+    { entityName: "News", id: "5", name: "Company anniversary celebration", secondaryInformation: "Published 2024-01-15" },
+    { entityName: "Product", id: "6", name: "Running Shoes", secondaryInformation: "Category: Footwear · Acme Inc." },
+    {
+        entityName: "Product",
+        id: "7",
+        name: "Bluetooth Headphones with Noise Cancellation and Long Battery Life",
+        secondaryInformation: "Category: Audio · SoundCorp",
+    },
+    { entityName: "Manufacturer", id: "8", name: "Acme Inc.", secondaryInformation: null },
+];
 
-function GlobalSearch() {
-    const [searchText, setSearchText] = useState("");
+const entityLabels: Record<string, ReactNode> = {
+    Page: "Pages",
+    News: "News",
+    Product: "Products",
+    Manufacturer: "Manufacturers",
+};
+
+function GlobalSearchDemo({
+    initialQuery = "",
+    staticResults,
+    loading = false,
+    forceOpen,
+}: {
+    initialQuery?: string;
+    staticResults?: SearchResult[];
+    loading?: boolean;
+    forceOpen?: boolean;
+}) {
+    const [searchText, setSearchText] = useState(initialQuery);
     const [open, setOpen] = useState(false);
-    const anchorRef = useRef<HTMLDivElement>(null);
-    const history = useHistory();
-    const apolloClient = useApolloClient();
-    const cometConfig = useCometConfig();
-    const entityDependencyMap = cometConfig.dependencies?.entityDependencyMap ?? {};
-    const contentScope = useContentScope();
-    const debounceTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-    const intl = useIntl();
-
-    const [executeSearch, { data, loading }] = useLazyQuery<GQLGlobalSearchQuery, GQLGlobalSearchQueryVariables>(globalSearchQuery, {
-        fetchPolicy: "network-only",
-    });
-
-    const debouncedSearch = useCallback(
-        (value: string) => {
-            if (debounceTimerRef.current) {
-                clearTimeout(debounceTimerRef.current);
-            }
-            debounceTimerRef.current = setTimeout(() => {
-                if (value.trim().length > 0) {
-                    executeSearch({ variables: { search: value.trim(), limit: 25 } });
-                }
-            }, 300);
-        },
-        [executeSearch],
-    );
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        return () => {
-            if (debounceTimerRef.current) {
-                clearTimeout(debounceTimerRef.current);
-            }
-        };
-    }, []);
+        if (forceOpen || initialQuery.length > 0) {
+            setOpen(true);
+        }
+    }, [forceOpen, initialQuery]);
+
+    const results: SearchResult[] = useMemo(() => {
+        if (staticResults) {
+            return staticResults;
+        }
+        if (!searchText.trim()) {
+            return [];
+        }
+        const lower = searchText.trim().toLowerCase();
+        return demoResults.filter(
+            (r) =>
+                r.name.toLowerCase().includes(lower) ||
+                (r.secondaryInformation ?? "").toLowerCase().includes(lower) ||
+                r.entityName.toLowerCase().includes(lower),
+        );
+    }, [searchText, staticResults]);
+
+    const totalCount = staticResults ? staticResults.length + 12 : results.length;
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setSearchText(value);
-        if (value.trim().length > 0) {
-            setOpen(true);
-            debouncedSearch(value);
-        } else {
-            setOpen(false);
-        }
+        setSearchText(e.target.value);
+        setOpen(e.target.value.trim().length > 0);
     };
 
     const handleClear = () => {
@@ -102,47 +99,18 @@ function GlobalSearch() {
         setOpen(false);
     };
 
-    const handleClickAway = () => {
-        setOpen(false);
-    };
-
-    const handleResultClick = async (entityName: string, id: string) => {
-        const dependencyObject = entityDependencyMap[entityName] as DependencyInterface | undefined;
-        if (!dependencyObject) {
-            return;
-        }
-
-        try {
-            const path = await dependencyObject.resolvePath({
-                apolloClient,
-                id,
-            });
-            const url = contentScope.match.url + path;
-            history.push(url);
-            setOpen(false);
-            setSearchText("");
-        } catch (error) {
-            if (process.env.NODE_ENV === "development") {
-                console.error(`Could not resolve path for ${entityName} (${id}):`, error);
-            }
-        }
-    };
-
-    const results = useMemo<SearchResult[]>(() => data?.fullTextSearch.nodes ?? [], [data]);
-    const totalCount = data?.fullTextSearch.totalCount ?? 0;
-
     const trimmedSearch = searchText.trim();
-    const showPopper = open && trimmedSearch.length > 0;
+    const showPopper = (forceOpen ?? open) && (trimmedSearch.length > 0 || !!staticResults);
 
     return (
-        <ClickAwayListener onClickAway={handleClickAway}>
-            <SearchRoot ref={anchorRef}>
+        <ClickAwayListener onClickAway={() => !forceOpen && setOpen(false)}>
+            <SearchRoot ref={setAnchorEl}>
                 <SearchInputWrapper focused={open}>
                     <SearchIconWrapper>
                         <Search fontSize="small" />
                     </SearchIconWrapper>
                     <StyledInputBase
-                        placeholder={intl.formatMessage({ id: "globalSearch.placeholder", defaultMessage: "Search…" })}
+                        placeholder="Search…"
                         value={searchText}
                         onChange={handleInputChange}
                         onFocus={() => {
@@ -155,11 +123,7 @@ function GlobalSearch() {
                                 {loading ? (
                                     <CircularProgress size={14} color="inherit" />
                                 ) : searchText ? (
-                                    <ClearButton
-                                        size="small"
-                                        onClick={handleClear}
-                                        aria-label={intl.formatMessage({ id: "globalSearch.clear", defaultMessage: "Clear search" })}
-                                    >
+                                    <ClearButton size="small" onClick={handleClear} aria-label="clear">
                                         <Clear sx={{ fontSize: 16 }} />
                                     </ClearButton>
                                 ) : null}
@@ -169,7 +133,7 @@ function GlobalSearch() {
                 </SearchInputWrapper>
                 <Popper
                     open={showPopper}
-                    anchorEl={anchorRef.current}
+                    anchorEl={anchorEl}
                     placement="bottom-end"
                     sx={{ zIndex: (theme) => theme.zIndex.appBar + 1 }}
                     modifiers={[{ name: "offset", options: { offset: [0, 6] } }]}
@@ -183,10 +147,10 @@ function GlobalSearch() {
                             <EmptyState>
                                 <Search sx={{ fontSize: 32, opacity: 0.4 }} />
                                 <Typography variant="body2" color="text.secondary">
-                                    <FormattedMessage id="globalSearch.noResults" defaultMessage="No results found" />
+                                    No results found
                                 </Typography>
                                 <Typography variant="caption" color="text.disabled">
-                                    <FormattedMessage id="globalSearch.noResultsHint" defaultMessage="Try a different search term" />
+                                    Try a different search term
                                 </Typography>
                             </EmptyState>
                         ) : (
@@ -194,20 +158,11 @@ function GlobalSearch() {
                                 <ResultsScroll>
                                     <List dense disablePadding>
                                         {results.map((result) => {
-                                            const dependency = entityDependencyMap[result.entityName] as DependencyInterface | undefined;
-                                            const hasDependency = !!dependency;
                                             const matches = findTextMatches(result.name, trimmedSearch);
-                                            const rawDisplayName = dependency?.displayName;
-                                            const entityLabel =
-                                                typeof rawDisplayName === "string"
-                                                    ? humanizeEntityName(rawDisplayName)
-                                                    : (rawDisplayName ?? humanizeEntityName(result.entityName));
+                                            const entityLabel = entityLabels[result.entityName] ?? result.entityName;
                                             return (
                                                 <ListItem key={`${result.entityName}-${result.id}`} disablePadding>
-                                                    <ResultItemButton
-                                                        disabled={!hasDependency}
-                                                        onClick={() => handleResultClick(result.entityName, result.id)}
-                                                    >
+                                                    <ResultItemButton>
                                                         <ListItemText
                                                             primary={
                                                                 <PrimaryText>
@@ -232,11 +187,7 @@ function GlobalSearch() {
                                     <>
                                         <FooterDivider />
                                         <ResultsFooter>
-                                            <FormattedMessage
-                                                id="globalSearch.showingResults"
-                                                defaultMessage="Showing {shown} of {total} results"
-                                                values={{ shown: results.length, total: totalCount }}
-                                            />
+                                            Showing {results.length} of {totalCount} results
                                         </ResultsFooter>
                                     </>
                                 )}
@@ -407,4 +358,41 @@ const ResultsFooter = styled("div")(({ theme }) => ({
     textAlign: "center",
 }));
 
-export { GlobalSearch };
+export default {
+    title: "@comet/cms-admin/Global Search",
+    parameters: { layout: "fullscreen" },
+    decorators: [
+        (Story) => (
+            <AppHeader position="relative" headerHeight={60}>
+                <AppHeaderMenuButton />
+                <CometLogo color="white" />
+                <FillSpace />
+                <Story />
+            </AppHeader>
+        ),
+    ],
+} as Meta;
+
+export const Empty = {
+    render: () => <GlobalSearchDemo />,
+    name: "Empty (idle)",
+};
+
+export const WithResults = {
+    render: () => <GlobalSearchDemo initialQuery="run" />,
+    name: "With results",
+};
+
+export const ManyResults = {
+    render: () => <GlobalSearchDemo forceOpen staticResults={demoResults} />,
+    name: "Grouped results with footer",
+};
+
+export const NoResults = {
+    render: () => <GlobalSearchDemo initialQuery="zzz-nothing-here" />,
+    name: "No results",
+};
+
+export const Loading = {
+    render: () => <GlobalSearchDemo forceOpen loading staticResults={[]} />,
+};
