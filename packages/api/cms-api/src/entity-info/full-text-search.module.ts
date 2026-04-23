@@ -7,4 +7,5 @@ import { FullTextSearchResolver } from "./full-text-search.resolver";
     imports: [EntityInfoModule],
     providers: [FullTextSearchResolver],
 })
+/** @experimental */
 export class FullTextSearchModule {}
