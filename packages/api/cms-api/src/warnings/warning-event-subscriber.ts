@@ -8,7 +8,7 @@ import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks
 import { ROOT_BLOCK_ENTITY_METADATA_KEY } from "../blocks/decorators/root-block-entity";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { isScopedEntitySqlPath, SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { WarningData } from "./dto/warning-data";
@@ -66,7 +66,9 @@ export class WarningEventSubscriber implements EventSubscriber {
                 if (scoped) {
                     let scopedEntityScope: ContentScope | ContentScope[];
 
-                    if (isInjectableService(scoped)) {
+                    if (isScopedEntitySqlPath(scoped)) {
+                        scopedEntityScope = await this.resolveSqlPathScope(scoped, args.entity);
+                    } else if (isInjectableService(scoped)) {
                         const service = this.moduleRef.get(scoped, { strict: false });
                         scopedEntityScope = await service.getEntityScope(args.entity);
                     } else {
@@ -160,6 +162,63 @@ export class WarningEventSubscriber implements EventSubscriber {
                 });
                 await this.entityManager.nativeDelete(Warning, { updatedAt: { $lt: startDate }, sourceInfo });
             }
+        }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private async resolveSqlPathScope(sqlPath: string | Record<string, string>, entity: any): Promise<ContentScope> {
+        if (typeof sqlPath === "string") {
+            const parts = sqlPath.split(".");
+            let current = entity;
+            for (const part of parts) {
+                if (current == null) {
+                    break;
+                }
+                if (typeof current.load === "function" && typeof current.unwrap === "function") {
+                    current = await current.load();
+                }
+                if (current[part] !== undefined) {
+                    current = current[part];
+                } else if (typeof current.init === "function") {
+                    current = await current.init();
+                    current = current?.[part];
+                } else {
+                    current = undefined;
+                    break;
+                }
+            }
+            if (current != null && typeof current.load === "function" && typeof current.unwrap === "function") {
+                current = await current.load();
+            }
+            return current as ContentScope;
+        } else {
+            const scope: Record<string, unknown> = {};
+            for (const [scopeField, fieldPath] of Object.entries(sqlPath)) {
+                const parts = fieldPath.split(".");
+                let current = entity;
+                for (const part of parts) {
+                    if (current == null) {
+                        break;
+                    }
+                    if (typeof current.load === "function" && typeof current.unwrap === "function") {
+                        current = await current.load();
+                    }
+                    if (current[part] !== undefined) {
+                        current = current[part];
+                    } else if (typeof current.init === "function") {
+                        current = await current.init();
+                        current = current?.[part];
+                    } else {
+                        current = undefined;
+                        break;
+                    }
+                }
+                if (current != null && typeof current.load === "function" && typeof current.unwrap === "function") {
+                    current = await current.load();
+                }
+                scope[scopeField] = current;
+            }
+            return scope as ContentScope;
         }
     }
 }

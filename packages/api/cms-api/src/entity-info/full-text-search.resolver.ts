@@ -1,6 +1,7 @@
 import { EntityManager, FilterQuery } from "@mikro-orm/postgresql";
 import { Inject, Optional, Type } from "@nestjs/common";
 import { Args, Int, Query, Resolver } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-scalars";
 
 import { DocumentInterface } from "../document/dto/document-interface";
 import { PAGE_TREE_DOCUMENTS } from "../page-tree/page-tree.constants";
@@ -21,6 +22,7 @@ export class FullTextSearchResolver {
         @Args("search") search: string,
         @Args("offset", { type: () => Int, defaultValue: 0 }) offset: number,
         @Args("limit", { type: () => Int, defaultValue: 25 }) limit: number,
+        @Args("scope", { type: () => GraphQLJSONObject, nullable: true }) scope?: Record<string, unknown>,
     ): Promise<PaginatedEntityInfo> {
         // Page-tree documents (Page, Link, ...) are present in the EntityInfo view so that
         // dependency lookups via getEntityInfo() can resolve document-id references. They share
@@ -33,10 +35,14 @@ export class FullTextSearchResolver {
             where.entityName = { $nin: this.pageTreeDocuments.map((Document) => Document.name) };
         }
 
-        const [results, totalCount] = await this.entityManager.findAndCount(EntityInfoObject, where, {
-            offset,
-            limit,
-        });
+        const qb = this.entityManager.createQueryBuilder(EntityInfoObject).where(where);
+
+        // Filter by scope if provided using jsonb containment operator
+        if (scope) {
+            qb.andWhere(`"scope" @> ?::jsonb`, [JSON.stringify(scope)]);
+        }
+
+        const [results, totalCount] = await qb.offset(offset).limit(limit).getResultAndCount();
 
         return new PaginatedEntityInfo(results, totalCount);
     }

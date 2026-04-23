@@ -6,7 +6,12 @@ import isEqual from "lodash.isequal";
 
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import {
+    isScopedEntitySqlPath,
+    SCOPED_ENTITY_METADATA_KEY,
+    ScopedEntityMeta,
+    ScopedEntitySqlPath,
+} from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 import { AFFECTED_SCOPE_METADATA_KEY, AffectedScopeMeta } from "./decorators/affected-scope.decorator";
@@ -101,13 +106,7 @@ export class ContentScopeService {
                         if (!scoped) {
                             throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
                         }
-                        let scopes;
-                        if (isInjectableService(scoped)) {
-                            const service = this.moduleRef.get(scoped, { strict: false });
-                            scopes = await service.getEntityScope(row);
-                        } else {
-                            scopes = await scoped(row);
-                        }
+                        const scopes = await this.resolveScopedEntityScopes(scoped, row);
                         if (!scopes) {
                             throw new Error(`@ScopedEntity function for ${affectedEntity.entity} didn't return any scopes`);
                         }
@@ -152,6 +151,88 @@ export class ContentScopeService {
         } else {
             const request = context.switchToHttp().getRequest();
             return { ...request.params, ...request.query };
+        }
+    }
+
+    /**
+     * Resolves scopes from a ScopedEntityMeta value, supporting all three variants:
+     * - Injectable service
+     * - Function callback
+     * - SQL-path (string or object)
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async resolveScopedEntityScopes(scoped: ScopedEntityMeta, entity: any): Promise<ContentScope | ContentScope[]> {
+        if (isScopedEntitySqlPath(scoped)) {
+            return this.resolveSqlPathScope(scoped, entity);
+        }
+        if (isInjectableService(scoped)) {
+            const service = this.moduleRef.get(scoped, { strict: false });
+            return service.getEntityScope(entity);
+        }
+        return scoped(entity);
+    }
+
+    /**
+     * Resolves scope from an entity using a SQL-path definition at runtime.
+     * Navigates the object graph following the path.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private async resolveSqlPathScope(sqlPath: ScopedEntitySqlPath, entity: any): Promise<ContentScope> {
+        if (typeof sqlPath === "string") {
+            // String form: navigate the path to get the scope object
+            const parts = sqlPath.split(".");
+            let current = entity;
+            for (const part of parts) {
+                if (current == null) {
+                    throw new Error(`Cannot resolve @ScopedEntity path "${sqlPath}": encountered null/undefined at "${part}"`);
+                }
+                // Handle MikroORM Reference/Ref objects (lazy-loaded relations)
+                if (typeof current.load === "function" && typeof current.unwrap === "function") {
+                    current = await current.load();
+                }
+                // Handle MikroORM init for collections/references
+                if (current[part] !== undefined) {
+                    current = current[part];
+                } else if (typeof current.init === "function") {
+                    current = await current.init();
+                    current = current?.[part];
+                } else {
+                    throw new Error(`Cannot resolve @ScopedEntity path "${sqlPath}": property "${part}" not found`);
+                }
+            }
+            // Handle final value being a Reference
+            if (current != null && typeof current.load === "function" && typeof current.unwrap === "function") {
+                current = await current.load();
+            }
+            return current as ContentScope;
+        } else {
+            // Object form: resolve each field individually
+            const scope: Record<string, unknown> = {};
+            for (const [scopeField, fieldPath] of Object.entries(sqlPath)) {
+                const parts = fieldPath.split(".");
+                let current = entity;
+                for (const part of parts) {
+                    if (current == null) {
+                        throw new Error(`Cannot resolve @ScopedEntity path "${fieldPath}": encountered null/undefined at "${part}"`);
+                    }
+                    if (typeof current.load === "function" && typeof current.unwrap === "function") {
+                        current = await current.load();
+                    }
+                    if (current[part] !== undefined) {
+                        current = current[part];
+                    } else if (typeof current.init === "function") {
+                        current = await current.init();
+                        current = current?.[part];
+                    } else {
+                        throw new Error(`Cannot resolve @ScopedEntity path "${fieldPath}": property "${part}" not found`);
+                    }
+                }
+                if (current != null && typeof current.load === "function" && typeof current.unwrap === "function") {
+                    current = await current.load();
+                }
+                scope[scopeField] = current;
+            }
+            return scope as ContentScope;
         }
     }
 }
