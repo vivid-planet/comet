@@ -2550,6 +2550,66 @@
         ]
     },
     {
+        "name": "Placeholder",
+        "fields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "field",
+                "kind": "Enum",
+                "enum": [
+                    "title",
+                    "price"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "productTitle",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "productPrice",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "value",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "field",
+                "kind": "Enum",
+                "enum": [
+                    "title",
+                    "price"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "productTitle",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "productPrice",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "ProductList",
         "fields": [
             {

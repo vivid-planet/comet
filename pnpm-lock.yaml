@@ -74,6 +74,9 @@ importers:
       '@comet/admin-icons':
         specifier: workspace:*
         version: link:../../packages/admin/admin-icons
+      '@comet/admin-rte':
+        specifier: workspace:*
+        version: link:../../packages/admin/admin-rte
       '@comet/brevo-admin':
         specifier: workspace:*
         version: link:../../packages/admin/brevo-admin
@@ -116,6 +119,9 @@ importers:
       dnd-core:
         specifier: ^16.0.1
         version: 16.0.1
+      draft-js:
+        specifier: ^0.11.4
+        version: 0.11.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       final-form:
         specifier: ^4.20.10
         version: 4.20.10
@@ -207,6 +213,9 @@ importers:
       '@swc/plugin-emotion':
         specifier: ^14.0.1
         version: 14.0.1
+      '@types/draft-js':
+        specifier: ^0.11.20
+        version: 0.11.20
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
