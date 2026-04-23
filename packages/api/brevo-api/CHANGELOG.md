@@ -1,5 +1,25 @@
 # @comet/brevo-api
 
+## 9.0.0-beta.3
+
+### Minor Changes
+
+- dd51208: Update TypeScript compilation target to ES2023 and lib to ES2023 to match the required Node.js v22
+
+### Patch Changes
+
+- Updated dependencies [a50793a]
+- Updated dependencies [cac2b3b]
+- Updated dependencies [71dce06]
+- Updated dependencies [0e7d7e9]
+- Updated dependencies [962a320]
+- Updated dependencies [802b0b8]
+- Updated dependencies [8bf0e5b]
+- Updated dependencies [2ea835c]
+- Updated dependencies [dd51208]
+- Updated dependencies [8722deb]
+    - @comet/cms-api@9.0.0-beta.3
+
 ## 9.0.0-beta.2
 
 ### Patch Changes

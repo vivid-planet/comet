@@ -1,5 +1,33 @@
 # @comet/admin
 
+## 9.0.0-beta.3
+
+### Major Changes
+
+- 3c81ff0: Remove `hasClearableContent` prop from `ClearInputAdornment`
+
+    The component now always renders when included in the component tree. Callers should conditionally render the component instead of passing the `hasClearableContent` prop.
+
+    **Migration:**
+
+    Before:
+
+    ```tsx
+    <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
+    ```
+
+    After:
+
+    ```tsx
+    {
+        value && <ClearInputAdornment position="end" onClick={() => onChange("")} />;
+    }
+    ```
+
+### Patch Changes
+
+- @comet/admin-icons@9.0.0-beta.3
+
 ## 9.0.0-beta.2
 
 ### Major Changes
