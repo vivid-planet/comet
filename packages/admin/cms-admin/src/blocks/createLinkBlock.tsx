@@ -89,6 +89,11 @@ function createLinkBlock(
             return false;
         },
         tags: tags ? tags : childTags,
+        translateContent: async (state, translate) => {
+            const translatedState = OneOfBlock.translateContent ? await OneOfBlock.translateContent(state, translate) : state;
+            const translatedTitle = state.title ? await translate(state.title) : state.title;
+            return { ...translatedState, title: translatedTitle };
+        },
     };
 }
 

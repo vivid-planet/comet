@@ -11,6 +11,7 @@ interface Options extends Partial<TextFieldProps> {
      */
     fieldProps?: Partial<TextFieldProps>;
     extractTextContents?: BlockMethods["extractTextContents"];
+    translateContent?: BlockMethods["translateContent"];
 }
 
 export function createCompositeBlockTextField({
@@ -18,6 +19,7 @@ export function createCompositeBlockTextField({
     fullWidth = true,
     fieldProps: legacyFieldProps,
     extractTextContents,
+    translateContent,
     ...fieldProps
 }: Options) {
     return createCompositeBlockField<string>({
@@ -31,5 +33,10 @@ export function createCompositeBlockTextField({
             </BlocksFinalForm>
         ),
         extractTextContents,
+        translateContent:
+            translateContent ??
+            (async (state: string, translate: (text: string) => Promise<string>) => {
+                return state.length > 0 ? translate(state) : state;
+            }),
     });
 }

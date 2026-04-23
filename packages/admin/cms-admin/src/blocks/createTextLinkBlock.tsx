@@ -79,6 +79,10 @@ export function createTextLinkBlock(
 
             return content;
         },
+        translateContent: async (state, translate) => {
+            const translatedText = state.text ? await translate(state.text) : state.text;
+            return { ...state, text: translatedText };
+        },
     };
 
     if (override) {
