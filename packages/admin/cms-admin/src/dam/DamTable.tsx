@@ -86,6 +86,7 @@ export interface DamConfig {
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
     additionalToolbarItems?: ReactNode;
+    disableFolderSelection?: boolean;
 }
 
 type DamTableProps = DamConfig & {
@@ -100,6 +101,7 @@ export const DamTable = ({ renderWithFullHeightMainContent, ...damConfigProps }:
         hideMultiselect: false,
         hideDamActions: false,
         hideArchiveFilter: false,
+        disableFolderSelection: false,
         ...damConfigProps,
     };
 

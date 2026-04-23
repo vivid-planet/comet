@@ -146,6 +146,7 @@ const FolderDataGrid = ({
     hideContextMenu = false,
     hideArchiveFilter,
     hideMultiselect,
+    disableFolderSelection,
     renderDamLabel,
     ...props
 }: FolderDataGridProps) => {
@@ -656,6 +657,7 @@ const FolderDataGrid = ({
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
+                    isRowSelectable={disableFolderSelection ? ({ row }) => isFile(row) : undefined}
                     rowSelectionModel={{ type: "include", ids: new Set(damSelectionActionsApi.selectionMap.keys()) }}
                     onRowSelectionModelChange={handleSelectionModelChange}
                     disableRowSelectionExcludeModel
