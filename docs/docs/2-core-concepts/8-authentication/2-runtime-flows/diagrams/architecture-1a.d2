@@ -1,0 +1,144 @@
+direction: right
+
+classes: {
+  leaf: {
+    style: {
+      font-size: 20
+    }
+  }
+  zone: {
+    style: {
+      font-size: 28
+      bold: true
+      stroke-width: 2
+    }
+  }
+  group: {
+    style: {
+      font-size: 22
+      bold: true
+    }
+  }
+}
+
+visitor: Public visitor {
+  shape: person
+  class: leaf
+  width: 90
+  height: 130
+  style.fill: "#fff4e6"
+  style.stroke: "#e67e22"
+  style.stroke-width: 2
+}
+
+client: "🧑‍💻 Client side" {
+  class: zone
+  style.fill: "#fff4e6"
+  style.stroke: "#e67e22"
+  height: 650
+  browser: "Visitor's browser" {
+    class: group
+    style.fill: "#ffffff"
+    style.stroke: "#e67e22"
+
+    page: Site {
+      class: leaf
+      style.fill: "#fff4e6"
+      style.stroke: "#e67e22"
+    }
+  }
+}
+
+public: "🌐 Server side — public" {
+  class: zone
+  style.fill: "#f2fbf5"
+  style.stroke: "#2f9e44"
+  height: 650
+
+  tr: "Traefik\nEdge Router" {
+    class: leaf
+    style.fill: "#e6f7ea"
+    style.stroke: "#2f9e44"
+  }
+
+  site: "Site container (Next.js)" {
+    class: group
+    style.fill: "#ffffff"
+    style.stroke: "#2f9e44"
+
+    routes: "page routes\n/[domain]/[language]/..." {
+      class: leaf
+      style.fill: "#e6f7ea"
+      style.stroke: "#2f9e44"
+    }
+    bff: "/graphql\nserver-side forwarder" {
+      class: leaf
+      style.fill: "#e6f7ea"
+      style.stroke: "#2f9e44"
+    }
+    cache: "ISR cache-handler\n~7.5 min revalidate" {
+      class: leaf
+      style.fill: "#e6f7ea"
+      style.stroke: "#2f9e44"
+    }
+    dam: "/dam/* middleware\nrewrite to API_URL_INTERNAL" {
+      class: leaf
+      style.fill: "#e6f7ea"
+      style.stroke: "#2f9e44"
+    }
+  }
+}
+
+internal: "🔒 Server side — internal (NOT reachable from the internet)" {
+  class: zone
+  style.fill: "#f5f6f7"
+  style.stroke: "#546e7a"
+  height: 650
+
+  api: API {
+    class: leaf
+    style.fill: "#eceff1"
+    style.stroke: "#546e7a"
+  }
+  pg: PostgreSQL {
+    class: leaf
+    shape: cylinder
+    style.fill: "#eceff1"
+    style.stroke: "#546e7a"
+  }
+  img: imgproxy {
+    class: leaf
+    style.fill: "#eceff1"
+    style.stroke: "#546e7a"
+  }
+  blob: Blob storage {
+    class: leaf
+    shape: cylinder
+    style.fill: "#eceff1"
+    style.stroke: "#546e7a"
+  }
+}
+
+visitor -> client.browser.page: opens Site {style.font-size: 18}
+
+client.browser.page -> public.tr: "1. HTTPS GET /…\ncomet-dxp.com" {style.font-size: 18}
+public.tr -> public.site.routes: "2. HTML pages (Next.js)" {style.font-size: 18}
+client.browser.page -> public.tr: "3. client-side GraphQL\nPOST /graphql\n(persisted queries)" {style.font-size: 18}
+public.tr -> public.site.bff: {style.font-size: 18}
+
+public.site.routes <-> public.site.cache: {style.font-size: 18}
+public.site.routes -> internal.api: |md
+  4\. SSR/ISR GraphQL
+  **Basic Auth: system-user**
+| {style.font-size: 18}
+public.site.bff -> internal.api: |md
+  4\. forward with
+  **Basic Auth: system-user**
+| {style.font-size: 18}
+internal.api -> internal.pg: {style.font-size: 18}
+
+client.browser.page -> public.tr: "5. GET /dam/…\nimage URLs" {style.font-size: 18}
+public.tr -> public.site.dam: "6. route /dam/… to Site" {style.font-size: 18}
+public.site.dam -> internal.api: "7. proxy to API_URL_INTERNAL" {style.font-size: 18; style.stroke-dash: 4}
+internal.api -> internal.img: "8. transform request" {style.font-size: 18}
+internal.img -> internal.blob: "9. read bytes" {style.font-size: 18}

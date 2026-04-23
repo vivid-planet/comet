@@ -1,0 +1,151 @@
+direction: right
+
+classes: {
+  leaf: {
+    style: {
+      font-size: 20
+    }
+  }
+  zone: {
+    style: {
+      font-size: 28
+      bold: true
+      stroke-width: 2
+    }
+  }
+  group: {
+    style: {
+      font-size: 22
+      bold: true
+    }
+  }
+  gate: {
+    style: {
+      font-size: 28
+      bold: true
+      stroke-width: 4
+      fill: "#ffa8a8"
+      stroke: "#c92a2a"
+    }
+  }
+}
+
+editor: Editor {
+  shape: person
+  class: leaf
+  width: 90
+  height: 130
+  style.fill: "#fff4e6"
+  style.stroke: "#e67e22"
+  style.stroke-width: 2
+}
+
+idp: OIDC IDP {
+  shape: cylinder
+  class: leaf
+  style.fill: "#eceff1"
+  style.stroke: "#546e7a"
+}
+
+client: "🧑‍💻 Client side" {
+  class: zone
+  style.fill: "#fff4e6"
+  style.stroke: "#e67e22"
+  height: 700
+
+  browser: "Editor's browser" {
+    class: group
+    style.fill: "#ffffff"
+    style.stroke: "#e67e22"
+
+    spa: "Admin (SPA)" {
+      class: leaf
+      style.fill: "#fff4e6"
+      style.stroke: "#e67e22"
+    }
+  }
+}
+
+gate: "🛡️  OAuth2-Proxy gate" {
+  class: gate
+  height: 700
+
+  oap: OAuth2-Proxy {
+    class: leaf
+    style.fill: "#ffffff"
+    style.stroke: "#c92a2a"
+  }
+
+  store: "session store\n_oauth2_proxy cookie → JWT" {
+    class: leaf
+    shape: cylinder
+    style.fill: "#ffffff"
+    style.stroke: "#c92a2a"
+  }
+
+  oap -> store: "keeps tokens" {style.font-size: 16; style.stroke-dash: 4}
+}
+
+protected: "🔒 Server side — internal (NOT reachable from the internet)" {
+  class: zone
+  style.fill: "#f5f6f7"
+  style.stroke: "#546e7a"
+  height: 700
+
+  admin_box: "Admin container" {
+    class: group
+    style.fill: "#ffffff"
+    style.stroke: "#546e7a"
+
+    dist: "Built SPA bundle\nindex.html + JS/CSS" {
+      class: leaf
+      style.fill: "#eceff1"
+      style.stroke: "#546e7a"
+    }
+  }
+
+  internal: "Internal network" {
+    class: group
+    style.fill: "#ffffff"
+    style.stroke: "#546e7a"
+
+    api: API {
+      class: leaf
+      style.fill: "#eceff1"
+      style.stroke: "#546e7a"
+    }
+    pg: PostgreSQL {
+      class: leaf
+      shape: cylinder
+      style.fill: "#eceff1"
+      style.stroke: "#546e7a"
+    }
+  }
+}
+
+editor -> client.browser.spa: opens Admin {style.font-size: 18}
+
+client.browser.spa -> gate.oap: "1. HTTPS GET admin.comet-dxp.com\nfirst load, no cookie" {style.font-size: 18}
+gate.oap <-> idp: |md
+  2\. **OIDC** login (authorization code flow)
+  blocks until cookie set
+| {style.font-size: 18}
+gate.oap -> client.browser.spa: |md
+  3\. **Set-Cookie _oauth2_proxy**
+  redirect to admin.…
+| {style.font-size: 18}
+
+client.browser.spa -> gate.oap: |md
+  4\. GET /index.html, /assets/\*
+  **Cookie: _oauth2_proxy**
+| {style.font-size: 18}
+gate.oap <-> protected.admin_box.dist: "5. fetch static assets" {style.font-size: 18}
+
+client.browser.spa -> gate.oap: |md
+  6\. Apollo POST /api/graphql
+  **Cookie: _oauth2_proxy**
+| {style.font-size: 18}
+gate.oap -> protected.internal.api: |md
+  7\. **Authorization: Bearer JWT**
+| {style.font-size: 18}
+protected.internal.api -> protected.internal.pg: {style.font-size: 18}

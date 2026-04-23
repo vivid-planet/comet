@@ -1,0 +1,199 @@
+direction: right
+
+classes: {
+  leaf: {
+    style: {
+      font-size: 20
+    }
+  }
+  zone: {
+    style: {
+      font-size: 28
+      bold: true
+      stroke-width: 2
+    }
+  }
+  group: {
+    style: {
+      font-size: 22
+      bold: true
+    }
+  }
+}
+
+editor: Editor {
+  shape: person
+  class: leaf
+  width: 90
+  height: 130
+  style.fill: "#fff4e6"
+  style.stroke: "#e67e22"
+  style.stroke-width: 2
+}
+
+client: "🧑‍💻 Client side" {
+  class: zone
+  style.fill: "#fff4e6"
+  style.stroke: "#e67e22"
+  height: 800
+
+  browser: "Editor's browser tab" {
+    class: group
+    style.fill: "#ffffff"
+    style.stroke: "#e67e22"
+
+    spa: "Admin (SPA)" {
+      class: group
+      style.fill: "#fff4e6"
+      style.stroke: "#e67e22"
+
+      app: Application {
+        class: leaf
+        style.fill: "#ffffff"
+        style.stroke: "#e67e22"
+      }
+
+      iframe: "Site Preview\norigin: preview.comet-dxp.com" {
+        class: group
+        style.fill: "#ede7f6"
+        style.stroke: "#5e35b1"
+        style.stroke-dash: 4
+
+        iframe_tag: "<iframe>\nsrc=preview.comet-dxp.com/site-preview?jwt=…" {
+          class: leaf
+          style.fill: "#ffffff"
+          style.stroke: "#5e35b1"
+        }
+      }
+
+      app -> iframe: "renders" {style.font-size: 16}
+    }
+  }
+}
+
+middle: {
+  style.opacity: 0
+  style.fill: "#ffffff"
+  style.stroke-width: 0
+  direction: down
+
+  oap: "🛡️  OAuth2-Proxy" {
+    class: leaf
+    width: 600
+    height: 260
+    style.font-size: 22
+    style.bold: true
+    style.fill: "#ffa8a8"
+    style.stroke: "#c92a2a"
+    style.stroke-width: 4
+  }
+
+  public: "🌐 Server side — public" {
+    class: zone
+    style.fill: "#f2fbf5"
+    style.stroke: "#2f9e44"
+    width: 600
+
+    site: "Site container (preview.comet-dxp.com)" {
+      class: group
+      style.fill: "#ffffff"
+      style.stroke: "#2f9e44"
+
+      sp_route: "/site-preview" {
+        class: group
+        style.fill: "#e6f7ea"
+        style.stroke: "#2f9e44"
+
+        jwt_guard: "🔐 JWT guard\nverifies ?jwt= with SITE_PREVIEW_SECRET" {
+          class: leaf
+          style.font-size: 18
+          style.bold: true
+          style.fill: "#ffa8a8"
+          style.stroke: "#c92a2a"
+          style.stroke-width: 3
+        }
+
+        invalid: "Invalid JWT Page\nHTTP Status Code 400" {
+          class: leaf
+          style.fill: "#ffe3e3"
+          style.stroke: "#c92a2a"
+        }
+
+        render_preview: "Render Site Preview Page" {
+          class: leaf
+          style.fill: "#ffffff"
+          style.stroke: "#2f9e44"
+        }
+
+        jwt_guard -> invalid: "jwt invalid / expired" {style.font-size: 16; style.stroke: "#c92a2a"; style.stroke-dash: 3}
+        jwt_guard -> render_preview: "valid jwt" {style.font-size: 16}
+      }
+
+    }
+  }
+}
+
+internal: "🔒 Server side — internal" {
+  class: zone
+  style.fill: "#f5f6f7"
+  style.stroke: "#546e7a"
+  height: 800
+
+  api: "API\n• mints sitePreviewJwt (10s)\n  signed with SITE_PREVIEW_SECRET\n• returns draft content" {
+    class: leaf
+    style.fill: "#eceff1"
+    style.stroke: "#546e7a"
+  }
+
+  pg: PostgreSQL {
+    class: leaf
+    shape: cylinder
+    style.fill: "#eceff1"
+    style.stroke: "#546e7a"
+  }
+}
+
+editor -> client.browser.spa.app: |md
+  opens **Site Preview**
+  admin.comet-dxp.com/{scope}/preview/?path=…
+| {style.font-size: 18}
+
+client.browser.spa.app -> middle.oap: |md
+  1\. GraphQL `sitePreviewJwt(scope, path, includeInvisible)`
+  uses Admin's **_oauth2_proxy cookie** (OAuth2-Proxy session)
+| {style.font-size: 18}
+middle.oap -> internal.api: "2. Authorization: Bearer JWT (user)" {style.font-size: 18}
+internal.api -> client.browser.spa.iframe: |md
+  3\. short-lived JWT (10 s)
+  signed with SITE_PREVIEW_SECRET
+  payload: userId, scope, path, previewData
+| {style.font-size: 18}
+
+client.browser.spa.app -> client.browser.spa.iframe: "4. renders iframe with ?jwt=…" {style.font-size: 18; style.stroke-dash: 4}
+
+client.browser.spa.iframe -> middle.public.site.sp_route.jwt_guard: |md
+  5\. GET /site-preview?jwt=…
+  (no cookie yet; bypasses OAuth2-Proxy)
+| {style.font-size: 18}
+client.browser.spa.iframe -> middle.public.site.sp_route.jwt_guard: |md
+  6\. **Set-Cookie: __comet_site_preview**
+  302 redirect → data.path
+| {
+  style.font-size: 18
+  source-arrowhead.shape: triangle
+  target-arrowhead.shape: none
+}
+
+
+middle.public.site.sp_route.render_preview -> internal.api: |md
+  7\. SSR GraphQL (drafts)
+  **Basic Auth: system-user** (transport)
+  draft access via `x-include-invisible`
+  derived from **__comet_site_preview JWT cookie**
+| {style.font-size: 18}
+internal.api -> internal.pg: {style.font-size: 18}
+middle.public.site.sp_route.render_preview -> internal.api: "8. draft content (JSON)" {
+  style.font-size: 18
+  source-arrowhead.shape: triangle
+  target-arrowhead.shape: none
+}
