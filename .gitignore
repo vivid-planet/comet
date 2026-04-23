@@ -22,3 +22,4 @@ junit.xml
 .agents/skills/
 .cursor/skills/
 .claude/skills/
+.env.secrets
