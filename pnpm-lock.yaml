@@ -1879,9 +1879,18 @@ importers:
       commander:
         specifier: ^14.0.2
         version: 14.0.2
+      graphql-scalars:
+        specifier: ^1.24.2
+        version: 1.24.2(graphql@16.13.2)
+      lodash.isequal:
+        specifier: ^4.5.0
+        version: 4.5.0
       nest-commander:
         specifier: ^3.20.1
         version: 3.20.1(@nestjs/common@11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)(@types/inquirer@8.2.12)(@types/node@24.12.2)(typescript@5.9.3)
+      uuid:
+        specifier: ^8.3.2
+        version: 8.3.2
     devDependencies:
       '@comet/eslint-config':
         specifier: workspace:*
@@ -1940,18 +1949,12 @@ importers:
       graphql:
         specifier: ^16.13.2
         version: 16.13.2
-      graphql-scalars:
-        specifier: 1.24.2
-        version: 1.24.2(graphql@16.13.2)
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@24.12.2)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.15.3)(@types/node@24.12.2)(typescript@5.9.3))
       jest-junit:
         specifier: ^15.0.0
         version: 15.0.0
-      lodash.isequal:
-        specifier: ^4.5.0
-        version: 4.5.0
       prettier:
         specifier: ^3.4.2
         version: 3.6.2
@@ -1973,9 +1976,6 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-      uuid:
-        specifier: ^8.3.2
-        version: 8.3.2
 
   packages/api/cms-api:
     dependencies:

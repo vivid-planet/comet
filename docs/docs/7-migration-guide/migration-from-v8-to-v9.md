@@ -173,6 +173,41 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 - }
 ```
 
+### Fix dev dependency imports in API source code
+
+`@comet/eslint-config` v9 adds the `import/no-extraneous-dependencies` rule to the NestJS ESLint config.
+This rule prevents production source files from importing packages that are listed as `devDependencies` in `package.json`.
+Dev dependencies may still be imported in test files (`*.spec.ts`, `*.test.ts`) and Jest config files.
+
+After upgrading, run the lint to surface any violations:
+
+```sh
+cd api
+npm run lint
+```
+
+For each `import/no-extraneous-dependencies` error, move the imported package from `devDependencies` to the appropriate section in `api/package.json`:
+
+- **Packages used only as types or utilities in source code** → move to `dependencies`
+- **Packages that consumers of your package are expected to install themselves** → move to `peerDependencies`
+
+```diff title="api/package.json"
+{
+    "dependencies": {
++       "some-package": "^1.0.0",
+    },
+-   "devDependencies": {
+-       "some-package": "^1.0.0",
+-   }
+}
+```
+
+Reinstall dependencies after updating `package.json`:
+
+```sh
+npm install
+```
+
 ### Verify lint passes
 
 ```sh

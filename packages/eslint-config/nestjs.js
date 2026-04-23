@@ -12,6 +12,12 @@ const config = [
             },
         },
         rules: {
+            "import/no-extraneous-dependencies": [
+                "error",
+                {
+                    devDependencies: ["**/*.spec.ts", "**/*.test.ts", "**/jest.config.*", "**/jest-setup-file.ts"],
+                },
+            ],
             "import/order": "off",
             "no-console": "off",
             "no-duplicate-imports": "error",
