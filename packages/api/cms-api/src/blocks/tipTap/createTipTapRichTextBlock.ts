@@ -239,6 +239,9 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
     return results;
 }
 
+/**
+ * @experimental
+ */
 export function createTipTapRichTextBlock(
     { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",

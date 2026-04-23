@@ -33,8 +33,8 @@ import { type Editor, useEditorState } from "@tiptap/react";
 import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type RefAttributes, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type BlockInterface, type LinkBlockInterface } from "../types";
-import { type TipTapBlockStyle, type TipTapBlockType, type TipTapSupports } from "./createTipTapRichTextBlock";
+import type { BlockInterface, LinkBlockInterface } from "../types";
+import type { TipTapBlockStyle, TipTapBlockType, TipTapSupports } from "./createTipTapRichTextBlock";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {

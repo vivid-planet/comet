@@ -5,11 +5,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
-import { type Editor } from "@tiptap/react";
+import type { Editor } from "@tiptap/react";
 import { type MouseEvent, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type BlockInterface, type BlockState, type LinkBlockInterface } from "../types";
+import type { BlockInterface, BlockState, LinkBlockInterface } from "../types";
 
 interface TipTapLinkDialogProps {
     editor: Editor;
