@@ -8,6 +8,7 @@ export type EntityInfo<Entity> =
           secondaryInformation?: AutoPath<Entity, PopulatePath.ALL> | string;
           visible?: ObjectQuery<Entity>;
           fullText?: keyof Entity & string;
+          requiredPermission?: string | string[];
       }
     | string;
 

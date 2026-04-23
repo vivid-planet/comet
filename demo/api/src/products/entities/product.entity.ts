@@ -94,6 +94,7 @@ export class ProductPriceRange {
     secondaryInformation: "manufacturer.name",
     visible: { status: { $eq: ProductStatus.Published } },
     fullText: "fullText",
+    requiredPermission: "products",
 })
 @ObjectType()
 @Entity()

@@ -86,11 +86,13 @@ export class EntityInfoService {
             if (entityInfo) {
                 if (typeof entityInfo === "string") {
                     if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
-                        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText"
+                        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText", null::text[] AS "requiredPermission"
                             FROM "PageTreeNodeEntityInfo"
                             LEFT JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeEntityInfo"."id"::uuid`);
                     } else {
-                        indexSelects.push(`SELECT sub.*, null::tsvector AS "fullText" FROM (${entityInfo}) sub`);
+                        indexSelects.push(
+                            `SELECT sub.*, null::tsvector AS "fullText", null::text[] AS "requiredPermission" FROM (${entityInfo}) sub`,
+                        );
                     }
                 } else {
                     const { entityName, metadata } = targetEntity;
@@ -122,13 +124,23 @@ export class EntityInfoService {
                         fullTextSql = this.resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
                     }
 
+                    let requiredPermissionSql = "null::text[]";
+                    if (entityInfo.requiredPermission) {
+                        const permissions = Array.isArray(entityInfo.requiredPermission)
+                            ? entityInfo.requiredPermission
+                            : [entityInfo.requiredPermission];
+                        // Escape single quotes to prevent SQL injection
+                        requiredPermissionSql = `ARRAY[${permissions.map((p) => `'${p.replace(/'/g, "''")}'`).join(",")}]::text[]`;
+                    }
+
                     const select = `SELECT
                                 ${nameSql} "name",
                                 ${secondaryInformationSql} "secondaryInformation",
                                 ${visibleSql} AS "visible",
                                 "${metadata.tableName}"."${primary}"::text "id",
                                 '${entityName}' "entityName",
-                                ${fullTextSql} AS "fullText"
+                                ${fullTextSql} AS "fullText",
+                                ${requiredPermissionSql} AS "requiredPermission"
                             FROM "${metadata.tableName}"`;
                     indexSelects.push(select);
                 }
@@ -137,13 +149,13 @@ export class EntityInfoService {
 
         // add all PageTreeNode Documents (Page, Link etc) thru PageTreeNodeDocument (no @EntityInfo needed on Page/Link)
         if (pageTreeFullText) {
-            indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", "PageTreeNodeFullText"."fullText"
+            indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", "PageTreeNodeFullText"."fullText", null::text[] AS "requiredPermission"
                 FROM "PageTreeNodeDocument"
                 JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
                 LEFT JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeDocument"."pageTreeNodeId"
             `);
         } else {
-            indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", null::tsvector AS "fullText"
+            indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", null::tsvector AS "fullText", null::text[] AS "requiredPermission"
                 FROM "PageTreeNodeDocument"
                 JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
             `);
