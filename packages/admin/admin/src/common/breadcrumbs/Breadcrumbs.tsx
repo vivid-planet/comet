@@ -11,6 +11,7 @@ type BreadcrumbsClassKey =
     | "item"
     | "activeItem"
     | "separator"
+    | "ellipsisButton"
     | "ellipsis"
     | "menuContainer"
     | "toolbarContainer"
@@ -33,6 +34,7 @@ interface BreadcrumbsProps
         item: typeof Typography;
         activeItem: typeof Typography;
         separator: "div";
+        ellipsisButton: typeof ButtonBase;
         ellipsis: typeof Typography;
         menuContainer: "div";
         toolbarContainer: "div";
@@ -101,6 +103,11 @@ const Separator = createComponentSlot("div")<BreadcrumbsClassKey>({
     display: flex;
     align-items: flex-end;
 `);
+
+const EllipsisButton = createComponentSlot(ButtonBase)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "ellipsisButton",
+})(css``);
 
 const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
@@ -249,11 +256,9 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                             <Fragment key={item.url}>
                                 {hasMultipleItems && isMobile && (
                                     <>
-                                        <ButtonBase>
-                                            <Ellipsis {...slotProps?.ellipsis} onClick={toggleMenu}>
-                                                {ellipsis}
-                                            </Ellipsis>
-                                        </ButtonBase>
+                                        <EllipsisButton onClick={toggleMenu} {...slotProps?.ellipsisButton}>
+                                            <Ellipsis {...slotProps?.ellipsis}>{ellipsis}</Ellipsis>
+                                        </EllipsisButton>
                                         <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
                                     </>
                                 )}
