@@ -1,5 +1,6 @@
 import { greyPalette, Tooltip } from "@comet/admin";
 import {
+    Add,
     MoreHorizontal,
     RteBold,
     RteClearLink,
@@ -35,6 +36,7 @@ import { FormattedMessage } from "react-intl";
 
 import type { BlockInterface, LinkBlockInterface } from "../types";
 import type { TipTapBlockStyle, TipTapBlockType, TipTapSupports } from "./createTipTapRichTextBlock";
+import { TipTapChildBlockDialog } from "./TipTapChildBlockDialog";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {
@@ -149,14 +151,18 @@ export const TipTapToolbar = ({
     supports,
     blockStyles,
     linkBlock,
+    childBlocks = [],
 }: {
     editor: Editor;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    childBlocks?: BlockInterface[];
 }) => {
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
+    const [childBlockMenuAnchorEl, setChildBlockMenuAnchorEl] = useState<null | HTMLElement>(null);
+    const [childBlockDialogBlock, setChildBlockDialogBlock] = useState<BlockInterface | null>(null);
     const inlineStyles = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
     const lists = (["ordered-list", "unordered-list"] as const).some((s) => supports.includes(s));
@@ -482,6 +488,54 @@ export const TipTapToolbar = ({
                 </ToolbarGroup>
             )}
             {linkDialogOpen && linkBlock && <TipTapLinkDialog editor={editor} linkBlock={linkBlock} onClose={() => setLinkDialogOpen(false)} />}
+            {childBlocks.length > 0 && (
+                <ToolbarGroup>
+                    <Tooltip title={<FormattedMessage id="comet.blocks.tipTapRichText.addChildBlock.tooltip" defaultMessage="Add block" />}>
+                        <Box
+                            component="button"
+                            type="button"
+                            onMouseDown={(e: MouseEvent) => {
+                                e.preventDefault();
+                                setChildBlockMenuAnchorEl(e.currentTarget as HTMLElement);
+                            }}
+                            sx={toolbarButtonSx}
+                        >
+                            <Add sx={{ fontSize: 15 }} color="inherit" />
+                        </Box>
+                    </Tooltip>
+                    <Menu
+                        open={Boolean(childBlockMenuAnchorEl)}
+                        anchorEl={childBlockMenuAnchorEl}
+                        onClose={() => {
+                            setChildBlockMenuAnchorEl(null);
+                            setTimeout(() => editor.commands.focus(), 0);
+                        }}
+                    >
+                        {childBlocks.map((block) => (
+                            <MenuItem
+                                key={block.name}
+                                onMouseDown={(e) => {
+                                    setChildBlockMenuAnchorEl(null);
+                                    e.persist();
+                                    setChildBlockDialogBlock(block);
+                                }}
+                            >
+                                {block.displayName}
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </ToolbarGroup>
+            )}
+            {childBlockDialogBlock && (
+                <TipTapChildBlockDialog
+                    editor={editor}
+                    block={childBlockDialogBlock}
+                    onClose={() => {
+                        setChildBlockDialogBlock(null);
+                        setTimeout(() => editor.commands.focus(), 0);
+                    }}
+                />
+            )}
         </Box>
     );
 };

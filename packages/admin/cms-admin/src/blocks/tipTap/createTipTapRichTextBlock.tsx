@@ -4,17 +4,20 @@ import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import type { ComponentType, HTMLAttributes, ReactNode } from "react";
+import { type ComponentType, type HTMLAttributes, type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
 import { BlockStyleContext } from "./BlockStyleContext";
+import { ChildBlockContext } from "./ChildBlockContext";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
+import { ChildBlock } from "./extensions/ChildBlock";
 import { CmsLink } from "./extensions/CmsLink";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { TipTapChildBlockDialog } from "./TipTapChildBlockDialog";
 import { TipTapToolbar } from "./TipTapToolbar";
 
 export type TipTapSupports =
@@ -74,6 +77,7 @@ interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
     link?: BlockInterface & LinkBlockInterface;
+    childBlocks?: BlockInterface[];
 }
 
 function getPlainTextFromContent(content: JSONContent): string {
@@ -139,21 +143,81 @@ async function mapLinkMarksDataAsync(content: JSONContent, fn: (data: any) => Pr
     return result;
 }
 
+function mapChildBlockNodesData(
+    content: JSONContent,
+    childBlocksMap: Map<string, BlockInterface>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fn: (block: BlockInterface, data: any) => any,
+): JSONContent {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (result.type === "childBlock" && result.attrs?.type && result.attrs?.data) {
+        const block = childBlocksMap.get(result.attrs.type as string);
+        if (block) {
+            result.attrs = { ...result.attrs, data: fn(block, result.attrs.data) };
+        }
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = result.content.map((child) => mapChildBlockNodesData(child, childBlocksMap, fn));
+    }
+
+    return result;
+}
+
+async function mapChildBlockNodesDataAsync(
+    content: JSONContent,
+    childBlocksMap: Map<string, BlockInterface>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fn: (block: BlockInterface, data: any) => Promise<any>,
+): Promise<JSONContent> {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (result.type === "childBlock" && result.attrs?.type && result.attrs?.data) {
+        const block = childBlocksMap.get(result.attrs.type as string);
+        if (block) {
+            result.attrs = { ...result.attrs, data: await fn(block, result.attrs.data) };
+        }
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = await Promise.all(result.content.map((child) => mapChildBlockNodesDataAsync(child, childBlocksMap, fn)));
+    }
+
+    return result;
+}
+
 const TipTapEditor = ({
     state,
     updateState,
     supports,
     blockStyles,
     linkBlock,
+    childBlocks,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    childBlocks: BlockInterface[];
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
+    const hasChildBlocks = childBlocks.length > 0;
+
+    const [editingChildBlock, setEditingChildBlock] = useState<{
+        block: BlockInterface;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: any;
+        pos: number;
+    } | null>(null);
 
     const editor = useEditor({
         extensions: [
@@ -176,6 +240,7 @@ const TipTapEditor = ({
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasLink ? [CmsLink] : []),
+            ...(hasChildBlocks ? [ChildBlock] : []),
         ],
         content: state.tipTapContent,
         onUpdate: ({ editor }) => {
@@ -183,18 +248,68 @@ const TipTapEditor = ({
         },
     });
 
+    const handleEditChildBlock = useCallback(
+        (pos: number) => {
+            if (!editor) {
+                return;
+            }
+            const node = editor.state.doc.nodeAt(pos);
+            if (node && node.type.name === "childBlock") {
+                const blockType = node.attrs.type as string;
+                const block = childBlocks.find((b) => b.name === blockType);
+                if (block) {
+                    setEditingChildBlock({ block, data: node.attrs.data, pos });
+                }
+            }
+        },
+        [editor, childBlocks],
+    );
+
+    const handleDeleteChildBlock = useCallback(
+        (pos: number) => {
+            if (!editor) {
+                return;
+            }
+            const tr = editor.state.tr;
+            tr.delete(pos, pos + 1);
+            editor.view.dispatch(tr);
+            editor.commands.focus();
+        },
+        [editor],
+    );
+
     if (!editor) {
         return null;
     }
 
     return (
         <BlockStyleContext.Provider value={blockStyles}>
-            <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />
-                <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
-                    <EditorContent editor={editor} />
+            <ChildBlockContext.Provider
+                value={{
+                    childBlocks,
+                    onEditChildBlock: handleEditChildBlock,
+                    onDeleteChildBlock: handleDeleteChildBlock,
+                }}
+            >
+                <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
+                    <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} childBlocks={childBlocks} />
+                    <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
+                        <EditorContent editor={editor} />
+                    </Box>
                 </Box>
-            </Box>
+                {editingChildBlock && (
+                    <TipTapChildBlockDialog
+                        editor={editor}
+                        block={editingChildBlock.block}
+                        existingData={editingChildBlock.data}
+                        nodePos={editingChildBlock.pos}
+                        onClose={() => {
+                            setEditingChildBlock(null);
+                            setTimeout(() => editor.commands.focus(), 0);
+                        }}
+                    />
+                )}
+            </ChildBlockContext.Provider>
         </BlockStyleContext.Provider>
     );
 };
@@ -208,11 +323,15 @@ export const createTipTapRichTextBlock = (
     let supports = options?.supports ?? defaultSupports;
     const blockStyles = options?.blockStyles ?? [];
     const linkBlock = options?.link;
+    const childBlocks = options?.childBlocks ?? [];
 
     // Auto-enable link support when a link block is provided
     if (linkBlock && !supports.includes("link")) {
         supports = [...supports, "link"];
     }
+
+    // Build a map of child blocks by name for efficient lookup
+    const childBlocksMap = new Map<string, BlockInterface>(childBlocks.map((b) => [b.name, b]));
 
     const TipTapRichTextBlock: BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> = {
         ...createBlockSkeleton(),
@@ -230,6 +349,9 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.input2State(data));
             }
+            if (childBlocksMap.size > 0) {
+                content = mapChildBlockNodesData(content, childBlocksMap, (block, data) => block.input2State(data));
+            }
             return { tipTapContent: content };
         },
 
@@ -237,6 +359,9 @@ export const createTipTapRichTextBlock = (
             let content = tipTapContent;
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.state2Output(data));
+            }
+            if (childBlocksMap.size > 0) {
+                content = mapChildBlockNodesData(content, childBlocksMap, (block, data) => block.state2Output(data));
             }
             return { tipTapContent: content };
         },
@@ -246,6 +371,9 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = await mapLinkMarksDataAsync(content, (data) => linkBlock.output2State(data, context));
             }
+            if (childBlocksMap.size > 0) {
+                content = await mapChildBlockNodesDataAsync(content, childBlocksMap, (block, data) => block.output2State(data, context));
+            }
             return { tipTapContent: content };
         },
 
@@ -254,6 +382,9 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.createPreviewState(data, previewCtx));
             }
+            if (childBlocksMap.size > 0) {
+                content = mapChildBlockNodesData(content, childBlocksMap, (block, data) => block.createPreviewState(data, previewCtx));
+            }
             return {
                 tipTapContent: content,
                 adminMeta: { route: previewCtx.parentUrl },
@@ -261,7 +392,16 @@ export const createTipTapRichTextBlock = (
         },
 
         AdminComponent: ({ state, updateState }) => {
-            return <TipTapEditor state={state} updateState={updateState} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />;
+            return (
+                <TipTapEditor
+                    state={state}
+                    updateState={updateState}
+                    supports={supports}
+                    blockStyles={blockStyles}
+                    linkBlock={linkBlock}
+                    childBlocks={childBlocks}
+                />
+            );
         },
 
         previewContent: (state) => {

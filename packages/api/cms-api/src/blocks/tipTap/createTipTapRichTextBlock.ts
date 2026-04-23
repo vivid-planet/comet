@@ -25,6 +25,7 @@ import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMig
 import type { SearchText, WeightedSearchText } from "../search/get-search-text";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
+import { ChildBlock } from "./extensions/ChildBlock";
 import { CmsLink } from "./extensions/CmsLink";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
@@ -74,9 +75,10 @@ export interface CreateTipTapRichTextBlockOptions {
     blockStyles?: TipTapBlockStyle[];
     indexSearchText?: boolean;
     link?: Block;
+    childBlocks?: Record<string, Block>;
 }
 
-function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockStyle[], hasLink: boolean): Extensions {
+function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockStyle[], hasLink: boolean, hasChildBlocks: boolean): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
     return [
         StarterKit.configure({
@@ -98,6 +100,7 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockSty
         ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
         ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
         ...(hasLink ? [CmsLink] : []),
+        ...(hasChildBlocks ? [ChildBlock] : []),
     ];
 }
 
@@ -172,7 +175,55 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: ValidationOptions) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapChildBlockNodesData(content: TipTapContent, childBlocksMap: Record<string, Block>, fn: (block: Block, data: any) => any): TipTapContent {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (result.type === "childBlock" && result.attrs?.type && result.attrs?.data) {
+        const block = childBlocksMap[result.attrs.type as string];
+        if (block) {
+            result.attrs = { ...result.attrs, data: fn(block, result.attrs.data) };
+        }
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = result.content.map((child: TipTapContent) => mapChildBlockNodesData(child, childBlocksMap, fn));
+    }
+
+    return result;
+}
+
+function collectChildBlockNodes(
+    content: TipTapContent,
+    childBlocksMap: Record<string, Block>,
+    basePath: string[] = ["tipTapContent"],
+): Array<{ type: string; data: unknown; path: string[] }> {
+    const results: Array<{ type: string; data: unknown; path: string[] }> = [];
+
+    if (content.type === "childBlock" && content.attrs?.type && content.attrs?.data) {
+        const blockType = content.attrs.type as string;
+        if (childBlocksMap[blockType]) {
+            results.push({
+                type: blockType,
+                data: content.attrs.data,
+                path: [...basePath, "attrs", "data"],
+            });
+        }
+    }
+
+    if (Array.isArray(content.content)) {
+        content.content.forEach((child: TipTapContent, childIdx: number) => {
+            results.push(...collectChildBlockNodes(child, childBlocksMap, [...basePath, "content", String(childIdx)]));
+        });
+    }
+
+    return results;
+}
+
+function IsTipTapContent(schema: Schema, linkBlock?: Block, childBlocksMap?: Record<string, Block>, validationOptions?: ValidationOptions) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
@@ -199,6 +250,25 @@ function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: 
                             for (const { data } of linkMarks) {
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
+                                    forbidNonWhitelisted: true,
+                                    whitelist: true,
+                                });
+                                if (validationErrors.length > 0) {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        // Validate child block data
+                        if (childBlocksMap && Object.keys(childBlocksMap).length > 0) {
+                            const childBlockNodes = collectChildBlockNodes(value as TipTapContent, childBlocksMap);
+                            for (const { type, data } of childBlockNodes) {
+                                const block = childBlocksMap[type];
+                                if (!block) {
+                                    return false;
+                                }
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                const validationErrors = await validate(block.blockInputFactory(data as any), {
                                     forbidNonWhitelisted: true,
                                     whitelist: true,
                                 });
@@ -243,14 +313,21 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
  * @experimental
  */
 export function createTipTapRichTextBlock(
-    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock }: CreateTipTapRichTextBlockOptions = {},
+    {
+        supports = defaultSupports,
+        blockStyles = [],
+        indexSearchText = true,
+        link: LinkBlock,
+        childBlocks: childBlocksOption = {},
+    }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, blockStyles, hasLink);
+    const hasChildBlocks = Object.keys(childBlocksOption).length > 0;
+    const extensions = buildExtensions(supports, blockStyles, hasLink, hasChildBlocks);
     const schema = getSchema(extensions);
 
     @BlockDataMigrationVersion(migrate.version)
@@ -273,20 +350,36 @@ export function createTipTapRichTextBlock(
         }
 
         childBlocksInfo(): ChildBlockInfo[] {
-            if (!LinkBlock) {
-                return [];
+            const results: ChildBlockInfo[] = [];
+
+            if (LinkBlock) {
+                results.push(
+                    ...collectLinkMarks(this.tipTapContent).map(({ data, path }) => ({
+                        visible: true,
+                        relJsonPath: path,
+                        block: data as BlockDataInterface,
+                        name: LinkBlock.name,
+                    })),
+                );
             }
-            return collectLinkMarks(this.tipTapContent).map(({ data, path }) => ({
-                visible: true,
-                relJsonPath: path,
-                block: data as BlockDataInterface,
-                name: LinkBlock.name,
-            }));
+
+            if (hasChildBlocks) {
+                results.push(
+                    ...collectChildBlockNodes(this.tipTapContent, childBlocksOption).map(({ type, data, path }) => ({
+                        visible: true,
+                        relJsonPath: path,
+                        block: data as BlockDataInterface,
+                        name: childBlocksOption[type].name,
+                    })),
+                );
+            }
+
+            return results;
         }
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, LinkBlock)
+        @IsTipTapContent(schema, LinkBlock, hasChildBlocks ? childBlocksOption : undefined)
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 
@@ -296,6 +389,12 @@ export function createTipTapRichTextBlock(
                 tipTapContent = mapLinkMarksData(tipTapContent, (data) =>
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     LinkBlock.blockInputFactory(data as any).transformToBlockData(),
+                );
+            }
+            if (hasChildBlocks) {
+                tipTapContent = mapChildBlockNodesData(tipTapContent, childBlocksOption, (block, data) =>
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    block.blockInputFactory(data as any).transformToBlockData(),
                 );
             }
             return plainToInstance(TipTapRichTextBlockData, { tipTapContent });
@@ -310,6 +409,9 @@ export function createTipTapRichTextBlock(
         let tipTapContent = o.tipTapContent;
         if (LinkBlock) {
             tipTapContent = mapLinkMarksData(tipTapContent, (data) => LinkBlock.blockDataFactory(data));
+        }
+        if (hasChildBlocks) {
+            tipTapContent = mapChildBlockNodesData(tipTapContent, childBlocksOption, (block, data) => block.blockDataFactory(data));
         }
         return plainToInstance(TipTapRichTextBlockData, { tipTapContent });
     };
