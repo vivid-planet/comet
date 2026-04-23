@@ -105,6 +105,11 @@ function renderNode(node: TipTapNode, index: number): ReactNode {
         case "nonBreakingSpace":
         case "softHyphen":
             return renderInlineContent(node, index);
+        case "childBlock": {
+            // Child blocks are rendered as block-level elements.
+            // In a real application, map node.attrs.type to the appropriate site block component.
+            return <div key={index} data-child-block-type={node.attrs?.type} />;
+        }
         default:
             return null;
     }
