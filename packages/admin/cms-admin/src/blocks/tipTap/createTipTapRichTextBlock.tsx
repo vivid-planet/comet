@@ -4,20 +4,18 @@ import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { type ComponentType, type HTMLAttributes, type ReactNode, useCallback, useState } from "react";
+import type { ComponentType, HTMLAttributes, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
 import { BlockStyleContext } from "./BlockStyleContext";
-import { ChildBlockContext } from "./ChildBlockContext";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { ChildBlock } from "./extensions/ChildBlock";
 import { CmsLink } from "./extensions/CmsLink";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
-import { TipTapChildBlockDialog } from "./TipTapChildBlockDialog";
 import { TipTapToolbar } from "./TipTapToolbar";
 
 export type TipTapSupports =
@@ -212,13 +210,6 @@ const TipTapEditor = ({
     const hasLink = supports.includes("link") && !!linkBlock;
     const hasChildBlocks = childBlocks.length > 0;
 
-    const [editingChildBlock, setEditingChildBlock] = useState<{
-        block: BlockInterface;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        data: any;
-        pos: number;
-    } | null>(null);
-
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
@@ -248,68 +239,18 @@ const TipTapEditor = ({
         },
     });
 
-    const handleEditChildBlock = useCallback(
-        (pos: number) => {
-            if (!editor) {
-                return;
-            }
-            const node = editor.state.doc.nodeAt(pos);
-            if (node && node.type.name === "childBlock") {
-                const blockType = node.attrs.type as string;
-                const block = childBlocks.find((b) => b.name === blockType);
-                if (block) {
-                    setEditingChildBlock({ block, data: node.attrs.data, pos });
-                }
-            }
-        },
-        [editor, childBlocks],
-    );
-
-    const handleDeleteChildBlock = useCallback(
-        (pos: number) => {
-            if (!editor) {
-                return;
-            }
-            const tr = editor.state.tr;
-            tr.delete(pos, pos + 1);
-            editor.view.dispatch(tr);
-            editor.commands.focus();
-        },
-        [editor],
-    );
-
     if (!editor) {
         return null;
     }
 
     return (
         <BlockStyleContext.Provider value={blockStyles}>
-            <ChildBlockContext.Provider
-                value={{
-                    childBlocks,
-                    onEditChildBlock: handleEditChildBlock,
-                    onDeleteChildBlock: handleDeleteChildBlock,
-                }}
-            >
-                <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                    <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} childBlocks={childBlocks} />
-                    <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
-                        <EditorContent editor={editor} />
-                    </Box>
+            <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
+                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} childBlocks={childBlocks} />
+                <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
+                    <EditorContent editor={editor} />
                 </Box>
-                {editingChildBlock && (
-                    <TipTapChildBlockDialog
-                        editor={editor}
-                        block={editingChildBlock.block}
-                        existingData={editingChildBlock.data}
-                        nodePos={editingChildBlock.pos}
-                        onClose={() => {
-                            setEditingChildBlock(null);
-                            setTimeout(() => editor.commands.focus(), 0);
-                        }}
-                    />
-                )}
-            </ChildBlockContext.Provider>
+            </Box>
         </BlockStyleContext.Provider>
     );
 };

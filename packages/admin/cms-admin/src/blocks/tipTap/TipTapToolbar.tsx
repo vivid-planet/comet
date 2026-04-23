@@ -1,6 +1,7 @@
 import { greyPalette, Tooltip } from "@comet/admin";
 import {
     Add,
+    Edit,
     MoreHorizontal,
     RteBold,
     RteClearLink,
@@ -162,7 +163,15 @@ export const TipTapToolbar = ({
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
     const [childBlockMenuAnchorEl, setChildBlockMenuAnchorEl] = useState<null | HTMLElement>(null);
-    const [childBlockDialogBlock, setChildBlockDialogBlock] = useState<BlockInterface | null>(null);
+    // For inserting a new child block: which block type was chosen from the menu
+    const [insertingChildBlock, setInsertingChildBlock] = useState<BlockInterface | null>(null);
+    // For editing an existing child block node that is selected
+    const [editingChildBlock, setEditingChildBlock] = useState<{
+        block: BlockInterface;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: any;
+        nodePos: number;
+    } | null>(null);
     const inlineStyles = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
     const lists = (["ordered-list", "unordered-list"] as const).some((s) => supports.includes(s));
@@ -206,6 +215,7 @@ export const TipTapToolbar = ({
                 isBulletListActive: e.isActive("bulletList"),
                 isLinkActive: e.isActive("link"),
                 selectionEmpty: e.state.selection.empty,
+                isChildBlockActive: e.isActive("childBlock"),
             };
         },
     });
@@ -517,21 +527,53 @@ export const TipTapToolbar = ({
                                 onMouseDown={(e) => {
                                     setChildBlockMenuAnchorEl(null);
                                     e.persist();
-                                    setChildBlockDialogBlock(block);
+                                    setInsertingChildBlock(block);
                                 }}
                             >
                                 {block.displayName}
                             </MenuItem>
                         ))}
                     </Menu>
+                    {editorState.isChildBlockActive && (
+                        <ToolbarButton
+                            editor={editor}
+                            icon={Edit}
+                            tooltip={<FormattedMessage id="comet.blocks.tipTapRichText.editChildBlock.tooltip" defaultMessage="Edit block" />}
+                            isActive="childBlock"
+                            onToggle={() => {
+                                const attrs = editor.getAttributes("childBlock");
+                                const blockType = attrs.type as string;
+                                const block = childBlocks.find((b) => b.name === blockType);
+                                if (block) {
+                                    setEditingChildBlock({
+                                        block,
+                                        data: attrs.data,
+                                        nodePos: editor.state.selection.from,
+                                    });
+                                }
+                            }}
+                        />
+                    )}
                 </ToolbarGroup>
             )}
-            {childBlockDialogBlock && (
+            {insertingChildBlock && (
                 <TipTapChildBlockDialog
                     editor={editor}
-                    block={childBlockDialogBlock}
+                    block={insertingChildBlock}
                     onClose={() => {
-                        setChildBlockDialogBlock(null);
+                        setInsertingChildBlock(null);
+                        setTimeout(() => editor.commands.focus(), 0);
+                    }}
+                />
+            )}
+            {editingChildBlock && (
+                <TipTapChildBlockDialog
+                    editor={editor}
+                    block={editingChildBlock.block}
+                    existingData={editingChildBlock.data}
+                    nodePos={editingChildBlock.nodePos}
+                    onClose={() => {
+                        setEditingChildBlock(null);
                         setTimeout(() => editor.commands.focus(), 0);
                     }}
                 />
