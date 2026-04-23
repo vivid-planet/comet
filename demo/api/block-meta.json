@@ -2214,6 +2214,7 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex"
                             },
@@ -2280,6 +2281,7 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex"
                             },
@@ -3724,6 +3726,23 @@
                 "name": "link",
                 "kind": "Block",
                 "block": "Link",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TipTapRichText",
+        "fields": [
+            {
+                "name": "tipTapContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "tipTapContent",
+                "kind": "Json",
                 "nullable": false
             }
         ]
