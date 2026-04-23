@@ -130,7 +130,11 @@ export const YouTubeVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage({
-                        onPlay: () => setShowPreviewImage(false),
+                        onPlay: () => {
+                            setShowPreviewImage(false);
+                            setIsPlaying(true);
+                            setIsHandledManually(true);
+                        },
                         image: previewImage,
                         aspectRatio,
                         sizes: previewImageSizes,

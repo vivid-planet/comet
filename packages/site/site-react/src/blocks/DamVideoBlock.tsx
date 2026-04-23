@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { type ComponentType, type ReactElement, type ReactNode, useCallback, useState } from "react";
+import { type ComponentType, type ReactElement, type ReactNode, useCallback, useEffect, useState } from "react";
 
 import type { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
@@ -35,34 +35,49 @@ export const DamVideoBlock = withPreview(
         pauseButtonAriaLabel,
         playPauseButton: PlayPauseButtonComponent,
     }: DamVideoBlockProps) => {
-        if (damFile === undefined) {
-            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
-        }
-
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
         const [isHandledManually, setIsHandledManually] = useState(false);
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
         const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
-        const videoRef = setVideoElement;
 
         const handleInView = useCallback(
             (inView: boolean) => {
-                if (!isHandledManually && videoElement) {
-                    if (inView && autoplay) {
-                        videoElement.play();
-                        setIsPlaying(true);
-                    } else {
-                        videoElement.pause();
-                        setIsPlaying(false);
-                    }
+                if (!autoplay || isHandledManually || !videoElement) {
+                    return;
+                }
+                if (inView) {
+                    void videoElement.play();
+                    setIsPlaying(true);
+                } else {
+                    videoElement.pause();
+                    setIsPlaying(false);
                 }
             },
             [autoplay, isHandledManually, videoElement],
         );
 
         useIsElementInViewport({ current: videoElement }, handleInView);
+
+        // When the user dismisses the preview image, the <video> mounts fresh. Trigger play()
+        // explicitly — the autoPlay attribute alone is often ignored by the browser after a
+        // React remount, and the click counts as user activation so playback can be unmuted.
+        useEffect(() => {
+            if (!videoElement || showPreviewImage || autoplay) {
+                return;
+            }
+            videoElement
+                .play()
+                .then(() => setIsPlaying(true))
+                .catch(() => {
+                    // Playback rejected — leave button in "play" state so the user can retry
+                });
+        }, [videoElement, showPreviewImage, autoplay]);
+
+        if (damFile === undefined) {
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
+        }
 
         const handlePlayPauseClick = () => {
             if (isPlaying) {
@@ -71,7 +86,8 @@ export const DamVideoBlock = withPreview(
                 videoElement?.pause();
             } else {
                 setIsPlaying(true);
-                videoElement?.play();
+                setIsHandledManually(true);
+                void videoElement?.play();
             }
         };
 
@@ -79,7 +95,10 @@ export const DamVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage({
-                        onPlay: () => setShowPreviewImage(false),
+                        onPlay: () => {
+                            setShowPreviewImage(false);
+                            setIsHandledManually(true);
+                        },
                         image: previewImage,
                         aspectRatio,
                         sizes: previewImageSizes,
@@ -90,12 +109,14 @@ export const DamVideoBlock = withPreview(
                 ) : (
                     <div className={styles.root}>
                         <video
-                            autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
+                            autoPlay={autoplay || !showPreviewImage}
                             controls={showControls}
                             loop={loop}
                             playsInline
-                            muted={autoplay}
-                            ref={videoRef}
+                            muted={autoplay && !isHandledManually}
+                            ref={setVideoElement}
+                            onPlay={() => setIsPlaying(true)}
+                            onPause={() => setIsPlaying(false)}
                             className={clsx(styles.video, fill && styles.fill)}
                             style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", " / ") } : undefined}
                         >
