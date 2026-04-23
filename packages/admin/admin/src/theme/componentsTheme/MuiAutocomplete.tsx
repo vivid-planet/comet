@@ -1,5 +1,5 @@
 import { Clear } from "@comet/admin-icons";
-import { autocompleteClasses, inputAdornmentClasses } from "@mui/material";
+import { autocompleteClasses } from "@mui/material";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import type { GetMuiComponentTheme } from "./getComponentsTheme";
@@ -15,31 +15,33 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
             color: "inherit",
         },
         root: {
-            // Position the custom end-adornment (loading / clear / error / popup-icon wrapper) absolutely
-            // so it stays pinned to the right of the input even when chips wrap to multiple rows in
-            // multi-select. Horizontal space is reserved via `inputRoot` padding-right (see `hasPopupIcon`).
-            [`.${autocompleteClasses.inputRoot} > .${inputAdornmentClasses.positionEnd}`]: {
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                right: spacing(2),
-                height: "auto",
-                maxHeight: "none",
-                margin: 0,
+            // Keep the outer InputBase row on a single no-wrap flex line so the end-adornment can never
+            // be pushed below chips. In multi-select, chips wrap inside their own inner `CometAdminAutocomplete-chipsWrap`
+            // container (rendered by `FinalFormAutocomplete`). The end-adornment stays inline and grows
+            // naturally as items are added (loading / clear / error / popup-icon).
+            [`& .${autocompleteClasses.inputRoot}`]: {
+                flexWrap: "nowrap",
+                alignItems: "center",
+            },
+            "& .CometAdminAutocomplete-chipsWrap": {
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "center",
+                gap: spacing(0.5),
+                flex: "1 1 auto",
+                minWidth: 0,
             },
         },
         endAdornment: {
-            // Render inline inside the outer InputAdornment (instead of absolutely-positioned on its own)
-            // so the popup-icon sits alongside clear/loading/error.
-            position: "static",
-            transform: "none",
+            top: 0,
+            bottom: 0,
+            right: spacing(2),
             display: "flex",
+            transform: "none",
         },
         hasPopupIcon: {
             [`&.${autocompleteClasses.root} .${autocompleteClasses.inputRoot}`]: {
-                // Reserve space for the absolutely-positioned end-adornment (popup icon + right offset,
-                // plus the clear button when a value is selected) so chips can't overlap it.
-                paddingRight: 52,
+                paddingRight: 26,
             },
         },
         popupIndicator: {

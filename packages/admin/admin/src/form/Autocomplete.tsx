@@ -3,6 +3,7 @@ import {
     Autocomplete,
     type AutocompleteProps,
     type AutocompleteRenderInputParams,
+    Box,
     CircularProgress,
     InputAdornment,
     InputBase,
@@ -99,6 +100,17 @@ export const FinalFormAutocomplete = <
                     {...params.InputProps}
                     // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
                     required={multiple ? false : required}
+                    // In multi-select, wrap the chips (rendered by MUI as `startAdornment`) in an inner
+                    // flex-wrap container. This lets chips wrap across multiple rows while keeping the
+                    // outer InputBase row a single no-wrap line, so the end-adornment always sits on the
+                    // right without being pushed below by chips.
+                    startAdornment={
+                        multiple && params.InputProps.startAdornment ? (
+                            <Box className="CometAdminAutocomplete-chipsWrap">{params.InputProps.startAdornment}</Box>
+                        ) : (
+                            params.InputProps.startAdornment
+                        )
+                    }
                     endAdornment={
                         <InputAdornment position="end">
                             {loading && <CircularProgress color="inherit" size={16} />}
