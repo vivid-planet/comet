@@ -22,7 +22,7 @@ import { strictBlockDataFactoryDecorator } from "../helpers/strictBlockDataFacto
 import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFactoryDecorator";
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
-import { type SearchText, type WeightedSearchText } from "../search/get-search-text";
+import type { SearchText, WeightedSearchText } from "../search/get-search-text";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
@@ -50,7 +50,7 @@ export type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading
 export interface TipTapBlockStyle {
     name: string;
     /**
-     * Limits the block style to the provided block types. 
+     * Limits the block style to the provided block types.
      * If none is specified, the block style is allowed for all block types.
      */
     appliesTo?: TipTapBlockType[];
