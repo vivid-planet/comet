@@ -1,4 +1,4 @@
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { Dialog, RowActionsItem } from "@comet/admin";
 import { ImpersonateUser, QuestionMark, Reset } from "@comet/admin-icons";
 import { CircularProgress, DialogContent, List, ListItem, ListItemText } from "@mui/material";
@@ -62,10 +62,13 @@ function StartImpersonationMenuItem({ userId }: { userId: string }) {
     });
     const impersonationAllowed = data?.user.impersonationAllowed ?? false;
 
-    const [loadMismatches, { data: mismatchData, loading: mismatchLoading }] = useLazyQuery<
+    const { data: mismatchData, loading: mismatchLoading } = useQuery<
         GQLUserImpersonationMismatchesQuery,
         GQLUserImpersonationMismatchesQueryVariables
-    >(userImpersonationMismatchesQuery);
+    >(userImpersonationMismatchesQuery, {
+        variables: { id: userId },
+        skip: !dialogOpen,
+    });
 
     const label = loading ? (
         <FormattedMessage id="comet.userPermissions.evaluatingPermissions" defaultMessage="Evaluating permissions" />
@@ -76,11 +79,6 @@ function StartImpersonationMenuItem({ userId }: { userId: string }) {
     ) : (
         commonImpersonationMessages.startImpersonation
     );
-
-    const handleQuestionMarkClick = () => {
-        loadMismatches({ variables: { id: userId } });
-        setDialogOpen(true);
-    };
 
     const permissionMismatches = mismatchData?.user.impersonationNotAllowedByPermissions ?? [];
 
@@ -94,7 +92,7 @@ function StartImpersonationMenuItem({ userId }: { userId: string }) {
                 {label}
             </RowActionsItem>
             {!loading && !isSelf && !impersonationAllowed && (
-                <RowActionsItem icon={<QuestionMark />} onClick={handleQuestionMarkClick}>
+                <RowActionsItem icon={<QuestionMark />} onClick={() => setDialogOpen(true)}>
                     <FormattedMessage id="comet.userPermissions.whyCannotImpersonate" defaultMessage="Why can't I impersonate?" />
                 </RowActionsItem>
             )}
