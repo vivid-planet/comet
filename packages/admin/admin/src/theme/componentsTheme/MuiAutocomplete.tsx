@@ -1,7 +1,6 @@
 import { Clear } from "@comet/admin-icons";
 import { autocompleteClasses } from "@mui/material";
 
-import { finalFormAutocompleteClasses } from "../../form/Autocomplete";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import type { GetMuiComponentTheme } from "./getComponentsTheme";
 
@@ -14,12 +13,6 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
     styleOverrides: mergeOverrideStyles<"MuiAutocomplete">(component?.styleOverrides, {
         loading: {
             color: "inherit",
-        },
-        root: {
-            [`& .${autocompleteClasses.inputRoot}:has(> .${finalFormAutocompleteClasses.multipleStartAdornmentContainer})`]: {
-                flexWrap: "nowrap",
-                alignItems: "center",
-            },
         },
         endAdornment: {
             top: 0,

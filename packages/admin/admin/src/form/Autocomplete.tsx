@@ -19,11 +19,22 @@ import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import type { AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
 
-export type FinalFormAutocompleteClassKey = "multipleStartAdornmentContainer";
+export type FinalFormAutocompleteClassKey = "multipleInputBase" | "multipleStartAdornmentContainer";
 
 export const finalFormAutocompleteClasses = generateUtilityClasses<FinalFormAutocompleteClassKey>("CometAdminFinalFormAutocomplete", [
+    "multipleInputBase",
     "multipleStartAdornmentContainer",
 ]);
+
+const MultipleInputBase = createComponentSlot(InputBase)<FinalFormAutocompleteClassKey>({
+    componentName: "FinalFormAutocomplete",
+    slotName: "multipleInputBase",
+})(css`
+    && {
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+`);
 
 const MultipleStartAdornmentContainer = createComponentSlot("div")<FinalFormAutocompleteClassKey>({
     componentName: "FinalFormAutocomplete",
@@ -120,30 +131,33 @@ export const FinalFormAutocomplete = <
             disabled={disabled}
             readOnly={readOnly}
             multiple={multiple as Multiple}
-            renderInput={(params: AutocompleteRenderInputParams) => (
-                <InputBase
-                    {...restInput}
-                    {...params}
-                    {...params.InputProps}
-                    // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
-                    required={multiple ? false : required}
-                    startAdornment={
-                        multiple && params.InputProps.startAdornment ? (
-                            <MultipleStartAdornmentContainer>{params.InputProps.startAdornment}</MultipleStartAdornmentContainer>
-                        ) : (
-                            params.InputProps.startAdornment
-                        )
-                    }
-                    endAdornment={
-                        <InputAdornment position="end">
-                            {loading && <CircularProgress color="inherit" size={16} />}
-                            {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
-                            {loadingError && <Error color="error" />}
-                            {params.InputProps.endAdornment}
-                        </InputAdornment>
-                    }
-                />
-            )}
+            renderInput={(params: AutocompleteRenderInputParams) => {
+                const RenderedInputBase = multiple ? MultipleInputBase : InputBase;
+                return (
+                    <RenderedInputBase
+                        {...restInput}
+                        {...params}
+                        {...params.InputProps}
+                        // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
+                        required={multiple ? false : required}
+                            startAdornment={
+                            multiple && params.InputProps.startAdornment ? (
+                                <MultipleStartAdornmentContainer>{params.InputProps.startAdornment}</MultipleStartAdornmentContainer>
+                            ) : (
+                                params.InputProps.startAdornment
+                            )
+                        }
+                        endAdornment={
+                            <InputAdornment position="end">
+                                {loading && <CircularProgress color="inherit" size={16} />}
+                                {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+                                {loadingError && <Error color="error" />}
+                                {params.InputProps.endAdornment}
+                            </InputAdornment>
+                        }
+                    />
+                );
+            }}
         />
     );
 };
