@@ -51,7 +51,13 @@ const withFoldersSelect = (
     }
 
     if (args.sortColumnName && args.sortDirection) {
-        qb.orderBy({ [`folder.${args.sortColumnName}`]: args.sortDirection });
+        if (args.sortColumnName === "size") {
+            qb.orderBy({ [raw("(COUNT(DISTINCT children.id) + COUNT(DISTINCT files.id))")]: args.sortDirection });
+        } else if (args.sortColumnName === "mimetype") {
+            qb.orderBy({ [`folder.name`]: args.sortDirection });
+        } else {
+            qb.orderBy({ [`folder.${args.sortColumnName}`]: args.sortDirection });
+        }
     }
 
     if (args.offset) {
@@ -129,7 +135,8 @@ export class FoldersService {
         const qb = withFoldersSelect(this.selectQueryBuilder(), args);
         const folders = await qb.getResult();
 
-        const countQb = withFoldersSelect(this.countQueryBuilder(), args);
+        // Omit sort args: ordering is irrelevant for counting and the count query builder lacks the joins required for "size" sorting
+        const countQb = withFoldersSelect(this.countQueryBuilder(), { ...args, sortColumnName: undefined, sortDirection: undefined });
         const totalCount = await countQb.getCount();
 
         return [folders, totalCount];
@@ -296,19 +303,26 @@ export class FoldersService {
     }
 
     async getFolderPosition(folderId: string, args: Omit<DamFolderListPositionArgs, "scope">, scope?: DamScopeInterface): Promise<number> {
-        const subQb = withFoldersSelect(
-            this.foldersRepository
-                .createQueryBuilder("folder")
-                .select(["folder.id", raw(`ROW_NUMBER() OVER( ORDER BY folder."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`)]),
-            {
-                includeArchived: args.includeArchived,
-                parentId: args.parentId,
-                query: args.filter?.searchText,
-                sortColumnName: args.sortColumnName,
-                sortDirection: args.sortDirection,
-                scope,
-            },
-        );
+        const isSizeSort = args.sortColumnName === "size";
+        const effectiveSortColumn = args.sortColumnName === "mimetype" ? "name" : args.sortColumnName;
+        const rowNumberExpr = isSizeSort
+            ? raw(`ROW_NUMBER() OVER( ORDER BY (COUNT(DISTINCT children.id) + COUNT(DISTINCT files.id)) ${args.sortDirection} ) AS row_number`)
+            : raw(`ROW_NUMBER() OVER( ORDER BY folder."${effectiveSortColumn}" ${args.sortDirection} ) AS row_number`);
+
+        let baseQb = this.foldersRepository.createQueryBuilder("folder").select(["folder.id", rowNumberExpr]);
+
+        if (isSizeSort) {
+            baseQb = baseQb.leftJoin("folder.children", "children").leftJoin("folder.files", "files").groupBy(["folder.id"]);
+        }
+
+        const subQb = withFoldersSelect(baseQb, {
+            includeArchived: args.includeArchived,
+            parentId: args.parentId,
+            query: args.filter?.searchText,
+            sortColumnName: args.sortColumnName,
+            sortDirection: args.sortDirection,
+            scope,
+        });
 
         const result: { rows: Array<{ row_number: string }> } = await this.foldersRepository.getKnex().raw(
             `select "folder_with_row_number".row_number

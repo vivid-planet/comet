@@ -1,11 +1,11 @@
 import { CometDigitalExperienceLogo, Error, Info, Warning } from "@comet/admin-icons";
 import { type ComponentsOverrides, type Divider, type Theme, type Typography, useThemeProps } from "@mui/material";
-import { type FunctionComponent, type ReactNode } from "react";
+import type { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { type InlineAlert, type InlineAlertSeverity } from "../inlineAlert/InlineAlert";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { InlineAlert, InlineAlertSeverity } from "../inlineAlert/InlineAlert";
 import {
     ActionContainer,
     BackgroundStyled,
@@ -16,7 +16,7 @@ import {
     LogoContainer,
     Root,
 } from "./FullPageAlert.styles";
-import { type FullPageAlertBackground } from "./FullPageAlertBackground";
+import type { FullPageAlertBackground } from "./FullPageAlertBackground";
 
 export type FullPageAlertClassKey =
     | "root"

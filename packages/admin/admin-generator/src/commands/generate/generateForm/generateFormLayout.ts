@@ -1,12 +1,12 @@
-import { type IntrospectionQuery } from "graphql";
+import type { IntrospectionQuery } from "graphql";
 
-import { type FormConfig, type FormLayoutConfig, type GQLDocumentConfigMap } from "../generate-command";
+import type { FormConfig, FormLayoutConfig, GQLDocumentConfigMap } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findIntrospectionFieldType } from "../utils/findIntrospectionFieldType";
-import { type Imports } from "../utils/generateImportsCode";
+import type { Imports } from "../utils/generateImportsCode";
 import { generateFormattedMessage } from "../utils/intl";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
-import { type Prop } from "./generateForm";
+import type { Prop } from "./generateForm";
 
 export function generateFormLayout({
     gqlIntrospection,

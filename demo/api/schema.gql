@@ -980,7 +980,6 @@ type Mutation {
   deleteProductVariant(id: ID!): Boolean!
   deleteRedirect(id: ID!): Boolean!
   deleteRedirects(ids: [ID!]!): Boolean!
-  importDamFileByDownload(input: UpdateDamFileInput!, scope: DamScopeInput!, url: String!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   moveDamFolders(folderIds: [ID!]!, scope: DamScopeInput!, targetFolderId: ID): [DamFolder!]!
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
@@ -1958,6 +1957,7 @@ type Query {
   newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]! = [{direction: ASC, field: createdAt}]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
   page(id: ID!): Page!
+  pageTreeFullTextSearch(limit: Int! = 25, offset: Int! = 0, scope: PageTreeNodeScopeInput!, search: String!): PaginatedPageTreeNodes!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!

@@ -157,7 +157,7 @@ From the theme, `MjmlMailRoot` automatically sets:
 
 ## MjmlSection
 
-`MjmlSection` wraps the MJML section with theme integration. It automatically applies `theme.colors.background.content` as the background color. To change the default for all sections, set it in the theme:
+`MjmlSection` wraps the MJML section with theme integration. It automatically applies `theme.colors.background.content` as the background color — unless the section is rendered inside an [`MjmlWrapper`](#mjmlwrapper), in which case the wrapper's background is used instead. To change the default for all sections, set it in the theme:
 
 ```ts
 const theme = createTheme({
@@ -213,6 +213,31 @@ By default, columns in a section stack vertically on mobile. To keep them side-b
 This wraps the children in an `MjmlGroup`, preventing the columns from stacking.
 
 **CSS class names:** `.mjmlSection`, `.mjmlSection--indented` (when `indent` is set).
+
+## MjmlWrapper
+
+`MjmlWrapper` groups multiple `MjmlSection`s that share a background. Like a section, it must be a direct child of the body; sections go inside the wrapper.
+
+When a theme is present, `MjmlWrapper` applies `theme.colors.background.content` as its default `backgroundColor`. Sections rendered inside a wrapper suppress their own theme-default background so the wrapper's color shows through. An explicit `backgroundColor` on an inner `MjmlSection` still wins.
+
+Use this to paint a different background behind a group of sections — for example, a footer with its own color:
+
+```tsx
+<MjmlWrapper backgroundColor="#2d4a6e">
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">First row</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Second row</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+</MjmlWrapper>
+```
+
+For a region that also needs different default text color or variants, combine `MjmlWrapper` with a scoped `ThemeProvider` (see [Scoped Theming](#scoped-theming) below).
 
 ## Text
 
@@ -389,6 +414,10 @@ To set a custom link color that persists across all viewports, use `!important` 
 ## Scoped Theming
 
 `ThemeProvider` makes a theme available to its children via React context. `MjmlMailRoot` uses it internally, so you don't need it for the top-level theme. Its main use case is **scoped theming** — applying a different theme to a subsection of the email.
+
+:::tip
+If all you need to change is the **background color** behind a group of sections, reach for [`MjmlWrapper`](#mjmlwrapper) instead — no theme cloning required.
+:::
 
 ### Creating a Dark Section
 

@@ -14,7 +14,7 @@ import {
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Box } from "@mui/system";
-import { type FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 import { useLocation } from "react-router";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";

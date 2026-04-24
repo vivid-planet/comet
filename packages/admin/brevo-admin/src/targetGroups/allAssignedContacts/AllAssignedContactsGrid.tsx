@@ -8,16 +8,16 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { type ContentScope } from "@comet/cms-admin";
+import type { ContentScope } from "@comet/cms-admin";
 import { DataGrid } from "@mui/x-data-grid";
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { allAssignedBrevoContactsGridQuery } from "./AllAssignedContactsGrid.gql";
-import {
-    type GQLBrevoContactsQuery,
-    type GQLBrevoContactsQueryVariables,
-    type GQLTargetGroupBrevoContactsListFragment,
+import type {
+    GQLBrevoContactsQuery,
+    GQLBrevoContactsQueryVariables,
+    GQLTargetGroupBrevoContactsListFragment,
 } from "./AllAssignedContactsGrid.gql.generated";
 
 const AssignedContactsGridToolbar = () => {

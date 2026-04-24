@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { type ComponentPropsWithoutRef, type CSSProperties, type JSX, type ReactNode, type TdHTMLAttributes } from "react";
+import type { ComponentPropsWithoutRef, CSSProperties, JSX, ReactNode, TdHTMLAttributes } from "react";
 
 import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultOrUndefined } from "../../theme/responsiveValue.js";

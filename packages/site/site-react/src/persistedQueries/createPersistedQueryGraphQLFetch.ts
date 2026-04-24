@@ -1,4 +1,4 @@
-import { type GraphQLFetch } from "../graphQLFetch/graphQLFetch";
+import type { GraphQLFetch } from "../graphQLFetch/graphQLFetch";
 
 type Fetch = typeof fetch;
 

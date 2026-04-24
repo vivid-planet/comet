@@ -90,6 +90,8 @@ registerStyles(
 );
 ```
 
+For three or more equal-width columns, see [Multi-Column Symmetric Layouts](#multi-column-symmetric-layouts).
+
 ## Asymmetric Two-Column Layout
 
 A fixed-width column paired with a fluid column that takes the remaining space. Common for image-plus-text layouts, icon rows, or sidebar patterns.
@@ -189,7 +191,11 @@ By default, MJML stacks columns in source order on mobile. If you need a column 
         <MjmlColumn className="layout__smallColumn" width={`${SMALL_COLUMN_WIDTH}px`}>
             <MjmlImage src="..." alt="..." width={SMALL_COLUMN_WIDTH} />
         </MjmlColumn>
-        <MjmlColumn className="layout__fluidColumn" width={`${fluidColumnWidth}px`} paddingRight={`${COLUMN_GAP}px`}>
+        <MjmlColumn
+            className="layout__fluidColumn"
+            width={`${fluidColumnWidth}px`}
+            paddingRight={`${COLUMN_GAP}px`}
+        >
             <MjmlText>This appears on the left on desktop, below the image on mobile.</MjmlText>
         </MjmlColumn>
     </MjmlSection>
@@ -200,3 +206,160 @@ Two important details:
 
 1. **`MjmlWrapper` replaces `indent`** — when using `direction="rtl"`, applying `indent` directly on the section causes a 1px line artifact in Outlook. Instead, wrap the section in `MjmlWrapper` and apply the indentation as padding. Set the `backgroundColor` on the wrapper to match the content background.
 2. **Source order = mobile stack order** — the small column is first in the JSX, so it stacks on top on mobile. `direction="rtl"` only affects the visual (left-to-right) order on desktop.
+
+## Multi-Column Symmetric Layouts
+
+Three or more equal-width columns use the same gap-via-inner-padding principle as the two-column layout, but require explicit `width` props: inner columns carry padding on **both** sides while outer columns only have it on one. Without compensation, the inner columns would end up with narrower content areas.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ MjmlSection indent                                              │
+│ ┌───────────────┐ ┌─────────────────┐ ┌───────────────┐         │
+│ │ outer         │ │ inner (wider)   │ │ outer         │         │
+│ │ paddingR:½gap │ │ paddingL:½gap   │ │ paddingL:½gap │         │
+│ │               │ │ paddingR:½gap   │ │               │         │
+│ └───────────────┘ └─────────────────┘ └───────────────┘         │
+│             ←── gap ──→         ←── gap ──→                     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Width Formula
+
+```tsx
+const columnGap = 20;
+const halfColumnGap = columnGap / 2;
+
+const availableContentWidth =
+    theme.sizes.bodyWidth - 2 * getDefaultFromResponsiveValue(theme.sizes.contentIndentation);
+
+const contentWidthPerColumn =
+    (availableContentWidth - (numberOfColumns - 1) * columnGap) / numberOfColumns;
+
+const outerColumnWidth = `${((contentWidthPerColumn + halfColumnGap) / availableContentWidth) * 100}%`;
+const innerColumnWidth = `${((contentWidthPerColumn + columnGap) / availableContentWidth) * 100}%`;
+```
+
+Outer columns get a width accounting for half-gap padding; inner columns are wider to absorb a full gap (half on each side). Percentages — rather than pixels — keep MJML's responsive fallback math predictable.
+
+### Pattern — Three Columns
+
+```tsx
+<MjmlSection indent className="threeColumnsSection">
+    <MjmlColumn
+        className="threeColumnsSection__column"
+        width={outerColumnWidth}
+        paddingRight={halfColumnGap}
+    >
+        <MjmlText>First</MjmlText>
+    </MjmlColumn>
+    <MjmlColumn
+        className="threeColumnsSection__column"
+        width={innerColumnWidth}
+        paddingLeft={halfColumnGap}
+        paddingRight={halfColumnGap}
+    >
+        <MjmlText>Second</MjmlText>
+    </MjmlColumn>
+    <MjmlColumn
+        className="threeColumnsSection__column"
+        width={outerColumnWidth}
+        paddingLeft={halfColumnGap}
+    >
+        <MjmlText>Third</MjmlText>
+    </MjmlColumn>
+</MjmlSection>
+```
+
+### Pattern — Four or More Columns
+
+Same formula; the inner-column is simply repeated. For four columns, the two middle columns both use `innerColumnWidth` with padding on both sides; the first and last use `outerColumnWidth` with padding only on the inner side.
+
+### Responsive Stacking
+
+Below the desktop breakpoint, the compensated inline widths no longer make sense: they were calibrated for a specific container width, and inner columns would otherwise render visibly wider than outer ones. A flex reset on the section's inner `<td>` neutralizes those widths so columns size equally.
+
+The one design decision is **when to collapse to a stack** — and that's per-component. A dense 3-column row might need to stack at mobile; a 4-column row would be too cramped below the default breakpoint.
+
+```ts
+registerStyles(
+    (theme) => css`
+        ${theme.breakpoints.default.belowMediaQuery} {
+            .threeColumnsSection > table > tbody > tr > td {
+                display: flex !important;
+                gap: 20px !important;
+            }
+            .threeColumnsSection__column {
+                flex: 1 1 0% !important;
+                width: auto !important;
+                max-width: none !important;
+                display: block !important;
+            }
+            .threeColumnsSection__column > table > tbody > tr > td {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        }
+
+        ${theme.breakpoints.mobile.belowMediaQuery} {
+            .threeColumnsSection > table > tbody > tr > td {
+                flex-direction: column !important;
+            }
+            .threeColumnsSection__column {
+                flex: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+    `,
+);
+```
+
+| Stack at           | When to use                                                              | Change from the example above                                                                      |
+| ------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| Mobile             | Columns remain readable while narrowing (typical for 3 columns).         | Use as-is.                                                                                         |
+| Default breakpoint | Columns would be too cramped below `bodyWidth` (typical for 4+ columns). | Merge the `mobile.belowMediaQuery` rules into `default.belowMediaQuery` and drop the mobile block. |
+
+### Non-Stacking Rows
+
+For short fixed-value rows — numeric data, icon strips — that remain readable even when narrow, keep columns side-by-side at every viewport. Add `disableResponsiveBehavior` on the section to suppress MJML's own mobile auto-stack:
+
+```tsx
+<MjmlSection indent disableResponsiveBehavior className="iconStrip">
+    {/* …columns as in the Three-Column pattern above… */}
+</MjmlSection>
+```
+
+The inline width compensation still needs to be neutralized so columns render at equal widths. Apply the same flex reset as in [Responsive Stacking](#responsive-stacking), with one adjustment: `disableResponsiveBehavior` wraps the columns in an `MjmlGroup` `<div>`, so the container selector goes one level deeper (`… > td > div`). Drop the `mobile.belowMediaQuery` block entirely — columns never stack.
+
+```ts
+.iconStrip > table > tbody > tr > td > div {
+    display: flex !important;
+    gap: 20px !important;
+}
+/* column rules identical to Responsive Stacking */
+```
+
+## Grouping Sections with a Shared Background
+
+When multiple sections need to share a background — for example, a multi-row footer with its own color — wrap them in `MjmlWrapper`. The wrapper owns the background; inner `MjmlSection`s suppress their own theme-default `backgroundColor` so the wrapper's color shows through.
+
+```tsx
+<MjmlWrapper backgroundColor="#2d4a6e">
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Footer row 1</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Footer row 2</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+</MjmlWrapper>
+```
+
+A few things worth knowing:
+
+- `MjmlWrapper` applies `theme.colors.background.content` as its default background when a theme is present, so the `backgroundColor` prop is only needed when the wrapper should differ from the theme default.
+- An explicit `backgroundColor` on an inner `MjmlSection` still wins — use that only when a single section inside the wrapper needs to stand out.
+- For a region that also needs different default text color or variants, combine `MjmlWrapper` with a scoped `ThemeProvider` (see [Scoped Theming](./2-components-and-theme.md#scoped-theming)). Text components pick up the scoped theme while the wrapper provides the background.

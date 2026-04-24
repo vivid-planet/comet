@@ -1,5 +1,5 @@
 import { readFile } from "fs/promises";
-import { type ResolvedIntlConfig } from "react-intl";
+import type { ResolvedIntlConfig } from "react-intl";
 
 type Messages = ResolvedIntlConfig["messages"];
 

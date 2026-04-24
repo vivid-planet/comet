@@ -11,16 +11,16 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { type FormApi } from "final-form";
+import type { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    type GQLProductCategoriesSelectQuery,
-    type GQLProductCategoriesSelectQueryVariables,
-    type GQLProductsSelectQuery,
-    type GQLProductsSelectQueryVariables,
+import type {
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
+    GQLProductsSelectQuery,
+    GQLProductsSelectQueryVariables,
 } from "./ProductHighlightForm.generated";
 import {
     createProductHighlightMutation,
@@ -28,14 +28,14 @@ import {
     productHighlightQuery,
     updateProductHighlightMutation,
 } from "./ProductHighlightForm.gql";
-import {
-    type GQLCreateProductHighlightMutation,
-    type GQLCreateProductHighlightMutationVariables,
-    type GQLProductHighlightFormHandmadeDetailsFragment,
-    type GQLProductHighlightQuery,
-    type GQLProductHighlightQueryVariables,
-    type GQLUpdateProductHighlightMutation,
-    type GQLUpdateProductHighlightMutationVariables,
+import type {
+    GQLCreateProductHighlightMutation,
+    GQLCreateProductHighlightMutationVariables,
+    GQLProductHighlightFormHandmadeDetailsFragment,
+    GQLProductHighlightQuery,
+    GQLProductHighlightQueryVariables,
+    GQLUpdateProductHighlightMutation,
+    GQLUpdateProductHighlightMutationVariables,
 } from "./ProductHighlightForm.gql.generated";
 
 type FormValues = GQLProductHighlightFormHandmadeDetailsFragment & {

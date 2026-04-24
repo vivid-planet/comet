@@ -3,7 +3,7 @@ import { type ComponentsOverrides, css, type Theme } from "@mui/material/styles"
 import { type PropsWithChildren, type ReactNode, useEffect, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FieldContainerProps = ThemedComponentBaseProps<{
     root: typeof FormControl;

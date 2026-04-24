@@ -1,5 +1,5 @@
 import { DamVideoBlock as SiteReactDamVideoBlock, type VideoPreviewImageProps } from "@comet/site-react";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 
 import { VideoPreviewImage } from "./helpers/VideoPreviewImage";
 

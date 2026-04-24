@@ -1,5 +1,5 @@
-import { type FormApi } from "final-form";
-import { type RefObject } from "react";
+import type { FormApi } from "final-form";
+import type { RefObject } from "react";
 
 import { useSaveConflict } from "../pages/useSaveConflict";
 

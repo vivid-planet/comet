@@ -34,10 +34,10 @@ import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
 
-import {
-    type GQLEditMainMenuItemFragment,
-    type GQLUpdateMainMenuItemMutation,
-    type GQLUpdateMainMenuItemMutationVariables,
+import type {
+    GQLEditMainMenuItemFragment,
+    GQLUpdateMainMenuItemMutation,
+    GQLUpdateMainMenuItemMutationVariables,
 } from "./EditMainMenuItem.generated";
 
 export type { GQLEditMainMenuItemFragment } from "./EditMainMenuItem.generated"; // re-export

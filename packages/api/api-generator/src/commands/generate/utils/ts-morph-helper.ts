@@ -1,4 +1,4 @@
-import { type EntityMetadata } from "@mikro-orm/postgresql";
+import type { EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { type ArrowFunction, ClassDeclaration, type Identifier, Project, SyntaxKind } from "ts-morph";
 

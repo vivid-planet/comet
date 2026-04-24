@@ -2,7 +2,7 @@ import { Field, StackPage, StackPageTitle, StackSwitch, StackSwitchApiContext } 
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Checkbox, Divider, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type Dispatch, type ReactNode, type SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { FormattedMessage, type IntlShape, type MessageDescriptor, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -29,7 +29,7 @@ import { resolveNewState } from "../utils";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 import { FinalFormColumnsSelect } from "./columnsBlock/FinalFormColumnsSelect";
 import { FinalFormLayoutSelect } from "./columnsBlock/FinalFormLayoutSelect";
-import { type ListBlockItem, type ListBlockState } from "./createListBlock";
+import type { ListBlockItem, ListBlockState } from "./createListBlock";
 import { createUseAdminComponent as createUseListBlockAdminComponent } from "./listBlock/createUseAdminComponent";
 
 export interface ColumnsBlockLayout {

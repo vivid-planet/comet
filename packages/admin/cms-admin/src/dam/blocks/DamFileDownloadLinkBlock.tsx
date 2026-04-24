@@ -4,13 +4,13 @@ import { Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { FormattedMessage } from "react-intl";
 
-import { type DamFileDownloadLinkBlockData, type DamFileDownloadLinkBlockInput } from "../../blocks.generated";
+import type { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
 import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
 import { createBlockSkeleton } from "../../blocks/helpers/createBlockSkeleton";
 import { BlockCategory, type BlockDependency, type BlockInterface } from "../../blocks/types";
 import { FileField } from "../../form/file/FileField";
-import { type GQLDamFileDownloadLinkFileQuery, type GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
+import type { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
 
 export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput> = {
     ...createBlockSkeleton(),

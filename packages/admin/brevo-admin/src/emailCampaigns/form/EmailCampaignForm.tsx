@@ -39,17 +39,17 @@ import { FormattedMessage } from "react-intl";
 import { useRouteMatch } from "react-router";
 
 import { useBrevoConfig } from "../../common/BrevoConfigProvider";
-import { type GQLEmailCampaignInput } from "../../graphql.generated";
+import type { GQLEmailCampaignInput } from "../../graphql.generated";
 import { ConfigFields } from "./ConfigFields";
 import { createEmailCampaignMutation, emailCampaignFormQuery, updateEmailCampaignMutation } from "./EmailCampaignForm.gql";
-import {
-    type GQLCreateEmailCampaignMutation,
-    type GQLCreateEmailCampaignMutationVariables,
-    type GQLEmailCampaignFormFragment,
-    type GQLEmailCampaignFormQuery,
-    type GQLEmailCampaignFormQueryVariables,
-    type GQLUpdateEmailCampaignMutation,
-    type GQLUpdateEmailCampaignMutationVariables,
+import type {
+    GQLCreateEmailCampaignMutation,
+    GQLCreateEmailCampaignMutationVariables,
+    GQLEmailCampaignFormFragment,
+    GQLEmailCampaignFormQuery,
+    GQLEmailCampaignFormQueryVariables,
+    GQLUpdateEmailCampaignMutation,
+    GQLUpdateEmailCampaignMutationVariables,
 } from "./EmailCampaignForm.gql.generated";
 import { SendManagerFields } from "./SendManagerFields";
 import { SendManagerWrapper } from "./SendManagerWrapper";

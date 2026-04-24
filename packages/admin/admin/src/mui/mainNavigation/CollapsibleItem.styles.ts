@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type MainNavigationContext } from "./Context";
+import type { MainNavigationContext } from "./Context";
 import { MainNavigationItem, type MainNavigationItemLevel } from "./Item";
 
 export type MainNavigationCollapsibleItemClassKey = "root" | "open" | "childSelected" | "mainNavigationItem" | "itemTitle" | "collapsibleIndicator";

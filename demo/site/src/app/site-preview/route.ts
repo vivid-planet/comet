@@ -1,5 +1,5 @@
 import { sitePreviewRoute } from "@comet/site-nextjs";
-import { type NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
 
