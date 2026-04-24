@@ -8,7 +8,8 @@ import { ROOT_BLOCK_KEYS_METADATA_KEY, ROOT_BLOCK_METADATA_KEY } from "../blocks
 import { ROOT_BLOCK_ENTITY_METADATA_KEY } from "../blocks/decorators/root-block-entity";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { resolveSqlPathScopeFromEntity } from "../common/helper/resolve-sql-path-scope.helper";
+import { isScopedEntitySqlPath, SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { WarningData } from "./dto/warning-data";
@@ -66,7 +67,9 @@ export class WarningEventSubscriber implements EventSubscriber {
                 if (scoped) {
                     let scopedEntityScope: ContentScope | ContentScope[];
 
-                    if (isInjectableService(scoped)) {
+                    if (isScopedEntitySqlPath(scoped)) {
+                        scopedEntityScope = await resolveSqlPathScopeFromEntity(scoped, args.entity);
+                    } else if (isInjectableService(scoped)) {
                         const service = this.moduleRef.get(scoped, { strict: false });
                         scopedEntityScope = await service.getEntityScope(args.entity);
                     } else {
