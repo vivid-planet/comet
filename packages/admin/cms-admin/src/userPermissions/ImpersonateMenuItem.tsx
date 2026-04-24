@@ -1,7 +1,7 @@
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { Dialog, RowActionsItem } from "@comet/admin";
 import { ImpersonateUser, QuestionMark, Reset } from "@comet/admin-icons";
-import { CircularProgress, DialogContent, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { CircularProgress, DialogContent, List, ListItem, ListItemText } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -77,8 +77,7 @@ function StartImpersonationMenuItem({ userId }: { userId: string }) {
         commonImpersonationMessages.startImpersonation
     );
 
-    const handleQuestionMarkClick = (event: React.MouseEvent) => {
-        event.stopPropagation();
+    const handleQuestionMarkClick = () => {
         loadMismatches({ variables: { id: userId } });
         setDialogOpen(true);
     };
@@ -91,16 +90,14 @@ function StartImpersonationMenuItem({ userId }: { userId: string }) {
                 icon={loading ? <CircularProgress size={16} /> : <ImpersonateUser />}
                 disabled={loading || !impersonationAllowed || isSelf}
                 onClick={() => startImpersonation(userId)}
-                endIcon={
-                    !loading && !isSelf && !impersonationAllowed ? (
-                        <IconButton size="small" onClick={handleQuestionMarkClick}>
-                            <QuestionMark fontSize="small" />
-                        </IconButton>
-                    ) : undefined
-                }
             >
                 {label}
             </RowActionsItem>
+            {!loading && !isSelf && !impersonationAllowed && (
+                <RowActionsItem icon={<QuestionMark />} onClick={handleQuestionMarkClick}>
+                    <FormattedMessage id="comet.userPermissions.whyCannotImpersonate" defaultMessage="Why can't I impersonate?" />
+                </RowActionsItem>
+            )}
             <Dialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
