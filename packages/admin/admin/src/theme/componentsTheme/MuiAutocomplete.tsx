@@ -14,6 +14,12 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
         loading: {
             color: "inherit",
         },
+        root: {
+            [`& .${autocompleteClasses.inputRoot}:has(> .CometAdminFinalFormAutocomplete-multipleStartAdornmentContainer)`]: {
+                flexWrap: "nowrap",
+                alignItems: "center",
+            },
+        },
         endAdornment: {
             top: 0,
             bottom: 0,
