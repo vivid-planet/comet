@@ -1,6 +1,7 @@
 import { ChevronDown, Error } from "@comet/admin-icons";
 import {
     Autocomplete,
+    autocompleteClasses,
     type AutocompleteProps,
     type AutocompleteRenderInputParams,
     CircularProgress,
@@ -30,6 +31,10 @@ const MultipleStartAdornmentContainer = createComponentSlot("div")<FinalFormAuto
         gap: ${theme.spacing(0.5)};
         flex: 1 1 auto;
         min-width: 0;
+
+        & ~ .${autocompleteClasses.input} {
+            flex-grow: 0;
+        }
     `,
 );
 
