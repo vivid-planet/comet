@@ -15,13 +15,12 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
             color: "inherit",
         },
         root: {
-            // Keep the outer InputBase row on a single no-wrap flex line when a `TagsContainer` is present
-            // (multi-select in `FinalFormAutocomplete`). Tags wrap inside that container; the end-adornment
-            // stays inline on the right and grows naturally as slots are added (loading / clear / error /
-            // popup-icon).
-            [`& .${autocompleteClasses.inputRoot}:has(> .CometAdminFinalFormAutocomplete-tagsContainer)`]: {
+            [`& .${autocompleteClasses.inputRoot}:has(> .CometAdminFinalFormAutocomplete-multipleStartAdornmentContainer)`]: {
                 flexWrap: "nowrap",
                 alignItems: "center",
+                [`& .${autocompleteClasses.input}`]: {
+                    flexGrow: 0,
+                },
             },
         },
         endAdornment: {
