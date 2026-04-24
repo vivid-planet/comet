@@ -323,6 +323,7 @@ export type GridConfig<T extends { __typename?: string }> = {
         deleteType?: "delete" | "remove";
         deleteText?: string;
     };
+    initialPageSize?: number;
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
