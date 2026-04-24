@@ -5,7 +5,6 @@ import {
     type AutocompleteProps,
     type AutocompleteRenderInputParams,
     CircularProgress,
-    generateUtilityClasses,
     InputAdornment,
     InputBase,
     Typography,
@@ -20,11 +19,6 @@ import { createComponentSlot } from "../helpers/createComponentSlot";
 import type { AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
 
 export type FinalFormAutocompleteClassKey = "multipleInputBase" | "multipleStartAdornmentContainer";
-
-export const finalFormAutocompleteClasses = generateUtilityClasses<FinalFormAutocompleteClassKey>("CometAdminFinalFormAutocomplete", [
-    "multipleInputBase",
-    "multipleStartAdornmentContainer",
-]);
 
 const MultipleInputBase = createComponentSlot(InputBase)<FinalFormAutocompleteClassKey>({
     componentName: "FinalFormAutocomplete",
