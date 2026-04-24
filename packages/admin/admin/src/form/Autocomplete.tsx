@@ -18,7 +18,7 @@ import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import type { AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
 
-export type FinalFormAutocompleteClassKey = "multipleInputBase" | "multipleStartAdornmentContainer";
+type FinalFormAutocompleteClassKey = "multipleInputBase" | "multipleStartAdornmentContainer";
 
 const MultipleInputBase = createComponentSlot(InputBase)<FinalFormAutocompleteClassKey>({
     componentName: "FinalFormAutocomplete",
