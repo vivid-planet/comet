@@ -44,10 +44,15 @@ type MultiFileFieldProps = FieldRenderProps<GQLDamFileFieldFileFragment[] | unde
 export function FileField(props: SingleFileFieldProps): ReactElement;
 export function FileField(props: MultiFileFieldProps): ReactElement;
 export function FileField(props: SingleFileFieldProps | MultiFileFieldProps): ReactElement {
-    if (props.multiple) {
-        return <MultiFileField {...props} />;
+    // `react-final-form`'s `<Field>` strips `multiple` from the component's top-level props
+    // and puts it on `input.multiple` (same pattern as `FinalFormFileUpload`), so we need to
+    // check both locations — `input.multiple` when used via `<Field>`, `props.multiple` when
+    // `FileField` is rendered directly (e.g. in unit tests).
+    const isMultiple = Boolean(props.multiple) || Boolean(props.input?.multiple);
+    if (isMultiple) {
+        return <MultiFileField {...(props as MultiFileFieldProps)} />;
     }
-    return <SingleFileField {...props} />;
+    return <SingleFileField {...(props as SingleFileFieldProps)} />;
 }
 
 const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: SingleFileFieldProps) => {
