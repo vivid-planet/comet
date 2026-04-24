@@ -116,6 +116,17 @@ export class UserResolver {
         return (await this.userService.getContentScopes(user)).length;
     }
 
+    @ResolveField(() => Boolean)
+    async impersonationAllowed(@Parent() user: UserPermissionsUser, @GetCurrentUser() currentUser: CurrentUser): Promise<boolean> {
+        return (
+            currentUser.id !== user.id &&
+            AbstractAccessControlService.isEqualOrMorePermissions(
+                currentUser.permissions,
+                await this.userService.getPermissionsAndContentScopes(user),
+            )
+        );
+    }
+
     @ResolveField(() => [PermissionMismatchDto])
     async impersonationNotAllowedByPermissions(
         @Parent() user: UserPermissionsUser,

@@ -155,6 +155,7 @@ type UserPermissionsUser {
   email: String!
   permissionsCount: Int!
   contentScopesCount: Int!
+  impersonationAllowed: Boolean!
   impersonationNotAllowedByPermissions: [UserPermissionsPermissionMismatch!]!
 }
 

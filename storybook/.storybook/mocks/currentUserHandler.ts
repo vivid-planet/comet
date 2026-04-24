@@ -29,6 +29,7 @@ type GQLUserPermissionsUser = {
     email: string;
     permissionsCount: number;
     contentScopesCount: number;
+    impersonationAllowed: boolean;
     impersonationNotAllowedByPermissions: Array<{ permission: string; missingContentScopes: Array<any> }>;
 };
 type GQLContentScopeWithLabel = {
@@ -57,6 +58,7 @@ export const currentUserHandler: GraphQLFieldResolver<unknown, unknown, { curren
         authenticatedUser: {
             email: "max@mustermann.com",
             permissionsCount: 0,
+            impersonationAllowed: true,
             impersonationNotAllowedByPermissions: [],
             contentScopesCount: 0,
             name: "Max Mustermann",

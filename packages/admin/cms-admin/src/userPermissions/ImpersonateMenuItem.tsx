@@ -1,16 +1,31 @@
-import { gql, useQuery } from "@apollo/client";
-import { RowActionsItem, Tooltip } from "@comet/admin";
-import { ImpersonateUser, Reset } from "@comet/admin-icons";
-import { CircularProgress } from "@mui/material";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { Dialog, RowActionsItem } from "@comet/admin";
+import { ImpersonateUser, QuestionMark, Reset } from "@comet/admin-icons";
+import { CircularProgress, DialogContent, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";
 import { useCurrentUser } from "./hooks/currentUser";
-import { type GQLUserImpersonationCheckQuery, type GQLUserImpersonationCheckQueryVariables } from "./ImpersonateMenuItem.generated";
+import {
+    type GQLUserImpersonationCheckQuery,
+    type GQLUserImpersonationCheckQueryVariables,
+    type GQLUserImpersonationMismatchesQuery,
+    type GQLUserImpersonationMismatchesQueryVariables,
+} from "./ImpersonateMenuItem.generated";
 import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
 
 const userImpersonationCheckQuery = gql`
     query UserImpersonationCheck($id: String!) {
+        user: userPermissionsUserById(id: $id) {
+            id
+            impersonationAllowed
+        }
+    }
+`;
+
+const userImpersonationMismatchesQuery = gql`
+    query UserImpersonationMismatches($id: String!) {
         user: userPermissionsUserById(id: $id) {
             id
             impersonationNotAllowedByPermissions {
@@ -39,13 +54,18 @@ function StartImpersonationMenuItem({ userId }: { userId: string }) {
     const currentUser = useCurrentUser();
     const intl = useIntl();
     const isSelf = currentUser.id === userId;
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const { data, loading } = useQuery<GQLUserImpersonationCheckQuery, GQLUserImpersonationCheckQueryVariables>(userImpersonationCheckQuery, {
         variables: { id: userId },
         skip: isSelf,
     });
-    const permissionMismatches = data?.user.impersonationNotAllowedByPermissions ?? [];
-    const impersonationAllowed = permissionMismatches.length === 0;
+    const impersonationAllowed = data?.user.impersonationAllowed ?? false;
+
+    const [loadMismatches, { data: mismatchData, loading: mismatchLoading }] = useLazyQuery<
+        GQLUserImpersonationMismatchesQuery,
+        GQLUserImpersonationMismatchesQueryVariables
+    >(userImpersonationMismatchesQuery);
 
     const label = loading ? (
         <FormattedMessage id="comet.userPermissions.evaluatingPermissions" defaultMessage="Evaluating permissions" />
@@ -57,36 +77,70 @@ function StartImpersonationMenuItem({ userId }: { userId: string }) {
         commonImpersonationMessages.startImpersonation
     );
 
-    const tooltipTitle =
-        !loading && !isSelf && !impersonationAllowed
-            ? permissionMismatches
-                  .map((m) => {
-                      if (m.missingContentScopes.length === 0) {
-                          return m.permission;
-                      }
-                      const scopes = m.missingContentScopes.map((cs) => Object.values(cs).join("/")).join(", ");
-                      return intl.formatMessage(
-                          {
-                              id: "comet.userPermissions.permissionWithMissingScopes",
-                              defaultMessage: "{permission} (missing scopes: {scopes})",
-                          },
-                          { permission: m.permission, scopes },
-                      );
-                  })
-                  .join(", ")
-            : "";
+    const handleQuestionMarkClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        loadMismatches({ variables: { id: userId } });
+        setDialogOpen(true);
+    };
+
+    const permissionMismatches = mismatchData?.user.impersonationNotAllowedByPermissions ?? [];
 
     return (
-        <Tooltip title={tooltipTitle}>
-            <span>
-                <RowActionsItem
-                    icon={loading ? <CircularProgress size={16} /> : <ImpersonateUser />}
-                    disabled={loading || !impersonationAllowed || isSelf}
-                    onClick={() => startImpersonation(userId)}
-                >
-                    {label}
-                </RowActionsItem>
-            </span>
-        </Tooltip>
+        <>
+            <RowActionsItem
+                icon={loading ? <CircularProgress size={16} /> : <ImpersonateUser />}
+                disabled={loading || !impersonationAllowed || isSelf}
+                onClick={() => startImpersonation(userId)}
+                endIcon={
+                    !loading && !isSelf && !impersonationAllowed ? (
+                        <IconButton size="small" onClick={handleQuestionMarkClick}>
+                            <QuestionMark fontSize="small" />
+                        </IconButton>
+                    ) : undefined
+                }
+            >
+                {label}
+            </RowActionsItem>
+            <Dialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                title={intl.formatMessage({
+                    id: "comet.userPermissions.impersonationNotAllowed",
+                    defaultMessage: "Impersonation not allowed",
+                })}
+            >
+                <DialogContent>
+                    {mismatchLoading ? (
+                        <CircularProgress size={24} />
+                    ) : (
+                        <List dense>
+                            {permissionMismatches.map((m) => (
+                                <ListItem key={m.permission}>
+                                    <ListItemText
+                                        primary={m.permission}
+                                        secondary={
+                                            m.missingContentScopes.length > 0
+                                                ? intl.formatMessage(
+                                                      {
+                                                          id: "comet.userPermissions.missingContentScopes",
+                                                          defaultMessage: "Missing scopes: {scopes}",
+                                                      },
+                                                      {
+                                                          scopes: m.missingContentScopes.map((cs) => Object.values(cs).join("/")).join(", "),
+                                                      },
+                                                  )
+                                                : intl.formatMessage({
+                                                      id: "comet.userPermissions.missingPermission",
+                                                      defaultMessage: "Permission not available",
+                                                  })
+                                        }
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                    )}
+                </DialogContent>
+            </Dialog>
+        </>
     );
 }

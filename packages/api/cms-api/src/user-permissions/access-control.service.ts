@@ -55,9 +55,6 @@ export abstract class AbstractAccessControlService implements AccessControlServi
         return mismatches;
     }
 
-    /**
-     * @deprecated Use `getPermissionMismatches` instead.
-     */
     static isEqualOrMorePermissions(permissions: CurrentUserPermission[], targetPermissions: CurrentUserPermission[]): boolean {
         return AbstractAccessControlService.getPermissionMismatches(permissions, targetPermissions).length === 0;
     }

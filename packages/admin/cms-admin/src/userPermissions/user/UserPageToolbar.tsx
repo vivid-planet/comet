@@ -1,19 +1,27 @@
-import { gql, useQuery } from "@apollo/client";
-import { CrudMoreActionsMenu, FillSpace, Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarTitleItem, Tooltip } from "@comet/admin";
-import { ImpersonateUser, Reset } from "@comet/admin-icons";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { CrudMoreActionsMenu, Dialog, FillSpace, Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import { ImpersonateUser, QuestionMark, Reset } from "@comet/admin-icons";
+import { CircularProgress, DialogContent, IconButton, List, ListItem, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useState } from "react";
 import { useIntl } from "react-intl";
 
 import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
 import { startImpersonation, stopImpersonation } from "../utils/handleImpersonation";
-import { type GQLUserPageQuery, type GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
+import {
+    type GQLUserPageMismatchesQuery,
+    type GQLUserPageMismatchesQueryVariables,
+    type GQLUserPageQuery,
+    type GQLUserPageQueryVariables,
+} from "./UserPageToolbar.generated";
 
 export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) => {
     const currentUser = useCurrentUser();
     const isAllowed = useUserPermissionCheck();
     const intl = useIntl();
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
@@ -21,10 +29,7 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                 user: userPermissionsUserById(id: $id) {
                     name
                     email
-                    impersonationNotAllowedByPermissions {
-                        permission
-                        missingContentScopes
-                    }
+                    impersonationAllowed
                 }
             }
         `,
@@ -32,6 +37,21 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
             variables: { id: userId },
         },
     );
+
+    const [loadMismatches, { data: mismatchData, loading: mismatchLoading }] = useLazyQuery<
+        GQLUserPageMismatchesQuery,
+        GQLUserPageMismatchesQueryVariables
+    >(gql`
+        query UserPageMismatches($id: String!) {
+            user: userPermissionsUserById(id: $id) {
+                id
+                impersonationNotAllowedByPermissions {
+                    permission
+                    missingContentScopes
+                }
+            }
+        }
+    `);
 
     if (error) {
         throw new Error(error.message);
@@ -41,60 +61,94 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
         return <Loading />;
     }
 
-    const permissionMismatches = data.user.impersonationNotAllowedByPermissions;
-    const impersonationAllowed = permissionMismatches.length === 0;
+    const impersonationAllowed = data.user.impersonationAllowed;
+    const permissionMismatches = mismatchData?.user.impersonationNotAllowedByPermissions ?? [];
 
-    const tooltipTitle = !impersonationAllowed
-        ? permissionMismatches
-              .map((m) => {
-                  if (m.missingContentScopes.length === 0) {
-                      return m.permission;
-                  }
-                  const scopes = m.missingContentScopes.map((cs: Record<string, unknown>) => Object.values(cs).join("/")).join(", ");
-                  return intl.formatMessage(
-                      {
-                          id: "comet.userPermissions.permissionWithMissingScopes",
-                          defaultMessage: "{permission} (missing scopes: {scopes})",
-                      },
-                      { permission: m.permission, scopes },
-                  );
-              })
-              .join(", ")
-        : "";
+    const handleQuestionMarkClick = () => {
+        loadMismatches({ variables: { id: userId } });
+        setDialogOpen(true);
+    };
 
     return (
-        <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
-            <ToolbarBackButton />
-            <ToolbarTitleItem>
-                <TitleText>{data.user.name}</TitleText>
-                <SupportText>{data.user.email}</SupportText>
-            </ToolbarTitleItem>
-            <FillSpace />
-            <ToolbarActions>
-                {isAllowed("impersonation") && (
-                    <CrudMoreActionsMenu
-                        overallActions={[
-                            currentUser.impersonated
-                                ? {
-                                      icon: <Reset />,
-                                      label: commonImpersonationMessages.stopImpersonation,
-                                      onClick: () => stopImpersonation(),
-                                  }
-                                : {
-                                      label: (
-                                          <Tooltip title={tooltipTitle}>
-                                              <span>{commonImpersonationMessages.startImpersonation}</span>
-                                          </Tooltip>
-                                      ),
-                                      icon: <ImpersonateUser />,
-                                      disabled: !impersonationAllowed,
-                                      onClick: () => startImpersonation(userId),
-                                  },
-                        ]}
-                    />
-                )}
-            </ToolbarActions>
-        </StackToolbar>
+        <>
+            <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                <ToolbarBackButton />
+                <ToolbarTitleItem>
+                    <TitleText>{data.user.name}</TitleText>
+                    <SupportText>{data.user.email}</SupportText>
+                </ToolbarTitleItem>
+                <FillSpace />
+                <ToolbarActions>
+                    {isAllowed("impersonation") && (
+                        <>
+                            {!currentUser.impersonated && !impersonationAllowed && (
+                                <IconButton size="small" onClick={handleQuestionMarkClick}>
+                                    <QuestionMark fontSize="small" />
+                                </IconButton>
+                            )}
+                            <CrudMoreActionsMenu
+                                overallActions={[
+                                    currentUser.impersonated
+                                        ? {
+                                              icon: <Reset />,
+                                              label: commonImpersonationMessages.stopImpersonation,
+                                              onClick: () => stopImpersonation(),
+                                          }
+                                        : {
+                                              label: commonImpersonationMessages.startImpersonation,
+                                              icon: <ImpersonateUser />,
+                                              disabled: !impersonationAllowed,
+                                              onClick: () => startImpersonation(userId),
+                                          },
+                                ]}
+                            />
+                        </>
+                    )}
+                </ToolbarActions>
+            </StackToolbar>
+            <Dialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                title={intl.formatMessage({
+                    id: "comet.userPermissions.impersonationNotAllowed",
+                    defaultMessage: "Impersonation not allowed",
+                })}
+            >
+                <DialogContent>
+                    {mismatchLoading ? (
+                        <CircularProgress size={24} />
+                    ) : (
+                        <List dense>
+                            {permissionMismatches.map((m) => (
+                                <ListItem key={m.permission}>
+                                    <ListItemText
+                                        primary={m.permission}
+                                        secondary={
+                                            m.missingContentScopes.length > 0
+                                                ? intl.formatMessage(
+                                                      {
+                                                          id: "comet.userPermissions.missingContentScopes",
+                                                          defaultMessage: "Missing scopes: {scopes}",
+                                                      },
+                                                      {
+                                                          scopes: m.missingContentScopes
+                                                              .map((cs: Record<string, unknown>) => Object.values(cs).join("/"))
+                                                              .join(", "),
+                                                      },
+                                                  )
+                                                : intl.formatMessage({
+                                                      id: "comet.userPermissions.missingPermission",
+                                                      defaultMessage: "Permission not available",
+                                                  })
+                                        }
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                    )}
+                </DialogContent>
+            </Dialog>
+        </>
     );
 };
 
