@@ -17,11 +17,11 @@ import { Edit } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, type GridRenderCellParams, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
-import { type ReactNode, useContext, useMemo } from "react";
+import { type ReactNode, useContext, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useUserPermissionCheck } from "./hooks/currentUser";
-import { ImpersonateMenuItem } from "./ImpersonateMenuItem";
+import { ImpersonateMenuItem, ImpersonationMismatchDialog } from "./ImpersonateMenuItem";
 import {
     type GQLUserAvailablePermissionsAndContentScopesQuery,
     type GQLUserForGridFragment,
@@ -54,6 +54,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     const intl = useIntl();
     const stackApi = useContext(StackSwitchApiContext);
     const isAllowed = useUserPermissionCheck();
+    const [mismatchDialogUserId, setMismatchDialogUserId] = useState<string | null>(null);
 
     const { data: availablePermissionsAndContentScopes } = useQuery<GQLUserAvailablePermissionsAndContentScopesQuery>(
         gql`
@@ -197,7 +198,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                 </IconButton>
                 {isAllowed("impersonation") && (
                     <CrudContextMenu>
-                        <ImpersonateMenuItem userId={params.row.id} />
+                        <ImpersonateMenuItem userId={params.row.id} onShowMismatches={() => setMismatchDialogUserId(params.row.id)} />
                     </CrudContextMenu>
                 )}
             </>
@@ -238,22 +239,25 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     }
 
     return (
-        <DataGrid<GQLUserForGridFragment>
-            {...dataGridProps}
-            rows={data?.users.nodes ?? []}
-            columns={columns}
-            rowCount={rowCount}
-            loading={loading}
-            slots={{
-                toolbar: UserPermissionsUserGridToolbar as GridSlotsComponent["toolbar"],
-            }}
-            slotProps={{
-                toolbar: {
-                    toolbarAction: toolbarAction,
-                } as UserPermissionsUserGridToolbarProps,
-            }}
-            showToolbar
-        />
+        <>
+            <DataGrid<GQLUserForGridFragment>
+                {...dataGridProps}
+                rows={data?.users.nodes ?? []}
+                columns={columns}
+                rowCount={rowCount}
+                loading={loading}
+                slots={{
+                    toolbar: UserPermissionsUserGridToolbar as GridSlotsComponent["toolbar"],
+                }}
+                slotProps={{
+                    toolbar: {
+                        toolbarAction: toolbarAction,
+                    } as UserPermissionsUserGridToolbarProps,
+                }}
+                showToolbar
+            />
+            <ImpersonationMismatchDialog userId={mismatchDialogUserId} open={!!mismatchDialogUserId} onClose={() => setMismatchDialogUserId(null)} />
+        </>
     );
 };
 

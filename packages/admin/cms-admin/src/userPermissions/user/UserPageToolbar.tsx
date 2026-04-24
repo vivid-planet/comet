@@ -9,6 +9,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
+import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { startImpersonation, stopImpersonation } from "../utils/handleImpersonation";
 import {
     type GQLUserPageMismatchesQuery,
@@ -127,7 +128,7 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                             {permissionMismatches.map((m) => (
                                 <ListItem key={m.permission}>
                                     <ListItemText
-                                        primary={m.permission}
+                                        primary={camelCaseToHumanReadable(m.permission)}
                                         secondary={
                                             m.missingContentScopes.length > 0
                                                 ? intl.formatMessage(
@@ -137,8 +138,15 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                                                       },
                                                       {
                                                           scopes: m.missingContentScopes
-                                                              .map((cs: Record<string, unknown>) => Object.values(cs).join("/"))
-                                                              .join(", "),
+                                                              .map((cs: Record<string, unknown>) =>
+                                                                  Object.entries(cs)
+                                                                      .map(
+                                                                          ([key, value]) =>
+                                                                              `${camelCaseToHumanReadable(key)}: ${camelCaseToHumanReadable(String(value))}`,
+                                                                      )
+                                                                      .join(", "),
+                                                              )
+                                                              .join("; "),
                                                       },
                                                   )
                                                 : intl.formatMessage({
