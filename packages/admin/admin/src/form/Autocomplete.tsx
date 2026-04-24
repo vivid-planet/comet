@@ -1,6 +1,7 @@
 import { ChevronDown, Error } from "@comet/admin-icons";
 import {
     Autocomplete,
+    autocompleteClasses,
     type AutocompleteProps,
     type AutocompleteRenderInputParams,
     CircularProgress,
@@ -8,12 +9,44 @@ import {
     InputBase,
     Typography,
 } from "@mui/material";
+import { type ComponentsOverrides, css, type Theme } from "@mui/material/styles";
 import type { ReactNode } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import type { AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
+
+type FinalFormAutocompleteClassKey = "multipleInputBase" | "multipleStartAdornmentContainer";
+
+const MultipleInputBase = createComponentSlot(InputBase)<FinalFormAutocompleteClassKey>({
+    componentName: "FinalFormAutocomplete",
+    slotName: "multipleInputBase",
+})(css`
+    && {
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+`);
+
+const MultipleStartAdornmentContainer = createComponentSlot("div")<FinalFormAutocompleteClassKey>({
+    componentName: "FinalFormAutocomplete",
+    slotName: "multipleStartAdornmentContainer",
+})(
+    ({ theme }) => css`
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: ${theme.spacing(0.5)};
+        flex: 1 1 auto;
+        min-width: 0;
+
+        & ~ .${autocompleteClasses.input} {
+            flex-grow: 0;
+        }
+    `,
+);
 
 export type FinalFormAutocompleteProps<
     T extends Record<string, any>,
@@ -92,23 +125,45 @@ export const FinalFormAutocomplete = <
             disabled={disabled}
             readOnly={readOnly}
             multiple={multiple as Multiple}
-            renderInput={(params: AutocompleteRenderInputParams) => (
-                <InputBase
-                    {...restInput}
-                    {...params}
-                    {...params.InputProps}
-                    // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
-                    required={multiple ? false : required}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            {loading && <CircularProgress color="inherit" size={16} />}
-                            {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
-                            {loadingError && <Error color="error" />}
-                            {params.InputProps.endAdornment}
-                        </InputAdornment>
-                    }
-                />
-            )}
+            renderInput={(params: AutocompleteRenderInputParams) => {
+                const RenderedInputBase = multiple ? MultipleInputBase : InputBase;
+                return (
+                    <RenderedInputBase
+                        {...restInput}
+                        {...params}
+                        {...params.InputProps}
+                        // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
+                        required={multiple ? false : required}
+                        startAdornment={
+                            multiple && params.InputProps.startAdornment ? (
+                                <MultipleStartAdornmentContainer>{params.InputProps.startAdornment}</MultipleStartAdornmentContainer>
+                            ) : (
+                                params.InputProps.startAdornment
+                            )
+                        }
+                        endAdornment={
+                            <InputAdornment position="end">
+                                {loading && <CircularProgress color="inherit" size={16} />}
+                                {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+                                {loadingError && <Error color="error" />}
+                                {params.InputProps.endAdornment}
+                            </InputAdornment>
+                        }
+                    />
+                );
+            }}
         />
     );
 };
+
+declare module "@mui/material/styles" {
+    interface ComponentNameToClassKey {
+        CometAdminFinalFormAutocomplete: FinalFormAutocompleteClassKey;
+    }
+
+    interface Components {
+        CometAdminFinalFormAutocomplete?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormAutocomplete"];
+        };
+    }
+}
