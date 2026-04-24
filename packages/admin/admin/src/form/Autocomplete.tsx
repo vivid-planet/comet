@@ -122,6 +122,7 @@ export const FinalFormAutocomplete = <
                     {...params.InputProps}
                     // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
                     required={multiple ? false : required}
+                    sx={multiple ? { "&&": { flexWrap: "nowrap", alignItems: "center" } } : undefined}
                     startAdornment={
                         multiple && params.InputProps.startAdornment ? (
                             <MultipleStartAdornmentContainer>{params.InputProps.startAdornment}</MultipleStartAdornmentContainer>
