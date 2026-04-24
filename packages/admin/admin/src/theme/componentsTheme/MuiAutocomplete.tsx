@@ -15,24 +15,13 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
             color: "inherit",
         },
         root: {
-            // Keep the outer InputBase row on a single no-wrap flex line so the end-adornment can never
-            // be pushed below chips. In multi-select, chips wrap inside their own inner `CometAdminAutocomplete-chipsWrap`
-            // container (rendered by `FinalFormAutocomplete`). The end-adornment stays inline and grows
-            // naturally as items are added (loading / clear / error / popup-icon).
-            [`& .${autocompleteClasses.inputRoot}`]: {
+            // Keep the outer InputBase row on a single no-wrap flex line when a `TagsContainer` is present
+            // (multi-select in `FinalFormAutocomplete`). Tags wrap inside that container; the end-adornment
+            // stays inline on the right and grows naturally as slots are added (loading / clear / error /
+            // popup-icon).
+            [`& .${autocompleteClasses.inputRoot}:has(> .CometAdminFinalFormAutocomplete-tagsContainer)`]: {
                 flexWrap: "nowrap",
                 alignItems: "center",
-            },
-            "& .CometAdminAutocomplete-chipsWrap": {
-                display: "flex",
-                flexWrap: "wrap",
-                alignItems: "center",
-                gap: spacing(0.5),
-                // Prefer to grow strongly so the chips container fills the remaining row width instead of
-                // leaving dead space between chips and the end-adornment. The flex-grow value beats the
-                // default `flex-grow: 1` that MUI sets on the `<input>`.
-                flex: "999 1 auto",
-                minWidth: 0,
             },
         },
         endAdornment: {

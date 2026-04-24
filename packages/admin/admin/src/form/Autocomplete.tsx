@@ -3,18 +3,38 @@ import {
     Autocomplete,
     type AutocompleteProps,
     type AutocompleteRenderInputParams,
-    Box,
     CircularProgress,
     InputAdornment,
     InputBase,
     Typography,
 } from "@mui/material";
+import { type ComponentsOverrides, css, type Theme } from "@mui/material/styles";
 import type { ReactNode } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import type { AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
+
+export type FinalFormAutocompleteClassKey = "tagsContainer";
+
+const TagsContainer = createComponentSlot("div")<FinalFormAutocompleteClassKey>({
+    componentName: "FinalFormAutocomplete",
+    slotName: "tagsContainer",
+})(
+    ({ theme }) => css`
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: ${theme.spacing(0.5)};
+        // Prefer to grow strongly so the tags container fills the remaining row width instead of
+        // leaving dead space between the tags and the end-adornment. The flex-grow value beats the
+        // default \`flex-grow: 1\` that MUI sets on the \`<input>\`.
+        flex: 999 1 auto;
+        min-width: 0;
+    `,
+);
 
 export type FinalFormAutocompleteProps<
     T extends Record<string, any>,
@@ -100,13 +120,13 @@ export const FinalFormAutocomplete = <
                     {...params.InputProps}
                     // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
                     required={multiple ? false : required}
-                    // In multi-select, wrap the chips (rendered by MUI as `startAdornment`) in an inner
-                    // flex-wrap container. This lets chips wrap across multiple rows while keeping the
+                    // In multi-select, wrap the tags (rendered by MUI as `startAdornment`) in an inner
+                    // flex-wrap container. This lets tags wrap across multiple rows while keeping the
                     // outer InputBase row a single no-wrap line, so the end-adornment always sits on the
-                    // right without being pushed below by chips.
+                    // right without being pushed below by the tags.
                     startAdornment={
                         multiple && params.InputProps.startAdornment ? (
-                            <Box className="CometAdminAutocomplete-chipsWrap">{params.InputProps.startAdornment}</Box>
+                            <TagsContainer>{params.InputProps.startAdornment}</TagsContainer>
                         ) : (
                             params.InputProps.startAdornment
                         )
@@ -124,3 +144,15 @@ export const FinalFormAutocomplete = <
         />
     );
 };
+
+declare module "@mui/material/styles" {
+    interface ComponentNameToClassKey {
+        CometAdminFinalFormAutocomplete: FinalFormAutocompleteClassKey;
+    }
+
+    interface Components {
+        CometAdminFinalFormAutocomplete?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormAutocomplete"];
+        };
+    }
+}
