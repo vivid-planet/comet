@@ -979,6 +979,7 @@ type Mutation {
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
   deleteRedirect(id: ID!): Boolean!
+  deleteRedirects(ids: [ID!]!): Boolean!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   moveDamFolders(folderIds: [ID!]!, scope: DamScopeInput!, targetFolderId: ID): [DamFolder!]!
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
