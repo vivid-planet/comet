@@ -1,10 +1,10 @@
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { CrudMoreActionsMenu, Dialog, FillSpace, Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
 import { ImpersonateUser, QuestionMark, Reset } from "@comet/admin-icons";
-import { CircularProgress, DialogContent, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { CircularProgress, DialogContent, List, ListItem, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
@@ -80,29 +80,34 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                 <FillSpace />
                 <ToolbarActions>
                     {isAllowed("impersonation") && (
-                        <>
-                            {!currentUser.impersonated && !impersonationAllowed && (
-                                <IconButton size="small" onClick={handleQuestionMarkClick}>
-                                    <QuestionMark fontSize="small" />
-                                </IconButton>
-                            )}
-                            <CrudMoreActionsMenu
-                                overallActions={[
-                                    currentUser.impersonated
-                                        ? {
-                                              icon: <Reset />,
-                                              label: commonImpersonationMessages.stopImpersonation,
-                                              onClick: () => stopImpersonation(),
-                                          }
-                                        : {
-                                              label: commonImpersonationMessages.startImpersonation,
-                                              icon: <ImpersonateUser />,
-                                              disabled: !impersonationAllowed,
-                                              onClick: () => startImpersonation(userId),
-                                          },
-                                ]}
-                            />
-                        </>
+                        <CrudMoreActionsMenu
+                            overallActions={[
+                                currentUser.impersonated
+                                    ? {
+                                          icon: <Reset />,
+                                          label: commonImpersonationMessages.stopImpersonation,
+                                          onClick: () => stopImpersonation(),
+                                      }
+                                    : {
+                                          label: commonImpersonationMessages.startImpersonation,
+                                          icon: <ImpersonateUser />,
+                                          disabled: !impersonationAllowed,
+                                          onClick: () => startImpersonation(userId),
+                                      },
+                                !currentUser.impersonated && !impersonationAllowed
+                                    ? {
+                                          icon: <QuestionMark />,
+                                          label: (
+                                              <FormattedMessage
+                                                  id="comet.userPermissions.whyCannotImpersonate"
+                                                  defaultMessage="Why can't I impersonate?"
+                                              />
+                                          ),
+                                          onClick: handleQuestionMarkClick,
+                                      }
+                                    : null,
+                            ]}
+                        />
                     )}
                 </ToolbarActions>
             </StackToolbar>
