@@ -1,8 +1,8 @@
 import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
-import { type ComponentsOverrides } from "@mui/material";
+import type { ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type SvgIconProps } from "@mui/material/SvgIcon";
-import { type ForwardRefExoticComponent, type MouseEvent, type PropsWithChildren, type RefAttributes } from "react";
+import type { SvgIconProps } from "@mui/material/SvgIcon";
+import type { ForwardRefExoticComponent, MouseEvent, PropsWithChildren, RefAttributes } from "react";
 
 import getRteTheme from "../utils/getRteTheme";
 

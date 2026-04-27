@@ -1,6 +1,6 @@
 import { Calendar } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
-import { type DateRangePickerProps as MuiDateRangePickerProps } from "@mui/x-date-pickers-pro";
+import type { DateRangePickerProps as MuiDateRangePickerProps } from "@mui/x-date-pickers-pro";
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -8,7 +8,7 @@ import { ClearInputAdornment as CometClearInputAdornment } from "../../common/Cl
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { getDateValue, getIsoDateString } from "../utils";
 
 /**
@@ -152,12 +152,13 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
                                 endAdornment: (
                                     <>
                                         <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
-                                        <ClearInputAdornment
-                                            position="end"
-                                            hasClearableContent={hasDateRangeValue && !required && !disabled && !readOnly}
-                                            onClick={() => onChange?.(undefined)}
-                                            {...slotProps?.clearInputAdornment}
-                                        />
+                                        {hasDateRangeValue && !required && !disabled && !readOnly && (
+                                            <ClearInputAdornment
+                                                position="end"
+                                                onClick={() => onChange?.(undefined)}
+                                                {...slotProps?.clearInputAdornment}
+                                            />
+                                        )}
                                     </>
                                 ),
                             },

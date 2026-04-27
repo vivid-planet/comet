@@ -25,12 +25,7 @@ import { useRouteMatch } from "react-router";
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { SeoBlock } from "./blocks/SeoBlock";
 import { StageBlock } from "./blocks/StageBlock";
-import {
-    type GQLEditPageQuery,
-    type GQLEditPageQueryVariables,
-    type GQLUpdatePageMutation,
-    type GQLUpdatePageMutationVariables,
-} from "./EditPage.generated";
+import type { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
 
 interface Props {
     id: string;
@@ -226,7 +221,7 @@ export const EditPage = ({ id }: Props) => {
                                     openSitePreviewWindow(pageState.path, contentScopeMatch.url);
                                 }}
                             >
-                                <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                                <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Site preview" />
                             </Button>
                             {pageSaveButton}
                         </Stack>

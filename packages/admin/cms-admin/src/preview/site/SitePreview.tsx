@@ -6,7 +6,7 @@ import { type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { type RouteComponentProps, useHistory, useLocation } from "react-router";
 
-import { type ExternalLinkBlockData } from "../../blocks.generated";
+import type { ExternalLinkBlockData } from "../../blocks.generated";
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { Device } from "../common/Device";
@@ -16,7 +16,7 @@ import { VisibilityToggle } from "../common/VisibilityToggle";
 import { type SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
-import { type GQLSitePreviewJwtQuery } from "./SitePreview.generated";
+import type { GQLSitePreviewJwtQuery } from "./SitePreview.generated";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
 //TODO v4 remove RouteComponentProps

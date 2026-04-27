@@ -4,7 +4,7 @@ import isEqual from "lodash.isequal";
 import { useEffect, useRef } from "react";
 
 import { usePersistedState } from "./usePersistedState";
-import { type IPagingApi } from "./useTableQueryPaging";
+import type { IPagingApi } from "./useTableQueryPaging";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

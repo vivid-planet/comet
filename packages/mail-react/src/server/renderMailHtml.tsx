@@ -1,6 +1,6 @@
 import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml.js";
 import mjml2html from "mjml";
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
 
 type MjmlOptions = Parameters<typeof mjml2html>[1];
 type MjmlWarning = ReturnType<typeof mjml2html>["errors"][number];

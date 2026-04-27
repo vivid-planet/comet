@@ -3,9 +3,9 @@ import "react-date-range/dist/theme/default.css";
 
 import { ClearInputAdornment, type InputWithPopperProps } from "@comet/admin";
 import { Calendar } from "@comet/admin-icons";
-import { type ComponentsOverrides } from "@mui/material";
+import type { ComponentsOverrides } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
-import { type Range } from "react-date-range";
+import type { Range } from "react-date-range";
 import { type FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "../DatePickerNavigation";
@@ -108,9 +108,9 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
             readOnly
             required={required}
             endAdornment={
-                !required ? (
+                !required && value ? (
                     <>
-                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
+                        <ClearInputAdornment position="end" onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}
                     </>
                 ) : (

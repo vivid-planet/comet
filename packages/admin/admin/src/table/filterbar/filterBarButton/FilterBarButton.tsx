@@ -3,10 +3,10 @@ import { ChevronDown } from "@comet/admin-icons";
 import { Button, buttonClasses, type ButtonProps, type ComponentsOverrides, svgIconClasses } from "@mui/material";
 import { css, type Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
-import { type ComponentType } from "react";
+import type { ComponentType } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { FilterBarActiveFilterBadge, type FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 
 /**

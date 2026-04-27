@@ -3,7 +3,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { v4 as uuid } from "uuid";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
-import { type GeneratedFile } from "../../utils/write-generated-files";
+import type { GeneratedFile } from "../../utils/write-generated-files";
 import { generateCrud } from "../generate-crud";
 
 @Entity()

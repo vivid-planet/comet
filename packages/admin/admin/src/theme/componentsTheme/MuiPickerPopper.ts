@@ -1,4 +1,4 @@
-import { type Components, type Theme } from "@mui/material/styles";
+import type { Components, Theme } from "@mui/material/styles";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 

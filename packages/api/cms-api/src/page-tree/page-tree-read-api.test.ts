@@ -4,7 +4,7 @@ import { SortDirection } from "../common/sorting/sort-direction.enum";
 import { getError, NoErrorThrownError } from "../common/test/get-error";
 import { PageTreeNodeSortField } from "./dto/page-tree-node.sort";
 import { createReadApi, paginatePreloadedNodes, sortPreloadedNodes } from "./page-tree-read-api";
-import { type PageTreeNodeInterface } from "./types";
+import type { PageTreeNodeInterface } from "./types";
 
 describe("PageTreeReadApi", () => {
     describe("getNodeByPath", () => {

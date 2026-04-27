@@ -6,7 +6,7 @@ import { type ChangeEvent, useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
-import { type GQLProductCategoryFilterQuery, type GQLProductCategoryFilterQueryVariables } from "./ProductCategoryFilter.generated";
+import type { GQLProductCategoryFilterQuery, GQLProductCategoryFilterQueryVariables } from "./ProductCategoryFilter.generated";
 
 const productCategoryQuery = gql`
     query ProductCategoryFilter($offset: Int!, $limit: Int!, $search: String) {
@@ -86,11 +86,7 @@ function ProductCategoryFilter({ item, applyValue, apiRef }: GridFilterInputValu
                             ...params.InputProps,
                             endAdornment: (
                                 <>
-                                    <ClearInputAdornment
-                                        position="end"
-                                        hasClearableContent={Boolean(item.value)}
-                                        onClick={() => handleApplyValue(undefined)}
-                                    />
+                                    {item.value && <ClearInputAdornment position="end" onClick={() => handleApplyValue(undefined)} />}
                                     {params.InputProps.endAdornment}
                                 </>
                             ),

@@ -7,11 +7,11 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { Component, createRef, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 
-import { type ISelectionApi } from "../SelectionApi";
-import { type IExportApi } from "./excelexport/IExportApi";
+import type { ISelectionApi } from "../SelectionApi";
+import type { IExportApi } from "./excelexport/IExportApi";
 import { isVisible } from "./isVisible";
 import { TablePagination } from "./Pagination";
-import { type IPagingInfo } from "./paging/IPagingInfo";
+import type { IPagingInfo } from "./paging/IPagingInfo";
 import { safeColumnGet } from "./safeColumnGet";
 import { TableBodyRow, type TableBodyRowProps } from "./TableBodyRow";
 import { type ISortApi, SortDirection } from "./useTableQuerySort";

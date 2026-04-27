@@ -2,7 +2,7 @@ import { Field, FinalFormInput } from "@comet/admin";
 import { Box } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { type VimeoVideoBlockData, type VimeoVideoBlockInput } from "../blocks.generated";
+import type { VimeoVideoBlockData, VimeoVideoBlockInput } from "../blocks.generated";
 import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";

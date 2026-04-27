@@ -1,20 +1,20 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { filterByFragment, FinalForm, type FinalFormSubmitEvent, Loading, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { type FormApi } from "final-form";
+import type { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createProductTagMutation, productTagFormFragment, productTagQuery, updateProductTagMutation } from "./ProductTagForm.gql";
-import {
-    type GQLCreateProductTagMutation,
-    type GQLCreateProductTagMutationVariables,
-    type GQLProductTagFormFragment,
-    type GQLProductTagQuery,
-    type GQLProductTagQueryVariables,
-    type GQLUpdateProductTagMutation,
-    type GQLUpdateProductTagMutationVariables,
+import type {
+    GQLCreateProductTagMutation,
+    GQLCreateProductTagMutationVariables,
+    GQLProductTagFormFragment,
+    GQLProductTagQuery,
+    GQLProductTagQueryVariables,
+    GQLUpdateProductTagMutation,
+    GQLUpdateProductTagMutationVariables,
 } from "./ProductTagForm.gql.generated";
 
 type FormValues = GQLProductTagFormFragment;

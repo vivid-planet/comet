@@ -1,6 +1,6 @@
 "use client";
 import { BlocksBlock, type PropsWithData, type SupportedBlocks } from "@comet/site-nextjs";
-import { type PageContentBlockData } from "@src/blocks.generated";
+import type { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { ContactFormBlock } from "@src/common/blocks/ContactFormBlock";

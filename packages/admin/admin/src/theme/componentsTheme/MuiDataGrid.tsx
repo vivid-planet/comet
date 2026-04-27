@@ -19,7 +19,7 @@ import { DataGridColumnsManagement } from "../../dataGrid/columnsManagement/Data
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
 import { DataGridPagination } from "../../dataGrid/pagination/DataGridPagination";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { type GetMuiComponentTheme } from "./getComponentsTheme";
+import type { GetMuiComponentTheme } from "./getComponentsTheme";
 
 const getDensityHeightValue = (density: string) => {
     switch (density) {

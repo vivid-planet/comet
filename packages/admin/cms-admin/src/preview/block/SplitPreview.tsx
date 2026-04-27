@@ -4,7 +4,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { BlockPreview } from "./BlockPreview";
 import { Column, FirstColumnContainer, MaximizeButton, MaximizeIcon, PreviewContainer, Root, Split } from "./SplitPreview.sc";
-import { type BlockPreviewApi } from "./useBlockPreview";
+import type { BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     url: string;
