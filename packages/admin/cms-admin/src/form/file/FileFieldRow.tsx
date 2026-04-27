@@ -6,6 +6,7 @@ import { type DropTargetMonitor, useDrag, useDrop, type XYCoord } from "react-dn
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
+import { DamThumbnail } from "../../dam/DataGrid/thumbnail/DamThumbnail";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DamPathLazy } from "./DamPathLazy";
 import type { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
@@ -100,7 +101,7 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
                 <Drag color="inherit" />
             </sc.Grabber>
             <sc.InnerRow>
-                {preview && <sc.PreviewSlot>{preview(file)}</sc.PreviewSlot>}
+                <sc.PreviewSlot>{preview ? preview(file) : <DamThumbnail asset={{ ...file, __typename: "DamFile" }} />}</sc.PreviewSlot>
                 <sc.TextSlot>
                     <Typography variant="subtitle1" noWrap>
                         {file.name}

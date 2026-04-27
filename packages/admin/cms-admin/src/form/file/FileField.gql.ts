@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
 
+import { damFileThumbnailFragment } from "../../dam/DataGrid/thumbnail/DamThumbnail";
+
 const damFileFieldFragment = gql`
     fragment DamFileFieldFile on DamFile {
         id
@@ -11,6 +13,7 @@ const damFileFieldFragment = gql`
         altText
         archived
         image {
+            ...DamFileThumbnail
             width
             height
             cropArea {
@@ -23,6 +26,7 @@ const damFileFieldFragment = gql`
         }
         fileUrl
     }
+    ${damFileThumbnailFragment}
 `;
 
 export const damFileFieldFileQuery = gql`

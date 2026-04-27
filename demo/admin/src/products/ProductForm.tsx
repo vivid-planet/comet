@@ -404,9 +404,6 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                             />
                         }
                         buttonText={<FormattedMessage id="product.demoRelatedImages.choose" defaultMessage="Choose related images" />}
-                        preview={(file: GQLDamFileFieldFileFragment) => (
-                            <img src={file.fileUrl} alt={file.name} width={48} height={48} style={{ objectFit: "cover", borderRadius: 4 }} />
-                        )}
                     />
                     <DateTimeField
                         label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
