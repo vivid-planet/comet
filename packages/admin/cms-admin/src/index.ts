@@ -166,6 +166,7 @@ export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootB
 export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionProps } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField, type GQLDamFileFieldFileFragment } from "./form/file/FileField";
+export { damFileFieldFragment } from "./form/file/FileField.gql";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {
     FinalFormFileUpload,

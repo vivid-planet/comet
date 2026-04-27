@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 import { damFileThumbnailFragment } from "../../dam/DataGrid/thumbnail/DamThumbnail";
 
-const damFileFieldFragment = gql`
+export const damFileFieldFragment = gql`
     fragment DamFileFieldFile on DamFile {
         id
         name
