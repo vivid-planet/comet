@@ -1,6 +1,6 @@
 import { Button, Dialog, SubRoute } from "@comet/admin";
 import { DialogActions } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
@@ -30,11 +30,17 @@ export const ChooseFilesDialog = ({ open, onClose, onConfirm, initialFileIds, al
 
     const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(new Map());
 
+    // Seed the selection only on the false→true open transition. The parent passes a freshly-
+    // constructed `initialFileIds` array every render; depending on it here would re-seed on
+    // every parent re-render and clobber the user's in-progress checkbox changes.
+    const wasOpenRef = useRef(false);
     useEffect(() => {
-        if (open) {
+        if (open && !wasOpenRef.current) {
             setSelectionMap(new Map(initialFileIds.map((id) => [id, "file"] as const)));
         }
-    }, [open, initialFileIds]);
+        wasOpenRef.current = open;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open]);
 
     const handleConfirm = () => {
         const fileIds = Array.from(selectionMap.entries())

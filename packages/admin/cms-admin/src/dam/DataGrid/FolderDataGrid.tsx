@@ -666,6 +666,7 @@ const FolderDataGrid = ({
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
+                    keepNonExistentRowsSelected
                     isRowSelectable={disableFolderSelection ? ({ row }) => isFile(row) : undefined}
                     rowSelectionModel={{ type: "include", ids: new Set(effectiveSelectionMap.keys()) }}
                     onRowSelectionModelChange={handleSelectionModelChange}
