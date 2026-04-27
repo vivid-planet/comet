@@ -131,6 +131,17 @@ It is also possible to start specific microservices
 pnpm exec dev-pm start @demo-api # (@demo-api|@demo-admin|@demo-site)
 ```
 
+#### Port Offset (running multiple apps simultaneously)
+
+All Comet DXP demo services share the same default ports (API: 4000, Admin: 8001, Site: 3000, etc.).
+To run two instances at the same time, shift one app's ports by an integer offset:
+
+    pnpm run set-ports -- 100   # shift all ports by +100 (writes demo/.env.local)
+    pnpm run set-ports -- 0     # reset to default port values
+
+The script rewrites `demo/.env.local` with the new port and URL values.
+Since `demo/.env.local` is symlinked into `demo/api/`, `demo/admin/`, and `demo/site/`, one command covers the whole demo application.
+
 #### Start Storybook
 
 ```bash
