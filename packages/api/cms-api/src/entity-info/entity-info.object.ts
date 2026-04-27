@@ -27,6 +27,7 @@ export class EntityInfoObject {
     @Property({ type: "boolean" })
     visible: boolean;
 
+    // only exists when FullTextSearchModule is used
     @Property({ type: FullTextType })
     fullText: string;
 }
