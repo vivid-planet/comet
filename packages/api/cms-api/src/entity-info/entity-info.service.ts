@@ -1,9 +1,10 @@
 import { AnyEntity, EntityManager, EntityMetadata } from "@mikro-orm/postgresql";
-import { Injectable, Logger } from "@nestjs/common";
+import { Inject, Injectable, Logger, Optional } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
+import { FULL_TEXT_SEARCH_ENABLED } from "./full-text-search.constants";
 
 @Injectable()
 export class EntityInfoService {
@@ -12,6 +13,7 @@ export class EntityInfoService {
     constructor(
         private readonly discoverService: DiscoverService,
         private entityManager: EntityManager,
+        @Optional() @Inject(FULL_TEXT_SEARCH_ENABLED) private readonly fullTextSearchEnabled?: boolean,
     ) {}
 
     /**
@@ -79,18 +81,21 @@ export class EntityInfoService {
 
     async createEntityInfoView(options?: { pageTreeFullText?: boolean }): Promise<void> {
         const pageTreeFullText = options?.pageTreeFullText ?? false;
+        const fullTextSearchEnabled = this.fullTextSearchEnabled ?? false;
         const indexSelects: string[] = [];
         const targetEntities = this.discoverService.discoverTargetEntities();
         for (const targetEntity of targetEntities) {
             const entityInfo = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, targetEntity.entity) as EntityInfo<AnyEntity>;
             if (entityInfo) {
                 if (typeof entityInfo === "string") {
-                    if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
+                    if (fullTextSearchEnabled && pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
                         indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText"
                             FROM "PageTreeNodeEntityInfo"
                             LEFT JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeEntityInfo"."id"::uuid`);
-                    } else {
+                    } else if (fullTextSearchEnabled) {
                         indexSelects.push(`SELECT sub.*, null::tsvector AS "fullText" FROM (${entityInfo}) sub`);
+                    } else {
+                        indexSelects.push(`SELECT sub.* FROM (${entityInfo}) sub`);
                     }
                 } else {
                     const { entityName, metadata } = targetEntity;
@@ -117,9 +122,12 @@ export class EntityInfoService {
                         visibleSql = sqlWhereMatch[1];
                     }
 
-                    let fullTextSql = "null::tsvector";
-                    if (entityInfo.fullText) {
-                        fullTextSql = this.resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
+                    let fullTextSql = null;
+                    if (fullTextSearchEnabled) {
+                        fullTextSql = "null::tsvector";
+                        if (entityInfo.fullText) {
+                            fullTextSql = this.resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
+                        }
                     }
 
                     const select = `SELECT
@@ -127,8 +135,8 @@ export class EntityInfoService {
                                 ${secondaryInformationSql} "secondaryInformation",
                                 ${visibleSql} AS "visible",
                                 "${metadata.tableName}"."${primary}"::text "id",
-                                '${entityName}' "entityName",
-                                ${fullTextSql} AS "fullText"
+                                '${entityName}' "entityName"
+                                ${fullTextSql ? `, ${fullTextSql} AS "fullText"` : ""}
                             FROM "${metadata.tableName}"`;
                     indexSelects.push(select);
                 }
@@ -136,14 +144,19 @@ export class EntityInfoService {
         }
 
         // add all PageTreeNode Documents (Page, Link etc) thru PageTreeNodeDocument (no @EntityInfo needed on Page/Link)
-        if (pageTreeFullText) {
+        if (fullTextSearchEnabled && pageTreeFullText) {
             indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", "PageTreeNodeFullText"."fullText"
                 FROM "PageTreeNodeDocument"
                 JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
                 LEFT JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeDocument"."pageTreeNodeId"
             `);
-        } else {
+        } else if (fullTextSearchEnabled) {
             indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", null::tsvector AS "fullText"
+                FROM "PageTreeNodeDocument"
+                JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
+            `);
+        } else {
+            indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName"
                 FROM "PageTreeNodeDocument"
                 JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
             `);
