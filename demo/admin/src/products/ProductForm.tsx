@@ -21,7 +21,7 @@ import {
     DamImageBlock,
     FileField,
     FileUploadField,
-    type GQLDamFileFieldFileFragment,
+    type GQLDamMultiFileFieldFileFragment,
     type GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -72,7 +72,7 @@ const rootBlocks = {
 type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" | "datasheets" | "relatedImages"> & {
     priceList: GQLFinalFormFileUploadFragment | null;
     datasheets: Array<GQLFinalFormFileUploadFragment>;
-    relatedImages: Array<GQLDamFileFieldFileFragment>;
+    relatedImages: Array<GQLDamMultiFileFieldFileFragment>;
 };
 
 type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
