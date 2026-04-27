@@ -9,7 +9,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { DamThumbnail } from "../../dam/DataGrid/thumbnail/DamThumbnail";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DamPathLazy } from "./DamPathLazy";
-import type { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
+import type { GQLDamMultiFileFieldFileFragment } from "./FileField.gql.generated";
 import * as sc from "./FileFieldRow.sc";
 
 const ITEM_TYPE = "fileFieldFile";
@@ -25,11 +25,11 @@ interface DragItem {
 }
 
 interface FileFieldRowProps {
-    file: GQLDamFileFieldFileFragment;
+    file: GQLDamMultiFileFieldFileFragment;
     index: number;
     onRemove: () => void;
     onMove: (dragIndex: number, hoverIndex: number) => void;
-    preview?: (file: GQLDamFileFieldFileFragment) => ReactNode;
+    preview?: (file: GQLDamMultiFileFieldFileFragment) => ReactNode;
     menuActions?: Array<ActionItem | ReactElement | null | undefined>;
 }
 

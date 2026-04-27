@@ -37,3 +37,36 @@ export const damFileFieldFileQuery = gql`
     }
     ${damFileFieldFragment}
 `;
+
+// Lean fragment used by FileField multi mode: omits the pixel-image-only fields
+// (`width`, `height`, `cropArea`) so the query tolerates DAM file rows whose
+// `DamFileImage` lacks pixel dimensions (e.g. SVGs, or images imported without
+// dimension extraction). The remaining fields are sufficient for FileFieldRow
+// (thumbnail + name + path) and for any consumer that just needs to identify
+// or list files.
+export const damMultiFileFieldFragment = gql`
+    fragment DamMultiFileFieldFile on DamFile {
+        id
+        name
+        size
+        mimetype
+        contentHash
+        title
+        altText
+        archived
+        image {
+            ...DamFileThumbnail
+        }
+        fileUrl
+    }
+    ${damFileThumbnailFragment}
+`;
+
+export const damMultiFileFieldFileQuery = gql`
+    query DamMultiFileFieldFile($id: ID!) {
+        damFile(id: $id) {
+            ...DamMultiFileFieldFile
+        }
+    }
+    ${damMultiFileFieldFragment}
+`;
