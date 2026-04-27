@@ -206,7 +206,7 @@ export const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, m
 
     const handleConfirm = async (fileIds: string[]) => {
         // Don't close the dialog yet — if a query rejects we'd silently lose the user's selection.
-        const existingById = new Map(files.map((f) => [f.id, f] as const));
+        const existingById = new Map<string, GQLDamMultiFileFieldFileFragment>(files.map((f) => [f.id, f]));
         const next: GQLDamMultiFileFieldFileFragment[] = await Promise.all(
             fileIds.map(async (id) => {
                 const existing = existingById.get(id);
