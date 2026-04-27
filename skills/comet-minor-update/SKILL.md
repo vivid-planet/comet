@@ -1,11 +1,11 @@
 ---
 name: comet-minor-update
-description: Performs a minor or patch version bump of all @comet/* packages across a Comet project (root, api, admin, site) to the newest version within the current major from npm, then installs. Use when the user asks to update Comet, bump Comet packages, do a minor Comet update, or upgrade Comet to the latest patch/minor of the current major.
+description: Performs a minor or patch version bump of all @comet/* packages across a Comet project (root, api, admin, and any site packages — zero, one, or many) to the newest version within the current major from npm, then installs. Use when the user asks to update Comet, bump Comet packages, do a minor Comet update, or upgrade Comet to the latest patch/minor of the current major.
 ---
 
 # Comet Minor/Patch Update Skill
 
-A Comet project is not an npm workspace — each package (`api/`, `admin/`, `site/`, and the repo root) has its own `package.json` and `package-lock.json`. A minor or patch Comet update therefore means updating every occurrence of every `@comet/*` dependency across those files to the same new version, then running `npm install` in each directory so each lockfile picks up the new version.
+A Comet project is not an npm workspace — the repo root, `api/`, `admin/`, and any site packages (zero, one, or many) each have their own `package.json` and `package-lock.json`. A minor or patch Comet update therefore means updating every occurrence of every `@comet/*` dependency across those files to the same new version, then running `npm install` in each directory so each lockfile picks up the new version.
 
 This skill covers **minor and patch** updates within the current major only (e.g. `8.20.4 → 8.21.0`). Major upgrades (e.g. `8.x → 9.x`) are different — they typically ship breaking changes, codemods, and migration guides, and are out of scope here.
 
@@ -42,15 +42,24 @@ If the user asks for a **major** bump (crossing major versions), stop and tell t
 
 ## Step 1 — Find all @comet dependencies
 
-Run one grep across all four `package.json` files to collect the full set of `@comet/*` entries and their versions.
+The repo root, `api/`, and `admin/` always have a `package.json`. Site packages are variable: a project may have none (api/admin only), a single site at `site/`, or several sites — often under `sites/`, though the location is not guaranteed. Discover them by content rather than path — any `package.json` outside `node_modules` that depends on `@comet/site-nextjs` or `@comet/site-react` is a site package.
 
 ```bash
-grep -n '"@comet/' package.json api/package.json admin/package.json site/package.json
+grep -rl --include='package.json' --exclude-dir=node_modules \
+  -E '"@comet/site-(nextjs|react)"' . | xargs -n1 dirname
+```
+
+Save the resulting list of site directories — Steps 3, 4, and 5 reuse it. **A project with no site packages is valid** — the grep returns nothing and the rest of the workflow only touches the root, `api/`, and `admin/`. Don't treat the empty result as an error.
+
+Then collect every `@comet/*` entry across the root, `api/`, `admin/`, and each site directory's `package.json`:
+
+```bash
+grep -n '"@comet/' package.json api/package.json admin/package.json \
+  <site-dir>/package.json ...
 ```
 
 Notes:
 
-- The `site/` directory is optional — some projects don't have it. If a `package.json` does not exist, skip it.
 - Not every `@comet/*` package follows the core release cadence. Packages that live outside the core monorepo (for example `@comet/dev-process-manager`) may use a different versioning scheme (often `^x.y.z`). **Only** bump packages whose current version matches the core Comet version (the one shared by `@comet/cms-api`, `@comet/admin`, `@comet/site-nextjs`, etc.). Leave the others untouched.
 - Use the invariants to tell core from satellite: core packages are all pinned to the same exact version, with no caret or tilde. Anything with a range or a different version is not core — verify before touching it.
 - If you find core packages on different versions, or any core package using a range (`^`, `~`), the project violates the invariants. Stop and tell the user — don't paper over it by bumping.
@@ -80,12 +89,13 @@ Core `@comet/*` packages are always released together at the same version, so ch
 
 ## Step 3 — Update every package.json
 
-Update every occurrence of the current version to the new version inside `@comet/*` entries across all four files. Write the new version **pinned** (e.g. `8.21.0`) — never add a caret or tilde, even if one was present before. Every core package must end up on the same target version (see Invariants).
+Update every occurrence of the current version to the new version inside `@comet/*` entries across every `package.json` from Step 1 (the root, `api/`, `admin/`, and each site directory). Write the new version **pinned** (e.g. `8.21.0`) — never add a caret or tilde, even if one was present before. Every core package must end up on the same target version (see Invariants).
 
 Before editing, do a quick check that the old version string doesn't appear elsewhere in those files (i.e. on non-`@comet` packages pinned to the same version by coincidence):
 
 ```bash
-grep -n '<OLD_VERSION>' package.json api/package.json admin/package.json site/package.json
+grep -n '<OLD_VERSION>' package.json api/package.json admin/package.json \
+  <site-dir>/package.json ...
 ```
 
 If every match is a `@comet/*` line, you can safely edit each file. If there are non-`@comet` matches, edit the `@comet` lines individually.
@@ -102,7 +112,8 @@ Install in the root first, then in each sub-package. In a sandboxed environment 
 npm install
 npm --prefix api install
 npm --prefix admin install
-npm --prefix site install   # skip if site does not exist
+# Then, for each site directory discovered in Step 1:
+npm --prefix <site-dir> install
 ```
 
 What a successful run looks like:
@@ -124,7 +135,7 @@ The direct-dependency line should show the new version.
 
 ### If install fails
 
-If any install fails because of the **sandbox** (no network access to the npm registry, read-only filesystem on `node_modules`, EPERM/EACCES on a lockfile, etc.): **stop and ask the user to run the installs themselves**. Do not try to work around it by retrying with different flags or disabling the sandbox — this is an environment problem, not a dependency problem. The `package.json` files are already edited, so the user just needs to run the four `npm install` commands from Step 4.
+If any install fails because of the **sandbox** (no network access to the npm registry, read-only filesystem on `node_modules`, EPERM/EACCES on a lockfile, etc.): **stop and ask the user to run the installs themselves**. Do not try to work around it by retrying with different flags or disabling the sandbox — this is an environment problem, not a dependency problem. The `package.json` files are already edited, so the user just needs to run the `npm install` commands from Step 4.
 
 If any install fails with a real error (peer-dependency conflict, missing version, registry auth, etc.): **stop immediately and tell the user**. Do not attempt `--force`, `--legacy-peer-deps`, manual lockfile edits, or destructive resets — the user needs to diagnose the failure, often because it indicates a broader incompatibility (e.g. a peer dep that also needs bumping, or a transitive regression).
 
@@ -136,15 +147,11 @@ In either case, report: which directory failed, the exact error lines, and the s
 
 Run lint and tests in each sub-package that defines them, and report the results. Do **not** start the dev server — that's the user's job (see Step 6 for why).
 
-For each of `api/`, `admin/`, `site/` (skip any that don't exist), check the `package.json` `scripts` block and run whatever is defined:
+For each of `api/`, `admin/`, and every site directory discovered in Step 1, check the `package.json` `scripts` block and run whatever is defined:
 
 ```bash
-npm --prefix api run lint --if-present
-npm --prefix api test --if-present
-npm --prefix admin run lint --if-present
-npm --prefix admin test --if-present
-npm --prefix site run lint --if-present
-npm --prefix site test --if-present
+npm --prefix <dir> run lint --if-present
+npm --prefix <dir> test --if-present
 ```
 
 `--if-present` makes npm exit 0 silently when the script is missing, so you can run the full set without first checking which scripts exist.
@@ -174,11 +181,11 @@ Tell the user:
 
 ## Common pitfalls
 
-| Pitfall                                                       | How to avoid                                                                                             |
-| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Picking a canary/beta as "newest"                             | Filter out any version containing `-` in Step 2.                                                         |
-| Bumping `@comet/dev-process-manager` (or similar) by accident | Only bump packages pinned to the shared core version — see Step 1.                                       |
-| Forgetting the root `package.json`                            | The repo root has its own `package.json` with `@comet/cli`. Always include it in the grep.               |
-| Assuming "up to date" means the install did nothing           | It means the lockfile already satisfies the new range. Verify with `grep` against the lockfile.          |
-| Running installs in parallel in a sandbox                     | If `&` backgrounding fails, just run the four installs sequentially. Takes a bit longer, works reliably. |
-| Crossing a major version                                      | This skill is minor/patch only. Stop and warn the user.                                                  |
+| Pitfall                                                       | How to avoid                                                                                        |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Picking a canary/beta as "newest"                             | Filter out any version containing `-` in Step 2.                                                    |
+| Bumping `@comet/dev-process-manager` (or similar) by accident | Only bump packages pinned to the shared core version — see Step 1.                                  |
+| Forgetting the root `package.json`                            | The repo root has its own `package.json` with `@comet/cli`. Always include it in the grep.          |
+| Assuming "up to date" means the install did nothing           | It means the lockfile already satisfies the new range. Verify with `grep` against the lockfile.     |
+| Running installs in parallel in a sandbox                     | If `&` backgrounding fails, just run the installs sequentially. Takes a bit longer, works reliably. |
+| Crossing a major version                                      | This skill is minor/patch only. Stop and warn the user.                                             |
