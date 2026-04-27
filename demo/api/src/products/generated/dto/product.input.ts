@@ -111,6 +111,10 @@ export class ProductInput {
     @IsArray()
     @IsString({ each: true })
     datasheets: string[];
+    @Field(() => [ID], { defaultValue: [] })
+    @IsArray()
+    @IsString({ each: true })
+    relatedImages: string[];
 }
 @InputType()
 export class ProductUpdateInput extends PartialType(ProductInput) {}
