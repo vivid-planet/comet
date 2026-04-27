@@ -108,6 +108,13 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
                     </Typography>
                 </sc.TextSlot>
                 <sc.ActionsSlot>
+                    <IconButton
+                        size="small"
+                        onClick={onRemove}
+                        aria-label={intl.formatMessage({ id: "comet.form.file.removeFile", defaultMessage: "Remove" })}
+                    >
+                        <Delete color="action" />
+                    </IconButton>
                     {showMoreMenu && (
                         <IconButton
                             size="small"
@@ -117,13 +124,6 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
                             <MoreVertical color="action" />
                         </IconButton>
                     )}
-                    <IconButton
-                        size="small"
-                        onClick={onRemove}
-                        aria-label={intl.formatMessage({ id: "comet.form.file.removeFile", defaultMessage: "Remove" })}
-                    >
-                        <Delete color="action" />
-                    </IconButton>
                 </sc.ActionsSlot>
             </sc.InnerRow>
             {showMoreMenu && (
