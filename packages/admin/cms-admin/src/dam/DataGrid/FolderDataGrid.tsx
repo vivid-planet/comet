@@ -673,7 +673,7 @@ const FolderDataGrid = ({
                     disableRowSelectionExcludeModel
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
-                        contextMenu: !hideContextMenu,
+                        actions: !hideContextMenu,
                     }}
                     slots={{
                         toolbar: FolderDataGridToolbar as GridSlotsComponent["toolbar"],

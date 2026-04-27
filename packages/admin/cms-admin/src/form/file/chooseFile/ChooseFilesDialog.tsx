@@ -1,5 +1,6 @@
-import { Button, Dialog, SubRoute } from "@comet/admin";
+import { Button, Dialog, StackLink, SubRoute } from "@comet/admin";
 import { DialogActions } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
@@ -8,8 +9,39 @@ import { useDamConfig } from "../../../dam/config/damConfig";
 import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
 import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
-import type { DamItemSelectionMap } from "../../../dam/DataGrid/FolderDataGrid";
+import type { DamItemSelectionMap, GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
+import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
+import type { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
+import { isFile } from "../../../dam/helpers/isFile";
 import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation";
+
+const StyledStackLink = styled(StackLink)`
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: ${({ theme }) => theme.palette.grey[900]};
+`;
+
+const renderDamLabel = (
+    row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
+    { matches, filterApi, showLicenseWarnings = false }: RenderDamLabelOptions,
+) => {
+    return isFile(row) ? (
+        // Files are non-interactive in multi-select mode: clicking the row selects it via the
+        // checkbox, not via navigation to the file's detail page.
+        <DamItemLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
+    ) : (
+        <StyledStackLink
+            pageName="folder"
+            payload={row.id}
+            onClick={() => {
+                filterApi.formApi.change("searchText", undefined);
+            }}
+        >
+            <DamItemLabel asset={row} matches={matches} />
+        </StyledStackLink>
+    );
+};
 
 interface ChooseFilesDialogProps {
     open: boolean;
@@ -69,6 +101,9 @@ export const ChooseFilesDialog = ({ open, onClose, onConfirm, initialFileIds, al
                     <SubRoute path="">
                         <RedirectToPersistedDamLocation stateKey={stateKey} />
                         <DamTable
+                            renderDamLabel={(row, options) =>
+                                renderDamLabel(row, { ...options, showLicenseWarnings: damConfig.enableLicenseFeature })
+                            }
                             allowedMimetypes={allowedMimetypes}
                             hideContextMenu={true}
                             hideMultiselect={false}
