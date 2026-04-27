@@ -45,15 +45,14 @@ describe("FileFieldRow", () => {
         expect(screen.getByText("invoice.pdf")).toBeDefined();
     });
 
-    it("calls onRemove when the Remove menu item is clicked", () => {
+    it("calls onRemove when the Remove icon button is clicked", () => {
         const onRemove = vi.fn();
         render(
             <Wrap>
                 <FileFieldRow file={makeFile()} index={0} onRemove={onRemove} onMove={vi.fn()} />
             </Wrap>,
         );
-        fireEvent.click(screen.getByRole("button", { name: /more actions/i }));
-        fireEvent.click(screen.getByRole("menuitem", { name: /remove/i }));
+        fireEvent.click(screen.getByRole("button", { name: /remove/i }));
         expect(onRemove).toHaveBeenCalledOnce();
     });
 

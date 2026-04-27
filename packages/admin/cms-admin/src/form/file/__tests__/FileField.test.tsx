@@ -118,9 +118,8 @@ describe("FileField multi mode", () => {
                 <FileField {...makeMultiInput([makeFile("1", "a.png"), makeFile("2", "b.png")], onChange)} />
             </Wrap>,
         );
-        const moreButtons = screen.getAllByRole("button", { name: /more actions/i });
-        fireEvent.click(moreButtons[0]);
-        fireEvent.click(screen.getByRole("menuitem", { name: /remove/i }));
+        const removeButtons = screen.getAllByRole("button", { name: /remove/i });
+        fireEvent.click(removeButtons[0]);
         expect(onChange).toHaveBeenCalledWith([expect.objectContaining({ id: "2", name: "b.png" })]);
     });
 
@@ -131,8 +130,7 @@ describe("FileField multi mode", () => {
                 <FileField {...makeMultiInput([makeFile("1", "a.png")], onChange)} />
             </Wrap>,
         );
-        fireEvent.click(screen.getByRole("button", { name: /more actions/i }));
-        fireEvent.click(screen.getByRole("menuitem", { name: /remove/i }));
+        fireEvent.click(screen.getByRole("button", { name: /remove/i }));
         expect(onChange).toHaveBeenCalledWith(undefined);
     });
 });

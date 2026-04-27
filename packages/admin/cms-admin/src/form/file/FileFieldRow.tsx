@@ -82,12 +82,9 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
 
     const handleMoreClick: MouseEventHandler<HTMLElement> = (event) => setMenuAnchorEl(event.currentTarget);
     const handleMenuClose = () => setMenuAnchorEl(null);
-    const handleRemove = () => {
-        onRemove();
-        handleMenuClose();
-    };
 
     const damDependency = entityDependencyMap["DamFile"];
+    const showMoreMenu = Boolean(damDependency) || (menuActions !== undefined && menuActions.length > 0);
 
     return (
         <sc.Root
@@ -111,52 +108,57 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
                     </Typography>
                 </sc.TextSlot>
                 <sc.ActionsSlot>
+                    {showMoreMenu && (
+                        <IconButton
+                            size="small"
+                            onClick={handleMoreClick}
+                            aria-label={intl.formatMessage({ id: "comet.form.file.moreActions", defaultMessage: "More actions" })}
+                        >
+                            <MoreVertical color="action" />
+                        </IconButton>
+                    )}
                     <IconButton
                         size="small"
-                        onClick={handleMoreClick}
-                        aria-label={intl.formatMessage({ id: "comet.form.file.moreActions", defaultMessage: "More actions" })}
+                        onClick={onRemove}
+                        aria-label={intl.formatMessage({ id: "comet.form.file.removeFile", defaultMessage: "Remove" })}
                     >
-                        <MoreVertical color="action" />
+                        <Delete color="action" />
                     </IconButton>
                 </sc.ActionsSlot>
             </sc.InnerRow>
-            <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
-                {damDependency && (
-                    <MenuItem
-                        onClick={async () => {
-                            handleMenuClose();
-                            const path = await damDependency.resolvePath({ apolloClient, id: file.id });
-                            window.open(contentScope.match.url + path, "_blank");
-                        }}
-                    >
-                        <ListItemIcon>
-                            <OpenNewTab />
-                        </ListItemIcon>
-                        <ListItemText primary={<FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />} />
-                    </MenuItem>
-                )}
-                {menuActions?.map((item, itemIndex) => {
-                    if (!item) {
-                        return null;
-                    }
-                    if (isValidElement(item)) {
-                        return item;
-                    }
-                    const { label, icon, ...rest } = item as ActionItem;
-                    return (
-                        <MenuItem key={itemIndex} {...rest}>
-                            {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
-                            <ListItemText primary={label} />
+            {showMoreMenu && (
+                <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
+                    {damDependency && (
+                        <MenuItem
+                            onClick={async () => {
+                                handleMenuClose();
+                                const path = await damDependency.resolvePath({ apolloClient, id: file.id });
+                                window.open(contentScope.match.url + path, "_blank");
+                            }}
+                        >
+                            <ListItemIcon>
+                                <OpenNewTab />
+                            </ListItemIcon>
+                            <ListItemText primary={<FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />} />
                         </MenuItem>
-                    );
-                })}
-                <MenuItem onClick={handleRemove}>
-                    <ListItemIcon>
-                        <Delete />
-                    </ListItemIcon>
-                    <ListItemText primary={<FormattedMessage id="comet.form.file.removeFile" defaultMessage="Remove" />} />
-                </MenuItem>
-            </Menu>
+                    )}
+                    {menuActions?.map((item, itemIndex) => {
+                        if (!item) {
+                            return null;
+                        }
+                        if (isValidElement(item)) {
+                            return item;
+                        }
+                        const { label, icon, ...rest } = item as ActionItem;
+                        return (
+                            <MenuItem key={itemIndex} {...rest}>
+                                {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
+                                <ListItemText primary={label} />
+                            </MenuItem>
+                        );
+                    })}
+                </Menu>
+            )}
         </sc.Root>
     );
 };
