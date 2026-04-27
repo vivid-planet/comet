@@ -1569,6 +1569,7 @@ input ProductFilter {
   price: NumberFilter
   priceList: ManyToOneFilter
   slug: StringFilter
+  soldCount: NumberFilter
   status: ProductStatusEnumFilter
   tags: ManyToManyFilter
   tagsWithStatus: OneToManyFilter
@@ -1699,6 +1700,7 @@ enum ProductSortField {
   priceList_name
   priceList_updatedAt
   slug
+  soldCount
   statistics_createdAt
   statistics_updatedAt
   statistics_views
@@ -1894,6 +1896,7 @@ enum ProductVariantSortField {
   product_price
   product_priceList
   product_slug
+  product_soldCount
   product_status
   product_title
   product_type
