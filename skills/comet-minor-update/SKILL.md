@@ -35,7 +35,8 @@ If the user asks for a **major** bump (crossing major versions), stop and tell t
 2. [Find the newest version in the current major on npm](#step-2--find-the-newest-version-in-the-current-major)
 3. [Update every `package.json`](#step-3--update-every-packagejson)
 4. [Install](#step-4--install)
-5. [Report the result](#step-5--report-the-result)
+5. [Verify](#step-5--verify)
+6. [Report the result](#step-6--report-the-result)
 
 ---
 
@@ -131,17 +132,43 @@ In either case, report: which directory failed, the exact error lines, and the s
 
 ---
 
-## Step 5 — Report the result
+## Step 5 — Verify
+
+Run lint and tests in each sub-package that defines them, and report the results. Do **not** start the dev server — that's the user's job (see Step 6 for why).
+
+For each of `api/`, `admin/`, `site/` (skip any that don't exist), check the `package.json` `scripts` block and run whatever is defined:
+
+```bash
+npm --prefix api run lint --if-present
+npm --prefix api test --if-present
+npm --prefix admin run lint --if-present
+npm --prefix admin test --if-present
+npm --prefix site run lint --if-present
+npm --prefix site test --if-present
+```
+
+`--if-present` makes npm exit 0 silently when the script is missing, so you can run the full set without first checking which scripts exist.
+
+If a project has a top-level lint/test script in the root `package.json`, run that too.
+
+What to do with the output:
+
+- **All green:** mention it briefly in the report.
+- **Failures:** report the failing command, the directory, and the first few error lines. Do not attempt to fix lint/test failures — they may indicate a real regression in the new Comet version, or pre-existing issues unrelated to the bump. The user decides.
+- **Type errors specifically:** these often come from stale generated files (`block-meta.json`, GraphQL schema) that only refresh when the app boots. Flag this possibility in the report so the user knows to start the dev server before assuming the bump broke types.
+
+---
+
+## Step 6 — Report the result
 
 Tell the user:
 
 - The old version → the new version
 - Which `package.json` files were touched
 - That each lockfile was updated and install succeeded
+- The verify results (lint/tests green, or which ones failed and where)
 - Anything suspicious you noticed (e.g. "the api/ install emitted a peer-dep warning about X — probably benign but worth a look")
 - **Remind the user to start the app once** (`npm run dev`). A minor Comet release can ship changes to generated artifacts like `block-meta.json` or the GraphQL schema, which are only regenerated when the app boots. Without this step, stale generated files can cause confusing type errors or runtime mismatches.
-
-Do not run tests, lints, or the dev server yourself unless the user asks — just remind them to do it. A minor/patch bump is a dependency update; verifying the app still works is the user's call.
 
 ---
 
