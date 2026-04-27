@@ -205,8 +205,7 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
     };
 
     const handleConfirm = async (fileIds: string[]) => {
-        setDialogOpen(false);
-
+        // Don't close the dialog yet — if a query rejects we'd silently lose the user's selection.
         const existingById = new Map(files.map((f) => [f.id, f] as const));
         const next: GQLDamMultiFileFieldFileFragment[] = await Promise.all(
             fileIds.map(async (id) => {
@@ -223,6 +222,7 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
         );
 
         commitChange(next);
+        setDialogOpen(false);
     };
 
     if (files.length === 0) {
