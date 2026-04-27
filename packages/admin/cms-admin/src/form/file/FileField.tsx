@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
-import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useState } from "react";
+import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useRef, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -10,25 +10,59 @@ import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponen
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
+import { ChooseFilesDialog } from "./chooseFile/ChooseFilesDialog";
 import { DamPathLazy } from "./DamPathLazy";
-import { damFileFieldFileQuery } from "./FileField.gql";
-import type { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
+import { damFileFieldFileQuery, damMultiFileFieldFileQuery } from "./FileField.gql";
+import type {
+    GQLDamFileFieldFileFragment,
+    GQLDamFileFieldFileQuery,
+    GQLDamFileFieldFileQueryVariables,
+    GQLDamMultiFileFieldFileFragment,
+    GQLDamMultiFileFieldFileQuery,
+    GQLDamMultiFileFieldFileQueryVariables,
+} from "./FileField.gql.generated";
+import { FileFieldRow } from "./FileFieldRow";
 
-export type { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
+export type { GQLDamFileFieldFileFragment, GQLDamMultiFileFieldFileFragment } from "./FileField.gql.generated";
 
 interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
     icon?: ReactNode;
 }
 
-interface FileFieldProps extends FieldRenderProps<GQLDamFileFieldFileFragment | undefined, HTMLInputElement> {
-    buttonText?: string;
+type CommonProps = {
+    buttonText?: ReactNode;
     allowedMimetypes?: string[];
-    preview?: ReactNode;
     menuActions?: Array<ActionItem | ReactElement | null | undefined>;
+};
+
+type SingleFileFieldProps = FieldRenderProps<GQLDamFileFieldFileFragment | undefined, HTMLInputElement> &
+    CommonProps & {
+        multiple?: false;
+        preview?: ReactNode;
+    };
+
+type MultiFileFieldProps = FieldRenderProps<GQLDamMultiFileFieldFileFragment[] | undefined, HTMLInputElement> &
+    CommonProps & {
+        multiple: true;
+        preview?: (file: GQLDamMultiFileFieldFileFragment) => ReactNode;
+    };
+
+export function FileField(props: SingleFileFieldProps): ReactElement;
+export function FileField(props: MultiFileFieldProps): ReactElement;
+export function FileField(props: SingleFileFieldProps | MultiFileFieldProps): ReactElement {
+    // `react-final-form`'s `<Field>` strips `multiple` from the component's top-level props
+    // and puts it on `input.multiple` (same pattern as `FinalFormFileUpload`), so we need to
+    // check both locations — `input.multiple` when used via `<Field>`, `props.multiple` when
+    // `FileField` is rendered directly (e.g. in unit tests).
+    const isMultiple = Boolean(props.multiple) || Boolean(props.input?.multiple);
+    if (isMultiple) {
+        return <MultiFileField {...(props as MultiFileFieldProps)} />;
+    }
+    return <SingleFileField {...(props as SingleFileFieldProps)} />;
 }
 
-const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: FileFieldProps) => {
+const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: SingleFileFieldProps) => {
     const [chooseFileDialogOpen, setChooseFileDialogOpen] = useState<boolean>(false);
     const client = useApolloClient();
 
@@ -148,4 +182,100 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
     );
 };
 
-export { FileField };
+export const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: MultiFileFieldProps) => {
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const client = useApolloClient();
+
+    // react-final-form can pass "" as the default when no initial value is set, so normalize to an array.
+    const files: GQLDamMultiFileFieldFileFragment[] = Array.isArray(input.value) ? input.value : [];
+
+    // react-dnd fires several `hover` events per task during a fast drag — faster than React can
+    // commit re-renders. Without a synchronously-updated ref, back-to-back hovers all read the
+    // same stale `files` snapshot and clobber each other's reorder, producing unrelated swaps.
+    // The pattern mirrors `createBlocksBlock`'s functional `updateState((prev) => …)` updater.
+    const filesRef = useRef(files);
+    filesRef.current = files;
+
+    const commitChange = (next: GQLDamMultiFileFieldFileFragment[]) => {
+        filesRef.current = next;
+        input.onChange(next.length === 0 ? undefined : next);
+    };
+
+    const handleRemove = (id: string) => {
+        commitChange(filesRef.current.filter((f) => f.id !== id));
+    };
+
+    const handleMove = (dragIndex: number, hoverIndex: number) => {
+        const next = [...filesRef.current];
+        const [moved] = next.splice(dragIndex, 1);
+        next.splice(hoverIndex, 0, moved);
+        commitChange(next);
+    };
+
+    const handleConfirm = async (fileIds: string[]) => {
+        // Don't close the dialog yet — if a query rejects we'd silently lose the user's selection.
+        const existingById = new Map<string, GQLDamMultiFileFieldFileFragment>(files.map((f) => [f.id, f]));
+        const next: GQLDamMultiFileFieldFileFragment[] = await Promise.all(
+            fileIds.map(async (id) => {
+                const existing = existingById.get(id);
+                if (existing) {
+                    return existing;
+                }
+                const { data } = await client.query<GQLDamMultiFileFieldFileQuery, GQLDamMultiFileFieldFileQueryVariables>({
+                    query: damMultiFileFieldFileQuery,
+                    variables: { id },
+                });
+                return data.damFile as GQLDamMultiFileFieldFileFragment;
+            }),
+        );
+
+        commitChange(next);
+        setDialogOpen(false);
+    };
+
+    if (files.length === 0) {
+        return (
+            <>
+                <BlockAdminComponentButton onClick={() => setDialogOpen(true)} startIcon={<Assets />} size="large">
+                    {buttonText ?? <FormattedMessage id="comet.form.file.chooseFiles" defaultMessage="Choose files" />}
+                </BlockAdminComponentButton>
+                <ChooseFilesDialog
+                    open={dialogOpen}
+                    allowedMimetypes={allowedMimetypes}
+                    initialFileIds={[]}
+                    onClose={() => setDialogOpen(false)}
+                    onConfirm={handleConfirm}
+                />
+            </>
+        );
+    }
+
+    return (
+        <>
+            <BlockAdminComponentPaper disablePadding>
+                {files.map((file, index) => (
+                    <FileFieldRow
+                        key={file.id}
+                        file={file}
+                        index={index}
+                        onRemove={() => handleRemove(file.id)}
+                        onMove={handleMove}
+                        preview={preview}
+                        menuActions={menuActions}
+                    />
+                ))}
+                <Divider />
+                <BlockAdminComponentButton startIcon={<Assets />} onClick={() => setDialogOpen(true)}>
+                    <FormattedMessage id="comet.form.file.changeSelectedFiles" defaultMessage="Change selected files" />
+                </BlockAdminComponentButton>
+            </BlockAdminComponentPaper>
+            <ChooseFilesDialog
+                open={dialogOpen}
+                allowedMimetypes={allowedMimetypes}
+                initialFileIds={files.map((f) => f.id)}
+                onClose={() => setDialogOpen(false)}
+                onConfirm={handleConfirm}
+            />
+        </>
+    );
+};

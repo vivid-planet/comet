@@ -124,6 +124,11 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => ManyToManyFilter)
     datasheets?: ManyToManyFilter;
+    @Field(() => ManyToManyFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ManyToManyFilter)
+    relatedImages?: ManyToManyFilter;
     @Field(() => [ProductFilter], { nullable: true })
     @Type(() => ProductFilter)
     @ValidateNested({ each: true })

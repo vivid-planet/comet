@@ -8,6 +8,7 @@ import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/dupl
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import FolderDataGrid, {
     damFolderQuery,
+    type DamItemSelectionMap,
     type GQLDamFileTableFragment,
     type GQLDamFolderQuery,
     type GQLDamFolderQueryVariables,
@@ -86,6 +87,9 @@ export interface DamConfig {
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
     additionalToolbarItems?: ReactNode;
+    disableFolderSelection?: boolean;
+    selectionMap?: DamItemSelectionMap;
+    onSelectionChange?: (next: DamItemSelectionMap) => void;
 }
 
 type DamTableProps = DamConfig & {
@@ -100,6 +104,7 @@ export const DamTable = ({ renderWithFullHeightMainContent, ...damConfigProps }:
         hideMultiselect: false,
         hideDamActions: false,
         hideArchiveFilter: false,
+        disableFolderSelection: false,
         ...damConfigProps,
     };
 
