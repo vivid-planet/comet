@@ -1,6 +1,6 @@
 import cometConfig from "./comet-config.json";
 import { environment } from "./environment";
-import { type PublicSiteConfig } from "./site-configs";
+import type { PublicSiteConfig } from "./site-configs";
 
 export function createConfig() {
     const environmentVariables = {} as Record<(typeof environment)[number], string>;
@@ -23,5 +23,8 @@ export function createConfig() {
         buildNumber: environmentVariables.BUILD_NUMBER,
         commitSha: environmentVariables.COMMIT_SHA,
         muiLicenseKey: environmentVariables.MUI_LICENSE_KEY,
+        brevo: {
+            allowAddingContactsWithoutDoi: environmentVariables.BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI === "true",
+        },
     };
 }

@@ -83,7 +83,7 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
             },
         ];
 
-        const result = await client.chat.completions.create({ messages: prompt, model: "", max_tokens: 300 });
+        const result = await client.chat.completions.create({ messages: prompt, model: "", max_completion_tokens: 300 });
         return result.choices[0].message?.content ?? "";
     }
 
@@ -116,7 +116,7 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
                 ],
             },
         ];
-        const result = await client.chat.completions.create({ messages: prompt, model: "", max_tokens: 300 });
+        const result = await client.chat.completions.create({ messages: prompt, model: "", max_completion_tokens: 300 });
         return result.choices[0].message?.content ?? "";
     }
 
@@ -154,7 +154,7 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
         let seoTags: SeoTags | undefined;
         let tries = 0;
         do {
-            const result = await client.chat.completions.create({ messages: prompt, model: "", max_tokens: 300 });
+            const result = await client.chat.completions.create({ messages: prompt, model: "", max_completion_tokens: 300 });
             tries++;
 
             const response = result.choices[0].message?.content;

@@ -1,17 +1,7 @@
-import {
-    Field,
-    FilterBar,
-    FilterBarPopoverFilter,
-    FinalFormSearchTextField,
-    type IFilterApi,
-    type ISortInformation,
-    SwitchField,
-    TableFilterFinalForm,
-} from "@comet/admin";
+import { Field, FilterBar, FilterBarPopoverFilter, FinalFormSearchTextField, type IFilterApi, SwitchField, TableFilterFinalForm } from "@comet/admin";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type DamFilter } from "../../DamTable";
-import { DamSortPopover } from "./DamSortPopover";
+import type { DamFilter } from "../../DamTable";
 
 interface DamTableFilterProps {
     hideArchiveFilter?: boolean;
@@ -27,7 +17,6 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
                 <Field
                     name="searchText"
                     component={FinalFormSearchTextField}
-                    clearable
                     disableContentTranslation
                     fieldContainerProps={{ fieldMargin: "never" }}
                 />
@@ -42,11 +31,6 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
                         />
                     </FilterBarPopoverFilter>
                 )}
-                <Field<ISortInformation> name="sort">
-                    {({ input }) => {
-                        return <DamSortPopover onChoose={input.onChange} currentSort={input.value} />;
-                    }}
-                </Field>
             </FilterBar>
         </TableFilterFinalForm>
     );

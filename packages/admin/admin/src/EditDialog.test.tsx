@@ -1,5 +1,6 @@
 import userEvent from "@testing-library/user-event";
-import { render, screen, waitFor } from "test-utils";
+import { cleanup, render, screen, waitFor } from "test-utils";
+import { afterEach, describe, expect, test, vi } from "vitest";
 
 import { Button } from "./common/buttons/Button";
 import { useEditDialog } from "./EditDialog";
@@ -9,9 +10,11 @@ import { FinalFormInput } from "./form/FinalFormInput";
 
 describe("EditDialog", () => {
     describe("onAfterSave", () => {
+        afterEach(cleanup);
+
         test("Should call onAfterSave when clicking save button", async () => {
             const user = userEvent.setup();
-            const onAfterSave = jest.fn();
+            const onAfterSave = vi.fn();
 
             function Story() {
                 const [EditDialog, , editDialogApi] = useEditDialog();
@@ -51,7 +54,7 @@ describe("EditDialog", () => {
 
         test("Should call onAfterSave when pressing Enter", async () => {
             const user = userEvent.setup();
-            const onAfterSave = jest.fn();
+            const onAfterSave = vi.fn();
 
             function Story() {
                 const [EditDialog, , editDialogApi] = useEditDialog();

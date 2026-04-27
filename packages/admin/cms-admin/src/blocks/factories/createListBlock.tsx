@@ -2,7 +2,7 @@ import { StackPage, StackSwitch, StackSwitchApiContext, Tooltip } from "@comet/a
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type FunctionComponent, type ReactNode } from "react";
+import type { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -16,7 +16,7 @@ import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { type BlockDependency, type BlockInterface, type BlockState, type PreviewContent } from "../types";
+import type { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
@@ -110,10 +110,11 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
     ) => BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>>,
 ): BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
-    if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks)
+    if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks) {
         throw new Error(
             `${name}: The property 'minVisibleBlocks' (value: ${minVisibleBlocks}) must be equal to or smaller than 'maxVisibleBlocks' (value: ${maxVisibleBlocks})`,
         );
+    }
 
     const getDefaultListEntry = () => ({
         key: uuid(),

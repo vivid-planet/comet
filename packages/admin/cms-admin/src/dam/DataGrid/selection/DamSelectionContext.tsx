@@ -1,21 +1,21 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { saveAs } from "file-saver";
+import { downloadFile } from "@comet/admin";
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useState } from "react";
 
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { MoveDamItemDialog } from "../../MoveDamItemDialog/MoveDamItemDialog";
-import { type DamItemSelectionMap } from "../FolderDataGrid";
-import {
-    type GQLArchiveFilesMutation,
-    type GQLArchiveFilesMutationVariables,
-    type GQLDamFileDownloadInfoFragment,
-    type GQLDeleteDamFileMutation,
-    type GQLDeleteDamFileMutationVariables,
-    type GQLDeleteDamFolderMutation,
-    type GQLDeleteDamFolderMutationVariables,
-    type GQLRestoreFilesMutation,
-    type GQLRestoreFilesMutationVariables,
+import type { DamItemSelectionMap } from "../FolderDataGrid";
+import type {
+    GQLArchiveFilesMutation,
+    GQLArchiveFilesMutationVariables,
+    GQLDamFileDownloadInfoFragment,
+    GQLDeleteDamFileMutation,
+    GQLDeleteDamFileMutationVariables,
+    GQLDeleteDamFolderMutation,
+    GQLDeleteDamFolderMutationVariables,
+    GQLRestoreFilesMutation,
+    GQLRestoreFilesMutationVariables,
 } from "./DamSelectionContext.generated";
 
 const damFileDownloadInfoFragment = gql`
@@ -267,7 +267,7 @@ export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => 
             if (downloadInfo === null) {
                 showError(setHasDownloadErrors);
             } else {
-                saveAs(downloadInfo.fileUrl, downloadInfo.name);
+                downloadFile(downloadInfo.fileUrl, downloadInfo.name);
             }
         }
 

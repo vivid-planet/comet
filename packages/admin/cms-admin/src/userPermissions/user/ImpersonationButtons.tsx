@@ -26,7 +26,9 @@ export const StartImpersonationButton = ({ userId }: { userId: string }) => {
         location.href = "/";
     };
 
-    if (!isAllowed("impersonation")) return null;
+    if (!isAllowed("impersonation")) {
+        return null;
+    }
 
     if (currentUser.id !== userId && !currentUser.impersonated) {
         return (

@@ -1,4 +1,4 @@
-import { type IntrospectionQuery } from "graphql";
+import type { IntrospectionField, IntrospectionQuery } from "graphql";
 
 import { type FormConfig, type GeneratorReturn, type GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generate-command";
 import { convertConfigImport } from "../utils/convertConfigImport";
@@ -6,19 +6,43 @@ import { findMutationTypeOrThrow } from "../utils/findMutationType";
 import { generateGqlOperation } from "../utils/generateGqlOperation";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
 import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
+import { extractErrorEnumsFromMutations } from "./extractErrorEnums";
 import { flatFormFieldsFromFormConfig } from "./flatFormFieldsFromFormConfig";
+import { generateErrorHandlingCode } from "./generateErrorHandling";
+import { generateErrorMessagesCode } from "./generateErrorMessages";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
 import { generateDestructFormValueForInput, generateFormValuesToGqlInput, generateFormValuesType, generateInitialValues } from "./generateFormValues";
 import { generateFragmentByFormFragmentFields } from "./generateFragmentByFormFragmentFields";
 import { getForwardedGqlArgs, type GqlArg } from "./getForwardedGqlArgs";
 
-export type Prop = { type: string; optional: boolean; name: string };
+/**
+ * Detects if a mutation has a wrapped payload response type (e.g., CreateProductPayload with product and errors fields)
+ * vs returning the entity directly.
+ */
+function hasPayloadResponseType(mutationField: IntrospectionField, gqlType: string): boolean {
+    let returnType = mutationField.type;
+    if (returnType.kind === "NON_NULL") {
+        returnType = returnType.ofType;
+    }
+
+    if (returnType.kind === "OBJECT" && returnType.name === gqlType) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+export type Prop = { type: string; optional: boolean; name: string; localAliasName?: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
-    if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
+    if (!props.length) {
+        return { formPropsTypeCode: "", formPropsParamsCode: "" };
+    }
 
     const uniqueProps = props.reduce<Prop[]>((acc, item) => {
         const propWithSameName = acc.find((prop) => prop.name == item.name);
-        if (!propWithSameName) return [item, ...acc];
+        if (!propWithSameName) {
+            return [item, ...acc];
+        }
         if (propWithSameName.type != item.type || propWithSameName.optional != item.optional) {
             // this is currently not supported
             return [item, ...acc];
@@ -30,7 +54,7 @@ function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; form
         formPropsTypeCode: `interface FormProps {
             ${uniqueProps.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
         }`,
-        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: FormProps`,
+        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name + (prop.localAliasName ? `: ${prop.localAliasName}` : "")).join(", ")}}: FormProps`,
     };
 }
 
@@ -94,6 +118,24 @@ export function generateForm(
     const addMode = mode === "add" || mode == "all";
 
     const createMutationType = addMode && findMutationTypeOrThrow(config.createMutation ?? `create${gqlType}`, gqlIntrospection);
+    const updateMutationType = editMode && findMutationTypeOrThrow(`update${gqlType}`, gqlIntrospection);
+
+    const createMutationHasPayloadResponse = createMutationType && hasPayloadResponseType(createMutationType, gqlType);
+    const updateMutationHasPayloadResponse = updateMutationType && hasPayloadResponseType(updateMutationType, gqlType);
+
+    // Extract error enum types from mutations
+    const errorEnums = extractErrorEnumsFromMutations({
+        createMutationType: createMutationHasPayloadResponse ? createMutationType : null,
+        updateMutationType: updateMutationHasPayloadResponse ? updateMutationType : null,
+        gqlIntrospection,
+    });
+
+    // Add imports for error handling if error enums exist
+    if (errorEnums.createErrorEnum || errorEnums.updateErrorEnum) {
+        imports.push({ name: "ReactNode", importPath: "react" });
+        imports.push({ name: "FORM_ERROR", importPath: "final-form" });
+        imports.push({ name: "FormattedMessage", importPath: "react-intl" });
+    }
 
     const formFields = flatFormFieldsFromFormConfig(config);
 
@@ -109,6 +151,7 @@ export function generateForm(
             imports.push(...forwardedArg.imports);
             if (forwardedArg.gqlArg.name === "scope" && !forwardedArg.gqlArg.isInputArgSubfield && !config.scopeAsProp) {
                 useScopeFromContext = true;
+                gqlArgs.push(forwardedArg.gqlArg);
             } else {
                 formProps.push(forwardedArg.prop);
                 gqlArgs.push(forwardedArg.gqlArg);
@@ -132,7 +175,9 @@ export function generateForm(
         .filter((field) => field.type == "block")
         .map((field) => {
             // map is for ts to infer block type correctly
-            if (field.type !== "block") throw new Error("Field is not a block field");
+            if (field.type !== "block") {
+                throw new Error("Field is not a block field");
+            }
             return field;
         });
     rootBlockFields.forEach((field) => {
@@ -179,6 +224,15 @@ export function generateForm(
         type: `(id: string) => void`,
     });
 
+    if (config.initialValuesAsProp) {
+        formProps.push({
+            name: "initialValues",
+            localAliasName: "passedInitialValues",
+            optional: true,
+            type: `Partial<FormValues>`,
+        });
+    }
+
     const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(formProps);
 
     gqlDocuments[`${instanceGqlType}FormFragment`] = {
@@ -211,7 +265,15 @@ export function generateForm(
                 type: "mutation",
                 operationName: `Create${gqlType}`,
                 rootOperation: createMutationType.name,
-                fields: ["id", "updatedAt", `...${formFragmentName}`],
+                fields: createMutationHasPayloadResponse
+                    ? [
+                          `${instanceGqlType}.id`,
+                          `${instanceGqlType}.updatedAt`,
+                          `${instanceGqlType}...${formFragmentName}`,
+                          "errors.code",
+                          "errors.field",
+                      ]
+                    : ["id", "updatedAt", `...${formFragmentName}`],
                 fragmentVariables: [`\${${`${instanceGqlType}FormFragment`}}`],
                 variables: [
                     ...gqlArgs
@@ -220,7 +282,6 @@ export function generateForm(
                             name: gqlArg.name,
                             type: `${gqlArg.type}!`,
                         })),
-                    ...(useScopeFromContext ? [{ name: "scope", type: `${gqlType}ContentScopeInput!` }] : []),
                     {
                         name: "input",
                         type: `${gqlType}Input!`,
@@ -237,7 +298,15 @@ export function generateForm(
                 type: "mutation",
                 operationName: `Update${gqlType}`,
                 rootOperation: `update${gqlType}`,
-                fields: ["id", "updatedAt", `...${formFragmentName}`],
+                fields: updateMutationHasPayloadResponse
+                    ? [
+                          `${instanceGqlType}.id`,
+                          `${instanceGqlType}.updatedAt`,
+                          `${instanceGqlType}...${formFragmentName}`,
+                          "errors.code",
+                          "errors.field",
+                      ]
+                    : ["id", "updatedAt", `...${formFragmentName}`],
                 fragmentVariables: [`\${${`${instanceGqlType}FormFragment`}}`],
                 variables: [
                     {
@@ -261,7 +330,9 @@ export function generateForm(
             importPath: `./${baseOutputFilename}.gql`,
         });
         const match = gqlDocument.document.match(/^\s*(query|mutation|fragment)\s+(\w+)/);
-        if (!match) throw new Error(`Could not find query or mutation name in ${gqlDocument}`);
+        if (!match) {
+            throw new Error(`Could not find query or mutation name in ${gqlDocument}`);
+        }
         const type = match[1];
         const documentName = match[2];
         imports.push({
@@ -312,6 +383,54 @@ export function generateForm(
         filterByFragmentType = `${formFragmentName}Fragment`;
     }
 
+    // Add error enum type imports if they exist
+    if (errorEnums.createErrorEnum) {
+        const typeName = `GQL${errorEnums.createErrorEnum}`;
+        imports.push({
+            name: typeName,
+            importPath: `@src/graphql.generated`,
+        });
+    }
+    if (errorEnums.useDifferentEnums && errorEnums.updateErrorEnum) {
+        const typeName = `GQL${errorEnums.updateErrorEnum}`;
+        imports.push({
+            name: typeName,
+            importPath: `@src/graphql.generated`,
+        });
+    }
+
+    // Generate error messages code
+    let errorMessagesCode = "";
+    if (errorEnums.useDifferentEnums) {
+        // Generate separate create and update error messages
+        if (errorEnums.createErrorEnum) {
+            errorMessagesCode += generateErrorMessagesCode({
+                enumName: errorEnums.createErrorEnum,
+                gqlType: gqlType,
+                variableName: "createErrorMessages",
+                gqlIntrospection,
+            });
+            errorMessagesCode += "\n\n";
+        }
+        if (errorEnums.updateErrorEnum) {
+            errorMessagesCode += generateErrorMessagesCode({
+                enumName: errorEnums.updateErrorEnum,
+                gqlType: gqlType,
+                variableName: "updateErrorMessages",
+                gqlIntrospection,
+            });
+        }
+    } else if (errorEnums.createErrorEnum || errorEnums.updateErrorEnum) {
+        // Generate single shared error messages object
+        const enumName = (errorEnums.createErrorEnum || errorEnums.updateErrorEnum) as string;
+        errorMessagesCode = generateErrorMessagesCode({
+            enumName,
+            gqlType: gqlType,
+            variableName: "submissionErrorMessages",
+            gqlIntrospection,
+        });
+    }
+
     const code = `
     ${generateImportsCode(imports)}
     import isEqual from "lodash.isequal";
@@ -329,6 +448,8 @@ export function generateForm(
     ${generateFormValuesType({ formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
 
     ${formPropsTypeCode}
+
+    ${errorMessagesCode}
 
     export function ${exportName}(${formPropsParamsCode}) {
         const client = useApolloClient();
@@ -348,7 +469,7 @@ export function generateForm(
                 : ""
         }
 
-        ${generateInitialValues({ mode, formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType })}
+        ${generateInitialValues({ mode, formValuesConfig, filterByFragmentType, gqlIntrospection, gqlType, initialValuesAsProp: !!config.initialValuesAsProp })}
 
 
         ${
@@ -382,10 +503,20 @@ export function generateForm(
                         ? `
                 ${readOnlyFields.some((field) => field.name === "id") ? "" : "if (!id) throw new Error();"}
                 const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
-                await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
+                ${updateMutationHasPayloadResponse ? `const { data: mutationResponse } = ` : ""}await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
                     variables: { id, input: updateInput },
                 });
+                ${
+                    updateMutationHasPayloadResponse && updateMutationType && errorEnums.updateErrorEnum
+                        ? `
+                    ${generateErrorHandlingCode({
+                        mutationResponsePath: `mutationResponse?.${updateMutationType.name}`,
+                        errorMessagesVariable: errorEnums.useDifferentEnums ? "updateErrorMessages" : "submissionErrorMessages",
+                    })}
+                `
+                        : ""
+                }
                 `
                         : ""
                 }
@@ -396,7 +527,6 @@ export function generateForm(
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
                     variables: {
-                        ${useScopeFromContext ? `scope,` : ""}
                         input: ${
                             gqlArgs.filter((prop) => prop.isInputArgSubfield).length
                                 ? `{ ...output, ${gqlArgs
@@ -413,7 +543,18 @@ export function generateForm(
                                 : ""
                         } },
                 });
-                const id = mutationResponse?.${createMutationType.name}.id;
+                ${
+                    createMutationHasPayloadResponse && errorEnums.createErrorEnum
+                        ? `
+                    ${generateErrorHandlingCode({
+                        mutationResponsePath: `mutationResponse?.${createMutationType.name}`,
+                        errorMessagesVariable: errorEnums.useDifferentEnums ? "createErrorMessages" : "submissionErrorMessages",
+                    })}
+                `
+                        : ""
+                }
+                
+                const id = mutationResponse?.${createMutationType.name}${createMutationHasPayloadResponse ? `.${instanceGqlType}?` : ""}.id;
                 if (id) {
                     setTimeout(() => {
                         onCreate?.(id);

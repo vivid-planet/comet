@@ -1,27 +1,27 @@
 import { type ApolloClient, gql } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
 import isEqual from "lodash.isequal";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { type BlockDependency, type ReplaceDependencyObject } from "../../../blocks/types";
-import { type ContentScope } from "../../../contentScope/Provider";
-import { type DocumentInterface, type GQLDocument, type GQLUpdatePageMutationVariables } from "../../../documents/types";
-import { type GQLDamFile } from "../../../graphql.generated";
-import { type PageTreeConfig } from "../../pageTreeConfig";
+import type { BlockDependency, ReplaceDependencyObject } from "../../../blocks/types";
+import type { ContentScope } from "../../../contentScope/Provider";
+import type { DocumentInterface, GQLDocument, GQLUpdatePageMutationVariables } from "../../../documents/types";
+import type { GQLDamFile } from "../../../graphql.generated";
+import type { PageTreeConfig } from "../../pageTreeConfig";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
-import { type PageClipboard, type PagesClipboard } from "../useCopyPastePages";
+import type { PageClipboard, PagesClipboard } from "../useCopyPastePages";
 import { createInboxFolder } from "./createInboxFolder";
-import {
-    type GQLCopyFilesToScopeMutation,
-    type GQLCopyFilesToScopeMutationVariables,
-    type GQLCreatePageNodeMutation,
-    type GQLCreatePageNodeMutationVariables,
-    type GQLFindCopiesOfFileInScopeQuery,
-    type GQLFindCopiesOfFileInScopeQueryVariables,
-    type GQLSlugAvailableQuery,
-    type GQLSlugAvailableQueryVariables,
+import type {
+    GQLCopyFilesToScopeMutation,
+    GQLCopyFilesToScopeMutationVariables,
+    GQLCreatePageNodeMutation,
+    GQLCreatePageNodeMutationVariables,
+    GQLFindCopiesOfFileInScopeQuery,
+    GQLFindCopiesOfFileInScopeQueryVariables,
+    GQLSlugAvailableQuery,
+    GQLSlugAvailableQueryVariables,
 } from "./sendPages.generated";
 
 const slugAvailableQuery = gql`
@@ -282,7 +282,9 @@ export async function sendPages(
                 }
 
                 if (fileIdsToCopyDirectly.length > 0) {
-                    if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
+                    if (!inboxFolderIdForCopiedFiles) {
+                        throw new Error("inbox folder must be created in step 0 when files need to be copied");
+                    }
                     const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                         mutation: copyFilesToScopeMutation,
                         variables: { fileIds: fileIdsToCopyDirectly, inboxFolderId: inboxFolderIdForCopiedFiles },

@@ -1,21 +1,20 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { FinalForm, type ISelectionApi, Loading } from "@comet/admin";
+import { FinalForm, Loading } from "@comet/admin";
 
 import { editFolderQuery, updateDamFolderMutation } from "./EditFolder.gql";
-import {
-    type GQLEditFolderQuery,
-    type GQLEditFolderQueryVariables,
-    type GQLUpdateDamFolderMutation,
-    type GQLUpdateDamFolderMutationVariables,
+import type {
+    GQLEditFolderQuery,
+    GQLEditFolderQueryVariables,
+    GQLUpdateDamFolderMutation,
+    GQLUpdateDamFolderMutationVariables,
 } from "./EditFolder.gql.generated";
 import { FolderFormFields, type FolderFormValues } from "./FolderFormFields";
 
 interface EditFolderProps {
     id: string;
-    selectionApi: ISelectionApi;
 }
 
-const EditFolder = ({ id, selectionApi }: EditFolderProps) => {
+const EditFolder = ({ id }: EditFolderProps) => {
     const { loading, data } = useQuery<GQLEditFolderQuery, GQLEditFolderQueryVariables>(editFolderQuery, {
         variables: {
             id: id,
@@ -40,9 +39,6 @@ const EditFolder = ({ id, selectionApi }: EditFolderProps) => {
                         },
                     },
                 });
-            }}
-            onAfterSubmit={() => {
-                selectionApi.handleDeselect();
             }}
             initialValues={data?.damFolder}
         >

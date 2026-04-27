@@ -9,7 +9,6 @@ import { Field, ObjectType } from "@nestjs/graphql";
 })
 // view-entity can't be saved or updated so disable create, update and delete
 @CrudGenerator({
-    targetDirectory: `${__dirname}/../generated/`,
     requiredPermission: ["manufacturers"],
     single: false,
     create: false,

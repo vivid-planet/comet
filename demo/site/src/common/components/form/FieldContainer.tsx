@@ -1,5 +1,5 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import styles from "./FieldContainer.module.scss";

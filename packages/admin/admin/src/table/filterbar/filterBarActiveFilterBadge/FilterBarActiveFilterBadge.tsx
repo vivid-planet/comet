@@ -2,7 +2,7 @@ import { type ComponentsOverrides, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

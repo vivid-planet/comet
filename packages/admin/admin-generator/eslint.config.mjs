@@ -1,7 +1,7 @@
+import { defineConfig } from "eslint/config";
 import eslintConfigCore from "@comet/eslint-config/core.js";
 
-/** @type {import('eslint')} */
-const config = [
+export default defineConfig([
     ...eslintConfigCore,
     {
         rules: {
@@ -9,6 +9,4 @@ const config = [
             "no-console": "off",
         },
     },
-];
-
-export default config;
+]);

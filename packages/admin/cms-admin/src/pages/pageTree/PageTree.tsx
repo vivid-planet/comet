@@ -19,20 +19,20 @@ import { type Align, FixedSizeList as List } from "react-window";
 import { useDebouncedCallback } from "use-debounce";
 
 import { usePageTreeScope } from "../config/usePageTreeScope";
-import { type GQLPagesQuery, type GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
-import {
-    type GQLMovePageTreeNodesByPosMutation,
-    type GQLPagesCacheQuery,
-    type GQLPagesCacheQueryVariables,
-    type GQLPageSlugPathFragment,
-    type GQLResetSlugMutation,
-    type GQLResetSlugMutationVariables,
+import type { GQLPagesQuery, GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
+import type {
+    GQLMovePageTreeNodesByPosMutation,
+    GQLPagesCacheQuery,
+    GQLPagesCacheQueryVariables,
+    GQLPageSlugPathFragment,
+    GQLResetSlugMutation,
+    GQLResetSlugMutationVariables,
 } from "./PageTree.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
 import PageTreeRow, { type DropTarget, type PageTreeDragObject } from "./PageTreeRow";
 import { type DropInfo, PageTreeService } from "./PageTreeService";
 import { useDndWindowScroll } from "./useDndWindowScroll/useDndWindowScroll";
-import { type PageTreePage } from "./usePageTree";
+import type { PageTreePage } from "./usePageTree";
 
 interface PageTreeProps {
     pages: PageTreePage[];

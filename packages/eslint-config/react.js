@@ -1,4 +1,4 @@
-import coreConfig from "./core.js";
+import coreConfig, { restrictedImportPatterns } from "./core.js";
 import reactIntlFormatPlugin from "@calm/eslint-plugin-react-intl";
 import globals from "globals";
 import formatJs from "eslint-plugin-formatjs";
@@ -7,6 +7,61 @@ import cometPlugin from "@comet/eslint-plugin";
 import reactHooks from "eslint-plugin-react-hooks";
 
 const cometAdminImportsRestrictedFromMuiMaterial = ["Alert", "Button", "Dialog", "Tooltip"];
+
+export const restrictedImportPaths = [
+    ...cometAdminImportsRestrictedFromMuiMaterial.map((name) => ({
+        name: "@mui/material",
+        importNames: [name],
+        message: `Please use ${name} from @comet/admin instead`,
+    })),
+    ...cometAdminImportsRestrictedFromMuiMaterial.map((name) => ({
+        name: `@mui/material/${name}`,
+        message: `Please use ${name} from @comet/admin instead`,
+    })),
+    {
+        name: "react",
+        importNames: ["default"],
+    },
+    {
+        name: "@mui/material",
+        importNames: ["styled"],
+        message: "Please use styled from @mui/material/styles instead.",
+    },
+    {
+        name: "@mui/icons-material",
+        message: "Please use @comet/admin-icons instead",
+    },
+    {
+        name: "@mui/x-data-grid",
+        importNames: ["GridColDef"],
+        message: "Please use GridColDef from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-pro",
+        importNames: ["GridColDef"],
+        message: "Please use GridColDef from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-premium",
+        importNames: ["GridColDef"],
+        message: "Please use GridColDef from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-pro",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-premium",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
+];
 
 /** @type {import('eslint')} */
 const config = [
@@ -70,45 +125,8 @@ const config = [
             "no-restricted-imports": [
                 "error",
                 {
-                    paths: [
-                        ...cometAdminImportsRestrictedFromMuiMaterial.map((name) => ({
-                            name: "@mui/material",
-                            importNames: [name],
-                            message: `Please use ${name} from @comet/admin instead`,
-                        })),
-                        ...cometAdminImportsRestrictedFromMuiMaterial.map((name) => ({
-                            name: `@mui/material/${name}`,
-                            message: `Please use ${name} from @comet/admin instead`,
-                        })),
-                        {
-                            name: "react",
-                            importNames: ["default"],
-                        },
-                        {
-                            name: "@mui/material",
-                            importNames: ["styled"],
-                            message: "Please use styled from @mui/material/styles instead.",
-                        },
-                        {
-                            name: "@mui/icons-material",
-                            message: "Please use @comet/admin-icons instead",
-                        },
-                        {
-                            name: "@mui/x-data-grid",
-                            importNames: ["GridColDef"],
-                            message: "Please use GridColDef from @comet/admin instead",
-                        },
-                        {
-                            name: "@mui/x-data-grid-pro",
-                            importNames: ["GridColDef"],
-                            message: "Please use GridColDef from @comet/admin instead",
-                        },
-                        {
-                            name: "@mui/x-data-grid-premium",
-                            importNames: ["GridColDef"],
-                            message: "Please use GridColDef from @comet/admin instead",
-                        },
-                    ],
+                    paths: restrictedImportPaths,
+                    patterns: restrictedImportPatterns,
                 },
             ],
         },

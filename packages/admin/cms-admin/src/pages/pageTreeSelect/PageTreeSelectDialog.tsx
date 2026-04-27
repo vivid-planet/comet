@@ -12,12 +12,12 @@ import {
     Select,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { type JSX, memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 
-import { type ContentScope } from "../../contentScope/Provider";
-import { type Maybe } from "../../graphql.generated";
+import type { ContentScope } from "../../contentScope/Provider";
+import type { Maybe } from "../../graphql.generated";
 import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { usePageTreeScope } from "../config/usePageTreeScope";
 import { PageSearch } from "../pageSearch/PageSearch";
@@ -31,7 +31,7 @@ import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { type PageTreePage, usePageTree } from "../pageTree/usePageTree";
 import { usePageTreeConfig } from "../pageTreeConfig";
-import { type GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
+import type { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
 
 export type { GQLSelectedPageFragment };

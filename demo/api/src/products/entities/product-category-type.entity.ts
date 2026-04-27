@@ -7,7 +7,7 @@ import { ProductCategory } from "./product-category.entity";
 
 @ObjectType()
 @Entity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
+@CrudGenerator({ requiredPermission: ["products"] })
 export class ProductCategoryType extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)

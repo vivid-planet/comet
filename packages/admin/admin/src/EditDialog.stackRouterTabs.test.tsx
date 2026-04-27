@@ -1,12 +1,12 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
-import { screen, waitFor, within } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Router } from "react-router";
-import { render } from "test-utils";
+import { render, screen, waitFor, within } from "test-utils";
+import { describe, expect, it } from "vitest";
 
 import { Button } from "./common/buttons/Button";
 import { FillSpace } from "./common/FillSpace";
@@ -18,7 +18,7 @@ import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
 import { ToolbarFillSpace } from "./common/toolbar/fillspace/ToolbarFillSpace";
 import { StackToolbar } from "./common/toolbar/StackToolbar";
 import { EditDialog } from "./EditDialog";
-import { type IEditDialogApi } from "./EditDialogApiContext";
+import type { IEditDialogApi } from "./EditDialogApiContext";
 import { FinalForm } from "./FinalForm";
 import { TextField } from "./form/fields/TextField";
 import { SaveBoundary } from "./saveBoundary/SaveBoundary";
@@ -31,7 +31,7 @@ import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 
 describe("EditDialog with Stack, Router Tabs and Grid", () => {
     type DialogProps = {
-        dialogApiRef: RefObject<IEditDialogApi>;
+        dialogApiRef: RefObject<IEditDialogApi | null>;
     };
 
     const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
@@ -133,6 +133,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                                         } as ToolbarProps,
                                     }}
                                     disableVirtualization
+                                    showToolbar
                                 />
                             </RouterTab>
                         </RouterTabs>
@@ -179,7 +180,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         await waitFor(() => {
             expect(rendered.getByTestId("editPage.backButton")).toBeInTheDocument();
         });
-        within(rendered.getByTestId("editPage.backButton")).getByRole("button").click();
+        within(rendered.getByTestId("editPage.backButton")).getByRole("link").click();
         await waitFor(() => {
             expect(screen.getByText("Products")).toBeInTheDocument();
         });
