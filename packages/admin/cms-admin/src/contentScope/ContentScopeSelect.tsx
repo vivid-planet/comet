@@ -19,7 +19,7 @@ import { Fragment, type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { findTextMatches, MarkedMatches } from "../common/MarkedMatches";
-import { type ContentScope } from "./Provider";
+import type { ContentScope } from "./Provider";
 
 type Option = {
     scope: ContentScope;
@@ -233,14 +233,15 @@ export function ContentScopeSelect({
                                     value={searchValue}
                                     onChange={(event) => setSearchValue(event.currentTarget.value)}
                                     endAdornment={
-                                        <ClearInputAdornment
-                                            onClick={() => setSearchValue("")}
-                                            hasClearableContent={searchValue !== ""}
-                                            position="end"
-                                            slotProps={{
-                                                buttonBase: { sx: { fontSize: "16px" } },
-                                            }}
-                                        />
+                                        searchValue !== "" ? (
+                                            <ClearInputAdornment
+                                                onClick={() => setSearchValue("")}
+                                                position="end"
+                                                slotProps={{
+                                                    buttonBase: { sx: { fontSize: "16px" } },
+                                                }}
+                                            />
+                                        ) : undefined
                                     }
                                     autoFocus
                                     fullWidth

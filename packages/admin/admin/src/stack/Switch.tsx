@@ -19,7 +19,7 @@ import { v4 as uuid } from "uuid";
 import { ForcePromptRoute } from "../router/ForcePromptRoute";
 import { SubRouteIndexRoute, useSubRoutePrefix } from "../router/SubRoute";
 import { StackBreadcrumb } from "./Breadcrumb";
-import { type IStackPageProps } from "./Page";
+import type { IStackPageProps } from "./Page";
 import { StackSwitchMeta } from "./SwitchMeta";
 
 interface IProps {

@@ -50,7 +50,7 @@
         "@mikro-orm/postgresql": "^6.6.12",
         "@nestjs/graphql": "^13.2.3",
         "@types/jest": "^29.5.14",
-        "@types/node": "^24.12.0",
+        "@types/node": "^24.12.2",
         "@types/pluralize": "^0.0.33",
         "class-validator": "^0.14.3",
         "eslint": "^9.39.2",
@@ -59,7 +59,7 @@
         "prettier": "^3.6.2",
         "reflect-metadata": "^0.2.2",
         "rimraf": "^6.1.2",
-        "ts-jest": "^29.4.6",
+        "ts-jest": "^29.4.9",
         "uuid": "^11.1.0"
     },
     "peerDependencies": {

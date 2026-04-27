@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { readFile, writeFile } from "fs/promises";
 import { format, resolveConfig } from "prettier";
 
-import { type BlockMeta, type BlockMetaField } from "../BlockMeta";
+import type { BlockMeta, BlockMetaField } from "../BlockMeta";
 
 let content = "";
 

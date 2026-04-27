@@ -55,7 +55,7 @@ context: |
 
     Docs & Agent Skill:
     - User-facing documentation lives at ../../docs/docs/3-features-modules/13-building-html-emails/
-      and a consumer-facing AI skill at ../../skills/dx-mail-react/ (both relative to
+      and a consumer-facing AI skill at ../../skills/comet-mail-react/ (both relative to
       this package). Library changes that affect usage patterns, component APIs, or
       styling conventions should consider updating both. Neither docs nor the skill
       are part of specs.

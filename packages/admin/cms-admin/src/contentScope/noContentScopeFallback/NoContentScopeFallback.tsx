@@ -1,6 +1,6 @@
 import { FullPageAlert } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { type FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { SignOutButton } from "../../common/signOutButton/SignOutButton";

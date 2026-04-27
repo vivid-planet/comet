@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type GridColDef } from "@comet/admin";
-import {
-    type IntrospectionEnumType,
-    type IntrospectionField,
-    type IntrospectionInputObjectType,
-    type IntrospectionNamedTypeRef,
-    type IntrospectionObjectType,
-    type IntrospectionQuery,
-    type IntrospectionType,
+import type { GridColDef } from "@comet/admin";
+import type {
+    IntrospectionEnumType,
+    IntrospectionField,
+    IntrospectionInputObjectType,
+    IntrospectionNamedTypeRef,
+    IntrospectionObjectType,
+    IntrospectionQuery,
+    IntrospectionType,
 } from "graphql";
 import pluralize from "pluralize";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import {
-    type ActionsGridColumnConfig,
-    type FormattedMessageElement,
-    type GeneratorReturn,
-    type GQLDocumentConfigMap,
-    type GridColumnConfig,
-    type GridColumnStaticSelectLabelCellContent,
-    type GridConfig,
-    type VirtualGridColumnConfig,
+import type {
+    ActionsGridColumnConfig,
+    FormattedMessageElement,
+    GeneratorReturn,
+    GQLDocumentConfigMap,
+    GridColumnConfig,
+    GridColumnStaticSelectLabelCellContent,
+    GridConfig,
+    VirtualGridColumnConfig,
 } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../utils/convertConfigImport";

@@ -182,6 +182,10 @@ npm run lint
 
 Repeat this step, fixing all lint errors, until the lint passes.
 
+### Rename `RedirectSourceTypeValues` to `RedirectSourceType``
+
+Use `RedirectSourceType` instead of `RedirectSourceTypeValues` from `@comet/cms-api`
+
 ## Admin
 
 ### Update Comet and peer dependencies
@@ -460,6 +464,24 @@ The `createHttpClient` function has been removed. Use native fetch instead.
 ### Remove `clearable` prop from `Autocomplete`, `FinalFormInput`, `FinalFormNumberInput` and `FinalFormSearchTextField`
 
 Those fields are now clearable automatically when not set to `required`, `disabled` or `readOnly`.
+
+### Remove `hasClearableContent` prop from `ClearInputAdornment`
+
+The `hasClearableContent` prop has been removed from `ClearInputAdornment`. The component now always renders when included in the component tree.
+
+Callers should conditionally render the component instead of passing the `hasClearableContent` prop.
+
+**Before:**
+
+```tsx
+<ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
+```
+
+**After:**
+
+```tsx
+{value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+```
 
 ### Replacement of `@comet/admin-date-time`
 

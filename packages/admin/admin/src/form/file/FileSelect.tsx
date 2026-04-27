@@ -1,15 +1,15 @@
 import { Error as ErrorIcon } from "@comet/admin-icons";
 import { type ComponentsOverrides, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
-import { type Accept, type DropzoneOptions } from "react-dropzone";
+import type { ReactNode } from "react";
+import type { Accept, DropzoneOptions } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { Alert } from "../../alert/Alert";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { FileDropzone } from "./FileDropzone";
-import { type ErrorFileSelectItem, type FileSelectItem, type ValidFileSelectItem } from "./fileSelectItemTypes";
+import type { ErrorFileSelectItem, FileSelectItem, ValidFileSelectItem } from "./fileSelectItemTypes";
 import { FileSelectListItem } from "./FileSelectListItem";
 
 export type FileSelectClassKey =

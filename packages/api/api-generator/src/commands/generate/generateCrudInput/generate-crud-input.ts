@@ -1,5 +1,5 @@
 import { hasCrudFieldFeature, type Permission } from "@comet/cms-api";
-import { type EntityMetadata } from "@mikro-orm/postgresql";
+import type { EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 import { SyntaxKind } from "ts-morph";
 
@@ -18,7 +18,7 @@ import {
     getFieldDecoratorClassName,
     morphTsProperty,
 } from "../utils/ts-morph-helper";
-import { type GeneratedFile } from "../utils/write-generated-files";
+import type { GeneratedFile } from "../utils/write-generated-files";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);

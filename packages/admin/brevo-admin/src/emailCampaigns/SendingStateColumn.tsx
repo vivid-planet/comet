@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type GQLSendingState } from "../graphql.generated";
+import type { GQLSendingState } from "../graphql.generated";
 
 interface Props {
     sendingState?: GQLSendingState;

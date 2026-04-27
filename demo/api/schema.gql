@@ -979,7 +979,6 @@ type Mutation {
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
   deleteRedirect(id: ID!): Boolean!
-  importDamFileByDownload(input: UpdateDamFileInput!, scope: DamScopeInput!, url: String!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   moveDamFolders(folderIds: [ID!]!, scope: DamScopeInput!, targetFolderId: ID): [DamFolder!]!
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
@@ -1960,6 +1959,7 @@ type Query {
   newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]! = [{direction: ASC, field: createdAt}]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
   page(id: ID!): Page!
+  pageTreeFullTextSearch(limit: Int! = 25, offset: Int! = 0, scope: PageTreeNodeScopeInput!, search: String!): PaginatedPageTreeNodes!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
@@ -1982,7 +1982,7 @@ type Query {
   productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]! = [{direction: ASC, field: position}]): PaginatedProductVariants!
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]! = [{direction: ASC, field: createdAt}]): PaginatedProducts!
   redirect(id: ID!): Redirect!
-  redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
+  redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceType!): Redirect
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   redirects(active: Boolean, query: String, scope: RedirectScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC, type: RedirectGenerationType): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   sitePreviewJwt(includeInvisible: Boolean!, path: String!, scope: JSONObject!): String!
@@ -2008,7 +2008,7 @@ type Redirect {
   id: ID!
   scope: RedirectScope!
   source: String!
-  sourceType: RedirectSourceTypeValues!
+  sourceType: RedirectSourceType!
   target: JSONObject!
   updatedAt: DateTime!
 }
@@ -2036,7 +2036,7 @@ input RedirectInput {
   comment: String
   generationType: RedirectGenerationType!
   source: String!
-  sourceType: RedirectSourceTypeValues!
+  sourceType: RedirectSourceType!
   target: JSONObject!
 }
 
@@ -2059,15 +2059,15 @@ enum RedirectSortField {
   updatedAt
 }
 
-input RedirectSourceTypeEnumFilter {
-  equal: RedirectSourceTypeValues
-  isAnyOf: [RedirectSourceTypeValues!]
-  notEqual: RedirectSourceTypeValues
-}
-
-enum RedirectSourceTypeValues {
+enum RedirectSourceType {
   domain
   path
+}
+
+input RedirectSourceTypeEnumFilter {
+  equal: RedirectSourceType
+  isAnyOf: [RedirectSourceType!]
+  notEqual: RedirectSourceType
 }
 
 input RedirectUpdateActivenessInput {

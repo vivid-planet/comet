@@ -1,6 +1,6 @@
 import { gql } from "@comet/site-nextjs";
-import { type ExternalLinkBlockData, type InternalLinkBlockData, type NewsLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
-import { type GQLPageTreeNodeScope, type GQLRedirectScopeInput } from "@src/graphql.generated";
+import type { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
+import type { GQLPageTreeNodeScope, GQLRedirectScopeInput } from "@src/graphql.generated";
 import type { PublicSiteConfig } from "@src/site-configs";
 import { createSitePath } from "@src/util/createSitePath";
 import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
@@ -8,8 +8,8 @@ import { getHostByHeaders, getSiteConfigForHost, getSiteConfigs } from "@src/uti
 import { type NextRequest, NextResponse } from "next/server";
 
 import { memoryCache } from "./cache";
-import { type CustomMiddleware } from "./chain";
-import { type GQLDomainRedirectsQuery, type GQLDomainRedirectsQueryVariables } from "./redirectToMainHost.generated";
+import type { CustomMiddleware } from "./chain";
+import type { GQLDomainRedirectsQuery, GQLDomainRedirectsQueryVariables } from "./redirectToMainHost.generated";
 
 const domainRedirectsQuery = gql`
     query DomainRedirects($scope: RedirectScopeInput!, $filter: RedirectFilter, $offset: Int, $limit: Int) {

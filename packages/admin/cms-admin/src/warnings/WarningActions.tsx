@@ -7,7 +7,7 @@ import { useHistory } from "react-router";
 
 import { type ContentScope, useContentScope } from "../contentScope/Provider";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
-import { type DependencyInterface } from "../dependencies/types";
+import type { DependencyInterface } from "../dependencies/types";
 
 interface Props {
     sourceInfo: {

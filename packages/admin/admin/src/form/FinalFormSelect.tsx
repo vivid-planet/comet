@@ -1,11 +1,11 @@
 import { Error } from "@comet/admin-icons";
 import { InputAdornment, LinearProgress, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
-import { type ReactNode } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { ReactNode } from "react";
+import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import type { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> {
@@ -19,17 +19,6 @@ export interface FinalFormSelectProps<T> {
 }
 
 type FinalFormSelectInternalProps<T> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
-
-const getHasClearableContent = (value: unknown, multiple: boolean | undefined, disabled: boolean | undefined) => {
-    if (disabled) {
-        return false;
-    }
-    if (multiple && Array.isArray(value)) {
-        return value.length > 0;
-    }
-
-    return value !== undefined && value !== "";
-};
 
 /**
  * Final Form-compatible Select component.
@@ -85,13 +74,10 @@ export const FinalFormSelect = <T,>({
 
     const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
 
-    const endAdornment = !required ? (
-        <ClearInputAdornment
-            position="end"
-            hasClearableContent={getHasClearableContent(value, multiple, disabled)}
-            onClick={() => onChange(multiple ? [] : undefined)}
-        />
-    ) : null;
+    const hasClearableContent = !disabled && (multiple && Array.isArray(value) ? value.length > 0 : value !== undefined && value !== "");
+
+    const endAdornment =
+        !required && hasClearableContent ? <ClearInputAdornment position="end" onClick={() => onChange(multiple ? [] : undefined)} /> : null;
 
     const selectProps = {
         ...rest,

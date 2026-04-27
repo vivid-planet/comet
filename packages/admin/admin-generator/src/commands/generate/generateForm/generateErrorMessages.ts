@@ -1,4 +1,4 @@
-import { type IntrospectionEnumType, type IntrospectionQuery } from "graphql";
+import type { IntrospectionEnumType, IntrospectionQuery } from "graphql";
 
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 
