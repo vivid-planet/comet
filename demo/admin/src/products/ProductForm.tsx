@@ -69,17 +69,16 @@ const rootBlocks = {
 };
 
 // Set types for FinalFormFileUpload manually, as they cannot be generated from the fragment in `@comet/cms-admin`
-type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" | "datasheets"> & {
+type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" | "datasheets" | "relatedImages"> & {
     priceList: GQLFinalFormFileUploadFragment | null;
     datasheets: Array<GQLFinalFormFileUploadFragment>;
+    relatedImages: Array<GQLDamFileFieldFileFragment>;
 };
 
 type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
     image: BlockState<typeof rootBlocks.image>;
     manufacturerCountry?: { id: string; label: string };
     lastCheckedAt?: Date | null;
-    // Demo-only: exercises the new multi-select FileField. Not persisted.
-    demoRelatedImages?: GQLDamFileFieldFileFragment[];
 };
 
 // TODO should we use a deep partial here?
@@ -114,6 +113,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                 inStock: false,
                 additionalTypes: [],
                 tags: [],
+                relatedImages: [],
                 dimensions: width !== undefined ? { width } : undefined,
             };
         }
@@ -141,11 +141,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         },
     });
 
-    const handleSubmit = async (
-        { manufacturerCountry, demoRelatedImages: _demoRelatedImages, ...formValues }: FormValues,
-        form: FormApi<FormValues>,
-        event: FinalFormSubmitEvent,
-    ) => {
+    const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) {
             throw new Error("Conflicts detected");
         }
@@ -162,6 +158,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
             statistics: { views: 0 },
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
+            relatedImages: formValues.relatedImages?.map(({ id }) => id) ?? [],
             manufacturer: formValues.manufacturer?.id,
             lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
         };
@@ -393,17 +390,12 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                         layout="grid"
                     />
                     <Field
-                        name="demoRelatedImages"
+                        name="relatedImages"
                         component={FileField}
                         multiple
                         fullWidth
-                        label={
-                            <FormattedMessage
-                                id="product.demoRelatedImages"
-                                defaultMessage="Related images (demo: multi-select FileField, not persisted)"
-                            />
-                        }
-                        buttonText={<FormattedMessage id="product.demoRelatedImages.choose" defaultMessage="Choose related images" />}
+                        label={<FormattedMessage id="product.relatedImages" defaultMessage="Related images" />}
+                        buttonText={<FormattedMessage id="product.relatedImages.choose" defaultMessage="Choose related images" />}
                     />
                     <DateTimeField
                         label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
