@@ -4,7 +4,7 @@
 
 Add `multiple` prop to `FileField` for selecting multiple DAM files
 
-`FileField` now accepts `multiple={true}` to select a list of DAM files instead of a single file. Multi-file values are `GQLDamFileFieldFileFragment[]`; the component renders a stacked, reorderable list of files with per-row menu and remove actions. The picker dialog pre-checks the current selection and replaces the value on confirm. The existing single-file API is unchanged.
+`FileField` now accepts `multiple={true}` to select a list of DAM files instead of a single file. Multi-file values are `GQLDamMultiFileFieldFileFragment[]` (a leaner fragment than the single-file `GQLDamFileFieldFileFragment`); the component renders a stacked, reorderable list of files with per-row menu and remove actions. The picker dialog pre-checks the current selection and replaces the value on confirm. The existing single-file API is unchanged. `MultiFileField` is also exported directly for consumers who prefer not to rely on the `multiple` prop discriminator.
 
 **Example**
 
