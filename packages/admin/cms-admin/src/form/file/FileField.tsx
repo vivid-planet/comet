@@ -182,7 +182,7 @@ const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuAct
     );
 };
 
-const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: MultiFileFieldProps) => {
+export const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: MultiFileFieldProps) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const client = useApolloClient();
 
