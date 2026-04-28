@@ -39,7 +39,7 @@ export const SelectField = <TFieldValues extends FieldValues>({
                         <div className={styles.container}>
                             <Select.Root
                                 value={field.value ?? null}
-                                onValueChange={(value: string | null) => field.onChange(value ?? "")}
+                                onValueChange={(value: string | null) => field.onChange(value)}
                                 name={field.name}
                             >
                                 <Select.Trigger
