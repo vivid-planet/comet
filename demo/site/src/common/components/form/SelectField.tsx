@@ -1,7 +1,7 @@
 import { Select } from "@base-ui/react/select";
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import clsx from "clsx";
-import { useId } from "react";
+import { type ReactNode, useId } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 
