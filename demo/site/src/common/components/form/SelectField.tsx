@@ -8,7 +8,7 @@ import { FormattedMessage } from "react-intl";
 import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
 import styles from "./SelectField.module.scss";
 
-type Option = { value: string; label: string };
+type Option = { value: string; label: ReactNode };
 
 type SelectFieldProps<TFieldValues extends FieldValues> = Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
     FieldContainerFieldProps & {
