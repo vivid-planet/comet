@@ -1,5 +1,7 @@
 # @comet/cli
 
+## 8.21.1
+
 ## 8.21.0
 
 ### Patch Changes
