@@ -13,16 +13,3 @@
 .optionalText {
     color: var(--text-secondary);
 }
-
-.helperText {
-    color: var(--contact-form-helper-text);
-    margin-top: var(--spacing-s100);
-}
-
-.errorWrapper {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-s100);
-    margin-top: var(--spacing-s100);
-    color: var(--contact-form-text-error);
-}
