@@ -61,13 +61,11 @@ export const SelectField = <TFieldValues extends FieldValues>({
                                 <Select.Portal>
                                     <Select.Positioner alignItemWithTrigger={false} sideOffset={-4}>
                                         <Select.Popup className={styles.menu}>
-                                            <div className={styles.menuList}>
-                                                {options.map((option) => (
-                                                    <Select.Item key={option.value} value={option.value} className={styles.option}>
-                                                        <Select.ItemText>{option.label}</Select.ItemText>
-                                                    </Select.Item>
-                                                ))}
-                                            </div>
+                                            {options.map((option) => (
+                                                <Select.Item key={option.value} value={option.value} className={styles.option}>
+                                                    <Select.ItemText>{option.label}</Select.ItemText>
+                                                </Select.Item>
+                                            ))}
                                         </Select.Popup>
                                     </Select.Positioner>
                                 </Select.Portal>
