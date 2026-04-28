@@ -1,6 +1,6 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import clsx from "clsx";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import styles from "./ErrorText.module.scss";
 
