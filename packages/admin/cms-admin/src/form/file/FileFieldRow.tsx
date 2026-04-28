@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { Delete, Drag, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
+import { Box, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Stack } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { type ComponentProps, isValidElement, type MouseEventHandler, type ReactElement, type ReactNode, useRef, useState } from "react";
 import { type DropTargetMonitor, useDrag, useDrop, type XYCoord } from "react-dnd";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -10,9 +11,26 @@ import { DamThumbnail } from "../../dam/DataGrid/thumbnail/DamThumbnail";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DamPathLazy } from "./DamPathLazy";
 import type { GQLDamMultiFileFieldFileFragment } from "./FileField.gql.generated";
-import * as sc from "./FileFieldRow.sc";
 
 const ITEM_TYPE = "fileFieldFile";
+
+const Grabber = styled("div")`
+    position: relative;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    flex-shrink: 0;
+    border-right: 1px solid ${({ theme }) => theme.palette.divider};
+    cursor: move;
+    color: ${({ theme }) => theme.palette.grey[600]};
+
+    &:hover {
+        background-color: ${({ theme }) => theme.palette.primary.light};
+        color: white;
+    }
+`;
 
 interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
@@ -35,7 +53,6 @@ interface FileFieldRowProps {
 
 export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActions }: FileFieldRowProps) => {
     const ref = useRef<HTMLDivElement>(null);
-    const [hover, setHover] = useState(false);
     const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
 
     const intl = useIntl();
@@ -87,27 +104,29 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
     const showMoreMenu = Boolean(damDependency) || (menuActions !== undefined && menuActions.length > 0);
 
     return (
-        <sc.Root
+        <Box
             ref={ref}
-            style={{ opacity: isDragging ? 0 : 1 }}
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
-            isMouseHover={hover}
+            sx={{
+                display: "flex",
+                opacity: isDragging ? 0 : 1,
+                borderBottom: 1,
+                borderColor: "divider",
+                "&:last-of-type": { borderBottom: "none" },
+                "&:hover": { bgcolor: "grey.50" },
+            }}
         >
-            <sc.Grabber>
+            <Grabber>
                 <Drag color="inherit" />
-            </sc.Grabber>
-            <sc.InnerRow>
-                <sc.PreviewSlot>{preview ? preview(file) : <DamThumbnail asset={{ ...file, __typename: "DamFile" }} />}</sc.PreviewSlot>
-                <sc.TextSlot>
-                    <Typography variant="subtitle1" noWrap>
-                        {file.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" noWrap>
-                        <DamPathLazy fileId={file.id} />
-                    </Typography>
-                </sc.TextSlot>
-                <sc.ActionsSlot>
+            </Grabber>
+            <Stack direction="row" alignItems="center" spacing={2} sx={{ flexGrow: 1, px: 2, py: 1.5, minWidth: 0 }}>
+                <Box sx={{ flexShrink: 0 }}>{preview ? preview(file) : <DamThumbnail asset={{ ...file, __typename: "DamFile" }} />}</Box>
+                <ListItemText
+                    primary={file.name}
+                    secondary={<DamPathLazy fileId={file.id} />}
+                    primaryTypographyProps={{ variant: "subtitle1", noWrap: true }}
+                    secondaryTypographyProps={{ variant: "body2", color: "textSecondary", noWrap: true, component: "span" }}
+                />
+                <Stack direction="row" sx={{ flexShrink: 0 }}>
                     <IconButton
                         size="small"
                         onClick={onRemove}
@@ -124,8 +143,8 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
                             <MoreVertical color="action" />
                         </IconButton>
                     )}
-                </sc.ActionsSlot>
-            </sc.InnerRow>
+                </Stack>
+            </Stack>
             {showMoreMenu && (
                 <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
                     {damDependency && (
@@ -159,6 +178,6 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
                     })}
                 </Menu>
             )}
-        </sc.Root>
+        </Box>
     );
 };
