@@ -13,7 +13,7 @@ type Option = { value: string; label: ReactNode };
 type SelectFieldProps<TFieldValues extends FieldValues> = Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
     FieldContainerFieldProps & {
         options: Array<Option>;
-        placeholder?: string;
+        placeholder?: ReactNode;
     };
 
 export const SelectField = <TFieldValues extends FieldValues>({
