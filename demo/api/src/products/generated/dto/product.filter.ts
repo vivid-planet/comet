@@ -6,7 +6,17 @@ import { Field, InputType } from "@nestjs/graphql";
 import { ProductStatusEnumFilter } from "./product-status.enum-filter";
 import { ProductTypeEnumFilter } from "./product-type.enum-filter";
 import { ProductTypeEnumsFilter } from "./product-type.enums-filter";
-import { BooleanFilter, DateFilter, DateTimeFilter, IdFilter, ManyToManyFilter, ManyToOneFilter, NumberFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
+import {
+    BooleanFilter,
+    DateFilter,
+    DateTimeFilter,
+    IdFilter,
+    ManyToManyFilter,
+    ManyToOneFilter,
+    NumberFilter,
+    OneToManyFilter,
+    StringFilter,
+} from "@comet/cms-api";
 @InputType()
 export class ProductFilter {
     @Field(() => IdFilter, { nullable: true })
@@ -54,6 +64,11 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => BooleanFilter)
     inStock?: BooleanFilter;
+    @Field(() => NumberFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => NumberFilter)
+    soldCount?: NumberFilter;
     @Field(() => DateFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

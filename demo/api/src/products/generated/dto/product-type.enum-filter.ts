@@ -4,5 +4,4 @@ import { ProductType } from "../../entities/product-type.enum";
 import { InputType } from "@nestjs/graphql";
 import { createEnumFilter } from "@comet/cms-api";
 @InputType()
-export class ProductTypeEnumFilter extends createEnumFilter(ProductType) {
-}
+export class ProductTypeEnumFilter extends createEnumFilter(ProductType) {}

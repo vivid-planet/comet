@@ -6,35 +6,49 @@ import { NewsInput, NewsUpdateInput } from "./dto/news.input";
 import { PaginatedNews } from "./dto/paginated-news";
 import { NewsListArgs } from "./dto/news-list.args";
 import { NewsComment } from "../entities/news-comment.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import {
+    AffectedEntity,
+    BlocksTransformerService,
+    DamImageBlock,
+    RequiredPermission,
+    RootBlockDataScalar,
+    gqlArgsToMikroOrmQuery,
+    gqlSortToMikroOrmOrderBy,
+} from "@comet/cms-api";
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { News, NewsContentScope } from "../entities/news.entity";
 @Resolver(() => News)
 @RequiredPermission(["news"])
 export class NewsResolver {
-    constructor(protected readonly entityManager: EntityManager, private readonly blocksTransformer: BlocksTransformerService) { }
+    constructor(
+        protected readonly entityManager: EntityManager,
+        private readonly blocksTransformer: BlocksTransformerService,
+    ) {}
     @Query(() => News)
     @AffectedEntity(News)
     async news(
-    @Args("id", { type: () => ID })
-    id: string): Promise<News> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<News> {
         const news = await this.entityManager.findOneOrFail(News, id);
         return news;
     }
     @Query(() => News, { nullable: true })
     async newsBySlug(
-    @Args("slug")
-    slug: string, 
-    @Args("scope", { type: () => NewsContentScope })
-    scope: NewsContentScope): Promise<News | null> {
+        @Args("slug")
+        slug: string,
+        @Args("scope", { type: () => NewsContentScope })
+        scope: NewsContentScope,
+    ): Promise<News | null> {
         const news = await this.entityManager.findOne(News, { slug, scope });
         return news ?? null;
     }
     @Query(() => PaginatedNews)
     async newsList(
-    @Args()
-    { scope, search, filter, sort, offset, limit }: NewsListArgs): Promise<PaginatedNews> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(News));
+        @Args()
+        { scope, search, filter, sort, offset, limit }: NewsListArgs,
+    ): Promise<PaginatedNews> {
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(News));
         where.scope = scope;
         const options: FindOptions<News> = { offset, limit };
         if (sort) {
@@ -45,15 +59,17 @@ export class NewsResolver {
     }
     @Mutation(() => News)
     async createNews(
-    @Args("scope", { type: () => NewsContentScope })
-    scope: NewsContentScope, 
-    @Args("input", { type: () => NewsInput })
-    input: NewsInput): Promise<News> {
+        @Args("scope", { type: () => NewsContentScope })
+        scope: NewsContentScope,
+        @Args("input", { type: () => NewsInput })
+        input: NewsInput,
+    ): Promise<News> {
         const { image: imageInput, content: contentInput, ...assignInput } = input;
         const news = this.entityManager.create(News, {
             ...assignInput,
             scope,
-            image: imageInput.transformToBlockData(), content: contentInput.transformToBlockData(),
+            image: imageInput.transformToBlockData(),
+            content: contentInput.transformToBlockData(),
         });
         await this.entityManager.flush();
         return news;
@@ -61,10 +77,11 @@ export class NewsResolver {
     @Mutation(() => News)
     @AffectedEntity(News)
     async updateNews(
-    @Args("id", { type: () => ID })
-    id: string, 
-    @Args("input", { type: () => NewsUpdateInput })
-    input: NewsUpdateInput): Promise<News> {
+        @Args("id", { type: () => ID })
+        id: string,
+        @Args("input", { type: () => NewsUpdateInput })
+        input: NewsUpdateInput,
+    ): Promise<News> {
         const news = await this.entityManager.findOneOrFail(News, id);
         const { image: imageInput, content: contentInput, ...assignInput } = input;
         news.assign({
@@ -82,8 +99,9 @@ export class NewsResolver {
     @Mutation(() => Boolean)
     @AffectedEntity(News)
     async deleteNews(
-    @Args("id", { type: () => ID })
-    id: string): Promise<boolean> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<boolean> {
         const news = await this.entityManager.findOneOrFail(News, id);
         this.entityManager.remove(news);
         await this.entityManager.flush();
@@ -91,20 +109,23 @@ export class NewsResolver {
     }
     @ResolveField(() => [NewsComment])
     async comments(
-    @Parent()
-    news: News): Promise<NewsComment[]> {
+        @Parent()
+        news: News,
+    ): Promise<NewsComment[]> {
         return news.comments.loadItems();
     }
     @ResolveField(() => RootBlockDataScalar(DamImageBlock))
     async image(
-    @Parent()
-    news: News): Promise<object> {
+        @Parent()
+        news: News,
+    ): Promise<object> {
         return this.blocksTransformer.transformToPlain(news.image);
     }
     @ResolveField(() => RootBlockDataScalar(NewsContentBlock))
     async content(
-    @Parent()
-    news: News): Promise<object> {
+        @Parent()
+        news: News,
+    ): Promise<object> {
         return this.blocksTransformer.transformToPlain(news.content);
     }
 }

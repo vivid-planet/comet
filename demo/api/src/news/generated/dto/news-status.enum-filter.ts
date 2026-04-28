@@ -4,5 +4,4 @@ import { NewsStatus } from "../../entities/news.entity";
 import { InputType } from "@nestjs/graphql";
 import { createEnumFilter } from "@comet/cms-api";
 @InputType()
-export class NewsStatusEnumFilter extends createEnumFilter(NewsStatus) {
-}
+export class NewsStatusEnumFilter extends createEnumFilter(NewsStatus) {}

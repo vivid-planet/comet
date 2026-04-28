@@ -18,7 +18,7 @@ export class ProductInput {
     title: string;
     @IsNotEmpty()
     @IsEnum(ProductStatus)
-    @Field(() => ProductStatus, { defaultValue: ProductStatus.Unpublished, })
+    @Field(() => ProductStatus, { defaultValue: ProductStatus.Unpublished })
     status: ProductStatus;
     @IsNotEmpty()
     @IsString()
@@ -27,20 +27,18 @@ export class ProductInput {
     slug: string;
     @IsNullable()
     @IsString()
-    @Field({ nullable: true,
-        defaultValue: null, })
+    @Field({ nullable: true, defaultValue: null })
     description?: string;
     @IsNotEmpty()
     @IsEnum(ProductType)
     @Field(() => ProductType)
     type: ProductType;
     @IsEnum(ProductType, { each: true })
-    @Field(() => [ProductType], { defaultValue: [], })
+    @Field(() => [ProductType], { defaultValue: [] })
     additionalTypes: ProductType[];
     @IsNullable()
     @IsNumber()
-    @Field({ nullable: true,
-        defaultValue: null, })
+    @Field({ nullable: true, defaultValue: null })
     price?: number;
     @IsNullable()
     @ValidateNested()
@@ -49,17 +47,15 @@ export class ProductInput {
     priceRange?: ProductPriceRange;
     @IsNotEmpty()
     @IsBoolean()
-    @Field({ defaultValue: true, })
+    @Field({ defaultValue: true })
     inStock: boolean;
     @IsNullable()
     @IsDateString()
-    @Field(() => GraphQLLocalDate, { nullable: true,
-        defaultValue: null, })
+    @Field(() => GraphQLLocalDate, { nullable: true, defaultValue: null })
     availableSince?: string;
     @IsNullable()
     @IsDate()
-    @Field({ nullable: true,
-        defaultValue: null, })
+    @Field({ nullable: true, defaultValue: null })
     lastCheckedAt?: Date;
     @IsNotEmpty()
     @Field(() => RootBlockInputScalar(DamImageBlock))
@@ -70,11 +66,11 @@ export class ProductInput {
     @IsArray()
     @ValidateNested()
     @Type(() => ProductDiscounts)
-    @Field(() => [ProductDiscounts], { defaultValue: [], })
+    @Field(() => [ProductDiscounts], { defaultValue: [] })
     discounts: ProductDiscounts[];
     @IsNotEmpty()
     @IsArray()
-    @Field(() => [String], { defaultValue: [], })
+    @Field(() => [String], { defaultValue: [] })
     @IsString({ each: true })
     articleNumbers: string[];
     @IsNullable()
@@ -92,8 +88,7 @@ export class ProductInput {
     @Type(() => ProductNestedProductColorInput)
     colors: ProductNestedProductColorInput[];
     @IsNullable()
-    @Field(() => ID, { nullable: true,
-        defaultValue: null, })
+    @Field(() => ID, { nullable: true, defaultValue: null })
     @IsUUID()
     category?: string;
     @Field(() => [ID], { defaultValue: [] })
@@ -105,13 +100,11 @@ export class ProductInput {
     @Type(() => ProductNestedProductToTagInput)
     tagsWithStatus: ProductNestedProductToTagInput[];
     @IsNullable()
-    @Field(() => ID, { nullable: true,
-        defaultValue: null, })
+    @Field(() => ID, { nullable: true, defaultValue: null })
     @IsUUID()
     manufacturer?: string;
     @IsNullable()
-    @Field(() => ID, { nullable: true,
-        defaultValue: null, })
+    @Field(() => ID, { nullable: true, defaultValue: null })
     @IsString()
     priceList?: string;
     @Field(() => [ID], { defaultValue: [] })
@@ -120,5 +113,4 @@ export class ProductInput {
     datasheets: string[];
 }
 @InputType()
-export class ProductUpdateInput extends PartialType(ProductInput) {
-}
+export class ProductUpdateInput extends PartialType(ProductInput) {}

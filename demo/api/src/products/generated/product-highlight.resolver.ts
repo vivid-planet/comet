@@ -9,12 +9,13 @@ import { AffectedEntity, RequiredPermission } from "@comet/cms-api";
 @Resolver(() => ProductHighlight)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductHighlightResolver {
-    constructor(protected readonly entityManager: EntityManager) { }
+    constructor(protected readonly entityManager: EntityManager) {}
     @Query(() => ProductHighlight)
     @AffectedEntity(ProductHighlight)
     async productHighlight(
-    @Args("id", { type: () => ID })
-    id: string): Promise<ProductHighlight> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<ProductHighlight> {
         const productHighlight = await this.entityManager.findOneOrFail(ProductHighlight, id);
         return productHighlight;
     }
@@ -27,8 +28,9 @@ export class ProductHighlightResolver {
     }
     @Mutation(() => ProductHighlight)
     async createProductHighlight(
-    @Args("input", { type: () => ProductHighlightInput })
-    input: ProductHighlightInput): Promise<ProductHighlight> {
+        @Args("input", { type: () => ProductHighlightInput })
+        input: ProductHighlightInput,
+    ): Promise<ProductHighlight> {
         const { product: productInput, ...assignInput } = input;
         const productHighlight = this.entityManager.create(ProductHighlight, {
             ...assignInput,
@@ -40,18 +42,18 @@ export class ProductHighlightResolver {
     @Mutation(() => ProductHighlight)
     @AffectedEntity(ProductHighlight)
     async updateProductHighlight(
-    @Args("id", { type: () => ID })
-    id: string, 
-    @Args("input", { type: () => ProductHighlightUpdateInput })
-    input: ProductHighlightUpdateInput): Promise<ProductHighlight> {
+        @Args("id", { type: () => ID })
+        id: string,
+        @Args("input", { type: () => ProductHighlightUpdateInput })
+        input: ProductHighlightUpdateInput,
+    ): Promise<ProductHighlight> {
         const productHighlight = await this.entityManager.findOneOrFail(ProductHighlight, id);
         const { product: productInput, ...assignInput } = input;
         productHighlight.assign({
             ...assignInput,
         });
         if (productInput !== undefined) {
-            productHighlight.product =
-                Reference.create(await this.entityManager.findOneOrFail(Product, productInput));
+            productHighlight.product = Reference.create(await this.entityManager.findOneOrFail(Product, productInput));
         }
         await this.entityManager.flush();
         return productHighlight;
@@ -59,8 +61,9 @@ export class ProductHighlightResolver {
     @Mutation(() => Boolean)
     @AffectedEntity(ProductHighlight)
     async deleteProductHighlight(
-    @Args("id", { type: () => ID })
-    id: string): Promise<boolean> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<boolean> {
         const productHighlight = await this.entityManager.findOneOrFail(ProductHighlight, id);
         this.entityManager.remove(productHighlight);
         await this.entityManager.flush();
@@ -68,8 +71,9 @@ export class ProductHighlightResolver {
     }
     @ResolveField(() => Product)
     async product(
-    @Parent()
-    productHighlight: ProductHighlight): Promise<Product> {
+        @Parent()
+        productHighlight: ProductHighlight,
+    ): Promise<Product> {
         return productHighlight.product.loadOrFail();
     }
 }

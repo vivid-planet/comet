@@ -11,20 +11,22 @@ import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMi
 @Resolver(() => ProductCategoryType)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductCategoryTypeResolver {
-    constructor(protected readonly entityManager: EntityManager) { }
+    constructor(protected readonly entityManager: EntityManager) {}
     @Query(() => ProductCategoryType)
     @AffectedEntity(ProductCategoryType)
     async productCategoryType(
-    @Args("id", { type: () => ID })
-    id: string): Promise<ProductCategoryType> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<ProductCategoryType> {
         const productCategoryType = await this.entityManager.findOneOrFail(ProductCategoryType, id);
         return productCategoryType;
     }
     @Query(() => PaginatedProductCategoryTypes)
     async productCategoryTypes(
-    @Args()
-    { search, filter, sort, offset, limit }: ProductCategoryTypesArgs): Promise<PaginatedProductCategoryTypes> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(ProductCategoryType));
+        @Args()
+        { search, filter, sort, offset, limit }: ProductCategoryTypesArgs,
+    ): Promise<PaginatedProductCategoryTypes> {
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(ProductCategoryType));
         const options: FindOptions<ProductCategoryType> = { offset, limit };
         if (sort) {
             options.orderBy = gqlSortToMikroOrmOrderBy(sort);
@@ -34,16 +36,16 @@ export class ProductCategoryTypeResolver {
     }
     @Mutation(() => ProductCategoryType)
     async createProductCategoryType(
-    @Args("input", { type: () => ProductCategoryTypeInput })
-    input: ProductCategoryTypeInput): Promise<ProductCategoryType> {
+        @Args("input", { type: () => ProductCategoryTypeInput })
+        input: ProductCategoryTypeInput,
+    ): Promise<ProductCategoryType> {
         const { categories: categoriesInput, ...assignInput } = input;
         const productCategoryType = this.entityManager.create(ProductCategoryType, {
             ...assignInput,
         });
         if (categoriesInput) {
             const categories = await this.entityManager.find(ProductCategory, { id: categoriesInput });
-            if (categories.length != categoriesInput.length)
-                throw new Error("Couldn't find all categories that were passed as input");
+            if (categories.length != categoriesInput.length) throw new Error("Couldn't find all categories that were passed as input");
             await productCategoryType.categories.loadItems();
             productCategoryType.categories.set(categories.map((category) => Reference.create(category)));
         }
@@ -53,10 +55,11 @@ export class ProductCategoryTypeResolver {
     @Mutation(() => ProductCategoryType)
     @AffectedEntity(ProductCategoryType)
     async updateProductCategoryType(
-    @Args("id", { type: () => ID })
-    id: string, 
-    @Args("input", { type: () => ProductCategoryTypeUpdateInput })
-    input: ProductCategoryTypeUpdateInput): Promise<ProductCategoryType> {
+        @Args("id", { type: () => ID })
+        id: string,
+        @Args("input", { type: () => ProductCategoryTypeUpdateInput })
+        input: ProductCategoryTypeUpdateInput,
+    ): Promise<ProductCategoryType> {
         const productCategoryType = await this.entityManager.findOneOrFail(ProductCategoryType, id);
         const { categories: categoriesInput, ...assignInput } = input;
         productCategoryType.assign({
@@ -64,8 +67,7 @@ export class ProductCategoryTypeResolver {
         });
         if (categoriesInput) {
             const categories = await this.entityManager.find(ProductCategory, { id: categoriesInput });
-            if (categories.length != categoriesInput.length)
-                throw new Error("Couldn't find all categories that were passed as input");
+            if (categories.length != categoriesInput.length) throw new Error("Couldn't find all categories that were passed as input");
             await productCategoryType.categories.loadItems();
             productCategoryType.categories.set(categories.map((category) => Reference.create(category)));
         }
@@ -75,8 +77,9 @@ export class ProductCategoryTypeResolver {
     @Mutation(() => Boolean)
     @AffectedEntity(ProductCategoryType)
     async deleteProductCategoryType(
-    @Args("id", { type: () => ID })
-    id: string): Promise<boolean> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<boolean> {
         const productCategoryType = await this.entityManager.findOneOrFail(ProductCategoryType, id);
         this.entityManager.remove(productCategoryType);
         await this.entityManager.flush();
@@ -84,8 +87,9 @@ export class ProductCategoryTypeResolver {
     }
     @ResolveField(() => [ProductCategory])
     async categories(
-    @Parent()
-    productCategoryType: ProductCategoryType): Promise<ProductCategory[]> {
+        @Parent()
+        productCategoryType: ProductCategoryType,
+    ): Promise<ProductCategory[]> {
         return productCategoryType.categories.loadItems();
     }
 }
