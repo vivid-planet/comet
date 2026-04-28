@@ -18,7 +18,6 @@ export enum ProductVariantSortField {
     product_additionalTypes = "product_additionalTypes",
     product_price = "product_price",
     product_inStock = "product_inStock",
-    product_soldCount = "product_soldCount",
     product_availableSince = "product_availableSince",
     product_lastCheckedAt = "product_lastCheckedAt",
     product_category = "product_category",
