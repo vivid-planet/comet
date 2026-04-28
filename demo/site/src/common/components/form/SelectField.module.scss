@@ -22,35 +22,32 @@
         border-color: var(--contact-form-border-hover);
     }
 
-    &:focus-within {
-        outline: 3px solid var(--functional-focus-main);
-        outline-offset: 0;
-        border: 2px solid var(--brand-primary-contrast);
-    }
-
     &--error {
         border-color: var(--contact-form-border-error);
     }
 }
 
-.placeholder {
-    color: var(--contact-form-text-placeholder);
+.value {
     font-size: 15px;
     line-height: 22px;
+
+    &[data-placeholder] {
+        color: var(--contact-form-text-placeholder);
+    }
 }
 
-.singleValue {
-    font-size: 15px;
-    line-height: 22px;
+.icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .chevron {
-    flex-shrink: 0;
     transition: transform 0.15s ease;
+}
 
-    &--open {
-        transform: rotate(180deg);
-    }
+.icon[data-open] .chevron {
+    transform: rotate(180deg);
 }
 
 .valueContainer {
@@ -61,16 +58,12 @@
 }
 
 .menu {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    margin-top: -4px;
+    width: var(--anchor-width);
     background-color: var(--contact-form-dropdown-bg-default, white);
     border-radius: 4px;
     box-shadow: 0 0 10px 0 rgb(0 0 0 / 15%);
     padding: 4px;
     box-sizing: border-box;
-    z-index: 10;
 }
 
 .menuList {
@@ -89,12 +82,12 @@
     font-size: 15px;
     line-height: 22px;
 
-    &--selected {
+    &[data-selected] {
         background-color: var(--contact-form-dropdown-bg-selected);
         color: var(--contact-form-dropdown-text-selected);
     }
 
-    &--focused {
+    &[data-highlighted]:not([data-selected]) {
         background-color: var(--contact-form-dropdown-bg-hover, var(--contact-form-dropdown-bg-selected));
         color: var(--contact-form-dropdown-text-hover, var(--contact-form-dropdown-text-default));
     }

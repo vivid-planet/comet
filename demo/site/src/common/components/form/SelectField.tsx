@@ -1,9 +1,9 @@
+import { Select } from "@base-ui/react/select";
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import clsx from "clsx";
 import { useId } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
-import Select, { components } from "react-select";
 
 import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
 import styles from "./SelectField.module.scss";
@@ -34,54 +34,47 @@ export const SelectField = <TFieldValues extends FieldValues>({
             control={control}
             rules={rules}
             render={({ field, fieldState }) => {
-                const selectedOption = options.find((o) => o.value === field.value) ?? null;
-
                 return (
                     <FieldContainer required={required} label={label} helperText={helperText} errorText={fieldState.error?.message} htmlFor={id}>
-                        <Select<Option>
-                            unstyled
-                            isSearchable={false}
-                            styles={{
-                                control: (base) => ({ ...base, outline: undefined }),
-                                option: () => ({ display: "flex", alignItems: "center" }),
-                            }}
-                            inputId={id}
-                            name={field.name}
-                            ref={field.ref}
-                            options={options}
-                            value={selectedOption}
-                            onChange={(option) => field.onChange(option?.value ?? "")}
-                            onBlur={field.onBlur}
-                            placeholder={placeholder ?? <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />}
-                            components={{
-                                DropdownIndicator: (props) => (
-                                    <components.DropdownIndicator {...props}>
-                                        <SvgUse
-                                            href="/assets/icons/chevron-down.svg#root"
-                                            width={16}
-                                            height={16}
-                                            className={clsx(styles.chevron, props.selectProps.menuIsOpen && styles["chevron--open"])}
+                        <div className={styles.container}>
+                            <Select.Root
+                                value={field.value ?? null}
+                                onValueChange={(value: string | null) => field.onChange(value ?? "")}
+                                name={field.name}
+                            >
+                                <Select.Trigger
+                                    id={id}
+                                    ref={field.ref}
+                                    onBlur={field.onBlur}
+                                    className={clsx(styles.control, fieldState.error && styles["control--error"])}
+                                >
+                                    <span className={styles.valueContainer}>
+                                        <Select.Value
+                                            placeholder={
+                                                placeholder ?? <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />
+                                            }
+                                            className={styles.value}
                                         />
-                                    </components.DropdownIndicator>
-                                ),
-                                IndicatorSeparator: null,
-                            }}
-                            classNames={{
-                                container: () => styles.container,
-                                control: () => clsx(styles.control, fieldState.error && styles["control--error"]),
-                                valueContainer: () => styles.valueContainer,
-                                placeholder: () => styles.placeholder,
-                                singleValue: () => styles.singleValue,
-                                menu: () => styles.menu,
-                                menuList: () => styles.menuList,
-                                option: ({ isSelected, isFocused }) =>
-                                    clsx(
-                                        styles.option,
-                                        isSelected && styles["option--selected"],
-                                        isFocused && !isSelected && styles["option--focused"],
-                                    ),
-                            }}
-                        />
+                                    </span>
+                                    <Select.Icon className={styles.icon}>
+                                        <SvgUse href="/assets/icons/chevron-down.svg#root" width={16} height={16} className={styles.chevron} />
+                                    </Select.Icon>
+                                </Select.Trigger>
+                                <Select.Portal>
+                                    <Select.Positioner alignItemWithTrigger={false} sideOffset={-4}>
+                                        <Select.Popup className={styles.menu}>
+                                            <div className={styles.menuList}>
+                                                {options.map((option) => (
+                                                    <Select.Item key={option.value} value={option.value} className={styles.option}>
+                                                        <Select.ItemText>{option.label}</Select.ItemText>
+                                                    </Select.Item>
+                                                ))}
+                                            </div>
+                                        </Select.Popup>
+                                    </Select.Positioner>
+                                </Select.Portal>
+                            </Select.Root>
+                        </div>
                     </FieldContainer>
                 );
             }}
