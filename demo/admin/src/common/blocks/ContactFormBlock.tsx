@@ -1,5 +1,5 @@
 import { BlockCategory, type BlockInterface, createBlockSkeleton } from "@comet/cms-admin";
-import { type ContactFormBlockData, type ContactFormBlockInput } from "@src/blocks.generated";
+import type { ContactFormBlockData, ContactFormBlockInput } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
 export const ContactFormBlock: BlockInterface<ContactFormBlockData, Record<string, never>, ContactFormBlockInput> = {

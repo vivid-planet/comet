@@ -93,7 +93,9 @@ export class PageTreeService {
         const readApi = this.createReadApi({ visibility: "all" });
 
         const existingNode = await readApi.getNodeOrFail(id);
-        if (!existingNode) throw new Error("Can't find page-tree-node with id");
+        if (!existingNode) {
+            throw new Error("Can't find page-tree-node with id");
+        }
 
         if (existingNode.slug === "home" && input.slug !== "home") {
             throw new Error(`Slug of page "home" cannot be changed`);
@@ -187,7 +189,9 @@ export class PageTreeService {
     async updateNodePosition(id: string, input: MovePageTreeNodesByPosInput): Promise<PageTreeNodeInterface> {
         const readApi = this.createReadApi({ visibility: "all" });
         const existingNode = await readApi.getNodeOrFail(id);
-        if (!existingNode) throw new Error("Can't find page-tree-node with id");
+        if (!existingNode) {
+            throw new Error("Can't find page-tree-node with id");
+        }
 
         if (input.parentId) {
             let currentParentId: string | null = input.parentId;
@@ -196,7 +200,9 @@ export class PageTreeService {
                     throw new CometValidationException("A page cannot be its own parent or be moved under one of its descendants");
                 }
                 const parentNode = await readApi.getNode(currentParentId);
-                if (!parentNode) break;
+                if (!parentNode) {
+                    break;
+                }
                 currentParentId = parentNode.parentId;
             }
         }

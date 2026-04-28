@@ -2,9 +2,9 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { Field, InputType, ID } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsDateString, IsEnum, IsUUID, IsArray } from "class-validator";
 import { GraphQLLocalDate } from "graphql-scalars";
 import { BlockInputInterface, DamImageBlock, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { IsArray, IsBoolean, IsDate, IsDateString, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
 import { ProductNestedProductStatisticsInput } from "./product-nested-product-statistics.input";

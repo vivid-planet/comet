@@ -29,7 +29,7 @@ async product(@Args("id", { type: () => ID }) id: string): Promise<Product> {
 ```
 
 ```ts
-@Query([Product])
+@Query(() => [Product])
 @AffectedEntity(Dealer, { idArg: "dealerId" })
 async products(@Args("dealerId", { type: () => ID }) dealerId: string): Promise<Product[]> {
     // Note: you can trust "dealerId" being in a valid scope, but you need to make sure that your business code restricts this query to the given dealer
@@ -75,3 +75,28 @@ It's also possible to pass a function which returns the content scope to the `@S
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
 export class PredefinedPage extends BaseEntity implements DocumentInterface {
 ```
+
+### Operations that require a content scope independently of a specific entity
+
+**@AffectedScope**
+
+Use this decorator in following cases:
+
+- You don't have an entity to check with `@AffectedEntity`
+- You want to check for a combination of content scope values.
+
+Example:
+
+```ts
+@Query(() => [Product])
+@AffectedScope((args) => ({ country: args.country, department: args.department }))
+async products(@Args("country", { type: () => string }) id: string, @Args("department", { type: () => string }): Promise<Product[]> {
+    // Note: you can trust "country" and "department" being in a valid scope in the sense that the user must have a content scope which is a combination of these dimensions:
+    // [{ country: "AT", department: "main" }]; // ok
+    // [{ country: "AT" }, { department: "main" }]; // not sufficient
+}
+```
+
+:::info
+Type annotation can either be achieved via generics (`@AffectedScope<ArgsType>((args) => args)`) or by type assignment (`@AffectedScope((args: ArgsType) => args)`)
+:::

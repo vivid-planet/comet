@@ -75,7 +75,7 @@ describe("buildOptions", () => {
             const sortProps = buildSortProps(metadata);
             expect(sortProps).toEqual(["nested", "id", "nested.foo"]);
 
-            const sortDto = generateSortDto({ generatorOptions: { targetDirectory: __dirname, requiredPermission: testPermission }, metadata });
+            const sortDto = generateSortDto({ generatorOptions: { requiredPermission: testPermission }, metadata });
             expect(sortDto).toMatchSnapshot();
 
             await orm.close();

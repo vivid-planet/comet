@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { sampleTree } from "../../pageTree/treemap/__tests__/treemap.test";
 import { areAllSubTreesFullSelected } from "../areAllSubTreesFullSelected";
 

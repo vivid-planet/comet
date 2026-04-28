@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes, type ReactNode } from "react";
+import type { InputHTMLAttributes, ReactNode } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 
 type CheckboxFieldProps<TFieldValues extends FieldValues> = Omit<InputHTMLAttributes<HTMLInputElement>, "name"> &

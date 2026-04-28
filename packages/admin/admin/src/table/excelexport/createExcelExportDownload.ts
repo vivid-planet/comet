@@ -2,9 +2,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as Excel from "exceljs/dist/exceljs.js";
-import { saveAs } from "file-saver";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
+import { downloadFile } from "../../helpers/downloadFile";
 import { isVisible } from "../isVisible";
 import { safeColumnGet } from "../safeColumnGet";
 import { type IRow, type ITableColumn, VisibleType } from "../Table";
@@ -89,7 +89,7 @@ export async function createExcelExportDownload<TRow extends IRow>(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         (buffer) => {
-            saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
+            downloadFile(new Blob([buffer]), safeFileNameWithExtension(fileName));
         },
     );
 }

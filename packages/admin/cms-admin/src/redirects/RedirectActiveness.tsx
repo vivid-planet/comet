@@ -2,13 +2,13 @@ import { gql, useMutation } from "@apollo/client";
 import { ChevronDown, Invisible, Visible } from "@comet/admin-icons";
 import { Chip, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { green } from "@mui/material/colors";
-import { type MouseEvent, useState } from "react";
+import { type JSX, type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    type GQLRedirectActivenessFragment,
-    type GQLUpdateRedirectActivenessMutation,
-    type GQLUpdateRedirectActivenessMutationVariables,
+import type {
+    GQLRedirectActivenessFragment,
+    GQLUpdateRedirectActivenessMutation,
+    GQLUpdateRedirectActivenessMutationVariables,
 } from "./RedirectActiveness.generated";
 
 const updateRedirectActivenessMutation = gql`

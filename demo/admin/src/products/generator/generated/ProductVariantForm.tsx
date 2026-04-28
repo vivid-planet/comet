@@ -18,6 +18,8 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
+import { ReactNode } from "react";
+import { FORM_ERROR } from "final-form";
 import { DamImageBlock } from "@comet/cms-admin";
 import { productVariantFormFragment } from "./ProductVariantForm.gql";
 import { GQLProductVariantFormFragment } from "./ProductVariantForm.gql.generated";
@@ -30,9 +32,10 @@ import { GQLCreateProductVariantMutationVariables } from "./ProductVariantForm.g
 import { updateProductVariantMutation } from "./ProductVariantForm.gql";
 import { GQLUpdateProductVariantMutation } from "./ProductVariantForm.gql.generated";
 import { GQLUpdateProductVariantMutationVariables } from "./ProductVariantForm.gql.generated";
+import { GQLProductVariantMutationErrorCode } from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
-    image: DamImageBlock
+    image: DamImageBlock,
 };
 type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
@@ -42,20 +45,32 @@ interface FormProps {
     id?: string;
     product: string;
 }
+const submissionErrorMessages: Record<GQLProductVariantMutationErrorCode, ReactNode> = {
+    nameTooShort: (
+        <FormattedMessage id="productvariant.form.error.nameTooShort" defaultMessage="Name must be at least 3 characters long, except for foo" />
+    ),
+};
 export function ProductVariantForm({ onCreate, id, product }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const { data, error, loading, refetch } = useQuery<GQLProductVariantQuery, GQLProductVariantQueryVariables>(productVariantQuery, id ? { variables: { id } } : { skip: true });
-    const initialValues = useMemo<Partial<FormValues>>(() => data?.productVariant
-        ? {
-            ...filterByFragment<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
-            image: rootBlocks.image.input2State(data.productVariant.image),
-        }
-        : {
-            image: rootBlocks.image.defaultValues(),
-        }, [data]);
+    const { data, error, loading, refetch } = useQuery<GQLProductVariantQuery, GQLProductVariantQueryVariables>(
+        productVariantQuery,
+        id ? { variables: { id } } : { skip: true },
+    );
+    const initialValues = useMemo<Partial<FormValues>>(
+        () =>
+            data?.productVariant
+                ? {
+                      ...filterByFragment<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
+                      image: rootBlocks.image.input2State(data.productVariant.image),
+                  }
+                : {
+                      image: rootBlocks.image.defaultValues(),
+                  },
+        [data],
+    );
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             const updatedAt = await queryUpdatedAt(client, "productVariant", id);
@@ -67,26 +82,52 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
         },
     });
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts())
-            throw new Error("Conflicts detected");
-        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image), };
+        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const output = { ...formValues, image: rootBlocks.image.state2Output(formValues.image) };
         if (mode === "edit") {
-            if (!id)
-                throw new Error();
+            if (!id) throw new Error();
             const { ...updateInput } = output;
-            await client.mutate<GQLUpdateProductVariantMutation, GQLUpdateProductVariantMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLUpdateProductVariantMutation, GQLUpdateProductVariantMutationVariables>({
                 mutation: updateProductVariantMutation,
                 variables: { id, input: updateInput },
             });
-        }
-        else {
+            if (mutationResponse?.updateProductVariant.errors.length) {
+                return mutationResponse?.updateProductVariant.errors.reduce(
+                    (submissionErrors, error) => {
+                        const errorMessage = submissionErrorMessages[error.code];
+                        if (error.field) {
+                            submissionErrors[error.field] = errorMessage;
+                        } else {
+                            submissionErrors[FORM_ERROR] = errorMessage;
+                        }
+                        return submissionErrors;
+                    },
+                    {} as Record<string, ReactNode>,
+                );
+            }
+        } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductVariantMutation, GQLCreateProductVariantMutationVariables>({
                 mutation: createProductVariantMutation,
                 variables: {
-                    input: output, product
+                    input: output,
+                    product,
                 },
             });
-            const id = mutationResponse?.createProductVariant.id;
+            if (mutationResponse?.createProductVariant.errors.length) {
+                return mutationResponse?.createProductVariant.errors.reduce(
+                    (submissionErrors, error) => {
+                        const errorMessage = submissionErrorMessages[error.code];
+                        if (error.field) {
+                            submissionErrors[error.field] = errorMessage;
+                        } else {
+                            submissionErrors[FORM_ERROR] = errorMessage;
+                        }
+                        return submissionErrors;
+                    },
+                    {} as Record<string, ReactNode>,
+                );
+            }
+            const id = mutationResponse?.createProductVariant.productVariant?.id;
             if (id) {
                 setTimeout(() => {
                     onCreate?.(id);
@@ -94,22 +135,42 @@ export function ProductVariantForm({ onCreate, id, product }: FormProps) {
             }
         }
     };
-    if (error)
-        throw error;
+    if (error) throw error;
     if (loading) {
-        return <Loading behavior="fillPageHeight"/>;
+        return <Loading behavior="fillPageHeight" />;
     }
-    return (<FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} initialValuesEqual={isEqual} //required to compare block data correctly
-     subscription={{}}>
-                {() => (<>
-                        {saveConflict.dialogs}
-                        <>
-                            
-        <TextField required variant="horizontal" fullWidth name="name" label={<FormattedMessage id="productVariant.name" defaultMessage="Name"/>}/>
-        <Field name="image" isEqual={isEqual} label={<FormattedMessage id="productVariant.image" defaultMessage="Image"/>} variant="horizontal" fullWidth>
-            {createFinalFormBlock(rootBlocks.image)}
-        </Field>
-                        </>
-                    </>)}
-            </FinalForm>);
+    return (
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
+            onSubmit={handleSubmit}
+            mode={mode}
+            initialValues={initialValues}
+            initialValuesEqual={isEqual} //required to compare block data correctly
+            subscription={{}}
+        >
+            {() => (
+                <>
+                    {saveConflict.dialogs}
+                    <>
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="name"
+                            label={<FormattedMessage id="productVariant.name" defaultMessage="Name" />}
+                        />
+                        <Field
+                            name="image"
+                            isEqual={isEqual}
+                            label={<FormattedMessage id="productVariant.image" defaultMessage="Image" />}
+                            variant="horizontal"
+                            fullWidth
+                        >
+                            {createFinalFormBlock(rootBlocks.image)}
+                        </Field>
+                    </>
+                </>
+            )}
+        </FinalForm>
+    );
 }

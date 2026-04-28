@@ -1,5 +1,5 @@
 import { defineConfig } from "@comet/admin-generator";
-import { type GQLManufacturer } from "@src/graphql.generated";
+import type { GQLManufacturer } from "@src/graphql.generated";
 
 export default defineConfig<GQLManufacturer>({
     type: "form",
@@ -9,7 +9,7 @@ export default defineConfig<GQLManufacturer>({
         {
             type: "fieldSet",
             name: "addressAsEmbeddable",
-            title: "Address",
+            title: "Address as embeddable",
             collapsible: true,
             fields: [
                 { type: "text", name: "address.street" },

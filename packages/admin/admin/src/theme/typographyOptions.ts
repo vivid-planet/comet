@@ -1,6 +1,6 @@
-import { type Breakpoints } from "@mui/material";
-import { type TypographyVariantsOptions } from "@mui/material/styles";
-import { type CSSProperties } from "react";
+import type { Breakpoints } from "@mui/material";
+import type { TypographyVariantsOptions } from "@mui/material/styles";
+import type { CSSProperties } from "react";
 
 const fontFamily = "Roboto Flex Variable, Helvetica, Arial, sans-serif";
 
@@ -132,7 +132,6 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyVar
         fontSize: 16,
         lineHeight: "20px",
         fontWeight: 250,
-        textTransform: "none",
 
         [breakpoints.up("md")]: {
             lineHeight: "16px",
