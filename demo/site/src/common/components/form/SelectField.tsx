@@ -48,14 +48,12 @@ export const SelectField = <TFieldValues extends FieldValues>({
                                     onBlur={field.onBlur}
                                     className={clsx(styles.control, fieldState.error && styles["control--error"])}
                                 >
-                                    <span className={styles.valueContainer}>
-                                        <Select.Value
-                                            placeholder={
-                                                placeholder ?? <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />
-                                            }
-                                            className={styles.value}
-                                        />
-                                    </span>
+                                    <Select.Value
+                                        placeholder={
+                                            placeholder ?? <FormattedMessage id="selectField.placeholder" defaultMessage="Select an option" />
+                                        }
+                                        className={styles.value}
+                                    />
                                     <Select.Icon className={styles.icon}>
                                         <SvgUse href="/assets/icons/chevron-down.svg#root" width={16} height={16} className={styles.chevron} />
                                     </Select.Icon>

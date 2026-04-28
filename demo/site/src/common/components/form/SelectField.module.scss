@@ -28,6 +28,10 @@
 }
 
 .value {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    overflow: hidden;
     font-size: 15px;
     line-height: 22px;
 
@@ -48,13 +52,6 @@
 
 .icon[data-open] .chevron {
     transform: rotate(180deg);
-}
-
-.valueContainer {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    overflow: hidden;
 }
 
 .menu {
