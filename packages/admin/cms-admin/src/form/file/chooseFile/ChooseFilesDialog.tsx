@@ -31,11 +31,12 @@ export const ChooseFilesDialog = ({ open, onClose, onConfirm, initialFileIds, al
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
 
+    const selectedFileIds = Array.from(selectionMap.entries())
+        .filter(([, type]) => type === "file")
+        .map(([id]) => id);
+
     const handleConfirm = () => {
-        const fileIds = Array.from(selectionMap.entries())
-            .filter(([, type]) => type === "file")
-            .map(([id]) => id);
-        onConfirm(fileIds);
+        onConfirm(selectedFileIds);
     };
 
     // Files are non-interactive in multi-select mode: clicking the row selects it via the
@@ -61,8 +62,12 @@ export const ChooseFilesDialog = ({ open, onClose, onConfirm, initialFileIds, al
                     <Button variant="textLight" onClick={onClose}>
                         <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
                     </Button>
-                    <Button variant="primary" onClick={handleConfirm}>
-                        <FormattedMessage id="comet.form.file.applyFileSelection" defaultMessage="Apply" />
+                    <Button variant="primary" onClick={handleConfirm} disabled={selectedFileIds.length === 0}>
+                        <FormattedMessage
+                            id="comet.form.file.applyFileSelection"
+                            defaultMessage="Select {count, plural, one {# file} other {# files}}"
+                            values={{ count: selectedFileIds.length }}
+                        />
                     </Button>
                 </DialogActions>
             }
