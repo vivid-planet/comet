@@ -1,18 +1,18 @@
 import { type RefObject, useCallback, useRef } from "react";
 import { useDragDropManager } from "react-dnd";
-import { type ListOnScrollProps } from "react-window";
+import type { ListOnScrollProps } from "react-window";
 
 import ScrollManager from "./ScrollManager";
 import useAnimationFrame from "./useAnimationFrame";
 
 interface UseSmoothScrollApi {
     onScroll: (props: ListOnScrollProps) => void;
-    outerRef: RefObject<HTMLElement>;
+    outerRef: RefObject<HTMLElement | null>;
 }
 
 export function useDndWindowScroll(): UseSmoothScrollApi {
     const domRef = useRef<HTMLElement>(null); // Dom-el to the virtual-list-element
-    const scrollPosition = useRef<ListOnScrollProps>(); // Scroll-position of the virtual-list-element
+    const scrollPosition = useRef<ListOnScrollProps>(undefined); // Scroll-position of the virtual-list-element
     const ddm = useDragDropManager();
 
     // Manipulating the dom directly with dom-api

@@ -7,6 +7,7 @@ import {
     FillSpace,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -17,12 +18,12 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import {
-    type GQLDeleteManufacturerMutation,
-    type GQLDeleteManufacturerMutationVariables,
-    type GQLManufacturersListQuery,
-    type GQLManufacturersListQueryVariables,
+import { DataGridPro, GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
+import type {
+    GQLDeleteManufacturerMutation,
+    GQLDeleteManufacturerMutationVariables,
+    GQLManufacturersListQuery,
+    GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -105,7 +106,7 @@ export function ManufacturersGrid() {
             },
             {
                 field: "addressAsEmbeddable.alternativeAddress.zip",
-                headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressZip", defaultMessage: "alt. ZIP2" }),
+                headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressZip2", defaultMessage: "alt. ZIP2" }),
                 valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
             },
             {
@@ -146,7 +147,9 @@ export function ManufacturersGrid() {
             sort: muiGridSortToGql(sortModel),
         },
     });
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     const rows = data?.manufacturers.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
@@ -161,6 +164,7 @@ export function ManufacturersGrid() {
             slots={{
                 toolbar: ManufacturersGridToolbar,
             }}
+            showToolbar
         />
     );
 }

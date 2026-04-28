@@ -1,5 +1,246 @@
 # @comet/cms-api
 
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- 1ad7de3: Return null in `getNodeByPath` when path is `/home` to prevent the home page from being returned for that path (results in 404)
+
+## 9.0.0-beta.1
+
+### Major Changes
+
+- 8c2fdde: Add filtering and sorting to `DependenciesList` and `DependentsList`
+
+    Users can now filter dependencies/dependents by name, type, secondary information, and visibility, and sort by all columns. A default filter shows only visible items. The `GqlFilter` type is now exported from `@comet/admin`.
+
+    **Breaking changes:**
+
+    **`@comet/cms-api`:** `DependencyFilter.targetGraphqlObjectType` and `DependentFilter.rootGraphqlObjectType` changed from `string` to `StringFilter`. Update any code passing a plain string to use `{ equal: "..." }` instead.
+
+    **`@comet/cms-api`:** `DependenciesService.getDependents()` and `getDependencies()` consolidated the `filter`, `paginationArgs`, and `options` parameters into a single `options` object. If you call these methods directly, merge the arguments:
+
+    ```ts
+    // Before
+    service.getDependents(target, filter, { offset, limit }, { forceRefresh, sort });
+
+    // After
+    service.getDependents(target, { filter, offset, limit, forceRefresh, sort });
+    ```
+
+    **`@comet/cms-admin`:** The GQL queries passed to `DependenciesList` and `DependentsList` must now accept `$filter` and `$sort` variables and forward them to the `dependencies`/`dependents` field. Update your queries as follows:
+
+    ```graphql
+    # DependentsList
+    query MyDependents($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependentFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    rootGraphqlObjectType
+                    rootId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+
+    # DependenciesList
+    query MyDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependencyFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    targetGraphqlObjectType
+                    targetId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+    ```
+
+- 3f3da52: Switch to SQL-based entity info system
+
+    The `@EntityInfo` decorator now accepts a field-path-based object or a raw SQL string instead of a TypeScript function or service class.
+    This enables efficient SQL-level filtering and sorting of dependencies and warnings based on entity info.
+
+    **Breaking changes:**
+    - `@EntityInfo` decorator API changed: now accepts `{ name, secondaryInformation?, visible? }` with dot-notation field paths, or a raw SQL string
+    - `EntityInfoServiceInterface` has been removed from exports
+    - `PageTreeNodeDocumentEntityInfoService` has been removed; `@EntityInfo` on `Page`, `Link`, and similar document entities is no longer needed
+    - `block_index_dependencies` view exposes two new columns `blockVisible` and `entityVisible`; `visible` is now their logical AND (previously only reflected block-level visibility)
+    - `block_index_dependencies` view now includes `rootName`, `rootSecondaryInformation`, `targetName`, and `targetSecondaryInformation` columns from `EntityInfo`, removing the need for a runtime JOIN when querying dependencies/dependents
+
+- 171c335: Redirects: add `domain` source type
+
+    To fully support domain redirects, additional handling is required in the site middleware.
+
+### Patch Changes
+
+- 19a0528: Fix `MailerLogStatus` GQL enum name (was incorrectly registered as `WarningStatus`)
+- f162fa5: Fix `AzureOpenAiContentGenerationService` for newer GPT models
+
+    We still used the deprecated `max_tokens` that isn't supported anymore by newer models.
+    Replaced it with the newer `max_completion_tokens`.
+
+## 9.0.0-beta.0
+
+## 8.20.0
+
+### Minor Changes
+
+- ed00704: Add `TableBlock` using the `createTableBlock()` factory
+
+    The passed in `richText` block is used to edit the cell content.
+
+    **Admin:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-admin";
+    import { RichTextBlock } from "./RichTextBlock";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+    **API:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-api";
+    import { RichTextBlock } from "./rich-text.block";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+## 8.19.0
+
+### Patch Changes
+
+- 0eb28a7: Skip block index view creation when no root block entities are found instead of failing with a SQL syntax error
+
+## 8.18.0
+
+### Minor Changes
+
+- 64b70bc: Deduplicate block index refreshes using PostgreSQL advisory locks
+
+    Replace the race-condition-prone `pg_stat_activity` check in `DependenciesService.refreshViews()` with `pg_try_advisory_xact_lock`, ensuring only one refresh runs at a time. This fixes the issue where many parallel requests (e.g., from the DAM Usages column) could trigger multiple concurrent `REFRESH MATERIALIZED VIEW` operations, overloading the database.
+
+- ef98821: Add option `shouldInvokeUserService` to `createJwtAuthService`
+
+    Sometimes it is preferred to load the user from the `UserService` instead of using the data from the ID-Token (e.g. because the `UserService` provides additional data). This options allows to force this behavior.
+
+### Patch Changes
+
+- e9c54bc: Fix `DamFolder.mpath` column type
+
+    Change the column type from `"uuid array"` to `"uuid[]"` to match PostgreSQL's canonical array type notation, preventing a redundant `alter column ... type uuid array` statement from being generated for every new migration.
+
+- b3bfe86: Update `@aws-sdk/` dependencies to fix CVE-2026-25896
+
+## 8.17.1
+
+### Patch Changes
+
+- 91e9a8f: Update fast-xml-parser to 5.3.6 to fix CVE-2026-26278 (entity expansion DoS)
+
+## 8.17.0
+
+## 8.16.0
+
+## 8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- 736e4ae: Add `@AffectedScope` decorator
+
+    See https://docs.comet-dxp.com/docs/core-concepts/content-scope/evaluate-content-scopes#operations-that-require-a-content-scope-independently-of-a-specific-entity
+
+## 8.13.0
+
+### Minor Changes
+
+- 6b0b088: Allow UserService to implement getAccountUrl() which provides a "My Account" link in the UserHeaderItem
+- 05638ed: `MailerService.sendMail()` now automatically creates a plaintext version from the HTML content
+
+    When the params passed to `sendMail()` do not include a `text` property but do include a `html` property, a plaintext version will be automatically generated based on the HTML content.
+
+## 8.12.0
+
+### Minor Changes
+
+- 488da0b: Add `registerAdditionalPermissions` helper
+
+    The helper can be used register additional permissions into the permission enum used for the GraphQL schema.
+    Only use this if you're building a library that requires additional permissions.
+    For application-level permissions, use the `AppPermission` option in the module registration methods.
+
+- 2930556: Send 401 instead 403 when CometAuthGuard cannot authenticate user
+
+    Restores the behavior of Comet v7.
+
+    Before (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "Forbidden resource",
+          "extensions": {
+            "code": "FORBIDDEN",
+            "originalError": {
+              "message": "Forbidden resource",
+              "error": "Forbidden",
+              "statusCode": 403
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
+    After (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "No AuthService could authenticate the user",
+          "extensions": {
+            "code": "UNAUTHENTICATED",
+            "originalError": {
+              "message": "No AuthService could authenticate the user",
+              "error": "Unauthorized",
+              "statusCode": 401
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
+## 8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- f34b750: Add Status to CronJob
+
 ## 8.10.0
 
 ### Minor Changes

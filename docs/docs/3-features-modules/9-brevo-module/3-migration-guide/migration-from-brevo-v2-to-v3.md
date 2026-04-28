@@ -1,5 +1,6 @@
 ---
 title: Migrating from v2 to v3
+sidebar_position: -3
 ---
 
 :::caution

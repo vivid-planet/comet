@@ -3,6 +3,7 @@ import {
     CrudField,
     CrudGenerator,
     DamImageBlock,
+    EntityInfo,
     FileUpload,
     ImportTargetInterface,
     RootBlock,
@@ -30,6 +31,7 @@ import { IsNumber } from "class-validator";
 import { GraphQLLocalDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
+import { ProductService } from "../product.service";
 import { ProductCategory } from "./product-category.entity";
 import { ProductColor } from "./product-color.entity";
 import { ProductStatistics } from "./product-statistics.entity";
@@ -85,10 +87,11 @@ export class ProductPriceRange {
     max: number;
 }
 
+@EntityInfo<Product>({ name: "title", secondaryInformation: "manufacturer.name", visible: { status: { $eq: ProductStatus.Published } } })
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
+@CrudGenerator({ requiredPermission: ["products"], hooksService: ProductService })
 export class Product extends BaseEntity implements ImportTargetInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 

@@ -69,9 +69,69 @@ Use property injection only when technically necessary.
 
 ## ORM / Database
 
+### Use EntityManager Instead of Repository Injection
+
+Prefer injecting the `EntityManager` directly over using `@InjectRepository` / `EntityRepository`.
+
+Repositories in MikroORM are thin wrappers around the `EntityManager` and do not add meaningful value. Using the `EntityManager` directly:
+
+- Is the [recommended approach in the MikroORM docs](https://mikro-orm.io/docs/repositories#why-use-repositories)
+- Is context-aware and ensures proper request-scoped and transactional behavior
+- Keeps NestJS DI simpler — no need for `MikroOrmModule.forFeature()` in the module
+
+:::warning Bad
+
+```ts
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+
+@Injectable()
+export class ProductsResolver {
+    constructor(
+        private readonly entityManager: EntityManager,
+        @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
+    ) {}
+
+    async product(id: string): Promise<Product> {
+        return this.repository.findOneOrFail(id);
+    }
+
+    async createProduct(input: ProductInput): Promise<Product> {
+        const product = this.repository.create(input);
+        await this.entityManager.flush();
+        return product;
+    }
+}
+```
+
+:::
+
+:::tip Good
+
+```ts
+import { EntityManager } from "@mikro-orm/postgresql";
+
+@Injectable()
+export class ProductsResolver {
+    constructor(private readonly entityManager: EntityManager) {}
+
+    async product(id: string): Promise<Product> {
+        return this.entityManager.findOneOrFail(Product, id);
+    }
+
+    async createProduct(input: ProductInput): Promise<Product> {
+        const product = this.entityManager.create(Product, input);
+        await this.entityManager.flush();
+        return product;
+    }
+}
+```
+
+:::
+
 ### Repository
 
-Prefer `repository.create` over `new Entity()` since `create` expects a complete data object.
+Prefer `entityManager.create(Entity, data)` over `new Entity()` since `create` expects a complete data object.
 
 ### Migrations
 
@@ -81,11 +141,7 @@ We do not use rollbacks; issues are resolved with a new deployment.
 
 ### Data Types
 
-- Always use `uuidv4` as the primary key whenever possible.
-    - Prevent listing or guessing of IDs (e.g., when they are part of a URL).
-    - Can be generated "offline" (without a connection to the database), making the ID available in the code before insertion.
-    - Are globally unique, which can sometimes be helpful.
-    - Use `columnType: "uuid"` for UUID columns.
+- Prefer `type: "uuid"` for IDs. See [Prefer UUIDs for IDs](/docs/coding-guidelines/postgresql#prefer-uuids-for-ids).
 - Always use `columnType: text` for strings. Explanation: See [Don't Do This - PostgreSQL wiki.](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_varchar.28n.29_by_default)
 - Prefer `jsonb` over `json`. Explanation: See [8.14. JSON Types](https://www.postgresql.org/docs/current/datatype-json.html)
 - For timestamps, always use `columnType: "timestamp with time zone"`.

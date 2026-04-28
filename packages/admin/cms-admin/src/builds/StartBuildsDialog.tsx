@@ -12,7 +12,7 @@ import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type GQLBuildTemplatesQuery, type GQLCreateBuildsMutation, type GQLCreateBuildsMutationVariables } from "./StartBuildsDialog.generated";
+import type { GQLBuildTemplatesQuery, GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables } from "./StartBuildsDialog.generated";
 
 const buildTemplatesQuery = gql`
     query BuildTemplates {
@@ -47,7 +47,10 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
         refetchQueries: ["Builds"],
     });
 
-    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
+        type: "include",
+        ids: new Set([]),
+    });
 
     const rows = data?.buildTemplates ?? [];
 
@@ -84,6 +87,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     onRowSelectionModelChange={(newSelectionModel) => {
                         setSelectionModel(newSelectionModel);
                     }}
+                    disableRowSelectionExcludeModel
                     rowSelectionModel={selectionModel}
                     paginationModel={{ page: 0, pageSize: 5 }}
                     hideFooterPagination={rows.length <= 5}
@@ -92,11 +96,11 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
             <DialogActions>
                 <CancelButton onClick={() => onClose()} />
                 <Button
-                    disabled={loading || selectionModel.length < 1}
+                    disabled={loading || selectionModel.ids.size < 1}
                     startIcon={loading ? <CircularProgress size={20} /> : undefined}
                     onClick={async () => {
                         await startBuilds({
-                            variables: { input: { names: rows.filter((row) => selectionModel.includes(row.id)).map((row) => row.name) } },
+                            variables: { input: { names: rows.filter((row) => selectionModel.ids.has(row.id)).map((row) => row.name) } },
                         });
                         onClose();
                     }}

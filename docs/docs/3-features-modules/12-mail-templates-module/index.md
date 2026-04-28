@@ -1,24 +1,53 @@
 # Mail-Templates (experimental)
 
-This module provides a way to create and manage mail-templates. It allows you to create reusable mail-templates that can be used in different parts of your application. The templates are created using React components and can be rendered to HTML using MJML.
+This module provides a way to create and manage mail-templates. It allows you to create reusable mail-templates that can be used in different parts of your application. The templates are created using React components and rendered to HTML.
 
 **Epic:** https://vivid-planet.atlassian.net/browse/COM-2057
 
-## Usage
+:::tip
+`@comet/mail-react` lets you build responsive, cross-client-compatible HTML emails using MJML-based React components. For the full theme, component, and customization API, see [Building HTML Emails](../13-building-html-emails/index.md).
+:::
 
-### Changes in files
+## Setup
 
-#### /api/src/app.module.ts
+Add the `MailTemplatesModule` to the imports of your `AppModule`:
 
-    imports: [
-        ...
-        MailTemplatesModule,
-    ]
+```ts title="/api/src/app.module.ts"
+imports: [
+    // existing imports
+    MailTemplatesModule,
+];
+```
 
-#### Create mail-class in the module the mail belongs to, e.g. `api/src/my-module/my-custom.mail.ts` (.mail is just a convention, not required)
+### Using React
 
-```typescript
-import { renderToMjml } from "mjml-react";
+If you plan to use React components in the mail template, update your `tsconfig.json` and install the required packages:
+
+```json title="/api/tsconfig.json"
+{
+    "compilerOptions": {
+        "jsx": "react-jsx"
+    }
+}
+```
+
+```json title="/api/package.json"
+"dependencies": {
+    "@comet/mail-react": "...",
+    "react": "^18.3.1"
+}
+```
+
+## Create a mail template class
+
+Create class in the module the mail belongs to, e.g. `api/src/my-module/my-custom.mail.ts`.
+
+- `.mail` is just a convention, not required
+- Use `.tsx` if you want to use React components in the mail template
+
+```tsx title="/api/src/my-module/my-custom.mail.tsx"
+import { MjmlColumn, MjmlMailRoot, MjmlSection, MjmlText } from "@comet/mail-react";
+import { renderMailHtml } from "@comet/mail-react/server";
 
 @MailTemplate()
 export class MyCustomMail implements MailTemplateInterface<MailProps> {
@@ -27,6 +56,18 @@ export class MyCustomMail implements MailTemplateInterface<MailProps> {
     async generateMail(props: MailProps) {
         const intl = this.translationService.getIntl();
 
+        const { html, mjmlWarnings } = renderMailHtml(
+            <MjmlMailRoot>
+                <IntlProvider locale="de" defaultLocale="de" messages={intl.messages}>
+                    <MailContent {...props} />
+                </IntlProvider>
+            </MjmlMailRoot>,
+        );
+
+        if (process.env.NODE_ENV === "development" && mjmlWarnings.length) {
+            console.warn(`${mjmlWarnings.length} MJML Warnings`, mjmlWarnings);
+        }
+
         return {
             to: { name: "John Doe", address: "bh@vivid-planet.com" },
             subject: intl.formatMessage({
@@ -34,11 +75,7 @@ export class MyCustomMail implements MailTemplateInterface<MailProps> {
                 defaultMessage: "My Custom Mail Subject",
             }),
             text: "LOREM IPSUM",
-            html: renderToMjml(
-                <IntlProvider locale={"de"} defaultLocale={"de"} messages={intl.messages}>
-                    <MailContent {...props} />
-                </IntlProvider>,
-            ),
+            html,
             attachments: [],
         };
     }
@@ -56,26 +93,34 @@ export class MyCustomMail implements MailTemplateInterface<MailProps> {
 
 export type MailProps = { ... }; // define props required to generate/render the mail
 
-const MailContent: React.FC<MailProps> = ({ recipient }) => {
+const MailContent = ({ recipient }: MailProps) => {
     return (
-        <div>
-            {recipient.name} LOREM IPSUM
-            <FormattedMessage id="mail-templates.static-mail_my-custom-mail.introHeadline" defaultMessage="Intro Headline" />
-        </div>
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlText>
+                    {recipient.name} LOREM IPSUM
+                    <FormattedMessage id="mail-templates.static-mail_my-custom-mail.introHeadline" defaultMessage="Intro Headline" />
+                </MjmlText>
+            </MjmlColumn>
+        </MjmlSection>
     );
 }
 ```
 
-#### Register in related module, required for debug-tools to find the mail-template
+## Register the mail template class
 
-    providers: [
-        ...
-        MyCustomMail,
-    ]
+Register the mail template class in the module it belongs to, required for debug-tools to find the mail-template
 
-#### Use MailTemplate
+```ts title="/api/src/my-module/my-module.module.ts"
+providers: [
+    // existing providers
+    MyCustomMail,
+];
+```
 
-```typescript
+## Use MailTemplate
+
+```ts title="/api/src/my-module/my-service.ts"
 import { MyCustomMail } from "@src/my-module/my-custom-mail/my-custom.mail.ts";
 
 @Injectable()
@@ -93,7 +138,7 @@ export class MyService {
 }
 ```
 
-#### Send test-mail
+## Send a test-mail
 
 ```shell
 # npm run console mail-template:test [mailTemplateClassName] [preparedTestPropsIndex]

@@ -2,12 +2,12 @@ import { type ComponentsOverrides, type Drawer as MuiDrawer, type Theme, useThem
 import { Children, cloneElement, type ReactNode, useContext, useEffect, useMemo, useRef } from "react";
 import { useHistory } from "react-router";
 
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
-import { type MainNavigationChild, type MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
+import type { MainNavigationChild, MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
 import { useMainNavigation } from "./Context";
-import { type MainNavigationItemProps } from "./Item";
-import { type MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
+import type { MainNavigationItemProps } from "./Item";
+import type { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 import { type MainNavigationClassKey, type OwnerState, PermanentDrawer, TemporaryDrawer } from "./MainNavigation.styles";
 
 export const DEFAULT_DRAWER_WIDTH = 300;
@@ -34,16 +34,24 @@ export const MainNavigation = (inProps: MainNavigationProps) => {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMainNavigation" });
     const history = useHistory();
-    const { open, toggleOpen, setDrawerVariant, drawerVariant } = useMainNavigation();
+    const { open, toggleOpen, setOpen, setDrawerVariant, drawerVariant } = useMainNavigation();
     const initialRender = useRef(true);
     const { headerHeight } = useContext(MasterLayoutContext);
+    const lastPermanentOpenState = useRef<boolean>(undefined);
 
     // useEffect needed to avoid a React error stating that a bad setState call was made.
     useEffect(() => {
         if (drawerVariant !== variant) {
             setDrawerVariant(variant);
+            if (variant === "temporary" && drawerVariant === "permanent") {
+                // switch from permanent to temporary
+                lastPermanentOpenState.current = open; // save open state of permanent menu
+                setOpen(false);
+            } else if (variant === "permanent" && drawerVariant === "temporary" && lastPermanentOpenState.current !== undefined) {
+                setOpen(lastPermanentOpenState.current); // restore open state of permanent menu
+            }
         }
-    }, [drawerVariant, setDrawerVariant, variant]);
+    }, [drawerVariant, open, setDrawerVariant, setOpen, variant]);
 
     // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
     useEffect(() => {

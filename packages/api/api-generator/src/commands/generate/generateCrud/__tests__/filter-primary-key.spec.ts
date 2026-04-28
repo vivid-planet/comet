@@ -3,7 +3,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { v4 as uuid } from "uuid";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
-import { type GeneratedFile } from "../../utils/write-generated-files";
+import type { GeneratedFile } from "../../utils/write-generated-files";
 import { generateCrud } from "../generate-crud";
 
 @Entity()
@@ -29,13 +29,12 @@ describe("filter primary key", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntity"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
             formattedOut = await formatGeneratedFiles(out);
             const foundFile = formattedOut.find((file) => file.name === "test-entity.resolver.ts");
-            if (!foundFile) throw new Error("File not found");
+            if (!foundFile) {
+                throw new Error("File not found");
+            }
         });
         afterEach(async () => {
             await orm.close();
@@ -43,7 +42,9 @@ describe("filter primary key", () => {
 
         it("filter for embedded field should exist", async () => {
             const file = formattedOut.find((file) => file.name === "dto/test-entity.filter.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             const source = parseSource(file.content);
 

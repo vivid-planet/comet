@@ -5,7 +5,7 @@ import { DialogActions, DialogContent, ListItemIcon, MenuItem } from "@mui/mater
 import { useContext, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type GQLPublishAllProductsMutation, type GQLPublishAllProductsMutationVariables } from "./PublishAllProducts.generated";
+import type { GQLPublishAllProductsMutation, GQLPublishAllProductsMutationVariables } from "./PublishAllProducts.generated";
 
 export function PublishAllProducts() {
     const [open, setOpen] = useState(false);

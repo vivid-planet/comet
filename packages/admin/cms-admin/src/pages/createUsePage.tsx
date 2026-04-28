@@ -5,6 +5,7 @@ import {
     type ComponentProps,
     createElement,
     type Dispatch,
+    type JSX,
     type ReactNode,
     type SetStateAction,
     useCallback,
@@ -15,11 +16,11 @@ import {
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { type BlockInterface, type BlockState } from "../blocks/types";
+import type { BlockInterface, BlockState } from "../blocks/types";
 import { resolveNewState } from "../blocks/utils";
 import { parallelAsyncEvery } from "../blocks/utils/parallelAsyncEvery";
-import { type GQLDocumentInterface } from "../graphql.generated";
-import { type GQLCheckForChangesQuery, type GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
+import type { GQLDocumentInterface } from "../graphql.generated";
+import type { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
 import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";

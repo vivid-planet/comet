@@ -1,0 +1,12 @@
+lib/
+block-meta.json
+src/blocks.generated.ts
+storybook-static/
+
+# Skills/commands installed by OpenSpec
+.claude/commands/
+.claude/skills/
+.cursor/commands/
+.cursor/skills/
+.github/prompts/
+.github/skills/

@@ -2,21 +2,22 @@ import "@fontsource-variable/roboto-flex/full.css";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
+import { BrevoConfigProvider } from "@comet/brevo-admin";
 import {
     CometConfigProvider,
     type ContentScope,
     ContentScopeProvider,
     createDamFileDependency,
     CurrentUserProvider,
-    MasterMenuRoutes,
     SitePreview,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LicenseInfo } from "@mui/x-license";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
+import { PageTreeNodeDependency } from "@src/pageTree/PageTreeNodeDependency";
 import type { ContentScope as BaseContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { enUS } from "date-fns/locale";
@@ -27,11 +28,11 @@ import { Route, Switch } from "react-router";
 
 import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
-import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { AppMasterMenu, AppMasterMenuRoutes, pageTreeDocumentTypes } from "./common/MasterMenu";
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
-import { type GQLPermission } from "./graphql.generated";
+import type { GQLPermission } from "./graphql.generated";
 import { getMessages } from "./lang";
 import { NewsDetailBlock } from "./news/blocks/NewsDetailBlock";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
@@ -97,6 +98,7 @@ export function App() {
                     Link,
                     News: NewsDependency,
                     Redirect: RedirectDependency,
+                    PageTreeNode: PageTreeNodeDependency,
                     DamFile: createDamFileDependency(),
                 },
             }}
@@ -107,7 +109,9 @@ export function App() {
                         return config.scope.domain === scope.domain;
                     });
 
-                    if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                    if (!siteConfig) {
+                        throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                    }
                     return {
                         url: siteConfig.url,
                         preloginEnabled: siteConfig.preloginEnabled || false,
@@ -131,48 +135,63 @@ export function App() {
                 },
             }}
         >
-            <ApolloProvider client={apolloClient}>
-                <IntlProvider locale="en" messages={getMessages("en")}>
-                    <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
-                        <MuiThemeProvider theme={theme}>
-                            <DndProvider options={HTML5toTouch}>
-                                <SnackbarProvider>
-                                    <ErrorDialogHandler />
-                                    <CurrentUserProvider>
-                                        <RouterBrowserRouter>
-                                            <GlobalStyle />
-                                            <ContentScopeProvider>
-                                                {({ match }) => (
-                                                    <Switch>
-                                                        <Route
-                                                            path={`${match.path}/preview`}
-                                                            render={(props) => (
-                                                                <SitePreview
-                                                                    resolvePath={(path: string, scope) => {
-                                                                        return `/${scope.language}${path}`;
-                                                                    }}
-                                                                    {...props}
-                                                                />
-                                                            )}
-                                                        />
-                                                        <Route
-                                                            render={() => (
-                                                                <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                    <MasterMenuRoutes menu={masterMenuData} />
-                                                                </MasterLayout>
-                                                            )}
-                                                        />
-                                                    </Switch>
-                                                )}
-                                            </ContentScopeProvider>
-                                        </RouterBrowserRouter>
-                                    </CurrentUserProvider>
-                                </SnackbarProvider>
-                            </DndProvider>
-                        </MuiThemeProvider>
-                    </LocalizationProvider>
-                </IntlProvider>
-            </ApolloProvider>
+            <BrevoConfigProvider
+                value={{
+                    scopeParts: ["domain", "language"],
+                    apiUrl: config.apiUrl,
+                    resolvePreviewUrlForScope: (scope: ContentScope) => {
+                        const siteConfig = config.siteConfigs.find((c) => c.scope.domain === scope.domain);
+                        if (!siteConfig) {
+                            throw new Error(`Could not find site config for domain ${scope.domain}`);
+                        }
+                        return `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}/brevo-email-campaign`;
+                    },
+                    allowAddingContactsWithoutDoi: config.brevo.allowAddingContactsWithoutDoi,
+                }}
+            >
+                <ApolloProvider client={apolloClient}>
+                    <IntlProvider locale="en" messages={getMessages("en")}>
+                        <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+                            <MuiThemeProvider theme={theme}>
+                                <DndProvider options={HTML5toTouch}>
+                                    <SnackbarProvider>
+                                        <ErrorDialogHandler />
+                                        <CurrentUserProvider>
+                                            <RouterBrowserRouter>
+                                                <GlobalStyle />
+                                                <ContentScopeProvider>
+                                                    {({ match }) => (
+                                                        <Switch>
+                                                            <Route
+                                                                path={`${match.path}/preview`}
+                                                                render={(props) => (
+                                                                    <SitePreview
+                                                                        resolvePath={(path: string, scope) => {
+                                                                            return `/${scope.language}${path}`;
+                                                                        }}
+                                                                        {...props}
+                                                                    />
+                                                                )}
+                                                            />
+                                                            <Route
+                                                                render={() => (
+                                                                    <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                        <AppMasterMenuRoutes />
+                                                                    </MasterLayout>
+                                                                )}
+                                                            />
+                                                        </Switch>
+                                                    )}
+                                                </ContentScopeProvider>
+                                            </RouterBrowserRouter>
+                                        </CurrentUserProvider>
+                                    </SnackbarProvider>
+                                </DndProvider>
+                            </MuiThemeProvider>
+                        </LocalizationProvider>
+                    </IntlProvider>
+                </ApolloProvider>
+            </BrevoConfigProvider>
         </CometConfigProvider>
     );
 }

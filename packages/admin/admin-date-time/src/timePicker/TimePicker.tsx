@@ -25,22 +25,22 @@ type SlotProps = ThemedComponentBaseProps<{
 }>["slotProps"];
 
 const Root = createComponentSlot(InputWithPopper)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "LegacyTimePicker",
     slotName: "root",
 })();
 
 const StartAdornment = createComponentSlot(InputAdornment)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "LegacyTimePicker",
     slotName: "startAdornment",
 })();
 
 const TimeOptionsList = createComponentSlot(MenuList)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "LegacyTimePicker",
     slotName: "timeOptionsList",
 })();
 
 const TimeOptionItem = createComponentSlot(MenuItem)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "LegacyTimePicker",
     slotName: "timeOptionItem",
 })(
     ({ theme }) => css`
@@ -60,7 +60,7 @@ export interface TimePickerProps extends Omit<InputWithPopperProps, "children" |
 }
 
 /**
- * @deprecated `TimePicker` from `@comet/admin-date-time` will be replaced by `TimePicker` (currently `Future_TimePicker`) from `@comet/admin` in a future major release.
+ * @deprecated Use `TimePicker` from `@comet/admin` instead.
  */
 export const TimePicker = (inProps: TimePickerProps) => {
     const {
@@ -75,7 +75,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
         max = "23:59",
         slotProps,
         ...inputWithPopperProps
-    } = useThemeProps({ props: inProps, name: "CometAdminTimePicker" });
+    } = useThemeProps({ props: inProps, name: "CometAdminLegacyTimePicker" });
     const intl = useIntl();
     const focusedItemRef = useRef<HTMLLIElement>(null);
 
@@ -123,9 +123,9 @@ export const TimePicker = (inProps: TimePickerProps) => {
             readOnly
             required={required}
             endAdornment={
-                !required && !inputWithPopperProps.disabled ? (
+                !required && !inputWithPopperProps.disabled && value ? (
                     <>
-                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange?.(undefined)} />
+                        <ClearInputAdornment position="end" onClick={() => onChange?.(undefined)} />
                         {endAdornment}
                     </>
                 ) : (
@@ -166,17 +166,17 @@ export const TimePicker = (inProps: TimePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminTimePicker: TimePickerClassKey;
+        CometAdminLegacyTimePicker: TimePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminTimePicker: TimePickerProps;
+        CometAdminLegacyTimePicker: TimePickerProps;
     }
 
     interface Components {
-        CometAdminTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimePicker"];
+        CometAdminLegacyTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminLegacyTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminLegacyTimePicker"];
         };
     }
 }

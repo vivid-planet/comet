@@ -2,7 +2,7 @@ import { WarningSolid } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
 import { defineMessages, FormattedMessage } from "react-intl";
 
-import { type GQLWarningSeverity } from "../graphql.generated";
+import type { GQLWarningSeverity } from "../graphql.generated";
 
 interface Props {
     severity: GQLWarningSeverity;

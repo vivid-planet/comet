@@ -12,7 +12,7 @@ import {
 import isEqual from "lodash.isequal";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
-import { type RichTextBlockData, type RichTextBlockInput } from "../blocks.generated";
+import type { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";

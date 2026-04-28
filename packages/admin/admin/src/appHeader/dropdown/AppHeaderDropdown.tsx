@@ -4,7 +4,7 @@ import { css, useThemeProps } from "@mui/material/styles";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { AppHeaderButton, type AppHeaderButtonProps } from "../button/AppHeaderButton";
 
 export type AppHeaderDropdownClassKey = "root" | "popover" | "button";

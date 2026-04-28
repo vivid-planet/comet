@@ -6,11 +6,11 @@ import { withMetrics } from "./opentelemetry-metrics";
 
 const dev = process.env.NODE_ENV !== "production";
 const host = process.env.SERVER_HOST ?? "localhost";
-const port = parseInt(process.env.PORT || "3000", 10);
+const port = parseInt(process.env.SITE_PORT || "3000", 10);
 const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
 
 // when using middleware `hostname` and `port` must be provided below
-const app = next({ dev, hostname: host, port });
+const app = next({ dev, hostname: host, port, webpack: true });
 
 app.prepare().then(() => {
     if (process.env.TRACING == "production") {

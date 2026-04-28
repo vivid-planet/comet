@@ -1,18 +1,18 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
-import { screen, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Router } from "react-router";
-import { render } from "test-utils";
+import { cleanup, render, screen, waitFor } from "test-utils";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { Button } from "./common/buttons/Button";
 import { FillSpace } from "./common/FillSpace";
 import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
 import { EditDialog } from "./EditDialog";
-import { type IEditDialogApi } from "./EditDialogApiContext";
+import type { IEditDialogApi } from "./EditDialogApiContext";
 import { FinalForm } from "./FinalForm";
 import { TextField } from "./form/fields/TextField";
 import { StackLink } from "./stack/StackLink";
@@ -20,7 +20,7 @@ import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 
 describe("EditDialog with Stack, Router Tabs and Grid", () => {
     type DialogProps = {
-        dialogApiRef: RefObject<IEditDialogApi>;
+        dialogApiRef: RefObject<IEditDialogApi | null>;
     };
 
     const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
@@ -119,11 +119,14 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                             } as ToolbarProps,
                         }}
                         disableVirtualization
+                        showToolbar
                     />
                 </RouterTab>
             </RouterTabs>
         );
     }
+
+    afterEach(cleanup);
 
     it("should not open edit dialog when navigating to the products page", async () => {
         const history = createMemoryHistory({

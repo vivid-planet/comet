@@ -188,6 +188,17 @@ The following methods are used to transition between the different block states:
     const headlineBlockState = HeadlineBlock.input2State(headlineBlockInput);
     ```
 
+    :::warning
+
+    The block's state may be typed differently than the block's input.
+    Use the `BlockState` helper type to transform the type:
+
+    ```ts
+    type HeadlineBlockState = BlockState<typeof HeadlineBlock>;
+    ```
+
+    :::
+
 - The `BlockInterface#state2Output` method is used to transition from state to output.
 
     ```ts

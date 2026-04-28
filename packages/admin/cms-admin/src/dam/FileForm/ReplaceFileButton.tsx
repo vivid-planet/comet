@@ -9,7 +9,7 @@ import { useCometConfig } from "../../config/CometConfigContext";
 import { replaceById } from "../../form/file/upload";
 import { useDamBasePath, useDamConfig } from "../config/damConfig";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
-import { type DamFileDetails } from "./EditFile";
+import type { DamFileDetails } from "./EditFile";
 
 interface ReplaceFileButtonProps {
     file: DamFileDetails;

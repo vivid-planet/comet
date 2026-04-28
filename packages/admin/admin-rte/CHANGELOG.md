@@ -1,5 +1,234 @@
 # @comet/admin-rte
 
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+- Updated dependencies [99140f8]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0-beta.2
+    - @comet/admin-icons@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [8e3a074]
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [f066335]
+- Updated dependencies [5f1566a]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- Updated dependencies [412ed19]
+- Updated dependencies [caceff8]
+    - @comet/admin@8.20.0
+    - @comet/admin-icons@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- Updated dependencies [fff2cc2]
+- Updated dependencies [fff2cc2]
+    - @comet/admin@8.19.0
+    - @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [0ce431c]
+- Updated dependencies [d344f53]
+    - @comet/admin@8.18.0
+    - @comet/admin-icons@8.18.0
+
+## 8.17.1
+
+### Patch Changes
+
+- Updated dependencies [91e9a8f]
+    - @comet/admin-icons@8.17.1
+    - @comet/admin@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- Updated dependencies [45163f1]
+    - @comet/admin@8.17.0
+    - @comet/admin-icons@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- Updated dependencies [472b496]
+    - @comet/admin@8.16.0
+    - @comet/admin-icons@8.16.0
+
+## 8.15.0
+
+### Patch Changes
+
+- Updated dependencies [cc96333]
+- Updated dependencies [180d1e3]
+- Updated dependencies [f7b9de9]
+- Updated dependencies [39a9bb0]
+- Updated dependencies [5b52998]
+- Updated dependencies [0c2435a]
+    - @comet/admin@8.15.0
+    - @comet/admin-icons@8.15.0
+
+## 8.14.0
+
+### Patch Changes
+
+- Updated dependencies [f31b52e]
+- Updated dependencies [5075f7a]
+- Updated dependencies [d0a7c96]
+    - @comet/admin@8.14.0
+    - @comet/admin-icons@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- Updated dependencies [60ecc0a]
+- Updated dependencies [dbf8774]
+    - @comet/admin@8.13.0
+    - @comet/admin-icons@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- Updated dependencies [12466e4]
+    - @comet/admin@8.12.0
+    - @comet/admin-icons@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [a498b80]
+    - @comet/admin@8.11.1
+    - @comet/admin-icons@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 8d7a90c: Add `requiredValidator` to validate if the RTE field is empty
+
+    ```tsx
+    import { createFinalFormRte, requiredValidator } from "@comet/admin-rte";
+
+    const { RteField } = createFinalFormRte();
+
+    const ExampleForm = () => {
+        return <Field name="richText" label="Rich Text" component={RteField} required validate={requiredValidator} />;
+    };
+    ```
+
+- cc727d1: Deprecate `createFinalFormRte` and add the new `createRteField` helper as a replacement
+
+    `createRteField` can be used to get the field-component directly, which does not need to be combined with the `Field` component.
+    Additionally, when using `createRteField`, the `requiredValidator` is automatically applied when setting the `required` prop.
+
+    **Example usage:**
+
+    ```tsx
+    import { createRteField } from "@comet/admin-rte";
+
+    const { RteField } = createRteField();
+
+    export const ExampleFields = () => {
+        return (
+            <>
+                <RteField name="optionalRteContent" label="Rich Text (optional)" />
+                <RteField name="requiredRteContent" label="Rich Text (required)" required />
+            </>
+        );
+    };
+    ```
+
+    **Example replacement of `createFinalFormRte`:**
+
+    ```diff
+    -import { Field } from "@comet/admin";
+    -import { createFinalFormRte, requiredValidator } from "@comet/admin-rte";
+    +import { createRteField } from "@comet/admin-rte";
+     import { Form } from "react-final-form";
+
+    -const { RteField } = createFinalFormRte();
+    +const { RteField } = createRteField();
+
+     type FormValues = {
+         optionalRteContent: string;
+         requiredRteContent: string;
+     };
+
+     export const ExampleForm = () => {
+         return (
+             <Form<FormValues>
+                 onSubmit={(values) => {
+                     // Handle submit
+                 }}
+                 render={({ handleSubmit }) => (
+                     <form onSubmit={handleSubmit}>
+    -                    <Field name="optionalRteContent" label="Rich Text (optional)" component={RteField} />
+    +                    <RteField name="optionalRteContent" label="Rich Text (optional)" />
+
+    -                    <Field name="requiredRteContent" label="Rich Text (required)" component={RteField} required validate={requiredValidator} />
+    +                    <RteField name="requiredRteContent" label="Rich Text (required)" required />
+                     </form>
+                 )}
+             />
+         );
+     };
+    ```
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+
+### Patch Changes
+
+- Updated dependencies [198da7b]
+- Updated dependencies [2580c61]
+- Updated dependencies [f0b1eb1]
+- Updated dependencies [9c091ec]
+- Updated dependencies [f293762]
+- Updated dependencies [9d5e331]
+- Updated dependencies [5337c20]
+- Updated dependencies [7e34c0b]
+- Updated dependencies [ed03e8d]
+    - @comet/admin@8.11.0
+    - @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Minor Changes

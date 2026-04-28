@@ -14,7 +14,7 @@ import { MovePageMenuItem } from "./MovePageMenuItem";
 import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "./Page";
 import { PageDeleteDialog } from "./PageDeleteDialog";
 import { subTreeFromNode, traverse } from "./treemap/TreeMapUtils";
-import { type GQLPageTreePageFragment, type PageTreePage } from "./usePageTree";
+import type { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {
@@ -74,16 +74,20 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     >
                         <FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />
                     </RowActionsItem>,
-                    <RowActionsItem
-                        key="preview"
-                        icon={documentType.hasNoSitePreview ? <PreviewUnavailable /> : <Preview />}
-                        onClick={() => {
-                            openSitePreviewWindow(page.path, contentScopeMatch.url);
-                        }}
-                        disabled={documentType.hasNoSitePreview}
-                    >
-                        <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
-                    </RowActionsItem>,
+                    documentType.SitePreviewAction ? (
+                        <documentType.SitePreviewAction key="preview" pageTreeNode={page} />
+                    ) : (
+                        <RowActionsItem
+                            key="preview"
+                            icon={documentType.hasNoSitePreview ? <PreviewUnavailable /> : <Preview />}
+                            onClick={() => {
+                                openSitePreviewWindow(page.path, contentScopeMatch.url);
+                            }}
+                            disabled={documentType.hasNoSitePreview}
+                        >
+                            <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
+                        </RowActionsItem>
+                    ),
                 ]}
                 <RowActionsMenu>
                     {page.visibility !== "Archived" && [

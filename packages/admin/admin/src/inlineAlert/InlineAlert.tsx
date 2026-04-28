@@ -1,10 +1,10 @@
 import { Error, Info, Warning } from "@comet/admin-icons";
-import { type ComponentsOverrides, type Theme, type Typography } from "@mui/material";
+import type { ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import { type FunctionComponent, type ReactNode } from "react";
+import type { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { ActionsContainer, Description, IconContainer, Root, Title } from "./InlineAlert.sc";
 
 export type InlineAlertClassKey = "root" | "iconContainer" | "title" | "description" | "actionsContainer";

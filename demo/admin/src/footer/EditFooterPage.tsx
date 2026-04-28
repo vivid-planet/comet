@@ -13,9 +13,9 @@ import {
     useSaveConflictQuery,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { type FooterContentBlockInput } from "@src/blocks.generated";
+import type { FooterContentBlockInput } from "@src/blocks.generated";
 import isEqual from "lodash.isequal";
-import { useEffect, useState } from "react";
+import { type JSX, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useRouteMatch } from "react-router";
 
