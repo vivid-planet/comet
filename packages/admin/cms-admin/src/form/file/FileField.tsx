@@ -181,7 +181,7 @@ const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuAct
     );
 };
 
-export const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: MultiFileFieldProps) => {
+const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: MultiFileFieldProps) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const apolloClient = useApolloClient();
     const snackbarApi = useSnackbarApi();
