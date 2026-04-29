@@ -10,8 +10,8 @@ import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminCompone
 import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
-import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
-import { ChooseFilesDialog } from "./chooseFile/ChooseFilesDialog";
+import { ChooseDamFileDialog } from "./chooseFile/ChooseDamFileDialog";
+import { ChooseDamFilesDialog } from "./chooseFile/ChooseDamFilesDialog";
 import { DamPathLazy } from "./DamPathLazy";
 import { damFileFieldFileQuery, damMultiFileFieldFileQuery } from "./FileField.gql";
 import type {
@@ -161,7 +161,7 @@ const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuAct
             <BlockAdminComponentButton onClick={() => setChooseFileDialogOpen(true)} startIcon={<Assets />} size="large">
                 {buttonText ?? <FormattedMessage id="comet.form.file.chooseFile" defaultMessage="Choose file" />}
             </BlockAdminComponentButton>
-            <ChooseFileDialog
+            <ChooseDamFileDialog
                 open={chooseFileDialogOpen}
                 allowedMimetypes={allowedMimetypes}
                 onClose={() => setChooseFileDialogOpen(false)}
@@ -238,7 +238,7 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
                 <BlockAdminComponentButton onClick={() => setDialogOpen(true)} startIcon={<Assets />} size="large">
                     {buttonText ?? <FormattedMessage id="comet.form.file.chooseFiles" defaultMessage="Choose files" />}
                 </BlockAdminComponentButton>
-                <ChooseFilesDialog
+                <ChooseDamFilesDialog
                     open={dialogOpen}
                     allowedMimetypes={allowedMimetypes}
                     initialFileIds={[]}
@@ -262,7 +262,7 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
                     <FormattedMessage id="comet.form.file.changeSelectedFiles" defaultMessage="Change selected files" />
                 </BlockAdminComponentButton>
             </BlockAdminComponentPaper>
-            <ChooseFilesDialog
+            <ChooseDamFilesDialog
                 open={dialogOpen}
                 allowedMimetypes={allowedMimetypes}
                 initialFileIds={files.map((f) => f.id)}

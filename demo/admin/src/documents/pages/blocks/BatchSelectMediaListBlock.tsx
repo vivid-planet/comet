@@ -4,7 +4,7 @@ import {
     BlockAdminComponentButton,
     BlockCategory,
     type BlockState,
-    ChooseFilesDialog,
+    ChooseDamFilesDialog,
     createCompositeBlock,
     createListBlock,
     damFileFieldFragment,
@@ -78,7 +78,7 @@ const ChooseFromDamButton = ({
             <BlockAdminComponentButton startIcon={<Add />} variant="primary" onClick={() => setOpen(true)} size="large">
                 {label}
             </BlockAdminComponentButton>
-            <ChooseFilesDialog
+            <ChooseDamFilesDialog
                 open={open}
                 onClose={() => setOpen(false)}
                 onConfirm={handleConfirm}

@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 import type { GQLDamFileTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import type { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
-import { BaseChooseFromDamDialog } from "./BaseChooseFromDamDialog";
+import { BaseChooseDamFileDialog } from "./BaseChooseDamFileDialog";
 
 const TableRowButton = styled(Button)`
     padding: 0;
@@ -18,14 +18,14 @@ const TableRowButton = styled(Button)`
     }
 `;
 
-interface ChooseFileDialogProps {
+interface ChooseDamFileDialogProps {
     open: boolean;
     onClose: (event: SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
     onChooseFile: (fileId: string) => void;
     allowedMimetypes?: string[];
 }
 
-export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps) => {
+export const ChooseDamFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseDamFileDialogProps) => {
     const renderFileLabel = (file: GQLDamFileTableFragment, { matches, showLicenseWarnings }: RenderDamLabelOptions) => (
         <TableRowButton disableRipple={true} variant="textDark" onClick={() => onChooseFile(file.id)} fullWidth>
             <DamItemLabel asset={file} matches={matches} showLicenseWarnings={showLicenseWarnings} />
@@ -33,7 +33,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
     );
 
     return (
-        <BaseChooseFromDamDialog
+        <BaseChooseDamFileDialog
             open={open}
             onClose={onClose}
             title={<FormattedMessage id="comet.form.file.selectFile" defaultMessage="Select file from DAM" />}

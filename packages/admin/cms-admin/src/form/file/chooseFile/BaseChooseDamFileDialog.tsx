@@ -20,7 +20,7 @@ const FolderStackLink = styled(StackLink)`
     color: ${({ theme }) => theme.palette.grey[900]};
 `;
 
-interface BaseChooseFromDamDialogProps {
+interface BaseChooseDamFileDialogProps {
     open: boolean;
     onClose: (event: SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
     title: ReactNode;
@@ -34,7 +34,7 @@ interface BaseChooseFromDamDialogProps {
     actions?: ReactNode;
 }
 
-export const BaseChooseFromDamDialog = ({
+export const BaseChooseDamFileDialog = ({
     open,
     onClose,
     title,
@@ -46,7 +46,7 @@ export const BaseChooseFromDamDialog = ({
     selectionMap,
     onSelectionChange,
     actions,
-}: BaseChooseFromDamDialogProps) => {
+}: BaseChooseDamFileDialogProps) => {
     const damConfig = useDamConfig();
     const scope = useDamScope();
 

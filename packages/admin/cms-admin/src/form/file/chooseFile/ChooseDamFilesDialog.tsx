@@ -6,9 +6,9 @@ import { FormattedMessage } from "react-intl";
 import type { DamItemSelectionMap, GQLDamFileTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import type { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
-import { BaseChooseFromDamDialog } from "./BaseChooseFromDamDialog";
+import { BaseChooseDamFileDialog } from "./BaseChooseDamFileDialog";
 
-interface ChooseFilesDialogProps {
+interface ChooseDamFilesDialogProps {
     open: boolean;
     onClose: () => void;
     onConfirm: (fileIds: string[]) => void | Promise<void>;
@@ -16,7 +16,7 @@ interface ChooseFilesDialogProps {
     allowedMimetypes?: string[];
 }
 
-export const ChooseFilesDialog = ({ open, onClose, onConfirm, initialFileIds, allowedMimetypes }: ChooseFilesDialogProps) => {
+export const ChooseDamFilesDialog = ({ open, onClose, onConfirm, initialFileIds, allowedMimetypes }: ChooseDamFilesDialogProps) => {
     const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(new Map());
     const [isConfirming, setIsConfirming] = useState(false);
 
@@ -60,7 +60,7 @@ export const ChooseFilesDialog = ({ open, onClose, onConfirm, initialFileIds, al
     );
 
     return (
-        <BaseChooseFromDamDialog
+        <BaseChooseDamFileDialog
             open={open}
             onClose={handleClose}
             title={<FormattedMessage id="comet.form.file.selectFiles" defaultMessage="Select files from DAM" />}

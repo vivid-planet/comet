@@ -6,11 +6,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { FileField } from "../FileField";
 import type { GQLDamFileFieldFileFragment } from "../FileField.gql.generated";
 
-vi.mock("../chooseFile/ChooseFileDialog", () => ({
-    ChooseFileDialog: ({ open }: { open: boolean }) => (open ? <div data-testid="choose-file-dialog" /> : null),
+vi.mock("../chooseFile/ChooseDamFileDialog", () => ({
+    ChooseDamFileDialog: ({ open }: { open: boolean }) => (open ? <div data-testid="choose-file-dialog" /> : null),
 }));
-vi.mock("../chooseFile/ChooseFilesDialog", () => ({
-    ChooseFilesDialog: ({ open }: { open: boolean }) => (open ? <div data-testid="choose-files-dialog" /> : null),
+vi.mock("../chooseFile/ChooseDamFilesDialog", () => ({
+    ChooseDamFilesDialog: ({ open }: { open: boolean }) => (open ? <div data-testid="choose-files-dialog" /> : null),
 }));
 vi.mock("../DamPathLazy", () => ({ DamPathLazy: () => <span data-testid="dam-path" /> }));
 vi.mock("../../../dependencies/dependenciesConfig", () => ({ useDependenciesConfig: () => ({ entityDependencyMap: {} }) }));
