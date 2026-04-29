@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { Delete, Drag, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Stack } from "@mui/material";
+import { IconButton, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type ComponentProps, isValidElement, type MouseEventHandler, type ReactElement, type ReactNode, useRef, useState } from "react";
 import { type DropTargetMonitor, useDrag, useDrop, type XYCoord } from "react-dnd";
@@ -14,28 +14,13 @@ import type { GQLDamMultiFileFieldFileFragment } from "./FileField.gql.generated
 
 const ITEM_TYPE = "fileFieldFile";
 
-const Row = styled("div", { shouldForwardProp: (prop) => prop !== "isDragging" })<{ isDragging: boolean }>`
-    display: flex;
-    opacity: ${({ isDragging }) => (isDragging ? 0 : 1)};
-    border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
-
-    &:last-of-type {
-        border-bottom: none;
-    }
-
-    &:hover {
-        background-color: ${({ theme }) => theme.palette.grey[50]};
-    }
-`;
-
 const Grabber = styled("div")`
-    position: relative;
-    z-index: 11;
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: stretch;
     width: 30px;
-    flex-shrink: 0;
+    margin: ${({ theme }) => theme.spacing(-1, 2, -1, -2)};
     border-right: 1px solid ${({ theme }) => theme.palette.divider};
     cursor: move;
     color: ${({ theme }) => theme.palette.grey[600]};
@@ -44,20 +29,6 @@ const Grabber = styled("div")`
         background-color: ${({ theme }) => theme.palette.primary.light};
         color: white;
     }
-`;
-
-const Content = styled(Stack)`
-    flex-grow: 1;
-    min-width: 0;
-    padding: ${({ theme }) => theme.spacing(1.5, 2)};
-`;
-
-const Preview = styled("div")`
-    flex-shrink: 0;
-`;
-
-const RowActions = styled(Stack)`
-    flex-shrink: 0;
 `;
 
 interface ActionItem extends ComponentProps<typeof MenuItem> {
@@ -80,7 +51,7 @@ interface FileFieldRowProps {
 }
 
 export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActions }: FileFieldRowProps) => {
-    const ref = useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLLIElement>(null);
     const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
 
     const intl = useIntl();
@@ -132,19 +103,12 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
     const showMoreMenu = Boolean(damDependency) || (menuActions !== undefined && menuActions.length > 0);
 
     return (
-        <Row ref={ref} isDragging={isDragging}>
-            <Grabber>
-                <Drag color="inherit" />
-            </Grabber>
-            <Content direction="row" alignItems="center" spacing={2}>
-                <Preview>{preview ? preview(file) : <DamThumbnail asset={{ ...file, __typename: "DamFile" }} />}</Preview>
-                <ListItemText
-                    primary={file.name}
-                    secondary={<DamPathLazy fileId={file.id} />}
-                    primaryTypographyProps={{ variant: "subtitle1", noWrap: true }}
-                    secondaryTypographyProps={{ variant: "body2", color: "textSecondary", noWrap: true, component: "span" }}
-                />
-                <RowActions direction="row">
+        <ListItem
+            ref={ref}
+            divider
+            sx={{ pl: 0, opacity: isDragging ? 0 : 1 }}
+            secondaryAction={
+                <Stack direction="row">
                     <IconButton
                         size="small"
                         onClick={onRemove}
@@ -161,8 +125,21 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
                             <MoreVertical color="action" />
                         </IconButton>
                     )}
-                </RowActions>
-            </Content>
+                </Stack>
+            }
+        >
+            <Grabber>
+                <Drag color="inherit" />
+            </Grabber>
+            <Stack direction="row" alignItems="center" spacing={2} flex={1} minWidth={0}>
+                {preview ? preview(file) : <DamThumbnail asset={{ ...file, __typename: "DamFile" }} />}
+                <ListItemText
+                    primary={file.name}
+                    secondary={<DamPathLazy fileId={file.id} />}
+                    primaryTypographyProps={{ variant: "subtitle1", noWrap: true }}
+                    secondaryTypographyProps={{ variant: "body2", color: "textSecondary", noWrap: true, component: "span" }}
+                />
+            </Stack>
             {showMoreMenu && (
                 <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
                     {damDependency && (
@@ -196,6 +173,6 @@ export const FileFieldRow = ({ file, index, onRemove, onMove, preview, menuActio
                     })}
                 </Menu>
             )}
-        </Row>
+        </ListItem>
     );
 };

@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { Alert, useSnackbarApi } from "@comet/admin";
 import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Snackbar, Typography } from "@mui/material";
+import { Box, Divider, Grid, IconButton, List, ListItemIcon, ListItemText, Menu, MenuItem, Snackbar, Typography } from "@mui/material";
 import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useRef, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -267,17 +267,19 @@ export const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, m
     return (
         <>
             <BlockAdminComponentPaper disablePadding>
-                {files.map((file, index) => (
-                    <FileFieldRow
-                        key={file.id}
-                        file={file}
-                        index={index}
-                        onRemove={() => handleRemove(file.id)}
-                        onMove={handleMove}
-                        preview={preview}
-                        menuActions={menuActions}
-                    />
-                ))}
+                <List disablePadding>
+                    {files.map((file, index) => (
+                        <FileFieldRow
+                            key={file.id}
+                            file={file}
+                            index={index}
+                            onRemove={() => handleRemove(file.id)}
+                            onMove={handleMove}
+                            preview={preview}
+                            menuActions={menuActions}
+                        />
+                    ))}
+                </List>
                 <Divider />
                 <BlockAdminComponentButton startIcon={<Assets />} onClick={() => setDialogOpen(true)}>
                     <FormattedMessage id="comet.form.file.changeSelectedFiles" defaultMessage="Change selected files" />
