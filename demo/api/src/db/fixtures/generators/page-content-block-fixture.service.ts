@@ -13,6 +13,7 @@ import { LayoutBlockFixtureService } from "./blocks/layout/layout-block-fixture.
 import { SpaceBlockFixtureService } from "./blocks/layout/space-block-fixture.service";
 import { DamImageBlockFixtureService } from "./blocks/media/dam-image-block-fixture.service";
 import { FullWidthImageBlockFixtureService } from "./blocks/media/full-width-image-block-fixture.service";
+import { MediaDownloadBlockFixtureService } from "./blocks/media/media-download-block-fixture.service";
 import { MediaGalleryBlockFixtureService } from "./blocks/media/media-gallery-block-fixture.service";
 import { StandaloneMediaBlockFixtureService } from "./blocks/media/standalone-media-block-fixture.service";
 import { AnchorBlockFixtureService } from "./blocks/navigation/anchor-block-fixture.service";
@@ -45,6 +46,7 @@ export class PageContentBlockFixtureService {
         private readonly keyFactsBlockFixtureService: KeyFactsBlockFixtureService,
         private readonly layoutBlockFixtureService: LayoutBlockFixtureService,
         private readonly linkListBlockFixtureService: LinkListBlockFixtureService,
+        private readonly mediaDownloadBlockFixtureService: MediaDownloadBlockFixtureService,
         private readonly mediaGalleryBlockFixtureService: MediaGalleryBlockFixtureService,
         private readonly spaceBlockFixtureService: SpaceBlockFixtureService,
         private readonly mediaBlockFixtureService: StandaloneMediaBlockFixtureService,
@@ -73,6 +75,7 @@ export class PageContentBlockFixtureService {
             fullWidthImage: ["media", this.fullWidthImageBlockFixtureService],
             image: ["media", this.imageBlockFixtureService],
             media: ["media", this.mediaBlockFixtureService],
+            mediaDownload: ["media", this.mediaDownloadBlockFixtureService],
             mediaGallery: ["media", this.mediaGalleryBlockFixtureService],
             anchor: ["navigation", this.anchorBlockFixtureService],
             callToActionList: ["navigation", this.callToActionListBlockFixtureService],

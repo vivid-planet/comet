@@ -24,6 +24,7 @@ import { DamImageBlockFixtureService } from "./generators/blocks/media/dam-image
 import { DamVideoBlockFixtureService } from "./generators/blocks/media/dam-video-block-fixture.service";
 import { FullWidthImageBlockFixtureService } from "./generators/blocks/media/full-width-image-block-fixture.service";
 import { MediaBlockFixtureService } from "./generators/blocks/media/media-block.fixture.service";
+import { MediaDownloadBlockFixtureService } from "./generators/blocks/media/media-download-block-fixture.service";
 import { MediaGalleryBlockFixtureService } from "./generators/blocks/media/media-gallery-block-fixture.service";
 import { PixelImageBlockFixtureService } from "./generators/blocks/media/pixel-image-block-fixture.service";
 import { StandaloneMediaBlockFixtureService } from "./generators/blocks/media/standalone-media-block-fixture.service";
@@ -94,6 +95,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         LinkBlockFixtureService,
         LinkListBlockFixtureService,
         ManyImagesTestPageFixtureService,
+        MediaDownloadBlockFixtureService,
         MediaGalleryBlockFixtureService,
         MediaBlockFixtureService,
         PageContentBlockFixtureService,

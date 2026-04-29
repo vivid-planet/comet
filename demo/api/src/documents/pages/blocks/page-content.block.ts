@@ -22,6 +22,7 @@ import { IsEnum } from "class-validator";
 
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { LayoutBlock } from "./layout.block";
+import { MediaDownloadBlock } from "./media-download.block";
 import { SliderBlock } from "./slider.block";
 
 const supportedBlocks = {
@@ -46,6 +47,7 @@ const supportedBlocks = {
     layout: LayoutBlock,
     textImage: TextImageBlock,
     fullWidthImage: FullWidthImageBlock,
+    mediaDownload: MediaDownloadBlock,
     table: TableBlock,
     productList: ProductListBlock,
     pageTreeIndex: PageTreeIndexBlock,
