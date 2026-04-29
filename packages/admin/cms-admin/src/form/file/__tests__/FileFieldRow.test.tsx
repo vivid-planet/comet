@@ -1,6 +1,3 @@
-import type { ReactNode } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { cleanup, fireEvent, render, screen } from "test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -14,8 +11,6 @@ vi.mock("@apollo/client", async () => {
     const actual = await vi.importActual<typeof import("@apollo/client")>("@apollo/client");
     return { ...actual, useApolloClient: () => ({}) };
 });
-
-const Wrap = ({ children }: { children: ReactNode }) => <DndProvider backend={HTML5Backend}>{children}</DndProvider>;
 
 const makeFile = (id = "1", name = "test.png"): GQLDamFileFieldFileFragment =>
     ({
@@ -37,37 +32,19 @@ describe("FileFieldRow", () => {
     });
 
     it("renders the file name", () => {
-        render(
-            <Wrap>
-                <FileFieldRow file={makeFile("1", "invoice.pdf")} index={0} onRemove={vi.fn()} onMove={vi.fn()} />
-            </Wrap>,
-        );
+        render(<FileFieldRow file={makeFile("1", "invoice.pdf")} onRemove={vi.fn()} />);
         expect(screen.getByText("invoice.pdf")).toBeDefined();
     });
 
     it("calls onRemove when the Remove icon button is clicked", () => {
         const onRemove = vi.fn();
-        render(
-            <Wrap>
-                <FileFieldRow file={makeFile()} index={0} onRemove={onRemove} onMove={vi.fn()} />
-            </Wrap>,
-        );
+        render(<FileFieldRow file={makeFile()} onRemove={onRemove} />);
         fireEvent.click(screen.getByRole("button", { name: /remove/i }));
         expect(onRemove).toHaveBeenCalledOnce();
     });
 
     it("renders preview via render function", () => {
-        render(
-            <Wrap>
-                <FileFieldRow
-                    file={makeFile("abc")}
-                    index={0}
-                    onRemove={vi.fn()}
-                    onMove={vi.fn()}
-                    preview={(file) => <span data-testid="preview">{file.id}</span>}
-                />
-            </Wrap>,
-        );
+        render(<FileFieldRow file={makeFile("abc")} onRemove={vi.fn()} preview={(file) => <span data-testid="preview">{file.id}</span>} />);
         expect(screen.getByTestId("preview").textContent).toBe("abc");
     });
 });

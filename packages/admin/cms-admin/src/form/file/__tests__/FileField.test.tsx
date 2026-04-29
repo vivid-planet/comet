@@ -1,7 +1,5 @@
 import { MockedProvider } from "@apollo/client/testing";
 import type { ReactNode } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { cleanup, fireEvent, render, screen } from "test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -18,11 +16,7 @@ vi.mock("../DamPathLazy", () => ({ DamPathLazy: () => <span data-testid="dam-pat
 vi.mock("../../../dependencies/dependenciesConfig", () => ({ useDependenciesConfig: () => ({ entityDependencyMap: {} }) }));
 vi.mock("../../../contentScope/Provider", () => ({ useContentScope: () => ({ match: { url: "" } }) }));
 
-const Wrap = ({ children }: { children: ReactNode }) => (
-    <MockedProvider>
-        <DndProvider backend={HTML5Backend}>{children}</DndProvider>
-    </MockedProvider>
-);
+const Wrap = ({ children }: { children: ReactNode }) => <MockedProvider>{children}</MockedProvider>;
 
 const makeFile = (id: string, name: string): GQLDamFileFieldFileFragment =>
     ({

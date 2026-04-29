@@ -2,7 +2,7 @@ import { useApolloClient } from "@apollo/client";
 import { Alert, useSnackbarApi } from "@comet/admin";
 import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, List, ListItemIcon, ListItemText, Menu, MenuItem, Snackbar, Typography } from "@mui/material";
-import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useRef, useState } from "react";
+import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -189,27 +189,12 @@ export const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, m
     // react-final-form can pass "" as the default when no initial value is set, so normalize to an array.
     const files: GQLDamMultiFileFieldFileFragment[] = Array.isArray(input.value) ? input.value : [];
 
-    // react-dnd fires several `hover` events per task during a fast drag — faster than React can
-    // commit re-renders. Without a synchronously-updated ref, back-to-back hovers all read the
-    // same stale `files` snapshot and clobber each other's reorder, producing unrelated swaps.
-    // The pattern mirrors `createBlocksBlock`'s functional `updateState((prev) => …)` updater.
-    const filesRef = useRef(files);
-    filesRef.current = files;
-
     const commitChange = (next: GQLDamMultiFileFieldFileFragment[]) => {
-        filesRef.current = next;
         input.onChange(next.length === 0 ? undefined : next);
     };
 
     const handleRemove = (id: string) => {
-        commitChange(filesRef.current.filter((f) => f.id !== id));
-    };
-
-    const handleMove = (dragIndex: number, hoverIndex: number) => {
-        const next = [...filesRef.current];
-        const [moved] = next.splice(dragIndex, 1);
-        next.splice(hoverIndex, 0, moved);
-        commitChange(next);
+        commitChange(files.filter((f) => f.id !== id));
     };
 
     const handleConfirm = async (fileIds: string[]) => {
@@ -268,16 +253,8 @@ export const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, m
         <>
             <BlockAdminComponentPaper disablePadding>
                 <List disablePadding>
-                    {files.map((file, index) => (
-                        <FileFieldRow
-                            key={file.id}
-                            file={file}
-                            index={index}
-                            onRemove={() => handleRemove(file.id)}
-                            onMove={handleMove}
-                            preview={preview}
-                            menuActions={menuActions}
-                        />
+                    {files.map((file) => (
+                        <FileFieldRow key={file.id} file={file} onRemove={() => handleRemove(file.id)} preview={preview} menuActions={menuActions} />
                     ))}
                 </List>
                 <Divider />
