@@ -343,9 +343,20 @@ Use `!important` when setting a custom link color — the responsive reset uses 
 import { ThemeProvider } from "@comet/mail-react";
 import { theme } from "./theme";
 
-const darkSectionTheme = structuredClone(theme);
-darkSectionTheme.colors.background.content = "#1A1A2E";
-darkSectionTheme.text.color = "#FFFFFF";
+const darkSectionTheme = {
+    ...theme,
+    colors: {
+        ...theme.colors,
+        background: {
+            ...theme.colors.background,
+            content: "#1A1A2E",
+        },
+    },
+    text: {
+        ...theme.text,
+        color: "#FFFFFF",
+    },
+};
 
 function EmailWithDarkFooter() {
     return (
@@ -368,7 +379,7 @@ function EmailWithDarkFooter() {
 }
 ```
 
-`ThemeProvider` **replaces** the theme — it does not merge with the parent. Use `structuredClone` on the root theme and override only what needs to change to preserve settings like font family, variants, and breakpoints.
+`ThemeProvider` **replaces** the theme — it does not merge with the parent. Spread the root theme and override only what needs to change to preserve settings like font family, variants, and breakpoints.
 
 Theme-aware `registerStyles` entries always resolve against the **root theme** from `MjmlMailRoot`, not nested `ThemeProvider` scopes.
 
