@@ -42,7 +42,7 @@ export const BaseChooseFromDamDialog = ({
     allowedMimetypes,
     renderFileLabel,
     hideMultiselect,
-    disableFolderSelection,
+    disableFolderSelection = false,
     selectionMap,
     onSelectionChange,
     actions,
@@ -95,6 +95,7 @@ export const BaseChooseFromDamDialog = ({
                             hideContextMenu={true}
                             hideMultiselect={hideMultiselect}
                             hideArchiveFilter={true}
+                            hideSelectiveActions={true}
                             disableFolderSelection={disableFolderSelection}
                             selectionMap={selectionMap}
                             onSelectionChange={onSelectionChange}

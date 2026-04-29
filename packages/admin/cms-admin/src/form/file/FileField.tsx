@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client";
+import { Alert, useSnackbarApi } from "@comet/admin";
 import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
+import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Snackbar, Typography } from "@mui/material";
 import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useRef, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -64,8 +65,6 @@ export function FileField(props: SingleFileFieldProps | MultiFileFieldProps): Re
 
 const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: SingleFileFieldProps) => {
     const [chooseFileDialogOpen, setChooseFileDialogOpen] = useState<boolean>(false);
-    const client = useApolloClient();
-
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const contentScope = useContentScope();
@@ -168,7 +167,7 @@ const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuAct
                 onClose={() => setChooseFileDialogOpen(false)}
                 onChooseFile={async (fileId) => {
                     setChooseFileDialogOpen(false);
-                    const { data } = await client.query<GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables>({
+                    const { data } = await apolloClient.query<GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables>({
                         query: damFileFieldFileQuery,
                         variables: {
                             id: fileId,
@@ -184,7 +183,8 @@ const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuAct
 
 export const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: MultiFileFieldProps) => {
     const [dialogOpen, setDialogOpen] = useState(false);
-    const client = useApolloClient();
+    const apolloClient = useApolloClient();
+    const snackbarApi = useSnackbarApi();
 
     // react-final-form can pass "" as the default when no initial value is set, so normalize to an array.
     const files: GQLDamMultiFileFieldFileFragment[] = Array.isArray(input.value) ? input.value : [];
@@ -213,24 +213,38 @@ export const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, m
     };
 
     const handleConfirm = async (fileIds: string[]) => {
-        // Don't close the dialog yet — if a query rejects we'd silently lose the user's selection.
+        // Don't close the dialog yet — if a query rejects we want to keep the user's selection
+        // visible and surface the error rather than silently dropping their work.
         const existingById = new Map<string, GQLDamMultiFileFieldFileFragment>(files.map((f) => [f.id, f]));
-        const next: GQLDamMultiFileFieldFileFragment[] = await Promise.all(
-            fileIds.map(async (id) => {
-                const existing = existingById.get(id);
-                if (existing) {
-                    return existing;
-                }
-                const { data } = await client.query<GQLDamMultiFileFieldFileQuery, GQLDamMultiFileFieldFileQueryVariables>({
-                    query: damMultiFileFieldFileQuery,
-                    variables: { id },
-                });
-                return data.damFile as GQLDamMultiFileFieldFileFragment;
-            }),
-        );
+        try {
+            const next: GQLDamMultiFileFieldFileFragment[] = await Promise.all(
+                fileIds.map(async (id) => {
+                    const existing = existingById.get(id);
+                    if (existing) {
+                        return existing;
+                    }
+                    const { data } = await apolloClient.query<GQLDamMultiFileFieldFileQuery, GQLDamMultiFileFieldFileQueryVariables>({
+                        query: damMultiFileFieldFileQuery,
+                        variables: { id },
+                    });
+                    return data.damFile as GQLDamMultiFileFieldFileFragment;
+                }),
+            );
 
-        commitChange(next);
-        setDialogOpen(false);
+            commitChange(next);
+            setDialogOpen(false);
+        } catch {
+            snackbarApi.showSnackbar(
+                <Snackbar autoHideDuration={5000}>
+                    <Alert severity="error">
+                        <FormattedMessage
+                            id="comet.form.file.failedToLoadSelection"
+                            defaultMessage="Failed to load selected files. Please try again."
+                        />
+                    </Alert>
+                </Snackbar>,
+            );
+        }
     };
 
     if (files.length === 0) {

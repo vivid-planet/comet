@@ -11,3 +11,7 @@ Add `multiple` prop to `FileField` for selecting multiple DAM files
 ```tsx
 <Field name="files" component={FileField} multiple preview={(file) => <Thumbnail fileId={file.id} />} />
 ```
+
+**Note**
+
+DAM table selection now persists across folder navigation (the underlying `DataGrid` is set to `keepNonExistentRowsSelected`). This is required so that multi-file pickers can collect files from multiple folders, but it also affects the standalone DAM page: bulk-selecting files in one folder and navigating to another now keeps the previous selection in the toolbar's selection map.

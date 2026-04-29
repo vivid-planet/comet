@@ -38,13 +38,10 @@ export const damFileFieldFileQuery = gql`
     ${damFileFieldFragment}
 `;
 
-// SVG-tolerant fragment used by FileField multi mode: omits the pixel-image-only
-// fields (`width`, `height`, `cropArea`) so the query doesn't fail on DAM file
-// rows whose `DamFileImage` lacks pixel dimensions (e.g. SVGs, or images
-// imported without dimension extraction). The remaining fields match the
-// single-file fragment minus those three and are sufficient for FileFieldRow
-// (thumbnail + name + path) and for any consumer that just needs to identify
-// or list files.
+// Lean fragment for list rendering — omits image-editor-only fields
+// (`width`, `height`, `cropArea`) which `FileFieldRow` doesn't render and
+// consumers like list blocks don't need. Reduces payload when picking many
+// files at once.
 export const damMultiFileFieldFragment = gql`
     fragment DamMultiFileFieldFile on DamFile {
         id
