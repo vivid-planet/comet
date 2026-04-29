@@ -22,6 +22,7 @@ export interface CometConfig<SiteConfigs = unknown> {
     dependencies?: DependenciesConfig;
     siteConfigs?: SiteConfigsConfig<SiteConfigs>;
     buildInformation?: BuildInformation;
+    licenseUrl?: string;
     contentLanguage?: ContentLanguageConfig;
     blocks?: BlocksConfig & {
         context?: Omit<BlockContext, "apiUrl" | "apolloClient">;
