@@ -158,6 +158,8 @@ const BatchSelectMediaListVideoListBlock = createListBlock(
         const OriginalAdminComponent = block.AdminComponent;
 
         block.AdminComponent = function BatchSelectMediaListVideoListAdminComponent({ state, updateState }) {
+            const damMimeTypes = useDamAcceptedMimeTypes();
+
             return (
                 <>
                     <OriginalAdminComponent state={state} updateState={updateState} />
@@ -166,7 +168,7 @@ const BatchSelectMediaListVideoListBlock = createListBlock(
                             label={
                                 <FormattedMessage id="batchSelectMediaListBlock.videoList.addMultipleVideos" defaultMessage="Add multiple videos" />
                             }
-                            allowedMimetypes={["video/mp4", "video/webm"]}
+                            allowedMimetypes={damMimeTypes.filteredAcceptedMimeTypes.video}
                             onChoose={(files) => {
                                 const newEntries = files.map((file) => {
                                     const props = {
