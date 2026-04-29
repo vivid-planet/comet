@@ -21,8 +21,8 @@ import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-const mediaDownloadFileQuery = gql`
-    query MediaDownloadFile($id: ID!) {
+const batchSelectMediaListFileQuery = gql`
+    query BatchSelectMediaListFile($id: ID!) {
         damFile(id: $id) {
             ...DamFileFieldFile
         }
@@ -30,11 +30,11 @@ const mediaDownloadFileQuery = gql`
     ${damFileFieldFragment}
 `;
 
-interface MediaDownloadFileQueryResult {
+interface BatchSelectMediaListFileQueryResult {
     damFile: GQLDamFileFieldFileFragment;
 }
 
-interface MediaDownloadFileQueryVariables {
+interface BatchSelectMediaListFileQueryVariables {
     id: string;
 }
 
@@ -61,8 +61,8 @@ const ChooseFromDamButton = ({
     const handleConfirm = async (fileIds: string[]) => {
         const files = await Promise.all(
             fileIds.map(async (id) => {
-                const { data } = await apolloClient.query<MediaDownloadFileQueryResult, MediaDownloadFileQueryVariables>({
-                    query: mediaDownloadFileQuery,
+                const { data } = await apolloClient.query<BatchSelectMediaListFileQueryResult, BatchSelectMediaListFileQueryVariables>({
+                    query: batchSelectMediaListFileQuery,
                     variables: { id },
                 });
                 return data.damFile;
@@ -89,17 +89,17 @@ const ChooseFromDamButton = ({
     );
 };
 
-const MediaDownloadImageListBlock = createListBlock(
+const BatchSelectMediaListImageListBlock = createListBlock(
     {
-        name: "MediaDownloadImageList",
+        name: "BatchSelectMediaListImageList",
         block: DamImageBlock,
-        itemName: <FormattedMessage id="mediaDownloadBlock.imageList.itemName" defaultMessage="image" />,
-        itemsName: <FormattedMessage id="mediaDownloadBlock.imageList.itemsName" defaultMessage="images" />,
+        itemName: <FormattedMessage id="batchSelectMediaListBlock.imageList.itemName" defaultMessage="image" />,
+        itemsName: <FormattedMessage id="batchSelectMediaListBlock.imageList.itemsName" defaultMessage="images" />,
     },
     (block) => {
         const OriginalAdminComponent = block.AdminComponent;
 
-        block.AdminComponent = function MediaDownloadImageListAdminComponent({ state, updateState }) {
+        block.AdminComponent = function BatchSelectMediaListImageListAdminComponent({ state, updateState }) {
             const damMimeTypes = useDamAcceptedMimeTypes();
 
             return (
@@ -107,7 +107,9 @@ const MediaDownloadImageListBlock = createListBlock(
                     <OriginalAdminComponent state={state} updateState={updateState} />
                     <HiddenInSubroute>
                         <ChooseFromDamButton
-                            label={<FormattedMessage id="mediaDownloadBlock.imageList.addMultipleImages" defaultMessage="Add multiple images" />}
+                            label={
+                                <FormattedMessage id="batchSelectMediaListBlock.imageList.addMultipleImages" defaultMessage="Add multiple images" />
+                            }
                             allowedMimetypes={[
                                 ...damMimeTypes.filteredAcceptedMimeTypes.pixelImage,
                                 ...damMimeTypes.filteredAcceptedMimeTypes.svgImage,
@@ -145,23 +147,25 @@ const MediaDownloadImageListBlock = createListBlock(
     },
 );
 
-const MediaDownloadVideoListBlock = createListBlock(
+const BatchSelectMediaListVideoListBlock = createListBlock(
     {
-        name: "MediaDownloadVideoList",
+        name: "BatchSelectMediaListVideoList",
         block: DamVideoBlock,
-        itemName: <FormattedMessage id="mediaDownloadBlock.videoList.itemName" defaultMessage="video" />,
-        itemsName: <FormattedMessage id="mediaDownloadBlock.videoList.itemsName" defaultMessage="videos" />,
+        itemName: <FormattedMessage id="batchSelectMediaListBlock.videoList.itemName" defaultMessage="video" />,
+        itemsName: <FormattedMessage id="batchSelectMediaListBlock.videoList.itemsName" defaultMessage="videos" />,
     },
     (block) => {
         const OriginalAdminComponent = block.AdminComponent;
 
-        block.AdminComponent = function MediaDownloadVideoListAdminComponent({ state, updateState }) {
+        block.AdminComponent = function BatchSelectMediaListVideoListAdminComponent({ state, updateState }) {
             return (
                 <>
                     <OriginalAdminComponent state={state} updateState={updateState} />
                     <HiddenInSubroute>
                         <ChooseFromDamButton
-                            label={<FormattedMessage id="mediaDownloadBlock.videoList.addMultipleVideos" defaultMessage="Add multiple videos" />}
+                            label={
+                                <FormattedMessage id="batchSelectMediaListBlock.videoList.addMultipleVideos" defaultMessage="Add multiple videos" />
+                            }
                             allowedMimetypes={["video/mp4", "video/webm"]}
                             onChoose={(files) => {
                                 const newEntries = files.map((file) => {
@@ -187,18 +191,18 @@ const MediaDownloadVideoListBlock = createListBlock(
     },
 );
 
-export const MediaDownloadBlock = createCompositeBlock(
+export const BatchSelectMediaListBlock = createCompositeBlock(
     {
-        name: "MediaDownload",
-        displayName: <FormattedMessage id="mediaDownloadBlock.displayName" defaultMessage="Media Download" />,
+        name: "BatchSelectMediaList",
+        displayName: <FormattedMessage id="batchSelectMediaListBlock.displayName" defaultMessage="Batch Select Media List" />,
         blocks: {
             images: {
-                block: MediaDownloadImageListBlock,
-                title: <FormattedMessage id="mediaDownloadBlock.images" defaultMessage="Images" />,
+                block: BatchSelectMediaListImageListBlock,
+                title: <FormattedMessage id="batchSelectMediaListBlock.images" defaultMessage="Images" />,
             },
             videos: {
-                block: MediaDownloadVideoListBlock,
-                title: <FormattedMessage id="mediaDownloadBlock.videos" defaultMessage="Videos" />,
+                block: BatchSelectMediaListVideoListBlock,
+                title: <FormattedMessage id="batchSelectMediaListBlock.videos" defaultMessage="Videos" />,
             },
         },
     },

@@ -14,12 +14,12 @@ import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
 import { PageContentStandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { TableBlock } from "@src/common/blocks/TableBlock";
 import { PageContentTextImageBlock } from "@src/common/blocks/TextImageBlock";
+import { PageContentBatchSelectMediaListBlock } from "@src/documents/pages/blocks/BatchSelectMediaListBlock";
 import { BillboardTeaserBlock } from "@src/documents/pages/blocks/BillboardTeaserBlock";
 import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { ContentGroupBlock } from "@src/documents/pages/blocks/ContentGroupBlock";
 import { FullWidthImageBlock } from "@src/documents/pages/blocks/FullWidthImageBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
-import { PageContentMediaDownloadBlock } from "@src/documents/pages/blocks/MediaDownloadBlock";
 import { ProductListBlock } from "@src/documents/pages/blocks/ProductListBlock";
 import { SliderBlock } from "@src/documents/pages/blocks/SliderBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
@@ -48,7 +48,7 @@ const supportedBlocks: SupportedBlocks = {
     layout: (props) => <LayoutBlock data={props} />,
     textImage: (props) => <PageContentTextImageBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
-    mediaDownload: (props) => <PageContentMediaDownloadBlock data={props} />,
+    batchSelectMediaList: (props) => <PageContentBatchSelectMediaListBlock data={props} />,
     table: (props) => <TableBlock data={props} />,
     productList: (props) => <ProductListBlock data={props} />,
     pageTreeIndex: (props) => <PageTreeIndexBlock data={props} />,

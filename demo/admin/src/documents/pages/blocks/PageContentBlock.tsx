@@ -17,12 +17,12 @@ import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAddition
 import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
 
+import { BatchSelectMediaListBlock } from "./BatchSelectMediaListBlock";
 import { BillboardTeaserBlock } from "./BillboardTeaserBlock";
 import { ColumnsBlock } from "./ColumnsBlock";
 import { ContentGroupBlock } from "./ContentGroupBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { KeyFactsBlock } from "./KeyFactsBlock";
-import { MediaDownloadBlock } from "./MediaDownloadBlock";
 import { SliderBlock } from "./SliderBlock";
 import { TeaserBlock } from "./TeaserBlock";
 
@@ -50,7 +50,7 @@ export const PageContentBlock = createBlocksBlock({
         layout: LayoutBlock,
         textImage: TextImageBlock,
         fullWidthImage: FullWidthImageBlock,
-        mediaDownload: MediaDownloadBlock,
+        batchSelectMediaList: BatchSelectMediaListBlock,
         table: TableBlock,
         productList: ProductListBlock,
         pageTreeIndex: PageTreeIndexBlock,

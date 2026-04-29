@@ -1,16 +1,16 @@
 import { DamVideoBlock, type PropsWithData, withPreview } from "@comet/site-nextjs";
-import type { MediaDownloadBlockData } from "@src/blocks.generated";
+import type { BatchSelectMediaListBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { PlayPauseButton } from "@src/common/helpers/PlayPauseButton";
 import { PageLayout } from "@src/layout/PageLayout";
 import { FormattedMessage } from "react-intl";
 
-import styles from "./MediaDownloadBlock.module.scss";
+import styles from "./BatchSelectMediaListBlock.module.scss";
 
-type MediaDownloadBlockProps = PropsWithData<MediaDownloadBlockData>;
+type BatchSelectMediaListBlockProps = PropsWithData<BatchSelectMediaListBlockData>;
 
-export const MediaDownloadBlock = withPreview(
-    ({ data }: MediaDownloadBlockProps) => {
+export const BatchSelectMediaListBlock = withPreview(
+    ({ data }: BatchSelectMediaListBlockProps) => {
         const images = data.images.blocks.filter((block) => block.visible);
         const videos = data.videos.blocks.filter((block) => block.visible);
 
@@ -23,7 +23,7 @@ export const MediaDownloadBlock = withPreview(
                 {images.length > 0 && (
                     <section className={styles.section}>
                         <h2 className={styles.heading}>
-                            <FormattedMessage id="mediaDownloadBlock.images" defaultMessage="Images" />
+                            <FormattedMessage id="batchSelectMediaListBlock.images" defaultMessage="Images" />
                         </h2>
                         <ul className={styles.list}>
                             {images.map((block) => (
@@ -37,7 +37,7 @@ export const MediaDownloadBlock = withPreview(
                 {videos.length > 0 && (
                     <section className={styles.section}>
                         <h2 className={styles.heading}>
-                            <FormattedMessage id="mediaDownloadBlock.videos" defaultMessage="Videos" />
+                            <FormattedMessage id="batchSelectMediaListBlock.videos" defaultMessage="Videos" />
                         </h2>
                         <ul className={styles.list}>
                             {videos.map((block) => (
@@ -56,13 +56,13 @@ export const MediaDownloadBlock = withPreview(
             </div>
         );
     },
-    { label: "MediaDownload" },
+    { label: "BatchSelectMediaList" },
 );
 
-export const PageContentMediaDownloadBlock = (props: MediaDownloadBlockProps) => (
+export const PageContentBatchSelectMediaListBlock = (props: BatchSelectMediaListBlockProps) => (
     <PageLayout grid>
         <div className={styles.pageLayoutContent}>
-            <MediaDownloadBlock {...props} />
+            <BatchSelectMediaListBlock {...props} />
         </div>
     </PageLayout>
 );
