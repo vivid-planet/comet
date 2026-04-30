@@ -164,6 +164,9 @@ const FolderDataGrid = ({
     const snackbarApi = useSnackbarApi();
     const { importSources, enableLicenseFeature } = useDamConfig();
 
+    if ((selectionMapProp !== undefined) !== (onSelectionChange !== undefined)) {
+        throw new Error("DamTable: `selectionMap` and `onSelectionChange` must be provided together for controlled selection.");
+    }
     const isControlledSelection = selectionMapProp !== undefined && onSelectionChange !== undefined;
     const effectiveSelectionMap = isControlledSelection ? selectionMapProp : damSelectionActionsApi.selectionMap;
 
