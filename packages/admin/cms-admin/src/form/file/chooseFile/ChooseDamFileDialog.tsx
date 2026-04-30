@@ -25,13 +25,18 @@ interface ChooseDamFileDialogProps {
     allowedMimetypes?: string[];
 }
 
-export const ChooseDamFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseDamFileDialogProps) => {
-    const renderFileLabel = (file: GQLDamFileTableFragment, { matches, showLicenseWarnings }: RenderDamLabelOptions) => (
-        <TableRowButton disableRipple={true} variant="textDark" onClick={() => onChooseFile(file.id)} fullWidth>
-            <DamItemLabel asset={file} matches={matches} showLicenseWarnings={showLicenseWarnings} />
-        </TableRowButton>
-    );
+type FileLabelProps = {
+    file: GQLDamFileTableFragment;
+    onChooseFile: (fileId: string) => void;
+} & RenderDamLabelOptions;
 
+const FileLabel = ({ file, onChooseFile, matches, showLicenseWarnings }: FileLabelProps) => (
+    <TableRowButton disableRipple={true} variant="textDark" onClick={() => onChooseFile(file.id)} fullWidth>
+        <DamItemLabel asset={file} matches={matches} showLicenseWarnings={showLicenseWarnings} />
+    </TableRowButton>
+);
+
+export const ChooseDamFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseDamFileDialogProps) => {
     return (
         <BaseChooseDamFileDialog
             open={open}
@@ -39,7 +44,7 @@ export const ChooseDamFileDialog = ({ open, onClose, onChooseFile, allowedMimety
             title={<FormattedMessage id="comet.form.file.selectFile" defaultMessage="Select file from DAM" />}
             stateKey="choose-file-dam-location"
             allowedMimetypes={allowedMimetypes}
-            renderFileLabel={renderFileLabel}
+            renderFileLabel={(file, options) => <FileLabel file={file} onChooseFile={onChooseFile} {...options} />}
             hideMultiselect={true}
         />
     );

@@ -16,6 +16,12 @@ interface ChooseDamFilesDialogProps {
     allowedMimetypes?: string[];
 }
 
+// Files are non-interactive in multi-select mode: clicking the row selects it via the
+// checkbox, not via navigation to the file's detail page.
+const FileLabel = ({ file, matches, showLicenseWarnings }: { file: GQLDamFileTableFragment } & RenderDamLabelOptions) => (
+    <DamItemLabel asset={file} matches={matches} showLicenseWarnings={showLicenseWarnings} />
+);
+
 export const ChooseDamFilesDialog = ({ open, onClose, onConfirm, initialFileIds, allowedMimetypes }: ChooseDamFilesDialogProps) => {
     const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(new Map());
     const [isConfirming, setIsConfirming] = useState(false);
@@ -53,12 +59,6 @@ export const ChooseDamFilesDialog = ({ open, onClose, onConfirm, initialFileIds,
         onClose();
     };
 
-    // Files are non-interactive in multi-select mode: clicking the row selects it via the
-    // checkbox, not via navigation to the file's detail page.
-    const renderFileLabel = (file: GQLDamFileTableFragment, { matches, showLicenseWarnings }: RenderDamLabelOptions) => (
-        <DamItemLabel asset={file} matches={matches} showLicenseWarnings={showLicenseWarnings} />
-    );
-
     return (
         <BaseChooseDamFileDialog
             open={open}
@@ -66,7 +66,7 @@ export const ChooseDamFilesDialog = ({ open, onClose, onConfirm, initialFileIds,
             title={<FormattedMessage id="comet.form.file.selectFiles" defaultMessage="Select files from DAM" />}
             stateKey="choose-files-dam-location"
             allowedMimetypes={allowedMimetypes}
-            renderFileLabel={renderFileLabel}
+            renderFileLabel={(file, options) => <FileLabel file={file} {...options} />}
             hideMultiselect={false}
             disableFolderSelection={true}
             selectionMap={selectionMap}

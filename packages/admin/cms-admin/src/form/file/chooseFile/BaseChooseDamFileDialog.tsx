@@ -34,6 +34,31 @@ interface BaseChooseDamFileDialogProps {
     actions?: ReactNode;
 }
 
+type DamLabelProps = {
+    row: GQLDamFileTableFragment | GQLDamFolderTableFragment;
+    options: RenderDamLabelOptions;
+    renderFileLabel: BaseChooseDamFileDialogProps["renderFileLabel"];
+    enableLicenseFeature?: boolean;
+};
+
+const DamLabel = ({ row, options, renderFileLabel, enableLicenseFeature }: DamLabelProps) => {
+    const fullOptions = { ...options, showLicenseWarnings: enableLicenseFeature };
+    if (isFile(row)) {
+        return renderFileLabel(row, fullOptions);
+    }
+    return (
+        <FolderStackLink
+            pageName="folder"
+            payload={row.id}
+            onClick={() => {
+                options.filterApi.formApi.change("searchText", undefined);
+            }}
+        >
+            <DamItemLabel asset={row} matches={options.matches} />
+        </FolderStackLink>
+    );
+};
+
 export const BaseChooseDamFileDialog = ({
     open,
     onClose,
@@ -42,7 +67,7 @@ export const BaseChooseDamFileDialog = ({
     allowedMimetypes,
     renderFileLabel,
     hideMultiselect,
-    disableFolderSelection = false,
+    disableFolderSelection,
     selectionMap,
     onSelectionChange,
     actions,
@@ -51,24 +76,6 @@ export const BaseChooseDamFileDialog = ({
     const scope = useDamScope();
 
     const scopedStateKey = Object.keys(scope).length > 0 ? `${Object.values(scope).join("-")}-${stateKey}` : stateKey;
-
-    const renderDamLabel = (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: RenderDamLabelOptions) => {
-        const fullOptions = { ...options, showLicenseWarnings: damConfig.enableLicenseFeature };
-        if (isFile(row)) {
-            return renderFileLabel(row, fullOptions);
-        }
-        return (
-            <FolderStackLink
-                pageName="folder"
-                payload={row.id}
-                onClick={() => {
-                    options.filterApi.formApi.change("searchText", undefined);
-                }}
-            >
-                <DamItemLabel asset={row} matches={options.matches} />
-            </FolderStackLink>
-        );
-    };
 
     return (
         <Dialog
@@ -90,7 +97,14 @@ export const BaseChooseDamFileDialog = ({
                     <SubRoute path="">
                         <RedirectToPersistedDamLocation stateKey={scopedStateKey} />
                         <DamTable
-                            renderDamLabel={renderDamLabel}
+                            renderDamLabel={(row, options) => (
+                                <DamLabel
+                                    row={row}
+                                    options={options}
+                                    renderFileLabel={renderFileLabel}
+                                    enableLicenseFeature={damConfig.enableLicenseFeature}
+                                />
+                            )}
                             allowedMimetypes={allowedMimetypes}
                             hideContextMenu={true}
                             hideMultiselect={hideMultiselect}
