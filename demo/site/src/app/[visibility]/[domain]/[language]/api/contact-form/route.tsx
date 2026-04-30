@@ -14,7 +14,8 @@ const queryValidationSchema = z.object({
     recaptchaToken: z.string(),
 });
 
-export async function POST(request: NextRequest, { params: { domain } }: { params: { domain: string } }) {
+export async function POST(request: NextRequest, context: RouteContext<"/[visibility]/[domain]/[language]/api/contact-form">) {
+    const { domain } = await context.params;
     const body = await request.json();
     const validationResult = queryValidationSchema.safeParse(body);
 
