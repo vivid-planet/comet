@@ -18,6 +18,7 @@ export default ((env) => {
                 domain: "secondary",
                 languages: ["en", "de"],
             },
+            recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY ?? "",
         },
     };
 }) satisfies GetSiteConfig;

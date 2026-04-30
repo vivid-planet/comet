@@ -2,6 +2,8 @@
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import type { ContactFormBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
+import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -11,6 +13,7 @@ import { CheckboxField } from "../components/form/CheckboxField";
 import { SelectField } from "../components/form/SelectField";
 import { TextareaField } from "../components/form/TextareaField";
 import { TextField } from "../components/form/TextField";
+import { Typography } from "../components/Typography";
 import styles from "./ContactFormBlock.module.scss";
 
 const subjectOptions = [
@@ -35,6 +38,8 @@ export const ContactFormBlock = withPreview(
         const params = useParams<{ visibility: string; domain: string; language: string }>();
         const language = params.language;
 
+        const { recaptchaSiteKey } = useSiteConfig();
+
         const {
             control,
             handleSubmit,
@@ -53,13 +58,41 @@ export const ContactFormBlock = withPreview(
         });
 
         const onSubmit = async (formValues: ContactFormValues) => {
+            let recaptchaToken: string;
+
+            if (!recaptchaSiteKey) {
+                console.error("Missing recaptchaSiteKey in siteConfig");
+                setError("root.serverError", {
+                    type: "manual",
+                    message: intl.formatMessage({
+                        id: "contactFormBlock.missingRecaptchaKey",
+                        defaultMessage: "The form is currently unavailable. Please try again later.",
+                    }),
+                });
+                return;
+            }
+
+            try {
+                recaptchaToken = await getRecaptchaToken("form_submit", recaptchaSiteKey);
+            } catch (error) {
+                console.error(error);
+                setError("root.serverError", {
+                    type: "manual",
+                    message: intl.formatMessage({
+                        id: "contactFormBlock.missingRecaptchaToken",
+                        defaultMessage: "ReCAPTCHA validation failed. Please try again.",
+                    }),
+                });
+                return;
+            }
+
             try {
                 const response = await fetch(`/${language}/api/contact-form`, {
                     method: "POST",
                     headers: {
                         "content-type": "application/json",
                     },
-                    body: JSON.stringify(formValues),
+                    body: JSON.stringify({ ...formValues, recaptchaToken }),
                 });
 
                 if (!response.ok) {
@@ -174,6 +207,16 @@ export const ContactFormBlock = withPreview(
                         <FormattedMessage id="contactForm.submitButton.label" defaultMessage="Submit" />
                     </Button>
                     {errors.root?.serverError && <div>{errors.root.serverError.message}</div>}
+                    <Typography variant="paragraph200" bottomSpacing>
+                        <FormattedMessage
+                            id="contactForm.recaptchaDisclaimer"
+                            defaultMessage="This site is protected by reCAPTCHA and the Google <privacyLink>Privacy Policy</privacyLink> and <termsLink>Terms of Service</termsLink> apply."
+                            values={{
+                                privacyLink: (chunks) => <a href="https://policies.google.com/privacy">{chunks}</a>,
+                                termsLink: (chunks) => <a href="https://policies.google.com/terms">{chunks}</a>,
+                            }}
+                        />
+                    </Typography>
                 </form>
             </PageLayout>
         );
