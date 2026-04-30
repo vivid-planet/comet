@@ -11,8 +11,8 @@ type BatchSelectMediaListBlockProps = PropsWithData<BatchSelectMediaListBlockDat
 
 export const BatchSelectMediaListBlock = withPreview(
     ({ data }: BatchSelectMediaListBlockProps) => {
-        const images = data.images.blocks.filter((block) => block.visible);
-        const videos = data.videos.blocks.filter((block) => block.visible);
+        const images = data.images.blocks;
+        const videos = data.videos.blocks;
 
         if (images.length === 0 && videos.length === 0) {
             return null;

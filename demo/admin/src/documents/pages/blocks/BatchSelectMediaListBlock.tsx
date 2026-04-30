@@ -120,7 +120,7 @@ const BatchSelectMediaListImageListBlock = createListBlock(
                                         ? "pixelImage"
                                         : "svgImage";
                                     const subBlock = type === "pixelImage" ? PixelImageBlock : SvgImageBlock;
-                                    const props = {
+                                    const props: BlockState<typeof DamImageBlock> = {
                                         activeType: type,
                                         attachedBlocks: [
                                             {
@@ -128,7 +128,7 @@ const BatchSelectMediaListImageListBlock = createListBlock(
                                                 props: { ...subBlock.defaultValues(), damFile: file },
                                             },
                                         ],
-                                    } as BlockState<typeof DamImageBlock>;
+                                    };
                                     return buildListEntry(props);
                                 });
 
