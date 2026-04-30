@@ -186,7 +186,7 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
     const apolloClient = useApolloClient();
     const snackbarApi = useSnackbarApi();
 
-    // react-final-form can pass "" as the default when no initial value is set, so normalize to an array.
+    // react-final-form can pass "" as the default when no initial value is set, so fall back to an empty array.
     const files: GQLDamMultiFileFieldFileFragment[] = Array.isArray(input.value) ? input.value : [];
 
     const commitChange = (next: GQLDamMultiFileFieldFileFragment[]) => {
@@ -212,7 +212,7 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
                         query: damMultiFileFieldFileQuery,
                         variables: { id },
                     });
-                    return data.damFile as GQLDamMultiFileFieldFileFragment;
+                    return data.damFile;
                 }),
             );
 

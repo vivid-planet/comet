@@ -19,7 +19,7 @@ interface DamMoreActionsProps {
     hideSelectiveActions?: boolean;
 }
 
-export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter, hideSelectiveActions = false }: DamMoreActionsProps) => {
+export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter, hideSelectiveActions }: DamMoreActionsProps) => {
     const damSelectionActionsApi = useDamSelectionApi();
     const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
