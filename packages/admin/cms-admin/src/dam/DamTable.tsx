@@ -1,20 +1,6 @@
 import { useQuery } from "@apollo/client";
-import {
-    EditDialogApiContext,
-    type IFilterApi,
-    type ISortInformation,
-    SortDirection,
-    Stack,
-    StackMainContent,
-    StackPage,
-    StackSwitch,
-    Toolbar,
-    useEditDialog,
-    useStackApi,
-    useStoredState,
-    useTableQueryFilter,
-} from "@comet/admin";
-import { type ReactNode, useEffect, useState } from "react";
+import { type IFilterApi, Stack, StackMainContent, StackPage, StackSwitch, Toolbar, useStackApi, useTableQueryFilter } from "@comet/admin";
+import { type ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
@@ -27,7 +13,7 @@ import FolderDataGrid, {
     type GQLDamFolderQueryVariables,
     type GQLDamFolderTableFragment,
 } from "./DataGrid/FolderDataGrid";
-import { type RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
+import type { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 
@@ -35,7 +21,6 @@ export interface DamFilter {
     allowedMimetypes?: string[];
     archived?: boolean;
     searchText?: string;
-    sort?: ISortInformation;
 }
 
 interface FolderProps extends DamConfig {
@@ -48,7 +33,6 @@ interface FolderProps extends DamConfig {
 const Folder = ({ id, filterApi, renderWithFullHeightMainContent, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
-    const [, , editDialogApi, selectionApi] = useEditDialog();
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
@@ -61,18 +45,14 @@ const Folder = ({ id, filterApi, renderWithFullHeightMainContent, ...props }: Fo
         skip: selectedFolderId === undefined,
     });
 
-    const folderDataGridNode = (
-        <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
-    );
+    const folderDataGridNode = <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} filterApi={filterApi} {...props} />;
 
     return (
         <CurrentDamFolderProvider folderId={id}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
-                    <EditDialogApiContext.Provider value={editDialogApi}>
-                        <Toolbar scopeIndicator={props.contentScopeIndicator} />
-                        {renderWithFullHeightMainContent ? <StackMainContent fullHeight>{folderDataGridNode}</StackMainContent> : folderDataGridNode}
-                    </EditDialogApiContext.Provider>
+                    <Toolbar scopeIndicator={props.contentScopeIndicator} />
+                    {renderWithFullHeightMainContent ? <StackMainContent fullHeight>{folderDataGridNode}</StackMainContent> : folderDataGridNode}
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
                     {(selectedId: string) => {
@@ -114,10 +94,6 @@ type DamTableProps = DamConfig & {
 
 export const DamTable = ({ renderWithFullHeightMainContent, ...damConfigProps }: DamTableProps) => {
     const intl = useIntl();
-    const [sorting, setSorting] = useStoredState<ISortInformation>("dam_filter_sorting", {
-        columnName: "name",
-        direction: SortDirection.ASC,
-    });
 
     const propsWithDefaultValues = {
         hideContextMenu: false,
@@ -127,15 +103,7 @@ export const DamTable = ({ renderWithFullHeightMainContent, ...damConfigProps }:
         ...damConfigProps,
     };
 
-    const filterApi = useTableQueryFilter<DamFilter>({
-        sort: sorting,
-    });
-
-    useEffect(() => {
-        if (filterApi.current.sort) {
-            setSorting(filterApi.current.sort);
-        }
-    }, [filterApi, filterApi.current.sort, setSorting]);
+    const filterApi = useTableQueryFilter<DamFilter>({});
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>

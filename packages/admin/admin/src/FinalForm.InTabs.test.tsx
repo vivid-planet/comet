@@ -1,6 +1,7 @@
 import { createTheme } from "@mui/material/styles";
-import { fireEvent, render, waitFor } from "@testing-library/react";
 import { IntlProvider } from "react-intl";
+import { cleanup, fireEvent, render, waitFor } from "test-utils";
+import { afterEach, expect, test } from "vitest";
 
 import { FinalForm } from "./FinalForm";
 import { Field } from "./form/Field";
@@ -13,6 +14,8 @@ import { Stack } from "./stack/Stack";
 import { StackLink } from "./stack/StackLink";
 import { StackSwitch } from "./stack/Switch";
 import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
+
+afterEach(cleanup);
 
 test("Form DirtyPrompt for inner Tabs", async () => {
     function Story() {
@@ -51,7 +54,9 @@ test("Form DirtyPrompt for inner Tabs", async () => {
         </IntlProvider>,
     );
     const input = rendered.container.querySelector(`input[name="foo"]`);
-    if (!input) throw new Error("input not found");
+    if (!input) {
+        throw new Error("input not found");
+    }
     fireEvent.change(input, { target: { value: "xxxx" } });
     fireEvent.click(rendered.getByText("Form 2"));
 
@@ -95,7 +100,9 @@ test("Form DirtyPrompt for outer Tabs", async () => {
         </IntlProvider>,
     );
     const input = rendered.container.querySelector(`input[name="foo"]`);
-    if (!input) throw new Error("input not found");
+    if (!input) {
+        throw new Error("input not found");
+    }
     fireEvent.change(input, { target: { value: "xxxx" } });
     fireEvent.click(rendered.getByText("Page 2"));
 
@@ -149,7 +156,9 @@ test("Form DirtyPrompt for outer Stack", async () => {
     );
     fireEvent.click(rendered.getByText("go to page2"));
     const input = rendered.container.querySelector(`input[name="foo"]`);
-    if (!input) throw new Error("input not found");
+    if (!input) {
+        throw new Error("input not found");
+    }
     fireEvent.change(input, { target: { value: "xxxx" } });
     fireEvent.click(rendered.getByText("go to page1"));
 
@@ -202,7 +211,9 @@ test("Form DirtyPrompt for inner Stack", async () => {
         </IntlProvider>,
     );
     const input = rendered.container.querySelector(`input[name="foo"]`);
-    if (!input) throw new Error("input not found");
+    if (!input) {
+        throw new Error("input not found");
+    }
     fireEvent.change(input, { target: { value: "xxxx" } });
     fireEvent.click(rendered.getByText("go to page2"));
 

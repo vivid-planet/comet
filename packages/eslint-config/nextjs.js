@@ -1,26 +1,27 @@
-import coreConfig from "./core.js";
+import coreConfig, { restrictedImportPatterns } from "./core.js";
 import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
-import { FlatCompat } from "@eslint/eslintrc";
+import nextPlugin from "@next/eslint-plugin-next";
 
-const compat = new FlatCompat({
-    // import.meta.dirname is available after Node.js v20.11.0
-    baseDirectory: import.meta.dirname,
-});
-
-const nextCoreWebVitals = compat
-    .config({
-        extends: ["next/core-web-vitals"],
-    })
-    // We need to filter out configurations from nextCoreWebVitals which define plugin.import. It is conflicting
-    // because it gets redefined
-    .filter((config) => !config.plugins || !config.plugins.import);
+export const restrictedImportPaths = [
+    {
+        name: "react",
+        importNames: ["default"],
+    },
+    {
+        name: "next/image",
+        importNames: ["default"],
+        message: "Don't use next/image. See https://docs.comet-dxp.com/docs/faqs/next-image-import-restriction",
+    },
+];
 
 /** @type {import('eslint')} */
 const config = [
     ...coreConfig,
-    // Next.js does not support ESLint v9 flat config yet - an opt-in to compatibility mode is required
-    ...nextCoreWebVitals,
+    // Extend config from plugin instead of using eslint-config-next to prevent issues with duplicate plugins, e.g., import.
+    // See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config.
+    nextPlugin.configs["core-web-vitals"],
     {
         rules: {
             "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
@@ -28,17 +29,8 @@ const config = [
             "no-restricted-imports": [
                 "error",
                 {
-                    paths: [
-                        {
-                            name: "react",
-                            importNames: ["default"],
-                        },
-                        {
-                            name: "next/image",
-                            importNames: ["default"],
-                            message: "Please use Image from @comet/site-nextjs instead",
-                        },
-                    ],
+                    paths: restrictedImportPaths,
+                    patterns: restrictedImportPatterns,
                 },
             ],
         },
@@ -56,6 +48,7 @@ const config = [
         },
         plugins: {
             react: react,
+            "react-hooks": reactHooks,
         },
         settings: {
             react: {
@@ -63,6 +56,8 @@ const config = [
             },
         },
         rules: {
+            ...react.configs.recommended.rules,
+            ...reactHooks.configs.recommended.rules,
             "react/display-name": "off",
             "react/jsx-curly-brace-presence": "error",
             "react/prop-types": "off",

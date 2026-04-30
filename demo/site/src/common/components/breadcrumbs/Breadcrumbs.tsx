@@ -8,7 +8,7 @@ import { useId, useState } from "react";
 import ReactFocusLock from "react-focus-lock";
 import { FormattedMessage } from "react-intl";
 
-import { type GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
+import type { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
 import styles from "./Breadcrumbs.module.scss";
 
 export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFragment) => {

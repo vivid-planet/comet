@@ -1,5 +1,361 @@
 # @comet/cms-admin
 
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Minor Changes
+
+- 25f7342: Export `PageTreeSelect`
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+- Updated dependencies [99140f8]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0-beta.2
+    - @comet/admin-date-time@9.0.0-beta.2
+    - @comet/admin-icons@9.0.0-beta.2
+    - @comet/admin-rte@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Major Changes
+
+- 8c2fdde: Add filtering and sorting to `DependenciesList` and `DependentsList`
+
+    Users can now filter dependencies/dependents by name, type, secondary information, and visibility, and sort by all columns. A default filter shows only visible items. The `GqlFilter` type is now exported from `@comet/admin`.
+
+    **Breaking changes:**
+
+    **`@comet/cms-api`:** `DependencyFilter.targetGraphqlObjectType` and `DependentFilter.rootGraphqlObjectType` changed from `string` to `StringFilter`. Update any code passing a plain string to use `{ equal: "..." }` instead.
+
+    **`@comet/cms-api`:** `DependenciesService.getDependents()` and `getDependencies()` consolidated the `filter`, `paginationArgs`, and `options` parameters into a single `options` object. If you call these methods directly, merge the arguments:
+
+    ```ts
+    // Before
+    service.getDependents(target, filter, { offset, limit }, { forceRefresh, sort });
+
+    // After
+    service.getDependents(target, { filter, offset, limit, forceRefresh, sort });
+    ```
+
+    **`@comet/cms-admin`:** The GQL queries passed to `DependenciesList` and `DependentsList` must now accept `$filter` and `$sort` variables and forward them to the `dependencies`/`dependents` field. Update your queries as follows:
+
+    ```graphql
+    # DependentsList
+    query MyDependents($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependentFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    rootGraphqlObjectType
+                    rootId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+
+    # DependenciesList
+    query MyDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependencyFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    targetGraphqlObjectType
+                    targetId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+    ```
+
+- 85b09a2: Replace `DependencyList` with `DependenciesList` and `DependentsList`
+
+    **Breaking change:** `DependencyList` has been removed. Use `DependenciesList` for queries returning `item.dependencies` and `DependentsList` for queries returning `item.dependents`.
+
+- 171c335: Redirects: add `domain` source type
+
+    To fully support domain redirects, additional handling is required in the site middleware.
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [8e3a074]
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-date-time@9.0.0-beta.1
+    - @comet/admin-rte@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- ee24125: Remove `createHttpClient` function
+
+    Use native fetch instead.
+
+- 5f1566a: Make packages ESM-only
+- 790e8d0: Remove the `filesInfoText` slot from `FileSelect`
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [3fda20b]
+- Updated dependencies [f066335]
+- Updated dependencies [5f1566a]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-date-time@9.0.0-beta.0
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin-rte@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+
+## 8.20.0
+
+### Minor Changes
+
+- ed00704: Add `TableBlock` using the `createTableBlock()` factory
+
+    The passed in `richText` block is used to edit the cell content.
+
+    **Admin:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-admin";
+    import { RichTextBlock } from "./RichTextBlock";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+    **API:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-api";
+    import { RichTextBlock } from "./rich-text.block";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+### Patch Changes
+
+- Updated dependencies [412ed19]
+- Updated dependencies [caceff8]
+    - @comet/admin@8.20.0
+    - @comet/admin-icons@8.20.0
+    - @comet/admin-date-time@8.20.0
+    - @comet/admin-rte@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- Updated dependencies [fff2cc2]
+- Updated dependencies [fff2cc2]
+    - @comet/admin@8.19.0
+    - @comet/admin-date-time@8.19.0
+    - @comet/admin-rte@8.19.0
+    - @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Minor Changes
+
+- 64b70bc: Re-add "Usages" column to the DAM `FolderDataGrid`, displaying the number of dependents for each file
+
+### Patch Changes
+
+- ed029fb: Export `CurrentUserContext` from `@comet/cms-admin`
+
+    `CurrentUserContext` is now exported so that consumers can directly access the React context. This is needed for use cases such as providing a custom implementation of the context (e.g. in tests or in applications that manage their own user context) and for components that need to consume the context directly rather than through the `useCurrentUser` hook.
+
+- Updated dependencies [0ce431c]
+- Updated dependencies [d344f53]
+    - @comet/admin@8.18.0
+    - @comet/admin-date-time@8.18.0
+    - @comet/admin-rte@8.18.0
+    - @comet/admin-icons@8.18.0
+
+## 8.17.1
+
+### Patch Changes
+
+- Updated dependencies [91e9a8f]
+    - @comet/admin-icons@8.17.1
+    - @comet/admin@8.17.1
+    - @comet/admin-date-time@8.17.1
+    - @comet/admin-rte@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- Updated dependencies [45163f1]
+    - @comet/admin@8.17.0
+    - @comet/admin-date-time@8.17.0
+    - @comet/admin-rte@8.17.0
+    - @comet/admin-icons@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- Updated dependencies [472b496]
+    - @comet/admin@8.16.0
+    - @comet/admin-date-time@8.16.0
+    - @comet/admin-rte@8.16.0
+    - @comet/admin-icons@8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 9333e9c: Readd "Start impersonation" button to UserGrid
+
+### Patch Changes
+
+- 2bbb9c1: Fix scope not switching when impersonating a user
+
+    Previously, the `ContentScopeProvider` blindly restored the scope from localStorage, which could redirect impersonated users to scopes they don't have access to.
+
+    Now, the stored scope is validated against the user's allowed scopes before being applied. If the stored scope is not allowed, it is cleared from localStorage and the default scope is used instead.
+
+    Additionally, the `NODE_ENV` guard on persisting the selected scope to localStorage is removed so scope persistence is also done locally again.
+
+- Updated dependencies [cc96333]
+- Updated dependencies [180d1e3]
+- Updated dependencies [f7b9de9]
+- Updated dependencies [39a9bb0]
+- Updated dependencies [5b52998]
+- Updated dependencies [0c2435a]
+    - @comet/admin@8.15.0
+    - @comet/admin-date-time@8.15.0
+    - @comet/admin-rte@8.15.0
+    - @comet/admin-icons@8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- d0a7c96: Automatically hide the `MasterMenu` and `AppHeaderMenuButton` if only one menu item is available
+
+### Patch Changes
+
+- Updated dependencies [f31b52e]
+- Updated dependencies [5075f7a]
+- Updated dependencies [d0a7c96]
+    - @comet/admin@8.14.0
+    - @comet/admin-date-time@8.14.0
+    - @comet/admin-rte@8.14.0
+    - @comet/admin-icons@8.14.0
+
+## 8.13.0
+
+### Minor Changes
+
+- 6b0b088: Allow UserService to implement getAccountUrl() which provides a "My Account" link in the UserHeaderItem
+
+### Patch Changes
+
+- 60ecc0a: Store open state of `MainNavigation` in local storage and restore it on page load
+- 5cfa88d: Fix renaming of DAM folders
+- Updated dependencies [60ecc0a]
+- Updated dependencies [dbf8774]
+    - @comet/admin@8.13.0
+    - @comet/admin-date-time@8.13.0
+    - @comet/admin-rte@8.13.0
+    - @comet/admin-icons@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- 02c25c1: Fix preview url handling in `SvgImageBlock`
+- Updated dependencies [12466e4]
+    - @comet/admin@8.12.0
+    - @comet/admin-date-time@8.12.0
+    - @comet/admin-rte@8.12.0
+    - @comet/admin-icons@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [a498b80]
+    - @comet/admin@8.11.1
+    - @comet/admin-date-time@8.11.1
+    - @comet/admin-rte@8.11.1
+    - @comet/admin-icons@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 89db54c: Improve `InfoTag` type in `DocumentType`
+
+    Add a new `InfoTagProps` type that can be used to properly type additional page tree node fields:
+
+    ```tsx
+    const Page: DocumentInterface = {
+        InfoTag: ({ page }: InfoTagProps<{ userGroup: GQLUserGroup }>) => {
+            // page now has the userGroup field
+            if (page.userGroup !== "all") {
+                return <Chip size="small" label={page.userGroup} />;
+            }
+            return null;
+        },
+    };
+    ```
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+- f34b750: Add Status to CronJob
+
+### Patch Changes
+
+- 0482cf9: Fix pagination in `DependencyList`
+
+    Additionally:
+    - Add loading state when reloading dependencies
+    - Refactor `DependencyList` DataGrid based on Grid generated by the admin generator to be closer to standard
+
+- 0031d19: Fix display of error message for exceeding max file uploads in `FinalFormFileUpload`
+- Updated dependencies [8d7a90c]
+- Updated dependencies [198da7b]
+- Updated dependencies [2580c61]
+- Updated dependencies [f0b1eb1]
+- Updated dependencies [9c091ec]
+- Updated dependencies [cc727d1]
+- Updated dependencies [f293762]
+- Updated dependencies [9d5e331]
+- Updated dependencies [5337c20]
+- Updated dependencies [7e34c0b]
+- Updated dependencies [ed03e8d]
+    - @comet/admin-rte@8.11.0
+    - @comet/admin@8.11.0
+    - @comet/admin-date-time@8.11.0
+    - @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

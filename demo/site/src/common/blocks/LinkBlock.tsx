@@ -9,53 +9,51 @@ import {
     type SupportedBlocks,
     withPreview,
 } from "@comet/site-nextjs";
-import { type LinkBlockData } from "@src/blocks.generated";
+import type { LinkBlockData } from "@src/blocks.generated";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
-import { type PropsWithChildren } from "react";
+import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
 
 import { InternalLinkBlock } from "./InternalLinkBlock";
 
-const supportedBlocks: SupportedBlocks = {
-    internal: ({ children, title, className, ...props }) => (
-        <InternalLinkBlock data={props} title={title} className={className}>
-            {children}
-        </InternalLinkBlock>
-    ),
-    external: ({ children, title, className, ...props }) => (
-        <ExternalLinkBlock data={props} title={title} className={className}>
-            {children}
-        </ExternalLinkBlock>
-    ),
-    news: ({ children, title, className, ...props }) => (
-        <NewsLinkBlock data={props} title={title} className={className}>
-            {children}
-        </NewsLinkBlock>
-    ),
-    damFileDownload: ({ children, title, className, ...props }) => (
-        <DamFileDownloadLinkBlock data={props} title={title} className={className}>
-            {children}
-        </DamFileDownloadLinkBlock>
-    ),
-    email: ({ children, title, className, ...props }) => (
-        <EmailLinkBlock data={props} title={title} className={className}>
-            {children}
-        </EmailLinkBlock>
-    ),
-    phone: ({ children, title, className, ...props }) => (
-        <PhoneLinkBlock data={props} title={title} className={className}>
-            {children}
-        </PhoneLinkBlock>
-    ),
-};
-
-interface LinkBlockProps extends PropsWithChildren<PropsWithData<LinkBlockData>> {
-    className?: string;
-}
+interface LinkBlockProps extends PropsWithChildren<PropsWithData<LinkBlockData>>, Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {}
 
 export const LinkBlock = withPreview(
-    ({ data, children, className }: LinkBlockProps) => {
+    ({ data, children, ...anchorProps }: LinkBlockProps) => {
+        const supportedBlocks: SupportedBlocks = {
+            internal: ({ children, ...props }) => (
+                <InternalLinkBlock data={props} {...anchorProps}>
+                    {children}
+                </InternalLinkBlock>
+            ),
+            external: ({ children, ...props }) => (
+                <ExternalLinkBlock data={props} {...anchorProps}>
+                    {children}
+                </ExternalLinkBlock>
+            ),
+            news: ({ children, ...props }) => (
+                <NewsLinkBlock data={props} {...anchorProps}>
+                    {children}
+                </NewsLinkBlock>
+            ),
+            damFileDownload: ({ children, ...props }) => (
+                <DamFileDownloadLinkBlock data={props} {...anchorProps}>
+                    {children}
+                </DamFileDownloadLinkBlock>
+            ),
+            email: ({ children, ...props }) => (
+                <EmailLinkBlock data={props} {...anchorProps}>
+                    {children}
+                </EmailLinkBlock>
+            ),
+            phone: ({ children, ...props }) => (
+                <PhoneLinkBlock data={props} {...anchorProps}>
+                    {children}
+                </PhoneLinkBlock>
+            ),
+        };
+
         return (
-            <OneOfBlock data={data} supportedBlocks={supportedBlocks} className={className}>
+            <OneOfBlock data={data} supportedBlocks={supportedBlocks}>
                 {children}
             </OneOfBlock>
         );

@@ -1,3 +1,4 @@
+import { defineConfig } from "eslint/config";
 import eslint from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -8,8 +9,7 @@ import simpleImportSort from "eslint-plugin-simple-import-sort";
 import { configs as eslintPluginJsonc } from "eslint-plugin-jsonc";
 import packageJson from "eslint-plugin-package-json";
 
-/** @type {import('eslint')} */
-const config = [
+export default defineConfig([
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
     prettierConfig,
@@ -47,7 +47,7 @@ const config = [
         // Rules
         rules: {
             "prefer-template": "error",
-            "no-console": ["error", { allow: ["warn", "error"] }],
+            "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
             "no-return-await": "error",
         },
     },
@@ -60,6 +60,4 @@ const config = [
         },
     },
     packageJson.configs.recommended,
-];
-
-export default config;
+]);

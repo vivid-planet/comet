@@ -9,6 +9,7 @@ import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCa
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
 import { StandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
+import { TableBlock } from "@src/common/blocks/TableBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
@@ -49,6 +50,7 @@ export const PageContentBlock = createBlocksBlock({
         layout: LayoutBlock,
         textImage: TextImageBlock,
         fullWidthImage: FullWidthImageBlock,
+        table: TableBlock,
         productList: ProductListBlock,
         pageTreeIndex: PageTreeIndexBlock,
         contactForm: ContactFormBlock,

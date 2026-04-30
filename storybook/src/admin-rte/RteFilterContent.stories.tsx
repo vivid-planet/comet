@@ -7,7 +7,7 @@ import {
     Rte,
 } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { type EditorState, type EntityInstance } from "draft-js";
+import type { EditorState, EntityInstance } from "draft-js";
 import { useRef } from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
@@ -41,7 +41,7 @@ export const RteFilterContent = {
         const { editorState, setEditorState } = useRteApi();
 
         // focus the editor to see the cursor immediately
-        const editorRef = useRef<IRteRef>();
+        const editorRef = useRef<IRteRef>(undefined);
         useAutoFocus(editorRef);
 
         return (

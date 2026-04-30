@@ -1,5 +1,5 @@
 import { useCometConfig } from "../config/CometConfigContext";
-import { type DependencyInterface } from "./types";
+import type { DependencyInterface } from "./types";
 
 export type DependenciesConfig = {
     entityDependencyMap: EntityDependencyMap;

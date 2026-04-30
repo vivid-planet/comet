@@ -1,4 +1,4 @@
-import { type ReactNode, type SelectHTMLAttributes } from "react";
+import type { ReactNode, SelectHTMLAttributes } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage } from "react-intl";
 

@@ -14,7 +14,7 @@ import DialogActions from "@mui/material/DialogActions";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { type ExternalLinkBlockData } from "../../blocks.generated";
+import type { ExternalLinkBlockData } from "../../blocks.generated";
 
 interface OpenLinkDialogProps {
     onClose?: () => void;

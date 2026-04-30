@@ -29,20 +29,21 @@ describe("GenerateCrud with ScopedEntity", () => {
             }),
         );
 
-        const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntityWithScopedEntity"),
-        );
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithScopedEntity"));
         const formattedOut = await formatGeneratedFiles(out);
 
         {
             const file = formattedOut.find((file) => file.name === "test-entity-with-scoped-entity.resolver.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
 
             const cls = source.getClassOrThrow("TestEntityWithScopedEntityResolver");
             const requiredPermissionDecorator = cls.getDecorators().find((decorator) => decorator.getName() === "RequiredPermission");
-            if (!requiredPermissionDecorator) throw new Error("RequiredPermission decorator not found");
+            if (!requiredPermissionDecorator) {
+                throw new Error("RequiredPermission decorator not found");
+            }
             const args = requiredPermissionDecorator.getArguments();
             expect(args.length).toBe(1); //must not contain a second argument with { skipScopeCheck: true }
         }
@@ -77,20 +78,21 @@ describe("GenerateCrud with Scope", () => {
             }),
         );
 
-        const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntityWithScope"),
-        );
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithScope"));
         const formattedOut = await formatGeneratedFiles(out);
 
         {
             const file = formattedOut.find((file) => file.name === "test-entity-with-scope.resolver.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
 
             const cls = source.getClassOrThrow("TestEntityWithScopeResolver");
             const requiredPermissionDecorator = cls.getDecorators().find((decorator) => decorator.getName() === "RequiredPermission");
-            if (!requiredPermissionDecorator) throw new Error("RequiredPermission decorator not found");
+            if (!requiredPermissionDecorator) {
+                throw new Error("RequiredPermission decorator not found");
+            }
             const args = requiredPermissionDecorator.getArguments();
             expect(args.length).toBe(1); //must not contain a second argument with { skipScopeCheck: true }
         }

@@ -2,7 +2,7 @@ import { useApolloClient } from "@apollo/client";
 import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
 import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useState } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
@@ -12,7 +12,7 @@ import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
 import { DamPathLazy } from "./DamPathLazy";
 import { damFileFieldFileQuery } from "./FileField.gql";
-import { type GQLDamFileFieldFileFragment, type GQLDamFileFieldFileQuery, type GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
+import type { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
 
 export type { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 
@@ -100,7 +100,9 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
                         )}
                         {menuActions &&
                             menuActions.map((item, index) => {
-                                if (!item) return null;
+                                if (!item) {
+                                    return null;
+                                }
 
                                 if (isValidElement(item)) {
                                     return item;

@@ -5,39 +5,51 @@ import { Injectable } from "@nestjs/common";
 import { ProductVariant } from "../entities/product-variant.entity";
 @Injectable()
 export class ProductVariantsService {
-    constructor(protected readonly entityManager: EntityManager) { }
-    async incrementPositions(group: {
-        product: string;
-    }, lowestPosition: number, highestPosition?: number) {
+    constructor(protected readonly entityManager: EntityManager) {}
+    async incrementPositions(
+        group: {
+            product: string;
+        },
+        lowestPosition: number,
+        highestPosition?: number,
+    ) {
         // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
-        await this.entityManager.nativeUpdate(ProductVariant, {
-            $and: [
-                { position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } },
-                this.getPositionGroupCondition(group),
-            ],
-        }, { position: raw("position + 1") });
+        await this.entityManager.nativeUpdate(
+            ProductVariant,
+            {
+                $and: [
+                    { position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } },
+                    this.getPositionGroupCondition(group),
+                ],
+            },
+            { position: raw("position + 1") },
+        );
     }
-    async decrementPositions(group: {
-        product: string;
-    }, lowestPosition: number, highestPosition?: number) {
+    async decrementPositions(
+        group: {
+            product: string;
+        },
+        lowestPosition: number,
+        highestPosition?: number,
+    ) {
         // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
-        await this.entityManager.nativeUpdate(ProductVariant, {
-            $and: [
-                { position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } },
-                this.getPositionGroupCondition(group),
-            ],
-        }, { position: raw("position - 1") });
+        await this.entityManager.nativeUpdate(
+            ProductVariant,
+            {
+                $and: [
+                    { position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } },
+                    this.getPositionGroupCondition(group),
+                ],
+            },
+            { position: raw("position - 1") },
+        );
     }
-    async getLastPosition(group: {
-        product: string;
-    }) {
+    async getLastPosition(group: { product: string }) {
         return this.entityManager.count(ProductVariant, this.getPositionGroupCondition(group));
     }
-    getPositionGroupCondition(group: {
-        product: string;
-    }): FilterQuery<ProductVariant> {
+    getPositionGroupCondition(group: { product: string }): FilterQuery<ProductVariant> {
         return {
-            product: group.product
+            product: group.product,
         };
     }
 }

@@ -1,10 +1,10 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { ContentTranslationServiceProvider } from "@comet/admin";
-import { type ComponentProps, type PropsWithChildren } from "react";
+import type { ComponentProps, PropsWithChildren } from "react";
 
 import { useContentScope } from "../contentScope/Provider";
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
-import { type GQLTranslateQuery, type GQLTranslateQueryVariables } from "./AzureAiTranslatorProvider.generated";
+import type { GQLTranslateQuery, GQLTranslateQueryVariables } from "./AzureAiTranslatorProvider.generated";
 
 interface AzureAiTranslatorProps extends Omit<ComponentProps<typeof ContentTranslationServiceProvider>, "enabled" | "translate"> {
     enabled?: boolean;

@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl/lib";
 
 import PageLabel from "./PageLabel";
 import * as sc from "./PageTreeDragLayer.sc";
-import { type PageTreePage } from "./usePageTree";
+import type { PageTreePage } from "./usePageTree";
 
 function getItemStyles(initialOffset: XYCoord | null, currentOffset: XYCoord | null) {
     if (!initialOffset || !currentOffset) {

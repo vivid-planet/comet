@@ -5,14 +5,22 @@ import { Injectable } from "@nestjs/common";
 import { ProductCategory } from "../entities/product-category.entity";
 @Injectable()
 export class ProductCategoriesService {
-    constructor(protected readonly entityManager: EntityManager) { }
+    constructor(protected readonly entityManager: EntityManager) {}
     async incrementPositions(lowestPosition: number, highestPosition?: number) {
         // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
-        await this.entityManager.nativeUpdate(ProductCategory, { position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } }, { position: raw("position + 1") });
+        await this.entityManager.nativeUpdate(
+            ProductCategory,
+            { position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } },
+            { position: raw("position + 1") },
+        );
     }
     async decrementPositions(lowestPosition: number, highestPosition?: number) {
         // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
-        await this.entityManager.nativeUpdate(ProductCategory, { position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } }, { position: raw("position - 1") });
+        await this.entityManager.nativeUpdate(
+            ProductCategory,
+            { position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } },
+            { position: raw("position - 1") },
+        );
     }
     async getLastPosition() {
         return this.entityManager.count(ProductCategory, {});

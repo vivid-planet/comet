@@ -1,11 +1,11 @@
 import { createComponentSlot, type ThemedComponentBaseProps, Tooltip } from "@comet/admin";
 import { MoreHorizontal } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, ListItemIcon as MuiListItemIcon, Menu, MenuItem, type Theme, useThemeProps } from "@mui/material";
-import { type Editor } from "draft-js";
+import type { Editor } from "draft-js";
 import { type MouseEvent, type RefObject, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type IFeatureConfig } from "../types";
+import type { IFeatureConfig } from "../types";
 import { ControlButton } from "./ControlButton";
 
 interface IProps
@@ -17,7 +17,7 @@ interface IProps
     }> {
     features: IFeatureConfig[];
     disabled?: boolean;
-    editorRef: RefObject<Editor>;
+    editorRef: RefObject<Editor | null>;
     maxVisible?: number;
 }
 
