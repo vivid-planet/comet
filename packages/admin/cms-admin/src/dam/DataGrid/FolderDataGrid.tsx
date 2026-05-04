@@ -87,6 +87,8 @@ interface FolderDataGridProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
 }
 
+const isSelectableRow = ({ row }: { row: GQLDamFileTableFragment | GQLDamFolderTableFragment }) => isFile(row);
+
 type FolderDataGridToolbarProps = {
     id?: string;
     filterApi: IFilterApi<DamFilter>;
@@ -150,6 +152,10 @@ const FolderDataGrid = ({
     hideArchiveFilter,
     toolbarOptions,
     hideMultiselect,
+    disableFolderSelection,
+    keepNonExistentRowsSelected,
+    selectionMap: selectionMapProp,
+    onSelectionChange,
     renderDamLabel,
     ...props
 }: FolderDataGridProps) => {
@@ -160,6 +166,12 @@ const FolderDataGrid = ({
     const scope = useDamScope();
     const snackbarApi = useSnackbarApi();
     const { importSources, enableLicenseFeature } = useDamConfig();
+
+    if ((selectionMapProp !== undefined) !== (onSelectionChange !== undefined)) {
+        throw new Error("DamTable: `selectionMap` and `onSelectionChange` must be provided together for controlled selection.");
+    }
+    const isControlledSelection = selectionMapProp !== undefined && onSelectionChange !== undefined;
+    const effectiveSelectionMap = isControlledSelection ? selectionMapProp : damSelectionActionsApi.selectionMap;
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -607,9 +619,9 @@ const FolderDataGrid = ({
         newSelectionModel.ids.forEach((selectedId) => {
             const typedId = selectedId as string;
 
-            if (damSelectionActionsApi.selectionMap.has(typedId)) {
+            if (effectiveSelectionMap.has(typedId)) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                newMap.set(typedId, damSelectionActionsApi.selectionMap.get(typedId)!);
+                newMap.set(typedId, effectiveSelectionMap.get(typedId)!);
             } else {
                 const item = dataGridData?.damItemsList.nodes.find((item) => item.id === typedId);
 
@@ -627,7 +639,11 @@ const FolderDataGrid = ({
             }
         });
 
-        damSelectionActionsApi.setSelectionMap(newMap);
+        if (isControlledSelection) {
+            onSelectionChange(newMap);
+        } else {
+            damSelectionActionsApi.setSelectionMap(newMap);
+        }
     };
 
     const getRowClassName = ({ row }: GridRowClassNameParams) => {
@@ -660,7 +676,9 @@ const FolderDataGrid = ({
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
-                    rowSelectionModel={{ type: "include", ids: new Set(damSelectionActionsApi.selectionMap.keys()) }}
+                    keepNonExistentRowsSelected={keepNonExistentRowsSelected}
+                    isRowSelectable={disableFolderSelection ? isSelectableRow : undefined}
+                    rowSelectionModel={{ type: "include", ids: new Set(effectiveSelectionMap.keys()) }}
                     onRowSelectionModelChange={handleSelectionModelChange}
                     disableRowSelectionExcludeModel
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
@@ -677,7 +695,7 @@ const FolderDataGrid = ({
                             filterApi,
                             uploadFilters,
                             additionalToolbarItems: props.additionalToolbarItems,
-                            ...toolbarOptions,
+                            hideSelectiveActions: toolbarOptions?.hideSelectiveActions,
                         } as FolderDataGridToolbarProps,
                     }}
                     showToolbar
