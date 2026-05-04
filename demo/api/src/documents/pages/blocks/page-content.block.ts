@@ -20,6 +20,7 @@ import { ProductListBlock } from "@src/products/blocks/product-list.block";
 import { UserGroup } from "@src/user-groups/user-group";
 import { IsEnum } from "class-validator";
 
+import { BatchSelectMediaListBlock } from "./batch-select-media-list.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { LayoutBlock } from "./layout.block";
 import { SliderBlock } from "./slider.block";
@@ -46,6 +47,7 @@ const supportedBlocks = {
     layout: LayoutBlock,
     textImage: TextImageBlock,
     fullWidthImage: FullWidthImageBlock,
+    batchSelectMediaList: BatchSelectMediaListBlock,
     table: TableBlock,
     productList: ProductListBlock,
     pageTreeIndex: PageTreeIndexBlock,

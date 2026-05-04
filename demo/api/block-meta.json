@@ -301,6 +301,151 @@
         ]
     },
     {
+        "name": "BatchSelectMediaList",
+        "fields": [
+            {
+                "name": "images",
+                "kind": "Block",
+                "block": "BatchSelectMediaListImageList",
+                "nullable": false
+            },
+            {
+                "name": "videos",
+                "kind": "Block",
+                "block": "BatchSelectMediaListVideoList",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "images",
+                "kind": "Block",
+                "block": "BatchSelectMediaListImageList",
+                "nullable": false
+            },
+            {
+                "name": "videos",
+                "kind": "Block",
+                "block": "BatchSelectMediaListVideoList",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "BatchSelectMediaListImageList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "DamImage",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "DamImage",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "BatchSelectMediaListVideoList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "DamVideo",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "DamVideo",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "BillboardTeaser",
         "fields": [
             {
@@ -2213,6 +2358,7 @@
                                 "layout": "Layout",
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
+                                "batchSelectMediaList": "BatchSelectMediaList",
                                 "table": "Table",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex"
@@ -2279,6 +2425,7 @@
                                 "layout": "Layout",
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
+                                "batchSelectMediaList": "BatchSelectMediaList",
                                 "table": "Table",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex"

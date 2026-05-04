@@ -164,8 +164,12 @@ export {
 } from "./documents/ContentGenerationConfigContext";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionProps } from "./documents/types";
-export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
-export { FileField } from "./form/file/FileField";
+export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+/** @deprecated Use `ChooseDamFileDialog` instead. */
+export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+export { ChooseDamFilesDialog } from "./form/file/chooseFile/ChooseDamFilesDialog";
+export { FileField, type GQLDamFileFieldFileFragment, type GQLDamMultiFileFieldFileFragment } from "./form/file/FileField";
+export { damFileFieldFragment, damMultiFileFieldFragment } from "./form/file/FileField.gql";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {
     FinalFormFileUpload,

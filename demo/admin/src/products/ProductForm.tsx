@@ -19,7 +19,9 @@ import {
     type BlockState,
     createFinalFormBlock,
     DamImageBlock,
+    FileField,
     FileUploadField,
+    type GQLDamMultiFileFieldFileFragment,
     type GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -67,9 +69,10 @@ const rootBlocks = {
 };
 
 // Set types for FinalFormFileUpload manually, as they cannot be generated from the fragment in `@comet/cms-admin`
-type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" | "datasheets"> & {
+type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" | "datasheets" | "relatedImages"> & {
     priceList: GQLFinalFormFileUploadFragment | null;
     datasheets: Array<GQLFinalFormFileUploadFragment>;
+    relatedImages: Array<GQLDamMultiFileFieldFileFragment>;
 };
 
 type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
@@ -110,6 +113,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                 inStock: false,
                 additionalTypes: [],
                 tags: [],
+                relatedImages: [],
                 dimensions: width !== undefined ? { width } : undefined,
             };
         }
@@ -154,6 +158,7 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
             statistics: { views: 0 },
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
+            relatedImages: formValues.relatedImages?.map(({ id }) => id) ?? [],
             manufacturer: formValues.manufacturer?.id,
             lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
         };
@@ -383,6 +388,14 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
                         maxFileSize={1024 * 1024 * 4} // 4 MB
                         fullWidth
                         layout="grid"
+                    />
+                    <Field
+                        name="relatedImages"
+                        component={FileField}
+                        multiple
+                        fullWidth
+                        label={<FormattedMessage id="product.relatedImages" defaultMessage="Related images" />}
+                        buttonText={<FormattedMessage id="product.relatedImages.choose" defaultMessage="Choose related images" />}
                     />
                     <DateTimeField
                         label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}

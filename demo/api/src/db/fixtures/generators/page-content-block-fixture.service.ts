@@ -11,6 +11,7 @@ import { ColumnsBlockFixtureService } from "./blocks/layout/columns-block-fixtur
 import { ContentGroupBlockFixtureService } from "./blocks/layout/content-group-block-fixture.service";
 import { LayoutBlockFixtureService } from "./blocks/layout/layout-block-fixture.service";
 import { SpaceBlockFixtureService } from "./blocks/layout/space-block-fixture.service";
+import { BatchSelectMediaListBlockFixtureService } from "./blocks/media/batch-select-media-list-block-fixture.service";
 import { DamImageBlockFixtureService } from "./blocks/media/dam-image-block-fixture.service";
 import { FullWidthImageBlockFixtureService } from "./blocks/media/full-width-image-block-fixture.service";
 import { MediaGalleryBlockFixtureService } from "./blocks/media/media-gallery-block-fixture.service";
@@ -35,6 +36,7 @@ export class PageContentBlockFixtureService {
     constructor(
         private readonly accordionBlockFixtureService: AccordionBlockFixtureService,
         private readonly anchorBlockFixtureService: AnchorBlockFixtureService,
+        private readonly batchSelectMediaListBlockFixtureService: BatchSelectMediaListBlockFixtureService,
         private readonly billboardTeaserBlockFixtureService: BillboardTeaserBlockFixtureService,
         private readonly callToActionListBlockFixtureService: StandaloneCallToActionListBlockFixtureService,
         private readonly columnsBlockFixtureService: ColumnsBlockFixtureService,
@@ -72,6 +74,7 @@ export class PageContentBlockFixtureService {
             slider: ["layout", this.sliderBlockFixtureService],
             fullWidthImage: ["media", this.fullWidthImageBlockFixtureService],
             image: ["media", this.imageBlockFixtureService],
+            batchSelectMediaList: ["media", this.batchSelectMediaListBlockFixtureService],
             media: ["media", this.mediaBlockFixtureService],
             mediaGallery: ["media", this.mediaGalleryBlockFixtureService],
             anchor: ["navigation", this.anchorBlockFixtureService],

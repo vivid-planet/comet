@@ -1,0 +1,68 @@
+import { DamVideoBlock, type PropsWithData, withPreview } from "@comet/site-nextjs";
+import type { BatchSelectMediaListBlockData } from "@src/blocks.generated";
+import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
+import { PlayPauseButton } from "@src/common/helpers/PlayPauseButton";
+import { PageLayout } from "@src/layout/PageLayout";
+import { FormattedMessage } from "react-intl";
+
+import styles from "./BatchSelectMediaListBlock.module.scss";
+
+type BatchSelectMediaListBlockProps = PropsWithData<BatchSelectMediaListBlockData>;
+
+export const BatchSelectMediaListBlock = withPreview(
+    ({ data }: BatchSelectMediaListBlockProps) => {
+        const images = data.images.blocks;
+        const videos = data.videos.blocks;
+
+        if (images.length === 0 && videos.length === 0) {
+            return null;
+        }
+
+        return (
+            <div className={styles.root}>
+                {images.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.heading}>
+                            <FormattedMessage id="batchSelectMediaListBlock.images" defaultMessage="Images" />
+                        </h2>
+                        <ul className={styles.list}>
+                            {images.map((block) => (
+                                <li key={block.key} className={styles.item}>
+                                    <DamImageBlock data={block.props} aspectRatio="3x2" sizes="(min-width: 768px) 33vw, 100vw" />
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+                )}
+                {videos.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.heading}>
+                            <FormattedMessage id="batchSelectMediaListBlock.videos" defaultMessage="Videos" />
+                        </h2>
+                        <ul className={styles.list}>
+                            {videos.map((block) => (
+                                <li key={block.key} className={styles.item}>
+                                    <DamVideoBlock
+                                        data={block.props}
+                                        previewImageSizes="(min-width: 768px) 50vw, 100vw"
+                                        aspectRatio="16x9"
+                                        playPauseButton={PlayPauseButton}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+                )}
+            </div>
+        );
+    },
+    { label: "BatchSelectMediaList" },
+);
+
+export const PageContentBatchSelectMediaListBlock = (props: BatchSelectMediaListBlockProps) => (
+    <PageLayout grid>
+        <div className={styles.pageLayoutContent}>
+            <BatchSelectMediaListBlock {...props} />
+        </div>
+    </PageLayout>
+);
