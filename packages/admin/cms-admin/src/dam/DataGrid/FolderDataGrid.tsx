@@ -91,6 +91,7 @@ type FolderDataGridToolbarProps = {
     id?: string;
     filterApi: IFilterApi<DamFilter>;
     hideArchiveFilter?: boolean;
+    hideSelectiveActions?: boolean;
     additionalToolbarItems?: ReactNode;
     uploadFilters: {
         allowedMimetypes?: string[];
@@ -101,6 +102,7 @@ function FolderDataGridToolbar({
     id: currentFolderId,
     filterApi,
     hideArchiveFilter,
+    hideSelectiveActions,
     additionalToolbarItems,
     uploadFilters,
 }: FolderDataGridToolbarProps) {
@@ -131,6 +133,7 @@ function FolderDataGridToolbar({
                     }}
                     folderId={data?.damFolder.id}
                     filter={uploadFilters}
+                    hideSelectiveActions={hideSelectiveActions}
                 />
 
                 <UploadFilesButton folderId={data?.damFolder.id} filter={uploadFilters} />
@@ -145,6 +148,7 @@ const FolderDataGrid = ({
     breadcrumbs,
     hideContextMenu = false,
     hideArchiveFilter,
+    toolbarOptions,
     hideMultiselect,
     renderDamLabel,
     ...props
@@ -673,6 +677,7 @@ const FolderDataGrid = ({
                             filterApi,
                             uploadFilters,
                             additionalToolbarItems: props.additionalToolbarItems,
+                            ...toolbarOptions,
                         } as FolderDataGridToolbarProps,
                     }}
                     showToolbar

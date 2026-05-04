@@ -85,6 +85,9 @@ export interface DamConfig {
     contentScopeIndicator?: ReactNode;
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
+    toolbarOptions?: {
+        hideSelectiveActions?: boolean;
+    };
     additionalToolbarItems?: ReactNode;
 }
 
