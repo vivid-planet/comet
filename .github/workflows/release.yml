@@ -43,7 +43,7 @@ jobs:
               uses: dotansimha/changesets-action@v1.5.2
               with:
                   version: pnpm run version
-                  publish: pnpm run publish --tag=stable-v8
+                  publish: pnpm run publish
                   title: "Version Packages (v8)"
                   createGithubReleases: aggregate
                   githubReleaseName: "${{ env.PUBLISHED_VERSION }}"
