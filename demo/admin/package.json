@@ -32,7 +32,6 @@
     "dependencies": {
         "@apollo/client": "^3.14.1",
         "@comet/admin": "workspace:*",
-        "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/brevo-admin": "workspace:*",
         "@comet/cms-admin": "workspace:*",
@@ -58,6 +57,7 @@
         "react-dnd-multi-backend": "^9.0.0",
         "react-dom": "^19.2.4",
         "react-final-form": "^6.5.9",
+        "react-hook-form": "^7.0.0",
         "react-intl": "^7.1.11",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
