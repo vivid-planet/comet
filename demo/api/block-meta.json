@@ -616,6 +616,11 @@
         ]
     },
     {
+        "name": "ContactForm",
+        "fields": [],
+        "inputFields": []
+    },
+    {
         "name": "ContentGroup",
         "fields": [
             {
@@ -2215,7 +2220,8 @@
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },
@@ -2281,7 +2287,8 @@
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },

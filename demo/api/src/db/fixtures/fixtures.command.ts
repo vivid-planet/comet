@@ -124,6 +124,13 @@ export class FixturesCommand extends CommandRunner {
             parentId: blockCategoriesPage.id,
         });
 
+        await this.documentGeneratorService.generatePage({
+            name: "Form",
+            scope,
+            blockCategory: "form",
+            parentId: blockCategoriesPage.id,
+        });
+
         this.logger.log("Generate Many Images Test Page...");
         await this.manyImagesTestPageFixtureService.execute();
         this.logger.log("Many Images Test Page created");
