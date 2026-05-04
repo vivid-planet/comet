@@ -85,7 +85,6 @@ interface FolderDataGridProps extends DamConfig {
     id?: string;
     breadcrumbs?: BreadcrumbItem[];
     filterApi: IFilterApi<DamFilter>;
-    hideSelectiveActions?: boolean;
 }
 
 type FolderDataGridToolbarProps = {
@@ -149,7 +148,7 @@ const FolderDataGrid = ({
     breadcrumbs,
     hideContextMenu = false,
     hideArchiveFilter,
-    hideSelectiveActions,
+    toolbarOptions,
     hideMultiselect,
     renderDamLabel,
     ...props
@@ -677,8 +676,8 @@ const FolderDataGrid = ({
                             breadcrumbs,
                             filterApi,
                             uploadFilters,
-                            hideSelectiveActions,
                             additionalToolbarItems: props.additionalToolbarItems,
+                            ...toolbarOptions,
                         } as FolderDataGridToolbarProps,
                     }}
                     showToolbar
