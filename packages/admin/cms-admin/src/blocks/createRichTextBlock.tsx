@@ -1,4 +1,4 @@
-import { type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@comet/admin-rte";
+import { htmlToState, type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@comet/admin-rte";
 import {
     BlockMapBuilder,
     convertFromHTML,
@@ -264,6 +264,18 @@ export const createRichTextBlock = (
         extractTextContents: function (state) {
             const content = state.editorState.getCurrentContent();
             return content.hasText() ? [stateToHtml({ editorState: state.editorState, options: rteOptions }).html] : [];
+        },
+        translateContent: async function (state, translate) {
+            const content = state.editorState.getCurrentContent();
+            if (!content.hasText()) {
+                return state;
+            }
+
+            const { html, entities } = stateToHtml({ editorState: state.editorState, options: rteOptions });
+            const translatedHtml = await translate(html);
+            const translatedEditorState = htmlToState({ html: translatedHtml, entities });
+
+            return { editorState: translatedEditorState };
         },
     };
 

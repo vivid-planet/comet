@@ -199,6 +199,9 @@ export type { SiteConfig } from "./siteConfigs/siteConfigsConfig";
 export { useSiteConfig } from "./siteConfigs/useSiteConfig";
 export { useSiteConfigs } from "./siteConfigs/useSiteConfigs";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
+export { createDocumentTranslationMethods } from "./translation/createDocumentTranslationMethods";
+export type { TranslatableInterface } from "./translation/TranslatableInterface";
+export { TranslateContentMenuItem } from "./translation/TranslateContentMenuItem";
 export {
     CurrentUserContext,
     type CurrentUserInterface,

@@ -9,7 +9,6 @@ import debounce from "p-debounce";
 import { type JSX, type ReactNode, useCallback, useEffect, useState } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
-import slugify from "slugify";
 import { useDebounce } from "use-debounce";
 
 import { useContentLanguage } from "../contentLanguage/useContentLanguage";
@@ -32,6 +31,7 @@ import type {
     GQLUpdatePageNodeMutation,
     GQLUpdatePageNodeMutationVariables,
 } from "./createEditPageNode.generated";
+import { transformToSlug } from "./pageTree/transformToSlug";
 
 type SerializedInitialValues = string;
 
@@ -542,14 +542,6 @@ interface FormValues {
     hideInMenu: boolean;
     createAutomaticRedirectsOnSlugChange?: boolean;
 }
-
-const transformToSlug = (name: string, locale: string) => {
-    let slug = slugify(name, { replacement: "-", lower: true, locale });
-    // Remove everything except unreserved characters and percent encoding (https://tools.ietf.org/html/rfc3986#section-2.1)
-    // This is necessary because slugify does not remove all reserved characters per default (e.g. "@")
-    slug = slug.replace(/[^a-zA-Z0-9-._~]/g, "");
-    return slug;
-};
 
 const isValidSlug = (value: string) => {
     return /^[a-zA-Z0-9][a-zA-Z0-9-_]*$/.test(value);

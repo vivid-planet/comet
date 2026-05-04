@@ -120,6 +120,7 @@ interface UsePageApi<PageState, RootBlocks extends RootBlocksInterface> {
     pageSaveButton: JSX.Element;
     dialogs: ReactNode;
     resetPageStateToLatest: () => Promise<void>;
+    translateContent: (batchTranslate: (texts: string[]) => Promise<string[]>) => Promise<void>;
 }
 
 // signature of the usePage hook
@@ -420,6 +421,64 @@ export const createUsePage: CreateUsePage =
                 [hasConflict, hasChanges, handleSavePage, saveError, saving],
             );
 
+            const translateContent = useCallback(
+                async (batchTranslate: (texts: string[]) => Promise<string[]>) => {
+                    if (!pageState?.document) {
+                        return;
+                    }
+
+                    // Pass 1: Collect all translatable texts
+                    const collectedTexts: string[] = [];
+                    const collectingTranslate = async (text: string): Promise<string> => {
+                        collectedTexts.push(text);
+                        return text;
+                    };
+
+                    await Promise.all(
+                        Object.entries(rootBlocks).map(async ([key, block]) => {
+                            if (block.translateContent) {
+                                await block.translateContent(pageState.document?.[key], collectingTranslate);
+                            }
+                        }),
+                    );
+
+                    if (collectedTexts.length === 0) {
+                        return;
+                    }
+
+                    // Pass 2: Batch translate
+                    const translatedTexts = await batchTranslate(collectedTexts);
+
+                    // Pass 3: Apply translations
+                    let textIndex = 0;
+                    const applyingTranslate = async (_text: string): Promise<string> => {
+                        return translatedTexts[textIndex++];
+                    };
+
+                    const translatedRootBlocks = await Promise.all(
+                        Object.entries(rootBlocks).map(async ([key, block]) => {
+                            const state = pageState.document?.[key];
+                            const translatedState = block.translateContent ? await block.translateContent(state, applyingTranslate) : state;
+                            return [key, translatedState];
+                        }),
+                    );
+
+                    setPageState((s) => {
+                        if (!s?.document) {
+                            return s;
+                        }
+                        return {
+                            ...s,
+                            document: {
+                                ...s.document,
+                                ...Object.fromEntries(translatedRootBlocks),
+                            },
+                        } as PS;
+                    });
+                },
+                [pageState],
+            );
+
             return {
                 hasChanges,
                 handleSavePage,
@@ -431,6 +490,7 @@ export const createUsePage: CreateUsePage =
                 saving,
                 pageSaveButton,
                 resetPageStateToLatest,
+                translateContent,
                 dialogs,
             };
         };

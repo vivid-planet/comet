@@ -1,7 +1,19 @@
 import { gql } from "@apollo/client";
-import { FillSpace, Loading, MainContent, messages, RouterPrompt, RouterTab, RouterTabs, Toolbar, ToolbarItem, useStackApi } from "@comet/admin";
+import {
+    CrudMoreActionsMenu,
+    FillSpace,
+    Loading,
+    MainContent,
+    messages,
+    RouterPrompt,
+    RouterTab,
+    RouterTabs,
+    Toolbar,
+    ToolbarItem,
+    useStackApi,
+} from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { BlockAdminComponentRoot, ContentScopeIndicator, createUsePage, PageName } from "@comet/cms-admin";
+import { BlockAdminComponentRoot, ContentScopeIndicator, createUsePage, PageName, TranslateContentMenuItem } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { useIntl } from "react-intl";
@@ -61,6 +73,7 @@ export const EditLink = ({ id }: Props) => {
         dialogs,
         pageSaveButton,
         handleSavePage,
+        translateContent,
     } = usePage({
         pageId: id,
     });
@@ -100,6 +113,11 @@ export const EditLink = ({ id }: Props) => {
                 </ToolbarItem>
                 <PageName pageId={id} />
                 <FillSpace />
+                <ToolbarItem>
+                    <CrudMoreActionsMenu
+                        overallActions={[<TranslateContentMenuItem key="translate" translateContent={translateContent} disabled={!linkState} />]}
+                    />
+                </ToolbarItem>
                 <ToolbarItem>{pageSaveButton}</ToolbarItem>
             </Toolbar>
             <MainContent>
