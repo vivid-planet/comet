@@ -1,7 +1,7 @@
 import { BaseEntity, defineConfig, Entity, ManyToOne, MikroORM, PrimaryKey, Ref } from "@mikro-orm/postgresql";
 import { ID } from "@nestjs/graphql";
-import { Field } from "@nestjs/graphql/dist/decorators/field.decorator";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { Field } from "@nestjs/graphql/dist/decorators/field.decorator.js";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
 import { formatSource, parseSource, testPermission } from "../../utils/test-helper";
