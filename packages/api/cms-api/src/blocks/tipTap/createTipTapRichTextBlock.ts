@@ -32,7 +32,7 @@ import { SoftHyphen } from "./extensions/SoftHyphen";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TipTapContent = Record<string, any>;
 
-export type TipTapSupports =
+type TipTapSupports =
     | "bold"
     | "italic"
     | "strike"
@@ -45,9 +45,9 @@ export type TipTapSupports =
     | "soft-hyphen"
     | "link";
 
-export type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
+type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
 
-export interface TipTapBlockStyle {
+interface TipTapBlockStyle {
     name: string;
     /**
      * Limits the block style to the provided block types.
