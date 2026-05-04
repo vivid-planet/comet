@@ -1,11 +1,11 @@
 import { v4 as uuid } from "uuid";
 
-import { type RichTextBlockInput } from "../../../blocks.generated";
+import type { RichTextBlockInput } from "../../../blocks.generated";
 import { createRichTextBlock, type RichTextBlockState } from "../../createRichTextBlock";
-import { type TableBlockState } from "../../createTableBlock";
+import type { TableBlockState } from "../../createTableBlock";
 import { createBlockSkeleton } from "../../helpers/createBlockSkeleton";
-import { type BlockInterface, type LinkBlockInterface } from "../../types";
-import { type ColumnInsertData } from "../utils/column";
+import type { BlockInterface, LinkBlockInterface } from "../../types";
+import type { ColumnInsertData } from "../utils/column";
 
 const MockLinkBlock: BlockInterface & LinkBlockInterface = {
     ...createBlockSkeleton(),

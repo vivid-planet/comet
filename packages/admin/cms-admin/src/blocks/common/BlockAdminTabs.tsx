@@ -5,7 +5,7 @@ import type { JSX } from "react";
 import { Switch, useRouteMatch } from "react-router";
 import { Link, type LinkProps } from "react-router-dom";
 
-import { type BlockAdminComponentPart } from "../types";
+import type { BlockAdminComponentPart } from "../types";
 import { TabContent } from "./AdminTabsTabContent";
 
 export interface BlockAdminTabsProps {

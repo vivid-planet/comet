@@ -12,7 +12,7 @@ import { Button } from "./common/buttons/Button";
 import { FillSpace } from "./common/FillSpace";
 import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
 import { EditDialog } from "./EditDialog";
-import { type IEditDialogApi } from "./EditDialogApiContext";
+import type { IEditDialogApi } from "./EditDialogApiContext";
 import { FinalForm } from "./FinalForm";
 import { TextField } from "./form/fields/TextField";
 import { StackLink } from "./stack/StackLink";
@@ -119,6 +119,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                             } as ToolbarProps,
                         }}
                         disableVirtualization
+                        showToolbar
                     />
                 </RouterTab>
             </RouterTabs>

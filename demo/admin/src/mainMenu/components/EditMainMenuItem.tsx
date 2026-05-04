@@ -34,10 +34,10 @@ import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
 
-import {
-    type GQLEditMainMenuItemFragment,
-    type GQLUpdateMainMenuItemMutation,
-    type GQLUpdateMainMenuItemMutationVariables,
+import type {
+    GQLEditMainMenuItemFragment,
+    GQLUpdateMainMenuItemMutation,
+    GQLUpdateMainMenuItemMutationVariables,
 } from "./EditMainMenuItem.generated";
 
 export type { GQLEditMainMenuItemFragment } from "./EditMainMenuItem.generated"; // re-export
@@ -148,7 +148,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                             openSitePreviewWindow(item.node.path, contentScopeMatch.url);
                         }}
                     >
-                        <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                        <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Site preview" />
                     </Button>
                     <SaveButton disabled={!hasChanges} loading={saving} hasErrors={saveError != null} onClick={handleSaveClick} />
                 </ToolbarActions>
@@ -156,7 +156,9 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
             {hasChanges && (
                 <RouterPrompt
                     message={(location) => {
-                        if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
+                        if (location.pathname.startsWith(match.url)) {
+                            return true;
+                        } //we navigated within our self
                         return intl.formatMessage(messages.saveUnsavedChanges);
                     }}
                     saveAction={handleSaveAction}

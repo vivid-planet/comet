@@ -9,12 +9,12 @@ import {
     useTheme,
     useThemeProps,
 } from "@mui/material";
-import { type OverridableComponent, type OverridableTypeMap } from "@mui/material/OverridableComponent";
+import type { OverridableComponent, OverridableTypeMap } from "@mui/material/OverridableComponent";
 import { type ElementType, type ForwardedRef, forwardRef, type ReactNode } from "react";
 
 import { Tooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../helpers/useWindowSize";
 
 type Variant = "primary" | "secondary" | "outlined" | "destructive" | "success" | "textLight" | "textDark";

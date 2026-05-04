@@ -1,5 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { type FetchResult } from "@apollo/client/link/core";
+import type { FetchResult } from "@apollo/client/link/core";
 import { Button, SaveButton } from "@comet/admin";
 import { Move, Reset } from "@comet/admin-icons";
 import {
@@ -13,7 +13,7 @@ import { styled } from "@mui/material/styles";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type TextMatch } from "../../common/MarkedMatches";
+import type { TextMatch } from "../../common/MarkedMatches";
 import { SearchInput } from "../../common/SearchInput";
 import { useDamScope } from "../config/useDamScope";
 import {

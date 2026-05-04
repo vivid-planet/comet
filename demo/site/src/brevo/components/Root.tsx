@@ -12,7 +12,7 @@ import {
     MjmlTitle,
 } from "@comet/mail-react";
 import { theme } from "@src/brevo/util/theme";
-import { type FC, type PropsWithChildren } from "react";
+import type { FC, PropsWithChildren } from "react";
 
 import { indentedSectionGroupStyles } from "./IndentedSectionGroup";
 

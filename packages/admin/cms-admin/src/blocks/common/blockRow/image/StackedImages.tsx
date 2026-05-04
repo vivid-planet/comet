@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 
-import { type PreviewContentImage } from "../../../types";
+import type { PreviewContentImage } from "../../../types";
 import * as sc from "./StackedImages.sc";
 
 interface StackedImagesProps {

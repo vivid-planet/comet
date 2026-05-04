@@ -1,16 +1,16 @@
 import { createContext, type PropsWithChildren, useContext } from "react";
 
 import { type BlocksConfig, BlocksConfigProvider } from "../blocks/config/BlocksConfigContext";
-import { type BlockContext } from "../blocks/context/BlockContext";
+import type { BlockContext } from "../blocks/context/BlockContext";
 import { BlockContextProvider } from "../blocks/context/BlockContextProvider";
-import { type BuildInformation } from "../common/header/about/build-information/buildInformation";
-import { type ContentLanguageConfig } from "../contentLanguage/contentLanguageConfig";
-import { type DamConfig } from "../dam/config/damConfig";
-import { type DependenciesConfig } from "../dependencies/dependenciesConfig";
-import { type PageTreeConfig } from "../pages/pageTreeConfig";
-import { type RedirectsConfig } from "../redirects/redirectsConfig";
-import { type SiteConfigsConfig } from "../siteConfigs/siteConfigsConfig";
-import { type WarningsConfig } from "../warnings/warningsConfig";
+import type { BuildInformation } from "../common/header/about/build-information/buildInformation";
+import type { ContentLanguageConfig } from "../contentLanguage/contentLanguageConfig";
+import type { DamConfig } from "../dam/config/damConfig";
+import type { DependenciesConfig } from "../dependencies/dependenciesConfig";
+import type { PageTreeConfig } from "../pages/pageTreeConfig";
+import type { RedirectsConfig } from "../redirects/redirectsConfig";
+import type { SiteConfigsConfig } from "../siteConfigs/siteConfigsConfig";
+import type { WarningsConfig } from "../warnings/warningsConfig";
 
 export interface CometConfig<SiteConfigs = unknown> {
     apiUrl: string;

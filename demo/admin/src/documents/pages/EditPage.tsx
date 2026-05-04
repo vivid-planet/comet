@@ -25,22 +25,24 @@ import { useRouteMatch } from "react-router";
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { SeoBlock } from "./blocks/SeoBlock";
 import { StageBlock } from "./blocks/StageBlock";
-import {
-    type GQLEditPageQuery,
-    type GQLEditPageQueryVariables,
-    type GQLUpdatePageMutation,
-    type GQLUpdatePageMutationVariables,
-} from "./EditPage.generated";
+import type { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
 
 interface Props {
     id: string;
 }
 
 const pageTreeNodeDependentsQuery = gql`
-    query PageTreeNodeDependents($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+    query PageTreeNodeDependents(
+        $id: ID!
+        $offset: Int!
+        $limit: Int!
+        $forceRefresh: Boolean = false
+        $filter: DependentFilter
+        $sort: [DependencySort!]
+    ) {
         item: pageTreeNode(id: $id) {
             id
-            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
                 nodes {
                     rootGraphqlObjectType
                     rootId
@@ -48,6 +50,7 @@ const pageTreeNodeDependentsQuery = gql`
                     jsonPath
                     name
                     secondaryInformation
+                    visible
                 }
                 totalCount
             }
@@ -56,10 +59,17 @@ const pageTreeNodeDependentsQuery = gql`
 `;
 
 const pageTreeNodeDependenciesQuery = gql`
-    query PageTreeNodeDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+    query PageTreeNodeDependencies(
+        $id: ID!
+        $offset: Int!
+        $limit: Int!
+        $forceRefresh: Boolean = false
+        $filter: DependencyFilter
+        $sort: [DependencySort!]
+    ) {
         item: page(id: $id) {
             id
-            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
                 nodes {
                     targetGraphqlObjectType
                     targetId
@@ -67,6 +77,7 @@ const pageTreeNodeDependenciesQuery = gql`
                     jsonPath
                     name
                     secondaryInformation
+                    visible
                 }
                 totalCount
             }
@@ -163,7 +174,9 @@ export const EditPage = ({ id }: Props) => {
             <ContentGenerationConfigProvider
                 seo={{
                     getRelevantContent: () => {
-                        if (!pageState || !pageState.document) return [];
+                        if (!pageState || !pageState.document) {
+                            return [];
+                        }
 
                         return PageContentBlock.extractTextContents?.(pageState.document.content, { includeInvisibleContent: false }) ?? [];
                     },
@@ -172,7 +185,9 @@ export const EditPage = ({ id }: Props) => {
                 {hasChanges && (
                     <RouterPrompt
                         message={(location) => {
-                            if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
+                            if (location.pathname.startsWith(match.url)) {
+                                return true;
+                            } //we navigated within our self
                             return intl.formatMessage({
                                 id: "editPage.discardChanges",
                                 defaultMessage: "Discard unsaved changes?",
@@ -206,7 +221,7 @@ export const EditPage = ({ id }: Props) => {
                                     openSitePreviewWindow(pageState.path, contentScopeMatch.url);
                                 }}
                             >
-                                <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                                <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Site preview" />
                             </Button>
                             {pageSaveButton}
                         </Stack>

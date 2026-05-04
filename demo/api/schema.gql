@@ -381,7 +381,7 @@ type DamFile {
   contentHash: String!
   createdAt: DateTime!
   damPath: String!
-  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   duplicates: [DamFile!]!
   fileUrl: String!
   folder: DamFolder
@@ -542,15 +542,37 @@ type Dependency {
 }
 
 input DependencyFilter {
+  and: [DependencyFilter!]
+  name: StringFilter
+  or: [DependencyFilter!]
   rootColumnName: String
-  targetGraphqlObjectType: String
+  secondaryInformation: StringFilter
+  targetGraphqlObjectType: StringFilter
   targetId: String
+  visible: BooleanFilter
+}
+
+input DependencySort {
+  direction: SortDirection! = ASC
+  field: DependencySortField!
+}
+
+enum DependencySortField {
+  graphqlObjectType
+  name
+  secondaryInformation
+  visible
 }
 
 input DependentFilter {
+  and: [DependentFilter!]
+  name: StringFilter
+  or: [DependentFilter!]
   rootColumnName: String
-  rootGraphqlObjectType: String
+  rootGraphqlObjectType: StringFilter
   rootId: String
+  secondaryInformation: StringFilter
+  visible: BooleanFilter
 }
 
 interface DocumentInterface {
@@ -669,7 +691,7 @@ input FolderFilterInput {
 type Footer {
   content: FooterContentBlockData!
   createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   id: ID!
   scope: FooterScope!
   updatedAt: DateTime!
@@ -799,7 +821,7 @@ type MainMenu {
 type MainMenuItem {
   content: RichTextBlockData
   createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   id: ID!
   node: PageTreeNode!
   updatedAt: DateTime!
@@ -957,7 +979,6 @@ type Mutation {
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
   deleteRedirect(id: ID!): Boolean!
-  importDamFileByDownload(input: UpdateDamFileInput!, scope: DamScopeInput!, url: String!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   moveDamFolders(folderIds: [ID!]!, scope: DamScopeInput!, targetFolderId: ID): [DamFolder!]!
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
@@ -1011,8 +1032,8 @@ type News {
   content: NewsContentBlockData!
   createdAt: DateTime!
   date: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
+  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   id: ID!
   image: DamImageBlockData!
   scope: NewsContentScope!
@@ -1143,7 +1164,7 @@ input OneToManyFilter {
 type Page implements DocumentInterface {
   content: PageContentBlockData!
   createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   id: ID!
   pageTreeNode: PageTreeNode
   seo: SeoBlockData!
@@ -1168,8 +1189,8 @@ input PageInput {
 type PageTreeNode {
   category: PageTreeNodeCategory!
   childNodes: [PageTreeNode!]!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
-  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
+  dependents(filter: DependentFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   document: PageContentUnion
   documentType: String!
   hideInMenu: Boolean!
@@ -1548,6 +1569,7 @@ input ProductFilter {
   price: NumberFilter
   priceList: ManyToOneFilter
   slug: StringFilter
+  soldCount: NumberFilter
   status: ProductStatusEnumFilter
   tags: ManyToManyFilter
   tagsWithStatus: OneToManyFilter
@@ -1678,6 +1700,7 @@ enum ProductSortField {
   priceList_name
   priceList_updatedAt
   slug
+  soldCount
   statistics_createdAt
   statistics_updatedAt
   statistics_views
@@ -1873,6 +1896,7 @@ enum ProductVariantSortField {
   product_price
   product_priceList
   product_slug
+  product_soldCount
   product_status
   product_title
   product_type
@@ -1935,6 +1959,7 @@ type Query {
   newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]! = [{direction: ASC, field: createdAt}]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
   page(id: ID!): Page!
+  pageTreeFullTextSearch(limit: Int! = 25, offset: Int! = 0, scope: PageTreeNodeScopeInput!, search: String!): PaginatedPageTreeNodes!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
@@ -1957,7 +1982,7 @@ type Query {
   productVariants(filter: ProductVariantFilter, limit: Int! = 25, offset: Int! = 0, product: ID!, search: String, sort: [ProductVariantSort!]! = [{direction: ASC, field: position}]): PaginatedProductVariants!
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]! = [{direction: ASC, field: createdAt}]): PaginatedProducts!
   redirect(id: ID!): Redirect!
-  redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
+  redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceType!): Redirect
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   redirects(active: Boolean, query: String, scope: RedirectScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC, type: RedirectGenerationType): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   sitePreviewJwt(includeInvisible: Boolean!, path: String!, scope: JSONObject!): String!
@@ -1978,12 +2003,12 @@ type Redirect {
   active: Boolean!
   comment: String
   createdAt: DateTime!
-  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0): PaginatedDependencies!
+  dependencies(filter: DependencyFilter, forceRefresh: Boolean! = false, limit: Int! = 25, offset: Int! = 0, sort: [DependencySort!]): PaginatedDependencies!
   generationType: RedirectGenerationType!
   id: ID!
   scope: RedirectScope!
   source: String!
-  sourceType: RedirectSourceTypeValues!
+  sourceType: RedirectSourceType!
   target: JSONObject!
   updatedAt: DateTime!
 }
@@ -2011,7 +2036,7 @@ input RedirectInput {
   comment: String
   generationType: RedirectGenerationType!
   source: String!
-  sourceType: RedirectSourceTypeValues!
+  sourceType: RedirectSourceType!
   target: JSONObject!
 }
 
@@ -2034,15 +2059,15 @@ enum RedirectSortField {
   updatedAt
 }
 
-input RedirectSourceTypeEnumFilter {
-  equal: RedirectSourceTypeValues
-  isAnyOf: [RedirectSourceTypeValues!]
-  notEqual: RedirectSourceTypeValues
-}
-
-enum RedirectSourceTypeValues {
+enum RedirectSourceType {
   domain
   path
+}
+
+input RedirectSourceTypeEnumFilter {
+  equal: RedirectSourceType
+  isAnyOf: [RedirectSourceType!]
+  notEqual: RedirectSourceType
 }
 
 input RedirectUpdateActivenessInput {

@@ -1,9 +1,9 @@
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
-import { type TableBlockData } from "../../../blocks.generated";
-import { type RichTextBlock, type RichTextBlockState } from "../../createRichTextBlock";
-import { type TableBlockState } from "../../createTableBlock";
+import type { TableBlockData } from "../../../blocks.generated";
+import type { RichTextBlock, RichTextBlockState } from "../../createRichTextBlock";
+import type { TableBlockState } from "../../createTableBlock";
 import { insertRowDataAtIndex, type RowInsertData } from "./row";
 import { rteSchema } from "./rteSchema";
 

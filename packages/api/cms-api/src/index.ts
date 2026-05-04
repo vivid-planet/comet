@@ -11,12 +11,8 @@ export { createSitePreviewAuthService } from "./auth/services/site-preview.auth-
 export { createStaticUserAuthService } from "./auth/services/static-authed-user.auth-service";
 export { createAuthGuardProviders } from "./auth/util/auth-guard.providers";
 export { AuthServiceInterface } from "./auth/util/auth-service.interface";
-export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
-export { BlobStorageAzureStorage } from "./blob-storage/backends/azure/blob-storage-azure.storage";
 export { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage/backends/blob-storage-backend.interface";
 export { BlobStorageBackendService } from "./blob-storage/backends/blob-storage-backend.service";
-export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage-file.config";
-export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
 export { ScaledImagesCacheService } from "./blob-storage/cache/scaled-images-cache.service";
@@ -105,7 +101,7 @@ export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
-export { getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
+export { blockToMikroOrmFullText, getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
@@ -251,6 +247,7 @@ export {
     PageTreeNodeBaseUpdateInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./page-tree/dto/page-tree-node.input";
+export { PaginatedPageTreeNodesFactory } from "./page-tree/dto/paginated-page-tree-nodes.factory";
 export { AttachedDocument } from "./page-tree/entities/attached-document.entity";
 export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entity";
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
@@ -263,7 +260,7 @@ export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-ex
 export { RedirectInterface } from "./redirects/entities/redirect-entity.factory";
 export { RedirectTargetUrlServiceInterface } from "./redirects/redirect-target-url.service";
 export { REDIRECTS_LINK_BLOCK } from "./redirects/redirects.constants";
-export { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects/redirects.enum";
+export { RedirectGenerationType, RedirectSourceType } from "./redirects/redirects.enum";
 export { RedirectsLinkBlock, RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";

@@ -26,12 +26,12 @@ import {
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { InputAdornment, MenuItem } from "@mui/material";
-import { type GQLProductMutationErrorCode, type GQLProductType } from "@src/graphql.generated";
-import {
-    type GQLManufacturerCountriesQuery,
-    type GQLManufacturerCountriesQueryVariables,
-    type GQLManufacturersQuery,
-    type GQLManufacturersQueryVariables,
+import type { GQLProductMutationErrorCode, GQLProductType } from "@src/graphql.generated";
+import type {
+    GQLManufacturerCountriesQuery,
+    GQLManufacturerCountriesQueryVariables,
+    GQLManufacturersQuery,
+    GQLManufacturersQueryVariables,
 } from "@src/products/ProductForm.generated";
 import { FORM_ERROR, type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
@@ -39,21 +39,21 @@ import { type ReactNode, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "./helpers/FutureProductNotice";
-import {
-    type GQLProductCategoriesSelectQuery,
-    type GQLProductCategoriesSelectQueryVariables,
-    type GQLProductTagsSelectQuery,
-    type GQLProductTagsSelectQueryVariables,
+import type {
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
+    GQLProductTagsSelectQuery,
+    GQLProductTagsSelectQueryVariables,
 } from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
-import {
-    type GQLCreateProductMutation,
-    type GQLCreateProductMutationVariables,
-    type GQLProductFormManualFragment,
-    type GQLProductQuery,
-    type GQLProductQueryVariables,
-    type GQLUpdateProductMutation,
-    type GQLUpdateProductMutationVariables,
+import type {
+    GQLCreateProductMutation,
+    GQLCreateProductMutationVariables,
+    GQLProductFormManualFragment,
+    GQLProductQuery,
+    GQLProductQueryVariables,
+    GQLUpdateProductMutation,
+    GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
 
 interface FormProps {
@@ -138,7 +138,9 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
     });
 
     const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        if (await saveConflict.checkForConflicts()) {
+            throw new Error("Conflicts detected");
+        }
 
         const output = {
             ...formValues,
@@ -157,7 +159,9 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         };
 
         if (mode === "edit") {
-            if (!id) throw new Error();
+            if (!id) {
+                throw new Error();
+            }
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
                 variables: { id, input: output },
@@ -190,7 +194,9 @@ export function ProductForm({ id, width, onCreate }: FormProps) {
         }
     };
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

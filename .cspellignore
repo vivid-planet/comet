@@ -7,6 +7,7 @@ codemods
 Embeddables
 exceljs
 exif
+extensionless
 GraphQLJSONObject
 imgproxy
 kubernetes
@@ -67,3 +68,10 @@ autoplay
 authproxy
 rdndmb
 xact
+Onetrust
+viewports
+roundrect
+arcsize
+shakability
+fulltext
+agentic

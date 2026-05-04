@@ -1,6 +1,6 @@
 import { renderToMjml } from "@comet/mail-react";
 import mjml2html from "mjml";
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
 
 export const renderMailHtml = (mail: ReactElement) => {
     const mjmlString = renderToMjml(mail);

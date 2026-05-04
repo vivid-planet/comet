@@ -1,5 +1,13 @@
 # @comet/site-react
 
+## 9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- 865fcfd: Remove legacy CJS fields (`module`, `types`) from package.json as these packages are ESM-only
+
 ## 9.0.0-beta.0
 
 ### Minor Changes

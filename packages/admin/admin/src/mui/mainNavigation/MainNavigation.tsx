@@ -2,12 +2,12 @@ import { type ComponentsOverrides, type Drawer as MuiDrawer, type Theme, useThem
 import { Children, cloneElement, type ReactNode, useContext, useEffect, useMemo, useRef } from "react";
 import { useHistory } from "react-router";
 
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
-import { type MainNavigationChild, type MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
+import type { MainNavigationChild, MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
 import { useMainNavigation } from "./Context";
-import { type MainNavigationItemProps } from "./Item";
-import { type MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
+import type { MainNavigationItemProps } from "./Item";
+import type { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 import { type MainNavigationClassKey, type OwnerState, PermanentDrawer, TemporaryDrawer } from "./MainNavigation.styles";
 
 export const DEFAULT_DRAWER_WIDTH = 300;

@@ -156,6 +156,7 @@ export class AppModule {
                         }
                         return config.sitePreviewSecret;
                     },
+                    fullText: true,
                 }),
 
                 RedirectsModule.register({
@@ -235,19 +236,14 @@ export class AppModule {
                         resolveConfig: (scope: EmailCampaignContentScope) => {
                             // change config based on scope - for example different sender email
                             // this is just to show you can use the scope to change the config but it has no real use in this example
-                            if (scope.domain === "main") {
-                                return {
-                                    apiKey: config.brevo.apiKey,
-                                    redirectUrlForImport: config.brevo.redirectUrlForImport,
-                                };
-                            } else if (scope.domain === "secondary") {
-                                return {
-                                    apiKey: config.brevo.apiKey,
-                                    redirectUrlForImport: config.brevo.redirectUrlForImport,
-                                };
+                            const siteConfig = config.siteConfigs.find((siteConfig) => siteConfig.scope.domain == scope.domain);
+                            if (!siteConfig) {
+                                throw Error("Invalid scope passed");
                             }
-
-                            throw Error("Invalid scope passed");
+                            return {
+                                apiKey: config.brevo.apiKey,
+                                redirectUrlForImport: siteConfig.url,
+                            };
                         },
                         BlacklistedContacts,
                         BrevoContactAttributes,

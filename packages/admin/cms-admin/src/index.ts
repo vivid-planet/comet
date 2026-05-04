@@ -163,8 +163,10 @@ export {
     useContentGenerationConfig,
 } from "./documents/ContentGenerationConfigContext";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
-export type { DocumentInterface, DocumentType, InfoTagProps } from "./documents/types";
-export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
+export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionProps } from "./documents/types";
+export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+/** @deprecated Use `ChooseDamFileDialog` instead. */
+export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
 export { FileField } from "./form/file/FileField";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {
@@ -183,6 +185,7 @@ export { createUsePage } from "./pages/createUsePage";
 export { PagesPage } from "./pages/pagesPage/PagesPage";
 export type { AllCategories } from "./pages/pageTree/PageTreeContext";
 export { useCopyPastePages } from "./pages/pageTree/useCopyPastePages";
+export { PageTreeSelect } from "./pages/pageTreeSelect/PageTreeSelect";
 export { resolveHasSaveConflict } from "./pages/resolveHasSaveConflict";
 export { useSaveConflict } from "./pages/useSaveConflict";
 export { useSaveConflictQuery } from "./pages/useSaveConflictQuery";

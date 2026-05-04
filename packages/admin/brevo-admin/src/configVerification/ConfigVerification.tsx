@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { Alert, Loading, MainContent } from "@comet/admin";
-import { type ContentScope } from "@comet/cms-admin";
-import { type JSX, type PropsWithChildren } from "react";
+import type { ContentScope } from "@comet/cms-admin";
+import type { JSX, PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { brevoConfigCheckQuery } from "./ConfigVerification.gql";
-import { type GQLBrevoConfigCheckQuery, type GQLBrevoConfigCheckQueryVariables } from "./ConfigVerification.gql.generated";
+import type { GQLBrevoConfigCheckQuery, GQLBrevoConfigCheckQueryVariables } from "./ConfigVerification.gql.generated";
 
 interface ConfigCheckProps {
     scope: ContentScope;
@@ -17,7 +17,9 @@ export function ConfigVerification({ scope, children }: PropsWithChildren<Config
         fetchPolicy: "cache-and-network",
     });
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

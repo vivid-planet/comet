@@ -182,6 +182,10 @@ npm run lint
 
 Repeat this step, fixing all lint errors, until the lint passes.
 
+### Rename `RedirectSourceTypeValues` to `RedirectSourceType``
+
+Use `RedirectSourceType` instead of `RedirectSourceTypeValues` from `@comet/cms-api`
+
 ## Admin
 
 ### Update Comet and peer dependencies
@@ -209,6 +213,16 @@ Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0` an
 +       "react-dnd-multi-backend": "^9.0.0",
 -       "react-intl": "^6.8.9",
 +       "react-intl": "^7.1.9",
+-       "@mui/x-data-grid": "^7.29.12",
+-       "@mui/x-data-grid-pro": "^7.29.12",
++       "@mui/x-data-grid": "^8.27.5",
++       "@mui/x-data-grid-pro": "^8.27.5",
+-       "@mui/x-date-pickers": "^7.29.4",
+-       "@mui/x-date-pickers-pro": "^7.29.4",
+-       "@mui/x-license": "^7.29.1",
++       "@mui/x-date-pickers": "^8.27.2",
++       "@mui/x-date-pickers-pro": "^8.27.2",
++       "@mui/x-license": "^8.26.0",
     },
     "devDependencies": {
 -       "@comet/admin-generator": "^8.0.0",
@@ -316,6 +330,107 @@ npx types-react-codemod@latest preset-19 ./src
 
 See the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) for more information.
 
+### Upgrade MUI X Data Grid to v8
+
+The MUI X Data Grid peer dependency has been bumped to v8.
+Review the [migration guide](https://mui.com/x/migration/migration-data-grid-v7/) for more information.
+
+#### Run codemods
+
+```sh
+cd admin
+
+npx @mui/x-codemod@latest v8.0.0/data-grid/preset-safe src
+```
+
+#### Import `GridToolbarQuickFilter` from `@comet/admin`
+
+`GridToolbarQuickFilter` must now be imported from `@comet/admin`:
+
+```diff
+-import { GridToolbarQuickFilter } from "@mui/x-data-grid";
++import { GridToolbarQuickFilter } from "@comet/admin";
+```
+
+```diff
+-import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
++import { GridToolbarQuickFilter } from "@comet/admin";
+```
+
+```diff
+-import { GridToolbarQuickFilter } from "@mui/x-data-grid-premium";
++import { GridToolbarQuickFilter } from "@comet/admin";
+```
+
+:::info
+
+An ESLint rule enforces this import. Running `npm run lint` will flag any remaining usages.
+
+:::
+
+#### Update row selection model usage
+
+The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`:
+
+```diff
+-const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
++const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
++    type: "include",
++    ids: new Set([]),
++});
+```
+
+Update all code that reads from the selection model:
+
+```diff
+-selectionModel.length
++selectionModel.ids.size
+
+-selectionModel.includes(row.id)
++selectionModel.ids.has(row.id)
+
+-for (const id of selectionModel) {
++for (const id of Array.from(selectionModel.ids)) {
+```
+
+When passing `rowSelectionModel` as a prop, convert to the new format:
+
+```diff
+-rowSelectionModel={state.ids}
++rowSelectionModel={{ type: "include", ids: new Set(state.ids) }}
+```
+
+When reading from `onRowSelectionModelChange`, convert back from `Set` to array if needed:
+
+```diff
+onRowSelectionModelChange={(newSelection) => {
+-    updateState({ ids: newSelection as string[] });
++    updateState({ ids: Array.from(newSelection.ids) as string[] });
+}}
+```
+
+Add `disableRowSelectionExcludeModel` to opt out of the new exclude selection model:
+
+```diff
+  <DataGridPro
+      checkboxSelection
+      keepNonExistentRowsSelected
++     disableRowSelectionExcludeModel
+  />
+```
+
+### Upgrade MUI X Date Pickers to v8
+
+The MUI X Date Pickers peer dependency has been bumped to v8.
+Review the [migration guide](https://mui.com/x/migration/migration-pickers-v7/) for more information.
+
+#### Update the `AdapterDateFns` import
+
+```diff title="src/App.tsx"
+-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
++import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+```
+
 ### Replace the `variant` prop with `color` in `Tooltip`
 
 The `variant` prop has been renamed to color and the options `neutral` and `primary` have been removed.
@@ -349,6 +464,24 @@ The `createHttpClient` function has been removed. Use native fetch instead.
 ### Remove `clearable` prop from `Autocomplete`, `FinalFormInput`, `FinalFormNumberInput` and `FinalFormSearchTextField`
 
 Those fields are now clearable automatically when not set to `required`, `disabled` or `readOnly`.
+
+### Remove `hasClearableContent` prop from `ClearInputAdornment`
+
+The `hasClearableContent` prop has been removed from `ClearInputAdornment`. The component now always renders when included in the component tree.
+
+Callers should conditionally render the component instead of passing the `hasClearableContent` prop.
+
+**Before:**
+
+```tsx
+<ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
+```
+
+**After:**
+
+```tsx
+{value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+```
 
 ### Replacement of `@comet/admin-date-time`
 

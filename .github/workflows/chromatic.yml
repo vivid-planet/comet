@@ -4,12 +4,16 @@ on:
     pull_request:
         paths:
             - packages/admin/admin/**
+            - packages/admin/cms-admin/**
+            - packages/mail-react/**
         branches:
             - main
             - next
     push:
         paths:
             - packages/admin/admin/**
+            - packages/admin/cms-admin/**
+            - packages/mail-react/**
         branches:
             - main
             - next
@@ -21,7 +25,7 @@ jobs:
         steps:
             - run: echo "${{ github.actor }}"
 
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
               with:
                   ref: ${{ github.event.pull_request.head.ref || github.ref }}
                   fetch-depth: 0
@@ -29,7 +33,7 @@ jobs:
             - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 22.x
-              uses: actions/setup-node@v5
+              uses: actions/setup-node@v6
               with:
                   node-version: 22
                   registry-url: "https://registry.npmjs.org"
@@ -39,10 +43,22 @@ jobs:
 
             - run: pnpm setup:ci
 
-            - run: pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build
+            - run: pnpm --recursive --filter '@comet/*admin*' --filter '@comet/mail-react' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build
 
             - name: Publish comet-admin to Chromatic
               uses: chromaui/action@v1
               with:
                   projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_ADMIN }}
                   workingDir: packages/admin/admin
+
+            - name: Publish comet-cms-admin to Chromatic
+              uses: chromaui/action@v1
+              with:
+                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_CMS_ADMIN }}
+                  workingDir: packages/admin/cms-admin
+
+            - name: Publish comet-mail-react to Chromatic
+              uses: chromaui/action@v1
+              with:
+                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_MAIL_REACT }}
+                  workingDir: packages/mail-react

@@ -1,15 +1,23 @@
 import { useQuery } from "@apollo/client";
-import { DataGridToolbar, type GridColDef, ToolbarTitleItem, useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
-import { type ContentScope } from "@comet/cms-admin";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { type ReactElement } from "react";
+import {
+    DataGridToolbar,
+    type GridColDef,
+    GridToolbarQuickFilter,
+    ToolbarTitleItem,
+    useBufferedRowCount,
+    useDataGridRemote,
+    usePersistentColumnState,
+} from "@comet/admin";
+import type { ContentScope } from "@comet/cms-admin";
+import { DataGrid } from "@mui/x-data-grid";
+import type { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { allAssignedBrevoContactsGridQuery } from "./AllAssignedContactsGrid.gql";
-import {
-    type GQLBrevoContactsQuery,
-    type GQLBrevoContactsQueryVariables,
-    type GQLTargetGroupBrevoContactsListFragment,
+import type {
+    GQLBrevoContactsQuery,
+    GQLBrevoContactsQueryVariables,
+    GQLTargetGroupBrevoContactsListFragment,
 } from "./AllAssignedContactsGrid.gql.generated";
 
 const AssignedContactsGridToolbar = () => {
@@ -94,7 +102,9 @@ export function AllAssignedContactsGrid({ id, scope, brevoId }: AllAssignedConta
 
     const allAssignedContactsRowCount = useBufferedRowCount(allAssignedContactsData?.brevoContacts.totalCount);
 
-    if (allAssignedContactsError) throw allAssignedContactsError;
+    if (allAssignedContactsError) {
+        throw allAssignedContactsError;
+    }
 
     return (
         <DataGrid
@@ -108,6 +118,7 @@ export function AllAssignedContactsGrid({ id, scope, brevoId }: AllAssignedConta
             slots={{
                 toolbar: AssignedContactsGridToolbar,
             }}
+            showToolbar
         />
     );
 }

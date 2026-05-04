@@ -12,7 +12,7 @@ import {
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { DialogContent, Typography } from "@mui/material";
-import { type StoryObj } from "@storybook/react-webpack5";
+import type { StoryObj } from "@storybook/react-webpack5";
 import { expect, waitFor, within } from "storybook/test";
 
 import { stackRouteDecorator } from "../../helpers/storyDecorators";

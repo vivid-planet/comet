@@ -1,8 +1,8 @@
 import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
 import { type ComponentsOverrides, css, type Theme, Typography, type TypographyProps, useThemeProps } from "@mui/material";
-import { type ElementType } from "react";
+import type { ElementType } from "react";
 
-import { type SupportedThings } from "./Rte";
+import type { SupportedThings } from "./Rte";
 
 // Only block-types used in block-type-map should be styled
 type StylableBlockTypes = Extract<

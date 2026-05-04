@@ -1,10 +1,10 @@
 import { type CrudSingleGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
-import { type EntityMetadata } from "@mikro-orm/postgresql";
+import type { EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
 import { buildOptions } from "../generateCrud/build-options";
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
-import { type GeneratedFile } from "../utils/write-generated-files";
+import type { GeneratedFile } from "../utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
@@ -20,7 +20,9 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         const generatedFiles: GeneratedFile[] = [];
 
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
-        if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
+        if (scopeProp && !scopeProp.targetMeta) {
+            throw new Error("Scope prop has no targetMeta");
+        }
         const blockProps = metadata.props.filter((prop) => {
             return hasCrudFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });

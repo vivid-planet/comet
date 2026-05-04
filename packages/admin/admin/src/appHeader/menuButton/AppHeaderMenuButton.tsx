@@ -1,6 +1,6 @@
 import { Close, Hamburger, HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, IconButton, type IconButtonClassKey, type IconButtonProps, type Theme, useThemeProps } from "@mui/material";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { useMainNavigation } from "../../mui/mainNavigation/Context";

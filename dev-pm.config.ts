@@ -134,6 +134,11 @@ export default defineConfig({
             script: "pnpm --filter @comet/mail-react run dev",
             group: ["mail-react"],
         },
+        {
+            name: "mail-react-storybook",
+            script: "pnpm --filter @comet/mail-react run storybook",
+            group: ["mail-react"],
+        },
 
         //group brevo
         {
@@ -195,11 +200,22 @@ export default defineConfig({
             group: ["demo-admin", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
+        {
+            name: "demo-oidc-provider",
+            script: "pnpm run dev:oidc-provider",
+            group: ["demo-admin", "demo"],
+        },
+        {
+            name: "demo-oauth2-proxy",
+            script: "pnpm run dev:oauth2-proxy",
+            group: ["demo-admin", "demo"],
+            waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
+        },
 
         //group demo api
         {
             name: "demo-docker",
-            script: "pnpm run dev:docker-compose up",
+            script: "set -a; . .env; . .env.local; set +a; docker compose up",
             group: ["demo-api", "demo"],
         },
         {
@@ -223,20 +239,6 @@ export default defineConfig({
         {
             name: "demo-api-storybook",
             script: "pnpm --filter comet-demo-api run storybook",
-            group: ["demo-api", "demo"],
-        },
-
-        // group demo login
-        {
-            name: "demo-oidc-provider",
-            script: "pnpm run dev:oidc-provider",
-            group: ["demo-login", "demo"],
-        },
-        {
-            name: "demo-oauth2-proxy",
-            script: "pnpm run dev:oauth2-proxy",
-            group: ["demo-login", "demo"],
-            waitOn: ["tcp:$IDP_PORT", "tcp:$ADMIN_PORT"],
         },
 
         //group demo site
@@ -269,6 +271,7 @@ export default defineConfig({
             name: "storybook",
             script: "pnpm --filter comet-storybook run storybook",
             group: ["storybook", "docs"],
+            waitOn: ["tcp:26646", "tcp:26647"], // storybook-comet-admin, storybook-comet-cms-admin
         },
         {
             name: "docs",
@@ -281,6 +284,12 @@ export default defineConfig({
             script: "pnpm --filter @comet/admin run storybook",
             group: ["storybook", "docs"],
             waitOn: waitOnPackages("@comet/admin"),
+        },
+        {
+            name: "storybook-comet-cms-admin",
+            script: "pnpm --filter @comet/cms-admin run storybook",
+            group: ["storybook", "docs"],
+            waitOn: waitOnPackages("@comet/cms-admin"),
         },
     ],
 });

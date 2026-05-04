@@ -97,7 +97,8 @@ const config = [
         rules: {
             "no-unused-vars": "off",
             "prefer-template": "error",
-            "no-console": ["error", { allow: ["warn", "error"] }],
+            "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
+            curly: "error",
             "no-return-await": "error",
             "no-restricted-imports": [
                 "error",
@@ -109,6 +110,7 @@ const config = [
             "@typescript-eslint/no-inferrable-types": ["error", { ignoreProperties: true }],
             "@typescript-eslint/prefer-enum-initializers": "error",
             "@typescript-eslint/no-non-null-assertion": "error",
+            "@typescript-eslint/no-import-type-side-effects": "error",
             "@typescript-eslint/consistent-type-imports": [
                 "error",
                 {

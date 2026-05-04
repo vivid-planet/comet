@@ -14,11 +14,11 @@ import { parseISO } from "date-fns";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import {
-    type GQLKubernetesCronJobsQuery,
-    type GQLKubernetesCronJobsQueryVariables,
-    type GQLTriggerKubernetesCronJobMutation,
-    type GQLTriggerKubernetesCronJobMutationVariables,
+import type {
+    GQLKubernetesCronJobsQuery,
+    GQLKubernetesCronJobsQueryVariables,
+    GQLTriggerKubernetesCronJobMutation,
+    GQLTriggerKubernetesCronJobMutationVariables,
 } from "./CronJobsGrid.generated";
 import { JobRuntime } from "./JobRuntime";
 import { JobStatus } from "./JobStatus";
