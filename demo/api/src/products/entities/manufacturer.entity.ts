@@ -1,5 +1,17 @@
-import { CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
-import { BaseEntity, Embeddable, Embedded, Entity, Enum, IType, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { CrudGenerator, EntityInfo, IsNullable, IsUndefinable } from "@comet/cms-api";
+import {
+    BaseEntity,
+    Embeddable,
+    Embedded,
+    Entity,
+    Enum,
+    FullTextType,
+    Index,
+    IType,
+    OptionalProps,
+    PrimaryKey,
+    Property,
+} from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { IsNumber, IsObject, IsString } from "class-validator";
 import { v4 as uuid } from "uuid";
@@ -79,6 +91,10 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
     alternativeAddress: AlternativeAddressAsEmbeddable;
 }
 
+@EntityInfo<Manufacturer>({
+    name: "name",
+    fullText: "fullText",
+})
 @Entity()
 @ObjectType()
 @CrudGenerator({ requiredPermission: ["manufacturers"] })
@@ -112,4 +128,16 @@ export class Manufacturer extends BaseEntity {
     @Property({ onUpdate: () => new Date() })
     @Field()
     updatedAt: Date = new Date();
+
+    @Index({ type: "fulltext" })
+    @Property<Manufacturer>({
+        nullable: true,
+        type: new FullTextType(),
+        onUpdate: (page) => {
+            return {
+                A: page.name,
+            };
+        },
+    })
+    fullText?: string;
 }

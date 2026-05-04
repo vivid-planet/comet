@@ -137,6 +137,7 @@ export class PageTreeModule {
                 AttachedDocumentLoaderService,
                 PageTreeNodeDocumentEntityScopeService,
                 InternalLinkBlockTransformerService,
+                PAGE_TREE_DOCUMENTS,
                 ...(PageTreeFullTextResolver ? [PageTreeFullTextService] : []),
             ],
         };

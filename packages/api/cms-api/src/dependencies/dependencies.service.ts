@@ -41,9 +41,9 @@ export class DependenciesService {
         await this.dropViews();
 
         await this.createBlockIndexView();
-        await this.entityInfoService.createEntityInfoView();
-        await this.createDependenciesView();
         await this.pageTreeFullTextService?.createPageTreeFullTextView();
+        await this.entityInfoService.createEntityInfoView({ pageTreeFullText: !!this.pageTreeFullTextService });
+        await this.createDependenciesView();
     }
 
     async dropViews(): Promise<void> {
