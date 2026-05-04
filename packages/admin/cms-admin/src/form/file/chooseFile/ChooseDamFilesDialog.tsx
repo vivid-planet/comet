@@ -1,6 +1,6 @@
 import { Button } from "@comet/admin";
 import { DialogActions } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import type { DamItemSelectionMap, GQLDamFileTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
@@ -9,7 +9,6 @@ import type { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemL
 import { BaseChooseDamFileDialog } from "./BaseChooseDamFileDialog";
 
 interface ChooseDamFilesDialogProps {
-    open: boolean;
     onClose: () => void;
     onConfirm: (fileIds: string[]) => void | Promise<void>;
     initialFileIds: string[];
@@ -20,26 +19,11 @@ const FileLabel = ({ file, matches, showLicenseWarnings }: { file: GQLDamFileTab
     <DamItemLabel asset={file} matches={matches} showLicenseWarnings={showLicenseWarnings} />
 );
 
-export const ChooseDamFilesDialog = ({ open, onClose, onConfirm, initialFileIds, allowedMimetypes }: ChooseDamFilesDialogProps) => {
-    const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(new Map());
+export const ChooseDamFilesDialog = ({ onClose, onConfirm, initialFileIds, allowedMimetypes }: ChooseDamFilesDialogProps) => {
+    const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(() => new Map(initialFileIds.map((id) => [id, "file"])));
     const [isConfirming, setIsConfirming] = useState(false);
 
-    // Seed the selection only on the false→true open transition. The parent passes a freshly-
-    // constructed `initialFileIds` array every render; depending on it here would re-seed on
-    // every parent re-render and clobber the user's in-progress checkbox changes.
-    const wasOpenRef = useRef(false);
-    useEffect(() => {
-        if (open && !wasOpenRef.current) {
-            setSelectionMap(new Map(initialFileIds.map((id) => [id, "file"] as const)));
-            setIsConfirming(false);
-        }
-        wasOpenRef.current = open;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [open]);
-
-    const selectedFileIds = Array.from(selectionMap.entries())
-        .filter(([, type]) => type === "file")
-        .map(([id]) => id);
+    const selectedFileIds = Array.from(selectionMap.keys());
 
     const handleConfirm = async () => {
         setIsConfirming(true);
@@ -59,7 +43,7 @@ export const ChooseDamFilesDialog = ({ open, onClose, onConfirm, initialFileIds,
 
     return (
         <BaseChooseDamFileDialog
-            open={open}
+            open
             onClose={handleClose}
             title={<FormattedMessage id="comet.form.file.selectFiles" defaultMessage="Select files from DAM" />}
             stateKey="choose-files-dam-location"

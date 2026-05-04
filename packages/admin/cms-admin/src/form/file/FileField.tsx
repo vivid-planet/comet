@@ -1,15 +1,13 @@
 import { useApolloClient } from "@apollo/client";
 import { Alert, useSnackbarApi } from "@comet/admin";
-import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import { Box, Divider, Grid, IconButton, List, ListItemIcon, ListItemText, Menu, MenuItem, Snackbar, Typography } from "@mui/material";
-import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useState } from "react";
+import { Assets, Delete, MoreVertical } from "@comet/admin-icons";
+import { Box, Divider, Grid, IconButton, List, Snackbar, Typography } from "@mui/material";
+import { type ReactElement, type ReactNode, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
-import { useContentScope } from "../../contentScope/Provider";
-import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { ChooseDamFileDialog } from "./chooseFile/ChooseDamFileDialog";
 import { ChooseDamFilesDialog } from "./chooseFile/ChooseDamFilesDialog";
 import { DamPathLazy } from "./DamPathLazy";
@@ -22,14 +20,10 @@ import type {
     GQLDamMultiFileFieldFileQuery,
     GQLDamMultiFileFieldFileQueryVariables,
 } from "./FileField.gql.generated";
+import { type ActionItem, FileFieldMenu, useHasFileFieldMenu } from "./FileFieldMenu";
 import { FileFieldRow } from "./FileFieldRow";
 
 export type { GQLDamFileFieldFileFragment, GQLDamMultiFileFieldFileFragment } from "./FileField.gql.generated";
-
-interface ActionItem extends ComponentProps<typeof MenuItem> {
-    label: ReactNode;
-    icon?: ReactNode;
-}
 
 type CommonProps = {
     buttonText?: ReactNode;
@@ -64,19 +58,12 @@ export function FileField(props: SingleFileFieldProps | MultiFileFieldProps): Re
 const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: SingleFileFieldProps) => {
     const [chooseFileDialogOpen, setChooseFileDialogOpen] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-    const contentScope = useContentScope();
     const apolloClient = useApolloClient();
-    const { entityDependencyMap } = useDependenciesConfig();
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
+    const showMenu = useHasFileFieldMenu(menuActions);
 
     const damFile = input.value;
 
     if (damFile) {
-        const showMenu = Boolean(entityDependencyMap["DamFile"]) || (menuActions !== undefined && menuActions.length > 0);
         return (
             <>
                 <BlockAdminComponentPaper disablePadding>
@@ -111,44 +98,7 @@ const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuAct
                     </BlockAdminComponentButton>
                 </BlockAdminComponentPaper>
                 {showMenu && (
-                    <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                        {entityDependencyMap["DamFile"] && (
-                            <MenuItem
-                                onClick={async () => {
-                                    const path = await entityDependencyMap["DamFile"].resolvePath({
-                                        apolloClient,
-                                        id: damFile.id,
-                                    });
-                                    const url = contentScope.match.url + path;
-                                    window.open(url, "_blank");
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <OpenNewTab />
-                                </ListItemIcon>
-                                <ListItemText primary={<FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />} />
-                            </MenuItem>
-                        )}
-                        {menuActions &&
-                            menuActions.map((item, index) => {
-                                if (!item) {
-                                    return null;
-                                }
-
-                                if (isValidElement(item)) {
-                                    return item;
-                                }
-
-                                const { label, icon, ...rest } = item as ActionItem;
-
-                                return (
-                                    <MenuItem key={index} {...rest}>
-                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
-                                        <ListItemText primary={label} />
-                                    </MenuItem>
-                                );
-                            })}
-                    </Menu>
+                    <FileFieldMenu fileId={damFile.id} anchorEl={anchorEl} onClose={() => setAnchorEl(null)} menuActions={menuActions} keepMounted />
                 )}
             </>
         );
@@ -187,23 +137,14 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
     // react-final-form may pass "" as the default when no initial value is set; fall back to [].
     const files: GQLDamMultiFileFieldFileFragment[] = Array.isArray(input.value) ? input.value : [];
 
-    const commitChange = (next: GQLDamMultiFileFieldFileFragment[]) => {
-        input.onChange(next.length === 0 ? undefined : next);
-    };
-
     const handleRemove = (id: string) => {
-        commitChange(files.filter((f) => f.id !== id));
+        input.onChange(files.filter((f) => f.id !== id));
     };
 
     const handleConfirm = async (fileIds: string[]) => {
-        const existingById = new Map<string, GQLDamMultiFileFieldFileFragment>(files.map((f) => [f.id, f]));
         try {
-            const next: GQLDamMultiFileFieldFileFragment[] = await Promise.all(
+            const next = await Promise.all(
                 fileIds.map(async (id) => {
-                    const existing = existingById.get(id);
-                    if (existing) {
-                        return existing;
-                    }
                     const { data } = await apolloClient.query<GQLDamMultiFileFieldFileQuery, GQLDamMultiFileFieldFileQueryVariables>({
                         query: damMultiFileFieldFileQuery,
                         variables: { id },
@@ -212,7 +153,7 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
                 }),
             );
 
-            commitChange(next);
+            input.onChange(next);
             setDialogOpen(false);
         } catch {
             snackbarApi.showSnackbar(
@@ -228,43 +169,39 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
         }
     };
 
-    if (files.length === 0) {
-        return (
-            <>
+    return (
+        <>
+            {files.length === 0 ? (
                 <BlockAdminComponentButton onClick={() => setDialogOpen(true)} startIcon={<Assets />} size="large">
                     {buttonText ?? <FormattedMessage id="comet.form.file.chooseFiles" defaultMessage="Choose files" />}
                 </BlockAdminComponentButton>
+            ) : (
+                <BlockAdminComponentPaper disablePadding>
+                    <List disablePadding>
+                        {files.map((file) => (
+                            <FileFieldRow
+                                key={file.id}
+                                file={file}
+                                onRemove={() => handleRemove(file.id)}
+                                preview={preview}
+                                menuActions={menuActions}
+                            />
+                        ))}
+                    </List>
+                    <Divider />
+                    <BlockAdminComponentButton startIcon={<Assets />} onClick={() => setDialogOpen(true)}>
+                        <FormattedMessage id="comet.form.file.changeSelectedFiles" defaultMessage="Change selected files" />
+                    </BlockAdminComponentButton>
+                </BlockAdminComponentPaper>
+            )}
+            {dialogOpen && (
                 <ChooseDamFilesDialog
-                    open={dialogOpen}
                     allowedMimetypes={allowedMimetypes}
-                    initialFileIds={[]}
+                    initialFileIds={files.map((f) => f.id)}
                     onClose={() => setDialogOpen(false)}
                     onConfirm={handleConfirm}
                 />
-            </>
-        );
-    }
-
-    return (
-        <>
-            <BlockAdminComponentPaper disablePadding>
-                <List disablePadding>
-                    {files.map((file) => (
-                        <FileFieldRow key={file.id} file={file} onRemove={() => handleRemove(file.id)} preview={preview} menuActions={menuActions} />
-                    ))}
-                </List>
-                <Divider />
-                <BlockAdminComponentButton startIcon={<Assets />} onClick={() => setDialogOpen(true)}>
-                    <FormattedMessage id="comet.form.file.changeSelectedFiles" defaultMessage="Change selected files" />
-                </BlockAdminComponentButton>
-            </BlockAdminComponentPaper>
-            <ChooseDamFilesDialog
-                open={dialogOpen}
-                allowedMimetypes={allowedMimetypes}
-                initialFileIds={files.map((f) => f.id)}
-                onClose={() => setDialogOpen(false)}
-                onConfirm={handleConfirm}
-            />
+            )}
         </>
     );
 };
