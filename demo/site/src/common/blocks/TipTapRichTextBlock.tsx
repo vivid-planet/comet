@@ -1,8 +1,8 @@
 "use client";
 import { PreviewSkeleton, type PropsWithData, withPreview } from "@comet/site-nextjs";
-import { type TipTapRichTextBlockData } from "@src/blocks.generated";
+import type { TipTapRichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { Typography } from "../components/Typography";
 import { isValidLink } from "../helpers/HiddenIfInvalidLink";
