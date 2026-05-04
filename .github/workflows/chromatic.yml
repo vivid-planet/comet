@@ -5,6 +5,7 @@ on:
         paths:
             - packages/admin/admin/**
             - packages/admin/cms-admin/**
+            - packages/mail-react/**
         branches:
             - main
             - next
@@ -12,6 +13,7 @@ on:
         paths:
             - packages/admin/admin/**
             - packages/admin/cms-admin/**
+            - packages/mail-react/**
         branches:
             - main
             - next
@@ -41,7 +43,7 @@ jobs:
 
             - run: pnpm setup:ci
 
-            - run: pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build
+            - run: pnpm --recursive --filter '@comet/*admin*' --filter '@comet/mail-react' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build
 
             - name: Publish comet-admin to Chromatic
               uses: chromaui/action@v1
@@ -54,3 +56,9 @@ jobs:
               with:
                   projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_CMS_ADMIN }}
                   workingDir: packages/admin/cms-admin
+
+            - name: Publish comet-mail-react to Chromatic
+              uses: chromaui/action@v1
+              with:
+                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_MAIL_REACT }}
+                  workingDir: packages/mail-react
