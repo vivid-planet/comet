@@ -2394,8 +2394,8 @@ importers:
   packages/mail-react:
     dependencies:
       '@faire/mjml-react':
-        specifier: ^3.5.3
-        version: 3.5.3(mjml@4.18.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: ^3.5.4
+        version: 3.5.4(mjml@4.18.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -5412,8 +5412,8 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@faire/mjml-react@3.5.3':
-    resolution: {integrity: sha512-eOLn+64y0pRSa9VlQL9ZzZbprKR9z99aqY8/tJpVqlR6D1IyOnzj6vSKeA7Tc60hSoR6OVbfLHBGIGvrl7dbww==}
+  '@faire/mjml-react@3.5.4':
+    resolution: {integrity: sha512-T8R5bnNnwpwemd5198CXbJGqQfKysgXxqPDnUbHLhY+IFdKofdI/SBpIlKs5oHV6pibS0uA61u6/GgYdnV1TJg==}
     peerDependencies:
       mjml: ^4.13.0
       react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -17936,6 +17936,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -22355,7 +22356,7 @@ snapshots:
     optionalDependencies:
       '@noble/hashes': 1.8.0
 
-  '@faire/mjml-react@3.5.3(mjml@4.18.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@faire/mjml-react@3.5.4(mjml@4.18.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       lodash.kebabcase: 4.1.1
       mjml: 4.18.0
