@@ -15,7 +15,7 @@ const config = [
             "import/no-extraneous-dependencies": [
                 "error",
                 {
-                    devDependencies: ["**/*.spec.ts", "**/*.test.ts", "**/jest.config.*", "**/jest-setup-file.ts"],
+                    devDependencies: ["**/*.spec.ts", "**/*.test.ts"],
                 },
             ],
             "import/order": "off",
