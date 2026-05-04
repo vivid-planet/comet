@@ -1,5 +1,66 @@
 # @comet/cms-admin
 
+## 9.0.0-beta.3
+
+### Minor Changes
+
+- dc8f29c: Add `SitePreviewAction` to `DocumentInterface`
+
+    Allows overriding the site preview button in the page tree row actions on a per-document-type basis. When set, the provided component replaces the default preview `RowActionsItem`, enabling custom preview URL construction (e.g., using additional GraphQL queries or scope data).
+
+    **Example**
+
+    ```tsx
+    import { RowActionsItem } from "@comet/admin";
+    import { Preview } from "@comet/admin-icons";
+    import { type DocumentInterface, openSitePreviewWindow, type SitePreviewActionProps } from "@comet/cms-admin";
+
+    function PageSitePreviewAction({ pageTreeNode }: SitePreviewActionProps) {
+        // Use hooks to construct a custom preview URL
+        const previewPath = useCustomPreviewPath(pageTreeNode);
+
+        return (
+            <RowActionsItem
+                icon={<Preview />}
+                disabled={!previewPath}
+                onClick={() => {
+                    if (previewPath) {
+                        openSitePreviewWindow(previewPath, "/custom-root");
+                    }
+                }}
+            >
+                Open preview
+            </RowActionsItem>
+        );
+    }
+
+    export const Page: DocumentInterface = {
+        // ...
+        SitePreviewAction: PageSitePreviewAction,
+    };
+    ```
+
+- 71dce06: Make DataGrid columns in DAM sortable
+
+    Make Name, Type/Format, Info, Creation, and Latest Change columns in the `FolderDataGrid` sortable via column header clicks, using the standard `muiGridSortToGql` pattern from generated grids. Remove the separate Sort dropdown from the toolbar. Sort state is now stored in URL params instead of localStorage.
+
+### Patch Changes
+
+- 8a93124: Fix `hideContextMenu` not hiding the context menu column in the DAM `DataGrid`
+
+    The visibility flag was applied to a no-longer-existing `contextMenu` column id; the column had been renamed to `actions`. The flag now targets the correct column.
+
+- f29b2d7: Deprecate `ChooseFileDialog` export
+
+    `ChooseFileDialog` was renamed to `ChooseDamFileDialog`
+
+- Updated dependencies [cabba53]
+- Updated dependencies [3c81ff0]
+    - @comet/admin@9.0.0-beta.3
+    - @comet/admin-date-time@9.0.0-beta.3
+    - @comet/admin-icons@9.0.0-beta.3
+    - @comet/admin-rte@9.0.0-beta.3
+
 ## 9.0.0-beta.2
 
 ### Major Changes
