@@ -167,7 +167,9 @@ export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionPr
 export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
 /** @deprecated Use `ChooseDamFileDialog` instead. */
 export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
-export { FileField } from "./form/file/FileField";
+export { ChooseDamFilesDialog } from "./form/file/chooseFile/ChooseDamFilesDialog";
+export { FileField, type GQLDamFileFieldFileFragment, type GQLDamMultiFileFieldFileFragment } from "./form/file/FileField";
+export { damMultiFileFieldFragment } from "./form/file/FileField.gql";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {
     FinalFormFileUpload,
