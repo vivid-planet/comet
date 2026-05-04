@@ -50,7 +50,7 @@
         "react-intl": "^7.1.11",
         "ts-dedent": "^2.2.0",
         "use-debounce": "^10.0.6",
-        "uuid": "^11.1.0"
+        "uuid": "^14.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.28.6",

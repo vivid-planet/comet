@@ -76,7 +76,7 @@
         "ts-jest": "^29.4.9",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",
-        "uuid": "^8.3.2"
+        "uuid": "^14.0.0"
     },
     "peerDependencies": {
         "@mikro-orm/cli": "^6.0.0",
