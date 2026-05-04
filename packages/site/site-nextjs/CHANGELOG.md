@@ -1,5 +1,12 @@
 # @comet/site-nextjs
 
+## 9.0.0-beta.3
+
+### Patch Changes
+
+- Updated dependencies [e125c84]
+    - @comet/site-react@9.0.0-beta.3
+
 ## 9.0.0-beta.2
 
 ### Patch Changes

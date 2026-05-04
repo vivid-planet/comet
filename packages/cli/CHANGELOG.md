@@ -1,5 +1,21 @@
 # @comet/cli
 
+## 9.0.0-beta.3
+
+### Minor Changes
+
+- 9746947: `install-agent-skills`: also install skills from `agentic-plugin/skills/`
+
+    In addition to the existing `skills/` directory, the command now installs skills from `agentic-plugin/skills/`. This allows shipping agent skills as part of a Claude Code plugin (with a `.claude-plugin/plugin.json` manifest) without losing the ability to install them via `install-agent-skills`.
+
+    Both directories are also fetched (via git sparse checkout) when consuming external repos listed in `agent-skills.json`. `skills/` keeps priority over `agentic-plugin/skills/`.
+
+### Patch Changes
+
+- 560a8f2: Cache `getSiteConfigs` and `op read` calls to avoid redundant execution
+
+    When a template contains multiple placeholders for the same environment, `getSiteConfigs(env)` and `op read` were called repeatedly with identical arguments. Both are now cached per invocation so each unique `env` and each unique `op://` URI is resolved only once.
+
 ## 9.0.0-beta.2
 
 ## 9.0.0-beta.1

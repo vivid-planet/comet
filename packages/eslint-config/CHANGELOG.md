@@ -1,5 +1,20 @@
 # @comet/eslint-config
 
+## 9.0.0-beta.3
+
+### Major Changes
+
+- 23a09c2: Add `curly` ESLint rule to enforce braces for control statements
+
+    This rule requires braces around the body of all control statements (if, else, for, while, etc.) to improve code readability and reduce diff size when adding statements.
+
+- 1f903b6: Enable `@typescript-eslint/no-import-type-side-effects` rule
+
+### Patch Changes
+
+- c57e54e: Allow `console.info` and `console.debug` in the `no-console` ESLint rule
+    - @comet/eslint-plugin@9.0.0-beta.3
+
 ## 9.0.0-beta.2
 
 ### Major Changes
