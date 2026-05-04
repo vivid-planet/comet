@@ -85,6 +85,7 @@ export interface DamConfig {
     contentScopeIndicator?: ReactNode;
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
+    hideSelectiveActions?: boolean;
     additionalToolbarItems?: ReactNode;
 }
 
@@ -99,6 +100,7 @@ export const DamTable = ({ renderWithFullHeightMainContent, ...damConfigProps }:
         hideContextMenu: false,
         hideMultiselect: false,
         hideDamActions: false,
+        hideSelectiveActions: false,
         hideArchiveFilter: false,
         ...damConfigProps,
     };
