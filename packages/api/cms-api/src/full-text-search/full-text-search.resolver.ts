@@ -33,9 +33,15 @@ export class FullTextSearchResolver {
         });
 
         const infoByKey = new Map(infos.map((info) => [`${info.entityName}:${info.id}`, info]));
-        const results = matches
-            .map((match) => infoByKey.get(`${match.entityName}:${match.id}`))
-            .filter((info): info is EntityInfoObject => info !== undefined);
+        const results = matches.map((match) => {
+            const info = infoByKey.get(`${match.entityName}:${match.id}`);
+            if (!info) {
+                throw new Error(
+                    `EntityInfo not found for ${match.entityName}:${match.id}. This may indicate a data inconsistency where the full-text search index contains an entry without corresponding entity information.`,
+                );
+            }
+            return info;
+        });
 
         return new PaginatedEntityInfo(results, totalCount);
     }
