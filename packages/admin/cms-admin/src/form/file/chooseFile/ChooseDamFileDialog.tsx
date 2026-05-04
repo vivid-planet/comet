@@ -104,6 +104,3 @@ export const ChooseDamFileDialog = ({ open, onClose, onChooseFile, allowedMimety
         </Dialog>
     );
 };
-
-/** @deprecated Use `ChooseDamFileDialog` instead. */
-export const ChooseFileDialog = ChooseDamFileDialog;
