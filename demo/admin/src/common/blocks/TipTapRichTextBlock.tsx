@@ -1,5 +1,5 @@
 import { createTipTapRichTextBlock } from "@comet/cms-admin";
-import { type HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { LinkBlock } from "./LinkBlock";
