@@ -1,5 +1,7 @@
 ---
 description: Security-by-design, privacy, authorization, defense-in-depth principles
+applyTo: "**"
+alwaysApply: false
 ---
 
 # Secure Software Development Rules

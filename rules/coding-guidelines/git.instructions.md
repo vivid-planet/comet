@@ -1,5 +1,7 @@
 ---
 description: Git, commit, PR, and changeset conventions for this repo
+applyTo: "**"
+alwaysApply: false
 ---
 
 # Git Rules
