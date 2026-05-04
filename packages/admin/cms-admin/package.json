@@ -114,7 +114,7 @@
         "@types/react-window": "^1.8.8",
         "chokidar-cli": "^3.0.0",
         "draft-js": "^0.11.7",
-        "eslint": "^9.39.2",
+        "eslint": "^9.39.4",
         "final-form": "^4.20.10",
         "graphql": "^16.13.2",
         "history": "^4.10.1",
