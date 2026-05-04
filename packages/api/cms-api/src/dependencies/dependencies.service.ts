@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "../common/filter/mikro-orm";
 import { StringFilter } from "../common/filter/string.filter";
 import { EntityInfoService } from "../entity-info/entity-info.service";
+import { FullTextSearchService } from "../full-text-search/full-text-search.service";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
@@ -33,6 +34,7 @@ export class DependenciesService {
         private readonly entityInfoService: EntityInfoService,
         private entityManager: EntityManager,
         @Optional() private readonly pageTreeFullTextService?: PageTreeFullTextService,
+        @Optional() private readonly fullTextSearchService?: FullTextSearchService,
     ) {
         this.connection = entityManager.getConnection();
     }
@@ -42,13 +44,15 @@ export class DependenciesService {
 
         await this.createBlockIndexView();
         await this.pageTreeFullTextService?.createPageTreeFullTextView();
-        await this.entityInfoService.createEntityInfoView({ pageTreeFullText: !!this.pageTreeFullTextService });
+        await this.entityInfoService.createEntityInfoView();
+        await this.fullTextSearchService?.createEntityInfoFullTextView();
         await this.createDependenciesView();
     }
 
     async dropViews(): Promise<void> {
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS "block_index_dependencies"`);
         await this.connection.execute(`DROP VIEW IF EXISTS "block_index"`);
+        await this.fullTextSearchService?.dropEntityInfoFullTextView();
         await this.entityInfoService.dropEntityInfoView();
         await this.pageTreeFullTextService?.dropPageTreeFullTextView();
     }
