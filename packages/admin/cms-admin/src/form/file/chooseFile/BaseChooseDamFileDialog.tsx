@@ -7,7 +7,7 @@ import { useDamConfig } from "../../../dam/config/damConfig";
 import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
 import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
-import type { DamItemSelectionMap, GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
+import type { DamItemSelectionMap, GQLDamFileTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import type { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
@@ -35,31 +35,6 @@ interface BaseChooseDamFileDialogProps {
     actions?: ReactNode;
 }
 
-type DamLabelProps = {
-    row: GQLDamFileTableFragment | GQLDamFolderTableFragment;
-    options: RenderDamLabelOptions;
-    renderFileLabel: BaseChooseDamFileDialogProps["renderFileLabel"];
-    enableLicenseFeature?: boolean;
-};
-
-const DamLabel = ({ row, options, renderFileLabel, enableLicenseFeature }: DamLabelProps) => {
-    const fullOptions = { ...options, showLicenseWarnings: enableLicenseFeature };
-    if (isFile(row)) {
-        return renderFileLabel(row, fullOptions);
-    }
-    return (
-        <FolderStackLink
-            pageName="folder"
-            payload={row.id}
-            onClick={() => {
-                options.filterApi.formApi.change("searchText", undefined);
-            }}
-        >
-            <DamItemLabel asset={row} matches={options.matches} />
-        </FolderStackLink>
-    );
-};
-
 export const BaseChooseDamFileDialog = ({
     open,
     onClose,
@@ -74,7 +49,7 @@ export const BaseChooseDamFileDialog = ({
     onSelectionChange,
     actions,
 }: BaseChooseDamFileDialogProps) => {
-    const damConfig = useDamConfig();
+    const { enableLicenseFeature, additionalToolbarItems } = useDamConfig();
     const scope = useDamScope();
 
     const scopedStateKey = Object.keys(scope).length > 0 ? `${Object.values(scope).join("-")}-${stateKey}` : stateKey;
@@ -99,14 +74,22 @@ export const BaseChooseDamFileDialog = ({
                     <SubRoute path="">
                         <RedirectToPersistedDamLocation stateKey={scopedStateKey} />
                         <DamTable
-                            renderDamLabel={(row, options) => (
-                                <DamLabel
-                                    row={row}
-                                    options={options}
-                                    renderFileLabel={renderFileLabel}
-                                    enableLicenseFeature={damConfig.enableLicenseFeature}
-                                />
-                            )}
+                            renderDamLabel={(row, options) => {
+                                if (isFile(row)) {
+                                    return renderFileLabel(row, { ...options, showLicenseWarnings: enableLicenseFeature });
+                                }
+                                return (
+                                    <FolderStackLink
+                                        pageName="folder"
+                                        payload={row.id}
+                                        onClick={() => {
+                                            options.filterApi.formApi.change("searchText", undefined);
+                                        }}
+                                    >
+                                        <DamItemLabel asset={row} matches={options.matches} />
+                                    </FolderStackLink>
+                                );
+                            }}
                             allowedMimetypes={allowedMimetypes}
                             hideContextMenu={true}
                             hideMultiselect={hideMultiselect}
@@ -116,7 +99,7 @@ export const BaseChooseDamFileDialog = ({
                             keepNonExistentRowsSelected={keepNonExistentRowsSelected}
                             selectionMap={selectionMap}
                             onSelectionChange={onSelectionChange}
-                            additionalToolbarItems={damConfig.additionalToolbarItems}
+                            additionalToolbarItems={additionalToolbarItems}
                         />
                     </SubRoute>
                 </MemoryRouter>
