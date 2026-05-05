@@ -15,6 +15,7 @@ export type { MjmlTextProps } from "./components/text/MjmlText.js";
 export { MjmlText } from "./components/text/MjmlText.js";
 export type { MjmlWrapperProps } from "./components/wrapper/MjmlWrapper.js";
 export { MjmlWrapper } from "./components/wrapper/MjmlWrapper.js";
+export { type Config, ConfigProvider, useConfig } from "./config/ConfigProvider.js";
 export { registerStyles } from "./styles/registerStyles.js";
 export { createBreakpoint } from "./theme/createBreakpoint.js";
 export { createTheme } from "./theme/createTheme.js";
