@@ -154,8 +154,6 @@ const FolderDataGrid = ({
     hideMultiselect,
     disableFolderSelection,
     keepNonExistentRowsSelected,
-    selectionMap: selectionMapProp,
-    onSelectionChange,
     renderDamLabel,
     ...props
 }: FolderDataGridProps) => {
@@ -166,12 +164,6 @@ const FolderDataGrid = ({
     const scope = useDamScope();
     const snackbarApi = useSnackbarApi();
     const { importSources, enableLicenseFeature } = useDamConfig();
-
-    if ((selectionMapProp !== undefined) !== (onSelectionChange !== undefined)) {
-        throw new Error("DamTable: `selectionMap` and `onSelectionChange` must be provided together for controlled selection.");
-    }
-    const selectionMap = selectionMapProp ?? damSelectionActionsApi.selectionMap;
-    const setSelection = onSelectionChange ?? damSelectionActionsApi.setSelectionMap;
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -619,9 +611,9 @@ const FolderDataGrid = ({
         newSelectionModel.ids.forEach((selectedId) => {
             const typedId = selectedId as string;
 
-            if (selectionMap.has(typedId)) {
+            if (damSelectionActionsApi.selectionMap.has(typedId)) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                newMap.set(typedId, selectionMap.get(typedId)!);
+                newMap.set(typedId, damSelectionActionsApi.selectionMap.get(typedId)!);
             } else {
                 const item = dataGridData?.damItemsList.nodes.find((item) => item.id === typedId);
 
@@ -639,7 +631,7 @@ const FolderDataGrid = ({
             }
         });
 
-        setSelection(newMap);
+        damSelectionActionsApi.setSelectionMap(newMap);
     };
 
     const getRowClassName = ({ row }: GridRowClassNameParams) => {
@@ -674,7 +666,7 @@ const FolderDataGrid = ({
                     checkboxSelection={!hideMultiselect}
                     keepNonExistentRowsSelected={keepNonExistentRowsSelected}
                     isRowSelectable={disableFolderSelection ? isSelectableRow : undefined}
-                    rowSelectionModel={{ type: "include", ids: new Set(selectionMap.keys()) }}
+                    rowSelectionModel={{ type: "include", ids: new Set(damSelectionActionsApi.selectionMap.keys()) }}
                     onRowSelectionModelChange={handleSelectionModelChange}
                     disableRowSelectionExcludeModel
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}

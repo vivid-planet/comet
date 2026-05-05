@@ -1,6 +1,6 @@
 import { Button } from "@comet/admin";
 import { DialogActions } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import type { DamItemSelectionMap, GQLDamFileTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
@@ -20,7 +20,13 @@ const FileLabel = ({ file, matches, showLicenseWarnings }: { file: GQLDamFileTab
 );
 
 export const ChooseDamFilesDialog = ({ onClose, onConfirm, initialFileIds, allowedMimetypes }: ChooseDamFilesDialogProps) => {
-    const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(() => new Map(initialFileIds.map((id) => [id, "file"])));
+    const initialSelectionMap = useMemo<DamItemSelectionMap>(
+        () => new Map(initialFileIds.map((id) => [id, "file"])),
+        // Seeded once on mount; the parent unmounts the dialog when closed, so on next open we get a fresh mount.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [],
+    );
+    const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(initialSelectionMap);
     const [isConfirming, setIsConfirming] = useState(false);
 
     const selectedFileIds = Array.from(selectionMap.keys());
@@ -52,7 +58,7 @@ export const ChooseDamFilesDialog = ({ onClose, onConfirm, initialFileIds, allow
             hideMultiselect={false}
             disableFolderSelection={true}
             keepNonExistentRowsSelected={true}
-            selectionMap={selectionMap}
+            initialSelectionMap={initialSelectionMap}
             onSelectionChange={setSelectionMap}
             actions={
                 <DialogActions>

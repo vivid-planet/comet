@@ -97,9 +97,23 @@ export const useDamSelectionApi = () => {
     return useContext(DamSelectionContext);
 };
 
-export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => {
+interface DamSelectionProviderProps {
+    children?: ReactNode;
+    initialSelectionMap?: DamItemSelectionMap;
+    onSelectionChange?: (next: DamItemSelectionMap) => void;
+}
+
+export const DamSelectionProvider = ({ children, initialSelectionMap, onSelectionChange }: DamSelectionProviderProps) => {
     const apolloClient = useApolloClient();
-    const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(new Map());
+    const [selectionMap, setMapState] = useState<DamItemSelectionMap>(() => initialSelectionMap ?? new Map());
+
+    const setSelectionMap: Dispatch<SetStateAction<DamItemSelectionMap>> = (next) => {
+        setMapState((prev) => {
+            const resolved = typeof next === "function" ? next(prev) : next;
+            onSelectionChange?.(resolved);
+            return resolved;
+        });
+    };
 
     const showError = (setError: Dispatch<SetStateAction<boolean>>) => {
         setError(true);
