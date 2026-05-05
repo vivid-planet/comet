@@ -1,5 +1,11 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const siteDir = path.resolve(__dirname, "../../site/src");
 
 const config: StorybookConfig = {
     framework: "@storybook/react-webpack5",
@@ -11,14 +17,27 @@ const config: StorybookConfig = {
         config.resolve.alias = {
             ...config.resolve.alias,
             "@src/blocks.generated": path.resolve(__dirname, "mocks/blocks.generated.ts"),
+            "@src/graphql.generated": path.resolve(__dirname, "mocks/graphql.generated.ts"),
             "@comet/site-nextjs": path.resolve(__dirname, "mocks/comet-site-nextjs.tsx"),
             "next/link": path.resolve(__dirname, "mocks/next-link.tsx"),
             "next/image": path.resolve(__dirname, "mocks/next-image.tsx"),
-            "@src": path.resolve(__dirname, "../../site/src"),
+            "@src": siteDir,
         };
 
         config.module = config.module || {};
         config.module.rules = config.module.rules || [];
+
+        // Process TSX/TS files from demo/site/src with babel
+        config.module.rules.push({
+            test: /\.(tsx?|jsx?)$/,
+            include: [siteDir],
+            use: {
+                loader: "babel-loader",
+                options: {
+                    presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
+                },
+            },
+        });
 
         // Add SCSS module support
         config.module.rules.push({

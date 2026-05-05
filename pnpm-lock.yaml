@@ -700,6 +700,15 @@ importers:
         specifier: ^0.10.2
         version: 0.10.2
     devDependencies:
+      '@babel/preset-env':
+        specifier: ^7.28.0
+        version: 7.28.6(@babel/core@7.28.6)
+      '@babel/preset-react':
+        specifier: ^7.27.1
+        version: 7.28.5(@babel/core@7.28.6)
+      '@babel/preset-typescript':
+        specifier: ^7.28.0
+        version: 7.28.5(@babel/core@7.28.6)
       '@comet/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -718,6 +727,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.10)
+      babel-loader:
+        specifier: ^10.0.0
+        version: 10.1.1(@babel/core@7.28.6)(webpack@5.105.4(esbuild@0.27.4))
       css-loader:
         specifier: ^7.1.2
         version: 7.1.4(webpack@5.105.4(esbuild@0.27.4))

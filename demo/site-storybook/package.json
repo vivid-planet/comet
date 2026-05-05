@@ -24,12 +24,16 @@
         "redraft": "^0.10.2"
     },
     "devDependencies": {
+        "@babel/preset-env": "^7.28.0",
+        "@babel/preset-react": "^7.27.1",
+        "@babel/preset-typescript": "^7.28.0",
         "@comet/eslint-config": "workspace:*",
         "@storybook/addon-docs": "^10.3.5",
         "@storybook/addon-webpack5-compiler-babel": "^4.0.1",
         "@storybook/react-webpack5": "^10.3.5",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
+        "babel-loader": "^10.0.0",
         "css-loader": "^7.1.2",
         "eslint": "^9.39.2",
         "eslint-plugin-storybook": "^10.3.5",
