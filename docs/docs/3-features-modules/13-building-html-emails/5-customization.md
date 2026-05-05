@@ -199,7 +199,7 @@ MJML generates table-based HTML. When targeting nested elements inside MJML comp
 
 `Config` can be used to expose, e.g., environment-specific values such as asset base URLs or per-deployment identifiers.
 
-- **`Config`** — an augmentable interface with no built-in keys. All keys are optional.
+- **`Config`** — an augmentable interface.
 - **`MjmlMailRoot.config`** — optional prop that exposes a `Config` value to descendants.
 - **`useConfig`** — hook that returns the nearest `Config`, or `{}` if no provider is mounted.
 - **`ConfigProvider`** — standalone provider for cases that bypass `MjmlMailRoot`.
