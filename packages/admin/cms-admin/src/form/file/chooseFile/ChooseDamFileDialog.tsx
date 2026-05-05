@@ -60,7 +60,7 @@ interface ChooseFileDialogProps {
     allowedMimetypes?: string[];
 }
 
-export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps) => {
+export const ChooseDamFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps) => {
     const damConfig = useDamConfig();
     let stateKey = "choose-file-dam-location";
     const scope = useDamScope();
@@ -97,6 +97,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                             hideMultiselect={true}
                             hideArchiveFilter={true}
                             additionalToolbarItems={damConfig.additionalToolbarItems}
+                            toolbarOptions={{ hideSelectiveActions: true }}
                         />
                     </SubRoute>
                 </MemoryRouter>

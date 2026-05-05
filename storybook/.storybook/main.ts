@@ -33,6 +33,10 @@ const config: StorybookConfig = {
                 title: "@comet/cms-admin",
                 url: configType === "DEVELOPMENT" ? "http://localhost:26647/" : "https://main--69df3371c46abe69b5199825.chromatic.com",
             },
+            "@comet/mail-react": {
+                title: "@comet/mail-react",
+                url: configType === "DEVELOPMENT" ? "http://localhost:6066/" : "https://main--69df33e9280a36be495d6521.chromatic.com",
+            },
         };
     },
 };

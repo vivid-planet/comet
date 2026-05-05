@@ -164,7 +164,9 @@ export {
 } from "./documents/ContentGenerationConfigContext";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionProps } from "./documents/types";
-export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
+export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+/** @deprecated Use `ChooseDamFileDialog` instead. */
+export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
 export { FileField } from "./form/file/FileField";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {

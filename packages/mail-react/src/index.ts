@@ -13,6 +13,8 @@ export type { HtmlTextProps } from "./components/text/HtmlText.js";
 export { HtmlText } from "./components/text/HtmlText.js";
 export type { MjmlTextProps } from "./components/text/MjmlText.js";
 export { MjmlText } from "./components/text/MjmlText.js";
+export type { MjmlWrapperProps } from "./components/wrapper/MjmlWrapper.js";
+export { MjmlWrapper } from "./components/wrapper/MjmlWrapper.js";
 export { registerStyles } from "./styles/registerStyles.js";
 export { createBreakpoint } from "./theme/createBreakpoint.js";
 export { createTheme } from "./theme/createTheme.js";
@@ -101,8 +103,6 @@ export {
     type IMjmlTableProps as MjmlTableProps,
     MjmlTitle,
     type IMjmlTitleProps as MjmlTitleProps,
-    MjmlWrapper,
-    type IMjmlWrapperProps as MjmlWrapperProps,
 } from "@faire/mjml-react";
 export { MjmlComment, MjmlConditionalComment, MjmlHtml, MjmlTrackingPixel, MjmlYahooStyle } from "@faire/mjml-react/extensions/index.js";
 export { renderToMjml } from "@faire/mjml-react/utils/renderToMjml.js";

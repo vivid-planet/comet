@@ -45,9 +45,9 @@
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
-        "@mikro-orm/cli": "^6.4.16",
-        "@mikro-orm/core": "^6.4.16",
-        "@mikro-orm/postgresql": "^6.4.16",
+        "@mikro-orm/cli": "^6.6.12",
+        "@mikro-orm/core": "^6.6.12",
+        "@mikro-orm/postgresql": "^6.6.12",
         "@nestjs/graphql": "^13.2.3",
         "@types/jest": "^29.5.14",
         "@types/node": "^24.12.2",

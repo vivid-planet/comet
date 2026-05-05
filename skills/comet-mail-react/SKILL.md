@@ -221,6 +221,7 @@ Place `declare module` blocks in your theme file below the `createTheme()` call.
 | Component      | Purpose                                                           | CSS Classes                                                     |
 | -------------- | ----------------------------------------------------------------- | --------------------------------------------------------------- |
 | `MjmlMailRoot` | Root element, provides theme, renders `<mjml>` skeleton           | —                                                               |
+| `MjmlWrapper`  | Groups sections sharing a background; theme-aware default bg      | —                                                               |
 | `MjmlSection`  | Full-width row, supports `indent` and `disableResponsiveBehavior` | `.mjmlSection`, `.mjmlSection--indented`                        |
 | `MjmlColumn`   | Vertical column inside a section                                  | —                                                               |
 | `MjmlText`     | Themed text block with `variant` and `bottomSpacing`              | `.mjmlText`, `.mjmlText--{variant}`, `.mjmlText--bottomSpacing` |

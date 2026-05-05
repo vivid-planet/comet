@@ -1,26 +1,22 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Inject, NotFoundException, Type } from "@nestjs/common";
+import { NotFoundException, Type } from "@nestjs/common";
 import { Args, Context, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
 import { basename, extname } from "path";
 
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { SkipBuild } from "../../builds/skip-build.decorator";
-import { CometValidationException } from "../../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { FileValidationService } from "../../file-utils/file-validation.service";
-import { createFileUploadInputFromUrl, slugifyFilename } from "../../file-utils/files.utils";
+import { slugifyFilename } from "../../file-utils/files.utils";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
-import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
 import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
@@ -62,7 +58,6 @@ export function createFilesResolver({
             private readonly filesService: FilesService,
             @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
-            @Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService,
             private readonly entityManager: EntityManager,
         ) {}
 
@@ -94,28 +89,6 @@ export function createFilesResolver({
         @AffectedEntity(File)
         async updateDamFile(@Args({ type: () => UpdateDamFileArgs }) { id, input }: UpdateDamFileArgs): Promise<FileInterface> {
             return this.filesService.updateById(id, input);
-        }
-
-        @Mutation(() => File)
-        @SkipBuild()
-        async importDamFileByDownload(
-            @Args("url", { type: () => String }) url: string,
-            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
-            @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
-        ): Promise<FileInterface> {
-            const file = await createFileUploadInputFromUrl(url);
-            const validationResult = await this.fileValidationService.validateFile(file);
-            if (validationResult !== undefined) {
-                throw new CometValidationException(validationResult);
-            }
-
-            const uploadedFile = await this.filesService.upload(file, {
-                ...input,
-                imageCropArea: imageInput?.cropArea,
-                folderId: input.folderId ? input.folderId : undefined,
-                scope: nonEmptyScopeOrNothing(scope),
-            });
-            return uploadedFile;
         }
 
         @Mutation(() => [File])
