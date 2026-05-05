@@ -6,6 +6,7 @@ const docsLink = "https://docs.comet-dxp.com/docs/faqs/environment-variables-in-
 export default defineConfig([
     globalIgnores([
         "**/**/*.generated.ts",
+        "**/*.stories.tsx",
         "dist/**",
         "lang/**",
         "lang-compiled/**",

@@ -1,6 +1,7 @@
-import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import { expect, userEvent, within } from "storybook/test";
+
+import { AccordionBlock } from "./AccordionBlock";
 
 const createAccordionData = (items: Array<{ title: string; openByDefault?: boolean }>) => ({
     blocks: items.map((item, index) => ({

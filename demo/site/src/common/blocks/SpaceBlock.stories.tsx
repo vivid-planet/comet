@@ -1,5 +1,6 @@
-import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
+
+import { SpaceBlock } from "./SpaceBlock";
 
 const meta: Meta<typeof SpaceBlock> = {
     title: "Blocks/SpaceBlock",

@@ -8,7 +8,7 @@
         "build-storybook": "storybook build --disable-telemetry",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
-        "lint:eslint": "eslint --max-warnings 0 src/ .storybook/ --no-warn-ignored",
+        "lint:eslint": "eslint --max-warnings 0 .storybook/ ../site/src/**/*.stories.tsx --no-warn-ignored",
         "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
         "lint:fix:eslint": "pnpm run lint:eslint --fix",
         "lint:fix:prettier": "pnpm run lint:prettier --write",

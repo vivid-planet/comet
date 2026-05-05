@@ -1,5 +1,6 @@
-import { Typography } from "@src/common/components/Typography";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
+
+import { Typography } from "./Typography";
 
 const meta: Meta<typeof Typography> = {
     title: "Components/Typography",

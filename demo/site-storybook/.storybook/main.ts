@@ -9,7 +9,7 @@ const siteDir = path.resolve(__dirname, "../../site/src");
 
 const config: StorybookConfig = {
     framework: "@storybook/react-webpack5",
-    stories: ["../src/**/*.stories.tsx"],
+    stories: ["../../site/src/**/*.stories.tsx"],
     addons: ["@storybook/addon-docs", "@storybook/addon-webpack5-compiler-babel"],
     staticDirs: ["../../site/public"],
     webpackFinal: async (config) => {

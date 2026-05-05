@@ -1,5 +1,6 @@
-import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
+
+import { HeadingBlock } from "./HeadingBlock";
 
 const createRichTextData = (text: string, blockType = "unstyled") => ({
     draftContent: {

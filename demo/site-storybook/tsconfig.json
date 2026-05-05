@@ -19,6 +19,6 @@
         "strict": false,
         "target": "es2017"
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", ".storybook/**/*.ts", ".storybook/**/*.tsx"],
+    "include": ["../site/src/**/*.stories.ts", "../site/src/**/*.stories.tsx", ".storybook/**/*.ts", ".storybook/**/*.tsx"],
     "exclude": ["node_modules"]
 }

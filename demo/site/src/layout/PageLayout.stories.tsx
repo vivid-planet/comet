@@ -1,5 +1,6 @@
-import { PageLayout } from "@src/layout/PageLayout";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
+
+import { PageLayout } from "./PageLayout";
 
 const meta: Meta<typeof PageLayout> = {
     title: "Layout/PageLayout",
