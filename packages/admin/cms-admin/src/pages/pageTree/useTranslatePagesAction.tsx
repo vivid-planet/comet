@@ -27,6 +27,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
     dialogs: ReactNode;
     translating: boolean;
     enabled: boolean;
+    hasTranslatableContent: boolean;
     openDialog: () => void;
 } {
     const apolloClient = useApolloClient();
@@ -40,6 +41,10 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
     });
 
     const eligiblePages = pages.filter((page) => page.visibility !== "Archived");
+    const hasTranslatableContent = eligiblePages.some((page) => {
+        const documentType = documentTypes[page.documentType];
+        return documentType && isTranslatable(documentType);
+    });
 
     const handleTranslate = async () => {
         setConfirmDialogOpen(false);
@@ -62,10 +67,10 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                     />,
                 );
 
-                const isHomePage = page.slug === "home";
+                const shouldTranslateName = hasTranslatableContent && page.slug !== "home";
 
                 // Pass 1: Collect all translatable texts
-                const collectedTexts: string[] = isHomePage ? [] : [page.name];
+                const collectedTexts: string[] = shouldTranslateName ? [page.name] : [];
 
                 let documentInput: Record<string, unknown> | undefined;
                 let documentId: string | undefined;
@@ -99,9 +104,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
 
                 // Pass 3: Apply translations
                 let translatedContentTexts: string[];
-                if (isHomePage) {
-                    translatedContentTexts = translatedTexts;
-                } else {
+                if (shouldTranslateName) {
                     const [translatedName, ...rest] = translatedTexts;
                     translatedContentTexts = rest;
 
@@ -122,6 +125,8 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
                             },
                         });
                     }
+                } else {
+                    translatedContentTexts = translatedTexts;
                 }
 
                 if (hasTranslatableContent && documentInput && documentId) {
@@ -208,7 +213,7 @@ export function useTranslatePagesAction({ pages, documentTypes }: Props): {
         </>
     );
 
-    return { dialogs, translating, enabled, openDialog: () => setConfirmDialogOpen(true) };
+    return { dialogs, translating, enabled, hasTranslatableContent, openDialog: () => setConfirmDialogOpen(true) };
 }
 
 const updatePageTreeNodeMutation = gql`

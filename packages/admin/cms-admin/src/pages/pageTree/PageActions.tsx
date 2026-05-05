@@ -36,6 +36,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
     const {
         dialogs: translateDialogs,
         enabled: translateEnabled,
+        hasTranslatableContent,
         translating,
         openDialog: openTranslateDialog,
     } = useTranslatePagesAction({
@@ -133,7 +134,12 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                         <Divider key="divider2" />,
                         <CopyPasteMenuItem key="copyPaste" page={page} />,
                         translateEnabled && (
-                            <RowActionsItem key="translate" icon={<Translate />} disabled={translating} onClick={openTranslateDialog}>
+                            <RowActionsItem
+                                key="translate"
+                                icon={<Translate />}
+                                disabled={translating || !hasTranslatableContent}
+                                onClick={openTranslateDialog}
+                            >
                                 <FormattedMessage id="comet.translator.translate" defaultMessage="Translate" />
                             </RowActionsItem>
                         ),

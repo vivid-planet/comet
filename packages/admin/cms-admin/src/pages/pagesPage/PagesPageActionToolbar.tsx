@@ -55,6 +55,7 @@ export const PagesPageActionToolbar = ({
         dialogs: translateDialogs,
         translating,
         enabled: translateEnabled,
+        hasTranslatableContent,
         openDialog: openTranslateDialog,
     } = useTranslatePagesAction({ pages: selectedPages, documentTypes });
     const [publishLoading, setPublishLoading] = useState(false);
@@ -218,7 +219,11 @@ export const PagesPageActionToolbar = ({
                     {translateEnabled && (
                         <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.translate" defaultMessage="Translate" />}>
                             <span>
-                                <IconButton disabled={selectedTree.size === 0 || translating} onClick={openTranslateDialog} size="large">
+                                <IconButton
+                                    disabled={selectedTree.size === 0 || translating || !hasTranslatableContent}
+                                    onClick={openTranslateDialog}
+                                    size="large"
+                                >
                                     {!translating ? <Translate /> : <ThreeDotSaving />}
                                 </IconButton>
                             </span>
