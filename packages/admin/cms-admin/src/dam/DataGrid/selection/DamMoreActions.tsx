@@ -16,9 +16,10 @@ interface DamMoreActionsProps {
     filter?: {
         allowedMimetypes?: string[];
     };
+    hideSelectiveActions?: boolean;
 }
 
-export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps) => {
+export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter, hideSelectiveActions }: DamMoreActionsProps) => {
     const damSelectionActionsApi = useDamSelectionApi();
     const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
@@ -82,37 +83,41 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                         icon: <AddFolderIcon />,
                     },
                 ]}
-                selectiveActions={[
-                    !onlyFoldersSelected
-                        ? {
-                              label: <FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />,
-                              onClick: handleDownloadClick,
-                              icon: <Download />,
-                          }
-                        : null,
-                    {
-                        label: <FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />,
-                        onClick: moveSelected,
-                        icon: <Move />,
-                        divider: true,
-                    },
-                    {
-                        label: <FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />,
-                        onClick: archiveSelected,
-                        icon: <Archive />,
-                    },
-                    {
-                        label: <FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />,
-                        onClick: restoreSelected,
-                        icon: <Restore />,
-                    },
-                    {
-                        label: <FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />,
-                        onClick: deleteSelected,
-                        icon: <Delete />,
-                    },
-                ]}
-                selectionSize={selectionSize}
+                selectiveActions={
+                    hideSelectiveActions
+                        ? undefined
+                        : [
+                              !onlyFoldersSelected
+                                  ? {
+                                        label: <FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />,
+                                        onClick: handleDownloadClick,
+                                        icon: <Download />,
+                                    }
+                                  : null,
+                              {
+                                  label: <FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />,
+                                  onClick: moveSelected,
+                                  icon: <Move />,
+                                  divider: true,
+                              },
+                              {
+                                  label: <FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />,
+                                  onClick: archiveSelected,
+                                  icon: <Archive />,
+                              },
+                              {
+                                  label: <FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />,
+                                  onClick: restoreSelected,
+                                  icon: <Restore />,
+                              },
+                              {
+                                  label: <FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />,
+                                  onClick: deleteSelected,
+                                  icon: <Delete />,
+                              },
+                          ]
+                }
+                selectionSize={hideSelectiveActions ? 0 : selectionSize}
                 slotProps={{
                     menu: {
                         transformOrigin,
