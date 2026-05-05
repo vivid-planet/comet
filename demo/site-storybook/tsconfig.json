@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "jsx": "react-jsx",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "noImplicitAny": false,
+        "paths": {
+            "@src/blocks.generated": ["./.storybook/mocks/blocks.generated.ts"],
+            "@src/graphql.generated": ["./.storybook/mocks/graphql.generated.ts"],
+            "@src/*": ["../site/src/*"]
+        },
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": false,
+        "target": "es2017"
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", ".storybook/**/*.ts", ".storybook/**/*.tsx"],
+    "exclude": ["node_modules"]
+}
