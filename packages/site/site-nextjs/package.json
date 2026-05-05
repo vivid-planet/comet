@@ -18,6 +18,10 @@
             "import": "./lib/index.js"
         },
         "./css": "./lib/style.css",
+        "./server": {
+            "types": "./lib/server.d.ts",
+            "import": "./lib/server.js"
+        },
         "./webpackPersistedQueriesLoader": "./lib/site-react/lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
     "files": [

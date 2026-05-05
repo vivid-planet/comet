@@ -9,9 +9,6 @@ export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { createFetchWithDefaultNextRevalidate, createFetchWithDefaults } from "./graphQLFetch/graphQLFetch";
 export { Image } from "./image/Image";
-export { sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
-export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
-export { legacyPagesRouterPreviewParams, previewParams, type SitePreviewParams } from "./sitePreview/previewUtils";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export {
     AdminMessageType,
@@ -57,7 +54,6 @@ export {
     OneOfBlock,
     OptionalBlock,
     parseAspectRatio,
-    persistedQueryRoute,
     PhoneLinkBlock,
     type PlayPauseButtonProps,
     Preview,
@@ -80,7 +76,6 @@ export {
     useOneTrustCookieApi,
     usePreview,
     type VideoPreviewImageProps,
-    webpackPersistedQueriesLoader,
     withPreview,
     type WithPreviewProps,
 } from "@comet/site-react";

@@ -11,8 +11,10 @@ export default defineConfig({
     build: {
         outDir: "lib",
         lib: {
-            entry: "./src/index.ts",
-            fileName: () => "index.js",
+            entry: {
+                index: "./src/index.ts",
+                server: "./src/server.ts",
+            },
             formats: ["es"],
         },
         rollupOptions: {
