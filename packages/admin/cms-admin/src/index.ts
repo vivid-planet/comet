@@ -168,8 +168,8 @@ export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog"
 /** @deprecated Use `ChooseDamFileDialog` instead. */
 export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
 export { ChooseDamFilesDialog } from "./form/file/chooseFile/ChooseDamFilesDialog";
-export { FileField, type GQLDamFileFieldFileFragment, type GQLDamMultiFileFieldFileFragment } from "./form/file/FileField";
-export { damMultiFileFieldFragment } from "./form/file/FileField.gql";
+export { FileField, type GQLDamFileFieldFileFragment } from "./form/file/FileField";
+export { damFileFieldFragment } from "./form/file/FileField.gql";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {
     FinalFormFileUpload,

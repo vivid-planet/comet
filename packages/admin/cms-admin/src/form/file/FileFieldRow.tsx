@@ -5,13 +5,13 @@ import { useIntl } from "react-intl";
 
 import { DamThumbnail } from "../../dam/DataGrid/thumbnail/DamThumbnail";
 import { DamPathLazy } from "./DamPathLazy";
-import type { GQLDamMultiFileFieldFileFragment } from "./FileField.gql.generated";
+import type { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 import { type ActionItem, FileFieldMenu, useHasFileFieldMenu } from "./FileFieldMenu";
 
 interface FileFieldRowProps {
-    file: GQLDamMultiFileFieldFileFragment;
+    file: GQLDamFileFieldFileFragment;
     onRemove: () => void;
-    preview?: (file: GQLDamMultiFileFieldFileFragment) => ReactNode;
+    preview?: (file: GQLDamFileFieldFileFragment) => ReactNode;
     menuActions?: Array<ActionItem | ReactElement | null | undefined>;
 }
 

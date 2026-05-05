@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { damMultiFileFieldFragment, finalFormFileUploadFragment } from "@comet/cms-admin";
+import { damFileFieldFragment, finalFormFileUploadFragment } from "@comet/cms-admin";
 
 export const productFormFragment = gql`
     fragment ProductFormManual on Product {
@@ -17,7 +17,7 @@ export const productFormFragment = gql`
             ...FinalFormFileUpload
         }
         relatedImages {
-            ...DamMultiFileFieldFile
+            ...DamFileFieldFile
         }
         manufacturer {
             id
@@ -47,7 +47,7 @@ export const productFormFragment = gql`
         availableSince
     }
     ${finalFormFileUploadFragment}
-    ${damMultiFileFieldFragment}
+    ${damFileFieldFragment}
 `;
 
 export const productQuery = gql`

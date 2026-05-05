@@ -11,19 +11,12 @@ import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponen
 import { ChooseDamFileDialog } from "./chooseFile/ChooseDamFileDialog";
 import { ChooseDamFilesDialog } from "./chooseFile/ChooseDamFilesDialog";
 import { DamPathLazy } from "./DamPathLazy";
-import { damFileFieldFileQuery, damMultiFileFieldFileQuery } from "./FileField.gql";
-import type {
-    GQLDamFileFieldFileFragment,
-    GQLDamFileFieldFileQuery,
-    GQLDamFileFieldFileQueryVariables,
-    GQLDamMultiFileFieldFileFragment,
-    GQLDamMultiFileFieldFileQuery,
-    GQLDamMultiFileFieldFileQueryVariables,
-} from "./FileField.gql.generated";
+import { damFileFieldFileQuery } from "./FileField.gql";
+import type { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
 import { type ActionItem, FileFieldMenu, useHasFileFieldMenu } from "./FileFieldMenu";
 import { FileFieldRow } from "./FileFieldRow";
 
-export type { GQLDamFileFieldFileFragment, GQLDamMultiFileFieldFileFragment } from "./FileField.gql.generated";
+export type { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 
 type CommonProps = {
     buttonText?: ReactNode;
@@ -37,10 +30,10 @@ type SingleFileFieldProps = FieldRenderProps<GQLDamFileFieldFileFragment | undef
         preview?: ReactNode;
     };
 
-type MultiFileFieldProps = FieldRenderProps<GQLDamMultiFileFieldFileFragment[] | undefined, HTMLInputElement> &
+type MultiFileFieldProps = FieldRenderProps<GQLDamFileFieldFileFragment[] | undefined, HTMLInputElement> &
     CommonProps & {
         multiple: true;
-        preview?: (file: GQLDamMultiFileFieldFileFragment) => ReactNode;
+        preview?: (file: GQLDamFileFieldFileFragment) => ReactNode;
     };
 
 export function FileField(props: SingleFileFieldProps): ReactElement;
@@ -135,7 +128,7 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
     const snackbarApi = useSnackbarApi();
 
     // react-final-form may pass "" as the default when no initial value is set; fall back to [].
-    const files: GQLDamMultiFileFieldFileFragment[] = Array.isArray(input.value) ? input.value : [];
+    const files: GQLDamFileFieldFileFragment[] = Array.isArray(input.value) ? input.value : [];
 
     const handleRemove = (id: string) => {
         input.onChange(files.filter((f) => f.id !== id));
@@ -145,8 +138,8 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
         try {
             const next = await Promise.all(
                 fileIds.map(async (id) => {
-                    const { data } = await apolloClient.query<GQLDamMultiFileFieldFileQuery, GQLDamMultiFileFieldFileQueryVariables>({
-                        query: damMultiFileFieldFileQuery,
+                    const { data } = await apolloClient.query<GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables>({
+                        query: damFileFieldFileQuery,
                         variables: { id },
                     });
                     return data.damFile;
