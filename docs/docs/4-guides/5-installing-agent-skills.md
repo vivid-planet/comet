@@ -54,7 +54,7 @@ The `SKILL.md` file contains markdown-formatted instructions that the agent foll
 
 ## Local skills
 
-Place skill folders inside `skills/` at your repo root. These have the highest priority and override any same-named skills from external repos.
+Place skill folders inside `skills/` or `agentic-plugin/skills/` at your repo root. These have the highest priority and override any same-named skills from external repos. `skills/` takes priority over `agentic-plugin/skills/`.
 
 Then run the `install-agent-skills` command to symlink them into the target directories:
 
@@ -62,7 +62,7 @@ Then run the `install-agent-skills` command to symlink them into the target dire
 npx @comet/cli install-agent-skills
 ```
 
-Local skills are **symlinked**, so edits to `skills/` are reflected immediately without re-running the command.
+Local skills are **symlinked**, so edits are reflected immediately without re-running the command.
 
 If your repo is also used as a skill source by other projects, see [Internal skills](#internal-skills) to prevent local-only skills from being installed by consumers.
 
@@ -76,7 +76,7 @@ You can install skills from external git repositories. This allows you to consum
 }
 ```
 
-Each entry is an SSH git URL, optionally followed by `#ref` to pin a branch, tag, or commit hash. Only the `skills/` folder is fetched from each repo (via git sparse checkout) — the rest of the repository is not downloaded. External skills are **copied** into the target directories.
+Each entry is an SSH git URL, optionally followed by `#ref` to pin a branch, tag, or commit hash. Only the `skills/` and `agentic-plugin/skills/` folders are fetched from each repo (via git sparse checkout) — the rest of the repository is not downloaded. External skills are **copied** into the target directories.
 
 Skills with `metadata.internal: true` in their `SKILL.md` are excluded when installing from external repos.
 
@@ -126,7 +126,7 @@ npx @comet/cli install-agent-skills --dry-run
 
 If you maintain a library, you can add agent skills to your repository so that projects using your library can pull them in via `agent-skills.json`.
 
-Place skill folders inside a `skills/` directory at your repo root:
+Place skill folders inside a `skills/` directory at your repo root (or `agentic-plugin/skills/` if you ship them as a Claude Code plugin):
 
 ```
 skills/
@@ -136,7 +136,7 @@ skills/
     └── SKILL.md
 ```
 
-When a consumer references your repo, `install-agent-skills` will sparse-fetch only the `skills/` folder — the rest of your repository is never downloaded. Their `agent-skills.json` would look like:
+When a consumer references your repo, `install-agent-skills` will sparse-fetch only the `skills/` and `agentic-plugin/skills/` folders — the rest of your repository is never downloaded. Their `agent-skills.json` would look like:
 
 ```json
 {

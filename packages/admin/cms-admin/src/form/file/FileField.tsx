@@ -9,7 +9,7 @@ import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminCompone
 import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
-import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
+import { ChooseDamFileDialog } from "./chooseFile/ChooseDamFileDialog";
 import { DamPathLazy } from "./DamPathLazy";
 import { damFileFieldFileQuery } from "./FileField.gql";
 import type { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
@@ -128,7 +128,7 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
             <BlockAdminComponentButton onClick={() => setChooseFileDialogOpen(true)} startIcon={<Assets />} size="large">
                 {buttonText ?? <FormattedMessage id="comet.form.file.chooseFile" defaultMessage="Choose file" />}
             </BlockAdminComponentButton>
-            <ChooseFileDialog
+            <ChooseDamFileDialog
                 open={chooseFileDialogOpen}
                 allowedMimetypes={allowedMimetypes}
                 onClose={() => setChooseFileDialogOpen(false)}

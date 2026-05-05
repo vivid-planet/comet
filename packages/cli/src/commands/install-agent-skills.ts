@@ -27,19 +27,21 @@ function parseRepoUrl(rawUrl: string): { repoUrl: string; ref: string | undefine
     return { repoUrl: rawUrl.slice(0, hashIndex), ref: rawUrl.slice(hashIndex + 1) || undefined };
 }
 
+const SKILL_SOURCE_PATHS = ["skills", "agentic-plugin/skills"];
+
 function cloneRepo(rawUrl: string): string {
     const { repoUrl, ref } = parseRepoUrl(rawUrl);
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "comet-agent-skills-"));
 
-    // Use sparse checkout to fetch only the skills/ folder
+    // Use sparse checkout to fetch only the skill source folders
     execFileSync("git", ["init", tmpDir], { stdio: "pipe" });
     execFileSync("git", ["-C", tmpDir, "remote", "add", "origin", "--", repoUrl], { stdio: "pipe" });
     execFileSync("git", ["-C", tmpDir, "config", "core.sparseCheckout", "true"], { stdio: "pipe" });
-    fs.writeFileSync(path.join(tmpDir, ".git", "info", "sparse-checkout"), "skills/\n");
+    fs.writeFileSync(path.join(tmpDir, ".git", "info", "sparse-checkout"), SKILL_SOURCE_PATHS.map((p) => `${p}/\n`).join(""));
 
     const fetchRef = ref ?? "HEAD";
     try {
-        console.log(`Fetching ${repoUrl} ref "${fetchRef}" (sparse, skills/ only)...`);
+        console.log(`Fetching ${repoUrl} ref "${fetchRef}" (sparse, ${SKILL_SOURCE_PATHS.map((p) => `${p}/`).join(", ")} only)...`);
         execFileSync("git", ["-C", tmpDir, "fetch", "--depth", "1", "origin", fetchRef], { stdio: "pipe" });
         execFileSync("git", ["-C", tmpDir, "checkout", "FETCH_HEAD"], { stdio: "pipe" });
     } catch {
@@ -171,20 +173,26 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
             fs.mkdirSync(dir, { recursive: true });
         }
 
-        // Priority order: local skills/ > external repos (in arg order)
-        const sources: SkillSource[] = [{ label: "local skills/", directory: path.join(cwd, "skills"), symlink: true }];
+        // Priority order: local skill folders (in declared order) > external repos (in arg order)
+        const sources: SkillSource[] = SKILL_SOURCE_PATHS.map((p) => ({
+            label: `local ${p}/`,
+            directory: path.join(cwd, p),
+            symlink: true,
+        }));
 
         const tempDirs: string[] = [];
         try {
             for (const rawUrl of repos) {
                 const cloneDir = cloneRepo(rawUrl);
                 tempDirs.push(cloneDir);
-                sources.push({
-                    label: `external ${rawUrl}`,
-                    directory: path.join(cloneDir, "skills"),
-                    symlink: false,
-                    filterInternal: true,
-                });
+                for (const p of SKILL_SOURCE_PATHS) {
+                    sources.push({
+                        label: `external ${rawUrl} (${p}/)`,
+                        directory: path.join(cloneDir, p),
+                        symlink: false,
+                        filterInternal: true,
+                    });
+                }
             }
             installSkills(sources, targetDirs, { dryRun });
         } finally {

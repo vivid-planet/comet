@@ -428,9 +428,20 @@ import { MjmlColumn, MjmlSection, MjmlText, ThemeProvider } from "@comet/mail-re
 
 import { theme } from "./theme";
 
-const darkSectionTheme = structuredClone(theme);
-darkSectionTheme.colors.background.content = "#1A1A2E";
-darkSectionTheme.text.color = "#FFFFFF";
+const darkSectionTheme = {
+    ...theme,
+    colors: {
+        ...theme.colors,
+        background: {
+            ...theme.colors.background,
+            content: "#1A1A2E",
+        },
+    },
+    text: {
+        ...theme.text,
+        color: "#FFFFFF",
+    },
+};
 
 function EmailWithDarkFooter() {
     return (
