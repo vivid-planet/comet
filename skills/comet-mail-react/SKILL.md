@@ -231,6 +231,37 @@ Place `declare module` blocks in your theme file below the `createTheme()` call.
 
 ---
 
+## Configuration
+
+`Config` is an augmentable interface that can be used to expose, e.g., environment-specific values such as asset base URLs.
+
+- **`Config`** — augmentable interface, no built-in keys. All keys optional.
+- **`MjmlMailRoot.config`** — optional prop that exposes a `Config` value to descendants.
+- **`useConfig`** — hook returning the nearest `Config`, or `{}` if no provider is mounted.
+- **`ConfigProvider`** — standalone provider for cases that bypass `MjmlMailRoot`.
+
+Add keys via module augmentation:
+
+```ts
+declare module "@comet/mail-react" {
+    interface Config {
+        assetBaseUrl?: string;
+    }
+}
+```
+
+Wire at the root and read from any descendant:
+
+```tsx
+import { MjmlMailRoot, useConfig, type Config } from "@comet/mail-react";
+
+const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
+
+<MjmlMailRoot config={config}>{/* descendants can call useConfig() */}</MjmlMailRoot>;
+```
+
+---
+
 ## Components Overview
 
 ### MJML Components (Layout Level)
