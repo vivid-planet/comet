@@ -204,7 +204,6 @@ export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
 export { EntityInfo } from "./entity-info/entity-info.decorator";
-export { FullTextSearchModule } from "./entity-info/full-text-search.module";
 export { FileUpload } from "./file-uploads/entities/file-upload.entity";
 export { FileUploadsModule } from "./file-uploads/file-uploads.module";
 export { FileUploadsService } from "./file-uploads/file-uploads.service";
@@ -212,6 +211,7 @@ export { FileUploadInput, FileUploadInterface } from "./file-utils/file-upload.i
 export { createFileUploadInputFromUrl, slugifyFilename } from "./file-utils/files.utils";
 export { FocalPoint } from "./file-utils/focal-point.enum";
 export { getCenteredPosition, getMaxDimensionsFromArea, ImageDimensionsAndCoordinates } from "./file-utils/images.util";
+export { FullTextSearchModule } from "./full-text-search/full-text-search.module";
 export { IMGPROXY_CONFIG } from "./imgproxy/imgproxy.constants";
 export { Extension, Gravity, ResizingType } from "./imgproxy/imgproxy.enum";
 export { ImgproxyModule } from "./imgproxy/imgproxy.module";
