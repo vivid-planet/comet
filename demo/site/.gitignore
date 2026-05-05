@@ -54,3 +54,4 @@ lang
 lang-extracted
 lang-compiled
 /dist
+/storybook-static

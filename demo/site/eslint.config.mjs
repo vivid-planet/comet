@@ -16,6 +16,8 @@ export default defineConfig([
         "lang/**",
         "lang-compiled/**",
         "lang-extracted/**",
+        ".storybook/**",
+        "storybook-static/**",
     ]),
     ...eslintConfigNextJs,
     {
