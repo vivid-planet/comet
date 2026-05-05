@@ -97,6 +97,7 @@ export const ChooseDamFileDialog = ({ open, onClose, onChooseFile, allowedMimety
                             hideMultiselect={true}
                             hideArchiveFilter={true}
                             additionalToolbarItems={damConfig.additionalToolbarItems}
+                            toolbarOptions={{ hideSelectiveActions: true }}
                         />
                     </SubRoute>
                 </MemoryRouter>
