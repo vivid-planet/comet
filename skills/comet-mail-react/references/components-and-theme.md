@@ -159,7 +159,7 @@ Root element for every email template. Renders the full MJML skeleton (`<mjml>`,
 | Prop       | Type        | Default         | Description                                               |
 | ---------- | ----------- | --------------- | --------------------------------------------------------- |
 | `theme`    | `Theme`     | `createTheme()` | Theme for the email                                       |
-| `config`   | `Config`    | —               | Augmentable values exposed to descendants via `useConfig` |
+| `config`   | `Config`    | `{}`            | Augmentable values exposed to descendants via `useConfig` |
 | `children` | `ReactNode` | —               | Email content                                             |
 
 **What it configures from the theme:**

@@ -1,7 +1,8 @@
 # config-context Specification
 
 ## Purpose
-TBD - created by archiving change add-config-context. Update Purpose after archive.
+
+Provide a runtime configuration channel for `@comet/mail-react` that is independent of the theme. Consumers extend an empty, augmentable `Config` interface via TypeScript declaration merging and read values through `useConfig()` from anywhere inside an `MjmlMailRoot`. This lets the package and its consumers expose new configurable values without widening the theme or threading props through component trees.
 ## Requirements
 ### Requirement: `Config` interface
 
