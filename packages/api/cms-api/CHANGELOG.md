@@ -1,5 +1,39 @@
 # @comet/cms-api
 
+## 9.0.0-beta.3
+
+### Major Changes
+
+- 0e7d7e9: Import blob storage backends dynamically
+
+    `BlobStorageAzureConfig`, `BlobStorageAzureStorage`, `BlobStorageFileConfig`, and `BlobStorageFileStorage` are no longer exported from `@comet/cms-api` as they are now loaded dynamically based on the configured driver. Only the relevant backend class is imported, which avoids loading unused optional dependencies (e.g., `@azure/storage-blob` or `aws-sdk`).
+
+- 962a320: Remove `importDamFileByDownload` mutation
+- 2ea835c: Rename `RedirectSourceTypeValues` to `RedirectSourceType`
+
+### Minor Changes
+
+- a50793a: Add `listFiles` method to `BlobStorageBackendService`
+- cac2b3b: Add fullText query support for PageTree (pageTreeFullTextSearch query)
+
+    to enable add a fullText column for a PageTree document (Page or others):
+
+        @Index({ type: "fulltext" })
+        @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.content) })
+        searchableContent?: string;
+
+    and enable fullText option for PageTreeModule
+
+- dd51208: Update TypeScript compilation target to ES2023 and lib to ES2023 to match the required Node.js v22
+
+### Patch Changes
+
+- f6a2932: Fix `MODULE_NOT_FOUND` errors caused by extensionless deep imports of `@nestjs/graphql` internals. `@nestjs/graphql` 13.3.0 tightened its `exports` map so that the `"./*": "./*"` pattern no longer maps to `.js` automatically. All deep imports of `@nestjs/graphql` internals now use explicit `.js` extensions.
+- 71dce06: Support sorting folders by size (child count) in `FoldersService`
+- 802b0b8: Remove `sharp` dependency by parsing the dominant color directly from the 1x1 PNG produced by imgproxy
+- 8bf0e5b: Remove unused `ts-morph` dependency
+- 8722deb: Upgrade `file-type` dependency from v16 to v21
+
 ## 9.0.0-beta.2
 
 ### Patch Changes
