@@ -34,27 +34,31 @@ type MjmlMailRootProps = PropsWithChildren<{
  *
  * Direct children should be section-level components (e.g. `MjmlSection`).
  */
-export function MjmlMailRoot({ theme: themeProp, attributes, head, config = {}, children }: MjmlMailRootProps): ReactNode {
+export function MjmlMailRoot({ theme: themeProp, attributes, head, config, children }: MjmlMailRootProps): ReactNode {
     const theme = themeProp ?? createTheme();
 
-    return (
-        <ConfigProvider config={config}>
-            <ThemeProvider theme={theme}>
-                <Mjml>
-                    <MjmlHead>
-                        <MjmlAttributes>
-                            <MjmlAll padding="0" fontFamily={theme.text.fontFamily} />
-                            {attributes}
-                        </MjmlAttributes>
-                        <MjmlBreakpoint width={`${theme.breakpoints.mobile.value}px`} />
-                        <Styles />
-                        {head}
-                    </MjmlHead>
-                    <MjmlBody width={theme.sizes.bodyWidth} backgroundColor={theme.colors.background.body}>
-                        {children}
-                    </MjmlBody>
-                </Mjml>
-            </ThemeProvider>
-        </ConfigProvider>
+    const content = (
+        <ThemeProvider theme={theme}>
+            <Mjml>
+                <MjmlHead>
+                    <MjmlAttributes>
+                        <MjmlAll padding="0" fontFamily={theme.text.fontFamily} />
+                        {attributes}
+                    </MjmlAttributes>
+                    <MjmlBreakpoint width={`${theme.breakpoints.mobile.value}px`} />
+                    <Styles />
+                    {head}
+                </MjmlHead>
+                <MjmlBody width={theme.sizes.bodyWidth} backgroundColor={theme.colors.background.body}>
+                    {children}
+                </MjmlBody>
+            </Mjml>
+        </ThemeProvider>
     );
+
+    if (config) {
+        return <ConfigProvider config={config}>{content}</ConfigProvider>;
+    }
+
+    return content;
 }

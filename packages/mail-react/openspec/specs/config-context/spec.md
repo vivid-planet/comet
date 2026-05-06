@@ -39,7 +39,7 @@ When no `ConfigProvider` is mounted in the ancestor tree, `useConfig` SHALL retu
 
 ### Requirement: `MjmlMailRoot` accepts an optional `config` prop
 
-`MjmlMailRoot` SHALL accept an optional `config?: Config` prop and SHALL mount a `ConfigProvider` internally so descendants always read a `Config` value via `useConfig`. When `config` is provided, descendants SHALL receive that value. When `config` is omitted, descendants SHALL receive an empty `Config` (`{}`).
+`MjmlMailRoot` SHALL accept an optional `config?: Config` prop. When `config` is provided, `MjmlMailRoot` SHALL mount a `ConfigProvider` internally so descendants receive that value via `useConfig`. When `config` is omitted, `MjmlMailRoot` SHALL NOT mount a `ConfigProvider`, so any `ConfigProvider` mounted in the ancestor tree remains visible to descendants; if no ancestor provider exists, `useConfig` returns `{}`.
 
 The `config` prop SHALL be additive and independent of the existing `theme` prop — passing one does not require passing the other.
 
@@ -48,8 +48,13 @@ The `config` prop SHALL be additive and independent of the existing `theme` prop
 - **WHEN** `<MjmlMailRoot config={value}>` renders a descendant that calls `useConfig()`
 - **THEN** the descendant receives `value`
 
-#### Scenario: `config` prop omitted
+#### Scenario: `config` prop omitted, no ancestor provider
 
-- **WHEN** `<MjmlMailRoot>` renders without a `config` prop and a descendant calls `useConfig()`
+- **WHEN** `<MjmlMailRoot>` renders without a `config` prop, no `ConfigProvider` is mounted in the ancestor tree, and a descendant calls `useConfig()`
 - **THEN** the descendant receives `{}` (an empty `Config`) and `useConfig` does not throw
+
+#### Scenario: `config` prop omitted, ancestor provider present
+
+- **WHEN** an outer `<ConfigProvider config={value}>` wraps `<MjmlMailRoot>` (without a `config` prop) and a descendant calls `useConfig()`
+- **THEN** the descendant receives `value` from the outer provider — `MjmlMailRoot` does not shadow it
 

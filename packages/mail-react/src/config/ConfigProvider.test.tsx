@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { MjmlMailRoot } from "../components/mailRoot/MjmlMailRoot.js";
 import { MjmlSection } from "../components/section/MjmlSection.js";
 import { renderMailHtml } from "../server/renderMailHtml.js";
-import { useConfig } from "./ConfigProvider.js";
+import { ConfigProvider, useConfig } from "./ConfigProvider.js";
 
 declare module "./ConfigProvider.js" {
     interface Config {
@@ -41,5 +41,24 @@ describe("MjmlMailRoot config integration", () => {
 
         expect(mjmlWarnings).toEqual([]);
         expect(html).toContain('data-config-value="from-root"');
+    });
+
+    it("does not shadow an outer ConfigProvider when no config prop is passed", () => {
+        const { html, mjmlWarnings } = renderMailHtml(
+            <ConfigProvider config={{ testKey: { value: "from-outer" } }}>
+                <MjmlMailRoot>
+                    <MjmlSection>
+                        <MjmlColumn>
+                            <MjmlText>
+                                <Probe />
+                            </MjmlText>
+                        </MjmlColumn>
+                    </MjmlSection>
+                </MjmlMailRoot>
+            </ConfigProvider>,
+        );
+
+        expect(mjmlWarnings).toEqual([]);
+        expect(html).toContain('data-config-value="from-outer"');
     });
 });
