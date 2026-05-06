@@ -141,29 +141,29 @@ export function installSkills(sources: SkillSource[], targetDirs: string[], { dr
     console.log(`\nTotal skills installed: ${installed.size}`);
 }
 
-interface AgentSkillsConfig {
+interface AgentFeaturesConfig {
     repos?: string[];
 }
 
-function loadConfig(configPath: string): AgentSkillsConfig {
+function loadConfig(configPath: string): AgentFeaturesConfig {
     const resolved = path.resolve(configPath);
     if (!fs.existsSync(resolved)) {
         throw new Error(`Config file not found: ${resolved}`);
     }
     const raw = fs.readFileSync(resolved, "utf-8");
-    return JSON.parse(raw) as AgentSkillsConfig;
+    return JSON.parse(raw) as AgentFeaturesConfig;
 }
 
-export const installAgentSkillsCommand = new Command("install-agent-skills")
-    .description("Install agent skills from local directories and optional external git repos")
-    .option("--config <path>", "Path to a JSON config file specifying repos to install skills from", "agent-skills.json")
+export const installAgentFeaturesCommand = new Command("install-agent-features")
+    .description("Install agent features from local directories and optional external git repos")
+    .option("--config <path>", "Path to a JSON config file specifying repos to install features from", "agent-features.json")
     .option("--dry-run", "Show which symlinks/copies would be created without making changes", false)
     .action(async (options: { config: string; dryRun: boolean }) => {
         const { config: configPath, dryRun } = options;
 
         const resolvedConfig = path.resolve(configPath);
         const repos = fs.existsSync(resolvedConfig) ? (loadConfig(configPath).repos ?? []) : [];
-        console.log(`=== Installing agent skills${dryRun ? " (dry run)" : ""} ===`);
+        console.log(`=== Installing agent features${dryRun ? " (dry run)" : ""} ===`);
 
         const cwd = process.cwd();
         const targetDirs = [path.join(cwd, ".agents", "skills"), path.join(cwd, ".claude", "skills")];

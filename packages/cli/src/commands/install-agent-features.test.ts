@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { type InstallOptions, installSkills, isInternalSkill, type SkillSource } from "./install-agent-skills";
+import { type InstallOptions, installSkills, isInternalSkill, type SkillSource } from "./install-agent-features";
 
 vi.mock("fs");
 

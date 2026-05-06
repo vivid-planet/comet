@@ -1,14 +1,14 @@
 ---
-title: Installing agent skills
+title: Installing agent features
 ---
 
-# Installing agent skills
+# Installing agent features
 
-The `npx @comet/cli install-agent-skills` command installs [agent skills](https://agentskills.io/) into your project — structured, reusable instructions for AI coding agents (such as Claude Code or GitHub Copilot). Skills are placed into `.agents/skills/` and `.claude/skills/`, where agents pick them up automatically.
+The `npx @comet/cli install-agent-features` command installs [agent skills](https://agentskills.io/) into your project — structured, reusable instructions for AI coding agents (such as Claude Code or GitHub Copilot). Skills are placed into `.agents/skills/` and `.claude/skills/`, where agents pick them up automatically.
 
 ## Quick start
 
-Add an `agent-skills.json` file at the project root containing the external repos to fetch skills from:
+Add an `agent-features.json` file at the project root containing the external repos to fetch skills from:
 
 ```json
 {
@@ -16,12 +16,12 @@ Add an `agent-skills.json` file at the project root containing the external repo
 }
 ```
 
-Add an `install-agent-skills` script to your root `package.json`:
+Add an `install-agent-features` script to your root `package.json`:
 
 ```json
 {
     "scripts": {
-        "install-agent-skills": "npx @comet/cli install-agent-skills"
+        "install-agent-features": "npx @comet/cli install-agent-features"
     }
 }
 ```
@@ -31,8 +31,8 @@ and run this script in `install.sh`:
 ```diff
   # ...
 
-+ # Install agent skills
-+ npm run install-agent-skills
++ # Install agent features
++ npm run install-agent-features
 
   # create site-config-envs
   npm run create-site-configs-env
@@ -56,10 +56,10 @@ The `SKILL.md` file contains markdown-formatted instructions that the agent foll
 
 Place skill folders inside `skills/` or `agentic-plugin/skills/` at your repo root. These have the highest priority and override any same-named skills from external repos. `skills/` takes priority over `agentic-plugin/skills/`.
 
-Then run the `install-agent-skills` command to symlink them into the target directories:
+Then run the `install-agent-features` command to symlink them into the target directories:
 
 ```sh
-npx @comet/cli install-agent-skills
+npx @comet/cli install-agent-features
 ```
 
 Local skills are **symlinked**, so edits are reflected immediately without re-running the command.
@@ -68,7 +68,7 @@ If your repo is also used as a skill source by other projects, see [Internal ski
 
 ## External repos
 
-You can install skills from external git repositories. This allows you to consume skills provided by libraries. The source repos are listed in `agent-skills.json`:
+You can install skills from external git repositories. This allows you to consume skills provided by libraries. The source repos are listed in `agent-features.json`:
 
 ```json
 {
@@ -107,24 +107,24 @@ Skills are installed into:
 
 Existing skills in these directories are overwritten when a skill with the same name is installed. Skills not managed by the command are left untouched.
 
-These directories should not be committed to your repository as they are created by the `install-agent-skills` command during install.
+These directories should not be committed to your repository as they are created by the `install-agent-features` command during install.
 
 ## Options
 
-| Option            | Description                                                                                       |
-| ----------------- | ------------------------------------------------------------------------------------------------- |
-| `--config <path>` | Path to a JSON config file specifying repos to install skills from (default: `agent-skills.json`) |
-| `--dry-run`       | Print what would be installed without making any changes                                          |
+| Option            | Description                                                                                         |
+| ----------------- | --------------------------------------------------------------------------------------------------- |
+| `--config <path>` | Path to a JSON config file specifying repos to install skills from (default: `agent-features.json`) |
+| `--dry-run`       | Print what would be installed without making any changes                                            |
 
 Preview what would be installed without making changes:
 
 ```sh
-npx @comet/cli install-agent-skills --dry-run
+npx @comet/cli install-agent-features --dry-run
 ```
 
 ## For library maintainers: Providing skills to consumers
 
-If you maintain a library, you can add agent skills to your repository so that projects using your library can pull them in via `agent-skills.json`.
+If you maintain a library, you can add agent skills to your repository so that projects using your library can pull them in via `agent-features.json`.
 
 Place skill folders inside a `skills/` directory at your repo root (or `agentic-plugin/skills/` if you ship them as a Claude Code plugin):
 
@@ -136,7 +136,7 @@ skills/
     └── SKILL.md
 ```
 
-When a consumer references your repo, `install-agent-skills` will sparse-fetch only the `skills/` and `agentic-plugin/skills/` folders — the rest of your repository is never downloaded. Their `agent-skills.json` would look like:
+When a consumer references your repo, `install-agent-features` will sparse-fetch only the `skills/` and `agentic-plugin/skills/` folders — the rest of your repository is never downloaded. Their `agent-features.json` would look like:
 
 ```json
 {
