@@ -14,7 +14,9 @@ junit.xml
 
 *storybook.log
 
-.claude
+.claude/*
+!.claude/settings.json
+!.claude/hooks/
 .context
 .playwright-mcp
 
