@@ -30,6 +30,7 @@ export type ErrorBoundaryProps = PropsWithChildren<{
     toggleDetailsOpenedIcon?: ReactNode;
     toggleDetailsClosedIcon?: ReactNode;
     key?: string | number;
+    onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }> &
     ThemedComponentBaseProps<{
         alert: typeof MuiAlert;
@@ -145,6 +146,7 @@ class CoreErrorBoundary extends Component<ErrorBoundaryProps, IErrorBoundaryStat
     }
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+        this.props.onError?.(error, errorInfo);
         this.setState((prev) => ({ ...prev, error, errorInfo }));
     }
 
@@ -158,6 +160,7 @@ class CoreErrorBoundary extends Component<ErrorBoundaryProps, IErrorBoundaryStat
             slotProps,
             userErrorMessage,
             key,
+            onError,
             ...restProps
         } = this.props;
         const { error, errorInfo, showDetails } = this.state;
