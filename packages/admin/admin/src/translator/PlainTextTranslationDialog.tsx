@@ -21,9 +21,15 @@ export const PlainTextTranslationDialog = (props: PlainTextTranslationDialogProp
             originalText={originalText}
             translatedText={translatedText}
             onApplyTranslation={onApplyTranslation}
-            renderOriginalText={(text) => <TextField value={text} disabled fullWidth multiline={multiline} />}
+            renderOriginalText={(text) => <TextField value={text} disabled fullWidth multiline={multiline} rows={multiline ? 3 : undefined} />}
             renderTranslatedText={(text, onChange) => (
-                <TextField value={text} onChange={(event) => onChange(event.target.value)} fullWidth multiline={multiline} />
+                <TextField
+                    value={text}
+                    onChange={(event) => onChange(event.target.value)}
+                    fullWidth
+                    multiline={multiline}
+                    rows={multiline ? 3 : undefined}
+                />
             )}
         />
     );
