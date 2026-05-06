@@ -3,26 +3,42 @@ import * as fs from "fs";
 import * as path from "path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { type InstallOptions, installSkills, isInternalSkill, type SkillSource } from "./install-agent-features";
+import { installFeatures } from "./install-agent-features";
 
 vi.mock("fs");
 
-const defaultOptions: InstallOptions = { dryRun: false };
-const targetDirs = [".agents/skills", ".claude/skills"];
-
 /**
- * Sets up fs mocks so that each key in skillMap is a readable directory
- * containing the listed skill folder names. Destination paths do not exist
- * unless listed under a target dir key.
+ * fs mock for installFeatures.
+ *
+ * - `listings` maps a directory path to the names of its direct entries.
+ * - Entries are assumed to be directories unless the entry name ends in `.md`
+ *   or appears in `fileContents`.
+ * - `existingDests` is the set of destination paths that pathExists/lstatSync
+ *   should return truthy for (used to assert overwrite behavior).
+ * - `fileContents` provides content for fs.readFileSync; any path not in the
+ *   map throws ENOENT.
  */
-function mockFilesystem(skillMap: Record<string, string[]>, existingDests: string[] = [], skillMdContents: Record<string, string> = {}): void {
-    vi.mocked(fs.existsSync).mockImplementation((p) => String(p) in skillMap);
-    vi.mocked(fs.readdirSync as (path: fs.PathLike) => string[]).mockImplementation((p) => skillMap[String(p)] ?? []);
+function mockFilesystem({
+    listings = {},
+    existingDests = [],
+    fileContents = {},
+}: {
+    listings?: Record<string, string[]>;
+    existingDests?: string[];
+    fileContents?: Record<string, string>;
+} = {}): void {
+    const isFile = (p: string): boolean => {
+        if (p in fileContents) {
+            return true;
+        }
+        return path.basename(p).endsWith(".md");
+    };
+
+    vi.mocked(fs.existsSync).mockImplementation((p) => String(p) in listings);
+    vi.mocked(fs.readdirSync as (p: fs.PathLike) => string[]).mockImplementation((p) => listings[String(p)] ?? []);
     vi.mocked(fs.statSync).mockImplementation((p) => {
-        const parentDir = path.dirname(String(p));
-        const name = path.basename(String(p));
-        const isDir = (skillMap[parentDir] ?? []).includes(name);
-        return { isDirectory: () => isDir } as fs.Stats;
+        const fileLike = isFile(String(p));
+        return { isDirectory: () => !fileLike, isFile: () => fileLike } as fs.Stats;
     });
     vi.mocked(fs.lstatSync).mockImplementation((p) => {
         if (existingDests.includes(String(p))) {
@@ -30,8 +46,8 @@ function mockFilesystem(skillMap: Record<string, string[]>, existingDests: strin
         }
         throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
     });
-    vi.mocked(fs.readFileSync as (path: fs.PathLike | number, options: BufferEncoding) => string).mockImplementation((p) => {
-        const content = skillMdContents[String(p)];
+    vi.mocked(fs.readFileSync as (p: fs.PathLike | number, options: BufferEncoding) => string).mockImplementation((p) => {
+        const content = fileContents[String(p)];
         if (content !== undefined) {
             return content;
         }
@@ -40,12 +56,10 @@ function mockFilesystem(skillMap: Record<string, string[]>, existingDests: strin
 }
 
 beforeEach(() => {
+    vi.mocked(fs.mkdirSync).mockImplementation(() => undefined);
     vi.mocked(fs.symlinkSync).mockImplementation(() => undefined);
     vi.mocked(fs.cpSync).mockImplementation(() => undefined);
     vi.mocked(fs.rmSync).mockImplementation(() => undefined);
-    vi.mocked(fs.readFileSync as (path: fs.PathLike | number, options: BufferEncoding) => string).mockImplementation(() => {
-        throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
-    });
     vi.spyOn(console, "log").mockImplementation(() => undefined);
     vi.spyOn(console, "warn").mockImplementation(() => undefined);
 });
@@ -55,248 +69,199 @@ afterEach(() => {
     vi.restoreAllMocks();
 });
 
-describe("installSkills – symlink vs copy", () => {
-    it("symlinks skill folders into target folder if symlink: true", () => {
-        mockFilesystem({ "/local/skills": ["my-skill"] });
+describe("installFeatures – local skills", () => {
+    it("symlinks skill folders into .agents/skills and .claude/skills", () => {
+        mockFilesystem({ listings: { "/proj/skills": ["my-skill"] } });
 
-        const sources: SkillSource[] = [{ label: "local skills/", directory: "/local/skills", symlink: true }];
-        installSkills(sources, targetDirs, defaultOptions);
+        installFeatures("/proj", [], { dryRun: false });
 
-        expect(fs.symlinkSync).toHaveBeenCalledTimes(2);
-        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/local/skills/my-skill"), ".agents/skills/my-skill");
-        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/local/skills/my-skill"), ".claude/skills/my-skill");
-        expect(fs.cpSync).not.toHaveBeenCalled();
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/skills/my-skill"), path.join("/proj", ".agents", "skills", "my-skill"));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/skills/my-skill"), path.join("/proj", ".claude", "skills", "my-skill"));
     });
 
-    it("copies skill folders into target folder if symlink: false", () => {
-        mockFilesystem({ "/remote/skills": ["remote-skill"] });
+    it("also installs from agentic-plugin/skills/", () => {
+        mockFilesystem({ listings: { "/proj/agentic-plugin/skills": ["plugin-skill"] } });
 
-        const sources: SkillSource[] = [{ label: "external repo", directory: "/remote/skills", symlink: false }];
-        installSkills(sources, targetDirs, defaultOptions);
+        installFeatures("/proj", [], { dryRun: false });
 
-        expect(fs.cpSync).toHaveBeenCalledTimes(2);
-        expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/remote/skills/remote-skill"), ".agents/skills/remote-skill", {
-            recursive: true,
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/proj/agentic-plugin/skills/plugin-skill"),
+            path.join("/proj", ".claude", "skills", "plugin-skill"),
+        );
+    });
+
+    it("skills/ takes priority over agentic-plugin/skills/ for same name", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/skills": ["shared"],
+                "/proj/agentic-plugin/skills": ["shared"],
+            },
         });
-        expect(fs.symlinkSync).not.toHaveBeenCalled();
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/skills/shared"), expect.any(String));
+        expect(fs.symlinkSync).not.toHaveBeenCalledWith(path.resolve("/proj/agentic-plugin/skills/shared"), expect.any(String));
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('CONFLICT: "shared"'));
     });
 
-    it("ignores files in the source directory, only installs subdirectories", () => {
-        mockFilesystem({ "/local/skills": ["real-skill"] });
-        // statSync returns isDirectory: false for "not-a-skill.md" (not in the skillMap)
-        vi.mocked(fs.readdirSync as (path: fs.PathLike) => string[]).mockImplementation(() => ["real-skill", "not-a-skill.md"]);
+    it("ignores files in skills/ — only subdirectories are skills", () => {
+        mockFilesystem({ listings: { "/proj/skills": ["real-skill", "not-a-skill.md"] } });
 
-        const sources: SkillSource[] = [{ label: "local skills/", directory: "/local/skills", symlink: true }];
-        installSkills(sources, targetDirs, defaultOptions);
+        installFeatures("/proj", [], { dryRun: false });
 
-        expect(fs.symlinkSync).toHaveBeenCalledTimes(2);
-        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/local/skills/real-skill"), expect.any(String));
-        expect(fs.symlinkSync).not.toHaveBeenCalledWith(path.resolve("/local/skills/not-a-skill.md"), expect.any(String));
-    });
-});
-
-describe("installSkills – missing source directory", () => {
-    it("logs 'No skills found' and does nothing when source directory does not exist", () => {
-        mockFilesystem({}); // existsSync returns false for all paths
-
-        const sources: SkillSource[] = [{ label: "local skills/", directory: "/local/skills", symlink: true }];
-        installSkills(sources, targetDirs, defaultOptions);
-
-        expect(fs.symlinkSync).not.toHaveBeenCalled();
-        expect(fs.cpSync).not.toHaveBeenCalled();
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("No skills found"));
-    });
-
-    it("logs 'No skills found' and does nothing when source directory is empty", () => {
-        mockFilesystem({ "/local/skills": [] }); // dir exists but has no entries
-
-        const sources: SkillSource[] = [{ label: "local skills/", directory: "/local/skills", symlink: true }];
-        installSkills(sources, targetDirs, defaultOptions);
-
-        expect(fs.symlinkSync).not.toHaveBeenCalled();
-        expect(fs.cpSync).not.toHaveBeenCalled();
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("No skills found"));
-    });
-
-    it("logs 'No skills found' and does nothing when cloned external repo has no skills/ folder", () => {
-        mockFilesystem({}); // cloned tmp dir exists but contains no skills/ subdirectory
-
-        const sources: SkillSource[] = [
-            { label: "external git@github.com:org/repo.git (skills/)", directory: "/tmp/cloned-repo/skills", symlink: false },
-        ];
-        installSkills(sources, targetDirs, defaultOptions);
-
-        expect(fs.cpSync).not.toHaveBeenCalled();
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("No skills found"));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/skills/real-skill"), expect.any(String));
+        expect(fs.symlinkSync).not.toHaveBeenCalledWith(path.resolve("/proj/skills/not-a-skill.md"), expect.any(String));
     });
 });
 
-describe("installSkills – dry-run mode", () => {
-    it("does not write any files or symlinks", () => {
-        mockFilesystem({ "/local/skills": ["my-skill"] });
+describe("installFeatures – local rules", () => {
+    it("symlinks .md files into .agents/rules, .claude/rules, .cursor/rules, and .github/instructions", () => {
+        mockFilesystem({ listings: { "/proj/rules": ["my-rule.md"] } });
 
-        const sources: SkillSource[] = [{ label: "local skills/", directory: "/local/skills", symlink: true }];
-        installSkills(sources, targetDirs, { dryRun: true });
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.mkdirSync).toHaveBeenCalledWith(path.join("/proj", ".agents", "rules"), { recursive: true });
+        expect(fs.mkdirSync).toHaveBeenCalledWith(path.join("/proj", ".claude", "rules"), { recursive: true });
+        expect(fs.mkdirSync).toHaveBeenCalledWith(path.join("/proj", ".cursor", "rules"), { recursive: true });
+        expect(fs.mkdirSync).toHaveBeenCalledWith(path.join("/proj", ".github", "instructions"), { recursive: true });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/rules/my-rule.md"), path.join("/proj", ".agents", "rules", "my-rule.md"));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/rules/my-rule.md"), path.join("/proj", ".claude", "rules", "my-rule.md"));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/rules/my-rule.md"), path.join("/proj", ".cursor", "rules", "my-rule.md"));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/proj/rules/my-rule.md"),
+            path.join("/proj", ".github", "instructions", "my-rule.md"),
+        );
+    });
+
+    it("walks subdirectories recursively, preserving the layout in each target", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/rules": ["top.md", "backend"],
+                "/proj/rules/backend": ["api.md", "deeper"],
+                "/proj/rules/backend/deeper": ["nested.md"],
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/proj/rules/backend/api.md"),
+            path.join("/proj", ".claude", "rules", "backend", "api.md"),
+        );
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/proj/rules/backend/deeper/nested.md"),
+            path.join("/proj", ".claude", "rules", "backend", "deeper", "nested.md"),
+        );
+        expect(fs.mkdirSync).toHaveBeenCalledWith(path.join("/proj", ".claude", "rules", "backend"), { recursive: true });
+        expect(fs.mkdirSync).toHaveBeenCalledWith(path.join("/proj", ".claude", "rules", "backend", "deeper"), { recursive: true });
+    });
+
+    it("ignores non-.md entries", () => {
+        mockFilesystem({ listings: { "/proj/rules": ["rule.md", "README.txt"] } });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/rules/rule.md"), expect.any(String));
+        expect(fs.symlinkSync).not.toHaveBeenCalledWith(path.resolve("/proj/rules/README.txt"), expect.any(String));
+    });
+});
+
+describe("installFeatures – cross-namespace", () => {
+    it("a skill and a rule may share a name without conflicting", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/skills": ["shared"],
+                "/proj/rules": ["shared.md"],
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(console.warn).not.toHaveBeenCalled();
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/skills/shared"), expect.any(String));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/rules/shared.md"), expect.any(String));
+    });
+});
+
+describe("installFeatures – dry-run", () => {
+    it("writes nothing", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/skills": ["my-skill"],
+                "/proj/rules": ["my-rule.md"],
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: true });
 
         expect(fs.symlinkSync).not.toHaveBeenCalled();
         expect(fs.cpSync).not.toHaveBeenCalled();
         expect(fs.rmSync).not.toHaveBeenCalled();
     });
 
-    it("logs what would be symlinked", () => {
-        mockFilesystem({ "/local/skills": ["my-skill"] });
+    it("logs would-be operations", () => {
+        mockFilesystem({ listings: { "/proj/skills": ["my-skill"] } });
 
-        const sources: SkillSource[] = [{ label: "local skills/", directory: "/local/skills", symlink: true }];
-        installSkills(sources, targetDirs, { dryRun: true });
+        installFeatures("/proj", [], { dryRun: true });
 
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining(`[dry-run] Would symlink: ${path.resolve("/local/skills/my-skill")}`));
-    });
-
-    it("logs what would be copied for external sources", () => {
-        mockFilesystem({ "/remote/skills": ["remote-skill"] });
-
-        const sources: SkillSource[] = [{ label: "external repo", directory: "/remote/skills", symlink: false }];
-        installSkills(sources, targetDirs, { dryRun: true });
-
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining(`[dry-run] Would copy: ${path.resolve("/remote/skills/remote-skill")}`));
+        expect(console.log).toHaveBeenCalledWith(expect.stringContaining(`[dry-run] Would symlink: ${path.resolve("/proj/skills/my-skill")}`));
     });
 });
 
-describe("installSkills – overwrites existing destinations", () => {
-    it("removes existing destination before writing", () => {
-        mockFilesystem({ "/local/skills": ["my-skill"] }, [".agents/skills/my-skill", ".claude/skills/my-skill"]);
-
-        const sources: SkillSource[] = [{ label: "local skills/", directory: "/local/skills", symlink: true }];
-        installSkills(sources, targetDirs, defaultOptions);
-
-        expect(fs.rmSync).toHaveBeenCalledWith(".agents/skills/my-skill", { recursive: true, force: true });
-        expect(fs.rmSync).toHaveBeenCalledWith(".claude/skills/my-skill", { recursive: true, force: true });
-        expect(fs.symlinkSync).toHaveBeenCalledTimes(2);
-    });
-});
-
-describe("installSkills – conflict: local vs remote", () => {
-    it("local skill wins: symlinks local, skips remote with a CONFLICT warning", () => {
+describe("installFeatures – overwrites existing destinations", () => {
+    it("removes the existing destination before re-creating it", () => {
         mockFilesystem({
-            "/local/skills": ["shared-skill"],
-            "/remote/skills": ["shared-skill"],
+            listings: { "/proj/skills": ["my-skill"] },
+            existingDests: [path.join("/proj", ".agents", "skills", "my-skill"), path.join("/proj", ".claude", "skills", "my-skill")],
         });
 
-        const sources: SkillSource[] = [
-            { label: "local skills/", directory: "/local/skills", symlink: true },
-            { label: "external repo", directory: "/remote/skills", symlink: false },
-        ];
-        installSkills(sources, targetDirs, defaultOptions);
+        installFeatures("/proj", [], { dryRun: false });
 
-        expect(fs.symlinkSync).toHaveBeenCalled();
-        expect(fs.cpSync).not.toHaveBeenCalled();
-        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('CONFLICT: "shared-skill"'));
-        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("external repo"));
+        expect(fs.rmSync).toHaveBeenCalledWith(path.join("/proj", ".agents", "skills", "my-skill"), { recursive: true, force: true });
+        expect(fs.rmSync).toHaveBeenCalledWith(path.join("/proj", ".claude", "skills", "my-skill"), { recursive: true, force: true });
     });
 });
 
-describe("installSkills – conflict: remote vs remote", () => {
-    it("first remote wins: copies remote1 skill, skips remote2 with a CONFLICT warning", () => {
+describe("installFeatures – internal filtering", () => {
+    it("local sources install internal skills (filterInternal applies only to external repos)", () => {
         mockFilesystem({
-            "/remote1/skills": ["shared-skill"],
-            "/remote2/skills": ["shared-skill"],
+            listings: { "/proj/skills": ["public", "internal"] },
+            fileContents: { "/proj/skills/internal/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal" },
         });
 
-        const sources: SkillSource[] = [
-            { label: "external repo1", directory: "/remote1/skills", symlink: false },
-            { label: "external repo2", directory: "/remote2/skills", symlink: false },
-        ];
-        installSkills(sources, targetDirs, defaultOptions);
+        installFeatures("/proj", [], { dryRun: false });
 
-        // Only 2 calls (one per target dir from remote1), not 4
-        expect(fs.cpSync).toHaveBeenCalledTimes(2);
-        expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/remote1/skills/shared-skill"), expect.any(String), { recursive: true });
-        expect(fs.cpSync).not.toHaveBeenCalledWith(path.resolve("/remote2/skills/shared-skill"), expect.any(String), expect.any(Object));
-        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('CONFLICT: "shared-skill"'));
-        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("external repo2"));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/skills/public"), expect.any(String));
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/skills/internal"), expect.any(String));
     });
 });
 
-describe("isInternalSkill", () => {
-    it("returns true when metadata.internal is true", () => {
-        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# My Skill" });
-        expect(isInternalSkill("/skills/my-skill")).toBe(true);
-    });
+describe("installFeatures – missing local sources", () => {
+    it("runs cleanly when there are no local skills or rules", () => {
+        mockFilesystem({});
 
-    it("returns false when metadata.internal is false", () => {
-        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "---\nmetadata:\n  internal: false\n---\n# My Skill" });
-        expect(isInternalSkill("/skills/my-skill")).toBe(false);
-    });
+        installFeatures("/proj", [], { dryRun: false });
 
-    it("returns false when frontmatter has no metadata field", () => {
-        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "---\ntitle: My Skill\n---\n# My Skill" });
-        expect(isInternalSkill("/skills/my-skill")).toBe(false);
-    });
-
-    it("returns false when SKILL.md has no frontmatter", () => {
-        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "# My Skill\nJust plain markdown, no frontmatter." });
-        expect(isInternalSkill("/skills/my-skill")).toBe(false);
-    });
-
-    it("returns false when SKILL.md does not exist", () => {
-        mockFilesystem({}, [], {});
-        expect(isInternalSkill("/skills/my-skill")).toBe(false);
-    });
-
-    it("returns false when SKILL.md frontmatter contains malformed YAML", () => {
-        mockFilesystem({}, [], { "/skills/my-skill/SKILL.md": "---\n: invalid: yaml: [\n---\n# My Skill" });
-        expect(isInternalSkill("/skills/my-skill")).toBe(false);
-    });
-});
-
-describe("installSkills – filterInternal", () => {
-    it("excludes internal skills when filterInternal: true, installs only non-internal skills", () => {
-        mockFilesystem({ "/remote/skills": ["public-skill", "internal-skill"] }, [], {
-            "/remote/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal Skill",
-        });
-
-        const sources: SkillSource[] = [{ label: "external repo (skills/)", directory: "/remote/skills", symlink: false, filterInternal: true }];
-        installSkills(sources, targetDirs, defaultOptions);
-
-        expect(fs.cpSync).toHaveBeenCalledTimes(2);
-        expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/remote/skills/public-skill"), expect.any(String), { recursive: true });
-        expect(fs.cpSync).not.toHaveBeenCalledWith(path.resolve("/remote/skills/internal-skill"), expect.any(String), expect.any(Object));
-    });
-
-    it("installs all skills including internal ones when filterInternal is omitted", () => {
-        mockFilesystem({ "/local/skills": ["public-skill", "internal-skill"] }, [], {
-            "/local/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal Skill",
-        });
-
-        const sources: SkillSource[] = [{ label: "local skills/", directory: "/local/skills", symlink: true }];
-        installSkills(sources, targetDirs, defaultOptions);
-
-        expect(fs.symlinkSync).toHaveBeenCalledTimes(4);
-        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/local/skills/public-skill"), expect.any(String));
-        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/local/skills/internal-skill"), expect.any(String));
-    });
-
-    it("logs 'No skills found' when filterInternal: true and all skills are internal", () => {
-        mockFilesystem({ "/remote/skills": ["internal-skill"] }, [], {
-            "/remote/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal Skill",
-        });
-
-        const sources: SkillSource[] = [{ label: "external repo (skills/)", directory: "/remote/skills", symlink: false, filterInternal: true }];
-        installSkills(sources, targetDirs, defaultOptions);
-
+        expect(fs.symlinkSync).not.toHaveBeenCalled();
         expect(fs.cpSync).not.toHaveBeenCalled();
         expect(console.log).toHaveBeenCalledWith(expect.stringContaining("No skills found"));
+        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("No rules found"));
     });
+});
 
-    it("excludes internal skills from dry-run output when filterInternal: true", () => {
-        mockFilesystem({ "/remote/skills": ["public-skill", "internal-skill"] }, [], {
-            "/remote/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal Skill",
+describe("installFeatures – EPERM symlink fallback", () => {
+    it("falls back to copy when symlinkSync throws EPERM (e.g. Windows without privileges)", () => {
+        mockFilesystem({ listings: { "/proj/skills": ["my-skill"] } });
+        vi.mocked(fs.symlinkSync).mockImplementationOnce(() => {
+            throw Object.assign(new Error("permission denied"), { code: "EPERM" });
         });
 
-        const sources: SkillSource[] = [{ label: "external repo (skills/)", directory: "/remote/skills", symlink: false, filterInternal: true }];
-        installSkills(sources, targetDirs, { dryRun: true });
+        installFeatures("/proj", [], { dryRun: false });
 
-        expect(console.log).toHaveBeenCalledWith(expect.stringContaining("public-skill"));
-        expect(console.log).not.toHaveBeenCalledWith(expect.stringContaining("internal-skill"));
+        expect(fs.cpSync).toHaveBeenCalledWith(path.resolve("/proj/skills/my-skill"), path.join("/proj", ".agents", "skills", "my-skill"), {
+            recursive: true,
+        });
     });
 });

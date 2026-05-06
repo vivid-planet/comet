@@ -4,11 +4,11 @@ title: Installing agent features
 
 # Installing agent features
 
-The `npx @comet/cli install-agent-features` command installs [agent skills](https://agentskills.io/) into your project — structured, reusable instructions for AI coding agents (such as Claude Code or GitHub Copilot). Skills are placed into `.agents/skills/` and `.claude/skills/`, where agents pick them up automatically.
+The `npx @comet/cli install-agent-features` command installs [agent skills](https://agentskills.io/) and agent rules into your project — structured, reusable instructions for AI coding agents (such as Claude Code, Cursor, or GitHub Copilot). Skills land in `.agents/skills/` and `.claude/skills/`; rules land in `.agents/rules/`, `.claude/rules/`, `.cursor/rules/`, and `.github/instructions/`. Agents pick them up automatically.
 
 ## Quick start
 
-Add an `agent-features.json` file at the project root containing the external repos to fetch skills from:
+Add an `agent-features.json` file at the project root containing the external repos to fetch skills and rules from:
 
 ```json
 {
@@ -52,69 +52,95 @@ skills/
 
 The `SKILL.md` file contains markdown-formatted instructions that the agent follows when the skill is active. This follows the [Agent Skills specification](https://agentskills.io/specification).
 
-## Local skills
+## What is a rule?
 
-Place skill folders inside `skills/` or `agentic-plugin/skills/` at your repo root. These have the highest priority and override any same-named skills from external repos. `skills/` takes priority over `agentic-plugin/skills/`.
+A rule is a markdown file inside `rules/`. The relative path from `rules/` is the rule name. Rules may be organized into subdirectories — the command walks the tree recursively and preserves the nested layout in each target directory. For example:
 
-Then run the `install-agent-features` command to symlink them into the target directories:
+```
+rules/
+├── naming-conventions.md
+├── testing-policy.md
+├── backend/
+│   └── api-patterns.md
+└── frontend/
+    └── component-structure.md
+```
+
+Rules are a lightweight complement to skills: use a rule for short, always-on guidance (a single-file set of instructions) and a skill for a larger bundle of instructions plus supporting files. Rules may begin with an optional YAML frontmatter block (see [Internal rules and skills](#internal-rules-and-skills)).
+
+## Local skills and rules
+
+Place skill folders inside `skills/` or `agentic-plugin/skills/` and rule files inside `rules/` at your repo root. These have the highest priority and override any same-named skills or rules from external repos. Among the local skill folders, `skills/` takes priority over `agentic-plugin/skills/`.
+
+Then run the command to symlink them into the target directories:
 
 ```sh
 npx @comet/cli install-agent-features
 ```
 
-Local skills are **symlinked**, so edits are reflected immediately without re-running the command.
+Local skills and rules are **symlinked**, so edits are reflected immediately without re-running the command.
 
-If your repo is also used as a skill source by other projects, see [Internal skills](#internal-skills) to prevent local-only skills from being installed by consumers.
+If your repo is also used as a source by other projects, see [Internal rules and skills](#internal-rules-and-skills) to prevent local-only items from being installed by consumers.
 
 ## External repos
 
-You can install skills from external git repositories. This allows you to consume skills provided by libraries. The source repos are listed in `agent-features.json`:
+You can install skills and rules from external git repositories. This allows you to consume items provided by libraries. The source repos are listed in `agent-features.json`:
 
 ```json
 {
-    "repos": ["git@github.com:vivid-planet/comet.git", "git@github.com:org/other-skills.git#main"]
+    "repos": ["git@github.com:vivid-planet/comet.git", "git@github.com:org/other-features.git#main"]
 }
 ```
 
-Each entry is an SSH git URL, optionally followed by `#ref` to pin a branch, tag, or commit hash. Only the `skills/` and `agentic-plugin/skills/` folders are fetched from each repo (via git sparse checkout) — the rest of the repository is not downloaded. External skills are **copied** into the target directories.
+Each entry is an SSH git URL, optionally followed by `#ref` to pin a branch, tag, or commit hash. Only the `skills/`, `agentic-plugin/skills/`, and `rules/` folders are fetched from each repo (via git sparse checkout) — the rest of the repository is not downloaded. External skills and rules are **copied** into the target directories.
 
-Skills with `metadata.internal: true` in their `SKILL.md` are excluded when installing from external repos.
+A repo may ship any subset of `skills/`, `agentic-plugin/skills/`, and `rules/`. Missing folders are silently ignored.
+
+Items with `metadata.internal: true` in their frontmatter are excluded when installing from external repos.
 
 ## Priority order
 
-When the same skill name exists in multiple sources, the higher-priority source wins. Local skills always take priority over external ones.
+When the same skill or rule name exists in multiple sources, the higher-priority source wins. Local always takes priority over external.
 
-A `CONFLICT` warning is printed for each skipped skill. No error is thrown — the command completes successfully.
+Skills and rules have separate namespaces: a skill and a rule may share a name without conflicting.
+
+A `CONFLICT` warning is printed for each skipped item. No error is thrown — the command completes successfully.
 
 Example output:
 
 ```
-Installing 1 skill(s) from local skills/...
+Installing 1 skill from local skills/...
   Symlinked: code-style
-Installing 2 skill(s) from external git@github.com:vivid-planet/comet.git (skills/)...
+Installing 2 skills from external git@github.com:vivid-planet/comet.git (skills/)...
   CONFLICT: "code-style" from external git@github.com:vivid-planet/comet.git (skills/) skipped (already installed from a higher-priority source)
   Copied: api-conventions
+Installing 1 rule from local rules/...
+  Symlinked: naming-conventions.md
 ```
 
 ## Target directories
 
-Skills are installed into:
+Items are installed into:
 
-| Directory         | Used by                                      |
-| ----------------- | -------------------------------------------- |
-| `.agents/skills/` | Cloud agents (e.g. GitHub Copilot Workspace) |
-| `.claude/skills/` | Local IDE agents (e.g. Claude Code)          |
+| Directory               | Content | Used by                                      |
+| ----------------------- | ------- | -------------------------------------------- |
+| `.agents/skills/`       | Skills  | Cloud agents (e.g. GitHub Copilot Workspace) |
+| `.claude/skills/`       | Skills  | Claude Code                                  |
+| `.agents/rules/`        | Rules   | Cloud agents                                 |
+| `.claude/rules/`        | Rules   | Claude Code                                  |
+| `.cursor/rules/`        | Rules   | Cursor                                       |
+| `.github/instructions/` | Rules   | GitHub Copilot                               |
 
-Existing skills in these directories are overwritten when a skill with the same name is installed. Skills not managed by the command are left untouched.
+Existing items in these directories are overwritten when an item with the same name is installed. Items not managed by the command are left untouched.
 
-These directories should not be committed to your repository as they are created by the `install-agent-features` command during install.
+These directories should not be committed to your repository as they are created by the command during install.
 
 ## Options
 
-| Option            | Description                                                                                         |
-| ----------------- | --------------------------------------------------------------------------------------------------- |
-| `--config <path>` | Path to a JSON config file specifying repos to install skills from (default: `agent-features.json`) |
-| `--dry-run`       | Print what would be installed without making any changes                                            |
+| Option            | Description                                                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------------------- |
+| `--config <path>` | Path to a JSON config file specifying repos to install features from (default: `agent-features.json`) |
+| `--dry-run`       | Print what would be installed without making any changes                                              |
 
 Preview what would be installed without making changes:
 
@@ -122,11 +148,11 @@ Preview what would be installed without making changes:
 npx @comet/cli install-agent-features --dry-run
 ```
 
-## For library maintainers: Providing skills to consumers
+## For library maintainers: Providing features to consumers
 
-If you maintain a library, you can add agent skills to your repository so that projects using your library can pull them in via `agent-features.json`.
+If you maintain a library, you can add agent skills and rules to your repository so that projects using your library can pull them in via `agent-features.json`.
 
-Place skill folders inside a `skills/` directory at your repo root (or `agentic-plugin/skills/` if you ship them as a Claude Code plugin):
+Place skill folders inside a `skills/` directory (or `agentic-plugin/skills/` if you ship them as a Claude Code plugin) and rule files inside a `rules/` directory at your repo root:
 
 ```
 skills/
@@ -134,9 +160,12 @@ skills/
 │   └── SKILL.md
 └── another-skill/
     └── SKILL.md
+rules/
+├── naming-conventions.md
+└── testing-policy.md
 ```
 
-When a consumer references your repo, `install-agent-features` will sparse-fetch only the `skills/` and `agentic-plugin/skills/` folders — the rest of your repository is never downloaded. Their `agent-features.json` would look like:
+When a consumer references your repo, `install-agent-features` will sparse-fetch only the `skills/`, `agentic-plugin/skills/`, and `rules/` folders — the rest of your repository is never downloaded. Their `agent-features.json` would look like:
 
 ```json
 {
@@ -152,11 +181,13 @@ To pin consumers to a specific release:
 }
 ```
 
-Skills in `skills/` have lower priority than the consuming project's own `skills/`. This means consumers can always override your skills locally without conflict.
+Skills and rules in your `skills/` and `rules/` folders have lower priority than the consuming project's own local items. This means consumers can always override your items locally without conflict.
 
-### Internal skills
+### Internal rules and skills
 
-To ship skills that are only relevant to contributors of your library (not consumers), set `metadata.internal: true` in the optional YAML metadata at the top of `SKILL.md`. These skills will be skipped when consumers install from your repo.
+To ship items that are only relevant to contributors of your library (not consumers), set `metadata.internal: true` in the optional YAML frontmatter at the top of the file. These items will be skipped when consumers install from your repo.
+
+For a skill, add the frontmatter to `SKILL.md`:
 
 ```markdown
 ---
@@ -165,6 +196,19 @@ metadata:
 ---
 
 # My Skill
+
+...
+```
+
+For a rule, add the frontmatter to the rule's `.md` file:
+
+```markdown
+---
+metadata:
+    internal: true
+---
+
+# My Rule
 
 ...
 ```
