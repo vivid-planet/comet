@@ -4,7 +4,7 @@
 
 Export `ChooseDamFilesDialog`
 
-Allows building custom multi-file picker UIs on top of the DAM file dialog (e.g. bulk-adding files to a list block). Pair it with `damMultiFileFieldFragment` and a DAM file query to fetch the picked file metadata.
+Allows building custom multi-file picker UIs on top of the DAM file dialog (e.g. bulk-adding files to a list block).
 
 ```tsx
 import { ChooseDamFilesDialog } from "@comet/cms-admin";
