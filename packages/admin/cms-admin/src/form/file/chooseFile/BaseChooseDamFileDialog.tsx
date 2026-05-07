@@ -30,7 +30,7 @@ interface BaseChooseDamFileDialogProps {
     hideMultiselect: boolean;
     disableFolderSelection?: boolean;
     keepNonExistentRowsSelected?: boolean;
-    initialSelectionMap?: DamItemSelectionMap;
+    initialSelection?: DamItemSelectionMap;
     onSelectionChange?: (map: DamItemSelectionMap) => void;
     actions?: ReactNode;
 }
@@ -45,7 +45,7 @@ export const BaseChooseDamFileDialog = ({
     hideMultiselect,
     disableFolderSelection,
     keepNonExistentRowsSelected,
-    initialSelectionMap,
+    initialSelection,
     onSelectionChange,
     actions,
 }: BaseChooseDamFileDialogProps) => {
@@ -97,7 +97,7 @@ export const BaseChooseDamFileDialog = ({
                             toolbarOptions={{ hideSelectiveActions: true }}
                             disableFolderSelection={disableFolderSelection}
                             keepNonExistentRowsSelected={keepNonExistentRowsSelected}
-                            initialSelectionMap={initialSelectionMap}
+                            initialSelection={initialSelection}
                             onSelectionChange={onSelectionChange}
                             additionalToolbarItems={additionalToolbarItems}
                         />

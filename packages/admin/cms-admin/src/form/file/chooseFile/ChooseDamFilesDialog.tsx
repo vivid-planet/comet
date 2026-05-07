@@ -52,7 +52,7 @@ export const ChooseDamFilesDialog = ({ onClose, onConfirm, initialFileIds, allow
             hideMultiselect={false}
             disableFolderSelection={true}
             keepNonExistentRowsSelected={true}
-            initialSelectionMap={selectionMap}
+            initialSelection={selectionMap}
             onSelectionChange={setSelectionMap}
             actions={
                 <DialogActions>

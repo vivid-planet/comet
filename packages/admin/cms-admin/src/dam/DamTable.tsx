@@ -92,7 +92,7 @@ export interface DamConfig {
     additionalToolbarItems?: ReactNode;
     disableFolderSelection?: boolean;
     keepNonExistentRowsSelected?: boolean;
-    initialSelectionMap?: DamItemSelectionMap;
+    initialSelection?: DamItemSelectionMap;
     onSelectionChange?: (next: DamItemSelectionMap) => void;
 }
 
@@ -119,10 +119,7 @@ export const DamTable = ({ renderWithFullHeightMainContent, ...damConfigProps }:
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
             <FileUploadContextProvider>
                 <ManualDuplicatedFilenamesHandlerContextProvider>
-                    <DamSelectionProvider
-                        initialSelectionMap={damConfigProps.initialSelectionMap}
-                        onSelectionChange={damConfigProps.onSelectionChange}
-                    >
+                    <DamSelectionProvider initialSelection={damConfigProps.initialSelection} onSelectionChange={damConfigProps.onSelectionChange}>
                         <Folder
                             filterApi={filterApi}
                             {...propsWithDefaultValues}
