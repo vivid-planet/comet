@@ -156,8 +156,8 @@ const MultiFileFieldInner = ({ buttonText, input, allowedMimetypes, preview, men
                 variables: { ids: fileIds, limit: fileIds.length, scope: damScope },
             });
 
-            const filesById = new Map(data.damFilesList.nodes.map((file) => [file.id, file]));
-            input.onChange(fileIds.flatMap((id) => filesById.get(id) ?? []));
+            const sortedFiles = [...data.damFilesList.nodes].sort((a, b) => fileIds.indexOf(a.id) - fileIds.indexOf(b.id));
+            input.onChange(sortedFiles);
             setDialogOpen(false);
         } catch {
             snackbarApi.showSnackbar(
