@@ -17,6 +17,7 @@ export default defineConfig({
                 "persistedQueries/webpackPersistedQueriesLoader": "./src/persistedQueries/webpackPersistedQueriesLoader.ts",
             },
             formats: ["es"],
+            cssFileName: "style",
         },
         rollupOptions: {
             plugins: [preserveDirectives()], // is necessary to preserve "use client" at top of file
