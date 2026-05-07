@@ -62,13 +62,6 @@ const withFilesSelect = (
     if (args.query) {
         qb.andWhere("file.name ILIKE ANY (ARRAY[?])", [args.query.split(" ").map((term) => `%${term}%`)]);
     }
-<<<<<<< HEAD
-    if (args.id) qb.andWhere({ id: args.id });
-    if (args.copyOfId) qb.andWhere({ copyOf: { id: args.copyOfId } });
-    if (args.filename) qb.andWhere({ name: args.filename });
-    if (args.contentHash) qb.andWhere({ contentHash: args.contentHash });
-    if (args.archived !== undefined) qb.andWhere({ archived: args.archived });
-=======
     if (args.id) {
         qb.andWhere({ id: args.id });
     }
@@ -87,7 +80,6 @@ const withFilesSelect = (
     if (args.archived !== undefined) {
         qb.andWhere({ archived: args.archived });
     }
->>>>>>> c6703db56 (Multi select `FileField` (#5542))
     if (args.folderId !== undefined) {
         if (args.folderId) {
             qb.andWhere({ folder: { id: args.folderId } });

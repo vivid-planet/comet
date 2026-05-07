@@ -1,16 +1,9 @@
 import { useApolloClient } from "@apollo/client";
-<<<<<<< HEAD
-import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
-import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useState } from "react";
-import { type FieldRenderProps } from "react-final-form";
-=======
 import { Alert, useSnackbarApi } from "@comet/admin";
 import { Assets, Delete, MoreVertical } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, List, Snackbar, Typography } from "@mui/material";
 import { type ReactElement, type ReactNode, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
->>>>>>> c6703db56 (Multi select `FileField` (#5542))
 import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
@@ -20,10 +13,6 @@ import { useDamScope } from "../../dam/config/useDamScope";
 import { ChooseDamFileDialog } from "./chooseFile/ChooseDamFileDialog";
 import { ChooseDamFilesDialog } from "./chooseFile/ChooseDamFilesDialog";
 import { DamPathLazy } from "./DamPathLazy";
-<<<<<<< HEAD
-import { damFileFieldFileQuery } from "./FileField.gql";
-import { type GQLDamFileFieldFileFragment, type GQLDamFileFieldFileQuery, type GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
-=======
 import { damFileFieldFileQuery, damFileFieldFilesByIdsQuery } from "./FileField.gql";
 import type {
     GQLDamFileFieldFileFragment,
@@ -34,7 +23,6 @@ import type {
 } from "./FileField.gql.generated";
 import { type ActionItem, FileFieldMenu, useHasFileFieldMenu } from "./FileFieldMenu";
 import { FileFieldRow } from "./FileFieldRow";
->>>>>>> c6703db56 (Multi select `FileField` (#5542))
 
 export type { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 
@@ -111,46 +99,7 @@ const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuAct
                     </BlockAdminComponentButton>
                 </BlockAdminComponentPaper>
                 {showMenu && (
-<<<<<<< HEAD
-                    <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                        {entityDependencyMap["DamFile"] && (
-                            <MenuItem
-                                onClick={async () => {
-                                    const path = await entityDependencyMap["DamFile"].resolvePath({
-                                        apolloClient,
-                                        id: damFile.id,
-                                    });
-                                    const url = contentScope.match.url + path;
-                                    window.open(url, "_blank");
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <OpenNewTab />
-                                </ListItemIcon>
-                                <ListItemText primary={<FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />} />
-                            </MenuItem>
-                        )}
-                        {menuActions &&
-                            menuActions.map((item, index) => {
-                                if (!item) return null;
-
-                                if (isValidElement(item)) {
-                                    return item;
-                                }
-
-                                const { label, icon, ...rest } = item as ActionItem;
-
-                                return (
-                                    <MenuItem key={index} {...rest}>
-                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
-                                        <ListItemText primary={label} />
-                                    </MenuItem>
-                                );
-                            })}
-                    </Menu>
-=======
                     <FileFieldMenu fileId={damFile.id} anchorEl={anchorEl} onClose={() => setAnchorEl(null)} menuActions={menuActions} keepMounted />
->>>>>>> c6703db56 (Multi select `FileField` (#5542))
                 )}
             </>
         );

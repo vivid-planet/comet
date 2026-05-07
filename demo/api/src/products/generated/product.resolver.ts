@@ -97,6 +97,9 @@ export class ProductResolver {
         if (fields.includes("datasheets")) {
             populate.push("datasheets");
         }
+        if (fields.includes("relatedImages")) {
+            populate.push("relatedImages");
+        }
         if (fields.includes("statistics")) {
             populate.push("statistics");
         }

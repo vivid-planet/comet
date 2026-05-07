@@ -664,13 +664,9 @@ const FolderDataGrid = ({
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
-<<<<<<< HEAD
-                    rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
-=======
                     keepNonExistentRowsSelected={keepNonExistentRowsSelected}
                     isRowSelectable={disableFolderSelection ? isSelectableRow : undefined}
-                    rowSelectionModel={{ type: "include", ids: new Set(damSelectionActionsApi.selectionMap.keys()) }}
->>>>>>> c6703db56 (Multi select `FileField` (#5542))
+                    rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onRowSelectionModelChange={handleSelectionModelChange}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
