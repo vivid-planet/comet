@@ -3,7 +3,7 @@ import { DialogActions } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import type { DamItemSelectionMap, GQLDamFileTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
+import type { GQLDamFileTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import type { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { BaseChooseDamFileDialog } from "./BaseChooseDamFileDialog";
@@ -20,10 +20,8 @@ const FileLabel = ({ file, matches, showLicenseWarnings }: { file: GQLDamFileTab
 );
 
 export const ChooseDamFilesDialog = ({ onClose, onConfirm, initialFileIds, allowedMimetypes }: ChooseDamFilesDialogProps) => {
-    const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(() => new Map(initialFileIds.map((id) => [id, "file"])));
+    const [selectedFileIds, setSelectedFileIds] = useState<string[]>(initialFileIds);
     const [isConfirming, setIsConfirming] = useState(false);
-
-    const selectedFileIds = Array.from(selectionMap.keys());
 
     const handleConfirm = async () => {
         setIsConfirming(true);
@@ -52,8 +50,8 @@ export const ChooseDamFilesDialog = ({ onClose, onConfirm, initialFileIds, allow
             hideMultiselect={false}
             disableFolderSelection={true}
             keepNonExistentRowsSelected={true}
-            initialSelection={selectionMap}
-            onSelectionChange={setSelectionMap}
+            initialFileIds={selectedFileIds}
+            onFileIdsChange={setSelectedFileIds}
             actions={
                 <DialogActions>
                     <Button variant="textLight" onClick={handleClose} disabled={isConfirming}>

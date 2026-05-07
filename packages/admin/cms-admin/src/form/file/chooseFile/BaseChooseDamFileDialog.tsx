@@ -7,7 +7,7 @@ import { useDamConfig } from "../../../dam/config/damConfig";
 import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
 import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
-import type { DamItemSelectionMap, GQLDamFileTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
+import type { GQLDamFileTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import type { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
@@ -30,8 +30,8 @@ interface BaseChooseDamFileDialogProps {
     hideMultiselect: boolean;
     disableFolderSelection?: boolean;
     keepNonExistentRowsSelected?: boolean;
-    initialSelection?: DamItemSelectionMap;
-    onSelectionChange?: (map: DamItemSelectionMap) => void;
+    initialFileIds?: string[];
+    onFileIdsChange?: (ids: string[]) => void;
     actions?: ReactNode;
 }
 
@@ -45,8 +45,8 @@ export const BaseChooseDamFileDialog = ({
     hideMultiselect,
     disableFolderSelection,
     keepNonExistentRowsSelected,
-    initialSelection,
-    onSelectionChange,
+    initialFileIds,
+    onFileIdsChange,
     actions,
 }: BaseChooseDamFileDialogProps) => {
     const { enableLicenseFeature, additionalToolbarItems } = useDamConfig();
@@ -97,8 +97,8 @@ export const BaseChooseDamFileDialog = ({
                             toolbarOptions={{ hideSelectiveActions: true }}
                             disableFolderSelection={disableFolderSelection}
                             keepNonExistentRowsSelected={keepNonExistentRowsSelected}
-                            initialSelection={initialSelection}
-                            onSelectionChange={onSelectionChange}
+                            initialSelection={initialFileIds ? new Map(initialFileIds.map((id) => [id, "file"])) : undefined}
+                            onSelectionChange={onFileIdsChange ? (map) => onFileIdsChange(Array.from(map.keys())) : undefined}
                             additionalToolbarItems={additionalToolbarItems}
                         />
                     </SubRoute>
