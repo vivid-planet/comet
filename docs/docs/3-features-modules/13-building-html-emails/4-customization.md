@@ -194,3 +194,38 @@ registerStyles(
 :::note
 MJML generates table-based HTML. When targeting nested elements inside MJML components, you may need to go through the table structure (e.g., `> table > tbody > tr > td`) to reach the element you want to style. Use the browser dev tools in Storybook to inspect the generated HTML structure.
 :::
+
+## Configuration
+
+`Config` can be used to expose, e.g., environment-specific values such as asset base URLs or per-deployment identifiers.
+
+- **`Config`** — an augmentable interface with no built-in keys. All keys are optional.
+- **`MjmlMailRoot.config`** — optional prop that exposes a `Config` value to descendants.
+- **`useConfig`** — hook that returns the nearest `Config`, or `{}` if no provider is mounted.
+- **`ConfigProvider`** — standalone provider for cases that bypass `MjmlMailRoot`.
+
+Add keys via TypeScript module augmentation:
+
+```ts title="config.ts"
+declare module "@comet/mail-react" {
+    interface Config {
+        assetBaseUrl?: string;
+    }
+}
+```
+
+Pass the value at the root and read it from any descendant:
+
+```tsx
+import { MjmlMailRoot, useConfig, type Config } from "@comet/mail-react";
+
+const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
+
+function WelcomeEmail() {
+    return (
+        <MjmlMailRoot config={config}>
+            {/* descendants can call useConfig() */}
+        </MjmlMailRoot>
+    );
+}
+```
