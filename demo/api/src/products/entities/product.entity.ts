@@ -4,7 +4,6 @@ import {
     CrudGenerator,
     DamImageBlock,
     EntityInfo,
-    FileInterface,
     FileUpload,
     ImportTargetInterface,
     RootBlock,
@@ -242,5 +241,5 @@ export class Product extends BaseEntity implements ImportTargetInterface {
 
     @ManyToMany(() => DamFile)
     @Field(() => [DamFile])
-    relatedImages = new Collection<FileInterface>(this);
+    relatedImages = new Collection<DamFile>(this);
 }
