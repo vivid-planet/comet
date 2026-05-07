@@ -1,5 +1,44 @@
 # @comet/cms-admin
 
+## 8.23.0
+
+### Minor Changes
+
+- d8e7261: Export `ChooseDamFilesDialog`
+
+    Allows building custom multi-file picker UIs on top of the DAM file dialog (e.g. bulk-adding files to a list block).
+
+    ```tsx
+    import { ChooseDamFilesDialog } from "@comet/cms-admin";
+
+    <ChooseDamFilesDialog open={open} onClose={onClose} onConfirm={(fileIds) => ...} initialFileIds={[]} allowedMimetypes={["image/jpeg"]} />
+    ```
+
+- d8e7261: Add `multiple` prop to `FileField` for selecting multiple DAM files
+
+    `FileField` now accepts `multiple={true}` to select a list of DAM files instead of a single file. Multi-file values are typed as `GQLDamFileFieldFileFragment[]` (the same fragment used in single-file mode); the component renders a stacked list of files with per-row menu and remove actions. The picker dialog pre-checks the current selection via `initialFileIds` and returns the picked file ids on confirm. The single-file API is unchanged.
+
+    **Example**
+
+    ```tsx
+    <Field name="files" component={FileField} multiple preview={(file) => <Thumbnail fileId={file.id} />} />
+    ```
+
+### Patch Changes
+
+- d8e7261: Hide selective actions of DAM more actions menu in `ChooseDamFileDialog`
+- d8e7261: Fix `hideContextMenu` not hiding the context menu column in the DAM `DataGrid`
+
+    The visibility flag was applied to a no-longer-existing `contextMenu` column id; the column had been renamed to `actions`. The flag now targets the correct column.
+
+- d8e7261: Deprecate `ChooseFileDialog` export
+
+    `ChooseFileDialog` was renamed to `ChooseDamFileDialog`
+    - @comet/admin@8.23.0
+    - @comet/admin-date-time@8.23.0
+    - @comet/admin-icons@8.23.0
+    - @comet/admin-rte@8.23.0
+
 ## 8.22.0
 
 ### Patch Changes

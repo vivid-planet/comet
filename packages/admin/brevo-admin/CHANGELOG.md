@@ -1,5 +1,19 @@
 # @comet/brevo-admin
 
+## 8.23.0
+
+### Patch Changes
+
+- Updated dependencies [d8e7261]
+- Updated dependencies [d8e7261]
+- Updated dependencies [d8e7261]
+- Updated dependencies [d8e7261]
+- Updated dependencies [d8e7261]
+    - @comet/cms-admin@8.23.0
+    - @comet/admin@8.23.0
+    - @comet/admin-date-time@8.23.0
+    - @comet/admin-icons@8.23.0
+
 ## 8.22.0
 
 ### Patch Changes
