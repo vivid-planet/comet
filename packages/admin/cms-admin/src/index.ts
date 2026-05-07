@@ -169,8 +169,9 @@ export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionPr
 export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
 /** @deprecated Use `ChooseDamFileDialog` instead. */
 export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
-export { FileField, FinalFormFileField, type FinalFormFileFieldProps } from "./form/file/FileField";
+export { FileField } from "./form/file/FileField";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
+export { FinalFormFileField, type FinalFormFileFieldProps } from "./form/file/FinalFormFileField";
 export {
     FinalFormFileUpload,
     finalFormFileUploadDownloadableFragment,
