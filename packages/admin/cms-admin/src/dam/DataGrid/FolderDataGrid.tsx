@@ -87,6 +87,8 @@ interface FolderDataGridProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
 }
 
+const isSelectableRow = ({ row }: { row: GQLDamFileTableFragment | GQLDamFolderTableFragment }) => isFile(row);
+
 type FolderDataGridToolbarProps = {
     id?: string;
     filterApi: IFilterApi<DamFilter>;
@@ -150,6 +152,8 @@ const FolderDataGrid = ({
     hideArchiveFilter,
     toolbarOptions,
     hideMultiselect,
+    disableFolderSelection,
+    keepNonExistentRowsSelected,
     renderDamLabel,
     ...props
 }: FolderDataGridProps) => {
@@ -660,7 +664,13 @@ const FolderDataGrid = ({
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
+<<<<<<< HEAD
                     rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
+=======
+                    keepNonExistentRowsSelected={keepNonExistentRowsSelected}
+                    isRowSelectable={disableFolderSelection ? isSelectableRow : undefined}
+                    rowSelectionModel={{ type: "include", ids: new Set(damSelectionActionsApi.selectionMap.keys()) }}
+>>>>>>> c6703db56 (Multi select `FileField` (#5542))
                     onRowSelectionModelChange={handleSelectionModelChange}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
@@ -676,7 +686,7 @@ const FolderDataGrid = ({
                             filterApi,
                             uploadFilters,
                             additionalToolbarItems: props.additionalToolbarItems,
-                            ...toolbarOptions,
+                            hideSelectiveActions: toolbarOptions?.hideSelectiveActions,
                         } as FolderDataGridToolbarProps,
                     }}
                 />

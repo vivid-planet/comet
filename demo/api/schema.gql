@@ -620,6 +620,7 @@ type EntityInfo {
 }
 
 input FileFilterInput {
+  ids: [ID!]
   mimetypes: [String!]
   searchText: String
 }
@@ -1392,6 +1393,7 @@ type Product {
   price: Float
   priceList: FileUpload
   priceRange: ProductPriceRange
+  relatedImages: [DamFile!]!
   slug: String!
   soldCount: Int
   statistics: ProductStatistics
@@ -1540,6 +1542,7 @@ input ProductFilter {
   or: [ProductFilter!]
   price: NumberFilter
   priceList: ManyToOneFilter
+  relatedImages: ManyToManyFilter
   slug: StringFilter
   status: ProductStatusEnumFilter
   tags: ManyToManyFilter
@@ -1585,6 +1588,7 @@ input ProductInput {
   price: Float = null
   priceList: ID = null
   priceRange: ProductPriceRangeInput
+  relatedImages: [ID!]! = []
   slug: String!
   statistics: ProductNestedProductStatisticsInput
   status: ProductStatus! = Unpublished
@@ -1799,6 +1803,7 @@ input ProductUpdateInput {
   price: Float
   priceList: ID
   priceRange: ProductPriceRangeInput
+  relatedImages: [ID!]
   slug: String
   statistics: ProductNestedProductStatisticsInput
   status: ProductStatus

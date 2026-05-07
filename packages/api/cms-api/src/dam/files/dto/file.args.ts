@@ -20,6 +20,11 @@ export class FileFilterInput {
     @IsOptional()
     @IsString({ each: true })
     mimetypes?: string[];
+
+    @Field(() => [ID], { nullable: true })
+    @IsOptional()
+    @IsUUID(4, { each: true })
+    ids?: string[];
 }
 
 export interface FileArgsInterface extends OffsetBasedPaginationArgs, SortArgs {
