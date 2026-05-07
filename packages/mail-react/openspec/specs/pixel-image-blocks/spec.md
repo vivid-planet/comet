@@ -1,7 +1,9 @@
 # pixel-image-blocks Specification
 
 ## Purpose
-TBD - created by archiving change add-pixel-image-blocks. Update Purpose after archive.
+
+HTML and MJML block components for rendering Comet CMS `PixelImageBlockData` in email templates, so consumers don't re-implement pixel-image width selection, URL resolution, and responsive scaling per project. The blocks pick a DPR-aware render width from `config.pixelImage.validSizes`, resolve an absolute image URL from `data.urlTemplate` (prefixing `config.pixelImage.baseUrl` when relative), derive the aspect ratio from the DAM crop area (with an optional explicit override), and scale to container width below the default breakpoint. `HtmlPixelImageBlock` renders an `<img>` for raw HTML or MJML ending-tag context; `MjmlPixelImageBlock` renders the re-exported `MjmlImage` for MJML context.
+
 ## Requirements
 
 ### Requirement: Pixel-image block components
