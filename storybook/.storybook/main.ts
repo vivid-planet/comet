@@ -1,8 +1,8 @@
-import type { StorybookConfig } from "@storybook/react-webpack5";
+import type { StorybookConfig } from "@storybook/react-vite";
 import remarkGfm from "remark-gfm";
 
 const config: StorybookConfig = {
-    framework: "@storybook/react-webpack5",
+    framework: "@storybook/react-vite",
     stories: ["../src/**/*.@(mdx|stories.tsx)"],
     addons: [
         {
@@ -15,7 +15,6 @@ const config: StorybookConfig = {
                 },
             },
         },
-        "@storybook/addon-webpack5-compiler-babel",
     ],
 
     env: (config) => ({

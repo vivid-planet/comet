@@ -1,5 +1,5 @@
 import { Alert, AutocompleteField, FinalForm } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof AutocompleteField>;
 const config: Meta<typeof AutocompleteField> = {
