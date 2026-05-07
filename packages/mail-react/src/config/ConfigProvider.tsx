@@ -16,7 +16,7 @@ import { createContext, type PropsWithChildren, type ReactNode, useContext } fro
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Config {}
 
-const ConfigContext = createContext<Config | null>(null);
+const ConfigContext = createContext<Config>({});
 
 /**
  * Places a `Config` value into a React context, making it available to all
@@ -30,5 +30,5 @@ export function ConfigProvider({ config, children }: PropsWithChildren<{ config:
  * Returns the nearest `Config` from context, defined by `ConfigProvider` or by the `config` prop on `MjmlMailRoot`.
  */
 export function useConfig(): Config {
-    return useContext(ConfigContext) ?? {};
+    return useContext(ConfigContext);
 }
