@@ -28,7 +28,7 @@ const damFileDownloadInfoFragment = gql`
 
 interface DamSelectionApi {
     selectionMap: DamItemSelectionMap;
-    setSelectionMap: Dispatch<SetStateAction<DamItemSelectionMap>>;
+    setSelectionMap: (selectionMap: DamItemSelectionMap) => void;
 
     // delete
     deleteSelected: () => void;
@@ -105,14 +105,11 @@ interface DamSelectionProviderProps {
 
 export const DamSelectionProvider = ({ children, initialSelection, onSelectionChange }: DamSelectionProviderProps) => {
     const apolloClient = useApolloClient();
-    const [selectionMap, setMapState] = useState<DamItemSelectionMap>(() => initialSelection ?? new Map());
+    const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(() => initialSelection ?? new Map());
 
-    const setSelectionMap: Dispatch<SetStateAction<DamItemSelectionMap>> = (next) => {
-        setMapState((prev) => {
-            const resolved = typeof next === "function" ? next(prev) : next;
-            onSelectionChange?.(resolved);
-            return resolved;
-        });
+    const onSelectionMapChange = (newSelectionMap: DamItemSelectionMap) => {
+        setSelectionMap(newSelectionMap);
+        onSelectionChange?.(newSelectionMap);
     };
 
     const showError = (setError: Dispatch<SetStateAction<boolean>>) => {
@@ -292,7 +289,7 @@ export const DamSelectionProvider = ({ children, initialSelection, onSelectionCh
         <DamSelectionContext.Provider
             value={{
                 selectionMap,
-                setSelectionMap,
+                setSelectionMap: onSelectionMapChange,
 
                 deleteSelected: openDeleteDialog,
                 deleting,
