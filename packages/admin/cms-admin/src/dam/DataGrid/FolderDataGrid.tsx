@@ -87,10 +87,13 @@ interface FolderDataGridProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
 }
 
+const isSelectableRow = ({ row }: { row: GQLDamFileTableFragment | GQLDamFolderTableFragment }) => isFile(row);
+
 type FolderDataGridToolbarProps = {
     id?: string;
     filterApi: IFilterApi<DamFilter>;
     hideArchiveFilter?: boolean;
+    hideSelectiveActions?: boolean;
     additionalToolbarItems?: ReactNode;
     uploadFilters: {
         allowedMimetypes?: string[];
@@ -101,6 +104,7 @@ function FolderDataGridToolbar({
     id: currentFolderId,
     filterApi,
     hideArchiveFilter,
+    hideSelectiveActions,
     additionalToolbarItems,
     uploadFilters,
 }: FolderDataGridToolbarProps) {
@@ -131,6 +135,7 @@ function FolderDataGridToolbar({
                     }}
                     folderId={data?.damFolder.id}
                     filter={uploadFilters}
+                    hideSelectiveActions={hideSelectiveActions}
                 />
 
                 <UploadFilesButton folderId={data?.damFolder.id} filter={uploadFilters} />
@@ -145,7 +150,10 @@ const FolderDataGrid = ({
     breadcrumbs,
     hideContextMenu = false,
     hideArchiveFilter,
+    toolbarOptions,
     hideMultiselect,
+    disableFolderSelection,
+    keepNonExistentRowsSelected,
     renderDamLabel,
     ...props
 }: FolderDataGridProps) => {
@@ -656,11 +664,13 @@ const FolderDataGrid = ({
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
+                    keepNonExistentRowsSelected={keepNonExistentRowsSelected}
+                    isRowSelectable={disableFolderSelection ? isSelectableRow : undefined}
                     rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onRowSelectionModelChange={handleSelectionModelChange}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
-                        contextMenu: !hideContextMenu,
+                        actions: !hideContextMenu,
                     }}
                     slots={{
                         toolbar: FolderDataGridToolbar as GridSlotsComponent["toolbar"],
@@ -672,6 +682,7 @@ const FolderDataGrid = ({
                             filterApi,
                             uploadFilters,
                             additionalToolbarItems: props.additionalToolbarItems,
+                            hideSelectiveActions: toolbarOptions?.hideSelectiveActions,
                         } as FolderDataGridToolbarProps,
                     }}
                 />
