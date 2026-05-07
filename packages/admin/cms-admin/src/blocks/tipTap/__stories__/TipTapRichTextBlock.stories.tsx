@@ -425,8 +425,9 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
         await step("Toggle bullet list via keyboard shortcut", async () => {
             const editor = canvas.getByRole("textbox");
             await userEvent.click(editor);
-            // Ctrl+Shift+8 toggles bullet list in TipTap
-            await userEvent.keyboard("{Control>}{Shift>}8{/Shift}{/Control}");
+            // TipTap binds list shortcuts to Mod-Shift-{7,8}: Meta on Mac, Control elsewhere
+            const mod = /Mac/i.test(navigator.platform) ? "Meta" : "Control";
+            await userEvent.keyboard(`{${mod}>}{Shift>}8{/Shift}{/${mod}}`);
 
             await waitFor(
                 () => {
@@ -465,8 +466,8 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
         await step("Switch to ordered list via keyboard shortcut", async () => {
             const editor = canvas.getByRole("textbox");
             await userEvent.click(editor);
-            // Ctrl+Shift+7 toggles ordered list in TipTap
-            await userEvent.keyboard("{Control>}{Shift>}7{/Shift}{/Control}");
+            const mod = /Mac/i.test(navigator.platform) ? "Meta" : "Control";
+            await userEvent.keyboard(`{${mod}>}{Shift>}7{/Shift}{/${mod}}`);
 
             await waitFor(
                 () => {
