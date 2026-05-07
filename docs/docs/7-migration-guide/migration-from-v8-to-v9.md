@@ -885,6 +885,46 @@ export function createGraphQLFetch() {
 }
 ```
 
+### Import server-only modules from `@comet/site-nextjs/server`
+
+Server-only exports (`sitePreviewRoute`, `legacyPagesRouterSitePreviewApiHandler`, `previewParams`, `legacyPagesRouterPreviewParams`, `persistedQueryRoute`) have been moved from `@comet/site-nextjs` to `@comet/site-nextjs/server`.
+
+This prevents server-only code (which depends on `next/headers`, `fs/promises`, `server-only`, etc.) from being pulled into client bundles. Previously, tree-shaking would remove unused server code, but this is an optional optimization — for example, Vite's dev server does not tree-shake, causing errors when importing `@comet/site-nextjs` in non-server environments (e.g., Storybook).
+
+Update all imports in your site that use these functions:
+
+```diff
+- import { sitePreviewRoute } from "@comet/site-nextjs";
++ import { sitePreviewRoute } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { previewParams } from "@comet/site-nextjs";
++ import { previewParams } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { legacyPagesRouterPreviewParams } from "@comet/site-nextjs";
++ import { legacyPagesRouterPreviewParams } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { legacyPagesRouterSitePreviewApiHandler } from "@comet/site-nextjs";
++ import { legacyPagesRouterSitePreviewApiHandler } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { persistedQueryRoute } from "@comet/site-nextjs";
++ import { persistedQueryRoute } from "@comet/site-nextjs/server";
+```
+
+Similarly, if you import `persistedQueryRoute` directly from `@comet/site-react`:
+
+```diff
+- import { persistedQueryRoute } from "@comet/site-react";
++ import { persistedQueryRoute } from "@comet/site-react/server";
+```
+
 ### Verify lint passes
 
 ```sh
