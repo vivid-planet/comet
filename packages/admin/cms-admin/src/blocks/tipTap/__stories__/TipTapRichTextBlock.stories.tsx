@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type HTMLAttributes, type ReactNode, useState } from "react";
 import { expect, waitFor, within } from "storybook/test";
 
