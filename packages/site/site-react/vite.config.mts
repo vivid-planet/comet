@@ -14,6 +14,7 @@ export default defineConfig({
             entry: {
                 index: "./src/index.ts",
                 server: "./src/server.ts",
+                "persistedQueries/webpackPersistedQueriesLoader": "./src/persistedQueries/webpackPersistedQueriesLoader.ts",
             },
             formats: ["es"],
         },

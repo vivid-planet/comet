@@ -22,7 +22,7 @@
             "types": "./lib/server.d.ts",
             "import": "./lib/server.js"
         },
-        "./webpackPersistedQueriesLoader": "./lib/site-react/lib/persistedQueries/webpackPersistedQueriesLoader.js"
+        "./webpackPersistedQueriesLoader": "./lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
     "files": [
         "lib/*"
