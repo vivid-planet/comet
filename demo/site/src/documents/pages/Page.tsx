@@ -1,4 +1,4 @@
-import { generateImageUrl, gql } from "@comet/site-nextjs";
+import { generateImageUrl, gql, JsonLd } from "@comet/site-nextjs";
 import { Breadcrumbs } from "@src/common/components/breadcrumbs/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/breadcrumbs/Breadcrumbs.fragment";
 import type { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
@@ -7,6 +7,7 @@ import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
+import type { Thing, WithContext } from "schema-dts";
 
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { StageBlock } from "./blocks/StageBlock";
@@ -145,11 +146,19 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
         }),
     ]);
 
+    let structuredData: WithContext<Thing> | undefined;
+    if (document.seo.structuredData && document.seo.structuredData.length > 0) {
+        try {
+            structuredData = JSON.parse(document.seo.structuredData) as WithContext<Thing>;
+        } catch (error) {
+            // CMS-supplied JSON-LD is invalid; skip emitting it rather than crashing the page.
+            console.error(`Invalid JSON-LD in seo.structuredData for page ${data.pageContent.id}:`, error);
+        }
+    }
+
     return (
         <>
-            {document.seo.structuredData && document.seo.structuredData.length > 0 && (
-                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: document.seo.structuredData }} />
-            )}
+            {structuredData && <JsonLd<Thing> data={structuredData} />}
             <Breadcrumbs {...data.pageContent} scope={scope} />
             {/* ID is used for skip link */}
             <main id="mainContent">

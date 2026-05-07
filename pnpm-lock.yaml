@@ -666,6 +666,9 @@ importers:
       sass:
         specifier: ^1.90.0
         version: 1.93.0
+      schema-dts:
+        specifier: ^2.0.0
+        version: 2.0.0(typescript@5.9.3)
       stylelint:
         specifier: ^16.24.0
         version: 16.24.0(typescript@5.9.3)
