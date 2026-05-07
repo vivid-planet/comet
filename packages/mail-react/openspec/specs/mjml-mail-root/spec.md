@@ -75,7 +75,7 @@ The `<MjmlHead>` SHALL contain `<MjmlAttributes><MjmlAll padding={0} fontFamily=
 
 #### Scenario: No other default attributes beyond padding and fontFamily
 
-- **WHEN** `<MjmlMailRoot>` is rendered without an `attributes` prop
+- **WHEN** `<MjmlMailRoot>` is rendered without `head` or `attributes` props
 - **THEN** the `<mj-attributes>` block contains only `<mj-all>` with `padding` and `font-family` attributes
 
 ### Requirement: Optional head and attributes slot props
