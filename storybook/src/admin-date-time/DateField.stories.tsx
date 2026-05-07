@@ -1,6 +1,6 @@
 import { Alert, FinalForm } from "@comet/admin";
 import { DateField } from "@comet/admin-date-time";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof DateField>;
 const config: Meta<typeof DateField> = {

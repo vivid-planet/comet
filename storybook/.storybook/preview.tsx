@@ -1,7 +1,7 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
 import { LicenseInfo } from "@mui/x-license";
-import type { Preview } from "@storybook/react-webpack5";
+import type { Preview } from "@storybook/react-vite";
 import type { GlobalTypes } from "storybook/internal/csf";
 
 import { CometConfigProviderDecorator } from "./decorators/CometConfigProvider.decorator";
