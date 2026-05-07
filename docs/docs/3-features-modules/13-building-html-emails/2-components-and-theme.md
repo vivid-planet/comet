@@ -155,6 +155,13 @@ From the theme, `MjmlMailRoot` automatically sets:
 - **Base font family** — from `theme.text.fontFamily`
 - **Zero default padding** — so components start with no padding
 
+### Extending `<MjmlHead>` and `<MjmlAttributes>`
+
+Two optional slot props let consumers contribute content the theme can't express:
+
+- `head` — `ReactNode` appended inside `<MjmlHead>` after the registered styles block (e.g. `<MjmlFont>`, `<MjmlConditionalComment>`, `<MjmlPreview>`)
+- `attributes` — `ReactNode` appended inside `<MjmlAttributes>` after the default `<MjmlAll>` (e.g. `<MjmlClass>` or per-element defaults)
+
 ## MjmlSection
 
 `MjmlSection` wraps the MJML section with theme integration. It automatically applies `theme.colors.background.content` as the background color — unless the section is rendered inside an [`MjmlWrapper`](#mjmlwrapper), in which case the wrapper's background is used instead. To change the default for all sections, set it in the theme:

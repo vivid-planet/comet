@@ -12,6 +12,10 @@ type MjmlMailRootProps = PropsWithChildren<{
      * (equivalent to `createTheme()`) is used.
      */
     theme?: Theme;
+    /** Extra content appended inside the built-in `<MjmlAttributes>`, after the default `<MjmlAll>`. */
+    attributes?: ReactNode;
+    /** Extra content appended inside `<MjmlHead>`, after the registered styles block. */
+    head?: ReactNode;
 }>;
 
 /**
@@ -25,7 +29,7 @@ type MjmlMailRootProps = PropsWithChildren<{
  *
  * Direct children should be section-level components (e.g. `MjmlSection`).
  */
-export function MjmlMailRoot({ theme: themeProp, children }: MjmlMailRootProps): ReactNode {
+export function MjmlMailRoot({ theme: themeProp, attributes, head, children }: MjmlMailRootProps): ReactNode {
     const theme = themeProp ?? createTheme();
 
     return (
@@ -34,9 +38,11 @@ export function MjmlMailRoot({ theme: themeProp, children }: MjmlMailRootProps):
                 <MjmlHead>
                     <MjmlAttributes>
                         <MjmlAll padding="0" fontFamily={theme.text.fontFamily} />
+                        {attributes}
                     </MjmlAttributes>
                     <MjmlBreakpoint width={`${theme.breakpoints.mobile.value}px`} />
                     <Styles />
+                    {head}
                 </MjmlHead>
                 <MjmlBody width={theme.sizes.bodyWidth} backgroundColor={theme.colors.background.body}>
                     {children}
