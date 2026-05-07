@@ -56,6 +56,7 @@ export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 export { isWithPreviewPropsData, withPreview, type WithPreviewProps } from "./iframebridge/withPreview";
 export { Image } from "./image/Image";
 export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, type ImageDimensions, parseAspectRatio } from "./image/image.utils";
+export { JsonLd, type JsonLdProps } from "./jsonLd/JsonLd";
 export { createPersistedQueryGraphQLFetch } from "./persistedQueries/createPersistedQueryGraphQLFetch";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { PreviewContext } from "./preview/PreviewContext";
