@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import { Field } from "@comet/admin";
 import { Crop } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import { deepClone } from "@mui/x-data-grid/internals";
@@ -175,9 +174,8 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                     }}
                     initialValues={{ damFile: state.damFile }}
                 >
-                    <Field
+                    <FileField
                         name="damFile"
-                        component={FileField}
                         fullWidth
                         buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
                         allowedMimetypes={filteredAcceptedMimeTypes.pixelImage}

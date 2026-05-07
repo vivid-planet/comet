@@ -96,9 +96,8 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type, dir
             onAfterSubmit={() => selectionApi.handleDeselect()}
             initialValues={initialValues}
         >
-            <Field
+            <FileField
                 name="alternative"
-                component={FileField}
                 allowedMimetypes={
                     direction === "for" ? acceptedMimeTypes.filteredAcceptedMimeTypes.captions : acceptedMimeTypes.filteredAcceptedMimeTypes.video
                 }

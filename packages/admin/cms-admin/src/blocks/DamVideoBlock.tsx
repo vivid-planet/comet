@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import { Field } from "@comet/admin";
 import { Video } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/internals";
@@ -120,9 +119,8 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
                 <BlocksFinalForm onSubmit={updateState} initialValues={state}>
-                    <Field
+                    <FileField
                         name="damFile"
-                        component={FileField}
                         fullWidth
                         allowedMimetypes={["video/mp4", "video/webm"]}
                         preview={<Video fontSize="large" color="primary" />}

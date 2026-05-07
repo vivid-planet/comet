@@ -1,4 +1,3 @@
-import { Field } from "@comet/admin";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import type { PixelImageBlockData, SvgImageBlockData } from "../../blocks.generated";
@@ -66,9 +65,8 @@ DamImageBlock.AdminComponent = function AdminComponent({ state, updateState }) {
                 }}
                 initialValues={{}}
             >
-                <Field
+                <FileField
                     name="damFile"
-                    component={FileField}
                     fullWidth
                     buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
                     allowedMimetypes={[...filteredAcceptedMimeTypes.pixelImage, ...filteredAcceptedMimeTypes.svgImage]}

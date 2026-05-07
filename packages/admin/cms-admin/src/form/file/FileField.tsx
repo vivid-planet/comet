@@ -1,4 +1,5 @@
 import { useApolloClient } from "@apollo/client";
+import { Field, type FieldProps } from "@comet/admin";
 import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
 import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useState } from "react";
@@ -21,14 +22,22 @@ interface ActionItem extends ComponentProps<typeof MenuItem> {
     icon?: ReactNode;
 }
 
-interface FileFieldProps extends FieldRenderProps<GQLDamFileFieldFileFragment | undefined, HTMLInputElement> {
-    buttonText?: string;
+export interface FinalFormFileFieldProps {
+    buttonText?: ReactNode;
     allowedMimetypes?: string[];
     preview?: ReactNode;
     menuActions?: Array<ActionItem | ReactElement | null | undefined>;
 }
 
-const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: FileFieldProps) => {
+type FinalFormFileFieldInternalProps = FieldRenderProps<GQLDamFileFieldFileFragment | undefined, HTMLInputElement>;
+
+export const FinalFormFileField = ({
+    buttonText,
+    input,
+    allowedMimetypes,
+    preview,
+    menuActions,
+}: FinalFormFileFieldProps & FinalFormFileFieldInternalProps) => {
     const [chooseFileDialogOpen, setChooseFileDialogOpen] = useState<boolean>(false);
     const client = useApolloClient();
 
@@ -148,4 +157,8 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
     );
 };
 
-export { FileField };
+export type FileFieldProps = FieldProps<GQLDamFileFieldFileFragment | undefined, HTMLInputElement> & FinalFormFileFieldProps;
+
+export const FileField = ({ name, ...restProps }: FileFieldProps) => {
+    return <Field component={FinalFormFileField} name={name} {...restProps} />;
+};
