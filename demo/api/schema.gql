@@ -642,6 +642,7 @@ type EntityInfo {
 }
 
 input FileFilterInput {
+  ids: [ID!]
   mimetypes: [String!]
   searchText: String
 }

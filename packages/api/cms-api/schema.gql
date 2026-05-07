@@ -606,6 +606,7 @@ enum DamItemType {
 input FileFilterInput {
   searchText: String
   mimetypes: [String!]
+  ids: [ID!]
 }
 
 input ImageCropAreaInput {

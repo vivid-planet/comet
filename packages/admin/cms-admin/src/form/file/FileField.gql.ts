@@ -28,3 +28,14 @@ export const damFileFieldFileQuery = gql`
     }
     ${damFileFieldFragment}
 `;
+
+export const damFileFieldFilesByIdsQuery = gql`
+    query DamFileFieldFilesByIds($ids: [ID!]!, $limit: Int!, $scope: DamScopeInput!) {
+        damFilesList(filter: { ids: $ids }, limit: $limit, includeArchived: true, scope: $scope) {
+            nodes {
+                ...DamFileFieldFile
+            }
+        }
+    }
+    ${damFileFieldFragment}
+`;

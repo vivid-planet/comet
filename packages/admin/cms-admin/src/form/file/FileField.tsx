@@ -8,11 +8,19 @@ import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
+import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
+import { useDamScope } from "../../dam/config/useDamScope";
 import { ChooseDamFileDialog } from "./chooseFile/ChooseDamFileDialog";
 import { ChooseDamFilesDialog } from "./chooseFile/ChooseDamFilesDialog";
 import { DamPathLazy } from "./DamPathLazy";
-import { damFileFieldFileQuery } from "./FileField.gql";
-import type { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
+import { damFileFieldFileQuery, damFileFieldFilesByIdsQuery } from "./FileField.gql";
+import type {
+    GQLDamFileFieldFileFragment,
+    GQLDamFileFieldFileQuery,
+    GQLDamFileFieldFileQueryVariables,
+    GQLDamFileFieldFilesByIdsQuery,
+    GQLDamFileFieldFilesByIdsQueryVariables,
+} from "./FileField.gql.generated";
 import { type ActionItem, FileFieldMenu, useHasFileFieldMenu } from "./FileFieldMenu";
 import { FileFieldRow } from "./FileFieldRow";
 
@@ -122,10 +130,17 @@ const SingleFileField = ({ buttonText, input, allowedMimetypes, preview, menuAct
     );
 };
 
-const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: MultiFileFieldProps) => {
+const MultiFileField = (props: MultiFileFieldProps) => (
+    <DamScopeProvider>
+        <MultiFileFieldInner {...props} />
+    </DamScopeProvider>
+);
+
+const MultiFileFieldInner = ({ buttonText, input, allowedMimetypes, preview, menuActions }: MultiFileFieldProps) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const apolloClient = useApolloClient();
     const snackbarApi = useSnackbarApi();
+    const damScope = useDamScope();
 
     // react-final-form may pass "" as the default when no initial value is set; fall back to [].
     const files: GQLDamFileFieldFileFragment[] = Array.isArray(input.value) ? input.value : [];
@@ -136,17 +151,13 @@ const MultiFileField = ({ buttonText, input, allowedMimetypes, preview, menuActi
 
     const handleConfirm = async (fileIds: string[]) => {
         try {
-            const next = await Promise.all(
-                fileIds.map(async (id) => {
-                    const { data } = await apolloClient.query<GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables>({
-                        query: damFileFieldFileQuery,
-                        variables: { id },
-                    });
-                    return data.damFile;
-                }),
-            );
+            const { data } = await apolloClient.query<GQLDamFileFieldFilesByIdsQuery, GQLDamFileFieldFilesByIdsQueryVariables>({
+                query: damFileFieldFilesByIdsQuery,
+                variables: { ids: fileIds, limit: fileIds.length, scope: damScope },
+            });
 
-            input.onChange(next);
+            const filesById = new Map(data.damFilesList.nodes.map((file) => [file.id, file]));
+            input.onChange(fileIds.flatMap((id) => filesById.get(id) ?? []));
             setDialogOpen(false);
         } catch {
             snackbarApi.showSnackbar(
