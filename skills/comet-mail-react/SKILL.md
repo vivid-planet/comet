@@ -169,6 +169,23 @@ function MyEmail() {
 }
 ```
 
+### Contributing to `<MjmlHead>` and `<MjmlAttributes>`
+
+`MjmlMailRoot` accepts two optional slot props for content that can't be expressed via `registerStyles`:
+
+- `head` — appended inside `<MjmlHead>` after the registered-styles block. Use for `<MjmlFont>`, `<MjmlConditionalComment>`, `<MjmlPreview>`, or `<MjmlStyle>` content that depends on React context at render time.
+- `attributes` — appended inside the built-in `<MjmlAttributes>` after the default `<MjmlAll>`. Use for `<MjmlClass>` or per-element defaults (e.g. `<MjmlText fontSize="14px" />`).
+
+Pass the children directly — do not wrap them in another `<MjmlHead>` / `<MjmlAttributes>`:
+
+```tsx
+<MjmlMailRoot theme={theme} attributes={<MjmlClass name="link" color="blue" />} head={<MjmlFont name="Foo" href="https://example.com/foo.css" />}>
+    {/* email content */}
+</MjmlMailRoot>
+```
+
+For module-scoped responsive CSS that depends only on the theme, prefer `registerStyles`.
+
 ### Module Augmentation for Type-Safety
 
 `@comet/mail-react` uses TypeScript module augmentation to make custom theme tokens type-safe. Always augment these interfaces when extending the theme — TypeScript will then error on typos or unknown keys.

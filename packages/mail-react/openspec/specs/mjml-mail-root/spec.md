@@ -75,8 +75,29 @@ The `<MjmlHead>` SHALL contain `<MjmlAttributes><MjmlAll padding={0} fontFamily=
 
 #### Scenario: No other default attributes beyond padding and fontFamily
 
-- **WHEN** `<MjmlMailRoot>` is rendered
+- **WHEN** `<MjmlMailRoot>` is rendered without `head` or `attributes` props
 - **THEN** the `<mj-attributes>` block contains only `<mj-all>` with `padding` and `font-family` attributes
+
+### Requirement: Optional head and attributes slot props
+
+`MjmlMailRoot` SHALL accept optional `head` and `attributes` props of type `ReactNode` that let consumers contribute content into `<MjmlHead>` and `<MjmlAttributes>` respectively.
+
+When provided, `attributes` SHALL be rendered as the last children of the built-in `<MjmlAttributes>` block, after the default `<MjmlAll>` element. When provided, `head` SHALL be rendered as the last child of `<MjmlHead>`, after the built-in `<MjmlAttributes>`, `<MjmlBreakpoint>`, and the registered-styles block. The `head` placement after registered styles SHALL allow consumer-provided `<mj-style>` declarations to override registered ones via CSS source order.
+
+#### Scenario: Head slot content appears in head
+
+- **WHEN** `<MjmlMailRoot head={<MjmlFont name="Foo" href="https://example.com/foo.css" />}>` is rendered
+- **THEN** the `<mj-head>` contains the `<mj-font>` element after the registered-styles block
+
+#### Scenario: Attributes slot content appears in attributes block
+
+- **WHEN** `<MjmlMailRoot attributes={<MjmlClass name="link" color="blue" />}>` is rendered
+- **THEN** the `<mj-attributes>` block contains `<mj-class name="link" color="blue" />` after the default `<mj-all>` element
+
+#### Scenario: Slot props omitted
+
+- **WHEN** `<MjmlMailRoot>` is rendered without `head` or `attributes` props
+- **THEN** no extra elements appear in `<mj-head>` or `<mj-attributes>` beyond the built-in defaults
 
 ### Requirement: Optional theme prop
 
