@@ -171,6 +171,7 @@ export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog"
 export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
 export { FileField } from "./form/file/FileField";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
+export { FinalFormFileField, type FinalFormFileFieldProps } from "./form/file/FinalFormFileField";
 export {
     FinalFormFileUpload,
     finalFormFileUploadDownloadableFragment,

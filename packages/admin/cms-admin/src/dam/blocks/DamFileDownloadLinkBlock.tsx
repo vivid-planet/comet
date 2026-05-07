@@ -115,7 +115,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                     openFileType: state.openFileType ?? "Download",
                 }}
             >
-                <Field name="file" component={FileField} fullWidth />
+                <FileField name="file" fullWidth />
                 <Divider />
                 <BlockAdminComponentPaper>
                     <Field

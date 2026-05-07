@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import { Field } from "@comet/admin";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { FormattedMessage } from "react-intl";
 
@@ -129,9 +128,8 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                     }}
                     initialValues={{ damFile: state.damFile }}
                 >
-                    <Field
+                    <FileField
                         name="damFile"
-                        component={FileField}
                         fullWidth
                         buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
                         allowedMimetypes={filteredAcceptedMimeTypes.svgImage}
