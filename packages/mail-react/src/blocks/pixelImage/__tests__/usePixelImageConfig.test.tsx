@@ -10,8 +10,8 @@ function ConfigProbe() {
 }
 
 describe("usePixelImageConfig", () => {
-    it("throws when config.pixelImage is unset", () => {
-        expect(() => renderToStaticMarkup(<ConfigProbe />)).toThrowError(/`pixelImage` must be set/);
+    it("throws when config.pixelImageBlock is unset", () => {
+        expect(() => renderToStaticMarkup(<ConfigProbe />)).toThrowError(/`pixelImageBlock` must be set/);
     });
 
     it("error message points at MjmlMailRoot and ConfigProvider", () => {
@@ -19,10 +19,10 @@ describe("usePixelImageConfig", () => {
         expect(() => renderToStaticMarkup(<ConfigProbe />)).toThrowError(/ConfigProvider/);
     });
 
-    it("does not throw when config.pixelImage is provided", () => {
+    it("does not throw when config.pixelImageBlock is provided", () => {
         expect(() =>
             renderToStaticMarkup(
-                <ConfigProvider config={{ pixelImage: { validSizes: [640, 1280], baseUrl: "http://localhost:3000" } }}>
+                <ConfigProvider config={{ pixelImageBlock: { validSizes: [640, 1280], baseUrl: "http://localhost:3000" } }}>
                     <ConfigProbe />
                 </ConfigProvider>,
             ),

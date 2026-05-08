@@ -29,13 +29,13 @@ import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@comet/mail-react"
 
 ### Configuration
 
-Both blocks read `validSizes` and `baseUrl` from `config.pixelImage`. In a typical Comet project, `validSizes` is the union of `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`; `baseUrl` is the API URL.
+Both blocks read `validSizes` and `baseUrl` from `config.pixelImageBlock`. In a typical Comet project, `validSizes` is the union of `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`; `baseUrl` is the API URL.
 
 ```tsx title="src/emails/WelcomeEmail.tsx"
 import { MjmlMailRoot, type Config } from "@comet/mail-react";
 
 const config: Config = {
-    pixelImage: {
+    pixelImageBlock: {
         validSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
         baseUrl: process.env.API_URL,
     },
@@ -48,7 +48,7 @@ const config: Config = {
 
 ### Render width
 
-The `width` prop is the desktop render width — the width at which the image displays in the default breakpoint. The block picks an actual source size from `config.pixelImage.validSizes`, accounting for retina displays.
+The `width` prop is the desktop render width — the width at which the image displays in the default breakpoint. The block picks an actual source size from `config.pixelImageBlock.validSizes`, accounting for retina displays.
 
 ```tsx
 <MjmlPixelImageBlock data={pixelImageData} width={536} />

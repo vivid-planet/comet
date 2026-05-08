@@ -40,7 +40,7 @@ export const Default: Story = {
     render: (args) => (
         <MjmlMailRoot
             config={{
-                pixelImage: {
+                pixelImageBlock: {
                     validSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 2560, 3200, 3840],
                     baseUrl: "",
                 },
@@ -66,7 +66,7 @@ export const AspectRatioOverride: Story = {
     render: (args) => (
         <MjmlMailRoot
             config={{
-                pixelImage: {
+                pixelImageBlock: {
                     validSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 2560, 3200, 3840],
                     baseUrl: "",
                 },

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-HTML and MJML block components for rendering Comet CMS `PixelImageBlockData` in email templates, so consumers don't re-implement pixel-image width selection, URL resolution, and responsive scaling per project. The blocks pick a DPR-aware render width from `config.pixelImage.validSizes`, resolve an absolute image URL from `data.urlTemplate` (prefixing `config.pixelImage.baseUrl` when relative), derive the aspect ratio from the DAM crop area (with an optional explicit override), and scale to container width below the default breakpoint. `HtmlPixelImageBlock` renders an `<img>` for raw HTML or MJML ending-tag context; `MjmlPixelImageBlock` renders the re-exported `MjmlImage` for MJML context.
+HTML and MJML block components for rendering Comet CMS `PixelImageBlockData` in email templates, so consumers don't re-implement pixel-image width selection, URL resolution, and responsive scaling per project. The blocks pick a DPR-aware render width from `config.pixelImageBlock.validSizes`, resolve an absolute image URL from `data.urlTemplate` (prefixing `config.pixelImageBlock.baseUrl` when relative), derive the aspect ratio from the DAM crop area (with an optional explicit override), and scale to container width below the default breakpoint. `HtmlPixelImageBlock` renders an `<img>` for raw HTML or MJML ending-tag context; `MjmlPixelImageBlock` renders the re-exported `MjmlImage` for MJML context.
 
 ## Requirements
 
@@ -22,27 +22,27 @@ The components SHALL set `alt` and `title` on the rendered element from the corr
 - **WHEN** a caller passes a prop that has a default sourced from the block data (e.g. `alt`, `title`)
 - **THEN** the caller-supplied value wins, allowing per-render-site overrides while preserving DAM defaults when omitted
 
-### Requirement: Block components require `pixelImage` configuration
+### Requirement: Block components require `pixelImageBlock` configuration
 
-`HtmlPixelImageBlock` and `MjmlPixelImageBlock` SHALL read `validSizes` and `baseUrl` from `config.pixelImage` via the `useConfig` hook. When `config.pixelImage` is not set, the block SHALL throw an error that names the missing configuration and points at where to provide it (`MjmlMailRoot.config` or `ConfigProvider`).
+`HtmlPixelImageBlock` and `MjmlPixelImageBlock` SHALL read `validSizes` and `baseUrl` from `config.pixelImageBlock` via the `useConfig` hook. When `config.pixelImageBlock` is not set, the block SHALL throw an error that names the missing configuration and points at where to provide it (`MjmlMailRoot.config` or `ConfigProvider`).
 
 #### Scenario: No config provided
 
-- **WHEN** a `MjmlPixelImageBlock` or `HtmlPixelImageBlock` is rendered in a tree where `config.pixelImage` is not set
+- **WHEN** a `MjmlPixelImageBlock` or `HtmlPixelImageBlock` is rendered in a tree where `config.pixelImageBlock` is not set
 - **THEN** the block throws an error explaining which configuration key is missing and how to provide it
 
-### Requirement: `Config` declares the `pixelImage` key
+### Requirement: `Config` declares the `pixelImageBlock` key
 
-The `Config` interface exported from the package SHALL include an optional `pixelImage` member of type `{ validSizes: number[]; baseUrl: string }`. Both fields are required when `pixelImage` is provided.
+The `Config` interface exported from the package SHALL include an optional `pixelImageBlock` member of type `{ validSizes: number[]; baseUrl: string }`. Both fields are required when `pixelImageBlock` is provided.
 
-#### Scenario: Partial pixelImage configuration
+#### Scenario: Partial pixelImageBlock configuration
 
-- **WHEN** a consumer provides `config.pixelImage` with only one of `validSizes` or `baseUrl`
+- **WHEN** a consumer provides `config.pixelImageBlock` with only one of `validSizes` or `baseUrl`
 - **THEN** TypeScript reports an error at the call site (the inner object's fields are not individually optional)
 
 ### Requirement: Render width selection
 
-The block components SHALL resolve the rendered image source URL using a render width chosen from `config.pixelImage.validSizes`:
+The block components SHALL resolve the rendered image source URL using a render width chosen from `config.pixelImageBlock.validSizes`:
 
 - The component's `width` prop is the default render width (the width at which the image displays in the default/desktop breakpoint).
 - The optional `largestPossibleRenderWidth` prop names the largest width the image can ever display at across breakpoints; when omitted, it defaults to `theme.sizes.bodyWidth`.
@@ -57,12 +57,12 @@ The block components SHALL resolve the rendered image source URL using a render 
 
 ### Requirement: Image URL resolution
 
-The block components SHALL build the rendered image URL by replacing `$resizeWidth` and `$resizeHeight` placeholders in `data.urlTemplate` with the chosen render width and a height computed from the resolved aspect ratio (`Math.ceil(width / aspectRatio)`). When the resulting URL is not absolute (does not start with a scheme), the block SHALL prefix it with `config.pixelImage.baseUrl`.
+The block components SHALL build the rendered image URL by replacing `$resizeWidth` and `$resizeHeight` placeholders in `data.urlTemplate` with the chosen render width and a height computed from the resolved aspect ratio (`Math.ceil(width / aspectRatio)`). When the resulting URL is not absolute (does not start with a scheme), the block SHALL prefix it with `config.pixelImageBlock.baseUrl`.
 
 #### Scenario: Absolute URL template
 
 - **WHEN** `data.urlTemplate` is already an absolute URL (starts with a scheme such as `https:`)
-- **THEN** the resolved image URL is used as-is and `config.pixelImage.baseUrl` is not prefixed
+- **THEN** the resolved image URL is used as-is and `config.pixelImageBlock.baseUrl` is not prefixed
 
 ### Requirement: Aspect ratio resolution
 

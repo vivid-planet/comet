@@ -1,6 +1,6 @@
 import { createContext, type PropsWithChildren, type ReactNode, useContext } from "react";
 
-export interface PixelImageConfig {
+export interface PixelImageBlockConfig {
     /**
      * Image widths supported by the API, used to pick a render width.
      * Generally derived from `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`.
@@ -30,7 +30,7 @@ export interface Config {
      * Configuration consumed by `HtmlPixelImageBlock` and `MjmlPixelImageBlock`.
      * Required when those components are rendered.
      */
-    pixelImage?: PixelImageConfig;
+    pixelImageBlock?: PixelImageBlockConfig;
 }
 
 const ConfigContext = createContext<Config>({});

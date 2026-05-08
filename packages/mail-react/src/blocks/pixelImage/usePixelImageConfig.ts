@@ -1,14 +1,14 @@
-import { type PixelImageConfig, useConfig } from "../../config/ConfigProvider.js";
+import { type PixelImageBlockConfig, useConfig } from "../../config/ConfigProvider.js";
 
 /**
- * Reads `config.pixelImage` from the configuration context and returns it narrowed to non-null.
+ * Reads `config.pixelImageBlock` from the configuration context and returns it narrowed to non-null.
  */
-export function usePixelImageConfig(): PixelImageConfig {
-    const { pixelImage } = useConfig();
+export function usePixelImageConfig(): PixelImageBlockConfig {
+    const { pixelImageBlock } = useConfig();
 
-    if (!pixelImage) {
-        throw new Error("`pixelImage` must be set in `config` on `MjmlMailRoot` or `ConfigProvider` to use the pixel-image configuration.");
+    if (!pixelImageBlock) {
+        throw new Error("`pixelImageBlock` must be set in `config` on `MjmlMailRoot` or `ConfigProvider` to use the pixel-image configuration.");
     }
 
-    return pixelImage;
+    return pixelImageBlock;
 }

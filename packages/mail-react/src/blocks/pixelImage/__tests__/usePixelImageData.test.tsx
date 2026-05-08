@@ -46,7 +46,7 @@ function expectNonNull<T>(value: T | null): T {
 
 const validSizes = [320, 640, 1280, 2048];
 const baseUrl = "http://localhost:3000";
-const config: Config = { pixelImage: { validSizes, baseUrl } };
+const config: Config = { pixelImageBlock: { validSizes, baseUrl } };
 
 const smartUrlTemplate = "/dam/images/abc/resize:$resizeWidth:$resizeHeight/photo.jpg";
 
@@ -103,7 +103,7 @@ describe("usePixelImageData — width selection", () => {
 });
 
 describe("usePixelImageData — URL prefixing", () => {
-    it("prefixes a relative URL with config.pixelImage.baseUrl", () => {
+    it("prefixes a relative URL with config.pixelImageBlock.baseUrl", () => {
         const result = expectNonNull(captureUsePixelImageData({ data: smartImageData, defaultRenderWidth: 200, config }));
         expect(result.imageUrl.startsWith(`${baseUrl}/dam/images/abc/`)).toBe(true);
     });

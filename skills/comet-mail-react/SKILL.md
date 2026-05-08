@@ -317,11 +317,11 @@ All components are imported from `@comet/mail-react` — never from `@faire/mjml
 
 #### Configuration
 
-Both blocks read `validSizes` and `baseUrl` from `config.pixelImage` and throw if it's missing. Wire it once on `MjmlMailRoot.config`. In a typical Comet project, `validSizes` is the union of `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`; `baseUrl` is the API URL.
+Both blocks read `validSizes` and `baseUrl` from `config.pixelImageBlock` and throw if it's missing. Wire it once on `MjmlMailRoot.config`. In a typical Comet project, `validSizes` is the union of `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`; `baseUrl` is the API URL.
 
 ```tsx
 const config: Config = {
-    pixelImage: {
+    pixelImageBlock: {
         validSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
         baseUrl: process.env.API_URL,
     },
