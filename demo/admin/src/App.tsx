@@ -68,6 +68,9 @@ export function App() {
         <CometConfigProvider
             {...config}
             graphQLApiUrl={`${config.apiUrl}/graphql`}
+            onError={(error, errorInfo) => {
+                console.error("Error caught by error boundary", error, errorInfo.componentStack);
+            }}
             pageTree={{
                 categories: pageTreeCategories,
                 documentTypes: pageTreeDocumentTypes,

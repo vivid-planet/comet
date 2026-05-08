@@ -128,6 +128,7 @@ export { ErrorDialog, type ErrorDialogOptions, type ErrorDialogProps } from "./e
 export { ErrorDialogHandler } from "./error/errordialog/ErrorDialogHandler";
 export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext } from "./error/errordialog/ErrorScope";
 export { useErrorDialog, type UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
+export { ErrorHandlerProvider, useErrorHandler } from "./error/errorHandler/ErrorHandlerProvider";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
