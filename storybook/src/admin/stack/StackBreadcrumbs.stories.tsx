@@ -45,7 +45,9 @@ type Args = {
 
 function Story({ selectedBreadcrumbsNumber, selectedBreadcrumbsGroup }: Args) {
     const stackApi = useStackApi();
-    if (!stackApi) return null;
+    if (!stackApi) {
+        return null;
+    }
     stackApi.breadCrumbs = allBreadcrumbGroups[selectedBreadcrumbsGroup][selectedBreadcrumbsNumber];
     return <StackBreadcrumbs />;
 }

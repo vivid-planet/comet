@@ -94,7 +94,9 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             const folderId = transformedBody.folderId;
             if (folderId) {
                 const folder = await this.foldersService.findOneById(folderId);
-                if (!folder) throw new BadRequestException(`Folder ${folderId} not found`);
+                if (!folder) {
+                    throw new BadRequestException(`Folder ${folderId} not found`);
+                }
                 if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
                     throw new BadRequestException("Folder scope doesn't match passed scope");
                 }
@@ -131,7 +133,9 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             const folderId = transformedBody.folderId;
             if (folderId) {
                 const folder = await this.foldersService.findOneById(folderId);
-                if (!folder) throw new BadRequestException(`Folder ${folderId} not found`);
+                if (!folder) {
+                    throw new BadRequestException(`Folder ${folderId} not found`);
+                }
                 if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
                     throw new BadRequestException("Folder scope doesn't match passed scope");
                 }

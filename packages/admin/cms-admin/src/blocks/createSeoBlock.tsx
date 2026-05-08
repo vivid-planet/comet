@@ -8,7 +8,7 @@ import { Field as ReactFinalFormField, useForm } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type SeoBlockData, type SeoBlockInput } from "../blocks.generated";
+import type { SeoBlockData, SeoBlockInput } from "../blocks.generated";
 import { useContentGenerationConfig } from "../documents/ContentGenerationConfigContext";
 import { validateUrl } from "../validation/validateUrl";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
@@ -26,7 +26,7 @@ import { PixelImageBlock } from "./PixelImageBlock";
 import { type SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
-import { type BlockInterface, type BlockState } from "./types";
+import type { BlockInterface, BlockState } from "./types";
 
 interface CreateSeoBlockOptions {
     image?: BlockInterface;

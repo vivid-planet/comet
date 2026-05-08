@@ -7,6 +7,7 @@ codemods
 Embeddables
 exceljs
 exif
+extensionless
 GraphQLJSONObject
 imgproxy
 kubernetes
@@ -60,8 +61,18 @@ numberfield
 Referer
 mailpit
 axllent
+Turbopack
 timestamptz
 formatjs
 autoplay
 authproxy
+rdndmb
 xact
+Onetrust
+viewports
+roundrect
+arcsize
+shakability
+fulltext
+agentic
+augmentable

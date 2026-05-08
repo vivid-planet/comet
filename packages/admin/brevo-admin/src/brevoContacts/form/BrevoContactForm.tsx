@@ -22,7 +22,7 @@ import { ArrowLeft } from "@comet/admin-icons";
 import { type ContentScope, ContentScopeIndicator, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { Card, IconButton } from "@mui/material";
 import { Box } from "@mui/system";
-import { type FormApi } from "final-form";
+import type { FormApi } from "final-form";
 import { type ReactElement, type ReactNode, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -33,15 +33,15 @@ import {
     createBrevoContactMutation,
     updateBrevoContactMutation,
 } from "./BrevoContactForm.gql";
-import {
-    type GQLBrevoContactFormCheckForChangesQuery,
-    type GQLBrevoContactFormCheckForChangesQueryVariables,
-    type GQLBrevoContactFormQuery,
-    type GQLBrevoContactFormQueryVariables,
-    type GQLCreateBrevoContactMutation,
-    type GQLCreateBrevoContactMutationVariables,
-    type GQLUpdateBrevoContactMutation,
-    type GQLUpdateBrevoContactMutationVariables,
+import type {
+    GQLBrevoContactFormCheckForChangesQuery,
+    GQLBrevoContactFormCheckForChangesQueryVariables,
+    GQLBrevoContactFormQuery,
+    GQLBrevoContactFormQueryVariables,
+    GQLCreateBrevoContactMutation,
+    GQLCreateBrevoContactMutationVariables,
+    GQLUpdateBrevoContactMutation,
+    GQLUpdateBrevoContactMutationVariables,
 } from "./BrevoContactForm.gql.generated";
 
 export type EditBrevoContactFormValues = {

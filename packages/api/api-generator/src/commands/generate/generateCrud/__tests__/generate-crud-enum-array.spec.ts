@@ -1,6 +1,6 @@
 import { BaseEntity, defineConfig, Entity, Enum, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { Field, registerEnumType } from "@nestjs/graphql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
@@ -35,10 +35,12 @@ describe("GenerateCrudEnumArray", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.input.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
         const source = parseSource(file.content);
 
         const classes = source.getClasses();
@@ -68,22 +70,18 @@ describe("GenerateCrudEnumArray", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.filter.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
         const source = parseSource(file.content);
         const classes = source.getClasses();
-        expect(classes.length).toBe(2);
+        expect(classes.length).toBe(1);
 
         {
             const cls = classes[0];
-            const structure = cls.getStructure();
-            expect(structure.name).toBe("TestEnumEnumsFilter");
-        }
-
-        {
-            const cls = classes[1];
             const structure = cls.getStructure();
             expect(structure.name).toBe("TestEntityFilter");
             expect(structure.properties?.length).toBe(4);

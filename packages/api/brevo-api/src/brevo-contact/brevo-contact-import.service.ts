@@ -190,7 +190,9 @@ export class BrevoContactImportService {
                     contactSource,
                     importId,
                 );
-                if (updatedBrevoContact) return "updated";
+                if (updatedBrevoContact) {
+                    return "updated";
+                }
             } else if (!brevoContact) {
                 const brevoConfig = await this.brevoConfigRepository.findOneOrFail({ scope });
 
@@ -203,8 +205,12 @@ export class BrevoContactImportService {
                     responsibleUserId,
                     contactSource,
                 });
-                if (!success) return "blacklisted";
-                if (success) return "created";
+                if (!success) {
+                    return "blacklisted";
+                }
+                if (success) {
+                    return "created";
+                }
             }
         } catch (err) {
             console.error(err);

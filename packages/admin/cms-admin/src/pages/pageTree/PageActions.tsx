@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { type IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
-import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings } from "@comet/admin-icons";
+import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings, Translate } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
 import { type PropsWithChildren, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -14,8 +14,9 @@ import { MovePageMenuItem } from "./MovePageMenuItem";
 import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "./Page";
 import { PageDeleteDialog } from "./PageDeleteDialog";
 import { subTreeFromNode, traverse } from "./treemap/TreeMapUtils";
-import { type GQLPageTreePageFragment, type PageTreePage } from "./usePageTree";
+import type { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
+import { useTranslatePagesAction } from "./useTranslatePagesAction";
 
 interface Props {
     page: PageTreePage;
@@ -32,6 +33,16 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const documentType = documentTypes[page.documentType];
+    const {
+        dialogs: translateDialogs,
+        enabled: translateEnabled,
+        hasTranslatableContent,
+        translating,
+        openDialog: openTranslateDialog,
+    } = useTranslatePagesAction({
+        pages: [page],
+        documentTypes,
+    });
     const isEditable = !!(page.visibility !== "Archived" && documentType.editComponent);
 
     const handleDeleteClick = async () => {
@@ -74,16 +85,20 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     >
                         <FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />
                     </RowActionsItem>,
-                    <RowActionsItem
-                        key="preview"
-                        icon={documentType.hasNoSitePreview ? <PreviewUnavailable /> : <Preview />}
-                        onClick={() => {
-                            openSitePreviewWindow(page.path, contentScopeMatch.url);
-                        }}
-                        disabled={documentType.hasNoSitePreview}
-                    >
-                        <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
-                    </RowActionsItem>,
+                    documentType.SitePreviewAction ? (
+                        <documentType.SitePreviewAction key="preview" pageTreeNode={page} />
+                    ) : (
+                        <RowActionsItem
+                            key="preview"
+                            icon={documentType.hasNoSitePreview ? <PreviewUnavailable /> : <Preview />}
+                            onClick={() => {
+                                openSitePreviewWindow(page.path, contentScopeMatch.url);
+                            }}
+                            disabled={documentType.hasNoSitePreview}
+                        >
+                            <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
+                        </RowActionsItem>
+                    ),
                 ]}
                 <RowActionsMenu>
                     {page.visibility !== "Archived" && [
@@ -118,6 +133,16 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                         <MovePageMenuItem key="movePage" page={page} />,
                         <Divider key="divider2" />,
                         <CopyPasteMenuItem key="copyPaste" page={page} />,
+                        translateEnabled && (
+                            <RowActionsItem
+                                key="translate"
+                                icon={<Translate />}
+                                disabled={translating || !hasTranslatableContent}
+                                onClick={openTranslateDialog}
+                            >
+                                <FormattedMessage id="comet.translator.translate" defaultMessage="Translate" />
+                            </RowActionsItem>
+                        ),
                         <Divider key="divider3" />,
                     ]}
                     <RowActionsItem
@@ -131,6 +156,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     </RowActionsItem>
                 </RowActionsMenu>
             </RowActionsMenu>
+            {translateDialogs}
             <PageDeleteDialog
                 dialogOpen={deleteDialogOpen}
                 handleCancelClick={() => {

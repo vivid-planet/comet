@@ -1,11 +1,11 @@
 import { ArrowLeft } from "@comet/admin-icons";
 import { type ComponentsOverrides, IconButton as MuiIconButton, type Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem as CommonToolbarItem } from "../item/ToolbarItem";
 

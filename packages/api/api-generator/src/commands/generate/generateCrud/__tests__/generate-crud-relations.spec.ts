@@ -1,5 +1,5 @@
 import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
@@ -57,13 +57,12 @@ describe("GenerateCrudRelations", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityProduct"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityProduct"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "test-entity-product.resolver.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             const source = parseSource(file.content);
 
@@ -90,14 +89,13 @@ describe("GenerateCrudRelations", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityCategory"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityCategory"));
             const formattedOut = await formatGeneratedFiles(out);
 
             const file = formattedOut.find((file) => file.name === "test-entity-category.resolver.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             const source = parseSource(file.content);
             const classes = source.getClasses();
@@ -123,13 +121,12 @@ describe("GenerateCrudRelations", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityProduct"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityProduct"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-product.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             const source = parseSource(file.content);
             const classes = source.getClasses();

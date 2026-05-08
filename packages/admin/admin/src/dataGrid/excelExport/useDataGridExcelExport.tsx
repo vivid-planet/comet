@@ -1,10 +1,10 @@
 import { type DocumentNode, type OperationVariables, useApolloClient } from "@apollo/client";
-import { type GridValidRowModel } from "@mui/x-data-grid";
-import { saveAs } from "file-saver";
+import type { GridValidRowModel } from "@mui/x-data-grid";
 import { useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 
-import { type GridColDef } from "../GridColDef";
+import { downloadFile } from "../../helpers/downloadFile";
+import type { GridColDef } from "../GridColDef";
 import { type ExcelGenerationOptions, generateExcelFile } from "./generateExcelFile";
 
 export interface ExportApi {
@@ -43,7 +43,7 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
             const workbook = generateExcelFile<Row>(columns, data, { worksheetName, styling });
 
             workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
+                downloadFile(new Blob([buffer]), safeFileNameWithExtension(fileName));
             });
         },
         [intl],

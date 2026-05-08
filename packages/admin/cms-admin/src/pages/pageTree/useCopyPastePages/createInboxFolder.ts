@@ -2,7 +2,7 @@ import { type ApolloClient, gql } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
 import { format } from "date-fns";
 
-import { type GQLCreateInboxFolderMutation, type GQLCreateInboxFolderMutationVariables } from "./createInboxFolder.generated";
+import type { GQLCreateInboxFolderMutation, GQLCreateInboxFolderMutationVariables } from "./createInboxFolder.generated";
 
 export const createInboxFolder = async ({
     client,

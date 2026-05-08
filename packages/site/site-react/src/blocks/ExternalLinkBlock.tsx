@@ -1,12 +1,12 @@
 "use client";
 
-import { type AnchorHTMLAttributes, cloneElement, type MouseEventHandler, type ReactElement } from "react";
+import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type MouseEventHandler, type ReactElement } from "react";
 
-import { type ExternalLinkBlockData } from "../blocks.generated";
+import type { ExternalLinkBlockData } from "../blocks.generated";
 import { usePreview } from "../preview/usePreview";
 import { sendSitePreviewIFrameMessage } from "../sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 import { SitePreviewIFrameMessageType } from "../sitePreview/iframebridge/SitePreviewIFrameMessage";
-import { type PropsWithData } from "./PropsWithData";
+import type { PropsWithData } from "./PropsWithData";
 
 interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData>, Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
     children: ReactElement;
@@ -29,7 +29,11 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
         };
 
         if (legacyBehavior) {
-            return cloneElement(children, { ...anchorProps, href: "#", onClick });
+            return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+                ...anchorProps,
+                href: "#",
+                onClick,
+            });
         }
 
         return (
@@ -50,7 +54,11 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
         const target = openInNewWindow ? "_blank" : anchorProps.target;
 
         if (legacyBehavior) {
-            return cloneElement(children, { ...anchorProps, href, target });
+            return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
+                ...anchorProps,
+                href,
+                target,
+            });
         }
 
         return (

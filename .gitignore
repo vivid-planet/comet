@@ -16,6 +16,7 @@ junit.xml
 
 .claude
 .context
+.playwright-mcp
 
 # Agent files
 .agents/skills/

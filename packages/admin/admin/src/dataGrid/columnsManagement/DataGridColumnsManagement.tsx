@@ -12,7 +12,7 @@ import type { GridApiPro } from "@mui/x-data-grid-pro";
 import { type ChangeEvent, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { Body, Divider, List, ListHeader, Root } from "./DataGridColumnsManagement.sc";
 import { DataGridColumnsManagementListItem } from "./DataGridColumnsManagementListItem";
 

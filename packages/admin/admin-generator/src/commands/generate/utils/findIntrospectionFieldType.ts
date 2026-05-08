@@ -1,4 +1,4 @@
-import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
+import type { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
 export function findIntrospectionFieldType({
     name,
@@ -14,7 +14,9 @@ export function findIntrospectionFieldType({
         const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
             | IntrospectionObjectType
             | undefined;
-        if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
+        if (!introspectionObject) {
+            throw new Error(`didn't find object ${gqlType} in gql introspection`);
+        }
 
         const introspectionField = (introspectionObject as IntrospectionObjectType).fields.find((field) => field.name === namePart);
         introspectionFieldType = introspectionField

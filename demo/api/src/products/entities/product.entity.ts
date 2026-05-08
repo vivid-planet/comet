@@ -3,6 +3,7 @@ import {
     CrudField,
     CrudGenerator,
     DamImageBlock,
+    EntityInfo,
     FileUpload,
     ImportTargetInterface,
     RootBlock,
@@ -25,6 +26,7 @@ import {
     types,
 } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { DamFile } from "@src/dam/entities/dam-file.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { GraphQLLocalDate } from "graphql-scalars";
@@ -86,10 +88,11 @@ export class ProductPriceRange {
     max: number;
 }
 
+@EntityInfo<Product>({ name: "title", secondaryInformation: "manufacturer.name", visible: { status: { $eq: ProductStatus.Published } } })
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"], hooksService: ProductService })
+@CrudGenerator({ requiredPermission: ["products"], hooksService: ProductService })
 export class Product extends BaseEntity implements ImportTargetInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
@@ -235,4 +238,8 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @ManyToMany(() => FileUpload)
     @Field(() => [FileUpload])
     datasheets = new Collection<FileUpload>(this);
+
+    @ManyToMany(() => DamFile)
+    @Field(() => [DamFile])
+    relatedImages = new Collection<DamFile>(this);
 }

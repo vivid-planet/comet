@@ -45,11 +45,21 @@ describe("UserPermissionsGuard", () => {
         affectedScope?: AffectedScopeMeta;
     }) => {
         reflector.getAllAndOverride = jest.fn().mockImplementation((decorator: string) => {
-            if (decorator === REQUIRED_PERMISSION_METADATA_KEY) return annotations.requiredPermission;
-            if (decorator === AFFECTED_ENTITY_METADATA_KEY) return annotations.affectedEntities;
-            if (decorator === SCOPED_ENTITY_METADATA_KEY) return annotations.scopedEntity;
-            if (decorator === DISABLE_COMET_GUARDS_METADATA_KEY) return annotations.disableCometGuards;
-            if (decorator === AFFECTED_SCOPE_METADATA_KEY) return annotations.affectedScope;
+            if (decorator === REQUIRED_PERMISSION_METADATA_KEY) {
+                return annotations.requiredPermission;
+            }
+            if (decorator === AFFECTED_ENTITY_METADATA_KEY) {
+                return annotations.affectedEntities;
+            }
+            if (decorator === SCOPED_ENTITY_METADATA_KEY) {
+                return annotations.scopedEntity;
+            }
+            if (decorator === DISABLE_COMET_GUARDS_METADATA_KEY) {
+                return annotations.disableCometGuards;
+            }
+            if (decorator === AFFECTED_SCOPE_METADATA_KEY) {
+                return annotations.affectedScope;
+            }
             return false;
         });
     };

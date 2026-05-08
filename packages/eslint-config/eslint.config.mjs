@@ -47,7 +47,7 @@ export default defineConfig([
         // Rules
         rules: {
             "prefer-template": "error",
-            "no-console": ["error", { allow: ["warn", "error"] }],
+            "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
             "no-return-await": "error",
         },
     },

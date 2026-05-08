@@ -1,38 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type ApolloClient } from "@apollo/client";
-import { type GridColDef } from "@comet/admin";
-import { type IconName } from "@comet/admin-icons";
-import { type BlockInterface, type ContentScope, type FinalFormFileUploadProps } from "@comet/cms-admin";
+import { readFile, writeFile } from "node:fs/promises";
+
+import type { ApolloClient } from "@apollo/client";
+import type { GridColDef } from "@comet/admin";
+import type { IconName } from "@comet/admin-icons";
+import type { BlockInterface, ContentScope, FinalFormFileUploadProps } from "@comet/cms-admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
-import { type IconProps } from "@mui/material";
-import {
-    type GridCellParams,
-    type GridFilterItem,
-    type GridFilterOperator,
-    type GridRenderCellParams,
-    type GridSortDirection,
-    type GridValidRowModel,
+import type { IconProps } from "@mui/material";
+import type {
+    GridCellParams,
+    GridFilterItem,
+    GridFilterOperator,
+    GridRenderCellParams,
+    GridSortDirection,
+    GridValidRowModel,
 } from "@mui/x-data-grid";
-import { exec as execCallback } from "child_process";
 import { Command } from "commander";
-import { type FieldValidator, type FormApi } from "final-form";
+import type { FieldValidator, FormApi } from "final-form";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import type { ComponentType, ReactElement } from "react";
+import { format, resolveConfig } from "prettier";
+import type { ComponentType, JSX, ReactElement } from "react";
 import type { FormattedMessage, MessageDescriptor } from "react-intl";
-import { promisify } from "util";
 
 import { parseConfig } from "./config/parseConfig";
 import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
-import { type UsableFields, type UsableFormFields } from "./generateGrid/usableFields";
-import { type ColumnVisibleOption } from "./utils/columnVisibility";
+import type { UsableFields, UsableFormFields } from "./generateGrid/usableFields";
+import type { ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
-
-const exec = promisify(execCallback);
 
 export type FormattedMessageElement = ReactElement<MessageDescriptor, typeof FormattedMessage>;
 
@@ -324,6 +323,7 @@ export type GridConfig<T extends { __typename?: string }> = {
         deleteType?: "delete" | "remove";
         deleteText?: string;
     };
+    initialPageSize?: number;
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
@@ -355,13 +355,15 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
 
         console.log(`generating ${file}`);
 
-        const config = await parseConfig(file);
+        const config = await parseConfig(`${process.cwd()}/${file}`);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
 
         const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
-        if (!exportName) throw new Error("Can not determine exportName");
+        if (!exportName) {
+            throw new Error("Can not determine exportName");
+        }
 
         let generated: GeneratorReturn;
         if (config.type == "form") {
@@ -394,8 +396,14 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         console.log("");
     }
     if (writtenFiles.length > 0) {
-        console.log("Formatting generated files...");
-        await exec(`./node_modules/.bin/prettier --write ${writtenFiles.join(" ")}`);
+        console.log(`Formatting ${writtenFiles.length} generated files...`);
+        await Promise.all(
+            writtenFiles.map(async (filepath) => {
+                const [content, options] = await Promise.all([readFile(filepath, "utf-8"), resolveConfig(filepath)]);
+                const formatted = await format(content, { ...options, filepath });
+                await writeFile(filepath, formatted);
+            }),
+        );
     }
 }
 

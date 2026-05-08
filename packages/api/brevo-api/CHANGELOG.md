@@ -1,5 +1,83 @@
 # @comet/brevo-api
 
+## 9.0.0-beta.3
+
+### Major Changes
+
+- 77a371e: Prevent importing dev dependencies in the API
+
+    Add `import/no-extraneous-dependencies` rule with `devDependencies` restriction to the NestJS ESLint config, preventing accidental imports of dev-only packages in production source files. Dev dependencies may only be imported in test files.
+
+    Fix `@comet/brevo-api` to correctly declare `@nestjs/graphql`, `graphql`, `graphql-scalars`, `lodash.isequal`, and `uuid` as dependencies/peerDependencies instead of devDependencies, since they are imported in source code.
+
+### Minor Changes
+
+- dd51208: Update TypeScript compilation target to ES2023 and lib to ES2023 to match the required Node.js v22
+
+### Patch Changes
+
+- Updated dependencies [a50793a]
+- Updated dependencies [cac2b3b]
+- Updated dependencies [f6a2932]
+- Updated dependencies [71dce06]
+- Updated dependencies [0e7d7e9]
+- Updated dependencies [962a320]
+- Updated dependencies [802b0b8]
+- Updated dependencies [8bf0e5b]
+- Updated dependencies [2ea835c]
+- Updated dependencies [dd51208]
+- Updated dependencies [8722deb]
+    - @comet/cms-api@9.0.0-beta.3
+
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- ba83625: Remove `node-fetch` dependency from `EcgRtrListService` in favor of Node's native `fetch`
+- Updated dependencies [1ad7de3]
+    - @comet/cms-api@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [19a0528]
+- Updated dependencies [f162fa5]
+- Updated dependencies [3f3da52]
+- Updated dependencies [171c335]
+    - @comet/cms-api@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Patch Changes
+
+- @comet/cms-api@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- Updated dependencies [ed00704]
+    - @comet/cms-api@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- Updated dependencies [0eb28a7]
+    - @comet/cms-api@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [64b70bc]
+- Updated dependencies [e9c54bc]
+- Updated dependencies [ef98821]
+- Updated dependencies [b3bfe86]
+    - @comet/cms-api@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

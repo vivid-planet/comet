@@ -1,5 +1,83 @@
 # @comet/eslint-config
 
+## 9.0.0-beta.3
+
+### Major Changes
+
+- 23a09c2: Add `curly` ESLint rule to enforce braces for control statements
+
+    This rule requires braces around the body of all control statements (if, else, for, while, etc.) to improve code readability and reduce diff size when adding statements.
+
+- 1f903b6: Enable `@typescript-eslint/no-import-type-side-effects` rule
+- 77a371e: Prevent importing dev dependencies in the API
+
+    Add `import/no-extraneous-dependencies` rule with `devDependencies` restriction to the NestJS ESLint config, preventing accidental imports of dev-only packages in production source files. Dev dependencies may only be imported in test files.
+
+    Fix `@comet/brevo-api` to correctly declare `@nestjs/graphql`, `graphql`, `graphql-scalars`, `lodash.isequal`, and `uuid` as dependencies/peerDependencies instead of devDependencies, since they are imported in source code.
+
+### Patch Changes
+
+- c57e54e: Allow `console.info` and `console.debug` in the `no-console` ESLint rule
+    - @comet/eslint-plugin@9.0.0-beta.3
+
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Patch Changes
+
+- @comet/eslint-plugin@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- 4b1d586: Fix missing Rules of React in `@comet/eslint-config/nextjs.js`
+    - @comet/eslint-plugin@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- db6b83a: Prevent lib imports from `@comet/` packages
+
+    Use `no-restricted-imports` to prevent importing private files from `@comet/*/lib`. For example, the following import would be forbidden:
+
+    ```ts
+    import { something } from "@comet/admin/lib/some/private/file";
+    ```
+
+- 740dba8: Bump Next.js peer dependency to v16
+
+    Follow the official migration guides ([v15](https://nextjs.org/docs/app/guides/upgrading/version-15), [v16](https://nextjs.org/docs/app/guides/upgrading/version-16)) to upgrade.
+
+### Patch Changes
+
+- Updated dependencies [db6b83a]
+    - @comet/eslint-plugin@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.18.0
+
 ## 8.17.1
 
 ### Patch Changes

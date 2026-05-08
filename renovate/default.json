@@ -47,7 +47,8 @@
         },
         {
             "groupName": "Final Form",
-            "matchPackageNames": ["/final-form/", "/react-final-form/"]
+            "matchPackageNames": ["/final-form/", "/react-final-form/"],
+            "enabled": false
         },
         {
             "groupName": "React Router",

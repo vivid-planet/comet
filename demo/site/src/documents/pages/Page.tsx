@@ -1,16 +1,16 @@
 import { generateImageUrl, gql } from "@comet/site-nextjs";
 import { Breadcrumbs } from "@src/common/components/breadcrumbs/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/breadcrumbs/Breadcrumbs.fragment";
-import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import type { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import { type Metadata, type ResolvingMetadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { StageBlock } from "./blocks/StageBlock";
-import { type GQLPageQuery, type GQLPageQueryVariables } from "./Page.generated";
+import type { GQLPageQuery, GQLPageQueryVariables } from "./Page.generated";
 
 const pageQuery = gql`
     query Page($pageTreeNodeId: ID!) {
@@ -45,12 +45,16 @@ async function fetchData({ pageTreeNodeId, scope }: Props) {
         { method: "GET" }, //for request memoization
     );
 
-    if (!props.pageContent) throw new Error("Could not load page content");
+    if (!props.pageContent) {
+        throw new Error("Could not load page content");
+    }
     const document = props.pageContent.document;
     if (!document) {
         return null;
     }
-    if (document.__typename != "Page") throw new Error(`invalid document type, expected Page, got ${document.__typename}`);
+    if (document.__typename != "Page") {
+        throw new Error(`invalid document type, expected Page, got ${document.__typename}`);
+    }
 
     return {
         ...props,
@@ -93,7 +97,9 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
             canonical: canonicalUrl,
             languages: document.seo.alternativeLinks.reduce(
                 (acc, link) => {
-                    if (link.code && link.url) acc[link.code] = link.url;
+                    if (link.code && link.url) {
+                        acc[link.code] = link.url;
+                    }
                     return acc;
                 },
                 { [scope.language]: canonicalUrl } as Record<string, string>,
@@ -111,7 +117,9 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
         // no document attached to page
         notFound(); //no return needed
     }
-    if (document.__typename != "Page") throw new Error(`invalid document type`);
+    if (document.__typename != "Page") {
+        throw new Error(`invalid document type`);
+    }
 
     [document.content, document.seo, document.stage] = await Promise.all([
         recursivelyLoadBlockData({

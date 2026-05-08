@@ -1,4 +1,5 @@
 import nextjsConfig, { restrictedImportPaths as baseRestrictedImportPaths } from "../nextjs.js";
+import { restrictedImportPatterns } from "../core.js";
 
 export const restrictedImportPaths = [
     ...baseRestrictedImportPaths,
@@ -17,6 +18,7 @@ const config = [
                 "error",
                 {
                     paths: restrictedImportPaths,
+                    patterns: restrictedImportPatterns,
                 },
             ],
         },

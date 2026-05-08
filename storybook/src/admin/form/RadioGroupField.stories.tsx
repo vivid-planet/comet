@@ -1,5 +1,5 @@
 import { Alert, FieldSet, FinalForm, RadioGroupField, type RadioGroupFieldProps } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof RadioGroupField>;
 const config: Meta<typeof RadioGroupField> = {

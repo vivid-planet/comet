@@ -1,5 +1,5 @@
 import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
 import { generateInputHandling } from "../../generateCrud/generate-crud";
@@ -65,9 +65,11 @@ describe("nested two level", () => {
     //Foo -> Bar -> Baz
     //foo.bars[].bazs[]
     it("input dto should reference the correct import", async () => {
-        const out = await generateCrudInput({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("Foo"));
+        const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("Foo"));
         const fooInputDto = out.find((f) => f.name == "dto/foo.input.ts");
-        if (!fooInputDto) throw new Error();
+        if (!fooInputDto) {
+            throw new Error();
+        }
 
         expect(fooInputDto.content).toContain(`bars: FooNestedBarInput[];`);
         expect(fooInputDto.content).toContain(`import { FooNestedBarInput } from "./foo-nested-bar.input";`);
@@ -80,7 +82,8 @@ describe("nested two level", () => {
                 assignEntityCode: `const foo = this.entityManager.create(Foo, {`,
             },
             orm.em.getMetadata().get("Foo"),
-            { targetDirectory: __dirname, requiredPermission: testPermission },
+            { requiredPermission: testPermission },
+            __dirname,
         );
         expect(imports.map((i) => i.name)).toEqual(["Bar", "Baz"]);
         expect(code).toMatchSnapshot();
@@ -93,7 +96,8 @@ describe("nested two level", () => {
                 assignEntityCode: `foo.assign({`,
             },
             orm.em.getMetadata().get("Foo"),
-            { targetDirectory: __dirname, requiredPermission: testPermission },
+            { requiredPermission: testPermission },
+            __dirname,
         );
         expect(imports.map((i) => i.name)).toEqual(["Bar", "Baz"]);
         expect(code).toMatchSnapshot();

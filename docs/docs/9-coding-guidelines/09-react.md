@@ -5,6 +5,7 @@ sidebar_position: -5
 
 ## General
 
+- Follow the best practices described in the [official React documentation](https://react.dev/).
 - Prefer Function Components over Class Components.
 - Create one file per "logical component." Multiple Function Components per file are allowed for structuring, styling, etc.
 - Always use JSX (use React's `createElement` only for app initialization).
@@ -228,7 +229,7 @@ It is important that the SVG file contains an `id`, which is then referenced via
 
 ```tsx
 <svg>
-    <use xlinkHref="/icon.svg#custom-id"></use>
+    <use href="/icon.svg#custom-id"></use>
 </svg>
 ```
 
@@ -467,5 +468,6 @@ the child component is not directly affected by changes in the parent query, for
 
 ## Further reading / sources:
 
+- [React documentation](https://react.dev/)
 - [Hello World - React](https://legacy.reactjs.org/docs/hello-world.html)
 - [TypeScript and React](https://fettblog.eu/typescript-react/)

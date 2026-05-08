@@ -1,4 +1,4 @@
-import { type ErrorInfo } from "react";
+import type { ErrorInfo } from "react";
 import { render } from "test-utils";
 import { afterEach, describe, expect, test, vi } from "vitest";
 

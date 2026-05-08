@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { type DamFileDetails } from "../EditFile";
+import type { DamFileDetails } from "../EditFile";
 import { type GQLVideoPreviewCaptionsQuery, type GQLVideoPreviewCaptionsQueryVariables, namedOperations } from "./VideoPreview.generated";
 
 const VideoPreviewWrapper = styled("div")`

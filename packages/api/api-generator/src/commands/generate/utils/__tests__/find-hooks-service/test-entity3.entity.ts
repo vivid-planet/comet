@@ -7,7 +7,6 @@ import { TestEntity3Service } from "./test-entity3.service";
 
 @Entity()
 @CrudGenerator({
-    targetDirectory: __dirname,
     requiredPermission: testPermission,
     hooksService: TestEntity3Service,
 })

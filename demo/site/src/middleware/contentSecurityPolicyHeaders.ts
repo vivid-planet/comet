@@ -1,6 +1,6 @@
-import { type NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
-import { type CustomMiddleware } from "./chain";
+import type { CustomMiddleware } from "./chain";
 
 type ContentSecurityPolicyDirective = {
     directive: string;

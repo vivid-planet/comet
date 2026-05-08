@@ -10,7 +10,8 @@ const RequestQueryValidationSchema = z.object({
     content: z.object({ blocks: z.array(z.any()) }),
 });
 
-export async function POST(request: Request, { params: { domain, language } }: { params: { domain: string; language: string } }) {
+export async function POST(request: Request, context: RouteContext<"/[visibility]/[domain]/[language]/render-brevo-email-campaign">) {
+    const { domain, language } = await context.params;
     const requestBody = await request.json();
     const validationResult = RequestQueryValidationSchema.safeParse(requestBody);
 

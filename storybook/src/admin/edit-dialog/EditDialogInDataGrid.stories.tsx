@@ -2,7 +2,7 @@ import { Button, DataGridToolbar, FillSpace, FinalForm, MainContent, useDataGrid
 import { Add as AddIcon } from "@comet/admin-icons";
 import { DialogContent, TextField } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { useLocation } from "react-router";
 
@@ -64,6 +64,7 @@ export const EditDialogInDataGrid = {
                             ),
                         } as ToolbarProps,
                     }}
+                    showToolbar
                 />
                 <EditDialog>
                     <DialogContent>

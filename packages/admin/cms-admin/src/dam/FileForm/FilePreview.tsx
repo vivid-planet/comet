@@ -1,23 +1,22 @@
 import { useApolloClient } from "@apollo/client";
-import { Button, useStackApi } from "@comet/admin";
+import { Button, downloadFile, useStackApi } from "@comet/admin";
 import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import saveAs from "file-saver";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { type DamFileDetails } from "./EditFile";
+import type { DamFileDetails } from "./EditFile";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
-import {
-    type GQLArchiveFileMutation,
-    type GQLArchiveFileMutationVariables,
-    type GQLDeleteDamFileMutation,
-    type GQLDeleteDamFileMutationVariables,
-    type GQLRestoreFileMutation,
-    type GQLRestoreFileMutationVariables,
+import type {
+    GQLArchiveFileMutation,
+    GQLArchiveFileMutationVariables,
+    GQLDeleteDamFileMutation,
+    GQLDeleteDamFileMutationVariables,
+    GQLRestoreFileMutation,
+    GQLRestoreFileMutationVariables,
 } from "./FilePreview.gql.generated";
 import { AudioPreview } from "./previews/AudioPreview";
 import { DefaultFilePreview } from "./previews/DefaultFilePreview";
@@ -81,7 +80,7 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                     variant="textLight"
                     startIcon={<Download />}
                     onClick={() => {
-                        saveAs(file.fileUrl, file.name);
+                        downloadFile(file.fileUrl, file.name);
                     }}
                 >
                     <FormattedMessage id="comet.dam.file.downloadFile" defaultMessage="Download File" />

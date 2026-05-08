@@ -1,5 +1,5 @@
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
 import { formatSource, testPermission } from "../../utils/test-helper";
@@ -52,10 +52,7 @@ describe("GenerateCrudInputJsonImport", () => {
             }),
         );
 
-        const out = await generateCrudInput(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntityWithJsonObject1"),
-        );
+        const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithJsonObject1"));
         const formattedOut = await formatSource(out[0].content);
 
         expect(formattedOut).toMatchSnapshot();
@@ -72,10 +69,7 @@ describe("GenerateCrudInputJsonImport", () => {
             }),
         );
 
-        const out = await generateCrudInput(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntityWithJsonObject1"),
-        );
+        const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithJsonObject1"));
         const formattedOut = await formatSource(out[0].content);
 
         expect(formattedOut).toMatchSnapshot();
@@ -93,10 +87,7 @@ describe("GenerateCrudInputJsonImport", () => {
             }),
         );
 
-        const out = await generateCrudInput(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntityWithJsonType1"),
-        );
+        const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithJsonType1"));
         const formattedOut = await formatSource(out[0].content);
 
         expect(formattedOut).toMatchSnapshot();
@@ -114,10 +105,7 @@ describe("GenerateCrudInputJsonImport", () => {
             }),
         );
 
-        const out = await generateCrudInput(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntityWithJsonType2"),
-        );
+        const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithJsonType2"));
         const formattedOut = await formatSource(out[0].content);
 
         expect(formattedOut).toMatchSnapshot();

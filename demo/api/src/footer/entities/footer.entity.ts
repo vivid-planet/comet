@@ -9,7 +9,7 @@ import { FooterScope } from "../dto/footer-scope";
 @Entity()
 @ObjectType()
 @RootBlockEntity()
-@CrudSingleGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["pageTree"] })
+@CrudSingleGenerator({ requiredPermission: ["pageTree"] })
 export class Footer extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 

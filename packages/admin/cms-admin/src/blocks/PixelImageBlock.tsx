@@ -2,11 +2,11 @@ import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Crop } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
+import { deepClone } from "@mui/x-data-grid/internals";
 import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type PixelImageBlockData, type PixelImageBlockInput } from "../blocks.generated";
+import type { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
 import { useCometConfig } from "../config/CometConfigContext";
 import { useDamBasePath } from "../dam/config/damConfig";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
@@ -15,7 +15,7 @@ import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { EditImageDialog } from "./image/EditImageDialog";
-import { type GQLImageBlockDamFileQuery, type GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
+import type { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
 import { BlockCategory, type BlockDependency, type BlockInterface } from "./types";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;
@@ -24,7 +24,9 @@ function createPreviewUrl(
     { damFile, cropArea }: ImageBlockState,
     { apiUrl, damBasePath, resize }: { apiUrl: string; resize?: { width: number; height: number }; damBasePath: string },
 ): string {
-    if (!damFile || !damFile.image) return "";
+    if (!damFile || !damFile.image) {
+        return "";
+    }
 
     const urlTemplateRoute = `/${damBasePath}/images/preview/$fileId/crop:$crop/resize:$resizeWidth:$resizeHeight/$fileName`;
     const imageCropArea = cropArea ? cropArea : damFile.image.cropArea;
@@ -234,8 +236,12 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     extractTextContents: (state) => {
         const contents = [];
 
-        if (state.damFile?.altText) contents.push(state.damFile.altText);
-        if (state.damFile?.title) contents.push(state.damFile.title);
+        if (state.damFile?.altText) {
+            contents.push(state.damFile.altText);
+        }
+        if (state.damFile?.title) {
+            contents.push(state.damFile.title);
+        }
 
         return contents;
     },

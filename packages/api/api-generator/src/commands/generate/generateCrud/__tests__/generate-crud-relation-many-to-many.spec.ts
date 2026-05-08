@@ -11,7 +11,7 @@ import {
     Ref,
     types,
 } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
@@ -65,12 +65,14 @@ describe("GenerateCrud Relation n:m with additional column", () => {
         );
 
         const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: testPermission, create: false, update: true, delete: false },
+            { requiredPermission: testPermission, create: false, update: true, delete: false },
             orm.em.getMetadata().get("Product"),
         );
         const formattedOut = await formatGeneratedFiles(out);
         const foundFile = formattedOut.find((file) => file.name === "product.resolver.ts");
-        if (!foundFile) throw new Error("File not found");
+        if (!foundFile) {
+            throw new Error("File not found");
+        }
 
         file = foundFile;
     });
