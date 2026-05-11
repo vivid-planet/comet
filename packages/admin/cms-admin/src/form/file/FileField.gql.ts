@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 
+import { pixelImageBlockFragment } from "../../blocks/PixelImageBlock.fragment";
 import { damFileThumbnailFragment } from "../../dam/DataGrid/thumbnail/DamThumbnail";
 
 export const damFileFieldFragment = gql`
@@ -14,19 +15,12 @@ export const damFileFieldFragment = gql`
         archived
         image {
             ...DamFileThumbnail
-            width
-            height
-            cropArea {
-                focalPoint
-                width
-                height
-                x
-                y
-            }
+            ...PixelImageBlockImage
         }
         fileUrl
     }
     ${damFileThumbnailFragment}
+    ${pixelImageBlockFragment}
 `;
 
 export const damFileFieldFileQuery = gql`

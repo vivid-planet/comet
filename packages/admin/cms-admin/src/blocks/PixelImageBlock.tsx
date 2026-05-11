@@ -15,6 +15,7 @@ import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { EditImageDialog } from "./image/EditImageDialog";
+import { pixelImageBlockFragment } from "./PixelImageBlock.fragment";
 import { type GQLImageBlockDamFileQuery, type GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
 import { BlockCategory, type BlockDependency, type BlockInterface } from "./types";
 
@@ -94,19 +95,12 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                         altText
                         archived
                         image {
-                            width
-                            height
-                            cropArea {
-                                focalPoint
-                                width
-                                height
-                                x
-                                y
-                            }
+                            ...PixelImageBlockImage
                         }
                         fileUrl
                     }
                 }
+                ${pixelImageBlockFragment}
             `,
             variables: { id: output.damFileId },
         });
