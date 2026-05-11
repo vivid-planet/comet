@@ -145,6 +145,9 @@ export const Stack = (props: PropsWithChildren<StackProps>) => {
     useEffect(() => {
         // execute on location change, set locationUrl for the last breadcrumb to the current location
         setBreadcrumbs((old) => {
+            if (old.length === 0) {
+                return old;
+            }
             const sorted = sortByParentId(old);
             sorted[sorted.length - 1].locationUrl = location.pathname + location.search; // modify object in place
             return [...old]; // clone (with modified object) to new array to trigger a state update
