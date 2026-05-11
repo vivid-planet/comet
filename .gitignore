@@ -15,6 +15,7 @@ junit.xml
 *storybook.log
 
 .context
+.playwright
 .playwright-mcp
 
 # Agent files
