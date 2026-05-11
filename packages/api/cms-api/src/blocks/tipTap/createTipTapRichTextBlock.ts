@@ -90,6 +90,7 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockSty
             blockquote: false,
             code: false,
             codeBlock: false,
+            link: false,
         }),
         ...(hasBlockStyles ? [BlockStyleParagraph] : []),
         ...(hasBlockStyles && supports.includes("heading") ? [BlockStyleHeading] : []),
