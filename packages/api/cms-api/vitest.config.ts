@@ -10,21 +10,7 @@ export default defineConfig({
             graphql: "graphql/index.js",
         },
     },
-    plugins: [
-        swc.vite({
-            jsc: {
-                parser: {
-                    syntax: "typescript",
-                    decorators: true,
-                },
-                transform: {
-                    legacyDecorator: true,
-                    decoratorMetadata: true,
-                },
-                target: "es2023",
-            },
-        }),
-    ],
+    plugins: [swc.vite()],
     test: {
         environment: "node",
         setupFiles: ["./vitest.setup.ts"],
