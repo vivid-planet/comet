@@ -90,9 +90,6 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockSty
             blockquote: false,
             code: false,
             codeBlock: false,
-            // Disable StarterKit's built-in Link to avoid duplicate 'link' extension when CmsLink is used.
-            // StarterKit includes Link by default since @tiptap/starter-kit v3:
-            // https://github.com/ueberdosis/tiptap/blob/5b1b271d649a9945bb694c4e3e1f2c437a85a9d8/packages/starter-kit/src/starter-kit.ts#L206-L208
             link: false,
         }),
         ...(hasBlockStyles ? [BlockStyleParagraph] : []),
