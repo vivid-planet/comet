@@ -50,6 +50,8 @@ export {
     type ImageDimensions,
     type IReadyIFrameMessage,
     isWithPreviewPropsData,
+    JsonLd,
+    type JsonLdProps,
     ListBlock,
     OneOfBlock,
     OptionalBlock,
