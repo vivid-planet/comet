@@ -80,6 +80,8 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
+export type { TipTapBlockStyle, TipTapBlockType } from "./blocks/tipTap/createTipTapRichTextBlock";
+export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
 export type {
     BlockAdminComponent,
     BlockAdminComponentPart,
@@ -167,7 +169,9 @@ export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionPr
 export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
 /** @deprecated Use `ChooseDamFileDialog` instead. */
 export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
-export { FileField } from "./form/file/FileField";
+export { ChooseDamFilesDialog } from "./form/file/chooseFile/ChooseDamFilesDialog";
+export { FileField, type GQLDamFileFieldFileFragment } from "./form/file/FileField";
+export { damFileFieldFragment } from "./form/file/FileField.gql";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {
     FinalFormFileUpload,

@@ -1,7 +1,7 @@
 import { ArrowRight } from "@comet/admin-icons";
 import { Box, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button } from "../../common/buttons/Button";
 import { Alert } from "../Alert";

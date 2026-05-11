@@ -18,7 +18,11 @@
             "import": "./lib/index.js"
         },
         "./css": "./lib/style.css",
-        "./webpackPersistedQueriesLoader": "./lib/site-react/lib/persistedQueries/webpackPersistedQueriesLoader.js"
+        "./server": {
+            "types": "./lib/server.d.ts",
+            "import": "./lib/server.js"
+        },
+        "./webpackPersistedQueriesLoader": "./lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
     "files": [
         "lib/*"
@@ -64,7 +68,7 @@
         "rollup-plugin-preserve-directives": "^0.4.0",
         "sass": "^1.89.2",
         "typescript": "^5.9.3",
-        "vite": "^5.4.21",
+        "vite": "^7.2.4",
         "vite-plugin-dts": "^4.5.4",
         "vitest": "^4.0.16"
     },

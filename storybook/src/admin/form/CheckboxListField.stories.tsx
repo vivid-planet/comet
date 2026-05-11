@@ -1,5 +1,5 @@
 import { Alert, CheckboxListField, type CheckboxListFieldProps, FieldSet, FinalForm } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof CheckboxListField>;
 const config: Meta<typeof CheckboxListField> = {

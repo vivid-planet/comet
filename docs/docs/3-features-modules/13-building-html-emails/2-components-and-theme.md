@@ -145,6 +145,8 @@ function WelcomeEmail() {
 
 When no `theme` prop is provided, `MjmlMailRoot` uses the default theme (equivalent to `createTheme()` with no arguments).
 
+`MjmlMailRoot` also accepts an optional `config` prop that can be used to expose, e.g., environment-specific values to descendants via `useConfig`. See [Configuration](./4-customization.md#configuration).
+
 ### What MjmlMailRoot Configures
 
 From the theme, `MjmlMailRoot` automatically sets:
@@ -154,6 +156,13 @@ From the theme, `MjmlMailRoot` automatically sets:
 - **MJML breakpoint** — from `theme.breakpoints.mobile`, controlling when columns stack vertically
 - **Base font family** — from `theme.text.fontFamily`
 - **Zero default padding** — so components start with no padding
+
+### Extending `<MjmlHead>` and `<MjmlAttributes>`
+
+Two optional slot props let consumers contribute content the theme can't express:
+
+- `head` — `ReactNode` appended inside `<MjmlHead>` after the registered styles block (e.g. `<MjmlFont>`, `<MjmlConditionalComment>`, `<MjmlPreview>`)
+- `attributes` — `ReactNode` appended inside `<MjmlAttributes>` after the default `<MjmlAll>` (e.g. `<MjmlClass>` or per-element defaults)
 
 ## MjmlSection
 
