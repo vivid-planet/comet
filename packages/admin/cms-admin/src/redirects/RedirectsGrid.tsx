@@ -256,7 +256,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             />
             <DeleteDialog
                 dialogOpen={deleteDialogOpen}
-                selectedCount={selectedIds.length}
+                deleteCount={selectedIds.length}
                 onDelete={handleDeleteConfirm}
                 onCancel={() => setDeleteDialogOpen(false)}
             />
