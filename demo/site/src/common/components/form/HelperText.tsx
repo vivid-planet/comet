@@ -11,7 +11,7 @@ type HelperTextProps = {
 
 export const HelperText: React.FC<HelperTextProps> = ({ children, id, className }) => {
     return (
-        <div id={id} className={clsx(styles.helperText, className)}>
+        <div id={id} className={clsx(styles.root, className)}>
             {children}
         </div>
     );
