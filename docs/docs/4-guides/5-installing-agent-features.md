@@ -124,7 +124,7 @@ Items are installed into:
 
 | Directory               | Content | Used by                                      |
 | ----------------------- | ------- | -------------------------------------------- |
-| `.agents/skills/`       | Skills  | Cloud agents (e.g. GitHub Copilot Workspace) |
+| `.agents/skills/`       | Skills  | Most agents |
 | `.claude/skills/`       | Skills  | Claude Code                                  |
 | `.agents/rules/`        | Rules   | Cloud agents                                 |
 | `.claude/rules/`        | Rules   | Claude Code                                  |
