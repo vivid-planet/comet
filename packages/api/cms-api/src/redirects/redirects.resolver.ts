@@ -270,6 +270,9 @@ export function createRedirectsResolver({
         @Mutation(() => Boolean)
         async deleteRedirects(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<boolean> {
             const entities = await this.repository.find({ id: { $in: ids } });
+            if (entities.length !== ids.length) {
+                throw new Error("Couldn't find all redirects that were passed as input");
+            }
             await this.entityManager.removeAndFlush(entities);
             return true;
         }
