@@ -1,4 +1,5 @@
 import { validate } from "class-validator";
+import { describe, expect, it } from "vitest";
 
 import { ExternalLinkBlock } from "../ExternalLinkBlock";
 import { createLinkBlock } from "../factories/createLinkBlock";
