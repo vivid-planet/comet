@@ -14,6 +14,15 @@ export const damFileFieldFragment = gql`
         archived
         image {
             ...DamFileThumbnail
+            width
+            height
+            cropArea {
+                focalPoint
+                width
+                height
+                x
+                y
+            }
         }
         fileUrl
     }
