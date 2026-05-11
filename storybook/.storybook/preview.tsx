@@ -10,8 +10,8 @@ import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
 
-if (typeof process !== "undefined" && process.env.MUI_LICENSE_KEY) {
-    LicenseInfo.setLicenseKey(process.env.MUI_LICENSE_KEY);
+if (import.meta.env.MUI_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(import.meta.env.MUI_LICENSE_KEY);
 }
 
 export const globalTypes: GlobalTypes = {
