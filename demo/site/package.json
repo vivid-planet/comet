@@ -31,6 +31,7 @@
         "serve": "NODE_ENV=production node dist/server.js"
     },
     "dependencies": {
+        "@base-ui/react": "^1.4.1",
         "@comet/mail-react": "workspace:*",
         "@comet/site-nextjs": "workspace:*",
         "@formatjs/cli": "^6.7.2",
