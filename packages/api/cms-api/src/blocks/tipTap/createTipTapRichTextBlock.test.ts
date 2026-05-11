@@ -551,4 +551,66 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(1);
         });
     });
+
+    describe("maxBlocks option", () => {
+        const block = createTipTapRichTextBlock({ maxBlocks: 2 }, "TestMaxBlocks");
+
+        it("should accept content within maxBlocks limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "First" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Second" }] },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept content with fewer blocks than maxBlocks", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [{ type: "paragraph", content: [{ type: "text", text: "Only one" }] }],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should reject content exceeding maxBlocks limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "First" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Second" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Third" }] },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+            expect(errors[0].property).toBe("tipTapContent");
+        });
+
+        it("should reject content with many blocks exceeding limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "1" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "2" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "3" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "4" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "5" }] },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+    });
 });

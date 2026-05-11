@@ -1,5 +1,6 @@
 import { greyPalette } from "@comet/admin";
 import { Box } from "@mui/material";
+import { Extension } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
@@ -74,6 +75,11 @@ interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
     link?: BlockInterface & LinkBlockInterface;
+    /**
+     * Limits the maximum number of top-level blocks (paragraphs, headings, lists)
+     * that can be created in the editor.
+     */
+    maxBlocks?: number;
 }
 
 function getPlainTextFromContent(content: JSONContent): string {
@@ -90,6 +96,28 @@ function getPlainTextFromContent(content: JSONContent): string {
 }
 
 const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
+
+const createMaxBlocksExtension = (maxBlocks: number) =>
+    Extension.create({
+        name: "maxBlocks",
+        addKeyboardShortcuts() {
+            return {
+                Enter: ({ editor }) => {
+                    if (editor.state.doc.childCount >= maxBlocks) {
+                        // Only block Enter when it would create a new block (not inside a list, etc.)
+                        const { $from } = editor.state.selection;
+                        const isAtEndOfBlock = $from.parentOffset === $from.parent.content.size;
+                        const parentDepth = $from.depth;
+                        // If at end of a top-level block (depth 1) or would split a top-level block
+                        if (parentDepth === 1 && isAtEndOfBlock) {
+                            return true; // prevent
+                        }
+                    }
+                    return false;
+                },
+            };
+        },
+    });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
@@ -145,12 +173,14 @@ const TipTapEditor = ({
     supports,
     blockStyles,
     linkBlock,
+    maxBlocks,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    maxBlocks?: number;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
@@ -177,9 +207,24 @@ const TipTapEditor = ({
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasLink ? [CmsLink] : []),
+            ...(maxBlocks !== undefined ? [createMaxBlocksExtension(maxBlocks)] : []),
         ],
         content: state.tipTapContent,
         onUpdate: ({ editor }) => {
+            if (maxBlocks !== undefined && editor.state.doc.childCount > maxBlocks) {
+                // Remove excess blocks (e.g. from paste)
+                const { tr } = editor.state;
+                const doc = editor.state.doc;
+                // Find position after the maxBlocks-th child
+                let pos = 0;
+                for (let i = 0; i < maxBlocks; i++) {
+                    pos += doc.child(i).nodeSize;
+                }
+                // Delete from pos to end of document
+                tr.delete(pos + 1, doc.content.size + 1);
+                editor.view.dispatch(tr);
+                return;
+            }
             updateState({ tipTapContent: editor.getJSON() });
         },
     });
@@ -209,6 +254,7 @@ export const createTipTapRichTextBlock = (
     let supports = options?.supports ?? defaultSupports;
     const blockStyles = options?.blockStyles ?? [];
     const linkBlock = options?.link;
+    const maxBlocks = options?.maxBlocks;
 
     // Auto-enable link support when a link block is provided
     if (linkBlock && !supports.includes("link")) {
@@ -262,7 +308,16 @@ export const createTipTapRichTextBlock = (
         },
 
         AdminComponent: ({ state, updateState }) => {
-            return <TipTapEditor state={state} updateState={updateState} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />;
+            return (
+                <TipTapEditor
+                    state={state}
+                    updateState={updateState}
+                    supports={supports}
+                    blockStyles={blockStyles}
+                    linkBlock={linkBlock}
+                    maxBlocks={maxBlocks}
+                />
+            );
         },
 
         previewContent: (state) => {
