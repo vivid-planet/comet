@@ -12,7 +12,7 @@ type ErrorTextProps = {
 
 export const ErrorText: React.FC<ErrorTextProps> = ({ children, id, className }) => {
     return (
-        <div id={id} className={clsx(styles.errorWrapper, className)}>
+        <div id={id} className={clsx(styles.root, className)}>
             <SvgUse href="/assets/icons/error.svg#root" width={16} height={16} />
             {children}
         </div>
