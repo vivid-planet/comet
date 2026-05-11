@@ -480,6 +480,7 @@ export function generateInputHandling(
             if (!targetMeta) {
                 throw new Error("targetMeta is not set for relation");
             }
+            imports.push(generateEntityImport(targetMeta, targetDirectory));
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
