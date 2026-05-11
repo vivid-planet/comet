@@ -29,6 +29,7 @@ import {
     selectClasses,
     type SvgIconProps,
 } from "@mui/material";
+import { grey as muiGreyPalette } from "@mui/material/colors";
 import { type Editor, useEditorState } from "@tiptap/react";
 import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type RefAttributes, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -48,13 +49,13 @@ const toolbarButtonSx = {
     border: "1px solid transparent",
     boxSizing: "border-box",
     transition: "background-color 200ms, border-color 200ms, color 200ms",
-    color: greyPalette[600],
+    color: muiGreyPalette[600],
     "&:hover": {
-        backgroundColor: greyPalette[200],
-        borderColor: greyPalette[400],
+        backgroundColor: muiGreyPalette[200],
+        borderColor: muiGreyPalette[400],
     },
     "&:disabled": {
-        color: greyPalette[300],
+        color: muiGreyPalette[300],
         "&, &:hover": {
             backgroundColor: "transparent",
             borderColor: "transparent",
@@ -64,7 +65,7 @@ const toolbarButtonSx = {
 
 const toolbarButtonSelectedSx = {
     "&:not(:disabled), &:not(:disabled):hover": {
-        borderColor: greyPalette[400],
+        borderColor: muiGreyPalette[400],
         backgroundColor: "white",
     },
 } as const;
@@ -113,7 +114,7 @@ const toolbarSlotSx = {
     py: "5px",
     pr: "6px",
     mr: "5px",
-    borderRight: `1px solid ${greyPalette[300]}`,
+    borderRight: `1px solid ${greyPalette[100]}`,
     "&:last-child": {
         mr: 0,
         pr: 0,
@@ -136,7 +137,7 @@ const selectFormControlSx = {
 const selectSx = {
     [`& .${selectClasses.select}.${inputBaseClasses.input}`]: {
         minHeight: 0,
-        color: greyPalette[600],
+        color: muiGreyPalette[600],
         minWidth: 180,
         lineHeight: "24px",
         fontSize: 14,
@@ -249,7 +250,7 @@ export const TipTapToolbar = ({
                 display: "flex",
                 flexWrap: "wrap",
                 borderTop: `1px solid ${greyPalette[100]}`,
-                backgroundColor: greyPalette[100],
+                backgroundColor: muiGreyPalette[100],
                 px: "6px",
             }}
         >
