@@ -48,11 +48,15 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
         {
             name: "highlight",
             label: <FormattedMessage id="tipTapRichTextBlock.inlineStyle.highlight" defaultMessage="Highlight" />,
+            element: (props: HTMLAttributes<HTMLElement>) => <span style={{ backgroundColor: "#fff3cd", padding: "0 2px" }} {...props} />,
         },
         {
             name: "tag",
             label: <FormattedMessage id="tipTapRichTextBlock.inlineStyle.tag" defaultMessage="Tag" />,
             appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => (
+                <span style={{ backgroundColor: "#e0f0ff", color: "#0066cc", padding: "0 4px", borderRadius: 4 }} {...props} />
+            ),
         },
     ],
 });
