@@ -6,9 +6,6 @@ import { GraphQLResolveInfo } from "graphql";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
-import { ProductColor } from "../entities/product-color.entity";
-import { ProductToTag } from "../entities/product-to-tag.entity";
-import { ProductStatistics } from "../entities/product-statistics.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
 import {
@@ -24,8 +21,11 @@ import {
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
 } from "@comet/cms-api";
-import { ProductVariant } from "../entities/product-variant.entity";
+import { ProductColor } from "../entities/product-color.entity";
+import { ProductToTag } from "../entities/product-to-tag.entity";
 import { ProductTag } from "../entities/product-tag.entity";
+import { ProductStatistics } from "../entities/product-statistics.entity";
+import { ProductVariant } from "../entities/product-variant.entity";
 import { DamFile } from "../../dam/entities/dam-file.entity";
 import { Product } from "../entities/product.entity";
 import { ProductService } from "../product.service";
