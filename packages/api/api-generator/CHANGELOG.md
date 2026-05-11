@@ -1,5 +1,16 @@
 # @comet/api-generator
 
+## 8.23.1
+
+### Patch Changes
+
+- 56a5883: Fix missing import for nested `ManyToOne` resolver target entities
+
+    `@comet/api-generator` now imports nested `ManyToOne` target entities in generated resolvers so generated code compiles without unresolved symbol errors.
+
+- Updated dependencies [662eb98]
+    - @comet/cms-api@8.23.1
+
 ## 8.23.0
 
 ### Patch Changes
