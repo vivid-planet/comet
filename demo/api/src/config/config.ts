@@ -85,8 +85,8 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         },
         mailer: {
             defaultFrom: '"Comet Demo" <comet-demo@comet-dxp.com>',
-            sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
-            sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
+            redirectAllMailsTo: envVars.MAILER_REDIRECT_ALL_MAILS_TO,
+            bccAllMailsTo: envVars.MAILER_BCC_ALL_MAILS_TO,
 
             daysToKeepMailLog: 90,
 

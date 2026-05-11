@@ -38,23 +38,23 @@ export class MailerService {
             textMail = htmlToText(originMailOptions.html);
         }
 
+        const bccAllMailsTo = this.mailerConfig.bccAllMailsTo ?? this.mailerConfig.sendAllMailsBcc;
+
         return {
             ...originMailOptions,
             text: textMail,
             from: originMailOptions.from || this.mailerConfig.defaultFrom,
-            bcc: this.mailerConfig.sendAllMailsBcc
-                ? [...this.normalizeToArray(originMailOptions.bcc), ...this.mailerConfig.sendAllMailsBcc]
-                : originMailOptions.bcc,
+            bcc: bccAllMailsTo ? [...this.normalizeToArray(originMailOptions.bcc), ...bccAllMailsTo] : originMailOptions.bcc,
         };
     }
 
     /**
      * Sends a mail and logs it in the database.
-     * If mailerConfig.sendAllMailsTo is set, the mail will be sent to this address instead of the `to` address and `bcc` will be omitted. This can
+     * If mailerConfig.redirectAllMailsTo is set, the mail will be sent to that address instead, and `cc` and `bcc` will be omitted. This can
      * be used to prevent non-prod environments from sending mails to real customers.
      * @param mailTypeForLogging Mail type, e.g. order confirmation, order cancellation, etc. to filter in the mailer log
      * @param additionalData Put your additional data here, e.g. orderId, resourcePoolId, etc.
-     * @param originMailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
+     * @param originMailOptions `from` defaults to this.config.mailer.defaultFrom; `bccAllMailsTo` is added to `bcc` unless `redirectAllMailsTo` is set.
      * @param logMail When set to false, the email will not be logged to the database.
      */
     async sendMail({ mailTypeForLogging, additionalData, logMail = true, ...originMailOptions }: SendMailParams): Promise<Mail> {
@@ -76,8 +76,9 @@ export class MailerService {
         }
 
         // this is needed because only on production stage we are allowed to send mails to customers
-        const mailOptions: MailOptions = this.mailerConfig.sendAllMailsTo
-            ? { ...mailOptionsWithDefaults, to: this.mailerConfig.sendAllMailsTo, cc: undefined, bcc: undefined }
+        const redirectAllMailsTo = this.mailerConfig.redirectAllMailsTo ?? this.mailerConfig.sendAllMailsTo;
+        const mailOptions: MailOptions = redirectAllMailsTo
+            ? { ...mailOptionsWithDefaults, to: redirectAllMailsTo, cc: undefined, bcc: undefined }
             : mailOptionsWithDefaults;
 
         const result = await this.mailerTransport.sendMail(mailOptions);

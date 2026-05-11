@@ -127,13 +127,13 @@ export class EnvironmentVariables {
     @IsArray()
     @Transform(({ value }) => value.split(","))
     @IsEmail({}, { each: true })
-    MAILER_SEND_ALL_MAILS_TO?: string[];
+    MAILER_REDIRECT_ALL_MAILS_TO?: string[];
 
     @IsUndefinable()
     @IsArray()
     @Transform(({ value }) => value.split(","))
     @IsEmail({}, { each: true })
-    MAILER_SEND_ALL_MAILS_BCC?: string[];
+    MAILER_BCC_ALL_MAILS_TO?: string[];
 
     @IsString()
     @ValidateIf(() => process.env.NODE_ENV === "production")

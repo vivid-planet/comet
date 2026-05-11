@@ -16,21 +16,21 @@ MAILER_PORT: number;
 @IsArray()
 @Transform(({ value }) => value.split(","))
 @IsEmail({}, { each: true })
-MAILER_SEND_ALL_MAILS_TO?: string[];
+MAILER_REDIRECT_ALL_MAILS_TO?: string[];
 
 @IsUndefinable()
 @IsArray()
 @Transform(({ value }) => value.split(","))
 @IsEmail({}, { each: true })
-MAILER_SEND_ALL_MAILS_BCC?: string[];
+MAILER_BCC_ALL_MAILS_TO?: string[];
 ```
 
 ```ts title="/api/src/config/config.ts"
 mailer: {
     // Mailer configuration
     defaultFrom: '"Comet Demo" <comet-demo@comet-dxp.com>',
-    sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
-    sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
+    redirectAllMailsTo: envVars.MAILER_REDIRECT_ALL_MAILS_TO,
+    bccAllMailsTo: envVars.MAILER_BCC_ALL_MAILS_TO,
 
     daysToKeepMailLog: 90,
 
@@ -56,14 +56,11 @@ services:
 # mailer
 MAILER_HOST=localhost
 MAILER_PORT=1025
-MAILER_SEND_ALL_MAILS_TO=demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com
+MAILER_REDIRECT_ALL_MAILS_TO=demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com
 ```
 
 ```ts title="/api/src/app.module.ts"
-imports: [
-    ...
-    MailerModule.register(config.mailer),
-]
+imports: [...MailerModule.register(config.mailer)];
 ```
 
 ```yaml title="/deployment/helm/values.tpl.yaml"
@@ -72,7 +69,7 @@ api:
     ...
     MAILER_HOST: "localhost"
     MAILER_PORT: 25
-    MAILER_SEND_ALL_MAILS_TO: "demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com"
+    MAILER_REDIRECT_ALL_MAILS_TO: "demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com"
 ```
 
 ## Usage

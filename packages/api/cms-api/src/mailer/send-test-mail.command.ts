@@ -30,10 +30,9 @@ export class SendTestMailCommand extends CommandRunner {
 
     @CreateRequestContext()
     async run(_arguments: string[], { receiver }: { receiver?: string }): Promise<void> {
-        const defaultReceiver = [
-            ...(this.mailerConfig.sendAllMailsTo ? this.mailerConfig.sendAllMailsTo : []),
-            ...(this.mailerConfig.sendAllMailsBcc ? this.mailerConfig.sendAllMailsBcc : []),
-        ];
+        const redirectAllMailsTo = this.mailerConfig.redirectAllMailsTo ?? this.mailerConfig.sendAllMailsTo;
+        const bccAllMailsTo = this.mailerConfig.bccAllMailsTo ?? this.mailerConfig.sendAllMailsBcc;
+        const defaultReceiver = [...(redirectAllMailsTo ?? []), ...(bccAllMailsTo ?? [])];
         if (!receiver && defaultReceiver.length === 0) {
             throw new Error(`No default receiver configured in config.mailer.receiver or config.mailer.bccReceiver. Please use --receiver.`);
         }
