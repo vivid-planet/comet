@@ -145,6 +145,8 @@ function WelcomeEmail() {
 
 When no `theme` prop is provided, `MjmlMailRoot` uses the default theme (equivalent to `createTheme()` with no arguments).
 
+`MjmlMailRoot` also accepts an optional `config` prop that can be used to expose, e.g., environment-specific values to descendants via `useConfig`. See [Configuration](./4-customization.md#configuration).
+
 ### What MjmlMailRoot Configures
 
 From the theme, `MjmlMailRoot` automatically sets:

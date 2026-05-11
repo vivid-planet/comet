@@ -24,6 +24,7 @@ import {
 } from "@comet/cms-api";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductTag } from "../entities/product-tag.entity";
+import { DamFile } from "../../dam/entities/dam-file.entity";
 import { Product } from "../entities/product.entity";
 import { ProductService } from "../product.service";
 import { ProductMutationError } from "./../product.service";
@@ -89,6 +90,7 @@ export class ProductResolver {
             tagsWithStatus: tagsWithStatusInput,
             tags: tagsInput,
             datasheets: datasheetsInput,
+            relatedImages: relatedImagesInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
             priceList: priceListInput,
@@ -141,6 +143,12 @@ export class ProductResolver {
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
         }
+        if (relatedImagesInput) {
+            const relatedImages = await this.entityManager.find(DamFile, { id: relatedImagesInput });
+            if (relatedImages.length != relatedImagesInput.length) throw new Error("Couldn't find all relatedImages that were passed as input");
+            await product.relatedImages.loadItems();
+            product.relatedImages.set(relatedImages.map((relatedImage) => Reference.create(relatedImage)));
+        }
         if (statisticsInput) {
             const statistic = new ProductStatistics();
             this.entityManager.assign(statistic, {
@@ -164,6 +172,7 @@ export class ProductResolver {
             tagsWithStatus: tagsWithStatusInput,
             tags: tagsInput,
             datasheets: datasheetsInput,
+            relatedImages: relatedImagesInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
             priceList: priceListInput,
@@ -211,6 +220,12 @@ export class ProductResolver {
             if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
+        }
+        if (relatedImagesInput) {
+            const relatedImages = await this.entityManager.find(DamFile, { id: relatedImagesInput });
+            if (relatedImages.length != relatedImagesInput.length) throw new Error("Couldn't find all relatedImages that were passed as input");
+            await product.relatedImages.loadItems();
+            product.relatedImages.set(relatedImages.map((relatedImage) => Reference.create(relatedImage)));
         }
         if (statisticsInput) {
             const statistic = product.statistics ? await product.statistics.loadOrFail() : new ProductStatistics();
@@ -301,6 +316,13 @@ export class ProductResolver {
         product: Product,
     ): Promise<FileUpload[]> {
         return product.datasheets.loadItems();
+    }
+    @ResolveField(() => [DamFile])
+    async relatedImages(
+        @Parent()
+        product: Product,
+    ): Promise<DamFile[]> {
+        return product.relatedImages.loadItems();
     }
     @ResolveField(() => ProductStatistics, { nullable: true })
     async statistics(
