@@ -197,7 +197,7 @@ function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined 
     return undefined;
 }
 
-function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: TipTapApiInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
+function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: TipTapInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
     const currentBlockType = getBlockTypeFromNode(content) ?? parentBlockType;
 
     if (Array.isArray(content.content)) {
@@ -222,7 +222,7 @@ function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: T
     return false;
 }
 
-function IsTipTapContent(schema: Schema, inlineStyles: TipTapApiInlineStyle[], linkBlock?: Block, validationOptions?: ValidationOptions) {
+function IsTipTapContent(schema: Schema, inlineStyles: TipTapInlineStyle[], linkBlock?: Block, validationOptions?: ValidationOptions) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
