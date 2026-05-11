@@ -13,6 +13,7 @@ import { BlockStyleContext } from "./BlockStyleContext";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
+import { ListLevelMax } from "./extensions/ListLevelMax";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 import { TipTapToolbar } from "./TipTapToolbar";
@@ -74,6 +75,12 @@ interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
     link?: BlockInterface & LinkBlockInterface;
+    /**
+     * Maximum nesting depth for list items.
+     * A value of 1 means no nesting (only top-level list items).
+     * Defaults to unlimited when not set.
+     */
+    listLevelMax?: number;
 }
 
 function getPlainTextFromContent(content: JSONContent): string {
@@ -145,12 +152,14 @@ const TipTapEditor = ({
     supports,
     blockStyles,
     linkBlock,
+    listLevelMax,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    listLevelMax?: number;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
@@ -177,6 +186,7 @@ const TipTapEditor = ({
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasLink ? [CmsLink] : []),
+            ...(listLevelMax !== undefined ? [ListLevelMax.configure({ listLevelMax })] : []),
         ],
         content: state.tipTapContent,
         onUpdate: ({ editor }) => {
@@ -191,7 +201,7 @@ const TipTapEditor = ({
     return (
         <BlockStyleContext.Provider value={blockStyles}>
             <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />
+                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} listLevelMax={listLevelMax} />
                 <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
                     <EditorContent editor={editor} />
                 </Box>
@@ -209,6 +219,7 @@ export const createTipTapRichTextBlock = (
     let supports = options?.supports ?? defaultSupports;
     const blockStyles = options?.blockStyles ?? [];
     const linkBlock = options?.link;
+    const listLevelMax = options?.listLevelMax;
 
     // Auto-enable link support when a link block is provided
     if (linkBlock && !supports.includes("link")) {
@@ -262,7 +273,16 @@ export const createTipTapRichTextBlock = (
         },
 
         AdminComponent: ({ state, updateState }) => {
-            return <TipTapEditor state={state} updateState={updateState} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />;
+            return (
+                <TipTapEditor
+                    state={state}
+                    updateState={updateState}
+                    supports={supports}
+                    blockStyles={blockStyles}
+                    linkBlock={linkBlock}
+                    listLevelMax={listLevelMax}
+                />
+            );
         },
 
         previewContent: (state) => {

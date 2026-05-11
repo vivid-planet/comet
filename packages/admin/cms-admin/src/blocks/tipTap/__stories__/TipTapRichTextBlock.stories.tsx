@@ -338,3 +338,84 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         });
     },
 };
+
+const ListLevelMaxBlock = createTipTapRichTextBlock({ listLevelMax: 2 });
+
+function ListLevelMaxStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(ListLevelMaxBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <ListLevelMaxBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const ListLevelMax: StoryObj<typeof ListLevelMaxStory> = {
+    render: () => <ListLevelMaxStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Editor is ready with list buttons", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Create a bullet list and type an item", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.click(editor);
+            await userEvent.type(editor, "Level 1");
+
+            await waitFor(
+                () => {
+                    expect(editor).toHaveTextContent("Level 1");
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Toggle bullet list and verify indent button behavior at max depth", async () => {
+            const editor = canvas.getByRole("textbox");
+            // Find UL button - it has a tooltip containing "Bullet list"
+            const buttons = canvas.getAllByRole("button");
+            // Click the UL button (index varies, find it by being not-disabled and after OL)
+            // In default config: undo(0), redo(1), bold(2), italic(3), strike(4), more(5), OL(6), UL(7), indent(8), dedent(9), nbsp(10), shy(11)
+            await userEvent.click(buttons[7]);
+
+            await waitFor(
+                () => {
+                    // Verify we're now in a list by checking the editor contains list items
+                    expect(canvas.getByRole("textbox").innerHTML).toContain("li");
+                },
+                { timeout: 3000 },
+            );
+
+            // Add second item and indent it
+            await userEvent.type(editor, "{enter}Level 2");
+
+            await waitFor(
+                () => {
+                    expect(editor).toHaveTextContent(/Level 2/);
+                },
+                { timeout: 3000 },
+            );
+
+            // Indent button (index 8) should be enabled (depth 1 -> 2 is allowed)
+            const indentButton = canvas.getAllByRole("button")[8];
+            expect(indentButton).not.toBeDisabled();
+
+            // Click indent
+            await userEvent.click(indentButton);
+
+            // After indenting, we're at depth 2 (= listLevelMax), so indent should be disabled
+            await waitFor(
+                () => {
+                    expect(canvas.getAllByRole("button")[8]).toBeDisabled();
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};

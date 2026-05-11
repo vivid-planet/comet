@@ -6,6 +6,7 @@ import { LinkBlock } from "./LinkBlock";
 
 export const TipTapRichTextBlock = createTipTapRichTextBlock({
     link: LinkBlock,
+    listLevelMax: 4,
     blockStyles: [
         {
             name: "paragraph300",

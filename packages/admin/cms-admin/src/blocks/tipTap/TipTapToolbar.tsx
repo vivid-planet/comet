@@ -149,11 +149,13 @@ export const TipTapToolbar = ({
     supports,
     blockStyles,
     linkBlock,
+    listLevelMax,
 }: {
     editor: Editor;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    listLevelMax?: number;
 }) => {
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
@@ -189,7 +191,24 @@ export const TipTapToolbar = ({
                 activeBlockStyle: (attrs.blockStyle as string) ?? "",
                 canUndo: e.can().undo(),
                 canRedo: e.can().redo(),
-                canIndent: e.can().sinkListItem("listItem"),
+                canIndent: (() => {
+                    if (!e.can().sinkListItem("listItem")) {
+                        return false;
+                    }
+                    if (listLevelMax !== undefined) {
+                        const { from } = e.state.selection;
+                        const resolved = e.state.doc.resolve(from);
+                        let depth = 0;
+                        for (let i = resolved.depth; i > 0; i--) {
+                            const node = resolved.node(i);
+                            if (node.type.name === "bulletList" || node.type.name === "orderedList") {
+                                depth++;
+                            }
+                        }
+                        return depth < listLevelMax;
+                    }
+                    return true;
+                })(),
                 canDedent: e.can().liftListItem("listItem"),
                 isBoldActive: e.isActive("bold"),
                 isItalicActive: e.isActive("italic"),
