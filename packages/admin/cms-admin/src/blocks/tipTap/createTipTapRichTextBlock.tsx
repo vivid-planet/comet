@@ -16,6 +16,7 @@ import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { InlineStyleContext } from "./InlineStyleContext";
 import { TipTapToolbar } from "./TipTapToolbar";
 
 export type TipTapSupports =
@@ -62,7 +63,12 @@ export interface TipTapBlockStyle {
 export interface TipTapInlineStyle {
     name: string;
     label: ReactNode;
+    /**
+     * Limits the inline style to the provided block types.
+     * If none is specified, the inline style is allowed for all block types.
+     */
     appliesTo?: TipTapBlockType[];
+    element: ComponentType<HTMLAttributes<HTMLElement>>;
 }
 
 export interface TipTapRichTextBlockState {
@@ -202,12 +208,14 @@ const TipTapEditor = ({
 
     return (
         <BlockStyleContext.Provider value={blockStyles}>
-            <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} inlineStyles={inlineStyles} linkBlock={linkBlock} />
-                <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
-                    <EditorContent editor={editor} />
+            <InlineStyleContext.Provider value={inlineStyles}>
+                <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
+                    <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} inlineStyles={inlineStyles} linkBlock={linkBlock} />
+                    <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
+                        <EditorContent editor={editor} />
+                    </Box>
                 </Box>
-            </Box>
+            </InlineStyleContext.Provider>
         </BlockStyleContext.Provider>
     );
 };

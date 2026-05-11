@@ -1,4 +1,8 @@
 import { Mark, mergeAttributes } from "@tiptap/core";
+import { MarkViewContent, type MarkViewProps, ReactMarkViewRenderer } from "@tiptap/react";
+import { useContext } from "react";
+
+import { InlineStyleContext } from "../InlineStyleContext";
 
 declare module "@tiptap/core" {
     interface Commands<ReturnType> {
@@ -9,9 +13,25 @@ declare module "@tiptap/core" {
     }
 }
 
+function InlineStyleMarkView({ mark }: MarkViewProps) {
+    const inlineStyles = useContext(InlineStyleContext);
+    const styleName = mark.attrs.type as string | null;
+    const config = styleName ? inlineStyles.find((s) => s.name === styleName) : undefined;
+
+    if (config) {
+        const Element = config.element;
+        return (
+            <Element data-inline-style={styleName}>
+                <MarkViewContent />
+            </Element>
+        );
+    }
+
+    return <MarkViewContent />;
+}
+
 export const InlineStyleMark = Mark.create({
     name: "inlineStyle",
-    excludes: "",
 
     addAttributes() {
         return {
@@ -34,6 +54,10 @@ export const InlineStyleMark = Mark.create({
 
     renderHTML({ HTMLAttributes }) {
         return ["span", mergeAttributes(HTMLAttributes), 0];
+    },
+
+    addMarkView() {
+        return ReactMarkViewRenderer(InlineStyleMarkView);
     },
 
     addCommands() {

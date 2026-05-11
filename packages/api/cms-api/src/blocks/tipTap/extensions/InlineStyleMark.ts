@@ -2,7 +2,6 @@ import { Mark } from "@tiptap/core";
 
 export const InlineStyleMark = Mark.create({
     name: "inlineStyle",
-    excludes: "",
 
     addAttributes() {
         return {
