@@ -39,7 +39,7 @@
     },
     "dependencies": {
         "use-constant": "^2.0.0",
-        "uuid": "^11.1.0"
+        "uuid": "^14.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.28.6",

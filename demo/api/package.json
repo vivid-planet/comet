@@ -85,7 +85,7 @@
         "response-time": "^2.3.4",
         "rxjs": "^7.8.2",
         "slugify": "^1.6.9",
-        "uuid": "^11.1.0"
+        "uuid": "^14.0.0"
     },
     "devDependencies": {
         "@comet/api-generator": "workspace:*",

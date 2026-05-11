@@ -47,7 +47,7 @@
         "graphql-scalars": "1.24.2",
         "lodash.isequal": "^4.5.0",
         "nest-commander": "^3.20.1",
-        "uuid": "^8.3.2"
+        "uuid": "^14.0.0"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
@@ -64,7 +64,6 @@
         "@types/inquirer": "^8.2.12",
         "@types/jest": "^29.5.14",
         "@types/lodash.isequal": "^4.5.8",
-        "@types/uuid": "^8.3.4",
         "chokidar-cli": "^2.1.0",
         "eslint": "^9.39.2",
         "express": "^5.2.1",

@@ -60,7 +60,7 @@
         "reflect-metadata": "^0.2.2",
         "rimraf": "^6.1.2",
         "ts-jest": "^29.4.9",
-        "uuid": "^11.1.0"
+        "uuid": "^14.0.0"
     },
     "peerDependencies": {
         "@mikro-orm/cli": "^6.0.0",
