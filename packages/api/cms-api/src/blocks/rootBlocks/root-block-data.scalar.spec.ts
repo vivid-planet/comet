@@ -2,7 +2,6 @@ import { NestFactory } from "@nestjs/core";
 import { GraphQLSchemaBuilderModule, GraphQLSchemaFactory, Query } from "@nestjs/graphql";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { clearGraphqlMetadataStorages } from "../../common/test/clear-graphql-metadata";
 import { PixelImageBlock } from "../../dam/blocks/pixel-image.block";
 import { RootBlockDataScalar } from "./root-block-data.scalar";
 
@@ -10,8 +9,6 @@ let gqlSchemaFactory: GraphQLSchemaFactory;
 
 describe("RootBlockDataScalar", () => {
     beforeEach(async () => {
-        clearGraphqlMetadataStorages();
-
         const app = await NestFactory.create(GraphQLSchemaBuilderModule, { logger: false });
         await app.init();
 
