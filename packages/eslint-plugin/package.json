@@ -6,7 +6,7 @@
     "main": "lib/index.js",
     "license": "BSD-2-Clause",
     "scripts": {
-        "build": "pnpm run clean && tsc",
+        "build": "pnpm run clean && tsc --project ./tsconfig.build.json",
         "clean": "rimraf lib",
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
