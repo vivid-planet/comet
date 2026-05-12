@@ -578,7 +578,7 @@ describe("UserPermissionsGuard", () => {
         ).rejects.toThrowError("Could not get content scope");
     });
 
-    it("allows user by AffectedScope", async () => {
+    testWithAls("allows user by AffectedScope", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -614,7 +614,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("allows user by multidimensional AffectedScope", async () => {
+    testWithAls("allows user by multidimensional AffectedScope", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -637,7 +637,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies by wrong AffectedScope", async () => {
+    testWithAls("denies by wrong AffectedScope", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -673,7 +673,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("allows scope parts submitted by AffectedScope", async () => {
+    testWithAls("allows scope parts submitted by AffectedScope", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
@@ -709,7 +709,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies by wrong multidimensional AffectedScope", async () => {
+    testWithAls("denies by wrong multidimensional AffectedScope", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [permissions.p1],
