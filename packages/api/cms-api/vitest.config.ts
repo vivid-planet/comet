@@ -10,7 +10,11 @@ export default defineConfig({
             graphql: "graphql/index.js",
         },
     },
-    plugins: [swc.vite()],
+    plugins: [
+        // The SWC plugin is required to emit decorator metadata.
+        // See https://github.com/vitest-dev/vitest/discussions/3320.
+        swc.vite(),
+    ],
     test: {
         environment: "node",
         setupFiles: ["./vitest.setup.ts"],
