@@ -1,5 +1,5 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import eslintConfigReact from "@comet/eslint-config/nestjs.js";
+import eslintConfigReact from "@comet/eslint-config/future/nestjs.js";
 
 export default defineConfig([
     globalIgnores(["src/mikro-orm/migrations/**", "lib/**", "block-meta.json"]),

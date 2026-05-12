@@ -1,5 +1,5 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import eslintConfigReact from "@comet/eslint-config/react.js";
+import eslintConfigReact from "@comet/eslint-config/future/react.js";
 import storybook from "eslint-plugin-storybook";
 
 export default defineConfig([

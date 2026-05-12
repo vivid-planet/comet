@@ -1,4 +1,4 @@
-import eslintConfigReact, { restrictedImportPaths } from "@comet/eslint-config/react.js";
+import eslintConfigReact, { restrictedImportPaths } from "@comet/eslint-config/future/react.js";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
