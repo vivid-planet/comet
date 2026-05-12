@@ -1,5 +1,5 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import eslintConfigNextJs from "@comet/eslint-config/future/nextjs.js";
+import eslintConfigNextJs from "@comet/eslint-config/nextjs.js";
 
 export default defineConfig([
     globalIgnores(["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json"]),
