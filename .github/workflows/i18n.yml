@@ -11,7 +11,7 @@ jobs:
         steps:
             - run: echo "${{ github.actor }}"
 
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
             - run: |
@@ -19,7 +19,7 @@ jobs:
                   git config user.email github-actions@github.com
 
             - name: "Library: Clone translations"
-              uses: actions/checkout@v5
+              uses: actions/checkout@v6
               with:
                   repository: vivid-planet/comet-lang
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
@@ -28,7 +28,7 @@ jobs:
             - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 24.x
-              uses: actions/setup-node@v5
+              uses: actions/setup-node@v6
               with:
                   node-version: 24
                   registry-url: "https://registry.npmjs.org"
@@ -42,12 +42,12 @@ jobs:
                   cp -r lang/* demo/admin/lang/comet-lang/
 
             - name: "Library: Update translatable strings"
-              uses: EndBug/add-and-commit@v9
+              uses: EndBug/add-and-commit@v10
               with:
                   cwd: "./demo/admin/lang/comet-lang"
 
             - name: "Demo Admin: Clone translations"
-              uses: actions/checkout@v5
+              uses: actions/checkout@v6
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
@@ -60,12 +60,12 @@ jobs:
                   cp -r lang-extracted/* lang/comet-demo-lang/admin
 
             - name: "Demo Admin: Update translatable strings"
-              uses: EndBug/add-and-commit@v9
+              uses: EndBug/add-and-commit@v10
               with:
                   cwd: "./demo/admin/lang/comet-demo-lang"
 
             - name: "Demo Site: Clone translations"
-              uses: actions/checkout@v5
+              uses: actions/checkout@v6
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
@@ -78,12 +78,12 @@ jobs:
                   cp -r lang-extracted/* lang/comet-demo-lang/site
 
             - name: "Demo Site: Update translatable strings"
-              uses: EndBug/add-and-commit@v9
+              uses: EndBug/add-and-commit@v10
               with:
                   cwd: "./demo/site/lang/comet-demo-lang"
 
             - name: "Demo Api: Clone translations"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
@@ -96,6 +96,6 @@ jobs:
                   cp -r lang-extracted/* lang/comet-demo-lang/api
 
             - name: "Demo Api: Update translatable strings"
-              uses: EndBug/add-and-commit@v9
+              uses: EndBug/add-and-commit@v10
               with:
                   cwd: "./demo/api/lang/comet-demo-lang"

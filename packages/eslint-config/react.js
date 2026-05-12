@@ -1,4 +1,4 @@
-import coreConfig from "./core.js";
+import coreConfig, { restrictedImportPatterns } from "./core.js";
 import reactIntlFormatPlugin from "@calm/eslint-plugin-react-intl";
 import globals from "globals";
 import formatJs from "eslint-plugin-formatjs";
@@ -45,6 +45,21 @@ export const restrictedImportPaths = [
         name: "@mui/x-data-grid-premium",
         importNames: ["GridColDef"],
         message: "Please use GridColDef from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-pro",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-premium",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
     },
 ];
 
@@ -111,6 +126,7 @@ const config = [
                 "error",
                 {
                     paths: restrictedImportPaths,
+                    patterns: restrictedImportPatterns,
                 },
             ],
         },

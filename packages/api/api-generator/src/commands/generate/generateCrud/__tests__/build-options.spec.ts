@@ -1,5 +1,5 @@
 import { BaseEntity, defineConfig, Entity, ManyToOne, MikroORM, OneToOne, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
 import { testPermission } from "../../utils/test-helper";
@@ -75,7 +75,7 @@ describe("buildOptions", () => {
             const sortProps = buildSortProps(metadata);
             expect(sortProps).toEqual(["nested", "id", "nested.foo"]);
 
-            const sortDto = generateSortDto({ generatorOptions: { targetDirectory: __dirname, requiredPermission: testPermission }, metadata });
+            const sortDto = generateSortDto({ generatorOptions: { requiredPermission: testPermission }, metadata });
             expect(sortDto).toMatchSnapshot();
 
             await orm.close();

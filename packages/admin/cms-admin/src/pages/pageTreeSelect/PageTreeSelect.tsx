@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { BlockAdminComponentNestedButton } from "../../blocks/common/BlockAdminComponentNestedButton";
 import { usePageTreeConfig } from "../pageTreeConfig";
-import { type GQLPageTreeSelectDetailQuery, type GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
+import type { GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
 import PageTreeSelectDialog, { type GQLSelectedPageFragment } from "./PageTreeSelectDialog";
 
 interface PageTreeSelectProps {
@@ -22,7 +22,7 @@ const pageTreeSelectDetail = gql`
     }
 `;
 
-export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps) {
+export function PageTreeSelect({ value, onChange }: PageTreeSelectProps) {
     const config = usePageTreeConfig();
     const [open, setOpen] = useState(false);
 

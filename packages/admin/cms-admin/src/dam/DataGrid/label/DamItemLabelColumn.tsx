@@ -4,14 +4,14 @@ import { styled } from "@mui/material/styles";
 import { type ReactNode, useEffect, useRef } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 
-import { type TextMatch } from "../../../common/MarkedMatches";
+import type { TextMatch } from "../../../common/MarkedMatches";
 import { useDamConfig } from "../../config/damConfig";
-import { type DamFilter } from "../../DamTable";
+import type { DamFilter } from "../../DamTable";
 import { isFile } from "../../helpers/isFile";
 import { isFolder } from "../../helpers/isFolder";
-import { type FileUploadApi } from "../fileUpload/useDamFileUpload";
-import { type GQLDamFileTableFragment, type GQLDamFolderTableFragment } from "../FolderDataGrid";
-import { type DamItemMatches } from "../useDamSearchHighlighting";
+import type { FileUploadApi } from "../fileUpload/useDamFileUpload";
+import type { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
+import type { DamItemMatches } from "../useDamSearchHighlighting";
 import DamItemLabel from "./DamItemLabel";
 
 interface DamLabelWrapperProps {
@@ -73,7 +73,7 @@ export const DamItemLabelColumn = ({
     scrollIntoView = false,
 }: DamItemLabelColumnProps) => {
     const damConfig = useDamConfig();
-    const columnRef = useRef<HTMLDivElement>();
+    const columnRef = useRef<HTMLDivElement>(undefined);
 
     useEffect(() => {
         if (scrollIntoView) {

@@ -1,12 +1,13 @@
 import { Field, FinalForm, SaveBoundary } from "@comet/admin";
 import { BlockAdminComponentRoot, createFinalFormBlock, createListBlock, ExternalLinkBlock } from "@comet/cms-admin";
 
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 import { dndProviderDecorator } from "../dnd.decorator";
 import { snackbarDecorator } from "../docs/components/Snackbar/snackbar.decorator";
 import { storyRouterDecorator } from "../story-router.decorator";
 
 export default {
-    decorators: [snackbarDecorator(), storyRouterDecorator(), dndProviderDecorator()],
+    decorators: [apolloStoryDecorator("/graphql"), snackbarDecorator(), storyRouterDecorator(), dndProviderDecorator()],
 };
 
 export const BlockInFinalFormWithSaveBoundary = () => {

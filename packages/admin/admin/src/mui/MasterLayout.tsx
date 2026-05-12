@@ -5,7 +5,8 @@ import { type ComponentType, type CSSProperties, type ReactNode, useEffect, useR
 import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { useStoredState } from "../hooks/useStoredState";
 import { MainNavigationContext } from "./mainNavigation/Context";
 import { MasterLayoutContext } from "./MasterLayoutContext";
 
@@ -70,13 +71,16 @@ export function MasterLayout(inProps: MasterLayoutProps) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMasterLayout" });
 
-    const [open, setOpen] = useState(openMenuByDefault);
+    const [open, setOpen] = useStoredState("main-navigation-open", openMenuByDefault);
     const [drawerVariant, setDrawerVariant] = useState<"permanent" | "temporary">("permanent");
     const [menuWidth, setMenuWidth] = useState(0);
+    const [hasMultipleMenuItems, setHasMultipleMenuItems] = useState(true);
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!menuRef.current) return;
+        if (!menuRef.current) {
+            return;
+        }
 
         const resizeObserver = new ResizeObserver(([entry]) => {
             if (entry) {
@@ -96,7 +100,9 @@ export function MasterLayout(inProps: MasterLayoutProps) {
     };
 
     return (
-        <MainNavigationContext.Provider value={{ open, toggleOpen, drawerVariant, setDrawerVariant }}>
+        <MainNavigationContext.Provider
+            value={{ open, toggleOpen, setOpen, drawerVariant, setDrawerVariant, hasMultipleMenuItems, setHasMultipleMenuItems }}
+        >
             <MasterLayoutContext.Provider value={{ headerHeight }}>
                 <CssBaseline />
                 <Root {...slotProps?.root} {...restProps}>

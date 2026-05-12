@@ -1,6 +1,6 @@
 "use client";
 import { hasRichTextBlockContent, PreviewSkeleton, type PropsWithData, withPreview } from "@comet/site-nextjs";
-import { type LinkBlockData, type RichTextBlockData } from "@src/blocks.generated";
+import type { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import clsx from "clsx";
 import redraft, { type Renderers, type TextBlockRenderFn } from "redraft";

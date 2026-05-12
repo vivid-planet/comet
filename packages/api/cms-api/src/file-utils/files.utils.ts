@@ -1,5 +1,4 @@
 import { XMLParser } from "fast-xml-parser";
-import FileType from "file-type";
 import fs from "fs";
 import { unlink } from "fs/promises";
 import * as mimedb from "mime-db";
@@ -10,7 +9,7 @@ import stream from "stream";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 
-import { type FileUploadInput } from "./file-upload.input";
+import type { FileUploadInput } from "./file-upload.input";
 import { FILE_UPLOAD_FIELD } from "./files.constants";
 
 const pipeline = promisify(stream.pipeline);
@@ -138,7 +137,8 @@ export async function createFileUploadInputFromUrl(url: string): Promise<FileUpl
         fs.copyFileSync(url, tempFile);
     }
 
-    const fileType = await FileType.fromFile(tempFile);
+    const { fileTypeFromFile } = await import("file-type");
+    const fileType = await fileTypeFromFile(tempFile);
     const stats = fs.statSync(tempFile); // TODO don't use sync
     const filenameWithoutExtension = basename(url, extname(url));
 

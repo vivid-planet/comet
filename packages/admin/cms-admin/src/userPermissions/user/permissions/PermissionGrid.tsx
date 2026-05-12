@@ -169,7 +169,9 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
         },
     ];
 
-    if (error) throw new Error(error.message);
+    if (error) {
+        throw new Error(error.message);
+    }
 
     const toolbarSlotProps: ToolbarProps = {
         toolbarAction: (
@@ -200,6 +202,7 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 slotProps={{
                     toolbar: toolbarSlotProps,
                 }}
+                showToolbar
             />
             {overrideContentScopesId && (
                 <OverrideContentScopesDialog

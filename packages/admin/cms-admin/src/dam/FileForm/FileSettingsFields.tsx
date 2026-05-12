@@ -14,14 +14,14 @@ import { useDamConfig } from "../config/damConfig";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
-import { type DamFileDetails, type EditFileFormValues } from "./EditFile";
-import { type GQLDamIsFilenameOccupiedQuery, type GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
+import type { DamFileDetails, EditFileFormValues } from "./EditFile";
+import type { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
 import { generateAltTextMutation, generateImageTitleMutation } from "./FileSettingsFields.gql";
-import {
-    type GQLGenerateAltTextMutation,
-    type GQLGenerateAltTextMutationVariables,
-    type GQLGenerateImageTitleMutation,
-    type GQLGenerateImageTitleMutationVariables,
+import type {
+    GQLGenerateAltTextMutation,
+    GQLGenerateAltTextMutationVariables,
+    GQLGenerateImageTitleMutation,
+    GQLGenerateImageTitleMutationVariables,
 } from "./FileSettingsFields.gql.generated";
 import { type LicenseType, licenseTypeArray, licenseTypeLabels } from "./licenseType";
 

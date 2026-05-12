@@ -17,7 +17,7 @@ export const RteDisable = {
         const [disabled, toggleDisabled] = useReducer((s) => !s, false);
 
         // focus the editor to see the cursor immediately
-        const editorRef = useRef<IRteRef>();
+        const editorRef = useRef<IRteRef>(undefined);
         useAutoFocus(editorRef);
 
         return (

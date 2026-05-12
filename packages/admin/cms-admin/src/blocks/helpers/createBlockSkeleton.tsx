@@ -58,6 +58,9 @@ function common<InputApi, State, OutputApi>(): Omit<
 
             return [];
         },
+        translateContent: async function (state) {
+            return state;
+        },
     };
 }
 

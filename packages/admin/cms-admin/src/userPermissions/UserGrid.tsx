@@ -1,9 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    CrudContextMenu,
     DataGridToolbar,
     FillSpace,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
@@ -14,18 +16,17 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
-import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
+import { DataGrid, type GridRenderCellParams, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactNode, useContext, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useUserPermissionCheck } from "./hooks/currentUser";
-import {
-    type GQLUserAvailablePermissionsAndContentScopesQuery,
-    type GQLUserForGridFragment,
-    type GQLUserGridQuery,
-    type GQLUserGridQueryVariables,
+import { ImpersonateMenuItem } from "./ImpersonateMenuItem";
+import type {
+    GQLUserAvailablePermissionsAndContentScopesQuery,
+    GQLUserForGridFragment,
+    GQLUserGridQuery,
+    GQLUserGridQueryVariables,
 } from "./UserGrid.generated";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
@@ -185,14 +186,21 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         pinned: "right",
         disableExport: true,
         renderCell: (params) => (
-            <IconButton
-                onClick={() => {
-                    stackApi.activatePage("edit", params.id.toString());
-                }}
-                color="primary"
-            >
-                <Edit />
-            </IconButton>
+            <>
+                <IconButton
+                    onClick={() => {
+                        stackApi.activatePage("edit", params.id.toString());
+                    }}
+                    color="primary"
+                >
+                    <Edit />
+                </IconButton>
+                {isAllowed("impersonation") && (
+                    <CrudContextMenu>
+                        <ImpersonateMenuItem userId={params.row.id} />
+                    </CrudContextMenu>
+                )}
+            </>
         ),
     });
 
@@ -225,7 +233,9 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     );
 
     const rowCount = useBufferedRowCount(data?.users.totalCount);
-    if (error) throw new Error(error.message);
+    if (error) {
+        throw new Error(error.message);
+    }
 
     return (
         <DataGrid<GQLUserForGridFragment>
@@ -242,6 +252,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                     toolbarAction: toolbarAction,
                 } as UserPermissionsUserGridToolbarProps,
             }}
+            showToolbar
         />
     );
 };

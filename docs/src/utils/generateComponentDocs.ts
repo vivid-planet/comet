@@ -50,7 +50,9 @@ const generateComponentDocs = (stories: StoriesJsonEntry[]) => {
 
     stories.forEach(({ id, title }) => {
         const componentName = title.split("/")[1];
-        if (!componentName) return;
+        if (!componentName) {
+            return;
+        }
 
         const fileName = `generated.${kebabCase(componentName)}.mdx`;
         const filePath = path.join(docsDir, fileName);

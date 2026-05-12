@@ -1,4 +1,4 @@
-import { type FieldValidator } from "final-form";
+import type { FieldValidator } from "final-form";
 import { type ComponentType, createElement, type ReactNode, useRef } from "react";
 import { Field as FinalFormField, type FieldMetaState, type FieldRenderProps, FormSpy, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -8,6 +8,10 @@ import { useFinalFormContext } from "./FinalFormContextProvider";
 
 const requiredValidator = (value: any) => {
     if (value === undefined || value === null || value === false || value === "") {
+        return <FormattedMessage id="comet.form.required" defaultMessage="Required" />;
+    }
+    // Check for empty arrays (relevant for multiple select fields)
+    if (Array.isArray(value) && value.length === 0) {
         return <FormattedMessage id="comet.form.required" defaultMessage="Required" />;
     }
     return undefined;

@@ -1,0 +1,159 @@
+## Requirements
+
+### Requirement: Drop-in replacement for base MjmlSection
+
+The custom `MjmlSection` component SHALL accept all props that the `@faire/mjml-react` `MjmlSection` accepts and forward them to the underlying component. Existing call sites that use `MjmlSection` without any of the new props SHALL produce identical output. The component SHALL NOT require a `ThemeProvider` ancestor when theme-dependent features are not used.
+
+When a `ThemeProvider` ancestor is present, no explicit `backgroundColor` prop is provided, and the component is NOT inside a custom `MjmlWrapper` subtree, `MjmlSection` SHALL apply `theme.colors.background.content` as the default `backgroundColor` on the underlying component.
+
+When `MjmlSection` is inside a custom `MjmlWrapper` subtree (as detected via the internal `InsideMjmlWrapperContext`), it SHALL NOT apply any default `backgroundColor`, so that the wrapper's background is visible through the section. An explicit `backgroundColor` prop on `MjmlSection` still takes precedence.
+
+When no `ThemeProvider` ancestor is present, `MjmlSection` SHALL NOT apply any default `backgroundColor`.
+
+When an explicit `backgroundColor` prop is provided, it SHALL always take precedence over the theme default, regardless of whether a `ThemeProvider` or a custom `MjmlWrapper` is present.
+
+#### Scenario: Base props are forwarded
+
+- **WHEN** a consumer renders `<MjmlSection backgroundColor="#fff" padding="10px">` without any new props
+- **THEN** the underlying `@faire/mjml-react` `MjmlSection` receives `backgroundColor="#fff"` and `padding="10px"` and renders identically to a direct usage
+
+#### Scenario: Works without ThemeProvider
+
+- **WHEN** `MjmlSection` is rendered without any `ThemeProvider` or `MjmlMailRoot` ancestor and without theme-dependent props
+- **THEN** the component renders successfully without throwing an error and without any default `backgroundColor`
+
+#### Scenario: Theme background applied when theme is present
+
+- **WHEN** `MjmlSection` is rendered inside a `ThemeProvider` without an explicit `backgroundColor` prop and not inside a custom `MjmlWrapper`
+- **THEN** the underlying component receives `backgroundColor` equal to `theme.colors.background.content`
+
+#### Scenario: Default theme background is white
+
+- **WHEN** `MjmlSection` is rendered inside a `MjmlMailRoot` with the default theme and without an explicit `backgroundColor` prop
+- **THEN** the underlying component receives `backgroundColor="#FFFFFF"`
+
+#### Scenario: Explicit backgroundColor overrides theme default
+
+- **WHEN** `MjmlSection` is rendered inside a `ThemeProvider` with `backgroundColor="#FF0000"`
+- **THEN** the underlying component receives `backgroundColor="#FF0000"` (the explicit prop wins)
+
+#### Scenario: Custom theme content background
+
+- **WHEN** `MjmlSection` is rendered inside a `MjmlMailRoot` with `createTheme({ colors: { background: { content: "#F0F0F0" } } })` and without an explicit `backgroundColor` prop
+- **THEN** the underlying component receives `backgroundColor="#F0F0F0"`
+
+#### Scenario: No theme default inside custom MjmlWrapper
+
+- **WHEN** `MjmlSection` is rendered inside a `MjmlMailRoot` and inside a custom `MjmlWrapper`, with no explicit `backgroundColor` prop on the section
+- **THEN** the underlying `MjmlSection` receives no `backgroundColor` (so the wrapper's background is visible)
+
+#### Scenario: Explicit backgroundColor still wins inside MjmlWrapper
+
+- **WHEN** `MjmlSection` with `backgroundColor="#00FF00"` is rendered inside a custom `MjmlWrapper` with `backgroundColor="#FF0000"` inside a `MjmlMailRoot`
+- **THEN** the underlying `MjmlSection` receives `backgroundColor="#00FF00"` (the explicit section prop wins over both the wrapper background and any theme default)
+
+### Requirement: Disable responsive behavior via `disableResponsiveBehavior` prop
+
+The component SHALL accept a `disableResponsiveBehavior` boolean prop (default `false`). When `true`, all children SHALL be wrapped in a single `MjmlGroup` element, preventing columns from stacking vertically on mobile viewports.
+
+#### Scenario: Default behavior (responsive)
+
+- **WHEN** `disableResponsiveBehavior` is not set or `false`
+- **THEN** children are rendered directly inside the section without a `MjmlGroup` wrapper
+
+#### Scenario: Responsive behavior disabled
+
+- **WHEN** `disableResponsiveBehavior` is `true`
+- **THEN** children are wrapped in a single `MjmlGroup` element
+
+### Requirement: SlotProps for sub-element customization
+
+The component SHALL accept a `slotProps` object prop with an optional `group` key. The value of `group` SHALL be a partial set of `MjmlGroupProps` that are spread onto the `MjmlGroup` element when it is rendered (i.e., when `disableResponsiveBehavior` is `true`).
+
+#### Scenario: SlotProps applied to group
+
+- **WHEN** `disableResponsiveBehavior` is `true` AND `slotProps={{ group: { width: "50%" } }}`
+- **THEN** the `MjmlGroup` element receives `width="50%"`
+
+#### Scenario: SlotProps ignored when group not rendered
+
+- **WHEN** `disableResponsiveBehavior` is `false` AND `slotProps={{ group: { width: "50%" } }}`
+- **THEN** no `MjmlGroup` is rendered and the `slotProps.group` values have no effect
+
+### Requirement: BEM class name and className merging
+
+The component SHALL always apply the block class name `mjmlSection` to the underlying element. When `indent` is `true`, the component SHALL additionally apply the BEM modifier class `mjmlSection--indented`.
+
+Any consumer-provided `className` prop SHALL be merged with the internal class names using `clsx`, with the consumer className as the last argument.
+
+#### Scenario: Block class always present
+
+- **WHEN** `MjmlSection` is rendered without any custom props
+- **THEN** the underlying element receives `className="mjmlSection"`
+
+#### Scenario: Consumer className merged
+
+- **WHEN** a consumer passes `className="custom"`
+- **THEN** the underlying element receives a className containing both `"mjmlSection"` and `"custom"`
+
+#### Scenario: Modifier and consumer className merged
+
+- **WHEN** a consumer passes `className="custom"` along with `indent`
+- **THEN** the underlying element receives a className containing `"mjmlSection"`, `"mjmlSection--indented"`, and `"custom"`
+
+### Requirement: Content indentation via `indent` prop
+
+The component SHALL accept an `indent` boolean prop (default `false`). When `true`, the component SHALL set `paddingLeft` and `paddingRight` to the default value of `theme.sizes.contentIndentation` (resolved via `getDefaultFromResponsiveValue`) on the underlying `MjmlSection`.
+
+When `indent` is `false` or not provided, no indentation padding SHALL be applied by the component.
+
+When `indent` is `true` and no `ThemeProvider` ancestor is present, the component SHALL throw an error with a message indicating that the `indent` prop requires a `ThemeProvider` or `MjmlMailRoot`.
+
+#### Scenario: Indentation enabled with number
+
+- **WHEN** `indent` is `true` and the theme has `sizes.contentIndentation === 20`
+- **THEN** the underlying `MjmlSection` receives `paddingLeft={20}` and `paddingRight={20}`
+
+#### Scenario: Indentation enabled with responsive object
+
+- **WHEN** `indent` is `true` and the theme has `sizes.contentIndentation === { default: 30, mobile: 15 }`
+- **THEN** the underlying `MjmlSection` receives `paddingLeft={30}` and `paddingRight={30}` (the default value)
+
+#### Scenario: Indentation disabled (default)
+
+- **WHEN** `indent` is not set or `false`
+- **THEN** no `paddingLeft` or `paddingRight` is set by the component
+
+#### Scenario: Indent without ThemeProvider throws targeted error
+
+- **WHEN** `indent` is `true` and there is no `ThemeProvider` or `MjmlMailRoot` ancestor
+- **THEN** the component throws an error with a message indicating that `indent` requires a `ThemeProvider` or `MjmlMailRoot`
+
+### Requirement: Responsive indentation overrides via registered styles
+
+When the `MjmlSection` module is imported, it SHALL register responsive styles (via `registerStyles`) that iterate only the objects returned by `getResponsiveOverrides(theme.sizes.contentIndentation)` — never the `default` key, which is applied only as inline padding — and generate a media query for each entry's `breakpointKey` and `value`, using the corresponding breakpoint's `belowMediaQuery` to override left/right padding on sections with the `mjmlSection--indented` class.
+
+#### Scenario: Mobile indentation in rendered HTML
+
+- **WHEN** `MjmlSection` is used with `indent`, the theme has `sizes.contentIndentation === { default: 20, mobile: 10 }`, and the email is rendered via `renderMailHtml`
+- **THEN** the resulting HTML contains a CSS media query below the mobile breakpoint that sets left/right padding to `10px` for indented sections
+
+#### Scenario: Multiple breakpoint overrides
+
+- **WHEN** the theme has `sizes.contentIndentation === { default: 30, tablet: 20, mobile: 10 }` and corresponding breakpoints
+- **THEN** the registered styles contain one media query per non-default key, each using the appropriate `belowMediaQuery` and padding value
+
+#### Scenario: No overrides when number value
+
+- **WHEN** the theme has `sizes.contentIndentation === 20` (plain number)
+- **THEN** no responsive styles are generated for indentation (only inline padding applies)
+
+### Requirement: Props type exported
+
+The component's props type SHALL be exported as `MjmlSectionProps` from the package entry point, replacing the previous re-export of `@faire/mjml-react`'s type. The base component and type SHALL NOT be exposed — consumers only interact with the custom version.
+
+#### Scenario: Custom props type importable
+
+- **WHEN** a consumer writes `import { type MjmlSectionProps } from "@comet/mail-react"`
+- **THEN** the type includes the custom props (`indent`, `disableResponsiveBehavior`, `slotProps`) in addition to all base section props
+

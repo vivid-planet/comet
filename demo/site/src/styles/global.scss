@@ -151,8 +151,7 @@ legend {
     isolation: isolate;
 }
 
-:focus {
+:focus-visible {
     outline: 3px solid var(--functional-focus-main);
-    outline-offset: 0;
-    border: 2px solid var(--brand-primary-contrast);
+    outline-offset: 2px;
 }

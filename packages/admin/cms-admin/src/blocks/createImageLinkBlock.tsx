@@ -2,7 +2,7 @@ import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { createCompositeBlock } from "./factories/createCompositeBlock";
 import { PixelImageBlock } from "./PixelImageBlock";
-import { type BlockInterface } from "./types";
+import type { BlockInterface } from "./types";
 
 interface CreateImageLinkBlockOptions {
     link: BlockInterface;

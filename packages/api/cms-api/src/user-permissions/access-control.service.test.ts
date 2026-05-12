@@ -1,8 +1,8 @@
 import { Test, type TestingModule } from "@nestjs/testing";
 
 import { AbstractAccessControlService } from "./access-control.service";
-import { type CurrentUser } from "./dto/current-user";
-import { type Permission } from "./user-permissions.types";
+import type { CurrentUser } from "./dto/current-user";
+import type { Permission } from "./user-permissions.types";
 
 const permissions = {
     p1: "p1" as Permission,
