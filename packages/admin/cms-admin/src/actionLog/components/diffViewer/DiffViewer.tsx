@@ -1,6 +1,6 @@
 import { ChevronDown } from "@comet/admin-icons";
 import { useTheme } from "@mui/material";
-import { type FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 import ReactDiffViewer, { DiffMethod, type ReactDiffViewerProps } from "react-diff-viewer-continued";
 import { FormattedMessage } from "react-intl";
 

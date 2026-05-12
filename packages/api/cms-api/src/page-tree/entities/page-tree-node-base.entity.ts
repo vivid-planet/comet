@@ -1,10 +1,12 @@
-import { BaseEntity, Entity, Enum, Index, ManyToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { BaseEntity, Entity, Enum, FullTextType, Index, ManyToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
+import { EntityInfo } from "../../entity-info/entity-info.decorator";
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility } from "../types";
 
+@EntityInfo(`SELECT "name", "secondaryInformation", "visible", "id", 'PageTreeNode' AS "entityName" FROM "PageTreeNodeEntityInfo"`)
 @Entity({ abstract: true })
 @ObjectType("PageTreeNodeBase", { isAbstract: true }) // ObjectType must be defined in base class! (The name "PageTreeNodeBase" is not used (we have no concrete type of PageTreeNodeBase))
 export abstract class PageTreeNodeBase extends BaseEntity {
@@ -51,6 +53,19 @@ export abstract class PageTreeNodeBase extends BaseEntity {
     hideInMenu: boolean = false;
 
     category: PageTreeNodeCategory;
+
+    @Index({ type: "fulltext" })
+    @Property<PageTreeNodeBase>({
+        nullable: true,
+        type: new FullTextType(),
+        onUpdate: (page) => {
+            return {
+                A: page.name,
+                D: page.slug,
+            };
+        },
+    })
+    fullText?: string;
 
     @Property({
         columnType: "timestamp with time zone",

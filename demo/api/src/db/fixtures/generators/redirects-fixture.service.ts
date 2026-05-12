@@ -4,7 +4,7 @@ import {
     RedirectGenerationType,
     REDIRECTS_LINK_BLOCK,
     RedirectsLinkBlock,
-    RedirectSourceTypeValues,
+    RedirectSourceType,
 } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { EntityManager } from "@mikro-orm/postgresql";
@@ -90,7 +90,7 @@ export class RedirectsFixtureService {
                 scope: {
                     domain: "secondary",
                 },
-                sourceType: RedirectSourceTypeValues.path,
+                sourceType: RedirectSourceType.path,
             });
         }
 

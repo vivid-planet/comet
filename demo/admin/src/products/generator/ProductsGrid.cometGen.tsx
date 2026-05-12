@@ -1,7 +1,7 @@
 import { GridCellContent } from "@comet/admin";
 import { defineConfig } from "@comet/admin-generator";
-import { type GQLProduct } from "@src/graphql.generated";
-import { type ReactNode } from "react";
+import type { GQLProduct } from "@src/graphql.generated";
+import type { ReactNode } from "react";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../ProductsGridPreviewAction";
@@ -42,7 +42,7 @@ export default defineConfig<GQLProduct>({
             minWidth: 200,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {
-                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap" />,
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="Cap" />,
                     Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt" />,
                     Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie" />,
                 };

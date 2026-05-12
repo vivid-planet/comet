@@ -2,7 +2,7 @@ import { type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/m
 import { type ReactNode, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useTopOffset } from "../helpers/useTopOffset";
 import { useIsActiveStackSwitch } from "../stack/useIsActiveStackSwitch";
 

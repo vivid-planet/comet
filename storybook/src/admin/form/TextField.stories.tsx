@@ -1,5 +1,5 @@
 import { Alert, FinalForm, TextField } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof TextField>;
 const config: Meta<typeof TextField> = {
@@ -53,7 +53,7 @@ export const Clearable: Story = {
                 {({ values }) => {
                     return (
                         <>
-                            <TextField clearable name="value" label="Textfield" fullWidth variant="horizontal" />
+                            <TextField name="value" label="Textfield" fullWidth variant="horizontal" />
 
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>

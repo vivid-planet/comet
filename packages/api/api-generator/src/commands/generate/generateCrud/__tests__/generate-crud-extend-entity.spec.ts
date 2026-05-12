@@ -1,6 +1,6 @@
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field } from "@nestjs/graphql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
@@ -39,14 +39,13 @@ describe("GenerateCrudInputExtendEntity", () => {
             }),
         );
 
-        const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: testPermission },
-            orm.em.getMetadata().get("TestEntityWithTimestamps"),
-        );
+        const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithTimestamps"));
         const formattedOut = await formatGeneratedFiles(out);
 
         const file = formattedOut.find((file) => file.name === "dto/test-entity-with-timestamps.filter.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
 
         const source = parseSource(file.content);
 

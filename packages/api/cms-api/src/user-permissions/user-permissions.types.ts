@@ -1,11 +1,11 @@
-import { type ModuleMetadata, type Type } from "@nestjs/common";
+import type { ModuleMetadata, Type } from "@nestjs/common";
 
 import { CorePermission } from "../common/enum/core-permission.enum";
-import { type CurrentUser } from "./dto/current-user";
-import { type FindUsersArgs } from "./dto/paginated-user-list";
-import { type UserPermission } from "./entities/user-permission.entity";
-import { type ContentScope } from "./interfaces/content-scope.interface";
-import { type User } from "./interfaces/user";
+import type { CurrentUser } from "./dto/current-user";
+import type { FindUsersArgs } from "./dto/paginated-user-list";
+import type { UserPermission } from "./entities/user-permission.entity";
+import type { ContentScope } from "./interfaces/content-scope.interface";
+import type { User } from "./interfaces/user";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface PermissionOverrides {} // This interface can be overwritten to add custom permissions
@@ -40,6 +40,7 @@ export interface UserPermissionsUserServiceInterface {
     getUserForLogin?: (id: string) => Promise<User> | User;
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
+    getAccountUrl?: (user: User) => Promise<string> | string;
 }
 
 export type ContentScopeWithLabel = {
@@ -83,4 +84,17 @@ export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, 
  */
 export const CombinedPermission: Record<string, string> = {
     ...CorePermission,
+};
+
+/**
+ * Helper to register additional permissions into the permission enum used for the GraphQL schema.
+ * Only use this if you're building a library that requires additional permissions.
+ * For application-level permissions, use the `AppPermission` option in the module registration methods.
+ *
+ * @param additionalPermissions
+ */
+export const registerAdditionalPermissions = (additionalPermissions: Record<string, string>): void => {
+    Object.entries(additionalPermissions).forEach(([key, value]) => {
+        CombinedPermission[key] = value;
+    });
 };

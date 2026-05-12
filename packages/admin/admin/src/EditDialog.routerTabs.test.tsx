@@ -12,7 +12,7 @@ import { Button } from "./common/buttons/Button";
 import { FillSpace } from "./common/FillSpace";
 import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
 import { EditDialog } from "./EditDialog";
-import { type IEditDialogApi } from "./EditDialogApiContext";
+import type { IEditDialogApi } from "./EditDialogApiContext";
 import { FinalForm } from "./FinalForm";
 import { TextField } from "./form/fields/TextField";
 import { StackLink } from "./stack/StackLink";
@@ -20,7 +20,7 @@ import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 
 describe("EditDialog with Stack, Router Tabs and Grid", () => {
     type DialogProps = {
-        dialogApiRef: RefObject<IEditDialogApi>;
+        dialogApiRef: RefObject<IEditDialogApi | null>;
     };
 
     const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
@@ -119,6 +119,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                             } as ToolbarProps,
                         }}
                         disableVirtualization
+                        showToolbar
                     />
                 </RouterTab>
             </RouterTabs>

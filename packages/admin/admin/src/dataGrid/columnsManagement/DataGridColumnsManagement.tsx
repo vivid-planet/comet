@@ -7,11 +7,12 @@ import {
     type Theme,
     useThemeProps,
 } from "@mui/material";
-import { gridColumnVisibilityModelSelector, type GridPinnedColumnPosition, useGridApiContext, useGridSelector } from "@mui/x-data-grid-pro";
+import { gridColumnVisibilityModelSelector, type GridPinnedColumnPosition, useGridApiContext, useGridSelector } from "@mui/x-data-grid";
+import type { GridApiPro } from "@mui/x-data-grid-pro";
 import { type ChangeEvent, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { Body, Divider, List, ListHeader, Root } from "./DataGridColumnsManagement.sc";
 import { DataGridColumnsManagementListItem } from "./DataGridColumnsManagementListItem";
 
@@ -28,7 +29,7 @@ export type DataGridColumnsManagementClassKey = "root" | "body" | "list" | "list
 export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProps) => {
     const { sx, className, slotProps = {} } = useThemeProps({ props: inProps, name: "CometAdminDataGridColumnsManagement" });
 
-    const apiRef = useGridApiContext();
+    const apiRef = useGridApiContext<GridApiPro>();
     const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
     const columns = apiRef.current.getAllColumns();
 

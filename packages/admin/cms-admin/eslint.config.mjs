@@ -1,16 +1,30 @@
-import eslintConfigReact from "@comet/eslint-config/future/react.js";
+import eslintConfigReact, { restrictedImportPaths } from "@comet/eslint-config/future/react.js";
+import { defineConfig, globalIgnores } from "eslint/config";
 
-/** @type {import('eslint')} */
-const config = [
-    {
-        ignores: ["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json"],
-    },
+export default defineConfig([
+    globalIgnores(["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json"]),
     ...eslintConfigReact,
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",
         },
     },
-];
-
-export default config;
+    {
+        files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+        rules: {
+            "@calm/react-intl/missing-formatted-message": "off",
+            "no-restricted-imports": [
+                "error",
+                {
+                    paths: [
+                        ...restrictedImportPaths,
+                        {
+                            name: "@testing-library/react",
+                            message: 'Please import from "test-utils" instead.',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+]);

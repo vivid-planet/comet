@@ -11,3 +11,4 @@ skipKeywords:
 
 skipUsers:
     - renovate[bot]
+    - Copilot

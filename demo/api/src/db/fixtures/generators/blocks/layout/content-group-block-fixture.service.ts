@@ -35,7 +35,8 @@ export class ContentGroupBlockFixtureService {
     async generateContentGroupContentBlock(): Promise<ExtractBlockInputFactoryProps<typeof ContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof ContentBlock>["blocks"] = [];
 
-        const blockCfg: Record<(typeof blocks)[number]["type"], BlockFixture> = {
+        // TODO: Add table fixture (https://vivid-planet.atlassian.net/browse/COM-2227)
+        const blockCfg: Record<Exclude<(typeof blocks)[number]["type"], "table">, BlockFixture> = {
             accordion: this.accordionBlockFixtureService,
             anchor: this.anchorBlockFixtureService,
             callToActionList: this.standaloneCallToActionListBlockFixtureService,

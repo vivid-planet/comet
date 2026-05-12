@@ -1,4 +1,4 @@
-import { type GQLUpdateDamFileInput } from "../../graphql.generated";
+import type { GQLUpdateDamFileInput } from "../../graphql.generated";
 
 interface UploadFileData {
     file: File &

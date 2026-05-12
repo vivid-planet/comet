@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { mswResolver } from "@graphql-mocks/network-msw";
 import { compareAsc, compareDesc } from "date-fns";
-import { type GraphQLFieldResolver } from "graphql";
+import type { GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
 import { http, HttpResponse } from "msw";
 

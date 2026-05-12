@@ -22,7 +22,9 @@ export class ActionLogsSubscriber implements EventSubscriber {
             Reflect.hasOwnMetadata(ACTION_LOGS_METADATA_KEY, changeSet.entity.constructor.prototype),
         )) {
             const actionLog = await this.createLog(changeSet);
-            if (!actionLog) continue;
+            if (!actionLog) {
+                continue;
+            }
             args.uow.computeChangeSet(actionLog, ChangeSetType.CREATE);
             args.uow.recomputeSingleChangeSet(actionLog);
         }
@@ -31,13 +33,17 @@ export class ActionLogsSubscriber implements EventSubscriber {
     async createLog(changeSet: ChangeSet<AnyEntity>): Promise<ActionLog | null> {
         const entityName = changeSet.entity.constructor.name;
         const entityMetadata = this.entityManager.getMetadata(entityName);
-        if (!entityMetadata) return null;
+        if (!entityMetadata) {
+            return null;
+        }
 
         const actionLogsMetadata: ActionLogMetadata | undefined = Reflect.getMetadata(
             ACTION_LOGS_METADATA_KEY,
             changeSet.entity.constructor.prototype,
         );
-        if (!actionLogsMetadata) return null;
+        if (!actionLogsMetadata) {
+            return null;
+        }
 
         if (entityMetadata.primaryKeys.length != 1) {
             console.error(`entity '${entityMetadata}' doesn't have a single primary key`);

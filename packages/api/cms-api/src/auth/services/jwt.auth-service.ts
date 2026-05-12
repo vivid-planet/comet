@@ -21,7 +21,14 @@ export interface JwtAuthServiceOptions {
     jwksOptions?: JwksRsa.Options;
     verifyOptions?: JwtVerifyOptions;
     tokenHeaderName?: string;
+    /**
+     * By default the JwtAuthService tries to create the User object solely based on the content of the JWT (using `sub` as id, `name` and `email`). Setting this option allows you to provide a custom function or service that converts the JWT into a User object. This is useful if the JWT does not contain all necessary information to create the User object or if you want to include additional logic during the conversion.
+     */
     convertJwtToUser?: ConvertJwtToUser | Type<JwtToUserServiceInterface>;
+    /**
+     * By default the JwtAuthService tries to create the User object solely based on the content of the JWT (using `sub` as id, `name` and `email`). Setting this flag to true will change this behavior and instead only extract the userId from the JWT and then invoke the UserService to fetch the full User object. This is useful if the UserService contains additional logic or data that should be included in the User object.
+     */
+    shouldInvokeUserService?: boolean;
 }
 
 export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }: JwtAuthServiceOptions): Type<AuthServiceInterface> {
@@ -33,15 +40,21 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
             private jwtService: JwtService,
             private readonly moduleRef: ModuleRef,
         ) {
-            if (jwksOptions) this.jwksClient = new JwksClient(jwksOptions);
+            if (jwksOptions) {
+                this.jwksClient = new JwksClient(jwksOptions);
+            }
         }
 
         async authenticateUser<T extends JwtPayload>(request: Request): Promise<AuthenticateUserResult> {
             const token = this.extractTokenFromRequest(request);
-            if (!token) return SKIP_AUTH_SERVICE;
+            if (!token) {
+                return SKIP_AUTH_SERVICE;
+            }
 
             if (this.jwksClient) {
-                if (!verifyOptions) verifyOptions = {};
+                if (!verifyOptions) {
+                    verifyOptions = {};
+                }
                 verifyOptions.secret = await this.loadSecretFromJwks(token);
             }
             if (!verifyOptions?.secret) {
@@ -58,6 +71,10 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
                 throw e;
             }
 
+            if (options.convertJwtToUser && options.shouldInvokeUserService) {
+                throw new Error("Cannot use both `convertJwtToUser` and `shouldInvokeUserService` options simultaneously");
+            }
+
             if (options.convertJwtToUser) {
                 if (isInjectableService(options.convertJwtToUser)) {
                     const service = this.moduleRef.get(options.convertJwtToUser, { strict: false });
@@ -68,6 +85,10 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
 
             if (typeof jwt.sub !== "string" || !jwt.sub) {
                 return { authenticationError: "No sub found in JWT. Please implement `convertJwtToUser`" };
+            }
+
+            if (options.shouldInvokeUserService) {
+                return { userId: jwt.sub };
             }
 
             if (typeof jwt.name === "string" && typeof jwt.email === "string") {
@@ -86,7 +107,9 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
         }
 
         private async loadSecretFromJwks(token: string): Promise<string> {
-            if (!this.jwksClient) throw new Error("jwksOptions.jwksUri not set");
+            if (!this.jwksClient) {
+                throw new Error("jwksOptions.jwksUri not set");
+            }
             const jwt = this.jwtService.decode(token, { complete: true }) as { header: { kid: string } };
             return (await this.jwksClient.getSigningKey(jwt.header.kid)).getPublicKey();
         }

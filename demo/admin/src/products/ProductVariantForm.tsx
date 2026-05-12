@@ -10,8 +10,10 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { type BlockState, createFinalFormBlock, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { type FormApi } from "final-form";
+import type { GQLProductVariantMutationErrorCode } from "@src/graphql.generated";
+import { FORM_ERROR, type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
+import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -20,14 +22,14 @@ import {
     productVariantFormQuery,
     updateProductVariantFormMutation,
 } from "./ProductVariantForm.gql";
-import {
-    type GQLCreateProductVariantMutation,
-    type GQLCreateProductVariantMutationVariables,
-    type GQLProductVariantFormFragment,
-    type GQLProductVariantFormQuery,
-    type GQLProductVariantFormQueryVariables,
-    type GQLUpdateProductVariantMutation,
-    type GQLUpdateProductVariantMutationVariables,
+import type {
+    GQLCreateProductVariantMutation,
+    GQLCreateProductVariantMutationVariables,
+    GQLProductVariantFormFragment,
+    GQLProductVariantFormQuery,
+    GQLProductVariantFormQueryVariables,
+    GQLUpdateProductVariantMutation,
+    GQLUpdateProductVariantMutationVariables,
 } from "./ProductVariantForm.gql.generated";
 
 interface FormProps {
@@ -41,6 +43,15 @@ const rootBlocks = {
 
 type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
+};
+
+const submissionErrorMessages: { [K in GQLProductVariantMutationErrorCode]: ReactNode } = {
+    nameTooShort: (
+        <FormattedMessage
+            id="productVariant.form.error.nameTooShort"
+            defaultMessage="Name must be at least 3 characters long when creating a product variant, except for foo"
+        />
+    ),
 };
 
 export function ProductVariantForm({ id, productId }: FormProps) {
@@ -75,24 +86,54 @@ export function ProductVariantForm({ id, productId }: FormProps) {
     });
 
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        if (await saveConflict.checkForConflicts()) {
+            throw new Error("Conflicts detected");
+        }
         const output = {
             ...formValues,
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {
-            if (!id) throw new Error();
-            await client.mutate<GQLUpdateProductVariantMutation, GQLUpdateProductVariantMutationVariables>({
+            if (!id) {
+                throw new Error();
+            }
+            const { data: mutationResponse } = await client.mutate<GQLUpdateProductVariantMutation, GQLUpdateProductVariantMutationVariables>({
                 mutation: updateProductVariantFormMutation,
                 variables: { id, input: output },
             });
+            if (mutationResponse?.updateProductVariant.errors.length) {
+                return mutationResponse.updateProductVariant.errors.reduce(
+                    (submissionErrors, error) => {
+                        const errorMessage = submissionErrorMessages[error.code];
+                        if (error.field) {
+                            submissionErrors[error.field] = errorMessage;
+                        } else {
+                            submissionErrors[FORM_ERROR] = errorMessage;
+                        }
+                        return submissionErrors;
+                    },
+                    {} as Record<string, ReactNode>,
+                );
+            }
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateProductVariantMutation, GQLCreateProductVariantMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateProductVariantMutation, GQLCreateProductVariantMutationVariables>({
                 mutation: createProductVariantFormMutation,
                 variables: { product: productId, input: output },
             });
+            if (mutationResponse?.createProductVariant.errors.length) {
+                console.error(mutationResponse?.createProductVariant.errors);
+                return mutationResponse.createProductVariant.errors.reduce(
+                    (acc, error) => {
+                        if (error.field) {
+                            acc[error.field] = error.code;
+                        }
+                        return acc;
+                    },
+                    {} as Record<string, string>,
+                );
+            }
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProductVariant.id;
+                const id = mutationResponse?.createProductVariant.productVariant?.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
@@ -102,7 +143,9 @@ export function ProductVariantForm({ id, productId }: FormProps) {
         }
     };
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

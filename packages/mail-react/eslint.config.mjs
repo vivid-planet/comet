@@ -1,16 +1,25 @@
+import { defineConfig, globalIgnores } from "eslint/config";
 import eslintConfigReact from "@comet/eslint-config/future/react.js";
 
-/** @type {import('eslint')} */
-const config = [
-    {
-        ignores: ["lib/**"],
-    },
+export default defineConfig([
+    globalIgnores(["lib/**", "src/**/*.generated.ts", "block-meta.json"]),
     ...eslintConfigReact,
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",
         },
     },
-];
-
-export default config;
+    {
+        files: ["src/**/*.stories.tsx", "src/**/*.test.ts", "src/**/*.test.tsx", "src/storybook/**"],
+        rules: {
+            "@calm/react-intl/missing-formatted-message": "off",
+            "react/jsx-no-literals": "off",
+        },
+    },
+    {
+        files: ["src/storybook/**"],
+        rules: {
+            "no-restricted-imports": "off",
+        },
+    },
+]);

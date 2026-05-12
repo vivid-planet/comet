@@ -1,6 +1,6 @@
 "use client";
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
-import { type StandaloneRichTextBlockData } from "@src/blocks.generated";
+import type { StandaloneRichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 
 import { RichTextBlock } from "./RichTextBlock";

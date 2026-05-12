@@ -22,7 +22,7 @@ import { useMemo } from "react";
 import { useContentScope } from "@comet/cms-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
-import { Future_DatePickerField } from "@comet/admin";
+import { DatePickerField } from "@comet/admin";
 import { newsFormFragment } from "./NewsForm.gql";
 import { GQLNewsFormFragment } from "./NewsForm.gql.generated";
 import { newsQuery } from "./NewsForm.gql";
@@ -96,8 +96,8 @@ export function NewsForm({ onCreate, id }: FormProps) {
             const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
                 mutation: createNewsMutation,
                 variables: {
-                    scope,
                     input: output,
+                    scope,
                 },
             });
             const id = mutationResponse?.createNews.id;
@@ -144,7 +144,7 @@ export function NewsForm({ onCreate, id }: FormProps) {
                             label={<FormattedMessage id="news.title" defaultMessage="Title" />}
                         />
 
-                        <Future_DatePickerField
+                        <DatePickerField
                             required
                             variant="horizontal"
                             fullWidth

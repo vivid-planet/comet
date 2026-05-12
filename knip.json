@@ -35,7 +35,7 @@
         },
         "packages/admin/admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-date-pickers-pro", "msw", "jsdom"],
+            "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-data-grid-premium", "@mui/x-date-pickers-pro", "msw"],
             "ignore": [".storybook/middleware.js"]
         },
         "packages/admin/admin-color-picker": {
@@ -45,16 +45,20 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/admin-rte": {
-            "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jsdom"]
+            "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["**/*.generated.ts"],
-            "ignoreDependencies": ["jsdom"]
+            "ignoreDependencies": ["@mui/x-data-grid-pro", "jsdom"]
         },
         "packages/admin/admin-generator": {
+            "entry": ["./src/index.ts", "./src/adminGenerator.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/brevo-admin": {
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["**/*.generated.ts"]
         },
         "packages/api/cms-api": {
             "entry": ["./src/**/migrations/*.ts"],
@@ -62,6 +66,9 @@
             "ignoreDependencies": ["@sentry/node"]
         },
         "packages/api/api-generator": {
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/api/brevo-api": {
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/site/site-react": {
@@ -73,7 +80,9 @@
             "ignore": ["./src/**/*.generated.ts"]
         },
         "packages/mail-react": {
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/**/*.generated.ts"],
+            "ignoreDependencies": ["storybook"]
         },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
@@ -97,7 +106,7 @@
             "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {
-            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts"],
+            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "./src/proxy.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]

@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { InfoContainer, InfoContent, TitleContainer } from "./ActionLogHeader.sc";

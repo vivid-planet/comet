@@ -13,3 +13,16 @@ junit.xml
 **/.idea
 
 *storybook.log
+
+.claude
+.context
+.playwright-mcp
+
+# Agent files
+.agents/skills/
+.agents/rules/
+.cursor/skills/
+.cursor/rules/
+.claude/skills/
+.claude/rules/
+.github/instructions/

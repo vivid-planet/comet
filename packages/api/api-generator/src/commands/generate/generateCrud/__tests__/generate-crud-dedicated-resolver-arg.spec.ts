@@ -1,13 +1,13 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
 import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Property, type Ref } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Entity()
-@CrudGenerator({ targetDirectory: __dirname, requiredPermission: testPermission })
+@CrudGenerator({ requiredPermission: testPermission })
 class TestEntityProductVariant extends BaseEntity {
     @PrimaryKey({ columnType: "text", type: "string" })
     id: string;
@@ -21,7 +21,7 @@ class TestEntityProductVariant extends BaseEntity {
 }
 
 @Entity()
-@CrudGenerator({ targetDirectory: __dirname, requiredPermission: testPermission })
+@CrudGenerator({ requiredPermission: testPermission })
 class TestEntityProduct extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
@@ -45,13 +45,12 @@ describe("GenerateCrud dedicatedResolverArg", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityProductVariant"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityProductVariant"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-product-variant.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             const source = parseSource(file.content);
             const classes = source.getClasses();
@@ -74,13 +73,12 @@ describe("GenerateCrud dedicatedResolverArg", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityProductVariant"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityProductVariant"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-product-variants.args.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             const source = parseSource(file.content);
 
@@ -104,13 +102,12 @@ describe("GenerateCrud dedicatedResolverArg", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: testPermission },
-                orm.em.getMetadata().get("TestEntityProductVariant"),
-            );
+            const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityProductVariant"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "test-entity-product-variant.resolver.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
 
             const source = parseSource(file.content);
 

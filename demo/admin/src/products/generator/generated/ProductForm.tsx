@@ -27,11 +27,13 @@ import { FileUploadField } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
+import { ReactNode } from "react";
+import { FORM_ERROR } from "final-form";
 import { DamImageBlock } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
 import { GQLFinalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 import { validateProductSlug } from "../validateProductSlug";
-import { Future_DatePickerField } from "@comet/admin";
+import { DatePickerField } from "@comet/admin";
 import { SelectField } from "@comet/admin";
 import { GQLProductCategoriesSelectQuery } from "./ProductForm.generated";
 import { GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
@@ -48,7 +50,7 @@ import { GQLManufacturersSelectQuery } from "./ProductForm.generated";
 import { GQLManufacturersSelectQueryVariables } from "./ProductForm.generated";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { FutureProductNotice } from "../../helpers/FutureProductNotice";
-import { Future_DateTimePickerField as DateTimePickerField } from "@comet/admin";
+import { DateTimePickerField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormDetailsFragment } from "./ProductForm.gql.generated";
 import { productQuery } from "./ProductForm.gql";
@@ -60,6 +62,7 @@ import { GQLCreateProductMutationVariables } from "./ProductForm.gql.generated";
 import { updateProductMutation } from "./ProductForm.gql";
 import { GQLUpdateProductMutation } from "./ProductForm.gql.generated";
 import { GQLUpdateProductMutationVariables } from "./ProductForm.gql.generated";
+import { GQLProductMutationErrorCode } from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 const rootBlocks = {
     image: DamImageBlock,
@@ -74,11 +77,20 @@ type FormValues = Omit<ProductFormDetailsFragment, "image" | "lastCheckedAt"> & 
     lastCheckedAt?: Date | null;
 };
 interface FormProps {
+    initialValues?: Partial<FormValues>;
     onCreate?: (id: string) => void;
     manufacturerCountry: string;
     id?: string;
 }
-export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
+const submissionErrorMessages: Record<GQLProductMutationErrorCode, ReactNode> = {
+    titleTooShort: (
+        <FormattedMessage
+            id="product.form.error.titleTooShort"
+            defaultMessage="Title must be at least 3 characters long when creating a product, except for foo"
+        />
+    ),
+};
+export function ProductForm({ initialValues: passedInitialValues, onCreate, manufacturerCountry, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -104,6 +116,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                       availableSince: "2025-01-01",
                       image: rootBlocks.image.defaultValues(),
                       lastCheckedAt: new Date("2018-01-12T00:00:00.000Z"),
+                      ...passedInitialValues,
                   },
         [data],
     );
@@ -145,7 +158,21 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                     input: output,
                 },
             });
-            const id = mutationResponse?.createProduct.id;
+            if (mutationResponse?.createProduct.errors.length) {
+                return mutationResponse?.createProduct.errors.reduce(
+                    (submissionErrors, error) => {
+                        const errorMessage = submissionErrorMessages[error.code];
+                        if (error.field) {
+                            submissionErrors[error.field] = errorMessage;
+                        } else {
+                            submissionErrors[FORM_ERROR] = errorMessage;
+                        }
+                        return submissionErrors;
+                    },
+                    {} as Record<string, ReactNode>,
+                );
+            }
+            const id = mutationResponse?.createProduct.product?.id;
             if (id) {
                 setTimeout(() => {
                     onCreate?.(id);
@@ -192,7 +219,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                                 variant="horizontal"
                                 fullWidth
                                 name="title"
-                                label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                                label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                                 validate={(value: string) =>
                                     value.length < 3 ? (
                                         <FormattedMessage
@@ -216,7 +243,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                                 }}
                             />
 
-                            <Future_DatePickerField
+                            <DatePickerField
                                 readOnly
                                 disabled
                                 endAdornment={
@@ -227,7 +254,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                                 variant="horizontal"
                                 fullWidth
                                 name="createdAt"
-                                label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
+                                label={<FormattedMessage id="product.createdAt" defaultMessage="Created At" />}
                             />
 
                             <TextAreaField
@@ -244,7 +271,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
                                 options={[
                                     {
-                                        label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />,
+                                        label: <FormattedMessage id="product.type.greatCap" defaultMessage="Great Cap" />,
                                         value: "cap",
                                     },
                                     {
@@ -385,7 +412,7 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                                 fullWidth
                                 name="priceRange"
                                 component={FinalFormRangeInput}
-                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price range" />}
                                 min={25}
                                 max={500}
                                 disableSlider
@@ -470,13 +497,13 @@ export function ProductForm({ onCreate, manufacturerCountry, id }: FormProps) {
                                 getOptionLabel={(option) => option.name}
                             />
                             <CheckboxField
-                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                fieldLabel={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
                                 name="inStock"
                                 fullWidth
                                 variant="horizontal"
                             />
 
-                            <Future_DatePickerField
+                            <DatePickerField
                                 variant="horizontal"
                                 fullWidth
                                 name="availableSince"

@@ -1,6 +1,6 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { type AnyEntity } from "@mikro-orm/postgresql";
-import { type DynamicModule, type Type } from "@nestjs/common";
+import type { AnyEntity } from "@mikro-orm/postgresql";
+import type { DynamicModule, Type } from "@nestjs/common";
 
 import { ActionLogsResolverFactory } from "./action-logs.resolver.factory";
 import { ActionLogsService } from "./action-logs.service";

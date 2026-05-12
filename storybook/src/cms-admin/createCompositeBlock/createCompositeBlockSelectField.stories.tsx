@@ -4,11 +4,12 @@ import { createCompositeBlock, createCompositeBlockSelectField } from "@comet/cm
 import { ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
 
+import { apolloStoryDecorator } from "../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 export default {
     title: "@comet/cms-admin/createCompositeBlock/createCompositeBlockSelectField",
-    decorators: [storyRouterDecorator()],
+    decorators: [apolloStoryDecorator("/graphql"), storyRouterDecorator()],
 };
 
 export const Basic = () => {

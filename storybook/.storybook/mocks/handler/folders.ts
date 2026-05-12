@@ -1,4 +1,4 @@
-import { type GraphQLFieldResolver } from "graphql";
+import type { GraphQLFieldResolver } from "graphql";
 
 import { sleep } from "../handlers";
 

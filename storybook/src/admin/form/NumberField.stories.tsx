@@ -1,5 +1,5 @@
 import { Alert, FinalForm, NumberField } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof NumberField>;
 const config: Meta<typeof NumberField> = {

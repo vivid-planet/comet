@@ -18,22 +18,6 @@ const supportedInlineCodePaths = [
     //support in up to 5 levels of nested fields (eg. fieldSet)
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.validate`),
 ];
-const supportedFormattedMessagePaths = [
-    "[type=grid].newEntryText",
-    "[type=grid].columns.headerName",
-    "[type=grid].columns.headerInfoTooltip",
-
-    //staticSelect
-    "[type=grid].columns.values.label",
-    "[type=grid].columns.values.label.primaryText",
-    "[type=grid].columns.values.label.secondaryText",
-
-    //support in up to 5 levels of nested fields (eg. fieldSet)
-    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.label`),
-    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.helperText`),
-    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.checkboxLabel`),
-    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.title`), // fieldSet title
-];
 
 // transform the config file to replace all imports and inline code with a { code, imports } object
 // this is needed to be able to execute the config file in a node environment
@@ -69,7 +53,9 @@ export function transformConfigFile(fileName: string, sourceText: string) {
                 if (ts.isArrowFunction(node)) {
                     if (supportedInlineCodePaths.includes(path)) {
                         let code = node.getText();
-                        if (code.endsWith(",")) code = code.slice(0, -1); // for some unknown reason node can contain the trailing comma
+                        if (code.endsWith(",")) {
+                            code = code.slice(0, -1);
+                        } // for some unknown reason node can contain the trailing comma
                         const imports = findUsedImports(node.body, importedIdentifiers); //find all imports used in the function body
                         // replace inline code with { code, imports } object
                         return ts.factory.createObjectLiteralExpression(
@@ -108,25 +94,6 @@ export function transformConfigFile(fileName: string, sourceText: string) {
                                 true,
                             );
                         }
-                    }
-                } else if (ts.isJsxSelfClosingElement(node)) {
-                    if (node.tagName.getText() == "FormattedMessage") {
-                        if (!supportedFormattedMessagePaths.includes(path)) {
-                            throw new Error(`FormattedMessage is not supported in this context: ${path}`);
-                        }
-                        return ts.factory.createObjectLiteralExpression(
-                            node.attributes.properties.map((attr) => {
-                                if (!ts.isJsxAttribute(attr)) {
-                                    throw new Error(`Only JsxAttributes are supported in FormattedMessage in this context: ${path}`);
-                                }
-                                let name = attr.name?.getText();
-                                if (name === "id") name = "formattedMessageId"; // rename to identify as formattedMessage
-                                if (!attr.initializer || !ts.isStringLiteral(attr.initializer)) {
-                                    throw new Error(`Only string literals are supported in FormattedMessage in this context: ${path}.${name}`);
-                                }
-                                return ts.factory.createPropertyAssignment(name, ts.factory.createStringLiteral(attr.initializer.text));
-                            }),
-                        );
                     }
                 }
 
@@ -173,7 +140,9 @@ export function transformConfigFile(fileName: string, sourceText: string) {
     const updatedSource = ts.transform(sourceFile, [
         (context) => {
             const visitor: ts.Visitor = (node) => {
-                if (node === configNode) return transformedConfigNode;
+                if (node === configNode) {
+                    return transformedConfigNode;
+                }
                 return ts.visitEachChild(node, visitor, context);
             };
             return (node: ts.SourceFile) => ts.visitNode(node, visitor) as ts.SourceFile;

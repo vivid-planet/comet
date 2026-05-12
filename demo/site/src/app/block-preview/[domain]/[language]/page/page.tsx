@@ -1,9 +1,9 @@
 "use client";
 
 import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
-import { type PageContentBlockData } from "@src/blocks.generated";
+import type { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
-import { type ContentScope } from "@src/site-configs";
+import type { ContentScope } from "@src/site-configs";
 import { withBlockPreview } from "@src/util/blockPreview";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
