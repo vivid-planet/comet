@@ -1,6 +1,6 @@
 import { ActionLogHeader } from "@comet/cms-admin";
 import { Typography } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 

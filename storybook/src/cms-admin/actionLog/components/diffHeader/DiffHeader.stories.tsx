@@ -1,5 +1,5 @@
 import { DiffHeader } from "@comet/cms-admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof DiffHeader>;
 const meta: Meta<typeof DiffHeader> = {
