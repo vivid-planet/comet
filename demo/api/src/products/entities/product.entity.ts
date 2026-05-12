@@ -2,6 +2,7 @@ import {
     ActionLogs,
     BlockDataInterface,
     CrudField,
+    CrudGenerator,
     DamImageBlock,
     EntityInfo,
     FileUpload,
@@ -32,6 +33,7 @@ import { IsNumber } from "class-validator";
 import { GraphQLLocalDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
+import { ProductService } from "../product.service";
 import { ProductCategory } from "./product-category.entity";
 import { ProductColor } from "./product-color.entity";
 import { ProductStatistics } from "./product-statistics.entity";
@@ -91,6 +93,7 @@ export class ProductPriceRange {
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
+@CrudGenerator({ requiredPermission: ["products"], hooksService: ProductService })
 @ActionLogs()
 export class Product extends BaseEntity implements ImportTargetInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
