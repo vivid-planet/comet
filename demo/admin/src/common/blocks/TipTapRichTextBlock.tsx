@@ -43,5 +43,17 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
             appliesTo: ["paragraph"],
             element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 18, lineHeight: "18px" }} {...props} />,
         },
+        {
+            name: "list300",
+            label: <FormattedMessage id="tipTapRichTextBlock.list300" defaultMessage="List" />,
+            appliesTo: ["ordered-list", "unordered-list"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 18, lineHeight: "26px" }} {...props} />,
+        },
+        {
+            name: "list200",
+            label: <FormattedMessage id="tipTapRichTextBlock.list200" defaultMessage="List Small" />,
+            appliesTo: ["ordered-list", "unordered-list"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 15, lineHeight: "22px" }} {...props} />,
+        },
     ],
 });
