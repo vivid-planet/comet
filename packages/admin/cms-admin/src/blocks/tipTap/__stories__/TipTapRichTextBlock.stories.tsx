@@ -528,3 +528,61 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
         });
     },
 };
+
+const MaxBlocksBlock = createTipTapRichTextBlock({ maxBlocks: 2 });
+
+function MaxBlocksStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(MaxBlocksBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <MaxBlocksBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const MaxBlocks: StoryObj<typeof MaxBlocksStory> = {
+    render: () => <MaxBlocksStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Editor is ready", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Type text and press Enter to create blocks", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.click(editor);
+            await userEvent.keyboard("First block");
+            await userEvent.keyboard("{Enter}");
+            await userEvent.keyboard("Second block");
+
+            await waitFor(
+                () => {
+                    expect(editor).toHaveTextContent("First block");
+                    expect(editor).toHaveTextContent("Second block");
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Third Enter does not create a new block (maxBlocks=2 enforced)", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.keyboard("{Enter}");
+            await userEvent.keyboard("Third block");
+
+            // The text "Third block" should be appended to second block (no new block created)
+            await waitFor(
+                () => {
+                    // Should still only have 2 paragraphs in the output
+                    const paragraphs = editor.querySelectorAll("p");
+                    expect(paragraphs.length).toBeLessThanOrEqual(2);
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};
