@@ -1,12 +1,4 @@
-import { useQuery } from "@apollo/client";
-import {
-    type GridColDef,
-    muiGridFilterToGql,
-    muiGridSortToGql,
-    useBufferedRowCount,
-    useDataGridRemote,
-    usePersistentColumnState,
-} from "@comet/admin";
+import { type GridColDef, useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
 import { View } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { DataGridPro, gridClasses, type GridRowSelectionModel, type GridSlotsComponent } from "@mui/x-data-grid-pro";
@@ -15,115 +7,91 @@ import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 
 import { ActionLogHeader } from "../components/header/ActionLogHeader";
 import { ActionGridToolbar, type ActionGridToolbarProps } from "./actionGridToolbar/ActionGridToolbar";
-import { actionLogGridQuery } from "./ActionLogGrid.gql";
-import {
-    type GQLActionLogGridFragmentFragment,
-    type GQLActionLogGridQuery,
-    type GQLActionLogGridQueryVariables,
-} from "./ActionLogGrid.gql.generated";
+import type { GQLActionLogGridFragmentFragment } from "./ActionLogGrid.gql.generated";
 import { Root } from "./ActionLogGrid.sc";
 import { UserCell } from "./userCell/UserCell";
 
 type ActionGridRow = GQLActionLogGridFragmentFragment;
 
 type ActionLogGridProps = {
+    actionLogs: { nodes: ActionGridRow[]; totalCount: number } | undefined;
     id: string;
-
-    entityName: string;
+    loading: boolean;
     /**
-     * latest name of the actual object which will be displayed in the title
+     * Latest name of the actual object, displayed in the title
      */
     name?: string;
     onClick: (versionId: string) => void;
     onCompareVersionsClick: (versionId: string, versionsId2: string) => void;
 };
 
-export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ id, entityName, name, onClick, onCompareVersionsClick }) => {
+export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ actionLogs, id, loading, name, onClick, onCompareVersionsClick }) => {
     const intl = useIntl();
-    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({ type: "include", ids: new Set() });
 
     const dataGridRemote = useDataGridRemote({ initialSort: [{ field: "version", sort: "desc" }] });
     const dataGridPersistent = usePersistentColumnState("ActionLogGrid");
     const dataGridProps = { ...dataGridRemote, ...dataGridPersistent };
-    const columns: GridColDef<ActionGridRow>[] = [
-        {
-            field: "version",
-            headerName: intl.formatMessage({ defaultMessage: "Version", id: "actionLog.actionLogGrid.columns.version" }),
-        },
-        {
-            field: "createdAt",
-            headerName: intl.formatMessage({ defaultMessage: "Datum", id: "actionLog.actionLogGrid.columns.createdAt" }),
-            minWidth: 200,
-            renderCell: ({ row }) => {
-                return <FormattedDate dateStyle="medium" timeStyle="short" value={row.createdAt} />;
-            },
-        },
-        {
-            field: "userId",
-            headerName: intl.formatMessage({ defaultMessage: "Geändert von", id: "actionLog.actionLogGrid.columns.userId" }),
-            minWidth: 400,
-            renderCell: ({ row }) => {
-                return <UserCell name={row.userId} />;
-            },
-        },
-        {
-            align: "right",
-            field: "actions",
-            filterable: false,
-            headerName: intl.formatMessage({ defaultMessage: "Actions", id: "actionLog.actionLogGrid.columns.actions" }),
-            pinned: "right",
-            width: 60,
-            renderCell: ({ row }) => {
-                return (
-                    <IconButton
-                        color="primary"
-                        onClick={() => {
-                            onClick(row.id);
-                        }}
-                    >
-                        <View />
-                    </IconButton>
-                );
-            },
-            renderHeader: () => {
-                return null;
-            },
-            sortable: false,
-            type: "actions",
-        },
-    ];
 
-    const { filter: gqlFilter } = muiGridFilterToGql(columns, dataGridProps.filterModel);
-
-    const { data, error, loading } = useQuery<GQLActionLogGridQuery, GQLActionLogGridQueryVariables>(actionLogGridQuery, {
-        variables: {
-            entityName,
-            filter: {
-                and: [
-                    ...(gqlFilter.and != null ? gqlFilter.and : []),
-                    {
-                        entityId: {
-                            equal: id,
-                        },
-                    },
-                ],
-                or: gqlFilter.or,
+    const columns = useMemo<GridColDef<ActionGridRow>[]>(
+        () => [
+            {
+                field: "version",
+                headerName: intl.formatMessage({ defaultMessage: "Version", id: "actionLog.actionLogGrid.columns.version" }),
             },
-            limit: dataGridProps.paginationModel.pageSize,
-            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
-            sort: muiGridSortToGql(dataGridProps.sortModel),
-        },
-    });
+            {
+                field: "createdAt",
+                headerName: intl.formatMessage({ defaultMessage: "Datum", id: "actionLog.actionLogGrid.columns.createdAt" }),
+                minWidth: 200,
+                renderCell: ({ row }) => {
+                    return <FormattedDate dateStyle="medium" timeStyle="short" value={row.createdAt} />;
+                },
+            },
+            {
+                field: "userId",
+                headerName: intl.formatMessage({ defaultMessage: "Geändert von", id: "actionLog.actionLogGrid.columns.userId" }),
+                minWidth: 400,
+                renderCell: ({ row }) => {
+                    return <UserCell name={row.userId} />;
+                },
+            },
+            {
+                align: "right",
+                field: "actions",
+                filterable: false,
+                headerName: intl.formatMessage({ defaultMessage: "Actions", id: "actionLog.actionLogGrid.columns.actions" }),
+                pinned: "right",
+                width: 60,
+                renderCell: ({ row }) => {
+                    return (
+                        <IconButton
+                            color="primary"
+                            onClick={() => {
+                                onClick(row.id);
+                            }}
+                        >
+                            <View />
+                        </IconButton>
+                    );
+                },
+                renderHeader: () => {
+                    return null;
+                },
+                sortable: false,
+                type: "actions",
+            },
+        ],
+        [intl, onClick],
+    );
 
-    const rowCount = useBufferedRowCount(data?.actionLogs.totalCount);
+    const rowCount = useBufferedRowCount(actionLogs?.totalCount);
 
-    if (error) throw error;
-
+    const selectedIds = Array.from(selectionModel.ids);
     const toolbarProps: ActionGridToolbarProps = {
-        disableCompare: selectionModel.length < 2,
+        disableCompare: selectionModel.ids.size < 2,
         onClickCompare: () => {
-            if (selectionModel.length >= 2) {
-                onCompareVersionsClick(selectionModel[0].toString(), selectionModel[1].toString());
+            if (selectionModel.ids.size >= 2) {
+                onCompareVersionsClick(selectedIds[0].toString(), selectedIds[1].toString());
             }
         },
     };
@@ -141,7 +109,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ id, entit
                 }
                 dbTypes={Array.from(
                     new Set(
-                        data?.actionLogs.nodes.map((value) => {
+                        actionLogs?.nodes.map((value) => {
                             return value.entityName;
                         }),
                     ),
@@ -169,11 +137,11 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ id, entit
                 checkboxSelection={true}
                 columns={columns}
                 isRowSelectable={(params) => {
-                    if (selectionModel.includes(params.row.id)) {
+                    if (selectionModel.ids.has(params.row.id)) {
                         return true;
                     }
 
-                    return selectionModel.length < 2;
+                    return selectionModel.ids.size < 2;
                 }}
                 loading={loading}
                 onRowSelectionModelChange={(newSelectionModel) => {
@@ -181,7 +149,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ id, entit
                 }}
                 pinnedColumns={{ right: ["actions"] }}
                 rowCount={rowCount}
-                rows={data?.actionLogs.nodes ?? []}
+                rows={actionLogs?.nodes ?? []}
                 rowSelectionModel={selectionModel}
                 slotProps={{
                     toolbar: toolbarProps,

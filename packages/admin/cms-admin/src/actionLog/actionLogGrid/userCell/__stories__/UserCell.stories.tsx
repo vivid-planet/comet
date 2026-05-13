@@ -1,10 +1,11 @@
-import { UserCell } from "@comet/cms-admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { UserCell } from "../UserCell";
 
 type Story = StoryObj<typeof UserCell>;
 const meta: Meta<typeof UserCell> = {
     component: UserCell,
-    title: "@comet/cms-admin/Action log/Action log grid/User cell/User cell",
+    title: "Action log/Action log grid/User cell",
 };
 export default meta;
 

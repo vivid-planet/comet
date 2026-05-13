@@ -1,13 +1,15 @@
-import { ActionGridToolbar } from "@comet/cms-admin";
 import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
-import type { Meta, StoryFn } from "@storybook/react-webpack5";
+import type { Meta, StoryFn } from "@storybook/react-vite";
+
+import { ActionGridToolbar } from "../ActionGridToolbar";
 
 type Story = StoryFn<typeof ActionGridToolbar>;
 const config: Meta<typeof ActionGridToolbar> = {
     component: ActionGridToolbar,
-    title: "@comet/cms-admin/Action log/Action log grid/Action grid toolbar/Action grid toolbar",
+    title: "Action log/Action log grid/Action grid toolbar",
 };
 export default config;
+
 const TemplateStory: Story = (props) => {
     const StoryComponent = () => {
         return (
