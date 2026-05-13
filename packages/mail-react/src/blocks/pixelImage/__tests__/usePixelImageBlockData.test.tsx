@@ -5,7 +5,7 @@ import type { PixelImageBlockData } from "../../../blocks.generated.js";
 import { type Config, ConfigProvider } from "../../../config/ConfigProvider.js";
 import { createTheme } from "../../../theme/createTheme.js";
 import { ThemeProvider } from "../../../theme/ThemeProvider.js";
-import { usePixelImageData } from "../usePixelImageData.js";
+import { usePixelImageBlockData } from "../usePixelImageBlockData.js";
 
 interface CaptureOptions {
     data: PixelImageBlockData;
@@ -16,10 +16,10 @@ interface CaptureOptions {
 }
 
 function captureUsePixelImageData({ data, defaultRenderWidth, largestPossibleRenderWidth, aspectRatio, config }: CaptureOptions) {
-    const captured: { value: ReturnType<typeof usePixelImageData> | undefined } = { value: undefined };
+    const captured: { value: ReturnType<typeof usePixelImageBlockData> | undefined } = { value: undefined };
 
     function Probe() {
-        captured.value = usePixelImageData({ data, defaultRenderWidth, largestPossibleRenderWidth, aspectRatio });
+        captured.value = usePixelImageBlockData({ data, defaultRenderWidth, largestPossibleRenderWidth, aspectRatio });
         return null;
     }
 
@@ -39,7 +39,7 @@ function captureUsePixelImageData({ data, defaultRenderWidth, largestPossibleRen
 
 function expectNonNull<T>(value: T | null): T {
     if (value === null) {
-        throw new Error("Expected non-null result from usePixelImageData");
+        throw new Error("Expected non-null result from usePixelImageBlockData");
     }
     return value;
 }
@@ -68,7 +68,7 @@ const smartImageData: PixelImageBlockData = {
     urlTemplate: smartUrlTemplate,
 };
 
-describe("usePixelImageData — width selection", () => {
+describe("usePixelImageBlockData — width selection", () => {
     it("picks the smallest validSizes entry >= defaultRenderWidth × 2", () => {
         const result = expectNonNull(captureUsePixelImageData({ data: smartImageData, defaultRenderWidth: 200, config }));
         expect(result.imageUrl).toContain(":640:");
@@ -102,7 +102,7 @@ describe("usePixelImageData — width selection", () => {
     });
 });
 
-describe("usePixelImageData — URL prefixing", () => {
+describe("usePixelImageBlockData — URL prefixing", () => {
     it("prefixes a relative URL with config.pixelImageBlock.baseUrl", () => {
         const result = expectNonNull(captureUsePixelImageData({ data: smartImageData, defaultRenderWidth: 200, config }));
         expect(result.imageUrl.startsWith(`${baseUrl}/dam/images/abc/`)).toBe(true);
@@ -119,7 +119,7 @@ describe("usePixelImageData — URL prefixing", () => {
     });
 });
 
-describe("usePixelImageData — aspect ratio", () => {
+describe("usePixelImageBlockData — aspect ratio", () => {
     it("uses the natural image aspect ratio for SMART crop areas", () => {
         const result = expectNonNull(captureUsePixelImageData({ data: smartImageData, defaultRenderWidth: 200, config }));
         expect(result.desktopImageHeight).toBe(100);
@@ -171,7 +171,7 @@ describe("usePixelImageData — aspect ratio", () => {
     });
 });
 
-describe("usePixelImageData — aspectRatio override", () => {
+describe("usePixelImageBlockData — aspectRatio override", () => {
     it("uses a numeric aspectRatio in place of the cropArea-derived ratio", () => {
         const result = expectNonNull(captureUsePixelImageData({ data: smartImageData, defaultRenderWidth: 200, aspectRatio: 16 / 9, config }));
         expect(result.imageUrl).toContain(":640:360/");
@@ -224,7 +224,7 @@ describe("usePixelImageData — aspectRatio override", () => {
     });
 });
 
-describe("usePixelImageData — incomplete data", () => {
+describe("usePixelImageBlockData — incomplete data", () => {
     it("returns null when damFile is absent", () => {
         const result = captureUsePixelImageData({ data: { urlTemplate: smartUrlTemplate }, defaultRenderWidth: 200, config });
         expect(result).toBeNull();

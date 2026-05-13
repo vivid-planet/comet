@@ -4,7 +4,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { registerStyles } from "../../styles/registerStyles.js";
 import { css } from "../../utils/css.js";
 import type { PixelImageBlockBaseProps } from "./common.js";
-import { usePixelImageData } from "./usePixelImageData.js";
+import { usePixelImageBlockData } from "./usePixelImageBlockData.js";
 
 export type HtmlPixelImageBlockProps = Omit<ComponentProps<"img">, "src" | "width" | "height"> & PixelImageBlockBaseProps;
 
@@ -23,7 +23,7 @@ export function HtmlPixelImageBlock({
     className,
     ...imgProps
 }: HtmlPixelImageBlockProps): ReactNode {
-    const imageData = usePixelImageData({ data, defaultRenderWidth: width, largestPossibleRenderWidth, aspectRatio });
+    const imageData = usePixelImageBlockData({ data, defaultRenderWidth: width, largestPossibleRenderWidth, aspectRatio });
 
     if (!imageData) {
         return null;

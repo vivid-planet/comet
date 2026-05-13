@@ -1,15 +1,15 @@
-import type { PixelImageBlockData } from "../../blocks.generated.js";
+import type { PixelImageBlockData as PixelImageBlockSourceData } from "../../blocks.generated.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
-import { usePixelImageConfig } from "./usePixelImageConfig.js";
+import { usePixelImageBlockConfig } from "./usePixelImageBlockConfig.js";
 
-interface UsePixelImageDataProps {
-    data: PixelImageBlockData;
+interface UsePixelImageBlockDataProps {
+    data: PixelImageBlockSourceData;
     defaultRenderWidth: number;
     largestPossibleRenderWidth?: number;
     aspectRatio?: number | string;
 }
 
-interface PixelImageData {
+interface PixelImageBlockData {
     imageUrl: string;
     defaultRenderWidth: number;
     desktopImageHeight: number;
@@ -17,14 +17,14 @@ interface PixelImageData {
     title: string | undefined;
 }
 
-export function usePixelImageData({
+export function usePixelImageBlockData({
     data: { damFile, cropArea, urlTemplate },
     defaultRenderWidth,
     largestPossibleRenderWidth: passedLargestPossibleRenderWidth,
     aspectRatio: passedAspectRatio,
-}: UsePixelImageDataProps): PixelImageData | null {
+}: UsePixelImageBlockDataProps): PixelImageBlockData | null {
     const theme = useTheme();
-    const { validSizes, baseUrl } = usePixelImageConfig();
+    const { validSizes, baseUrl } = usePixelImageBlockConfig();
     const largestPossibleRenderWidth = passedLargestPossibleRenderWidth ?? theme.sizes.bodyWidth;
 
     if (!damFile?.image) {

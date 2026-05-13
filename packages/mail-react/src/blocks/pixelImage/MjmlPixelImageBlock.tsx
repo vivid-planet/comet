@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { registerStyles } from "../../styles/registerStyles.js";
 import { css } from "../../utils/css.js";
 import type { PixelImageBlockBaseProps } from "./common.js";
-import { usePixelImageData } from "./usePixelImageData.js";
+import { usePixelImageBlockData } from "./usePixelImageBlockData.js";
 
 export type MjmlPixelImageBlockProps = Omit<IMjmlImageProps, "src" | "width" | "height"> & PixelImageBlockBaseProps;
 
@@ -21,7 +21,7 @@ export function MjmlPixelImageBlock({
     className,
     ...imageProps
 }: MjmlPixelImageBlockProps): ReactNode {
-    const imageData = usePixelImageData({ data, defaultRenderWidth: width, largestPossibleRenderWidth, aspectRatio });
+    const imageData = usePixelImageBlockData({ data, defaultRenderWidth: width, largestPossibleRenderWidth, aspectRatio });
 
     if (!imageData) {
         return null;

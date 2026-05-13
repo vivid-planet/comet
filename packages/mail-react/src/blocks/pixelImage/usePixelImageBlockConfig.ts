@@ -3,7 +3,7 @@ import { type PixelImageBlockConfig, useConfig } from "../../config/ConfigProvid
 /**
  * Reads `config.pixelImageBlock` from the configuration context and returns it narrowed to non-null.
  */
-export function usePixelImageConfig(): PixelImageBlockConfig {
+export function usePixelImageBlockConfig(): PixelImageBlockConfig {
     const { pixelImageBlock } = useConfig();
 
     if (!pixelImageBlock) {

@@ -2,14 +2,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { ConfigProvider } from "../../../config/ConfigProvider.js";
-import { usePixelImageConfig } from "../usePixelImageConfig.js";
+import { usePixelImageBlockConfig } from "../usePixelImageBlockConfig.js";
 
 function ConfigProbe() {
-    usePixelImageConfig();
+    usePixelImageBlockConfig();
     return null;
 }
 
-describe("usePixelImageConfig", () => {
+describe("usePixelImageBlockConfig", () => {
     it("throws when config.pixelImageBlock is unset", () => {
         expect(() => renderToStaticMarkup(<ConfigProbe />)).toThrowError(/`pixelImageBlock` must be set/);
     });
