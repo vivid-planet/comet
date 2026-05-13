@@ -1,6 +1,6 @@
 ---
 name: dev-pm
-description: Run, restart, stop, and inspect logs/status of long-running development processes via dev-pm (dev-process-manager). Use when starting/stopping/restarting services, tailing logs of those processes, or checking which services are running. Do not use for one-off scripts (`pnpm run X` is fine for those) — dev-pm is for processes that stay alive.
+description: Run, restart, stop, and inspect logs/status of long-running development processes via dev-pm (dev-process-manager). Use when starting/stopping/restarting services, tailing logs of those processes, or checking which services are running. Do not use for one-off scripts (`npm run X` is fine for those) — dev-pm is for processes that stay alive.
 ---
 
 # dev-pm Skill
@@ -9,7 +9,7 @@ description: Run, restart, stop, and inspect logs/status of long-running develop
 
 ## Critical rules
 
-1. **Always invoke through pnpm:** `pnpm exec -- dev-pm <command>`. Never call `dev-pm` directly.
+1. **Always invoke through the package manager:** `npm exec -- dev-pm <command>`. Never call `dev-pm` directly. If `pnpm` is the active package manager for the project (e.g. a `pnpm-lock.yaml` is present), use `pnpm exec -- dev-pm <command>` instead.
 2. **Never use streaming flags from a tool call — they hang.** `logs` requires `-n` / `--lines <N>`; `status` must not get `--interval`; `start` / `restart` must not get `--follow`.
 3. **Services may already be running.** dev-pm runs as a daemon across sessions — check `status` before starting things again. Same applies to build watchers ("the build watcher is running" means dev-pm is supervising a `build:watch` script); if absent, build the affected package manually.
 4. **dev-pm owns _all_ long-running tasks — including docker.** If a project uses dev-pm, assume every long-lived process (servers, watchers, codegen, **and** `docker compose up`) is wired into `dev-pm.config.ts`. Don't reach for `docker compose up` / `docker compose down` directly — start/stop the corresponding dev-pm script (commonly named `docker`). Exceptions exist; only treat something as outside scope after confirming it's not in `dev-pm.config.ts`.
@@ -21,9 +21,9 @@ Script/group names below are placeholders; the authoritative list is `dev-pm.con
 ### `start [patterns...]`
 
 ```bash
-pnpm exec -- dev-pm start <script>      # one script
-pnpm exec -- dev-pm start @<group>      # a group
-pnpm exec -- dev-pm start <a> <b>       # multiple patterns
+npm exec -- dev-pm start <script>      # one script
+npm exec -- dev-pm start @<group>      # a group
+npm exec -- dev-pm start <a> <b>       # multiple patterns
 ```
 
 - `@`-prefix → group name (from `group: [...]` in the config). Bare → script `name`. Globs (minimatch) work too, e.g. `api-*`.
@@ -32,8 +32,8 @@ pnpm exec -- dev-pm start <a> <b>       # multiple patterns
 ### `status` / `list`
 
 ```bash
-pnpm exec -- dev-pm status              # all scripts
-pnpm exec -- dev-pm status <pattern>    # filter
+npm exec -- dev-pm status              # all scripts
+npm exec -- dev-pm status <pattern>    # filter
 ```
 
 First stop when troubleshooting "is X running?".
@@ -50,8 +50,8 @@ First stop when troubleshooting "is X running?".
 ### `logs` / `log`
 
 ```bash
-pnpm exec -- dev-pm logs --lines 200 <script>
-pnpm exec -- dev-pm log -n 500 <pattern>
+npm exec -- dev-pm logs --lines 200 <script>
+npm exec -- dev-pm log -n 500 <pattern>
 ```
 
 Pick a line count for the question — 100–200 for a quick check, 500+ for startup/error history.
@@ -59,8 +59,8 @@ Pick a line count for the question — 100–200 for a quick check, 500+ for sta
 ### `restart [patterns...]`
 
 ```bash
-pnpm exec -- dev-pm restart <script>
-pnpm exec -- dev-pm restart @<group>
+npm exec -- dev-pm restart <script>
+npm exec -- dev-pm restart @<group>
 ```
 
 Use after rebuilding a package whose consumers cache the old build, or after editing config the running process loaded at startup.
@@ -68,8 +68,8 @@ Use after rebuilding a package whose consumers cache the old build, or after edi
 ### `stop [patterns...]`
 
 ```bash
-pnpm exec -- dev-pm stop <script>
-pnpm exec -- dev-pm stop @<group>
+npm exec -- dev-pm stop <script>
+npm exec -- dev-pm stop @<group>
 ```
 
 Stops the matched scripts; the daemon stays alive.
@@ -77,7 +77,7 @@ Stops the matched scripts; the daemon stays alive.
 ### `shutdown` / `halt`
 
 ```bash
-pnpm exec -- dev-pm shutdown
+npm exec -- dev-pm shutdown
 ```
 
 Stops everything and shuts down the daemon. Only when the user explicitly asks to "stop everything" / "kill dev-pm". Don't use as a "reset state" hammer — prefer `restart <pattern>`.
