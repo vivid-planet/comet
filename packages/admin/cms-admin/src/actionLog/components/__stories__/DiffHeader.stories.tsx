@@ -1,10 +1,11 @@
-import { DiffHeader } from "@comet/cms-admin";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { DiffHeader } from "../DiffHeader";
 
 type Story = StoryObj<typeof DiffHeader>;
 const meta: Meta<typeof DiffHeader> = {
     component: DiffHeader,
-    title: "@comet/cms-admin/Action log/Components/Diff header/Diff header",
+    title: "actionLog/components/DiffHeader",
 };
 export default meta;
 

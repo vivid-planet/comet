@@ -1,13 +1,14 @@
-import { ActionLogHeader } from "@comet/cms-admin";
 import { Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
+import { ActionLogHeader } from "../ActionLogHeader";
+
 type Story = StoryObj<typeof ActionLogHeader>;
 const meta: Meta<typeof ActionLogHeader> = {
     component: ActionLogHeader,
-    title: "@comet/cms-admin/Action log/Components/Header/Action log header",
+    title: "actionLog/components/header/ActionLogHeader",
 };
 export default meta;
 

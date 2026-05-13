@@ -1,10 +1,11 @@
-import { DiffViewer } from "@comet/cms-admin";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { DiffViewer } from "../DiffViewer";
 
 type Story = StoryObj<typeof DiffViewer>;
 const meta: Meta<typeof DiffViewer> = {
     component: DiffViewer,
-    title: "@comet/cms-admin/Action log/Components/Diff viewer/Diff viewer",
+    title: "actionLog/components/diffViewer/DiffViewer",
 };
 export default meta;
 
