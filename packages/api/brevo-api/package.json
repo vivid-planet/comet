@@ -29,8 +29,8 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
-        "test": "jest --passWithNoTests",
-        "test:watch": "jest --watch"
+        "test": "vitest --run --passWithNoTests",
+        "test:watch": "vitest --watch"
     },
     "dependencies": {
         "@comet/cms-api": "workspace:*",
@@ -62,22 +62,19 @@
         "@nestjs/graphql": "^13.4.0",
         "@nestjs/platform-express": "^11.1.19",
         "@types/inquirer": "^8.2.12",
-        "@types/jest": "^29.5.14",
         "@types/lodash.isequal": "^4.5.8",
         "@types/uuid": "^8.3.4",
         "chokidar-cli": "^2.1.0",
         "eslint": "^9.39.2",
         "express": "^5.2.1",
         "graphql": "^16.13.2",
-        "jest": "^29.7.0",
-        "jest-junit": "^15.0.0",
         "prettier": "^3.4.2",
         "reflect-metadata": "^0.2.2",
         "rimraf": "^3.0.2",
         "rxjs": "^7.8.2",
-        "ts-jest": "^29.4.9",
         "ts-node": "^10.9.2",
-        "typescript": "^5.9.3"
+        "typescript": "^5.9.3",
+        "vitest": "^4.0.16"
     },
     "peerDependencies": {
         "@mikro-orm/cli": "^6.0.0",
