@@ -343,6 +343,101 @@ describe("createTipTapRichTextBlock validation", () => {
         });
     });
 
+    describe("schema with block styles and lists", () => {
+        const block = createTipTapRichTextBlock(
+            {
+                supports: ["bold", "heading", "ordered-list", "unordered-list"],
+                blockStyles: [
+                    { name: "intro", appliesTo: ["paragraph"] },
+                    { name: "listStyle", appliesTo: ["ordered-list", "unordered-list"] },
+                    { name: "highlight" },
+                ],
+            },
+            "TestBlockStylesList",
+        );
+
+        it("should accept a paragraph with blockStyle inside an ordered list", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "orderedList",
+                            content: [
+                                {
+                                    type: "listItem",
+                                    content: [
+                                        {
+                                            type: "paragraph",
+                                            attrs: { blockStyle: "listStyle" },
+                                            content: [{ type: "text", text: "Styled list item" }],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept a paragraph with blockStyle inside a bullet list", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "bulletList",
+                            content: [
+                                {
+                                    type: "listItem",
+                                    content: [
+                                        {
+                                            type: "paragraph",
+                                            attrs: { blockStyle: "highlight" },
+                                            content: [{ type: "text", text: "Highlighted bullet" }],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept a list item paragraph with null blockStyle", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "bulletList",
+                            content: [
+                                {
+                                    type: "listItem",
+                                    content: [
+                                        {
+                                            type: "paragraph",
+                                            attrs: { blockStyle: null },
+                                            content: [{ type: "text", text: "Default bullet" }],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+    });
+
     describe("minimal schema (no supports)", () => {
         const block = createTipTapRichTextBlock({ supports: [] }, "TestMinimal");
 
@@ -545,6 +640,68 @@ describe("createTipTapRichTextBlock validation", () => {
                                 },
                             ],
                         },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+    });
+
+    describe("maxBlocks option", () => {
+        const block = createTipTapRichTextBlock({ maxBlocks: 2 }, "TestMaxBlocks");
+
+        it("should accept content within maxBlocks limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "First" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Second" }] },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept content with fewer blocks than maxBlocks", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [{ type: "paragraph", content: [{ type: "text", text: "Only one" }] }],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should reject content exceeding maxBlocks limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "First" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Second" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "Third" }] },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+            expect(errors[0].property).toBe("tipTapContent");
+        });
+
+        it("should reject content with many blocks exceeding limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "1" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "2" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "3" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "4" }] },
+                        { type: "paragraph", content: [{ type: "text", text: "5" }] },
                     ],
                 },
             });

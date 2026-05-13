@@ -1,5 +1,17 @@
 import { createContext, type PropsWithChildren, type ReactNode, useContext } from "react";
 
+export interface PixelImageBlockConfig {
+    /**
+     * Image widths supported by the API, used to pick a render width.
+     * Generally derived from `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`.
+     */
+    validSizes: number[];
+    /**
+     * Origin to prefix relative image URLs with, e.g. `http://localhost:3000`.
+     */
+    baseUrl: string;
+}
+
 /**
  * Configuration context for mails.
  *
@@ -13,8 +25,13 @@ import { createContext, type PropsWithChildren, type ReactNode, useContext } fro
  * }
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface Config {}
+export interface Config {
+    /**
+     * Configuration consumed by `HtmlPixelImageBlock` and `MjmlPixelImageBlock`.
+     * Required when those components are rendered.
+     */
+    pixelImageBlock?: PixelImageBlockConfig;
+}
 
 const ConfigContext = createContext<Config>({});
 

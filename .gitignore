@@ -20,5 +20,9 @@ junit.xml
 
 # Agent files
 .agents/skills/
+.agents/rules/
 .cursor/skills/
+.cursor/rules/
 .claude/skills/
+.claude/rules/
+.github/instructions/
