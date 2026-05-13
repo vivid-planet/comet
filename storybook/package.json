@@ -75,7 +75,7 @@
         "eslint-plugin-storybook": "^10.3.5",
         "graphql-mocks": "^0.10.0",
         "immutable": "^3.8.2",
-        "msw": "^2.0.0",
+        "msw": "^2.14.6",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "react-dnd": "^16.0.1",
