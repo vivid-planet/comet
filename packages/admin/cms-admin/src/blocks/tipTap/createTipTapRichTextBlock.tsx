@@ -174,7 +174,13 @@ function trimListNesting(content: JSONContent, maxLevel: number, currentDepth = 
 
     const newContent = content.content
         .map((child) => trimListNesting(child, maxLevel, depth))
-        .filter((child) => child.type !== "paragraph" || child.content !== undefined || !isListNode);
+        .filter((child) => {
+            // When a list is removed (replaced with empty paragraph), keep it only if it has content
+            if (isListNode && child.type === "paragraph" && child.content === undefined) {
+                return false;
+            }
+            return true;
+        });
 
     return { ...content, content: newContent };
 }
