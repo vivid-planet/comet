@@ -89,6 +89,11 @@ interface TipTapRichTextBlockFactoryOptions {
      * that can be created in the editor.
      */
     maxBlocks?: number;
+    /**
+     * Limits the maximum nesting depth of list items.
+     * A value of 1 means only a flat list (no nesting), 2 allows one level of sub-lists, etc.
+     */
+    listLevelMax?: number;
 }
 
 function getPlainTextFromContent(content: JSONContent): string {
@@ -121,6 +126,96 @@ const createMaxBlocksExtension = (maxBlocks: number) =>
                         if (parentDepth === 1 && isAtEndOfBlock) {
                             return true; // prevent
                         }
+                    }
+                    return false;
+                },
+            };
+        },
+    });
+
+function getListNestingDepthFromJson(content: JSONContent, currentDepth = 0): number {
+    if (!content || typeof content !== "object") {
+        return 0;
+    }
+
+    const isListNode = content.type === "bulletList" || content.type === "orderedList";
+    const depth = isListNode ? currentDepth + 1 : currentDepth;
+
+    if (!Array.isArray(content.content)) {
+        return depth;
+    }
+
+    let maxDepth = depth;
+    for (const child of content.content) {
+        const childDepth = getListNestingDepthFromJson(child, depth);
+        if (childDepth > maxDepth) {
+            maxDepth = childDepth;
+        }
+    }
+    return maxDepth;
+}
+
+function trimListNesting(content: JSONContent, maxLevel: number, currentDepth = 0): JSONContent {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+
+    const isListNode = content.type === "bulletList" || content.type === "orderedList";
+    const depth = isListNode ? currentDepth + 1 : currentDepth;
+
+    if (isListNode && depth > maxLevel) {
+        // Remove this list node entirely - extract text content from listItems as flat content
+        return { type: "paragraph" };
+    }
+
+    if (!Array.isArray(content.content)) {
+        return content;
+    }
+
+    const newContent = content.content
+        .map((child) => trimListNesting(child, maxLevel, depth))
+        .filter((child) => child.type !== "paragraph" || child.content !== undefined || !isListNode);
+
+    return { ...content, content: newContent };
+}
+
+function getListDepthAtSelection(editor: {
+    state: { selection: { $from: { depth: number; node: (depth: number) => { type: { name: string } } } } };
+}): number {
+    const { $from } = editor.state.selection;
+    let listDepth = 0;
+    for (let d = 0; d <= $from.depth; d++) {
+        const node = $from.node(d);
+        if (node.type.name === "bulletList" || node.type.name === "orderedList") {
+            listDepth++;
+        }
+    }
+    return listDepth;
+}
+
+const createListLevelMaxExtension = (listLevelMax: number) =>
+    Extension.create({
+        name: "listLevelMax",
+        addKeyboardShortcuts() {
+            return {
+                Tab: ({ editor }) => {
+                    // Only intercept Tab in list context
+                    const { $from } = editor.state.selection;
+                    let inList = false;
+                    for (let d = 0; d <= $from.depth; d++) {
+                        const node = $from.node(d);
+                        if (node.type.name === "bulletList" || node.type.name === "orderedList") {
+                            inList = true;
+                            break;
+                        }
+                    }
+                    if (!inList) {
+                        return false;
+                    }
+
+                    const currentDepth = getListDepthAtSelection(editor);
+                    if (currentDepth >= listLevelMax) {
+                        return true; // prevent further indentation
                     }
                     return false;
                 },
@@ -183,6 +278,7 @@ const TipTapEditor = ({
     blockStyles,
     linkBlock,
     maxBlocks,
+    listLevelMax,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
@@ -190,6 +286,7 @@ const TipTapEditor = ({
     blockStyles: TipTapBlockStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
     maxBlocks?: number;
+    listLevelMax?: number;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
@@ -217,6 +314,7 @@ const TipTapEditor = ({
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasLink ? [CmsLink] : []),
             ...(maxBlocks !== undefined ? [createMaxBlocksExtension(maxBlocks)] : []),
+            ...(listLevelMax !== undefined ? [createListLevelMaxExtension(listLevelMax)] : []),
         ],
         content: state.tipTapContent,
         onUpdate: ({ editor }) => {
@@ -235,6 +333,18 @@ const TipTapEditor = ({
                 editor.view.dispatch(tr);
                 return;
             }
+
+            if (listLevelMax !== undefined) {
+                const json = editor.getJSON();
+                const currentDepth = getListNestingDepthFromJson(json);
+                if (currentDepth > listLevelMax) {
+                    // Trim nested lists that exceed the limit (e.g. from paste)
+                    const trimmed = trimListNesting(json, listLevelMax);
+                    editor.commands.setContent(trimmed);
+                    return;
+                }
+            }
+
             updateState({ tipTapContent: editor.getJSON() });
         },
     });
@@ -246,7 +356,7 @@ const TipTapEditor = ({
     return (
         <BlockStyleContext.Provider value={blockStyles}>
             <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />
+                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} listLevelMax={listLevelMax} />
                 <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
                     <EditorContent editor={editor} />
                 </Box>
@@ -265,6 +375,7 @@ export const createTipTapRichTextBlock = (
     const blockStyles = options?.blockStyles ?? [];
     const linkBlock = options?.link;
     const maxBlocks = options?.maxBlocks;
+    const listLevelMax = options?.listLevelMax;
 
     // Auto-enable link support when a link block is provided
     if (linkBlock && !supports.includes("link")) {
@@ -326,6 +437,7 @@ export const createTipTapRichTextBlock = (
                     blockStyles={blockStyles}
                     linkBlock={linkBlock}
                     maxBlocks={maxBlocks}
+                    listLevelMax={listLevelMax}
                 />
             );
         },

@@ -586,3 +586,78 @@ export const MaxBlocks: StoryObj<typeof MaxBlocksStory> = {
         });
     },
 };
+
+const ListLevelMaxBlock = createTipTapRichTextBlock({ listLevelMax: 2 });
+
+function ListLevelMaxStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(ListLevelMaxBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <ListLevelMaxBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const ListLevelMax: StoryObj<typeof ListLevelMaxStory> = {
+    render: () => <ListLevelMaxStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Editor is ready", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Create a bullet list", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.click(editor);
+            await userEvent.keyboard("Item 1");
+
+            // Toggle bullet list using keyboard shortcut
+            const mod = /Mac/i.test(navigator.platform) ? "Meta" : "Control";
+            await userEvent.keyboard(`{${mod}>}{Shift>}8{/Shift}{/${mod}}`);
+
+            await waitFor(
+                () => {
+                    expect(editor.querySelector("ul")).toBeTruthy();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Create a second list item and indent it (allowed, depth 2)", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.keyboard("{Enter}");
+            await userEvent.keyboard("Item 2");
+            await userEvent.keyboard("{Tab}");
+
+            await waitFor(
+                () => {
+                    // Should have nested ul (depth 2)
+                    const nestedUl = editor.querySelector("ul ul");
+                    expect(nestedUl).toBeTruthy();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Try to indent further (should be blocked, depth would exceed 2)", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.keyboard("{Enter}");
+            await userEvent.keyboard("Item 3");
+            await userEvent.keyboard("{Tab}");
+
+            await waitFor(
+                () => {
+                    // Should NOT have triple-nested ul (depth 3 not allowed)
+                    const tripleNestedUl = editor.querySelector("ul ul ul");
+                    expect(tripleNestedUl).toBeNull();
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};
