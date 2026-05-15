@@ -1,3 +1,4 @@
+export { ActionLogCompare, actionLogCompareFragment } from "./actionLog/actionLogCompare/ActionLogCompare";
 export { ActionLogGrid, actionLogGridFragment } from "./actionLog/actionLogGrid/ActionLogGrid";
 export { ActionLogShowVersion, actionLogShowVersionFragment } from "./actionLog/actionLogShowVersion/ActionLogShowVersion";
 export { DiffHeader, type DiffHeaderProps } from "./actionLog/components/DiffHeader";
