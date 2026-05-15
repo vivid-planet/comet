@@ -1,4 +1,5 @@
 import {
+    Button,
     FillSpace,
     SaveBoundary,
     SaveBoundarySaveButton,
@@ -11,12 +12,31 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
 } from "@comet/admin";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+import { ActionLogDialog, ContentScopeIndicator, useActionLogDialog } from "@comet/cms-admin";
 import { ManufacturerForm } from "@src/products/ManufacturerForm";
 import { ManufacturersGrid } from "@src/products/ManufacturersGrid";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
-const FormToolbar = () => (
+const EditFormToolbar = ({ id }: { id: string }) => {
+    const { openActionLogDialog, dialogProps } = useActionLogDialog({ rootField: "manufacturer", id });
+
+    return (
+        <StackToolbar>
+            <ToolbarBackButton />
+            <ToolbarAutomaticTitleItem />
+            <FillSpace />
+            <ToolbarActions>
+                <Button variant="textDark" onClick={openActionLogDialog}>
+                    <FormattedMessage id="manufacturer.versionHistory" defaultMessage="Version history" />
+                </Button>
+                <SaveBoundarySaveButton />
+            </ToolbarActions>
+            <ActionLogDialog {...dialogProps} />
+        </StackToolbar>
+    );
+};
+
+const AddFormToolbar = () => (
     <StackToolbar>
         <ToolbarBackButton />
         <ToolbarAutomaticTitleItem />
@@ -41,7 +61,7 @@ export function ManufacturersPage() {
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editManufacturers", defaultMessage: "Edit Manufacturers" })}>
                     {(selectedId) => (
                         <SaveBoundary>
-                            <FormToolbar />
+                            <EditFormToolbar id={selectedId} />
                             <StackMainContent>
                                 <ManufacturerForm id={selectedId} />
                             </StackMainContent>
@@ -50,7 +70,7 @@ export function ManufacturersPage() {
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addManufacturers", defaultMessage: "Add Manufacturers" })}>
                     <SaveBoundary>
-                        <FormToolbar />
+                        <AddFormToolbar />
                         <StackMainContent>
                             <ManufacturerForm />
                         </StackMainContent>
