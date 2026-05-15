@@ -13,12 +13,13 @@ import {
     ToolbarBackButton,
 } from "@comet/admin";
 import { ContentScopeIndicator, useActionLogDialog } from "@comet/cms-admin";
+import type { GQLQuery } from "@src/graphql.generated";
 import { ManufacturerForm } from "@src/products/ManufacturerForm";
 import { ManufacturersGrid } from "@src/products/ManufacturersGrid";
 import { FormattedMessage, useIntl } from "react-intl";
 
 const EditFormToolbar = ({ id }: { id: string }) => {
-    const [ActionLogDialog, { openActionLogDialog }] = useActionLogDialog({ rootField: "manufacturer", id });
+    const [ActionLogDialog, { openActionLogDialog }] = useActionLogDialog<GQLQuery>({ rootField: "manufacturer", id });
 
     return (
         <StackToolbar>

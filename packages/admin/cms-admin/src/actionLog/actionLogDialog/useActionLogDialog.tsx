@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { muiGridSortToGql, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
-import { type ComponentType, useCallback, useMemo, useState } from "react";
+import { type ComponentType, useCallback, useMemo, useRef, useState } from "react";
 
 import type { GQLActionLogCompareFragmentFragment } from "../actionLogCompare/ActionLogCompare.gql.generated";
 import type { GQLActionLogGridFragmentFragment } from "../actionLogGrid/ActionLogGrid.gql.generated";
@@ -19,11 +19,22 @@ type EntityActionLogsResult = {
     };
 };
 
-type UseActionLogDialogOptions = {
+type ExtractActionLogRootFields<TQuery> = {
+    [K in keyof TQuery]: NonNullable<TQuery[K]> extends { actionLog: unknown; actionLogs: unknown } ? K & string : never;
+}[keyof TQuery];
+
+/**
+ * Names of GraphQL root fields that expose `actionLog`/`actionLogs`, derived from the consuming app's `GQLQuery` type.
+ * Falls back to `string` when no `TQuery` is provided (e.g. when using the hook without an explicit generic).
+ */
+type ActionLogRootField<TQuery> = [ExtractActionLogRootFields<TQuery>] extends [never] ? string : ExtractActionLogRootFields<TQuery>;
+
+type UseActionLogDialogOptions<TQuery> = {
     /**
      * GraphQL root field name of the entity that exposes `actionLog`/`actionLogs`, e.g. `"manufacturer"`, `"product"`, `"news"`.
+     * Pass your app's `GQLQuery` as the hook's generic argument to constrain this to valid fields.
      */
-    rootField: string;
+    rootField: ActionLogRootField<TQuery>;
     id: string;
     /**
      * Latest name of the entity, shown in the dialog title.
@@ -40,7 +51,12 @@ type ActionLogDialogApi = {
     closeActionLogDialog: () => void;
 };
 
-export function useActionLogDialog({ rootField, id, name, columnStateStorageKey }: UseActionLogDialogOptions): [ComponentType, ActionLogDialogApi] {
+export function useActionLogDialog<TQuery = unknown>({
+    rootField,
+    id,
+    name,
+    columnStateStorageKey,
+}: UseActionLogDialogOptions<TQuery>): [ComponentType, ActionLogDialogApi] {
     const [open, setOpen] = useState(false);
     const [view, setView] = useState<DialogView>({ type: "grid" });
 
@@ -105,20 +121,27 @@ export function useActionLogDialog({ rootField, id, name, columnStateStorageKey 
 
     const api = useMemo<ActionLogDialogApi>(() => ({ openActionLogDialog, closeActionLogDialog }), [openActionLogDialog, closeActionLogDialog]);
 
+    const latestPropsRef = useRef({ id, name, open, value, closeActionLogDialog });
+    latestPropsRef.current = { id, name, open, value, closeActionLogDialog };
+
     const ActionLogDialog = useMemo<ComponentType>(
-        () => () => (
-            <ActionLogDialogComponent
-                id={id}
-                name={name}
-                open={open}
-                value={value}
-                onClose={closeActionLogDialog}
-                onShowVersionClick={(versionId) => setView({ type: "showVersion", versionId })}
-                onCompareVersionsClick={(beforeId, afterId) => setView({ type: "compareVersions", beforeId, afterId })}
-                onShowVersionHistoryClick={() => setView({ type: "grid" })}
-            />
-        ),
-        [id, name, open, value, closeActionLogDialog],
+        () =>
+            function ActionLogDialog() {
+                const { id, name, open, value, closeActionLogDialog } = latestPropsRef.current;
+                return (
+                    <ActionLogDialogComponent
+                        id={id}
+                        name={name}
+                        open={open}
+                        value={value}
+                        onClose={closeActionLogDialog}
+                        onShowVersionClick={(versionId) => setView({ type: "showVersion", versionId })}
+                        onCompareVersionsClick={(beforeId, afterId) => setView({ type: "compareVersions", beforeId, afterId })}
+                        onShowVersionHistoryClick={() => setView({ type: "grid" })}
+                    />
+                );
+            },
+        [],
     );
 
     return [ActionLogDialog, api];
