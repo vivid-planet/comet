@@ -11,6 +11,8 @@ import { ActionLogHeader } from "../components/header/ActionLogHeader";
 import type { GQLActionLogShowVersionFragmentFragment } from "./ActionLogShowVersion.gql.generated";
 import { LoadingContainer, PaperStyled, Root } from "./ActionLogShowVersion.styles";
 
+export { actionLogShowVersionFragment } from "./ActionLogShowVersion.gql";
+
 type ActionLogShowVersionProps = {
     actionLog: GQLActionLogShowVersionFragmentFragment | undefined;
     error?: boolean;

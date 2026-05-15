@@ -12,13 +12,13 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
 } from "@comet/admin";
-import { ActionLogDialog, ContentScopeIndicator, useActionLogDialog } from "@comet/cms-admin";
+import { ContentScopeIndicator, useActionLogDialog } from "@comet/cms-admin";
 import { ManufacturerForm } from "@src/products/ManufacturerForm";
 import { ManufacturersGrid } from "@src/products/ManufacturersGrid";
 import { FormattedMessage, useIntl } from "react-intl";
 
 const EditFormToolbar = ({ id }: { id: string }) => {
-    const { openActionLogDialog, dialogProps } = useActionLogDialog({ rootField: "manufacturer", id });
+    const [ActionLogDialog, { openActionLogDialog }] = useActionLogDialog({ rootField: "manufacturer", id });
 
     return (
         <StackToolbar>
@@ -31,7 +31,7 @@ const EditFormToolbar = ({ id }: { id: string }) => {
                 </Button>
                 <SaveBoundarySaveButton />
             </ToolbarActions>
-            <ActionLogDialog {...dialogProps} />
+            <ActionLogDialog />
         </StackToolbar>
     );
 };

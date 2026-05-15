@@ -11,6 +11,8 @@ import type { GQLActionLogGridFragmentFragment } from "./ActionLogGrid.gql.gener
 import { Root } from "./ActionLogGrid.sc";
 import { UserCell } from "./userCell/UserCell";
 
+export { actionLogGridFragment } from "./ActionLogGrid.gql";
+
 type ActionGridRow = GQLActionLogGridFragmentFragment;
 
 type ActionLogGridProps = ReturnType<typeof useDataGridRemote> &

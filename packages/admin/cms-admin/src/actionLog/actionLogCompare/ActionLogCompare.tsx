@@ -11,6 +11,8 @@ import { ActionLogHeader } from "../components/header/ActionLogHeader";
 import type { GQLActionLogCompareFragmentFragment } from "./ActionLogCompare.gql.generated";
 import { LoadingContainer, PaperStyled, Root } from "./ActionLogCompare.styles";
 
+export { actionLogCompareFragment } from "./ActionLogCompare.gql";
+
 type ActionLogCompareProps = {
     afterVersion: GQLActionLogCompareFragmentFragment | undefined;
     beforeVersion: GQLActionLogCompareFragmentFragment | undefined;
