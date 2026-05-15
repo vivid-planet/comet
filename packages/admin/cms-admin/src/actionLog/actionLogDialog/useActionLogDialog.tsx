@@ -1,14 +1,12 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { muiGridSortToGql, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
 import { type ComponentType, useCallback, useMemo, useState } from "react";
 
-import { actionLogCompareFragment } from "../actionLogCompare/ActionLogCompare";
 import type { GQLActionLogCompareFragmentFragment } from "../actionLogCompare/ActionLogCompare.gql.generated";
-import { actionLogGridFragment } from "../actionLogGrid/ActionLogGrid";
 import type { GQLActionLogGridFragmentFragment } from "../actionLogGrid/ActionLogGrid.gql.generated";
-import { actionLogShowVersionFragment } from "../actionLogShowVersion/ActionLogShowVersion";
 import type { GQLActionLogShowVersionFragmentFragment } from "../actionLogShowVersion/ActionLogShowVersion.gql.generated";
 import { ActionLogDialog as ActionLogDialogComponent, type ActionLogDialogValue } from "./ActionLogDialog";
+import { createActionLogDialogQueries } from "./createActionLogDialogQueries";
 
 type DialogView = { type: "grid" } | { type: "showVersion"; versionId: string } | { type: "compareVersions"; beforeId: string; afterId: string };
 
@@ -49,47 +47,9 @@ export function useActionLogDialog({ rootField, id, name, columnStateStorageKey 
     const dataGridRemote = useDataGridRemote({ initialSort: [{ field: "version", sort: "desc" }] });
     const persistentColumnState = usePersistentColumnState(columnStateStorageKey ?? `${rootField}ActionLogDialogGrid`);
 
-    const gridQuery = useMemo(
-        () => gql`
-            query ${capitalize(rootField)}ActionLogsDialog($id: ID!, $offset: Int!, $limit: Int!, $sort: [ActionLogSort!]) {
-                ${rootField}(id: $id) {
-                    actionLogs(offset: $offset, limit: $limit, sort: $sort) {
-                        nodes { ...ActionLogGridFragment }
-                        totalCount
-                    }
-                }
-            }
-            ${actionLogGridFragment}
-        `,
-        [rootField],
-    );
+    const queries = useMemo(() => createActionLogDialogQueries(rootField), [rootField]);
 
-    const showVersionQuery = useMemo(
-        () => gql`
-            query ${capitalize(rootField)}ActionLogShowVersionDialog($id: ID!, $versionId: ID!) {
-                ${rootField}(id: $id) {
-                    actionLog(id: $versionId) { ...ActionLogShowVersionFragment }
-                }
-            }
-            ${actionLogShowVersionFragment}
-        `,
-        [rootField],
-    );
-
-    const compareVersionsQuery = useMemo(
-        () => gql`
-            query ${capitalize(rootField)}ActionLogCompareDialog($id: ID!, $beforeId: ID!, $afterId: ID!) {
-                ${rootField}(id: $id) {
-                    beforeVersion: actionLog(id: $beforeId) { ...ActionLogCompareFragment }
-                    afterVersion: actionLog(id: $afterId) { ...ActionLogCompareFragment }
-                }
-            }
-            ${actionLogCompareFragment}
-        `,
-        [rootField],
-    );
-
-    const gridResult = useQuery<EntityActionLogsResult>(gridQuery, {
+    const gridResult = useQuery<EntityActionLogsResult>(queries.gridQuery, {
         skip: !open || view.type !== "grid",
         variables: {
             id,
@@ -99,12 +59,12 @@ export function useActionLogDialog({ rootField, id, name, columnStateStorageKey 
         },
     });
 
-    const showVersionResult = useQuery<EntityActionLogsResult>(showVersionQuery, {
+    const showVersionResult = useQuery<EntityActionLogsResult>(queries.showVersionQuery, {
         skip: !open || view.type !== "showVersion",
         variables: view.type === "showVersion" ? { id, versionId: view.versionId } : undefined,
     });
 
-    const compareVersionsResult = useQuery<EntityActionLogsResult>(compareVersionsQuery, {
+    const compareVersionsResult = useQuery<EntityActionLogsResult>(queries.compareVersionsQuery, {
         skip: !open || view.type !== "compareVersions",
         variables: view.type === "compareVersions" ? { id, beforeId: view.beforeId, afterId: view.afterId } : undefined,
     });
@@ -162,8 +122,4 @@ export function useActionLogDialog({ rootField, id, name, columnStateStorageKey 
     );
 
     return [ActionLogDialog, api];
-}
-
-function capitalize(value: string) {
-    return value.charAt(0).toUpperCase() + value.slice(1);
 }
