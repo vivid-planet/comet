@@ -16,6 +16,7 @@ const TemplateStory: Story = (props) => {
             <DataGrid
                 columns={[]}
                 rows={[]}
+                showToolbar
                 slotProps={{
                     toolbar: props,
                 }}

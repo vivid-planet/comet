@@ -1,3 +1,4 @@
+import { useDataGridRemote, usePersistentColumnState } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MemoryRouter } from "react-router";
 
@@ -27,12 +28,21 @@ const meta: Meta<typeof ActionLogGrid> = {
 };
 export default meta;
 
+const StandardStory = (args: React.ComponentProps<typeof ActionLogGrid>) => {
+    const dataGridProps = {
+        ...useDataGridRemote({ initialSort: [{ field: "version", sort: "desc" }] }),
+        ...usePersistentColumnState("ActionLogGrid"),
+    };
+    return <ActionLogGrid {...args} {...dataGridProps} />;
+};
+
 export const Standard: Story = {
+    render: (args) => <StandardStory {...args} />,
     args: {
         actionLogs: mockActionLogs,
         id: "550e8400-e29b-41d4-a716-446655440000",
         loading: false,
-        onClick: () => undefined,
+        onShowVersionClick: () => undefined,
         onCompareVersionsClick: () => undefined,
     },
 };

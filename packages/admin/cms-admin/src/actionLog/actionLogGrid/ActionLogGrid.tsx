@@ -1,8 +1,8 @@
-import { type GridColDef, useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
+import { type GridColDef, useBufferedRowCount, type useDataGridRemote, type usePersistentColumnState } from "@comet/admin";
 import { View } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { DataGridPro, gridClasses, type GridRowSelectionModel, type GridSlotsComponent } from "@mui/x-data-grid-pro";
-import { type FunctionComponent, useState } from "react";
+import { type FunctionComponent, useMemo, useState } from "react";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 
 import { ActionLogHeader } from "../components/header/ActionLogHeader";
@@ -13,25 +13,30 @@ import { UserCell } from "./userCell/UserCell";
 
 type ActionGridRow = GQLActionLogGridFragmentFragment;
 
-type ActionLogGridProps = {
-    actionLogs: { nodes: ActionGridRow[]; totalCount: number } | undefined;
-    id: string;
-    loading: boolean;
-    /**
-     * Latest name of the actual object, displayed in the title
-     */
-    name?: string;
-    onClick: (versionId: string) => void;
-    onCompareVersionsClick: (versionId: string, versionsId2: string) => void;
-};
+type ActionLogGridProps = ReturnType<typeof useDataGridRemote> &
+    ReturnType<typeof usePersistentColumnState> & {
+        actionLogs: { nodes: ActionGridRow[]; totalCount: number } | undefined;
+        id: string;
+        loading: boolean;
+        /**
+         * Latest name of the actual object, displayed in the title
+         */
+        name?: string;
+        onShowVersionClick: (versionId: string) => void;
+        onCompareVersionsClick: (versionId: string, versionsId2: string) => void;
+    };
 
-export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ actionLogs, id, loading, name, onClick, onCompareVersionsClick }) => {
+export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({
+    actionLogs,
+    id,
+    loading,
+    name,
+    onShowVersionClick,
+    onCompareVersionsClick,
+    ...dataGridProps
+}) => {
     const intl = useIntl();
     const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({ type: "include", ids: new Set() });
-
-    const dataGridRemote = useDataGridRemote({ initialSort: [{ field: "version", sort: "desc" }] });
-    const dataGridPersistent = usePersistentColumnState("ActionLogGrid");
-    const dataGridProps = { ...dataGridRemote, ...dataGridPersistent };
 
     const columns = useMemo<GridColDef<ActionGridRow>[]>(
         () => [
@@ -67,7 +72,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ actionLog
                         <IconButton
                             color="primary"
                             onClick={() => {
-                                onClick(row.id);
+                                onShowVersionClick(row.id);
                             }}
                         >
                             <View />
@@ -81,7 +86,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ actionLog
                 type: "actions",
             },
         ],
-        [intl, onClick],
+        [intl, onShowVersionClick],
     );
 
     const rowCount = useBufferedRowCount(actionLogs?.totalCount);
@@ -135,6 +140,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ actionLog
                 }}
                 {...dataGridProps}
                 checkboxSelection={true}
+                showToolbar
                 columns={columns}
                 isRowSelectable={(params) => {
                     if (selectionModel.ids.has(params.row.id)) {
@@ -144,6 +150,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({ actionLog
                     return selectionModel.ids.size < 2;
                 }}
                 loading={loading}
+                onRowClick={({ row }) => onShowVersionClick(row.id)}
                 onRowSelectionModelChange={(newSelectionModel) => {
                     setSelectionModel(newSelectionModel);
                 }}
