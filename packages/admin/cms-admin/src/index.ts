@@ -2,6 +2,8 @@ export { ActionGridToolbar } from "./actionLog/actionLogGrid/actionGridToolbar/A
 export { ActionLogGrid } from "./actionLog/actionLogGrid/ActionLogGrid";
 export { actionLogGridFragment } from "./actionLog/actionLogGrid/ActionLogGrid.gql";
 export { UserCell } from "./actionLog/actionLogGrid/userCell/UserCell";
+export { ActionLogShowVersion } from "./actionLog/actionLogShowVersion/ActionLogShowVersion";
+export { actionLogShowVersionFragment } from "./actionLog/actionLogShowVersion/ActionLogShowVersion.gql";
 export { DiffHeader, type DiffHeaderProps } from "./actionLog/components/DiffHeader";
 export { DiffViewer, type DiffViewerProps } from "./actionLog/components/diffViewer/DiffViewer";
 export { ActionLogHeader, type ActionLogHeaderProps } from "./actionLog/components/header/ActionLogHeader";
