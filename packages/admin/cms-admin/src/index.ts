@@ -1,5 +1,6 @@
 export { ActionLogCompare } from "./actionLog/actionLogCompare/ActionLogCompare";
 export { actionLogCompareFragment } from "./actionLog/actionLogCompare/ActionLogCompare.gql";
+export { ActionLogDialog, type ActionLogDialogValue } from "./actionLog/actionLogDialog/ActionLogDialog";
 export { ActionGridToolbar } from "./actionLog/actionLogGrid/actionGridToolbar/ActionGridToolbar";
 export { ActionLogGrid } from "./actionLog/actionLogGrid/ActionLogGrid";
 export { actionLogGridFragment } from "./actionLog/actionLogGrid/ActionLogGrid.gql";
