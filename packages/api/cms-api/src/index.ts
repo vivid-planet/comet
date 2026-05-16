@@ -104,6 +104,7 @@ export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scala
 export { blockToMikroOrmFullText, getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
 export { createTipTapRichTextBlock, type CreateTipTapRichTextBlockOptions } from "./blocks/tipTap/createTipTapRichTextBlock";
+export { createDraftJsToTipTapMigration } from "./blocks/tipTap/draftjs-to-tiptap-migration";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";
