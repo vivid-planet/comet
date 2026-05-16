@@ -529,7 +529,7 @@ importers:
         version: link:../../packages/site/site-nextjs
       '@formatjs/cli':
         specifier: ^6.7.2
-        version: 6.7.4(@vue/compiler-core@3.5.15)
+        version: 6.7.4
       '@next/bundle-analyzer':
         specifier: ^16.0.3
         version: 16.0.3
@@ -551,27 +551,6 @@ importers:
       '@opentelemetry/sdk-node':
         specifier: ^0.215.0
         version: 0.215.0(@opentelemetry/api@1.9.1)
-      '@tiptap/core':
-        specifier: ^3.22.3
-        version: 3.22.3(@tiptap/pm@3.22.3)
-      '@tiptap/extension-heading':
-        specifier: ^3.22.3
-        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
-      '@tiptap/extension-paragraph':
-        specifier: ^3.22.3
-        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
-      '@tiptap/extension-subscript':
-        specifier: ^3.22.3
-        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)
-      '@tiptap/extension-superscript':
-        specifier: ^3.22.3
-        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)
-      '@tiptap/starter-kit':
-        specifier: ^3.22.3
-        version: 3.22.3
-      '@tiptap/static-renderer':
-        specifier: ^3.22.3
-        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       cache-manager:
         specifier: ^5.7.6
         version: 5.7.6
@@ -635,7 +614,7 @@ importers:
         version: 5.0.3(graphql@16.13.2)
       '@graphql-codegen/cli':
         specifier: ^5.0.7
-        version: 5.0.7(@babel/core@7.28.6)(@parcel/watcher@2.5.6)(@types/node@24.12.4)(cosmiconfig-toml-loader@1.0.0)(enquirer@2.4.1)(graphql@16.13.2)(typescript@5.9.3)
+        version: 5.0.7(@babel/core@7.28.6)(@parcel/watcher@2.5.6)(@types/node@24.12.4)(graphql@16.13.2)(typescript@5.9.3)
       '@graphql-codegen/named-operations-object':
         specifier: ^3.1.1
         version: 3.1.1(graphql-tag@2.12.6(graphql@16.13.2))(graphql@16.13.2)
@@ -8966,14 +8945,6 @@ packages:
 
   '@tiptap/starter-kit@3.22.3':
     resolution: {integrity: sha512-vdW/Oo1fdwTL1VOQ5YYbTov00ANeHLquBVEZyL/EkV7Xv5io9rXQsCysJfTSHhiQlyr2MtWFB4+CPGuwXjQWOQ==}
-
-  '@tiptap/static-renderer@3.22.3':
-    resolution: {integrity: sha512-gbuEhr+CIsfx8wIA0JbXYGdc3STPE+Lfu8ozhSxTvy45jUnkjcfbajImyX9PQdUjGcbsoLNLnynheAdh0pvbng==}
-    peerDependencies:
-      '@tiptap/core': ^3.22.3
-      '@tiptap/pm': ^3.22.3
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@tokenizer/inflate@0.4.1':
     resolution: {integrity: sha512-2mAv+8pkG6GIZiF1kNg1jAjh27IDxEPKwdGul3snfztFerfPGI1LjDezZp3i7BElXompqEtPmoPx6c2wgtWsOA==}
@@ -22498,6 +22469,8 @@ snapshots:
 
   '@fontsource-variable/roboto-flex@5.2.8': {}
 
+  '@formatjs/cli@6.7.4': {}
+
   '@formatjs/cli@6.7.4(@vue/compiler-core@3.5.15)':
     optionalDependencies:
       '@vue/compiler-core': 3.5.15
@@ -22636,6 +22609,58 @@ snapshots:
       jiti: 1.21.7
       json-to-pretty-yaml: 1.2.2
       listr2: 4.0.5(enquirer@2.4.1)
+      log-symbols: 4.1.0
+      micromatch: 4.0.8
+      shell-quote: 1.8.2
+      string-env-interpolation: 1.0.1
+      ts-log: 2.2.5
+      tslib: 2.8.1
+      yaml: 2.8.3
+      yargs: 17.7.2
+    optionalDependencies:
+      '@parcel/watcher': 2.5.6
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@types/node'
+      - bufferutil
+      - cosmiconfig-toml-loader
+      - encoding
+      - enquirer
+      - graphql-sock
+      - supports-color
+      - typescript
+      - utf-8-validate
+
+  '@graphql-codegen/cli@5.0.7(@babel/core@7.28.6)(@parcel/watcher@2.5.6)(@types/node@24.12.4)(graphql@16.13.2)(typescript@5.9.3)':
+    dependencies:
+      '@babel/generator': 7.28.6
+      '@babel/template': 7.28.6
+      '@babel/types': 7.28.6
+      '@graphql-codegen/client-preset': 4.8.3(@babel/core@7.28.6)(graphql@16.13.2)
+      '@graphql-codegen/core': 4.0.2(graphql@16.13.2)
+      '@graphql-codegen/plugin-helpers': 5.1.1(graphql@16.13.2)
+      '@graphql-tools/apollo-engine-loader': 8.0.13(graphql@16.13.2)
+      '@graphql-tools/code-file-loader': 8.1.13(graphql@16.13.2)
+      '@graphql-tools/git-loader': 8.0.17(graphql@16.13.2)
+      '@graphql-tools/github-loader': 8.0.13(@types/node@24.12.4)(graphql@16.13.2)
+      '@graphql-tools/graphql-file-loader': 8.0.12(graphql@16.13.2)
+      '@graphql-tools/json-file-loader': 8.0.11(graphql@16.13.2)
+      '@graphql-tools/load': 8.1.0(graphql@16.13.2)
+      '@graphql-tools/prisma-loader': 8.0.17(@types/node@24.12.4)(graphql@16.13.2)
+      '@graphql-tools/url-loader': 8.0.24(@types/node@24.12.4)(graphql@16.13.2)
+      '@graphql-tools/utils': 10.11.0(graphql@16.13.2)
+      '@whatwg-node/fetch': 0.10.3
+      chalk: 4.1.2
+      cosmiconfig: 8.3.6(typescript@5.9.3)
+      debounce: 1.2.1
+      detect-indent: 6.1.0
+      graphql: 16.13.2
+      graphql-config: 5.1.3(@types/node@24.12.4)(graphql@16.13.2)(typescript@5.9.3)
+      inquirer: 8.2.7(@types/node@24.12.4)
+      is-glob: 4.0.3
+      jiti: 1.21.7
+      json-to-pretty-yaml: 1.2.2
+      listr2: 4.0.5
       log-symbols: 4.1.0
       micromatch: 4.0.8
       shell-quote: 1.8.2
@@ -26926,13 +26951,6 @@ snapshots:
       '@tiptap/extension-underline': 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
       '@tiptap/extensions': 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)
       '@tiptap/pm': 3.22.3
-
-  '@tiptap/static-renderer@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
-    dependencies:
-      '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
-      '@tiptap/pm': 3.22.3
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
 
   '@tokenizer/inflate@0.4.1':
     dependencies:
@@ -31488,6 +31506,26 @@ snapshots:
       - typescript
       - utf-8-validate
 
+  graphql-config@5.1.3(@types/node@24.12.4)(graphql@16.13.2)(typescript@5.9.3):
+    dependencies:
+      '@graphql-tools/graphql-file-loader': 8.0.12(graphql@16.13.2)
+      '@graphql-tools/json-file-loader': 8.0.11(graphql@16.13.2)
+      '@graphql-tools/load': 8.1.0(graphql@16.13.2)
+      '@graphql-tools/merge': 9.1.9(graphql@16.13.2)
+      '@graphql-tools/url-loader': 8.0.24(@types/node@24.12.4)(graphql@16.13.2)
+      '@graphql-tools/utils': 10.11.0(graphql@16.13.2)
+      cosmiconfig: 8.3.6(typescript@5.9.3)
+      graphql: 16.13.2
+      jiti: 2.6.1
+      minimatch: 9.0.5
+      string-env-interpolation: 1.0.1
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - typescript
+      - utf-8-validate
+
   graphql-mocks@0.10.0(graphql@16.13.2):
     dependencies:
       graphql: 16.13.2
@@ -33100,6 +33138,17 @@ snapshots:
       yaml: 2.8.3
 
   listenercount@1.0.1: {}
+
+  listr2@4.0.5:
+    dependencies:
+      cli-truncate: 2.1.0
+      colorette: 2.0.20
+      log-update: 4.0.0
+      p-map: 4.0.0
+      rfdc: 1.4.1
+      rxjs: 7.8.2
+      through: 2.3.8
+      wrap-ansi: 7.0.0
 
   listr2@4.0.5(enquirer@2.4.1):
     dependencies:
