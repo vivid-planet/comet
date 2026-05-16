@@ -260,6 +260,68 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
         });
     });
 
+    describe("non-breaking space and soft-hyphen", () => {
+        const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichTextNbspShy");
+
+        it("converts U+00A0 and U+00AD characters into atom nodes and validates", async () => {
+            const data = block.blockDataFactory({
+                draftContent: {
+                    blocks: [draftBlock({ type: "unstyled", text: "key value soft­hyphen" })],
+                    entityMap: {},
+                },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const tipTapContent = (data as any).tipTapContent;
+            expect(tipTapContent.content[0].content).toEqual([
+                { type: "text", text: "key" },
+                { type: "nonBreakingSpace" },
+                { type: "text", text: "value soft" },
+                { type: "softHyphen" },
+                { type: "text", text: "hyphen" },
+            ]);
+
+            const input = block.blockInputFactory({ tipTapContent });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+    });
+
+    describe("subscript and superscript", () => {
+        const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichTextSubSup");
+
+        it("maps DraftJS SUP/SUB inline styles to TipTap marks and validates", async () => {
+            const data = block.blockDataFactory({
+                draftContent: {
+                    blocks: [
+                        draftBlock({
+                            type: "unstyled",
+                            text: "H2O E=mc2",
+                            inlineStyleRanges: [
+                                { style: "SUB", offset: 1, length: 1 },
+                                { style: "SUP", offset: 8, length: 1 },
+                            ],
+                        }),
+                    ],
+                    entityMap: {},
+                },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const tipTapContent = (data as any).tipTapContent;
+            expect(tipTapContent.content[0].content).toEqual([
+                { type: "text", text: "H" },
+                { type: "text", text: "2", marks: [{ type: "subscript" }] },
+                { type: "text", text: "O E=mc" },
+                { type: "text", text: "2", marks: [{ type: "superscript" }] },
+            ]);
+
+            const input = block.blockInputFactory({ tipTapContent });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+    });
+
     describe("supports filtering during migration", () => {
         const block = createTipTapRichTextBlock({ supports: ["bold"], migrateFromDraftJs: true }, "MigratedRichTextSupportsBold");
 

@@ -55,6 +55,20 @@ const legacyDraftJsContent = {
             data: {},
         },
         {
+            // Special characters: U+00A0 (NBSP) between "key" and "value", U+00AD (soft hyphen) inside "extra­ordinary".
+            // Also exercises SUB/SUP inline styles (H2O, E=mc2).
+            key: "33333333-3333-3333-3333-3333333333bb",
+            text: "key value, extra­ordinary stuff like H2O and E=mc2.",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [
+                { style: "SUB", offset: 38, length: 1 },
+                { style: "SUP", offset: 49, length: 1 },
+            ],
+            entityRanges: [],
+            data: {},
+        },
+        {
             key: "44444444-4444-4444-4444-444444444444",
             text: "First bullet point",
             type: "unordered-list-item",

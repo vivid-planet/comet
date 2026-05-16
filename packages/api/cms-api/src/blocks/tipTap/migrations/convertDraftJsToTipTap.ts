@@ -166,13 +166,54 @@ function buildInlineContent(
         segments.push({ text: segmentText, marks });
     }
 
-    return segments.map((segment) => {
-        const node: TipTapContent = { type: "text", text: segment.text };
-        if (segment.marks.length > 0) {
-            node.marks = segment.marks;
+    return segments.flatMap((segment) => splitAtomChars(segment.text, segment.marks, supports));
+}
+
+const NBSP_CHAR = "\u00a0";
+const SOFT_HYPHEN_CHAR = "\u00ad";
+
+function makeTextNode(text: string, marks: TipTapContent[]): TipTapContent {
+    const node: TipTapContent = { type: "text", text };
+    if (marks.length > 0) {
+        node.marks = marks;
+    }
+    return node;
+}
+
+// Splits a text segment so each U+00A0/U+00AD character (the way the DraftJS
+// RTE persists non-breaking-spaces and soft-hyphens) becomes a dedicated TipTap atom node
+// when the corresponding feature is supported. Otherwise the characters are preserved as-is
+// inside the surrounding text node.
+function splitAtomChars(text: string, marks: TipTapContent[], supports: Set<TipTapSupports>): TipTapContent[] {
+    const supportsNbsp = supports.has("non-breaking-space");
+    const supportsShy = supports.has("soft-hyphen");
+
+    if ((!supportsNbsp && !supportsShy) || (!text.includes(NBSP_CHAR) && !text.includes(SOFT_HYPHEN_CHAR))) {
+        return text.length === 0 ? [] : [makeTextNode(text, marks)];
+    }
+
+    const nodes: TipTapContent[] = [];
+    let buffer = "";
+    const flushBuffer = () => {
+        if (buffer.length > 0) {
+            nodes.push(makeTextNode(buffer, marks));
+            buffer = "";
         }
-        return node;
-    });
+    };
+
+    for (const char of text) {
+        if (char === NBSP_CHAR && supportsNbsp) {
+            flushBuffer();
+            nodes.push({ type: "nonBreakingSpace" });
+        } else if (char === SOFT_HYPHEN_CHAR && supportsShy) {
+            flushBuffer();
+            nodes.push({ type: "softHyphen" });
+        } else {
+            buffer += char;
+        }
+    }
+    flushBuffer();
+    return nodes;
 }
 
 function makeLeafBlockNode(type: "paragraph" | "heading", inlineContent: TipTapContent[], headingLevel?: number): TipTapContent {

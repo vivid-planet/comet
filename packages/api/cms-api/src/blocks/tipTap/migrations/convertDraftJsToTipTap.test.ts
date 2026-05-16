@@ -106,9 +106,7 @@ describe("convertDraftJsToTipTap", () => {
                 { blocks: [makeBlock({ type: "paragraph-small", text: "tiny" })], entityMap: {} },
                 { supports: [...defaultSupports], blockStyleMap: { "paragraph-small": "small" } },
             );
-            expect(result.content).toEqual([
-                { type: "paragraph", attrs: { blockStyle: "small" }, content: [{ type: "text", text: "tiny" }] },
-            ]);
+            expect(result.content).toEqual([{ type: "paragraph", attrs: { blockStyle: "small" }, content: [{ type: "text", text: "tiny" }] }]);
         });
 
         it("blockStyleMap takes precedence over header mapping", () => {
@@ -116,9 +114,7 @@ describe("convertDraftJsToTipTap", () => {
                 { blocks: [makeBlock({ type: "header-one", text: "Title" })], entityMap: {} },
                 { supports: [...defaultSupports], blockStyleMap: { "header-one": "huge" } },
             );
-            expect(result.content).toEqual([
-                { type: "paragraph", attrs: { blockStyle: "huge" }, content: [{ type: "text", text: "Title" }] },
-            ]);
+            expect(result.content).toEqual([{ type: "paragraph", attrs: { blockStyle: "huge" }, content: [{ type: "text", text: "Title" }] }]);
         });
     });
 
@@ -340,6 +336,74 @@ describe("convertDraftJsToTipTap", () => {
                     { supports: [...defaultSupports] },
                 ),
             ).not.toThrow();
+        });
+    });
+
+    describe("non-breaking space and soft-hyphen splitting", () => {
+        it("splits a U+00A0 character into a nonBreakingSpace atom node", () => {
+            const result = convertDraftJsToTipTap(
+                { blocks: [makeBlock({ type: "unstyled", text: "a b" })], entityMap: {} },
+                { supports: [...defaultSupports] },
+            );
+            expect(result.content?.[0].content).toEqual([{ type: "text", text: "a" }, { type: "nonBreakingSpace" }, { type: "text", text: "b" }]);
+        });
+
+        it("splits a U+00AD character into a softHyphen atom node", () => {
+            const result = convertDraftJsToTipTap(
+                { blocks: [makeBlock({ type: "unstyled", text: "long­word" })], entityMap: {} },
+                { supports: [...defaultSupports] },
+            );
+            expect(result.content?.[0].content).toEqual([{ type: "text", text: "long" }, { type: "softHyphen" }, { type: "text", text: "word" }]);
+        });
+
+        it("preserves marks on text fragments adjacent to atom characters", () => {
+            const result = convertDraftJsToTipTap(
+                {
+                    blocks: [
+                        makeBlock({
+                            type: "unstyled",
+                            text: "a b",
+                            inlineStyleRanges: [{ style: "BOLD", offset: 0, length: 3 }],
+                        }),
+                    ],
+                    entityMap: {},
+                },
+                { supports: [...defaultSupports] },
+            );
+            expect(result.content?.[0].content).toEqual([
+                { type: "text", text: "a", marks: [{ type: "bold" }] },
+                { type: "nonBreakingSpace" },
+                { type: "text", text: "b", marks: [{ type: "bold" }] },
+            ]);
+        });
+
+        it("handles consecutive and mixed atom characters", () => {
+            const result = convertDraftJsToTipTap(
+                { blocks: [makeBlock({ type: "unstyled", text: "a ­b" })], entityMap: {} },
+                { supports: [...defaultSupports] },
+            );
+            expect(result.content?.[0].content).toEqual([
+                { type: "text", text: "a" },
+                { type: "nonBreakingSpace" },
+                { type: "softHyphen" },
+                { type: "text", text: "b" },
+            ]);
+        });
+
+        it("keeps atom characters as plain text when feature is not in supports", () => {
+            const result = convertDraftJsToTipTap(
+                { blocks: [makeBlock({ type: "unstyled", text: "a b­c" })], entityMap: {} },
+                { supports: ["bold"] },
+            );
+            expect(result.content?.[0].content).toEqual([{ type: "text", text: "a b­c" }]);
+        });
+
+        it("splits only the supported atom character when one of the two is disabled", () => {
+            const result = convertDraftJsToTipTap(
+                { blocks: [makeBlock({ type: "unstyled", text: "a b­c" })], entityMap: {} },
+                { supports: ["non-breaking-space"] },
+            );
+            expect(result.content?.[0].content).toEqual([{ type: "text", text: "a" }, { type: "nonBreakingSpace" }, { type: "text", text: "b­c" }]);
         });
     });
 
