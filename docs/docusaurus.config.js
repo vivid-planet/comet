@@ -92,13 +92,6 @@ const config = {
                 ],
                 additionalLanguages: ["bash", "diff", "json"],
             },
-            announcementBar: {
-                id: "work-in-progress",
-                content: "Documentation is a work in progress",
-                backgroundColor: "var(--ifm-color-warning-contrast-background)",
-                textColor: "var(--ifm-color-warning-contrast-foreground)",
-                isCloseable: false,
-            },
             liveCodeBlock: {
                 playgroundPosition: "top",
             },

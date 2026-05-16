@@ -24,7 +24,7 @@ Email styling follows a desktop-first approach where all default styles must be 
 Never rely on `<style>` blocks for your base/desktop layout. Outlook and several other major clients strip or ignore them. Always set default styles inline via MJML component props.
 :::
 
-Media queries, registered via [`registerStyles`](./4-customization.md#registering-responsive-styles), serve as **progressive enhancement** for mobile and responsive behavior. Clients that support media queries also support modern CSS, so properties like `flex` and CSS custom properties are safe to use inside them. Because inline styles take precedence over `<style>` blocks, responsive overrides must use `!important` to take effect. See [Adding Custom Responsive Styles](./4-customization.md#adding-custom-responsive-styles) for details.
+Media queries, registered via [`registerStyles`](./5-customization.md#registering-responsive-styles), serve as **progressive enhancement** for mobile and responsive behavior. Clients that support media queries also support modern CSS, so properties like `flex` and CSS custom properties are safe to use inside them. Because inline styles take precedence over `<style>` blocks, responsive overrides must use `!important` to take effect. See [Adding Custom Responsive Styles](./5-customization.md#adding-custom-responsive-styles) for details.
 
 ## MJML Components vs HTML Components
 
@@ -36,13 +36,13 @@ Once you enter an ending tag, you are in **HTML-land for the entire subtree**. N
 
 When you need to drop into raw HTML outside of a text context — for example, to build a custom table layout — use `MjmlRaw` (or `MjmlTable` for table shorthand). These are escape hatches for cases where MJML components can't achieve the desired layout, and should generally be a last resort.
 
-`@comet/mail-react` provides both MJML-level and HTML-level text components to work across this boundary. See [Components & Theme](./2-components-and-theme.md#text) for all available text components and their usage.
+`@comet/mail-react` provides both MJML-level and HTML-level text components to work across this boundary. See [Theme & Base Components](./2-components-and-theme.md#text) for all available text components and their usage.
 
 ## Common Pitfalls
 
 ### Avoid Block-Level HTML Elements Inside Ending Tags
 
-Don't use `<p>`, `<h1>`, `<h2>`, or other block-level HTML elements inside ending tags. They have wildly inconsistent default margins and spacing across email clients and add no rendering value in email HTML. Instead, use `<td>`, `<div>`, and `<span>` for structure, and build your typography hierarchy through `MjmlText`/`HtmlText` [text variants](./2-components-and-theme.md#text-variants) rather than HTML semantics. If a block-level element is truly unavoidable, always reset its margins explicitly with inline styles (e.g., `style={{ margin: 0 }}`).
+Don't use `<p>`, `<h1>`, `<h2>`, or other block-level HTML elements inside ending tags. They have wildly inconsistent default margins and spacing across email clients and add no rendering value in email HTML. Instead, use `<td>`, `<div>`, and `<span>` for structure, and build your typography hierarchy through `MjmlText`/`HtmlText` [text variants](./2-components-and-theme.md#variants) rather than HTML semantics. If a block-level element is truly unavoidable, always reset its margins explicitly with inline styles (e.g., `style={{ margin: 0 }}`).
 
 ### Set `mso-line-height-rule: exactly` for Manual HTML
 

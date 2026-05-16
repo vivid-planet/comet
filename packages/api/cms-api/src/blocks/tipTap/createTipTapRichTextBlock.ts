@@ -46,7 +46,16 @@ type TipTapSupports =
     | "soft-hyphen"
     | "link";
 
-type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
+type TipTapBlockType =
+    | "paragraph"
+    | "heading-1"
+    | "heading-2"
+    | "heading-3"
+    | "heading-4"
+    | "heading-5"
+    | "heading-6"
+    | "ordered-list"
+    | "unordered-list";
 
 interface TipTapBlockStyle {
     name: string;
@@ -85,6 +94,11 @@ export interface CreateTipTapRichTextBlockOptions {
     inlineStyles?: TipTapInlineStyle[];
     indexSearchText?: boolean;
     link?: Block;
+    /**
+     * Limits the maximum number of top-level blocks (paragraphs, headings, lists)
+     * that can be stored. Content exceeding this limit will be rejected during validation.
+     */
+    maxBlocks?: number;
 }
 
 function buildExtensions(
@@ -226,7 +240,11 @@ function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: T
     return false;
 }
 
-function IsTipTapContent(schema: Schema, inlineStyles: TipTapInlineStyle[], linkBlock?: Block, validationOptions?: ValidationOptions) {
+function IsTipTapContent(
+    schema: Schema,
+    { inlineStyles, linkBlock, maxBlocks }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number },
+    validationOptions?: ValidationOptions,
+) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
@@ -250,6 +268,14 @@ function IsTipTapContent(schema: Schema, inlineStyles: TipTapInlineStyle[], link
                         // Validate inline style appliesTo constraints
                         if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
                             return false;
+                        }
+
+                        // Enforce maxBlocks limit on top-level content nodes
+                        if (maxBlocks !== undefined) {
+                            const content = (value as TipTapContent).content;
+                            if (Array.isArray(content) && content.length > maxBlocks) {
+                                return false;
+                            }
                         }
 
                         // Validate link mark data
@@ -308,6 +334,7 @@ export function createTipTapRichTextBlock(
         inlineStyles = [],
         indexSearchText = true,
         link: LinkBlock,
+        maxBlocks,
     }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
@@ -351,7 +378,7 @@ export function createTipTapRichTextBlock(
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, inlineStyles, LinkBlock)
+        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks })
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 

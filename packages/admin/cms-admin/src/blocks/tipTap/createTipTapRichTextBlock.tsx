@@ -1,5 +1,6 @@
 import { greyPalette } from "@comet/admin";
 import { Box } from "@mui/material";
+import { Extension } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
@@ -47,7 +48,16 @@ const defaultSupports: TipTapSupports[] = [
     "soft-hyphen",
 ];
 
-export type TipTapBlockType = "paragraph" | "heading-1" | "heading-2" | "heading-3" | "heading-4" | "heading-5" | "heading-6";
+export type TipTapBlockType =
+    | "paragraph"
+    | "heading-1"
+    | "heading-2"
+    | "heading-3"
+    | "heading-4"
+    | "heading-5"
+    | "heading-6"
+    | "ordered-list"
+    | "unordered-list";
 
 export interface TipTapBlockStyle {
     name: string;
@@ -88,6 +98,11 @@ interface TipTapRichTextBlockFactoryOptions {
     blockStyles?: TipTapBlockStyle[];
     inlineStyles?: TipTapInlineStyle[];
     link?: BlockInterface & LinkBlockInterface;
+    /**
+     * Limits the maximum number of top-level blocks (paragraphs, headings, lists)
+     * that can be created in the editor.
+     */
+    maxBlocks?: number;
 }
 
 function getPlainTextFromContent(content: JSONContent): string {
@@ -104,6 +119,28 @@ function getPlainTextFromContent(content: JSONContent): string {
 }
 
 const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
+
+const createMaxBlocksExtension = (maxBlocks: number) =>
+    Extension.create({
+        name: "maxBlocks",
+        addKeyboardShortcuts() {
+            return {
+                Enter: ({ editor }) => {
+                    if (editor.state.doc.childCount >= maxBlocks) {
+                        // Only block Enter when it would create a new block (not inside a list, etc.)
+                        const { $from } = editor.state.selection;
+                        const isAtEndOfBlock = $from.parentOffset === $from.parent.content.size;
+                        const parentDepth = $from.depth;
+                        // If at end of a top-level block (depth 1) or would split a top-level block
+                        if (parentDepth === 1 && isAtEndOfBlock) {
+                            return true; // prevent
+                        }
+                    }
+                    return false;
+                },
+            };
+        },
+    });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
@@ -160,6 +197,7 @@ const TipTapEditor = ({
     blockStyles,
     inlineStyles,
     linkBlock,
+    maxBlocks,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
@@ -167,6 +205,7 @@ const TipTapEditor = ({
     blockStyles: TipTapBlockStyle[];
     inlineStyles: TipTapInlineStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    maxBlocks?: number;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
@@ -195,9 +234,25 @@ const TipTapEditor = ({
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasLink ? [CmsLink] : []),
+            ...(maxBlocks !== undefined ? [createMaxBlocksExtension(maxBlocks)] : []),
         ],
         content: state.tipTapContent,
         onUpdate: ({ editor }) => {
+            if (maxBlocks !== undefined && editor.state.doc.childCount > maxBlocks) {
+                // Remove excess blocks (e.g. from paste)
+                const { tr } = editor.state;
+                const doc = editor.state.doc;
+                // Find the resolved position after the maxBlocks-th child
+                let pos = 0;
+                for (let i = 0; i < maxBlocks; i++) {
+                    pos += doc.child(i).nodeSize;
+                }
+                // In ProseMirror, doc content positions are offset by 1 (for the doc open token)
+                // Delete from after the last allowed block to end of doc content
+                tr.delete(pos + 1, doc.content.size + 1);
+                editor.view.dispatch(tr);
+                return;
+            }
             updateState({ tipTapContent: editor.getJSON() });
         },
     });
@@ -230,6 +285,7 @@ export const createTipTapRichTextBlock = (
     const blockStyles = options?.blockStyles ?? [];
     const inlineStyles = options?.inlineStyles ?? [];
     const linkBlock = options?.link;
+    const maxBlocks = options?.maxBlocks;
 
     // Auto-enable link support when a link block is provided
     if (linkBlock && !supports.includes("link")) {
@@ -291,6 +347,7 @@ export const createTipTapRichTextBlock = (
                     blockStyles={blockStyles}
                     inlineStyles={inlineStyles}
                     linkBlock={linkBlock}
+                    maxBlocks={maxBlocks}
                 />
             );
         },
