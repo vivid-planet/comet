@@ -117,21 +117,6 @@ export class DraftJsMigrationPageFixtureService {
         );
         await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
 
-        // Construct page content data via blockDataFactory (not blockInputFactory) so the
-        // DraftJS-shaped props on the tipTapRichText slot flow through the
-        // TipTapRichTextBlock.blockDataFactory migration pipeline.
-        const content = PageContentBlock.blockDataFactory({
-            blocks: [
-                {
-                    key: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
-                    visible: true,
-                    type: "tipTapRichText",
-                    props: legacyDraftJsContent,
-                    userGroup: UserGroup.all,
-                },
-            ],
-        });
-
         const pageInput = new PageInput();
         pageInput.seo = generateSeoBlock();
         pageInput.stage = StageBlock.blockInputFactory({ blocks: [] });
@@ -139,10 +124,31 @@ export class DraftJsMigrationPageFixtureService {
         await this.entityManager.persistAndFlush(
             this.entityManager.create(Page, {
                 id: documentId,
-                content,
+                content: PageContentBlock.blockInputFactory({ blocks: [] }).transformToBlockData(),
                 seo: pageInput.seo.transformToBlockData(),
                 stage: pageInput.stage.transformToBlockData(),
             }),
         );
+
+        // Bypass the RootBlockType custom column so the legacy DraftJS-shaped JSON lands in the DB
+        // unchanged. The on-read DraftJS→TipTap migration in TipTapRichTextBlock.blockDataFactory
+        // is what we want this fixture to exercise.
+        const legacyPageContent = {
+            data: {
+                blocks: [
+                    {
+                        key: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+                        visible: true,
+                        type: "tipTapRichText",
+                        props: { draftContent: legacyDraftJsContent },
+                        userGroup: UserGroup.all,
+                    },
+                ],
+            },
+            index: [],
+        };
+        await this.entityManager
+            .getConnection()
+            .execute(`UPDATE "Page" SET content = ? WHERE id = ?`, [JSON.stringify(legacyPageContent), documentId]);
     }
 }

@@ -254,10 +254,6 @@ export function createTipTapRichTextBlock(
     const extensions = buildExtensions(supports, blockStyles, hasLink);
     const schema = getSchema(extensions);
 
-    if (migrateFromDraftJs && baseMigrate.migrations.length > 0) {
-        throw new Error(`migrateFromDraftJs cannot be combined with custom migrations on TipTapRichTextBlock "${blockName}"`);
-    }
-
     const migrate = migrateFromDraftJs
         ? {
               version: baseMigrate.version + 1,

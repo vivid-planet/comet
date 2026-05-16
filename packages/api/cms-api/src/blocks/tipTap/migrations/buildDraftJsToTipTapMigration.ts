@@ -61,9 +61,11 @@ export function buildDraftJsToTipTapMigration(options: BuildOptions): ClassConst
 
             const stripped = buildStrippedTipTapDoc(from.draftContent);
             if (isValidTipTapContentSync(stripped, schema, { maxBlocks })) {
+                console.warn("DraftJS->TipTap migration failed, using stripped content");
                 return { tipTapContent: stripped };
             }
 
+            console.warn("DraftJS->TipTap migration failed, lost content!");
             return { tipTapContent: EMPTY_DOC };
         }
     };

@@ -244,27 +244,4 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
             expect(tipTapContent.content[0].type).toBe("paragraph");
         });
     });
-
-    describe("guard against combining with custom migrations", () => {
-        it("throws when migrateFromDraftJs is combined with custom migrations", () => {
-            class FakeMigration {
-                public readonly toVersion = 1;
-                public supports(): boolean {
-                    return false;
-                }
-                public apply(raw: unknown): unknown {
-                    return raw;
-                }
-            }
-            expect(() =>
-                createTipTapRichTextBlock(
-                    { migrateFromDraftJs: true },
-                    {
-                        name: "MigratedRichTextConflict",
-                        migrate: { version: 1, migrations: [FakeMigration] },
-                    },
-                ),
-            ).toThrow(/cannot be combined with custom migrations/);
-        });
-    });
 });
