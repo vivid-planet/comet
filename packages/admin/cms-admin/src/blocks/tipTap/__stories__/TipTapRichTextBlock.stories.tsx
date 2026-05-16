@@ -587,7 +587,6 @@ export const MaxBlocks: StoryObj<typeof MaxBlocksStory> = {
     },
 };
 
-
 const InlineStylesBlock = createTipTapRichTextBlock({
     inlineStyles: [
         {
