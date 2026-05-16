@@ -1,7 +1,7 @@
 import { type Extensions, getSchema } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
-import { Node as ProseMirrorNode, type Schema } from "@tiptap/pm/model";
+import type { Schema } from "@tiptap/pm/model";
 import StarterKit from "@tiptap/starter-kit";
 import { plainToInstance } from "class-transformer";
 import { registerDecorator, validate, type ValidationOptions } from "class-validator";
@@ -28,6 +28,8 @@ import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
+import { isValidTipTapContentSync } from "./tipTapValidation";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TipTapContent = Record<string, any>;
@@ -88,6 +90,18 @@ export interface CreateTipTapRichTextBlockOptions {
      * that can be stored. Content exceeding this limit will be rejected during validation.
      */
     maxBlocks?: number;
+    /**
+     * Enables best-effort migration of persisted DraftJS-based RichTextBlock data
+     * (`{ draftContent: { blocks, entityMap } }`) into TipTap content on first read.
+     *
+     * The migration uses the `supports`, `blockStyles`, `link`, and `maxBlocks` options
+     * to build the target schema, validates the converted document, and falls back to a
+     * stripped-down plain-text-paragraph document if validation fails.
+     *
+     * Cannot currently be combined with custom `migrate.migrations`; an error is thrown
+     * if both are configured.
+     */
+    migrateFromDraftJs?: boolean;
 }
 
 function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockStyle[], hasLink: boolean): Extensions {
@@ -114,31 +128,6 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockSty
         ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
         ...(hasLink ? [CmsLink] : []),
     ];
-}
-
-// ProseMirror's Node.fromJSON silently drops unknown marks. This function
-// checks the raw JSON for mark types that don't exist in the schema.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function containsUnknownMarks(json: any, schema: Schema): boolean {
-    if (typeof json !== "object" || json === null) {
-        return false;
-    }
-
-    if (Array.isArray(json.marks)) {
-        for (const mark of json.marks) {
-            if (typeof mark?.type === "string" && !schema.marks[mark.type]) {
-                return true;
-            }
-        }
-    }
-    if (Array.isArray(json.content)) {
-        for (const child of json.content) {
-            if (containsUnknownMarks(child, schema)) {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -197,44 +186,26 @@ function IsTipTapContent(schema: Schema, { linkBlock, maxBlocks }: { linkBlock?:
             options: { message: "tipTapContent must be valid TipTap JSON content", ...validationOptions },
             validator: {
                 async validate(value: unknown) {
-                    if (typeof value !== "object" || value === null) {
+                    if (!isValidTipTapContentSync(value, schema, { maxBlocks })) {
                         return false;
                     }
-                    try {
-                        // Check for unknown marks before parsing (ProseMirror silently drops them)
-                        if (containsUnknownMarks(value, schema)) {
-                            return false;
-                        }
-                        const node = ProseMirrorNode.fromJSON(schema, value);
-                        node.check();
 
-                        // Enforce maxBlocks limit on top-level content nodes
-                        if (maxBlocks !== undefined) {
-                            const content = (value as TipTapContent).content;
-                            if (Array.isArray(content) && content.length > maxBlocks) {
+                    // Validate link mark data
+                    if (linkBlock) {
+                        const linkMarks = collectLinkMarks(value as TipTapContent);
+                        for (const { data } of linkMarks) {
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
+                                forbidNonWhitelisted: true,
+                                whitelist: true,
+                            });
+                            if (validationErrors.length > 0) {
                                 return false;
                             }
                         }
-
-                        // Validate link mark data
-                        if (linkBlock) {
-                            const linkMarks = collectLinkMarks(value as TipTapContent);
-                            for (const { data } of linkMarks) {
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
-                                    forbidNonWhitelisted: true,
-                                    whitelist: true,
-                                });
-                                if (validationErrors.length > 0) {
-                                    return false;
-                                }
-                            }
-                        }
-
-                        return true;
-                    } catch {
-                        return false;
                     }
+
+                    return true;
                 },
             },
         });
@@ -266,15 +237,33 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
  * @experimental
  */
 export function createTipTapRichTextBlock(
-    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock, maxBlocks }: CreateTipTapRichTextBlockOptions = {},
+    {
+        supports = defaultSupports,
+        blockStyles = [],
+        indexSearchText = true,
+        link: LinkBlock,
+        maxBlocks,
+        migrateFromDraftJs = false,
+    }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
-    const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
+    const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
     const extensions = buildExtensions(supports, blockStyles, hasLink);
     const schema = getSchema(extensions);
+
+    if (migrateFromDraftJs && baseMigrate.migrations.length > 0) {
+        throw new Error(`migrateFromDraftJs cannot be combined with custom migrations on TipTapRichTextBlock "${blockName}"`);
+    }
+
+    const migrate = migrateFromDraftJs
+        ? {
+              version: baseMigrate.version + 1,
+              migrations: [buildDraftJsToTipTapMigration({ schema, supports, link: LinkBlock, maxBlocks }), ...baseMigrate.migrations],
+          }
+        : baseMigrate;
 
     @BlockDataMigrationVersion(migrate.version)
     class TipTapRichTextBlockData extends BlockData {
