@@ -59,6 +59,10 @@ interface TipTapBlockStyle {
 
 interface TipTapInlineStyle {
     name: string;
+    /**
+     * Limits the inline style to the provided block types.
+     * If none is specified, the inline style is allowed for all block types.
+     */
     appliesTo?: TipTapBlockType[];
 }
 
