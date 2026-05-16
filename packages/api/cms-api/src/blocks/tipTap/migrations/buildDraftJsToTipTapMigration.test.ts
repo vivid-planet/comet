@@ -198,6 +198,68 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
         });
     });
 
+    describe("headings", () => {
+        const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichTextHeading");
+
+        it("preserves a header-one as a TipTap heading level 1", () => {
+            const data = block.blockDataFactory({
+                draftContent: {
+                    blocks: [draftBlock({ type: "header-one", text: "Title" })],
+                    entityMap: {},
+                },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const tipTapContent = (data as any).tipTapContent;
+            expect(tipTapContent).toEqual({
+                type: "doc",
+                content: [
+                    {
+                        type: "heading",
+                        attrs: { level: 1 },
+                        content: [{ type: "text", text: "Title" }],
+                    },
+                ],
+            });
+        });
+    });
+
+    describe("blockStyleMap", () => {
+        const block = createTipTapRichTextBlock(
+            {
+                blockStyles: [{ name: "small", appliesTo: ["paragraph"] }],
+                migrateFromDraftJs: { blockStyleMap: { "paragraph-small": "small" } },
+            },
+            "MigratedRichTextBlockStyleMap",
+        );
+
+        it("maps a custom DraftJS block type to a TipTap paragraph with blockStyle", async () => {
+            const data = block.blockDataFactory({
+                draftContent: {
+                    blocks: [draftBlock({ type: "paragraph-small", text: "tiny" })],
+                    entityMap: {},
+                },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const tipTapContent = (data as any).tipTapContent;
+            expect(tipTapContent).toEqual({
+                type: "doc",
+                content: [
+                    {
+                        type: "paragraph",
+                        attrs: { blockStyle: "small" },
+                        content: [{ type: "text", text: "tiny" }],
+                    },
+                ],
+            });
+
+            const input = block.blockInputFactory({ tipTapContent });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+    });
+
     describe("supports filtering during migration", () => {
         const block = createTipTapRichTextBlock({ supports: ["bold"], migrateFromDraftJs: true }, "MigratedRichTextSupportsBold");
 

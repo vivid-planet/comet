@@ -46,6 +46,15 @@ const legacyDraftJsContent = {
             data: {},
         },
         {
+            key: "33333333-3333-3333-3333-3333333333aa",
+            text: "This used a custom paragraph-small block type and should keep its smaller style.",
+            type: "paragraph-small",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+        },
+        {
             key: "44444444-4444-4444-4444-444444444444",
             text: "First bullet point",
             type: "unordered-list-item",

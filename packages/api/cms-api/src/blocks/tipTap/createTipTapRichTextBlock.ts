@@ -91,17 +91,18 @@ export interface CreateTipTapRichTextBlockOptions {
      */
     maxBlocks?: number;
     /**
-     * Enables best-effort migration of persisted DraftJS-based RichTextBlock data
-     * (`{ draftContent: { blocks, entityMap } }`) into TipTap content on first read.
+     * Enables best-effort block migration of DraftJS-based RichTextBlock data
+     * (`{ draftContent: { blocks, entityMap } }`) into TipTap data.
      *
      * The migration uses the `supports`, `blockStyles`, `link`, and `maxBlocks` options
      * to build the target schema, validates the converted document, and falls back to a
      * stripped-down plain-text-paragraph document if validation fails.
      *
-     * Cannot currently be combined with custom `migrate.migrations`; an error is thrown
-     * if both are configured.
+     * Pass an object with `blockStyleMap` to map DraftJS custom block types (e.g.
+     * `paragraph-small` from a DraftJS `blocktypeMap`) to TipTap paragraph `blockStyle`
+     * attribute values.
      */
-    migrateFromDraftJs?: boolean;
+    migrateFromDraftJs?: boolean | { blockStyleMap?: Record<string, string> };
 }
 
 function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockStyle[], hasLink: boolean): Extensions {
@@ -254,10 +255,14 @@ export function createTipTapRichTextBlock(
     const extensions = buildExtensions(supports, blockStyles, hasLink);
     const schema = getSchema(extensions);
 
+    const draftJsBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.blockStyleMap : undefined;
     const migrate = migrateFromDraftJs
         ? {
               version: baseMigrate.version + 1,
-              migrations: [buildDraftJsToTipTapMigration({ schema, supports, link: LinkBlock, maxBlocks }), ...baseMigrate.migrations],
+              migrations: [
+                  buildDraftJsToTipTapMigration({ schema, supports, link: LinkBlock, maxBlocks, blockStyleMap: draftJsBlockStyleMap }),
+                  ...baseMigrate.migrations,
+              ],
           }
         : baseMigrate;
 

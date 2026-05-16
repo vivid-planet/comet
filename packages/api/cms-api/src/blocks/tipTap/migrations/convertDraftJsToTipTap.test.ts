@@ -100,6 +100,26 @@ describe("convertDraftJsToTipTap", () => {
             );
             expect(result.content).toEqual([{ type: "paragraph" }]);
         });
+
+        it("maps a block type from blockStyleMap to a paragraph with blockStyle attr", () => {
+            const result = convertDraftJsToTipTap(
+                { blocks: [makeBlock({ type: "paragraph-small", text: "tiny" })], entityMap: {} },
+                { supports: [...defaultSupports], blockStyleMap: { "paragraph-small": "small" } },
+            );
+            expect(result.content).toEqual([
+                { type: "paragraph", attrs: { blockStyle: "small" }, content: [{ type: "text", text: "tiny" }] },
+            ]);
+        });
+
+        it("blockStyleMap takes precedence over header mapping", () => {
+            const result = convertDraftJsToTipTap(
+                { blocks: [makeBlock({ type: "header-one", text: "Title" })], entityMap: {} },
+                { supports: [...defaultSupports], blockStyleMap: { "header-one": "huge" } },
+            );
+            expect(result.content).toEqual([
+                { type: "paragraph", attrs: { blockStyle: "huge" }, content: [{ type: "text", text: "Title" }] },
+            ]);
+        });
     });
 
     describe("list grouping", () => {

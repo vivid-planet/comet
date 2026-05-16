@@ -54,6 +54,11 @@ interface DraftJsContent {
 interface ConvertOptions {
     supports?: TipTapSupports[];
     link?: Block;
+    /**
+     * Maps DraftJS block types (e.g. custom `paragraph-small`) to a TipTap paragraph
+     * `blockStyle` attribute value. Matched blocks become `{ type: "paragraph", attrs: { blockStyle: ... } }`.
+     */
+    blockStyleMap?: Record<string, string>;
 }
 
 const INLINE_STYLE_TO_MARK: Record<string, { mark: string; supports: TipTapSupports }> = {
@@ -181,6 +186,14 @@ function makeLeafBlockNode(type: "paragraph" | "heading", inlineContent: TipTapC
     return node;
 }
 
+function makeParagraphWithBlockStyle(inlineContent: TipTapContent[], blockStyle: string): TipTapContent {
+    const node: TipTapContent = { type: "paragraph", attrs: { blockStyle } };
+    if (inlineContent.length > 0) {
+        node.content = inlineContent;
+    }
+    return node;
+}
+
 function makeListItem(inlineContent: TipTapContent[]): TipTapContent {
     return {
         type: "listItem",
@@ -195,6 +208,7 @@ export function convertDraftJsToTipTap(draftContent: DraftJsContent | undefined 
 
     const supports = new Set<TipTapSupports>(options.supports ?? []);
     const hasLink = !!options.link;
+    const blockStyleMap = options.blockStyleMap ?? {};
     const entityMap = draftContent.entityMap ?? {};
 
     const topLevel: TipTapContent[] = [];
@@ -232,6 +246,12 @@ export function convertDraftJsToTipTap(draftContent: DraftJsContent | undefined 
         }
 
         flushList();
+
+        const mappedBlockStyle = blockStyleMap[block.type];
+        if (mappedBlockStyle !== undefined) {
+            topLevel.push(makeParagraphWithBlockStyle(inlineContent, mappedBlockStyle));
+            continue;
+        }
 
         const headerLevel = HEADER_TYPE_TO_LEVEL[block.type];
         if (headerLevel !== undefined && supports.has("heading")) {
