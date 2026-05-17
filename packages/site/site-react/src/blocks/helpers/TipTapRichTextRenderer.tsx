@@ -71,6 +71,9 @@ export function renderTipTapRichText({ content, nodeMapping, markMapping }: Rend
     return renderNode(content, undefined);
 }
 
+const nonBreakingSpace = String.fromCodePoint(0xa0);
+const softHyphen = String.fromCodePoint(0xad);
+
 export const defaultTipTapNodeMapping: Record<string, TipTapNodeHandler> = {
     paragraph: ({ children }) => <p>{children}</p>,
     heading: ({ node, children }) => {
@@ -82,8 +85,8 @@ export const defaultTipTapNodeMapping: Record<string, TipTapNodeHandler> = {
     orderedList: ({ children }) => <ol>{children}</ol>,
     listItem: ({ children }) => <li>{children}</li>,
     hardBreak: () => <br />,
-    nonBreakingSpace: () => " ",
-    softHyphen: () => "­",
+    nonBreakingSpace: () => nonBreakingSpace,
+    softHyphen: () => softHyphen,
 };
 
 export const defaultTipTapMarkMapping: Record<string, TipTapMarkHandler> = {
