@@ -539,6 +539,7 @@ type Query {
   userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
+  azureAiTranslateBatch(input: AzureAiTranslationBatchInput!): [String!]!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
   blockPreviewJwt(scope: JSONObject!, url: String!, includeInvisible: Boolean!): String!
   warning(id: ID!): Warning!
@@ -609,6 +610,7 @@ enum DamItemType {
 input FileFilterInput {
   searchText: String
   mimetypes: [String!]
+  ids: [ID!]
 }
 
 input ImageCropAreaInput {
@@ -679,6 +681,11 @@ input AzureAiTranslationInput {
   targetLanguage: String!
 }
 
+input AzureAiTranslationBatchInput {
+  texts: [String!]!
+  targetLanguage: String!
+}
+
 input WarningFilter {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -743,7 +750,6 @@ type Mutation {
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
-  importDamFileByDownload(url: String!, scope: DamScopeInput! = {}, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!

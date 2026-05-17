@@ -1,7 +1,7 @@
 import { Alert, FinalForm, SelectField } from "@comet/admin";
 import { Lock } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof SelectField>;
 const config: Meta<typeof SelectField> = {

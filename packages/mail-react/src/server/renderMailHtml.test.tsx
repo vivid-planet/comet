@@ -1,4 +1,4 @@
-import { MjmlColumn, MjmlText } from "@faire/mjml-react";
+import { MjmlClass, MjmlColumn, MjmlText, MjmlTitle } from "@faire/mjml-react";
 import { describe, expect, it } from "vitest";
 
 import { MjmlMailRoot } from "../components/mailRoot/MjmlMailRoot.js";
@@ -80,6 +80,35 @@ describe("server/renderMailHtml", () => {
 
         expect(html).toContain(".themed");
         expect(html).toContain("width: 600px");
+    });
+
+    it("renders the head slot content inside <mj-head>", () => {
+        const titleText = "Welcome to Comet";
+        const { html } = renderMailHtml(
+            <MjmlMailRoot head={<MjmlTitle>{titleText}</MjmlTitle>}>
+                <MjmlSection>
+                    <MjmlColumn>
+                        <MjmlText>Hello</MjmlText>
+                    </MjmlColumn>
+                </MjmlSection>
+            </MjmlMailRoot>,
+        );
+
+        expect(html).toContain(`<title>${titleText}</title>`);
+    });
+
+    it("renders the attributes slot content inside <mj-attributes>", () => {
+        const { html } = renderMailHtml(
+            <MjmlMailRoot attributes={<MjmlClass name="cta" color="#FF0000" />}>
+                <MjmlSection>
+                    <MjmlColumn>
+                        <MjmlText mjmlClass="cta">Hello</MjmlText>
+                    </MjmlColumn>
+                </MjmlSection>
+            </MjmlMailRoot>,
+        );
+
+        expect(html).toContain("color:#FF0000");
     });
 
     it("produces no MJML warnings for a valid component tree", () => {

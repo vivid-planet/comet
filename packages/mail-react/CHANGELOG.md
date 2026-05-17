@@ -1,5 +1,17 @@
 # @comet/mail-react
 
+## 9.0.0-beta.3
+
+### Minor Changes
+
+- 92a475f: `MjmlWrapper` now applies the themes content background color by default when used within a `ThemeProvider` or `MjmlMailRoot`
+
+### Patch Changes
+
+- 92a475f: Fix `MjmlSection` overriding `MjmlWrapper`'s background
+
+    When rendered inside a custom `MjmlWrapper`, `MjmlSection` no longer applies its theme-default `backgroundColor`, so the wrapper's background is now visible through its sections. An explicit `backgroundColor` prop on `MjmlSection` still takes precedence. Sections rendered outside of a wrapper continue to receive the theme default as before.
+
 ## 9.0.0-beta.2
 
 ### Minor Changes

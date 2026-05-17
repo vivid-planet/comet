@@ -10,6 +10,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import type { SeoBlockData, SeoBlockInput } from "../blocks.generated";
 import { useContentGenerationConfig } from "../documents/ContentGenerationConfigContext";
+import { validateJson } from "../validation/validateJson";
 import { validateUrl } from "../validation/validateUrl";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
@@ -188,7 +189,7 @@ export function createSeoBlock(
                             <Typography variant="h4" gutterBottom>
                                 <FormattedMessage id="comet.blocks.seo.structuredData.sectionTitle" defaultMessage="Structured Data" />
                             </Typography>
-                            <Field name="structuredData" multiline={true} rows={15} component={FinalFormInput} fullWidth />
+                            <Field name="structuredData" multiline={true} rows={15} component={FinalFormInput} fullWidth validate={validateJson} />
                         </Box>
 
                         {/* Sitemap */}

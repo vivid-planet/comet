@@ -75,6 +75,124 @@ registerStyles(
 );
 ```
 
+For three or more equal-width columns, see [Multi-Column Symmetric Layouts](#multi-column-symmetric-layouts-3-columns).
+
+---
+
+## Multi-Column Symmetric Layouts (3+ columns)
+
+Three or more equal-width columns need explicit `width` props because inner columns carry padding on both sides and outer columns on only one. Without compensation, content areas are unequal.
+
+### N-Column Width Formula
+
+```ts
+const columnGap = 20;
+const halfColumnGap = columnGap / 2;
+const availableContentWidth = theme.sizes.bodyWidth - 2 * getDefaultFromResponsiveValue(theme.sizes.contentIndentation);
+const contentWidthPerColumn = (availableContentWidth - (numberOfColumns - 1) * columnGap) / numberOfColumns;
+
+const outerColumnWidth = `${((contentWidthPerColumn + halfColumnGap) / availableContentWidth) * 100}%`;
+const innerColumnWidth = `${((contentWidthPerColumn + columnGap) / availableContentWidth) * 100}%`;
+```
+
+- Outermost columns → `outerColumnWidth`, padding on their inner side only
+- All middle columns → `innerColumnWidth`, padding on both sides (`halfColumnGap` each)
+
+Scales to any N; 3 and 4 differ only in how many middle columns you repeat. Percentages — not pixels — keep MJML's fallback math predictable.
+
+### Pattern
+
+Three columns shown; for four or more, repeat the middle-column.
+
+```tsx
+<MjmlSection indent className="multiColumnSection">
+    <MjmlColumn className="multiColumnSection__column" width={outerColumnWidth} paddingRight={halfColumnGap}>
+        …
+    </MjmlColumn>
+    <MjmlColumn className="multiColumnSection__column" width={innerColumnWidth} paddingLeft={halfColumnGap} paddingRight={halfColumnGap}>
+        …
+    </MjmlColumn>
+    <MjmlColumn className="multiColumnSection__column" width={outerColumnWidth} paddingLeft={halfColumnGap}>
+        …
+    </MjmlColumn>
+</MjmlSection>
+```
+
+### Responsive Stacking — Pick Per Layout
+
+Stacking is a **design decision per component**, not a function of column count. Do not assume the user wants the storybook default — these are starting points, not rules. If it is unclear which strategy fits, infer from the content (dense text vs. short labels vs. fixed-width icons/numbers) or ask.
+
+| Strategy            | When to pick it                                                                         | How it's implemented                                                               |
+| ------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| A. Stack at mobile  | Columns stay readable while narrowing below `bodyWidth` (e.g., 3-col storybook default) | Flex reset at `default` + stack at `mobile`                                        |
+| B. Stack at default | Columns would get too cramped below `bodyWidth` (e.g., 4-col storybook default)         | Flex reset that stacks at `default`                                                |
+| C. Never stack      | Short fixed content that must remain horizontal (numeric rows, icon strips)             | `disableResponsiveBehavior` + flex reset one level deeper (targets `… > td > div`) |
+
+All three strategies share the same flex reset on the element that directly contains the columns — it neutralises the compensated inline widths so content areas stay equal at every viewport (without it, percentage widths and pixel paddings drift apart below `bodyWidth`, making columns unequal by a few pixels). For A and B the container is the section's inner `<td>`; for C it is the `MjmlGroup` wrapper `<div>` that `disableResponsiveBehavior` inserts between the `<td>` and the columns, so the selector goes one level deeper (`… > td > div`). They also differ at `mobile.belowMediaQuery`: A adds a stack override, B collapses into the `default` block and stacks immediately, C adds nothing. Strategy C additionally needs `disableResponsiveBehavior` on the section — MJML auto-stacks below its own mobile breakpoint by default, and this prop wraps the columns in an `MjmlGroup` internally so the auto-stack is suppressed even in clients that ignore the flex CSS.
+
+**Strategy A** — keep the horizontal intermediate state, stack at mobile:
+
+```ts
+${theme.breakpoints.default.belowMediaQuery} {
+    .multiColumnSection > table > tbody > tr > td {
+        display: flex !important;
+        gap: 20px !important;
+    }
+    .multiColumnSection__column {
+        flex: 1 1 0% !important;
+        width: auto !important;
+        max-width: none !important;
+        display: block !important;
+    }
+    .multiColumnSection__column > table > tbody > tr > td {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+${theme.breakpoints.mobile.belowMediaQuery} {
+    .multiColumnSection > table > tbody > tr > td {
+        flex-direction: column !important;
+    }
+    .multiColumnSection__column {
+        flex: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+```
+
+**Strategy B** — collapse the two blocks: put `flex-direction: column` and `width: 100%` in the `default.belowMediaQuery` block and drop the `mobile.belowMediaQuery` block.
+
+**Strategy C** — set `disableResponsiveBehavior` on the section and apply Strategy A's flex reset one level deeper (the group wrapper), dropping the `mobile.belowMediaQuery` block:
+
+```tsx
+<MjmlSection indent disableResponsiveBehavior className="multiColumnSection">
+    {/* …columns as in the pattern above… */}
+</MjmlSection>
+```
+
+```ts
+${theme.breakpoints.default.belowMediaQuery} {
+    .multiColumnSection > table > tbody > tr > td > div {
+        display: flex !important;
+        gap: 20px !important;
+    }
+    .multiColumnSection__column {
+        flex: 1 1 0% !important;
+        width: auto !important;
+        max-width: none !important;
+        display: block !important;
+    }
+    .multiColumnSection__column > table > tbody > tr > td {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+```
+
+The only difference from Strategy A's `default.belowMediaQuery` block is the `> div` in the first selector — `disableResponsiveBehavior` wraps the columns in an `MjmlGroup` `<div>` inside the `<td>`, so the flex container has to target that wrapper instead of the `<td>` to make the columns its direct flex children. Applying flex to the `<td>` instead would give it a single flex item (the wrapper), and the block-display rule on the columns below would make them stack vertically inside that wrapper.
+
 ---
 
 ## Asymmetric Two-Column Layout (Fixed + Fluid)
@@ -168,3 +286,30 @@ When using `direction="rtl"`:
 
 - **Use `MjmlWrapper` instead of `indent`** — applying `indent` on a `direction="rtl"` section causes a 1px line artifact in Outlook. Wrap the section in `MjmlWrapper` with `padding={`0 ${sectionIndent}px`}` and set `backgroundColor` to match.
 - **Source order = mobile stack order** — the small column is first in the JSX, so it stacks on top on mobile. `direction="rtl"` only affects the visual left-to-right order on desktop.
+
+---
+
+## Grouping Sections with a Shared Background
+
+When multiple sections need to share a background — for example, a multi-row footer with its own color — wrap them in `MjmlWrapper`. The wrapper owns the background; inner `MjmlSection`s suppress their own theme-default `backgroundColor` so the wrapper's color shows through.
+
+```tsx
+<MjmlWrapper backgroundColor="#2d4a6e">
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Footer row 1</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Footer row 2</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+</MjmlWrapper>
+```
+
+Key behaviors:
+
+- `MjmlWrapper` applies `theme.colors.background.content` as its default background when a theme is present, so the `backgroundColor` prop is only needed when the wrapper should differ from the theme default.
+- An explicit `backgroundColor` on an inner `MjmlSection` still wins — use that only when a single section inside the wrapper needs to stand out.
+- For a region that also needs different default text color or variants, combine `MjmlWrapper` with a scoped `ThemeProvider` (see [`components-and-theme.md`](components-and-theme.md) → Scoped Theming). Text components pick up the scoped theme while the wrapper provides the background.

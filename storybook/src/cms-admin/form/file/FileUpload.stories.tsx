@@ -1,6 +1,6 @@
 import { Alert, FinalForm } from "@comet/admin";
 import { FileUploadField, type GQLFinalFormFileUploadDownloadableFragment, type GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof FileUploadField>;
 const config: Meta<typeof FileUploadField> = {

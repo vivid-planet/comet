@@ -173,6 +173,41 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 - }
 ```
 
+### Fix dev dependency imports in API source code
+
+`@comet/eslint-config` v9 adds the `import/no-extraneous-dependencies` rule to the NestJS ESLint config.
+This rule prevents production source files from importing packages that are listed as `devDependencies` in `package.json`.
+Dev dependencies may still be imported in test files (`*.spec.ts`, `*.test.ts`).
+
+After upgrading, run the lint to surface any violations:
+
+```sh
+cd api
+npm run lint
+```
+
+For each `import/no-extraneous-dependencies` error, move the imported package from `devDependencies` to the appropriate section in `api/package.json`:
+
+- **Packages used only as types or utilities in source code** → move to `dependencies`
+- **Packages that consumers of your package are expected to install themselves** → move to `peerDependencies`
+
+```diff title="api/package.json"
+{
+    "dependencies": {
++       "some-package": "^1.0.0",
+    },
+-   "devDependencies": {
+-       "some-package": "^1.0.0",
+-   }
+}
+```
+
+Reinstall dependencies after updating `package.json`:
+
+```sh
+npm install
+```
+
 ### Verify lint passes
 
 ```sh
@@ -848,6 +883,46 @@ export function createGraphQLFetch() {
         `${process.env.API_URL_INTERNAL}/graphql`,
     );
 }
+```
+
+### Import server-only modules from `@comet/site-nextjs/server`
+
+Server-only exports (`sitePreviewRoute`, `legacyPagesRouterSitePreviewApiHandler`, `previewParams`, `legacyPagesRouterPreviewParams`, `persistedQueryRoute`) have been moved from `@comet/site-nextjs` to `@comet/site-nextjs/server`.
+
+This prevents server-only code (which depends on `next/headers`, `fs/promises`, `server-only`, etc.) from being pulled into client bundles. Previously, tree-shaking would remove unused server code, but this is an optional optimization — for example, Vite's dev server does not tree-shake, causing errors when importing `@comet/site-nextjs` in non-server environments (e.g., Storybook).
+
+Update all imports in your site that use these functions:
+
+```diff
+- import { sitePreviewRoute } from "@comet/site-nextjs";
++ import { sitePreviewRoute } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { previewParams } from "@comet/site-nextjs";
++ import { previewParams } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { legacyPagesRouterPreviewParams } from "@comet/site-nextjs";
++ import { legacyPagesRouterPreviewParams } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { legacyPagesRouterSitePreviewApiHandler } from "@comet/site-nextjs";
++ import { legacyPagesRouterSitePreviewApiHandler } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { persistedQueryRoute } from "@comet/site-nextjs";
++ import { persistedQueryRoute } from "@comet/site-nextjs/server";
+```
+
+Similarly, if you import `persistedQueryRoute` directly from `@comet/site-react`:
+
+```diff
+- import { persistedQueryRoute } from "@comet/site-react";
++ import { persistedQueryRoute } from "@comet/site-react/server";
 ```
 
 ### Verify lint passes

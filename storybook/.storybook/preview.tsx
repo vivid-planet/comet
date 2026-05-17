@@ -1,7 +1,7 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
 import { LicenseInfo } from "@mui/x-license";
-import type { Preview } from "@storybook/react-webpack5";
+import type { Preview } from "@storybook/react-vite";
 import type { GlobalTypes } from "storybook/internal/csf";
 
 import { CometConfigProviderDecorator } from "./decorators/CometConfigProvider.decorator";
@@ -10,8 +10,8 @@ import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
 
-if (process.env.MUI_LICENSE_KEY) {
-    LicenseInfo.setLicenseKey(process.env.MUI_LICENSE_KEY);
+if (import.meta.env.MUI_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(import.meta.env.MUI_LICENSE_KEY);
 }
 
 export const globalTypes: GlobalTypes = {

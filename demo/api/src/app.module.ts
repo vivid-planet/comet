@@ -270,7 +270,7 @@ export class AppModule {
                                 throw new Error(`No site config found for scope ${scope.domain}`);
                             }
                             return {
-                                url: `${siteConfig.url}/${scope.language}/render-brevo-email-campaign`,
+                                url: `${siteConfig.url}/api/render-brevo-email-campaign`,
                                 basicAuth: {
                                     username: config.brevo.campaign.basicAuth.username,
                                     password: config.brevo.campaign.basicAuth.password,
