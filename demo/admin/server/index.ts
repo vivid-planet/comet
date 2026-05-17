@@ -1,16 +1,16 @@
 import fs from "node:fs";
 
+import express from "express";
+import expressStaticGzip from "express-static-gzip";
+import helmet from "helmet";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const express = require("express");
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const helmet = require("helmet");
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const expressStaticGzip = require("express-static-gzip");
-
 const app = express();
-const port = Number(process.env.ADMIN_PORT ?? "3000");
+const parsedPort = parseInt(process.env.ADMIN_PORT ?? "3000", 10);
+if (Number.isNaN(parsedPort) || parsedPort < 1 || parsedPort > 65535) {
+    throw new Error(`Invalid ADMIN_PORT value: ${process.env.ADMIN_PORT ?? ""}`);
+}
+const port = parsedPort;
 const host = process.env.SERVER_HOST ?? "localhost";
 
 let indexFile = fs.readFileSync("./build/index.html", "utf8");
@@ -41,7 +41,7 @@ app.use(
             useDefaults: false, // Avoid default values for not explicitly set directives
         },
         xFrameOptions: false, // Disable deprecated X-Frame-Options header
-        crossOriginResourcePolicy: "same-origin", // Do not allow cross-origin requests to access the response
+        crossOriginResourcePolicy: { policy: "same-origin" }, // Do not allow cross-origin requests to access the response
         crossOriginEmbedderPolicy: false, // Disable Cross-Origin-Embedder-Policy as it is not needed (value=no-corp)
         crossOriginOpenerPolicy: true, // Enable Cross-Origin-Opener-Policy (value=same-origin)
         strictTransportSecurity: {
@@ -75,15 +75,17 @@ app.use(
         enableBrotli: true,
         orderPreference: ["br", "gz"],
         index: false, // Don't send index.html for requests to "/" as it will be handled by the fallback route (with replaced environment variables)
-        setHeaders: (res, filePath: string) => {
-            if ([".js", ".js.br", ".js.gz", ".css", ".css.br", ".css.gz"].some((fileExtension) => filePath.endsWith(fileExtension))) {
-                // The js file is static and the index.html uses a parameter as cache buster
-                // implemented as suggested by https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#caching_static_assets
-                res.setHeader("cache-control", "private, max-age=31536000, immutable");
-            } else {
-                // Icons and Fonts could be changed over time, cache for 7d
-                res.setHeader("cache-control", "private, max-age=604800, immutable");
-            }
+        serveStatic: {
+            setHeaders: (res, filePath: string) => {
+                if ([".js", ".js.br", ".js.gz", ".css", ".css.br", ".css.gz"].some((fileExtension) => filePath.endsWith(fileExtension))) {
+                    // The js file is static and the index.html uses a parameter as cache buster
+                    // implemented as suggested by https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#caching_static_assets
+                    res.setHeader("cache-control", "private, max-age=31536000, immutable");
+                } else {
+                    // Icons and Fonts could be changed over time, cache for 7d
+                    res.setHeader("cache-control", "private, max-age=604800, immutable");
+                }
+            },
         },
     }),
 );
