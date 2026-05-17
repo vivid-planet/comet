@@ -10,6 +10,7 @@ import {
 } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
+import { resolveFieldToSql } from "./resolve-field-to-sql";
 
 @Injectable()
 export class EntityInfoService {
@@ -19,74 +20,6 @@ export class EntityInfoService {
         private readonly discoverService: DiscoverService,
         private entityManager: EntityManager,
     ) {}
-
-    /**
-     * Resolves a field path (e.g., "title" or "manufacturer.name") to a SQL expression.
-     * Supports direct fields, embeddables, and n-level deep ManyToOne/OneToOne relations using subqueries.
-     *
-     * @param fieldPath - Dot-separated path like "title", "scope.domain", or "manufacturer.name"
-     * @param metadata - MikroORM entity metadata for the source entity
-     * @param tableName - SQL table name (or alias) to use for the source table
-     * @returns SQL expression string
-     */
-    private resolveFieldToSql(fieldPath: string, metadata: EntityMetadata, tableName: string): string {
-        const parts = fieldPath.split(".");
-
-        // Direct field - find the actual column name
-        if (parts.length === 1) {
-            const fieldProp = metadata.props.find((p) => p.name === parts[0]);
-            if (!fieldProp) {
-                throw new Error(`Field "${parts[0]}" not found in entity "${metadata.className}"`);
-            }
-
-            return `"${tableName}"."${fieldProp.fieldNames[0]}"`;
-        }
-
-        // Relation path - resolve first relation and recurse for the rest
-        const [relationName, ...remainingParts] = parts;
-
-        // Find the relation property in metadata
-        const relationProp = metadata.props.find((p) => p.name === relationName);
-
-        if (!relationProp) {
-            throw new Error(`Relation "${relationName}" not found in entity "${metadata.className}"`);
-        }
-
-        // Handle embedded properties - fields are columns on the same table
-        if (relationProp.kind === "embedded") {
-            let currentProp = relationProp;
-            let currentName = relationName;
-            for (const part of remainingParts) {
-                const childProp = currentProp.embeddedProps?.[part];
-                if (!childProp) {
-                    throw new Error(`Embedded field "${part}" not found in embeddable "${currentName}" of entity "${metadata.className}"`);
-                }
-                currentName = part;
-                currentProp = childProp;
-            }
-            return `"${tableName}"."${currentProp.fieldNames[0]}"`;
-        }
-
-        if (relationProp.kind !== "m:1" && relationProp.kind !== "1:1") {
-            throw new Error(
-                `Only ManyToOne, OneToOne relations and embeddables are supported for EntityInfo. "${relationName}" is "${relationProp.kind}"`,
-            );
-        }
-
-        if (!relationProp.targetMeta) {
-            throw new Error(`Relation "${relationName}" has no target metadata`);
-        }
-
-        // Get the join column (foreign key) and target table info
-        const joinColumn = relationProp.joinColumns[0];
-        const targetTableName = relationProp.targetMeta.tableName;
-        const targetPrimaryKey = relationProp.targetMeta.primaryKeys[0];
-
-        // Recursively resolve the remaining path in the target entity
-        const innerSql = this.resolveFieldToSql(remainingParts.join("."), relationProp.targetMeta, targetTableName);
-
-        return `(SELECT ${innerSql} FROM "${targetTableName}" WHERE "${targetTableName}"."${targetPrimaryKey}" = "${tableName}"."${joinColumn}")`;
-    }
 
     /**
      * Resolves the scope for an entity to a SQL expression returning a JSON object.
@@ -153,13 +86,11 @@ export class EntityInfoService {
     private resolveScopedEntitySqlPathToSql(sqlPath: ScopedEntitySqlPath, metadata: EntityMetadata): string {
         if (typeof sqlPath === "string") {
             // String form: path to an embedded scope object
-            // We need to resolve each field in the embedded scope
             const parts = sqlPath.split(".");
             let currentMeta = metadata;
             let tableName = metadata.tableName;
             const subqueryParts: { joinColumn: string; targetTable: string; targetPk: string; sourceTable: string }[] = [];
 
-            // Walk the path to find the embedded scope
             for (let i = 0; i < parts.length; i++) {
                 const part = parts[i];
                 const prop = currentMeta.props.find((p) => p.name === part);
@@ -170,18 +101,14 @@ export class EntityInfoService {
                 }
 
                 if (prop.kind === "embedded" && prop.embeddedProps) {
-                    // If there are remaining parts, drill into the embedded
                     const remaining = parts.slice(i + 1);
                     if (remaining.length === 0) {
-                        // This is the scope object itself - build JSON from its fields
                         if (subqueryParts.length === 0) {
                             return this.buildScopeJsonSql(prop.embeddedProps, tableName);
                         } else {
-                            // Scope is in a related entity - wrap in subquery
                             return this.wrapInSubqueries(this.buildScopeJsonSql(prop.embeddedProps, tableName), subqueryParts);
                         }
                     }
-                    // Drill into nested embeddable
                     let currentProp = prop;
                     for (const remainPart of remaining) {
                         const childProp = currentProp.embeddedProps?.[remainPart];
@@ -191,7 +118,6 @@ export class EntityInfoService {
                             );
                         }
                         if (childProp.embeddedProps) {
-                            // This is an embedded scope object
                             if (subqueryParts.length === 0) {
                                 return this.buildScopeJsonSql(childProp.embeddedProps, tableName);
                             } else {
@@ -228,7 +154,7 @@ export class EntityInfoService {
             // Object form: build JSON from individual field paths
             const jsonParts: string[] = [];
             for (const [scopeField, fieldPath] of Object.entries(sqlPath)) {
-                const fieldSql = this.resolveFieldToSql(fieldPath, metadata, metadata.tableName);
+                const fieldSql = resolveFieldToSql(fieldPath, metadata, metadata.tableName);
                 jsonParts.push(`'${scopeField}', ${fieldSql}`);
             }
             if (jsonParts.length === 0) {
@@ -253,68 +179,56 @@ export class EntityInfoService {
         return result;
     }
 
-    async createEntityInfoView(options?: { pageTreeFullText?: boolean }): Promise<void> {
-        const pageTreeFullText = options?.pageTreeFullText ?? false;
+    async createEntityInfoView(): Promise<void> {
         const indexSelects: string[] = [];
         const targetEntities = this.discoverService.discoverTargetEntities();
         for (const targetEntity of targetEntities) {
             const entityInfo = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, targetEntity.entity) as EntityInfo<AnyEntity>;
-            if (entityInfo) {
-                if (typeof entityInfo === "string") {
-                    if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
-                        // For PageTreeNode, resolve scope from the entity metadata (the scope is on the PageTreeNode table, not the view)
-                        const pageTreeScopeSql = this.resolveScopeToSql(targetEntity.entity, targetEntity.metadata);
-                        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText", ${pageTreeScopeSql} AS "scope"
-                            FROM "PageTreeNodeEntityInfo"
-                            JOIN "PageTreeNode" ON "PageTreeNode"."id" = "PageTreeNodeEntityInfo"."id"::uuid
-                            LEFT JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeEntityInfo"."id"::uuid`);
-                    } else {
-                        indexSelects.push(`SELECT sub.*, null::tsvector AS "fullText", null::jsonb AS "scope" FROM (${entityInfo}) sub`);
+            if (!entityInfo) {
+                continue;
+            }
+
+            if (typeof entityInfo === "string") {
+                indexSelects.push(
+                    `SELECT sub."name", sub."secondaryInformation", sub."visible", sub."id", sub."entityName", null::jsonb AS "scope" FROM (${entityInfo}) sub`,
+                );
+            } else {
+                const { entityName, metadata } = targetEntity;
+                const primary = metadata.primaryKeys[0];
+
+                // Resolve the name field (must not be NULL)
+                const nameSql = `COALESCE(${resolveFieldToSql(entityInfo.name, metadata, metadata.tableName)}, '')`;
+
+                // Resolve the secondaryInformation field (if provided, can be NULL)
+                let secondaryInformationSql = "null";
+                if (entityInfo.secondaryInformation) {
+                    secondaryInformationSql = resolveFieldToSql(entityInfo.secondaryInformation, metadata, metadata.tableName);
+                }
+
+                let visibleSql = "true";
+                if (entityInfo.visible) {
+                    const qb = this.entityManager.createQueryBuilder(targetEntity.entity.name, metadata.tableName);
+                    const query = qb.select("*").where(entityInfo.visible);
+                    const sql = query.getFormattedQuery();
+                    const sqlWhereMatch = sql.match(/^select .*? from .*? where (.*)/);
+                    if (!sqlWhereMatch) {
+                        throw new Error(`Could not extract where clause from query: ${sql}`);
                     }
-                } else {
-                    const { entityName, metadata } = targetEntity;
-                    const primary = metadata.primaryKeys[0];
+                    visibleSql = sqlWhereMatch[1];
+                }
 
-                    // Resolve the name field (must not be NULL)
-                    const nameSql = `COALESCE(${this.resolveFieldToSql(entityInfo.name, metadata, metadata.tableName)}, '')`;
+                // Resolve scope to SQL
+                const scopeSql = this.resolveScopeToSql(targetEntity.entity, metadata);
 
-                    // Resolve the secondaryInformation field (if provided, can be NULL)
-                    let secondaryInformationSql = "null";
-                    if (entityInfo.secondaryInformation) {
-                        secondaryInformationSql = this.resolveFieldToSql(entityInfo.secondaryInformation, metadata, metadata.tableName);
-                    }
-
-                    let visibleSql = "true";
-                    if (entityInfo.visible) {
-                        const qb = this.entityManager.createQueryBuilder(targetEntity.entity.name, metadata.tableName);
-                        const query = qb.select("*").where(entityInfo.visible);
-                        const sql = query.getFormattedQuery();
-                        const sqlWhereMatch = sql.match(/^select .*? from .*? where (.*)/);
-                        if (!sqlWhereMatch) {
-                            throw new Error(`Could not extract where clause from query: ${sql}`);
-                        }
-                        visibleSql = sqlWhereMatch[1];
-                    }
-
-                    let fullTextSql = "null::tsvector";
-                    if (entityInfo.fullText) {
-                        fullTextSql = this.resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
-                    }
-
-                    // Resolve scope to SQL
-                    const scopeSql = this.resolveScopeToSql(targetEntity.entity, metadata);
-
-                    const select = `SELECT
+                const select = `SELECT
                                 ${nameSql} "name",
                                 ${secondaryInformationSql} "secondaryInformation",
                                 ${visibleSql} AS "visible",
                                 "${metadata.tableName}"."${primary}"::text "id",
                                 '${entityName}' "entityName",
-                                ${fullTextSql} AS "fullText",
                                 ${scopeSql} AS "scope"
                             FROM "${metadata.tableName}"`;
-                    indexSelects.push(select);
-                }
+                indexSelects.push(select);
             }
         }
 
@@ -323,20 +237,11 @@ export class EntityInfoService {
         const pageTreeEntity = targetEntities.find((e) => e.metadata.tableName === "PageTreeNode");
         const pageTreeDocScopeSql = pageTreeEntity ? this.resolveScopeToSql(pageTreeEntity.entity, pageTreeEntity.metadata) : "null::jsonb";
 
-        if (pageTreeFullText) {
-            indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", "PageTreeNodeFullText"."fullText", ${pageTreeDocScopeSql} AS "scope"
-                FROM "PageTreeNodeDocument"
-                JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
-                JOIN "PageTreeNode" ON "PageTreeNode"."id" = "PageTreeNodeDocument"."pageTreeNodeId"
-                LEFT JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeDocument"."pageTreeNodeId"
-            `);
-        } else {
-            indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", null::tsvector AS "fullText", ${pageTreeDocScopeSql} AS "scope"
-                FROM "PageTreeNodeDocument"
-                JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
-                JOIN "PageTreeNode" ON "PageTreeNode"."id" = "PageTreeNodeDocument"."pageTreeNodeId"
-            `);
-        }
+        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", ${pageTreeDocScopeSql} AS "scope"
+            FROM "PageTreeNodeDocument"
+            JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
+            JOIN "PageTreeNode" ON "PageTreeNode"."id" = "PageTreeNodeDocument"."pageTreeNodeId"
+        `);
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
 

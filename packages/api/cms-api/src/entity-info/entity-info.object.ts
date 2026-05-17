@@ -1,5 +1,4 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import { FullTextType } from "@mikro-orm/postgresql";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
@@ -27,9 +26,6 @@ export class EntityInfoObject {
 
     @Property({ type: "boolean" })
     visible: boolean;
-
-    @Property({ type: FullTextType })
-    fullText: string;
 
     @Field(() => GraphQLJSONObject, { nullable: true })
     @Property({ type: "json", nullable: true })
