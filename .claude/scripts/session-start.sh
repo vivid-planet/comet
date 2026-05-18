@@ -79,7 +79,7 @@ CI=false pnpm run copy-project-files
 
 
 # --- install agent skills ---
-pnpm run install-agent-skills
+pnpm run install-agent-features
 
 
 # --- lang clones (only when not existing) ---
