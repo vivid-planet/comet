@@ -1,5 +1,7 @@
 # @comet/cms-api
 
+## 8.23.2
+
 ## 8.23.1
 
 ### Patch Changes
