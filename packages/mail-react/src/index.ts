@@ -4,6 +4,10 @@ export { OneOfBlock } from "./blocks/factories/OneOfBlock.js";
 export { OptionalBlock } from "./blocks/factories/OptionalBlock.js";
 export type { SupportedBlocks } from "./blocks/factories/types.js";
 export type { PropsWithData } from "./blocks/helpers/PropsWithData.js";
+export type { HtmlPixelImageBlockProps } from "./blocks/pixelImage/HtmlPixelImageBlock.js";
+export { HtmlPixelImageBlock } from "./blocks/pixelImage/HtmlPixelImageBlock.js";
+export type { MjmlPixelImageBlockProps } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
+export { MjmlPixelImageBlock } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
 export type { HtmlInlineLinkProps } from "./components/inlineLink/HtmlInlineLink.js";
 export { HtmlInlineLink } from "./components/inlineLink/HtmlInlineLink.js";
 export { MjmlMailRoot } from "./components/mailRoot/MjmlMailRoot.js";
@@ -13,6 +17,9 @@ export type { HtmlTextProps } from "./components/text/HtmlText.js";
 export { HtmlText } from "./components/text/HtmlText.js";
 export type { MjmlTextProps } from "./components/text/MjmlText.js";
 export { MjmlText } from "./components/text/MjmlText.js";
+export type { MjmlWrapperProps } from "./components/wrapper/MjmlWrapper.js";
+export { MjmlWrapper } from "./components/wrapper/MjmlWrapper.js";
+export { type Config, ConfigProvider, type PixelImageBlockConfig, useConfig } from "./config/ConfigProvider.js";
 export { registerStyles } from "./styles/registerStyles.js";
 export { createBreakpoint } from "./theme/createBreakpoint.js";
 export { createTheme } from "./theme/createTheme.js";
@@ -101,8 +108,6 @@ export {
     type IMjmlTableProps as MjmlTableProps,
     MjmlTitle,
     type IMjmlTitleProps as MjmlTitleProps,
-    MjmlWrapper,
-    type IMjmlWrapperProps as MjmlWrapperProps,
 } from "@faire/mjml-react";
 export { MjmlComment, MjmlConditionalComment, MjmlHtml, MjmlTrackingPixel, MjmlYahooStyle } from "@faire/mjml-react/extensions/index.js";
 export { renderToMjml } from "@faire/mjml-react/utils/renderToMjml.js";

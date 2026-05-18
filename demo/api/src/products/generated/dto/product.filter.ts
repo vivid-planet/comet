@@ -64,6 +64,11 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => BooleanFilter)
     inStock?: BooleanFilter;
+    @Field(() => NumberFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => NumberFilter)
+    soldCount?: NumberFilter;
     @Field(() => DateFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
@@ -124,6 +129,11 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => ManyToManyFilter)
     datasheets?: ManyToManyFilter;
+    @Field(() => ManyToManyFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ManyToManyFilter)
+    relatedImages?: ManyToManyFilter;
     @Field(() => [ProductFilter], { nullable: true })
     @Type(() => ProductFilter)
     @ValidateNested({ each: true })

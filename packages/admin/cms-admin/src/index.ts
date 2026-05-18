@@ -80,6 +80,8 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
+export type { TipTapBlockStyle, TipTapBlockType } from "./blocks/tipTap/createTipTapRichTextBlock";
+export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
 export type {
     BlockAdminComponent,
     BlockAdminComponentPart,
@@ -164,8 +166,12 @@ export {
 } from "./documents/ContentGenerationConfigContext";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionProps } from "./documents/types";
-export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
-export { FileField } from "./form/file/FileField";
+export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+/** @deprecated Use `ChooseDamFileDialog` instead. */
+export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+export { ChooseDamFilesDialog } from "./form/file/chooseFile/ChooseDamFilesDialog";
+export { FileField, type GQLDamFileFieldFileFragment } from "./form/file/FileField";
+export { damFileFieldFragment } from "./form/file/FileField.gql";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {
     FinalFormFileUpload,
@@ -199,6 +205,9 @@ export type { SiteConfig } from "./siteConfigs/siteConfigsConfig";
 export { useSiteConfig } from "./siteConfigs/useSiteConfig";
 export { useSiteConfigs } from "./siteConfigs/useSiteConfigs";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
+export { createDocumentTranslationMethods } from "./translation/createDocumentTranslationMethods";
+export type { TranslatableInterface } from "./translation/TranslatableInterface";
+export { TranslateContentMenuItem } from "./translation/TranslateContentMenuItem";
 export {
     CurrentUserContext,
     type CurrentUserInterface,

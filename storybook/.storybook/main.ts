@@ -1,8 +1,8 @@
-import type { StorybookConfig } from "@storybook/react-webpack5";
+import type { StorybookConfig } from "@storybook/react-vite";
 import remarkGfm from "remark-gfm";
 
 const config: StorybookConfig = {
-    framework: "@storybook/react-webpack5",
+    framework: "@storybook/react-vite",
     stories: ["../src/**/*.@(mdx|stories.tsx)"],
     addons: [
         {
@@ -15,7 +15,6 @@ const config: StorybookConfig = {
                 },
             },
         },
-        "@storybook/addon-webpack5-compiler-babel",
     ],
 
     env: (config) => ({
@@ -32,6 +31,10 @@ const config: StorybookConfig = {
             "@comet/cms-admin": {
                 title: "@comet/cms-admin",
                 url: configType === "DEVELOPMENT" ? "http://localhost:26647/" : "https://main--69df3371c46abe69b5199825.chromatic.com",
+            },
+            "@comet/mail-react": {
+                title: "@comet/mail-react",
+                url: configType === "DEVELOPMENT" ? "http://localhost:6066/" : "https://main--69df33e9280a36be495d6521.chromatic.com",
             },
         };
     },

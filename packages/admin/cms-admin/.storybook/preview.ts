@@ -1,4 +1,4 @@
-import type { Preview } from "@storybook/react-webpack5";
+import type { Preview } from "@storybook/react-vite";
 import { type GlobalTypes } from "storybook/internal/csf";
 
 import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";

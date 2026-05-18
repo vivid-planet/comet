@@ -45,6 +45,7 @@ const withFilesSelect = (
     args: {
         query?: string;
         id?: string;
+        ids?: string[];
         copyOfId?: string;
         filename?: string;
         folderId?: string | null;
@@ -65,6 +66,9 @@ const withFilesSelect = (
     }
     if (args.id) {
         qb.andWhere({ id: args.id });
+    }
+    if (args.ids) {
+        qb.andWhere({ id: { $in: args.ids } });
     }
     if (args.copyOfId) {
         qb.andWhere({ copyOf: { id: args.copyOfId } });
@@ -147,6 +151,7 @@ export class FilesService {
             archived: !includeArchived ? false : undefined,
             folderId: !isSearching ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
+            ids: filter?.ids,
             query: filter?.searchText,
             sortColumnName,
             sortDirection,
@@ -164,6 +169,7 @@ export class FilesService {
             archived: !includeArchived ? false : undefined,
             folderId: !isSearching ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
+            ids: filter?.ids,
             query: filter?.searchText,
             sortColumnName,
             sortDirection,
@@ -176,6 +182,7 @@ export class FilesService {
             archived: !includeArchived ? false : undefined,
             folderId: !isSearching ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
+            ids: filter?.ids,
             query: filter?.searchText,
             sortColumnName,
             sortDirection,
