@@ -15,7 +15,7 @@ import { Test, type TestingModule } from "@nestjs/testing";
 
 import { DiscoverService } from "../dependencies/discover.service";
 import { ScopedEntity } from "../user-permissions/decorators/scoped-entity.decorator";
-import { EntityInfoService } from "./entity-info.service";
+import { FullTextSearchService } from "./full-text-search.service";
 
 // Entities for scope testing
 
@@ -100,8 +100,8 @@ const mockEntityManager = {
     getConnection: jest.fn().mockReturnValue({}),
 };
 
-describe("EntityInfoService - resolveScopeToSql", () => {
-    let service: EntityInfoService;
+describe("FullTextSearchService - resolveScopeToSql", () => {
+    let service: FullTextSearchService;
     let orm: MikroORM;
 
     beforeAll(async () => {
@@ -120,10 +120,10 @@ describe("EntityInfoService - resolveScopeToSql", () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [EntityInfoService, { provide: DiscoverService, useValue: {} }, { provide: EntityManager, useValue: mockEntityManager }],
+            providers: [FullTextSearchService, { provide: DiscoverService, useValue: {} }, { provide: EntityManager, useValue: mockEntityManager }],
         }).compile();
 
-        service = module.get<EntityInfoService>(EntityInfoService);
+        service = module.get<FullTextSearchService>(FullTextSearchService);
     });
 
     function callResolveScopeToSql(entityName: string): string {

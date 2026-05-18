@@ -2,9 +2,9 @@
 "@comet/cms-api": minor
 ---
 
-Add entity scope to `EntityInfo` view and scope argument to `fullTextSearch`
+Add entity scope to `EntityInfoFullText` view and scope argument to `fullTextSearch`
 
-The `EntityInfo` database view now includes a `scope` column (jsonb) that is automatically populated from:
+The `EntityInfoFullText` database view now includes a `scope` column (jsonb) that is automatically populated from:
 
 - An embedded `scope` property on the entity (e.g., `@Embedded(() => MyScope) scope: MyScope`)
 - A SQL-path `@ScopedEntity` decorator
@@ -16,7 +16,7 @@ The `@ScopedEntity` decorator now supports SQL-convertible path definitions in a
 - String form: `@ScopedEntity("company.scope")` — path to an embedded scope object via a relation
 - Object form: `@ScopedEntity({ domain: "company.scope.domain", language: "company.scope.language" })` — individual field paths
 
-The old callback/service format is still supported but cannot be combined with `@EntityInfo` (since callbacks cannot be converted to SQL for the view).
+The old callback/service format is still supported but cannot be combined with full-text search (since callbacks cannot be converted to SQL for the view).
 
 **`fullTextSearch` scope argument**
 
@@ -36,6 +36,6 @@ query {
 }
 ```
 
-**`EntityInfo` GraphQL type**
+**`FullTextSearchResult` GraphQL type**
 
-The `EntityInfo` GraphQL type now includes a `scope` field (JSON object).
+The `fullTextSearch` query now returns `FullTextSearchResult` objects that include `id`, `entityName`, `name`, `secondaryInformation`, and `scope`.
