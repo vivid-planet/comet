@@ -45,9 +45,7 @@ export class FullTextSearchService {
 
             let requiredPermissionSql = "null::text[]";
             if (entityInfo.requiredPermission) {
-                const permissions = Array.isArray(entityInfo.requiredPermission)
-                    ? entityInfo.requiredPermission
-                    : [entityInfo.requiredPermission];
+                const permissions = Array.isArray(entityInfo.requiredPermission) ? entityInfo.requiredPermission : [entityInfo.requiredPermission];
                 // Escape single quotes to prevent SQL injection
                 requiredPermissionSql = `ARRAY[${permissions.map((p) => `'${p.replace(/'/g, "''")}'`).join(",")}]::text[]`;
             }
@@ -62,7 +60,9 @@ export class FullTextSearchService {
 
         if (indexSelects.length === 0) {
             // Empty placeholder so the view always exists with the expected columns
-            indexSelects.push(`SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", NULL::text[] AS "requiredPermission" WHERE false`);
+            indexSelects.push(
+                `SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", NULL::text[] AS "requiredPermission" WHERE false`,
+            );
         }
 
         const viewSql = indexSelects.join("\n UNION ALL \n");

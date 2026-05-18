@@ -38,11 +38,7 @@ export class FullTextSearchResolver {
             where.requiredPermission = { $ne: null };
         }
 
-        const [matches, totalCount] = await this.entityManager.findAndCount(
-            EntityInfoFullTextObject,
-            where,
-            { offset, limit },
-        );
+        const [matches, totalCount] = await this.entityManager.findAndCount(EntityInfoFullTextObject, where, { offset, limit });
 
         if (matches.length === 0) {
             return new PaginatedEntityInfo([], totalCount);
