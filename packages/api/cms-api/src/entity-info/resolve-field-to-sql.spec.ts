@@ -13,6 +13,7 @@ import {
     Property,
     Ref,
 } from "@mikro-orm/postgresql";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { resolveFieldToSql } from "./resolve-field-to-sql";
 
