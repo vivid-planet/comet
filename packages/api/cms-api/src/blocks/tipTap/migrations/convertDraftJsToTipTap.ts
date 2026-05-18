@@ -47,6 +47,12 @@ interface ConvertOptions {
      * `blockStyle` attribute value. Matched blocks become `{ type: "paragraph", attrs: { blockStyle: ... } }`.
      */
     blockStyleMap?: Record<string, string>;
+    /**
+     * Maps DraftJS custom inline style names (e.g. `highlight` from a DraftJS `customInlineStyles`
+     * configuration) to TipTap `inlineStyle` mark type values.
+     * Matched ranges become `{ type: "inlineStyle", attrs: { type: <mappedValue> } }`.
+     */
+    inlineStyleMap?: Record<string, string>;
 }
 
 const INLINE_STYLE_TO_MARK: Record<string, { mark: string; supports: TipTapSupports }> = {
@@ -84,6 +90,7 @@ function buildInlineContent(
     entityMap: Record<string, DraftJsEntity>,
     supports: Set<TipTapSupports>,
     hasLink: boolean,
+    inlineStyleMap: Record<string, string>,
 ): TipTapContent[] {
     const text = block.text ?? "";
     if (text.length === 0) {
@@ -135,6 +142,13 @@ function buildInlineContent(
                 if (mapping && supports.has(mapping.supports)) {
                     if (!marks.some((mark) => mark.type === mapping.mark)) {
                         marks.push({ type: mapping.mark });
+                    }
+                } else {
+                    const inlineStyleType = inlineStyleMap[range.style];
+                    if (inlineStyleType !== undefined) {
+                        if (!marks.some((mark) => mark.type === "inlineStyle" && mark.attrs?.type === inlineStyleType)) {
+                            marks.push({ type: "inlineStyle", attrs: { type: inlineStyleType } });
+                        }
                     }
                 }
             }
@@ -238,6 +252,7 @@ export function convertDraftJsToTipTap(draftContent: DraftJsContent | undefined 
     const supports = new Set<TipTapSupports>(options.supports ?? []);
     const hasLink = !!options.link;
     const blockStyleMap = options.blockStyleMap ?? {};
+    const inlineStyleMap = options.inlineStyleMap ?? {};
     const entityMap = draftContent.entityMap ?? {};
 
     const topLevel: TipTapContent[] = [];
@@ -254,7 +269,7 @@ export function convertDraftJsToTipTap(draftContent: DraftJsContent | undefined 
     };
 
     for (const block of draftContent.blocks) {
-        const inlineContent = buildInlineContent(block, entityMap, supports, hasLink);
+        const inlineContent = buildInlineContent(block, entityMap, supports, hasLink, inlineStyleMap);
 
         if (block.type === "unordered-list-item" && supports.has("unordered-list")) {
             if (currentListType !== "bulletList") {

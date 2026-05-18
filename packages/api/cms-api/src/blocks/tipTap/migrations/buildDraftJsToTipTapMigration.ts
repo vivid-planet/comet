@@ -40,7 +40,7 @@ interface BuildOptions extends ConvertOptions {
 const EMPTY_DOC: TipTapContent = { type: "doc", content: [{ type: "paragraph" }] };
 
 export function buildDraftJsToTipTapMigration(options: BuildOptions): ClassConstructor<BlockMigrationInterface> {
-    const { schema, maxBlocks, supports, link, blockStyleMap } = options;
+    const { schema, maxBlocks, supports, link, blockStyleMap, inlineStyleMap } = options;
 
     return class DraftJsToTipTapMigration extends BlockMigration<(from: From) => To> implements BlockMigrationInterface {
         public readonly toVersion = 1;
@@ -54,7 +54,7 @@ export function buildDraftJsToTipTapMigration(options: BuildOptions): ClassConst
                 return { tipTapContent: EMPTY_DOC };
             }
 
-            const converted = convertDraftJsToTipTap(from.draftContent, { supports, link, blockStyleMap });
+            const converted = convertDraftJsToTipTap(from.draftContent, { supports, link, blockStyleMap, inlineStyleMap });
             if (isValidTipTapContentSync(converted, schema, { maxBlocks })) {
                 return { tipTapContent: converted };
             }

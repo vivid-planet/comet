@@ -339,6 +339,65 @@ describe("convertDraftJsToTipTap", () => {
                 ),
             ).not.toThrow();
         });
+
+        it("maps a custom inline style via inlineStyleMap to an inlineStyle mark", () => {
+            const result = convertDraftJsToTipTap(
+                {
+                    blocks: [makeBlock({ type: "unstyled", text: "hi", inlineStyleRanges: [{ style: "highlight", offset: 0, length: 2 }] })],
+                    entityMap: {},
+                },
+                { supports: [...defaultSupports], inlineStyleMap: { highlight: "highlight" } },
+            );
+            expect(result.content?.[0].content).toEqual([
+                { type: "text", text: "hi", marks: [{ type: "inlineStyle", attrs: { type: "highlight" } }] },
+            ]);
+        });
+
+        it("maps DraftJS inline style name to a different TipTap inline style name", () => {
+            const result = convertDraftJsToTipTap(
+                {
+                    blocks: [makeBlock({ type: "unstyled", text: "x", inlineStyleRanges: [{ style: "HIGHLIGHT", offset: 0, length: 1 }] })],
+                    entityMap: {},
+                },
+                { supports: [...defaultSupports], inlineStyleMap: { HIGHLIGHT: "highlight" } },
+            );
+            expect(result.content?.[0].content).toEqual([
+                { type: "text", text: "x", marks: [{ type: "inlineStyle", attrs: { type: "highlight" } }] },
+            ]);
+        });
+
+        it("drops a custom inline style not present in inlineStyleMap", () => {
+            const result = convertDraftJsToTipTap(
+                {
+                    blocks: [makeBlock({ type: "unstyled", text: "x", inlineStyleRanges: [{ style: "unknown-style", offset: 0, length: 1 }] })],
+                    entityMap: {},
+                },
+                { supports: [...defaultSupports], inlineStyleMap: { highlight: "highlight" } },
+            );
+            expect(result.content?.[0].content).toEqual([{ type: "text", text: "x" }]);
+        });
+
+        it("can combine a built-in mark and a custom inlineStyle mark on the same text", () => {
+            const result = convertDraftJsToTipTap(
+                {
+                    blocks: [
+                        makeBlock({
+                            type: "unstyled",
+                            text: "x",
+                            inlineStyleRanges: [
+                                { style: "BOLD", offset: 0, length: 1 },
+                                { style: "highlight", offset: 0, length: 1 },
+                            ],
+                        }),
+                    ],
+                    entityMap: {},
+                },
+                { supports: [...defaultSupports], inlineStyleMap: { highlight: "highlight" } },
+            );
+            expect(result.content?.[0].content).toEqual([
+                { type: "text", text: "x", marks: [{ type: "bold" }, { type: "inlineStyle", attrs: { type: "highlight" } }] },
+            ]);
+        });
     });
 
     describe("non-breaking space and soft-hyphen splitting", () => {

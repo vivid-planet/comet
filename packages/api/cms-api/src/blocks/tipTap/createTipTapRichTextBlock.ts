@@ -112,8 +112,11 @@ export interface CreateTipTapRichTextBlockOptions {
      * Pass an object with `blockStyleMap` to map DraftJS custom block types (e.g.
      * `paragraph-small` from a DraftJS `blocktypeMap`) to TipTap paragraph `blockStyle`
      * attribute values.
+     *
+     * Pass an object with `inlineStyleMap` to map DraftJS custom inline style names (e.g.
+     * `highlight` from a DraftJS `customInlineStyles`) to TipTap `inlineStyle` mark type values.
      */
-    migrateFromDraftJs?: boolean | { blockStyleMap?: Record<string, string> };
+    migrateFromDraftJs?: boolean | { blockStyleMap?: Record<string, string>; inlineStyleMap?: Record<string, string> };
 }
 
 function buildExtensions(
@@ -319,11 +322,19 @@ export function createTipTapRichTextBlock(
     const schema = getSchema(extensions);
 
     const draftJsBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.blockStyleMap : undefined;
+    const draftJsInlineStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.inlineStyleMap : undefined;
     const migrate = migrateFromDraftJs
         ? {
               version: baseMigrate.version + 1,
               migrations: [
-                  buildDraftJsToTipTapMigration({ schema, supports, link: LinkBlock, maxBlocks, blockStyleMap: draftJsBlockStyleMap }),
+                  buildDraftJsToTipTapMigration({
+                      schema,
+                      supports,
+                      link: LinkBlock,
+                      maxBlocks,
+                      blockStyleMap: draftJsBlockStyleMap,
+                      inlineStyleMap: draftJsInlineStyleMap,
+                  }),
                   ...baseMigrate.migrations,
               ],
           }
