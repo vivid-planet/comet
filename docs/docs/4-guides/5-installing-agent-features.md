@@ -12,7 +12,7 @@ Add an `agent-features.json` file at the project root containing the external re
 
 ```json
 {
-    "repos": ["git@github.com:vivid-planet/comet.git"]
+    "repos": ["https://github.com/vivid-planet/comet.git"]
 }
 ```
 
@@ -88,11 +88,11 @@ You can install skills and rules from external git repositories. This allows you
 
 ```json
 {
-    "repos": ["git@github.com:vivid-planet/comet.git", "git@github.com:org/other-features.git#main"]
+    "repos": ["https://github.com/vivid-planet/comet.git", "https://github.com/org/other-features.git#main"]
 }
 ```
 
-Each entry is an SSH git URL, optionally followed by `#ref` to pin a branch, tag, or commit hash. Only the `skills/`, `agentic-plugin/skills/`, and `rules/` folders are fetched from each repo (via git sparse checkout) — the rest of the repository is not downloaded. External skills and rules are **copied** into the target directories.
+Each entry is a git URL (HTTPS or SSH), optionally followed by `#ref` to pin a branch, tag, or commit hash. Only the `skills/`, `agentic-plugin/skills/`, and `rules/` folders are fetched from each repo (via git sparse checkout) — the rest of the repository is not downloaded. External skills and rules are **copied** into the target directories.
 
 A repo may ship any subset of `skills/`, `agentic-plugin/skills/`, and `rules/`. Missing folders are silently ignored.
 
@@ -111,8 +111,8 @@ Example output:
 ```
 Installing 1 skill from local skills/...
   Symlinked: code-style
-Installing 2 skills from external git@github.com:vivid-planet/comet.git (skills/)...
-  CONFLICT: "code-style" from external git@github.com:vivid-planet/comet.git (skills/) skipped (already installed from a higher-priority source)
+Installing 2 skills from external https://github.com/vivid-planet/comet.git (skills/)...
+  CONFLICT: "code-style" from external https://github.com/vivid-planet/comet.git (skills/) skipped (already installed from a higher-priority source)
   Copied: api-conventions
 Installing 1 rule from local rules/...
   Symlinked: naming-conventions.md
@@ -169,7 +169,7 @@ When a consumer references your repo, `install-agent-features` will sparse-fetch
 
 ```json
 {
-    "repos": ["git@github.com:your-org/your-library.git"]
+    "repos": ["https://github.com/your-org/your-library.git"]
 }
 ```
 
@@ -177,7 +177,7 @@ To pin consumers to a specific release:
 
 ```json
 {
-    "repos": ["git@github.com:your-org/your-library.git#v2.1.0"]
+    "repos": ["https://github.com/your-org/your-library.git#v2.1.0"]
 }
 ```
 
