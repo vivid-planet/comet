@@ -49,4 +49,24 @@ describe("CometConfigProvider", () => {
 
         expect(document.title).toBe("Comet Demo Admin");
     });
+
+    it("should replace the browser tab label when the environment label changes", () => {
+        document.title = "Comet Demo Admin";
+
+        const { rerender } = render(
+            <TestConfigProvider config={{ environmentLabel: "Dev" }}>
+                <div />
+            </TestConfigProvider>,
+        );
+
+        expect(document.title).toBe("Comet Demo Admin [Dev]");
+
+        rerender(
+            <TestConfigProvider config={{ environmentLabel: "Staging" }}>
+                <div />
+            </TestConfigProvider>,
+        );
+
+        expect(document.title).toBe("Comet Demo Admin [Staging]");
+    });
 });
