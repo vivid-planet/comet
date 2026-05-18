@@ -212,6 +212,7 @@ export { FileUploadInput, FileUploadInterface } from "./file-utils/file-upload.i
 export { createFileUploadInputFromUrl, slugifyFilename } from "./file-utils/files.utils";
 export { FocalPoint } from "./file-utils/focal-point.enum";
 export { getCenteredPosition, getMaxDimensionsFromArea, ImageDimensionsAndCoordinates } from "./file-utils/images.util";
+export { FullTextSearchModule } from "./full-text-search/full-text-search.module";
 export { IMGPROXY_CONFIG } from "./imgproxy/imgproxy.constants";
 export { Extension, Gravity, ResizingType } from "./imgproxy/imgproxy.enum";
 export { ImgproxyModule } from "./imgproxy/imgproxy.module";
@@ -234,6 +235,7 @@ export { MailerLog } from "./mailer/entities/mailer-log.entity";
 export { MAILER_SERVICE_CONFIG } from "./mailer/mailer.constants";
 export { MailerModule, MailerModuleConfig } from "./mailer/mailer.module";
 export { MailerService, SendMailParams } from "./mailer/mailer.service";
+export { entityToMikroOrmFullText } from "./mikro-orm/helper/entity-to-mikro-orm-full-text";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";

@@ -25,6 +25,11 @@ function renderMark(mark: { type: string; attrs?: Record<string, any> }, childre
             return <sup>{children}</sup>;
         case "subscript":
             return <sub>{children}</sub>;
+        case "inlineStyle": {
+            const inlineStyleType = mark.attrs?.type as string | undefined;
+            const className = inlineStyleType ? (styles as Record<string, string>)[`inlineStyle-${inlineStyleType}`] : undefined;
+            return <span className={className}>{children}</span>;
+        }
         case "link":
             return mark.attrs?.data && isValidLink(mark.attrs.data) ? (
                 <LinkBlock data={mark.attrs.data} className={styles.inlineLink}>

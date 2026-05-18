@@ -26,6 +26,7 @@ import type { SearchText, WeightedSearchText } from "../search/get-search-text";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
+import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 
@@ -65,6 +66,15 @@ interface TipTapBlockStyle {
     appliesTo?: TipTapBlockType[];
 }
 
+interface TipTapInlineStyle {
+    name: string;
+    /**
+     * Limits the inline style to the provided block types.
+     * If none is specified, the inline style is allowed for all block types.
+     */
+    appliesTo?: TipTapBlockType[];
+}
+
 const defaultSupports: TipTapSupports[] = [
     "bold",
     "italic",
@@ -81,6 +91,7 @@ const defaultSupports: TipTapSupports[] = [
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
+    inlineStyles?: TipTapInlineStyle[];
     indexSearchText?: boolean;
     link?: Block;
     /**
@@ -96,8 +107,14 @@ export interface CreateTipTapRichTextBlockOptions {
     listLevelMax?: number;
 }
 
-function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockStyle[], hasLink: boolean): Extensions {
+function buildExtensions(
+    supports: TipTapSupports[],
+    blockStyles: TipTapBlockStyle[],
+    inlineStyles: TipTapInlineStyle[],
+    hasLink: boolean,
+): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
+    const hasInlineStyles = inlineStyles.length > 0;
     return [
         StarterKit.configure({
             bold: supports.includes("bold") ? {} : false,
@@ -114,6 +131,7 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockSty
         }),
         ...(hasBlockStyles ? [BlockStyleParagraph] : []),
         ...(hasBlockStyles && supports.includes("heading") ? [BlockStyleHeading] : []),
+        ...(hasInlineStyles ? [InlineStyleMark] : []),
         ...(supports.includes("sup") ? [Superscript] : []),
         ...(supports.includes("sub") ? [Subscript] : []),
         ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
@@ -215,9 +233,49 @@ function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
     return maxDepth;
 }
 
+function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined {
+    if (node.type === "paragraph") {
+        return "paragraph";
+    }
+    if (node.type === "heading" && node.attrs?.level) {
+        return `heading-${node.attrs.level}` as TipTapBlockType;
+    }
+    return undefined;
+}
+
+function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: TipTapInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
+    const currentBlockType = getBlockTypeFromNode(content) ?? parentBlockType;
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            // Check text nodes for inline style marks
+            if (child.type === "text" && Array.isArray(child.marks)) {
+                for (const mark of child.marks) {
+                    if (mark.type === "inlineStyle" && mark.attrs?.type) {
+                        const styleConfig = inlineStyles.find((s) => s.name === mark.attrs.type);
+                        if (styleConfig?.appliesTo && currentBlockType && !styleConfig.appliesTo.includes(currentBlockType)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            if (containsInvalidInlineStyleMarks(child, inlineStyles, currentBlockType)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 function IsTipTapContent(
     schema: Schema,
-    { linkBlock, maxBlocks, listLevelMax }: { linkBlock?: Block; maxBlocks?: number; listLevelMax?: number },
+    {
+        inlineStyles,
+        linkBlock,
+        maxBlocks,
+        listLevelMax,
+    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; listLevelMax?: number },
     validationOptions?: ValidationOptions,
 ) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
@@ -239,6 +297,11 @@ function IsTipTapContent(
                         }
                         const node = ProseMirrorNode.fromJSON(schema, value);
                         node.check();
+
+                        // Validate inline style appliesTo constraints
+                        if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
+                            return false;
+                        }
 
                         // Enforce maxBlocks limit on top-level content nodes
                         if (maxBlocks !== undefined) {
@@ -309,6 +372,7 @@ export function createTipTapRichTextBlock(
     {
         supports = defaultSupports,
         blockStyles = [],
+        inlineStyles = [],
         indexSearchText = true,
         link: LinkBlock,
         maxBlocks,
@@ -320,7 +384,7 @@ export function createTipTapRichTextBlock(
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, blockStyles, hasLink);
+    const extensions = buildExtensions(supports, blockStyles, inlineStyles, hasLink);
     const schema = getSchema(extensions);
 
     @BlockDataMigrationVersion(migrate.version)
@@ -356,7 +420,7 @@ export function createTipTapRichTextBlock(
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, { linkBlock: LinkBlock, maxBlocks, listLevelMax })
+        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, listLevelMax })
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 

@@ -7,6 +7,7 @@ export type EntityInfo<Entity> =
           name: AutoPath<Entity, PopulatePath.ALL> | string;
           secondaryInformation?: AutoPath<Entity, PopulatePath.ALL> | string;
           visible?: ObjectQuery<Entity>;
+          fullText?: keyof Entity & string;
       }
     | string;
 
