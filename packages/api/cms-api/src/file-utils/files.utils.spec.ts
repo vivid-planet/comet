@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { isValidSvg } from "./files.utils";
 
 describe("Files Utils", () => {

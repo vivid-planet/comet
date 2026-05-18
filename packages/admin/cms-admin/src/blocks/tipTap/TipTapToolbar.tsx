@@ -30,12 +30,13 @@ import {
     selectClasses,
     type SvgIconProps,
 } from "@mui/material";
+import { grey as muiGreyPalette } from "@mui/material/colors";
 import { type Editor, useEditorState } from "@tiptap/react";
 import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type RefAttributes, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import type { BlockInterface, LinkBlockInterface } from "../types";
-import type { TipTapBlockStyle, TipTapBlockType, TipTapPlaceholder, TipTapSupports } from "./createTipTapRichTextBlock";
+import type { TipTapBlockStyle, TipTapBlockType, TipTapInlineStyle, TipTapPlaceholder, TipTapSupports } from "./createTipTapRichTextBlock";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {
@@ -49,13 +50,13 @@ const toolbarButtonSx = {
     border: "1px solid transparent",
     boxSizing: "border-box",
     transition: "background-color 200ms, border-color 200ms, color 200ms",
-    color: greyPalette[600],
+    color: muiGreyPalette[600],
     "&:hover": {
-        backgroundColor: greyPalette[200],
-        borderColor: greyPalette[400],
+        backgroundColor: muiGreyPalette[200],
+        borderColor: muiGreyPalette[400],
     },
     "&:disabled": {
-        color: greyPalette[300],
+        color: muiGreyPalette[300],
         "&, &:hover": {
             backgroundColor: "transparent",
             borderColor: "transparent",
@@ -65,7 +66,7 @@ const toolbarButtonSx = {
 
 const toolbarButtonSelectedSx = {
     "&:not(:disabled), &:not(:disabled):hover": {
-        borderColor: greyPalette[400],
+        borderColor: muiGreyPalette[400],
         backgroundColor: "white",
     },
 } as const;
@@ -114,7 +115,7 @@ const toolbarSlotSx = {
     py: "5px",
     pr: "6px",
     mr: "5px",
-    borderRight: `1px solid ${greyPalette[300]}`,
+    borderRight: `1px solid ${greyPalette[100]}`,
     "&:last-child": {
         mr: 0,
         pr: 0,
@@ -137,7 +138,7 @@ const selectFormControlSx = {
 const selectSx = {
     [`& .${selectClasses.select}.${inputBaseClasses.input}`]: {
         minHeight: 0,
-        color: greyPalette[600],
+        color: muiGreyPalette[600],
         minWidth: 180,
         lineHeight: "24px",
         fontSize: 14,
@@ -149,24 +150,27 @@ export const TipTapToolbar = ({
     editor,
     supports,
     blockStyles,
+    inlineStyles,
     placeholders,
     linkBlock,
 }: {
     editor: Editor;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
+    inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
 }) => {
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [placeholderAnchorEl, setPlaceholderAnchorEl] = useState<null | HTMLElement>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
-    const inlineStyles = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
+    const hasInlineFormatButtons = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
     const lists = (["ordered-list", "unordered-list"] as const).some((s) => supports.includes(s));
     const specialChars = (["non-breaking-space", "soft-hyphen"] as const).some((s) => supports.includes(s));
     const hasLink = supports.includes("link") && !!linkBlock;
     const hasPlaceholders = placeholders.length > 0;
+    const hasInlineStyles = inlineStyles.length > 0;
 
     const editorState = useEditorState({
         editor,
@@ -180,6 +184,12 @@ export const TipTapToolbar = ({
                 return "paragraph";
             })();
             const activeTipTapBlockType: TipTapBlockType = (() => {
+                if (e.isActive("orderedList")) {
+                    return "ordered-list";
+                }
+                if (e.isActive("bulletList")) {
+                    return "unordered-list";
+                }
                 for (let level = 1; level <= 6; level++) {
                     if (e.isActive("heading", { level })) {
                         return `heading-${level}` as TipTapBlockType;
@@ -188,10 +198,18 @@ export const TipTapToolbar = ({
                 return "paragraph";
             })();
             const attrs = e.isActive("heading") ? e.getAttributes("heading") : e.getAttributes("paragraph");
+            const activeInlineStyle = (() => {
+                if (!hasInlineStyles) {
+                    return "";
+                }
+                const inlineStyleAttrs = e.getAttributes("inlineStyle");
+                return (inlineStyleAttrs.type as string) ?? "";
+            })();
             return {
                 activeBlockType,
                 activeTipTapBlockType,
                 activeBlockStyle: (attrs.blockStyle as string) ?? "",
+                activeInlineStyle,
                 canUndo: e.can().undo(),
                 canRedo: e.can().redo(),
                 canIndent: e.can().sinkListItem("listItem"),
@@ -220,6 +238,7 @@ export const TipTapToolbar = ({
     };
 
     const applicableBlockStyles = blockStyles.filter((style) => !style.appliesTo || style.appliesTo.includes(editorState.activeTipTapBlockType));
+    const applicableInlineStyles = inlineStyles.filter((style) => !style.appliesTo || style.appliesTo.includes(editorState.activeTipTapBlockType));
 
     const handleBlockTypeChange = (e: SelectChangeEvent) => {
         const value = e.target.value;
@@ -253,13 +272,22 @@ export const TipTapToolbar = ({
         editor.chain().focus().updateAttributes(nodeType, { blockStyle: value }).run();
     };
 
+    const handleInlineStyleChange = (e: SelectChangeEvent) => {
+        const value = e.target.value;
+        if (value) {
+            editor.chain().focus().setInlineStyle({ type: value }).run();
+        } else {
+            editor.chain().focus().unsetInlineStyle().run();
+        }
+    };
+
     return (
         <Box
             sx={{
                 display: "flex",
                 flexWrap: "wrap",
                 borderTop: `1px solid ${greyPalette[100]}`,
-                backgroundColor: greyPalette[100],
+                backgroundColor: muiGreyPalette[100],
                 px: "6px",
             }}
         >
@@ -331,7 +359,31 @@ export const TipTapToolbar = ({
                     </FormControl>
                 </ToolbarGroup>
             )}
-            {(inlineStyles || moreOptions) && (
+            {applicableInlineStyles.length > 0 && (
+                <ToolbarGroup>
+                    <FormControl sx={selectFormControlSx}>
+                        <Select
+                            value={editorState.activeInlineStyle}
+                            onChange={handleInlineStyleChange}
+                            displayEmpty
+                            variant="filled"
+                            MenuProps={{ elevation: 1 }}
+                            sx={selectSx}
+                            disabled={editorState.selectionEmpty}
+                        >
+                            <MenuItem value="" dense>
+                                <FormattedMessage id="comet.blocks.tipTapRichText.inlineStyle.default" defaultMessage="Default" />
+                            </MenuItem>
+                            {applicableInlineStyles.map((style) => (
+                                <MenuItem key={style.name} value={style.name} dense>
+                                    {style.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </ToolbarGroup>
+            )}
+            {(hasInlineFormatButtons || moreOptions) && (
                 <ToolbarGroup>
                     {supports.includes("bold") && (
                         <ToolbarButton

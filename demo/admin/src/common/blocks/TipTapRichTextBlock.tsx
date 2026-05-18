@@ -43,5 +43,32 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
             appliesTo: ["paragraph"],
             element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 18, lineHeight: "18px" }} {...props} />,
         },
+        {
+            name: "list300",
+            label: <FormattedMessage id="tipTapRichTextBlock.list300" defaultMessage="List" />,
+            appliesTo: ["ordered-list", "unordered-list"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 18, lineHeight: "26px" }} {...props} />,
+        },
+        {
+            name: "list200",
+            label: <FormattedMessage id="tipTapRichTextBlock.list200" defaultMessage="List Small" />,
+            appliesTo: ["ordered-list", "unordered-list"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 15, lineHeight: "22px" }} {...props} />,
+        },
+    ],
+    inlineStyles: [
+        {
+            name: "highlight",
+            label: <FormattedMessage id="tipTapRichTextBlock.inlineStyle.highlight" defaultMessage="Highlight" />,
+            element: (props: HTMLAttributes<HTMLElement>) => <span style={{ backgroundColor: "#fff3cd", padding: "0 2px" }} {...props} />,
+        },
+        {
+            name: "tag",
+            label: <FormattedMessage id="tipTapRichTextBlock.inlineStyle.tag" defaultMessage="Tag" />,
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => (
+                <span style={{ backgroundColor: "#e0f0ff", color: "#0066cc", padding: "0 4px", borderRadius: 4 }} {...props} />
+            ),
+        },
     ],
 });
