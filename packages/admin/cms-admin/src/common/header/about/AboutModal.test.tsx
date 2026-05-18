@@ -25,7 +25,7 @@ describe("AboutModal", () => {
     it("should show the environment label when configured", () => {
         renderAboutModal("Staging");
 
-        expect(screen.getByText("Environment: Staging")).toBeTruthy();
+        expect(screen.getByText("Environment: Staging")).not.toBeNull();
     });
 
     it("should hide the environment label when not configured", () => {

@@ -43,7 +43,9 @@ export function CometConfigProvider<SiteConfigs = unknown>({ children, ...config
             return;
         }
 
-        originalDocumentTitle.current ??= document.title;
+        if (originalDocumentTitle.current === undefined) {
+            originalDocumentTitle.current = document.title;
+        }
         document.title = `${originalDocumentTitle.current} [${config.environmentLabel}]`;
 
         return () => {
