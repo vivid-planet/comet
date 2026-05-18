@@ -10,7 +10,7 @@ Example `agent-features.json`:
 
 ```json
 {
-    "repos": ["git@github.com:vivid-planet/comet.git"]
+    "repos": ["https://github.com/vivid-planet/comet.git"]
 }
 ```
 

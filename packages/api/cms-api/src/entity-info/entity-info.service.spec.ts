@@ -15,6 +15,7 @@ import {
     Ref,
 } from "@mikro-orm/postgresql";
 import { Test, type TestingModule } from "@nestjs/testing";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DiscoverService } from "../dependencies/discover.service";
 import { EntityInfoService } from "./entity-info.service";
@@ -111,7 +112,7 @@ class ProductVariant extends BaseEntity {
 }
 
 const mockEntityManager = {
-    getConnection: jest.fn().mockReturnValue({}),
+    getConnection: vi.fn().mockReturnValue({}),
 };
 
 describe("EntityInfoService", () => {
