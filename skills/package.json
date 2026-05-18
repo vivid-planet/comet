@@ -9,17 +9,19 @@
     },
     "license": "BSD-2-Clause",
     "files": [
-        "comet-block/**",
-        "comet-mail-react/**",
-        "comet-minor-update/**",
-        "dev-pm/**"
+        "skills/**"
     ],
     "scripts": {
         "lint": "pnpm run lint:prettier",
         "lint:ci": "pnpm run lint",
         "lint:fix": "pnpm run lint:fix:prettier",
         "lint:fix:prettier": "pnpm run lint:prettier --write",
-        "lint:prettier": "pnpm exec prettier --check '**/*.{json,md,yml,yaml}'"
+        "lint:prettier": "pnpm exec prettier --check '**/*.{json,md,yml,yaml}'",
+        "prepack": "node -e \"const fs=require('node:fs');const path=require('node:path');const root=process.cwd();const out=path.join(root,'skills');fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(out,{recursive:true});for(const dir of ['comet-block','comet-mail-react','comet-minor-update','dev-pm']){fs.cpSync(path.join(root,dir),path.join(out,dir),{recursive:true});}\"",
+        "postpack": "node -e \"require('node:fs').rmSync(require('node:path').join(process.cwd(),'skills'),{recursive:true,force:true});\""
+    },
+    "devDependencies": {
+        "prettier": "^3.6.2"
     },
     "engines": {
         "node": ">=22.0.0"

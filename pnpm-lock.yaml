@@ -2658,7 +2658,11 @@ importers:
         specifier: ^5.102.1
         version: 5.106.0
 
-  skills: {}
+  skills:
+    devDependencies:
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
 
   storybook:
     dependencies:
