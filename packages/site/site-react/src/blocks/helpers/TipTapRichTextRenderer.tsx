@@ -34,6 +34,9 @@ export interface RenderTipTapRichTextOptions {
     markMapping?: Record<string, TipTapMarkHandler>;
 }
 
+/**
+ * @experimental
+ */
 export function renderTipTapRichText({ content, nodeMapping, markMapping }: RenderTipTapRichTextOptions): ReactNode {
     const applyMarks = (children: ReactNode, node: TipTapNode): ReactNode => {
         if (!node.marks || node.marks.length === 0) {
