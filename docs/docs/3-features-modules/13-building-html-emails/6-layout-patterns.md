@@ -2,7 +2,7 @@
 title: Layout Patterns
 ---
 
-This page provides ready-to-use layout recipes that combine the concepts from [Email Basics](./1-email-basics.md), [Components and Theme](./2-components-and-theme.md), and [Customization](./4-customization.md) into complete, tested patterns.
+This page provides ready-to-use layout recipes that combine the concepts from [Email Basics](./1-email-basics.md), [Theme & Base Components](./2-components-and-theme.md), and [Customization](./5-customization.md) into complete, tested patterns.
 
 ## How Column Gaps Work in MJML
 

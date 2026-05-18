@@ -14,6 +14,10 @@ export const restrictedImportPaths = [
         importNames: ["default"],
         message: "Don't use next/image. See https://docs.comet-dxp.com/docs/faqs/next-image-import-restriction",
     },
+    {
+        name: "node-cache",
+        message: "node-cache is abandonware. Use cache-manager or @cacheable/node-cache instead",
+    },
 ];
 
 /** @type {import('eslint')} */

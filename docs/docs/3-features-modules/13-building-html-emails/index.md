@@ -5,7 +5,7 @@ title: Building HTML Emails
 `@comet/mail-react` lets you build responsive, themed HTML emails using React components. Under the hood it uses [MJML](https://documentation.mjml.io/) to generate cross-client-compatible HTML. On top of the raw MJML components the library provides a theme system, higher-level wrapper components, a style utility layer, and Storybook integration for live previewing emails during development.
 
 :::tip 🤖 Agent Skill `comet-mail-react`
-An agent skill for building HTML emails with `@comet/mail-react` is available. It provides AI coding agents with email development best practices, component patterns, and cross-client compatibility guidance. See [Installing Agent Skills](../../4-guides/5-installing-agent-skills.md) for setup instructions.
+An agent skill for building HTML emails with `@comet/mail-react` is available. It provides AI coding agents with email development best practices, component patterns, and cross-client compatibility guidance. See [Installing Agent Features](../../4-guides/5-installing-agent-features.md) for setup instructions.
 :::
 
 :::info
@@ -84,12 +84,13 @@ The `indent` prop on `MjmlSection` adds theme-based left/right padding so conten
 
 ## Rendering Emails
 
-In Storybook, the decorator handles MJML-to-HTML conversion automatically. When rendering the final HTML to send, use the `renderMailHtml` function — see [Rendering](./3-rendering.md) for full details and integration examples.
+In Storybook, the decorator handles MJML-to-HTML conversion automatically. When rendering the final HTML to send, use the `renderMailHtml` function — see [Rendering](./4-rendering.md) for full details and integration examples.
 
 ## Next Steps
 
 - [**Email Basics**](./1-email-basics.md) — Layout rules, nesting requirements, and when to use MJML vs HTML components
-- [**Components and Theme**](./2-components-and-theme.md) — Full theme API, text variants, responsive values, and all available components
-- [**Rendering**](./3-rendering.md) — Converting email templates to HTML with `renderMailHtml`, browser environments, and Mail Templates Module integration
-- [**Customization**](./4-customization.md) — Creating custom components, extending the theme with module augmentation, and adding responsive styles
-- [**Layout Patterns**](./5-layout-patterns.md) — Ready-to-use layout recipes including multi-column layouts with gaps and responsive stacking
+- [**Theme & Base Components**](./2-components-and-theme.md) — Full theme API, text variants, responsive values, and all available base components
+- [**Blocks**](./3-blocks.md) — Drop-in components for rendering Comet CMS block data (e.g. pixel-image blocks) in emails
+- [**Rendering**](./4-rendering.md) — Converting email templates to HTML with `renderMailHtml`, browser environments, and Mail Templates Module integration
+- [**Customization**](./5-customization.md) — Creating custom components, extending the theme with module augmentation, and adding responsive styles
+- [**Layout Patterns**](./6-layout-patterns.md) — Ready-to-use layout recipes including multi-column layouts with gaps and responsive stacking
