@@ -2,9 +2,13 @@ import { AnyEntity, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
-import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
+import { ENTITY_INFO_METADATA_KEY, EntityInfo, EntityInfoSql } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
 import { resolveFieldToSql } from "./resolve-field-to-sql";
+
+function isEntityInfoSql(entityInfo: EntityInfo<AnyEntity>): entityInfo is EntityInfoSql {
+    return typeof entityInfo === "object" && "sql" in entityInfo;
+}
 
 @Injectable()
 export class EntityInfoService {
@@ -24,9 +28,13 @@ export class EntityInfoService {
                 continue;
             }
 
-            if (typeof entityInfo === "string") {
+            if (typeof entityInfo === "string" || isEntityInfoSql(entityInfo)) {
+                const sql = typeof entityInfo === "string" ? entityInfo : entityInfo.sql;
+                const requiredPermission = typeof entityInfo === "string" ? undefined : entityInfo.requiredPermission;
+                const requiredPermissionSql = requiredPermission ? `'${requiredPermission}'` : "NULL::text";
+
                 indexSelects.push(
-                    `SELECT sub."name", sub."secondaryInformation", sub."visible", sub."id", sub."entityName", sub."requiredPermission" FROM (${entityInfo}) sub`,
+                    `SELECT sub."name", sub."secondaryInformation", sub."visible", sub."id", sub."entityName", ${requiredPermissionSql} AS "requiredPermission" FROM (${sql}) sub`,
                 );
             } else {
                 const { entityName, metadata } = targetEntity;
@@ -68,7 +76,7 @@ export class EntityInfoService {
         }
 
         // add all PageTreeNode Documents (Page, Link etc) thru PageTreeNodeDocument (no @EntityInfo needed on Page/Link)
-        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", "PageTreeNodeEntityInfo"."requiredPermission"
+        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", 'pageTree' AS "requiredPermission"
             FROM "PageTreeNodeDocument"
             JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
         `);

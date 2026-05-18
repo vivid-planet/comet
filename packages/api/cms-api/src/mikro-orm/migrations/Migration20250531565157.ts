@@ -28,8 +28,7 @@ SELECT
   file.id::text AS id,
   file.name AS "name",
   ft.path AS "secondaryInformation",
-  NOT (file.archived OR COALESCE(ft.any_archived, false)) AS visible,
-  'dam' AS "requiredPermission"
+  NOT (file.archived OR COALESCE(ft.any_archived, false)) AS visible
 FROM "DamFile" file
 LEFT JOIN folder_tree ft ON file."folderId" = ft.id;`);
     }

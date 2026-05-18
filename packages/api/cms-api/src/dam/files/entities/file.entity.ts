@@ -162,9 +162,10 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
     }
 
     if (Scope) {
-        @EntityInfo<DamFile>(
-            `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName", "requiredPermission" FROM "DamFileEntityInfo"`,
-        )
+        @EntityInfo<DamFile>({
+            sql: `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`,
+            requiredPermission: "dam",
+        })
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {
@@ -174,9 +175,10 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         }
         return DamFile;
     } else {
-        @EntityInfo<DamFile>(
-            `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName", "requiredPermission" FROM "DamFileEntityInfo"`,
-        )
+        @EntityInfo<DamFile>({
+            sql: `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`,
+            requiredPermission: "dam",
+        })
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {}

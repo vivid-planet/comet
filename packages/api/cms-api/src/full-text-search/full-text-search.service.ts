@@ -2,9 +2,13 @@ import { AnyEntity, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Optional } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
-import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../entity-info/entity-info.decorator";
+import { ENTITY_INFO_METADATA_KEY, EntityInfo, EntityInfoSql } from "../entity-info/entity-info.decorator";
 import { resolveFieldToSql } from "../entity-info/resolve-field-to-sql";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
+
+function isEntityInfoSql(entityInfo: EntityInfo<AnyEntity>): entityInfo is EntityInfoSql {
+    return typeof entityInfo === "object" && "sql" in entityInfo;
+}
 
 @Injectable()
 export class FullTextSearchService {
@@ -25,10 +29,13 @@ export class FullTextSearchService {
                 continue;
             }
 
-            if (typeof entityInfo === "string") {
+            if (typeof entityInfo === "string" || isEntityInfoSql(entityInfo)) {
                 if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
+                    const requiredPermission = typeof entityInfo === "string" ? undefined : entityInfo.requiredPermission;
+                    const requiredPermissionSql = requiredPermission ? `'${requiredPermission}'` : "NULL::text";
+
                     indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText",
-                        'pageTree' AS "requiredPermission"
+                        ${requiredPermissionSql} AS "requiredPermission"
                         FROM "PageTreeNodeEntityInfo"
                         INNER JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeEntityInfo"."id"::uuid`);
                 }
