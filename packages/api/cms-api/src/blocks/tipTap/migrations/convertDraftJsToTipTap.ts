@@ -1,20 +1,8 @@
 import type { Block } from "../../block";
+import type { TipTapSupports } from "../createTipTapRichTextBlock";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TipTapContent = Record<string, any>;
-
-type TipTapSupports =
-    | "bold"
-    | "italic"
-    | "strike"
-    | "sub"
-    | "sup"
-    | "heading"
-    | "ordered-list"
-    | "unordered-list"
-    | "non-breaking-space"
-    | "soft-hyphen"
-    | "link";
 
 interface DraftJsInlineStyleRange {
     style: string;

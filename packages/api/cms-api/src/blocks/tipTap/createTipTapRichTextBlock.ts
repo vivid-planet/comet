@@ -34,7 +34,7 @@ import { isValidTipTapContentSync } from "./tipTapValidation";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TipTapContent = Record<string, any>;
 
-type TipTapSupports =
+export type TipTapSupports =
     | "bold"
     | "italic"
     | "strike"
