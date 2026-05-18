@@ -25,4 +25,7 @@ export class EntityInfoObject {
 
     @Property({ type: "boolean" })
     visible: boolean;
+
+    @Property({ type: "text", nullable: true })
+    requiredPermission: string | null;
 }

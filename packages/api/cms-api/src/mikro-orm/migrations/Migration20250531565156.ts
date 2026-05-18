@@ -30,7 +30,8 @@ WITH RECURSIVE "PageTreeNodePath" AS (
 SELECT "PageTreeNode"."id"::text AS "id",
        "PageTreeNode"."name",
        "PageTreeNodePath"."path" AS "secondaryInformation",
-       "PageTreeNodePath"."inherited_visible" AS "visible"
+       "PageTreeNodePath"."inherited_visible" AS "visible",
+       'pageTree' AS "requiredPermission"
     FROM "PageTreeNode"
     JOIN "PageTreeNodePath" ON "PageTreeNode"."id" = "PageTreeNodePath"."id"`);
     }

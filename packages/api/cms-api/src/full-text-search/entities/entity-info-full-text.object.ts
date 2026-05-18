@@ -14,4 +14,7 @@ export class EntityInfoFullTextObject {
 
     @Property({ type: FullTextType })
     fullText: string;
+
+    @Property({ type: "text", nullable: true })
+    requiredPermission: string | null;
 }

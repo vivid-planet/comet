@@ -26,7 +26,7 @@ export class EntityInfoService {
 
             if (typeof entityInfo === "string") {
                 indexSelects.push(
-                    `SELECT sub."name", sub."secondaryInformation", sub."visible", sub."id", sub."entityName" FROM (${entityInfo}) sub`,
+                    `SELECT sub."name", sub."secondaryInformation", sub."visible", sub."id", sub."entityName", sub."requiredPermission" FROM (${entityInfo}) sub`,
                 );
             } else {
                 const { entityName, metadata } = targetEntity;
@@ -53,19 +53,22 @@ export class EntityInfoService {
                     visibleSql = sqlWhereMatch[1];
                 }
 
+                const requiredPermissionSql = entityInfo.requiredPermission ? `'${entityInfo.requiredPermission}'` : "NULL::text";
+
                 const select = `SELECT
                                 ${nameSql} "name",
                                 ${secondaryInformationSql} "secondaryInformation",
                                 ${visibleSql} AS "visible",
                                 "${metadata.tableName}"."${primary}"::text "id",
-                                '${entityName}' "entityName"
+                                '${entityName}' "entityName",
+                                ${requiredPermissionSql} AS "requiredPermission"
                             FROM "${metadata.tableName}"`;
                 indexSelects.push(select);
             }
         }
 
         // add all PageTreeNode Documents (Page, Link etc) thru PageTreeNodeDocument (no @EntityInfo needed on Page/Link)
-        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName"
+        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", "PageTreeNodeEntityInfo"."requiredPermission"
             FROM "PageTreeNodeDocument"
             JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
         `);

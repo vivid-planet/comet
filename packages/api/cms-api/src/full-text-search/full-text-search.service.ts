@@ -27,7 +27,8 @@ export class FullTextSearchService {
 
             if (typeof entityInfo === "string") {
                 if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
-                    indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText"
+                    indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText",
+                        'pageTree' AS "requiredPermission"
                         FROM "PageTreeNodeEntityInfo"
                         INNER JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeEntityInfo"."id"::uuid`);
                 }
@@ -42,17 +43,21 @@ export class FullTextSearchService {
             const primary = metadata.primaryKeys[0];
 
             const fullTextSql = resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
+            const requiredPermissionSql = entityInfo.requiredPermission ? `'${entityInfo.requiredPermission}'` : "NULL::text";
 
             indexSelects.push(`SELECT
                             "${metadata.tableName}"."${primary}"::text "id",
                             '${entityName}' "entityName",
-                            ${fullTextSql} AS "fullText"
+                            ${fullTextSql} AS "fullText",
+                            ${requiredPermissionSql} AS "requiredPermission"
                         FROM "${metadata.tableName}"`);
         }
 
         if (indexSelects.length === 0) {
             // Empty placeholder so the view always exists with the expected columns
-            indexSelects.push(`SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText" WHERE false`);
+            indexSelects.push(
+                `SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", NULL::text AS "requiredPermission" WHERE false`,
+            );
         }
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
