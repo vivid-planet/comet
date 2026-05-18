@@ -1,0 +1,31 @@
+{
+    "name": "@comet/skills",
+    "version": "9.0.0-beta.3",
+    "description": "Reusable AI coding agent skills for Comet projects",
+    "repository": {
+        "directory": "skills",
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet"
+    },
+    "license": "BSD-2-Clause",
+    "files": [
+        "comet-block/**",
+        "comet-mail-react/**",
+        "comet-minor-update/**",
+        "dev-pm/**"
+    ],
+    "scripts": {
+        "lint": "pnpm run lint:prettier",
+        "lint:ci": "pnpm run lint",
+        "lint:fix": "pnpm run lint:fix:prettier",
+        "lint:fix:prettier": "pnpm run lint:prettier --write",
+        "lint:prettier": "pnpm exec prettier --check '**/*.{json,md,yml,yaml}'"
+    },
+    "engines": {
+        "node": ">=22.0.0"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    }
+}

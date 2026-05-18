@@ -155,6 +155,7 @@ Common commands:
 | `@comet/eslint-config` | Shared ESLint configurations                               |
 | `@comet/eslint-plugin` | Custom ESLint rules for Comet projects                     |
 | `@comet/mail-react`    | Utilities for building HTML emails with React (MJML-based) |
+| `@comet/skills`        | Reusable AI coding agent skills for Comet projects         |
 
 ### Docs & Storybook
 

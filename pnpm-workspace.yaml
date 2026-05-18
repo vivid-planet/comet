@@ -1,5 +1,6 @@
 packages:
     - "packages/**"
+    - "skills"
     - "demo/**"
     - "docs"
     - "storybook"
