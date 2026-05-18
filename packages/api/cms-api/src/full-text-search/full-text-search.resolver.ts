@@ -1,5 +1,6 @@
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, Int, Query, Resolver } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-scalars";
 
 import { EntityInfoObject } from "../entity-info/entity-info.object";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
@@ -16,12 +17,14 @@ export class FullTextSearchResolver {
         @Args("search") search: string,
         @Args("offset", { type: () => Int, defaultValue: 0 }) offset: number,
         @Args("limit", { type: () => Int, defaultValue: 25 }) limit: number,
+        @Args("scope", { type: () => GraphQLJSONObject, nullable: true }) scope?: Record<string, unknown>,
     ): Promise<PaginatedEntityInfo> {
-        const [matches, totalCount] = await this.entityManager.findAndCount(
-            EntityInfoFullTextObject,
-            { fullText: { $fulltext: search } },
-            { offset, limit },
-        );
+        const where: Record<string, unknown> = { fullText: { $fulltext: search } };
+        if (scope) {
+            where.scope = scope;
+        }
+
+        const [matches, totalCount] = await this.entityManager.findAndCount(EntityInfoFullTextObject, where, { offset, limit });
 
         if (matches.length === 0) {
             return new PaginatedEntityInfo([], totalCount);

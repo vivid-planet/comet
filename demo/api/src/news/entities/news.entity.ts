@@ -9,6 +9,7 @@ import {
     RootBlockDataScalar,
     RootBlockEntity,
     RootBlockType,
+    ScopedEntity,
 } from "@comet/cms-api";
 import {
     BaseEntity,
@@ -62,6 +63,7 @@ export class NewsContentScope {
 }
 
 @EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } }, fullText: "fullText" })
+@ScopedEntity("scope")
 @RootBlockEntity()
 @ObjectType()
 @Entity()

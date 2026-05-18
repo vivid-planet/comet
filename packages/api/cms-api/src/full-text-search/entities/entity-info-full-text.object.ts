@@ -14,4 +14,7 @@ export class EntityInfoFullTextObject {
 
     @Property({ type: FullTextType })
     fullText: string;
+
+    @Property({ type: "jsonb", nullable: true })
+    scope: Record<string, unknown> | null;
 }

@@ -6,10 +6,48 @@ import isEqual from "lodash.isequal";
 
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import {
+    isScopedEntitySqlResolvable,
+    SCOPED_ENTITY_METADATA_KEY,
+    ScopedEntityMeta,
+    ScopedEntitySqlMapping,
+} from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 import { AFFECTED_SCOPE_METADATA_KEY, AffectedScopeMeta } from "./decorators/affected-scope.decorator";
+
+/**
+ * Resolves scope from an entity instance using a SQL-resolvable ScopedEntity meta.
+ * - String: dot-path to an embedded object (e.g., "scope" reads entity.scope)
+ * - Object mapping: keys are scope property names, values are dot-paths (e.g., { domain: "scope.domain" })
+ */
+export function resolveScopeFromEntity(meta: string | ScopedEntitySqlMapping, entity: Record<string, unknown>): ContentScope {
+    if (typeof meta === "string") {
+        const value = getNestedValue(entity, meta);
+        if (typeof value !== "object" || value === null) {
+            throw new Error(`@ScopedEntity("${meta}") resolved to a non-object value on entity`);
+        }
+        return { ...value } as ContentScope;
+    }
+
+    const scope: Record<string, unknown> = {};
+    for (const [scopeKey, fieldPath] of Object.entries(meta)) {
+        scope[scopeKey] = getNestedValue(entity, fieldPath);
+    }
+    return scope as ContentScope;
+}
+
+function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
+    const parts = path.split(".");
+    let current: unknown = obj;
+    for (const part of parts) {
+        if (current === null || current === undefined || typeof current !== "object") {
+            return undefined;
+        }
+        current = (current as Record<string, unknown>)[part];
+    }
+    return current;
+}
 
 // TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()
@@ -102,7 +140,9 @@ export class ContentScopeService {
                             throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
                         }
                         let scopes;
-                        if (isInjectableService(scoped)) {
+                        if (isScopedEntitySqlResolvable(scoped)) {
+                            scopes = resolveScopeFromEntity(scoped, row);
+                        } else if (isInjectableService(scoped)) {
                             const service = this.moduleRef.get(scoped, { strict: false });
                             scopes = await service.getEntityScope(row);
                         } else {
