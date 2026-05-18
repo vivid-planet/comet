@@ -26,6 +26,7 @@ import type { SearchText, WeightedSearchText } from "../search/get-search-text";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
+import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
@@ -67,6 +68,15 @@ interface TipTapBlockStyle {
     appliesTo?: TipTapBlockType[];
 }
 
+interface TipTapInlineStyle {
+    name: string;
+    /**
+     * Limits the inline style to the provided block types.
+     * If none is specified, the inline style is allowed for all block types.
+     */
+    appliesTo?: TipTapBlockType[];
+}
+
 const defaultSupports: TipTapSupports[] = [
     "bold",
     "italic",
@@ -83,6 +93,7 @@ const defaultSupports: TipTapSupports[] = [
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
+    inlineStyles?: TipTapInlineStyle[];
     indexSearchText?: boolean;
     link?: Block;
     /**
@@ -105,8 +116,14 @@ export interface CreateTipTapRichTextBlockOptions {
     migrateFromDraftJs?: boolean | { blockStyleMap?: Record<string, string> };
 }
 
-function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockStyle[], hasLink: boolean): Extensions {
+function buildExtensions(
+    supports: TipTapSupports[],
+    blockStyles: TipTapBlockStyle[],
+    inlineStyles: TipTapInlineStyle[],
+    hasLink: boolean,
+): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
+    const hasInlineStyles = inlineStyles.length > 0;
     return [
         StarterKit.configure({
             bold: supports.includes("bold") ? {} : false,
@@ -123,6 +140,7 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockSty
         }),
         ...(hasBlockStyles ? [BlockStyleParagraph] : []),
         ...(hasBlockStyles && supports.includes("heading") ? [BlockStyleHeading] : []),
+        ...(hasInlineStyles ? [InlineStyleMark] : []),
         ...(supports.includes("sup") ? [Superscript] : []),
         ...(supports.includes("sub") ? [Subscript] : []),
         ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
@@ -177,7 +195,46 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function IsTipTapContent(schema: Schema, { linkBlock, maxBlocks }: { linkBlock?: Block; maxBlocks?: number }, validationOptions?: ValidationOptions) {
+function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined {
+    if (node.type === "paragraph") {
+        return "paragraph";
+    }
+    if (node.type === "heading" && node.attrs?.level) {
+        return `heading-${node.attrs.level}` as TipTapBlockType;
+    }
+    return undefined;
+}
+
+function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: TipTapInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
+    const currentBlockType = getBlockTypeFromNode(content) ?? parentBlockType;
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            // Check text nodes for inline style marks
+            if (child.type === "text" && Array.isArray(child.marks)) {
+                for (const mark of child.marks) {
+                    if (mark.type === "inlineStyle" && mark.attrs?.type) {
+                        const styleConfig = inlineStyles.find((s) => s.name === mark.attrs.type);
+                        if (styleConfig?.appliesTo && currentBlockType && !styleConfig.appliesTo.includes(currentBlockType)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            if (containsInvalidInlineStyleMarks(child, inlineStyles, currentBlockType)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+function IsTipTapContent(
+    schema: Schema,
+    { inlineStyles, linkBlock, maxBlocks }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number },
+    validationOptions?: ValidationOptions,
+) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
@@ -188,6 +245,11 @@ function IsTipTapContent(schema: Schema, { linkBlock, maxBlocks }: { linkBlock?:
             validator: {
                 async validate(value: unknown) {
                     if (!isValidTipTapContentSync(value, schema, { maxBlocks })) {
+                        return false;
+                    }
+
+                    // Validate inline style appliesTo constraints
+                    if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
                         return false;
                     }
 
@@ -241,6 +303,7 @@ export function createTipTapRichTextBlock(
     {
         supports = defaultSupports,
         blockStyles = [],
+        inlineStyles = [],
         indexSearchText = true,
         link: LinkBlock,
         maxBlocks,
@@ -252,7 +315,7 @@ export function createTipTapRichTextBlock(
     const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, blockStyles, hasLink);
+    const extensions = buildExtensions(supports, blockStyles, inlineStyles, hasLink);
     const schema = getSchema(extensions);
 
     const draftJsBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.blockStyleMap : undefined;
@@ -299,7 +362,7 @@ export function createTipTapRichTextBlock(
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, { linkBlock: LinkBlock, maxBlocks })
+        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks })
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 
