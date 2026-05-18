@@ -7,8 +7,9 @@ import { Command, CommandRunner } from "nest-commander";
 import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
+import { resolveSqlPathScopeFromEntity } from "../common/helper/resolve-sql-path-scope.helper";
 import { DiscoverService } from "../dependencies/discover.service";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { isScopedEntitySqlPath, SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsFunction, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
@@ -80,7 +81,9 @@ export class WarningCheckerCommand extends CommandRunner {
                             if (scoped) {
                                 let scopedEntityScope: ContentScope | ContentScope[];
 
-                                if (isInjectableService(scoped)) {
+                                if (isScopedEntitySqlPath(scoped)) {
+                                    scopedEntityScope = await resolveSqlPathScopeFromEntity(scoped, rootBlock);
+                                } else if (isInjectableService(scoped)) {
                                     const service = this.moduleRef.get(scoped, { strict: false });
                                     scopedEntityScope = await service.getEntityScope(rootBlock);
                                 } else {

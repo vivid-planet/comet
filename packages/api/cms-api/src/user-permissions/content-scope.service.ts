@@ -5,8 +5,9 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
+import { resolveSqlPathScopeFromEntity } from "../common/helper/resolve-sql-path-scope.helper";
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { isScopedEntitySqlPath, SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 import { AFFECTED_SCOPE_METADATA_KEY, AffectedScopeMeta } from "./decorators/affected-scope.decorator";
@@ -101,13 +102,7 @@ export class ContentScopeService {
                         if (!scoped) {
                             throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
                         }
-                        let scopes;
-                        if (isInjectableService(scoped)) {
-                            const service = this.moduleRef.get(scoped, { strict: false });
-                            scopes = await service.getEntityScope(row);
-                        } else {
-                            scopes = await scoped(row);
-                        }
+                        const scopes = await this.resolveScopedEntityScopes(scoped, row);
                         if (!scopes) {
                             throw new Error(`@ScopedEntity function for ${affectedEntity.entity} didn't return any scopes`);
                         }
@@ -153,5 +148,23 @@ export class ContentScopeService {
             const request = context.switchToHttp().getRequest();
             return { ...request.params, ...request.query };
         }
+    }
+
+    /**
+     * Resolves scopes from a ScopedEntityMeta value, supporting all three variants:
+     * - Injectable service
+     * - Function callback
+     * - SQL-path (string or object)
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async resolveScopedEntityScopes(scoped: ScopedEntityMeta, entity: any): Promise<ContentScope | ContentScope[]> {
+        if (isScopedEntitySqlPath(scoped)) {
+            return resolveSqlPathScopeFromEntity(scoped, entity);
+        }
+        if (isInjectableService(scoped)) {
+            const service = this.moduleRef.get(scoped, { strict: false });
+            return service.getEntityScope(entity);
+        }
+        return scoped(entity);
     }
 }
