@@ -2658,6 +2658,8 @@ importers:
         specifier: ^5.102.1
         version: 5.106.0
 
+  skills: {}
+
   storybook:
     dependencies:
       '@apollo/client':
