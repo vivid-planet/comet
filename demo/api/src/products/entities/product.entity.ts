@@ -245,11 +245,11 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @ManyToMany(() => FileUpload)
     @Field(() => [FileUpload])
     datasheets = new Collection<FileUpload>(this);
-  
+
     @ManyToMany(() => DamFile)
     @Field(() => [DamFile])
     relatedImages = new Collection<DamFile>(this);
-  
+
     @Index({ type: "fulltext" })
     @Property<Product>({
         nullable: true,
