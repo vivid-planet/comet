@@ -157,7 +157,7 @@ importers:
         version: 10.0.6(react@19.2.6)
       uuid:
         specifier: ^11.1.0
-        version: 11.1.0
+        version: 11.1.1
     devDependencies:
       '@babel/core':
         specifier: ^7.28.6
@@ -417,7 +417,7 @@ importers:
         version: 1.6.9
       uuid:
         specifier: ^11.1.0
-        version: 11.1.0
+        version: 11.1.1
     devDependencies:
       '@comet/api-generator':
         specifier: workspace:*
@@ -792,7 +792,7 @@ importers:
         version: 2.0.0(react@19.2.6)
       uuid:
         specifier: ^11.1.0
-        version: 11.1.0
+        version: 11.1.1
     devDependencies:
       '@apollo/client':
         specifier: ^3.14.1
@@ -1222,7 +1222,7 @@ importers:
         version: 2.0.0(react@19.2.6)
       uuid:
         specifier: ^11.1.0
-        version: 11.1.0
+        version: 11.1.1
     devDependencies:
       '@babel/cli':
         specifier: ^7.28.6
@@ -1603,7 +1603,7 @@ importers:
         version: 10.0.6(react@19.2.6)
       uuid:
         specifier: ^11.1.0
-        version: 11.1.0
+        version: 11.1.1
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -1857,7 +1857,7 @@ importers:
         version: 29.4.9(@babel/core@7.28.6)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.6))(jest-util@29.7.0)(jest@29.7.0(@types/node@24.12.4)(babel-plugin-macros@3.1.0))(typescript@5.9.3)
       uuid:
         specifier: ^11.1.0
-        version: 11.1.0
+        version: 11.1.1
 
   packages/api/brevo-api:
     dependencies:
@@ -1904,8 +1904,8 @@ importers:
         specifier: ^3.20.1
         version: 3.20.1(@nestjs/common@11.1.19(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.19)(@types/inquirer@8.2.12)(@types/node@24.12.4)(typescript@5.9.3)
       uuid:
-        specifier: ^8.3.2
-        version: 8.3.2
+        specifier: ^11.0.0
+        version: 11.1.1
     devDependencies:
       '@comet/eslint-config':
         specifier: workspace:*
@@ -2110,7 +2110,7 @@ importers:
         version: 1.6.9
       uuid:
         specifier: ^11.1.0
-        version: 11.1.0
+        version: 11.1.1
       uuid-by-string:
         specifier: ^4.0.0
         version: 4.0.0
@@ -2743,7 +2743,7 @@ importers:
         version: 10.0.6(react@19.2.6)
       uuid:
         specifier: ^11.1.0
-        version: 11.1.0
+        version: 11.1.1
     devDependencies:
       '@babel/cli':
         specifier: ^7.28.6
@@ -17798,8 +17798,8 @@ packages:
   uuid-by-string@4.0.0:
     resolution: {integrity: sha512-88ZSfcSkN04juiLqSsuyteqlSrXNFdsEPzSv3urnElDXNsZUXQN0smeTnh99x2DE15SCUQNgqKBfro54CuzHNQ==}
 
-  uuid@11.1.0:
-    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
   uuid@8.3.2:
@@ -32963,7 +32963,7 @@ snapshots:
       roughjs: 4.6.6
       stylis: 4.3.6
       ts-dedent: 2.2.0
-      uuid: 11.1.0
+      uuid: 11.1.1
     transitivePeerDependencies:
       - supports-color
 
@@ -37491,7 +37491,7 @@ snapshots:
       js-md5: 0.7.3
       js-sha1: 0.6.0
 
-  uuid@11.1.0: {}
+  uuid@11.1.1: {}
 
   uuid@8.3.2: {}
 
