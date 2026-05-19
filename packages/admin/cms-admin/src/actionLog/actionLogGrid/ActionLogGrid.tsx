@@ -168,3 +168,4 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({
         </Root>
     );
 };
+export { actionLogGridFragment } from "./ActionLogGrid.gql";
