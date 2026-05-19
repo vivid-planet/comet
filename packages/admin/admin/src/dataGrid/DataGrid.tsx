@@ -1,26 +1,23 @@
-import { type ComponentType, lazy, type Ref, Suspense } from "react";
+import { DataGrid as MuiDataGrid, type DataGridProps as MuiDataGridProps } from "@mui/x-data-grid";
+import { type ComponentType, lazy, Suspense } from "react";
 
-type DataGridComponent = ComponentType<any>;
+type DataGridComponent = ComponentType<MuiDataGridProps>;
 
 const ResolvedDataGrid = lazy(async () => {
     try {
         const { DataGridPremium } = await import("@mui/x-data-grid-premium");
-        return { default: DataGridPremium as DataGridComponent };
+        return { default: DataGridPremium as unknown as DataGridComponent };
     } catch {
         try {
             const { DataGridPro } = await import("@mui/x-data-grid-pro");
-            return { default: DataGridPro as DataGridComponent };
+            return { default: DataGridPro as unknown as DataGridComponent };
         } catch {
-            const { DataGrid: MuiDataGrid } = await import("@mui/x-data-grid");
             return { default: MuiDataGrid as DataGridComponent };
         }
     }
 });
 
-export type DataGridProps = {
-    [key: string]: any;
-    ref?: Ref<unknown>;
-};
+export type DataGridProps = MuiDataGridProps;
 
 function DataGrid(props: DataGridProps) {
     return (
