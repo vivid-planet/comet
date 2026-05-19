@@ -1,41 +1,42 @@
-import { Button, Tooltip } from "@comet/admin";
 import { Add, StatusErrorSolid, StatusSuccessSolid, StatusWarningSolid } from "@comet/admin-icons";
 import { Box, Chip, Stack, Typography } from "@mui/material";
-import type { Decorator } from "@storybook/react-vite";
+import type { Decorator, Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useState } from "react";
 
-export default {
-    title: "@comet/admin/Tooltip",
+import { Button } from "../buttons/Button";
+import { Tooltip } from "../Tooltip";
+
+type Story = StoryObj<typeof Tooltip>;
+const config: Meta<typeof Tooltip> = {
+    component: Tooltip,
+    title: "components/common/Tooltip",
 };
 
-export const IconWithTooltip = {
-    render: () => {
-        return (
-            <Tooltip title="Add something">
-                <Add />
-            </Tooltip>
-        );
-    },
+export default config;
 
+export const IconWithTooltip: Story = {
+    render: () => (
+        <Tooltip title="Add something">
+            <Add />
+        </Tooltip>
+    ),
     name: "Icon with Tooltip",
 };
 
-export const StatusIndicators = {
-    render: () => {
-        return (
-            <Stack py={5} spacing={5}>
-                <Tooltip title="Success variant" placement="top-start" color="success">
-                    <StatusSuccessSolid color="success" />
-                </Tooltip>
-                <Tooltip title="Warning variant" placement="top-start" color="warning">
-                    <StatusWarningSolid color="warning" />
-                </Tooltip>
-                <Tooltip title="Error variant" placement="top-start" color="error">
-                    <StatusErrorSolid color="error" />
-                </Tooltip>
-            </Stack>
-        );
-    },
+export const StatusIndicators: Story = {
+    render: () => (
+        <Stack py={5} spacing={5}>
+            <Tooltip title="Success variant" placement="top-start" color="success">
+                <StatusSuccessSolid color="success" />
+            </Tooltip>
+            <Tooltip title="Warning variant" placement="top-start" color="warning">
+                <StatusWarningSolid color="warning" />
+            </Tooltip>
+            <Tooltip title="Error variant" placement="top-start" color="error">
+                <StatusErrorSolid color="error" />
+            </Tooltip>
+        </Stack>
+    ),
 };
 
 // Makes it easier to see the light variant of the tooltip
@@ -45,7 +46,7 @@ const lightGrayBackgroundDecorator: Decorator = (Story) => (
     </Box>
 );
 
-export const StackedTooltipsFromDesign = {
+export const StackedTooltipsFromDesign: Story = {
     decorators: [lightGrayBackgroundDecorator],
     render: () => {
         const [showTooltips, setShowTooltips] = useState(false);
@@ -70,7 +71,7 @@ export const StackedTooltipsFromDesign = {
     },
 };
 
-export const FeedbackTooltipsFromDesign = {
+export const FeedbackTooltipsFromDesign: Story = {
     render: () => {
         const [showTooltips, setShowTooltips] = useState(false);
 
@@ -104,7 +105,7 @@ export const FeedbackTooltipsFromDesign = {
  * This demonstrates using custom content in tooltips where a simple title and description is not sufficient. <br/>
  * Currently, ther is no obvious correct way to do this, which causes inconsistent styling, depending on how the content is provided.
  */
-export const TooltipsWithCustomContent = {
+export const TooltipsWithCustomContent: Story = {
     decorators: [lightGrayBackgroundDecorator],
     render: () => {
         const [showTooltips, setShowTooltips] = useState(false);
@@ -167,51 +168,49 @@ export const TooltipsWithCustomContent = {
 /**
  * This is to test how the focus-behavior works with different tooltip children.
  */
-export const FocusTest = {
-    render: () => {
-        return (
-            <>
-                <Typography variant="h4">Without tooltip (standalone elements)</Typography>
-                <Typography variant="overline">Only the button should be focusable</Typography>
-                <Stack p={2} mt={2} mb={8} spacing={12} direction="row" alignItems="center" sx={{ backgroundColor: "#f0f0f0" }}>
+export const FocusTest: Story = {
+    render: () => (
+        <>
+            <Typography variant="h4">Without tooltip (standalone elements)</Typography>
+            <Typography variant="overline">Only the button should be focusable</Typography>
+            <Stack p={2} mt={2} mb={8} spacing={12} direction="row" alignItems="center" sx={{ backgroundColor: "#f0f0f0" }}>
+                <Typography>Typography</Typography>
+                <Chip label="Chip" />
+                <Button>Button</Button>
+                <span>Span</span>
+            </Stack>
+            <Typography variant="h4">With tooltip</Typography>
+            <Typography variant="overline">All elements should be focusable</Typography>
+            <Stack p={2} mt={2} mb={8} spacing={12} direction="row" alignItems="center" sx={{ backgroundColor: "#f0f0f0" }}>
+                <Tooltip title="Hello Tooltip">
                     <Typography>Typography</Typography>
+                </Tooltip>
+                <Tooltip title="Hello Tooltip">
                     <Chip label="Chip" />
+                </Tooltip>
+                <Tooltip title="Hello Tooltip">
                     <Button>Button</Button>
+                </Tooltip>
+                <Tooltip title="Hello Tooltip">
                     <span>Span</span>
-                </Stack>
-                <Typography variant="h4">With tooltip</Typography>
-                <Typography variant="overline">All elements should be focusable</Typography>
-                <Stack p={2} mt={2} mb={8} spacing={12} direction="row" alignItems="center" sx={{ backgroundColor: "#f0f0f0" }}>
-                    <Tooltip title="Hello Tooltip">
-                        <Typography>Typography</Typography>
-                    </Tooltip>
-                    <Tooltip title="Hello Tooltip">
-                        <Chip label="Chip" />
-                    </Tooltip>
-                    <Tooltip title="Hello Tooltip">
-                        <Button>Button</Button>
-                    </Tooltip>
-                    <Tooltip title="Hello Tooltip">
-                        <span>Span</span>
-                    </Tooltip>
-                </Stack>
-                <Typography variant="h4">With tooltip and disabled tabindex</Typography>
-                <Typography variant="overline">Nothing should be focusable</Typography>
-                <Stack p={2} mt={2} mb={8} spacing={12} direction="row" alignItems="center" sx={{ backgroundColor: "#f0f0f0" }}>
-                    <Tooltip title="Hello Tooltip" tabIndex={-1}>
-                        <Typography>Typography</Typography>
-                    </Tooltip>
-                    <Tooltip title="Hello Tooltip" tabIndex={-1}>
-                        <Chip label="Chip" />
-                    </Tooltip>
-                    <Tooltip title="Hello Tooltip" tabIndex={-1}>
-                        <Button>Button</Button>
-                    </Tooltip>
-                    <Tooltip title="Hello Tooltip" tabIndex={-1}>
-                        <span>Span</span>
-                    </Tooltip>
-                </Stack>
-            </>
-        );
-    },
+                </Tooltip>
+            </Stack>
+            <Typography variant="h4">With tooltip and disabled tabindex</Typography>
+            <Typography variant="overline">Nothing should be focusable</Typography>
+            <Stack p={2} mt={2} mb={8} spacing={12} direction="row" alignItems="center" sx={{ backgroundColor: "#f0f0f0" }}>
+                <Tooltip title="Hello Tooltip" tabIndex={-1}>
+                    <Typography>Typography</Typography>
+                </Tooltip>
+                <Tooltip title="Hello Tooltip" tabIndex={-1}>
+                    <Chip label="Chip" />
+                </Tooltip>
+                <Tooltip title="Hello Tooltip" tabIndex={-1}>
+                    <Button>Button</Button>
+                </Tooltip>
+                <Tooltip title="Hello Tooltip" tabIndex={-1}>
+                    <span>Span</span>
+                </Tooltip>
+            </Stack>
+        </>
+    ),
 };
