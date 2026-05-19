@@ -1,4 +1,4 @@
-import { RouteWithErrorBoundary } from "@comet/admin";
+import { RouteWithErrorBoundary, useNotFound } from "@comet/admin";
 import { Tab as MuiTab, type TabProps, Tabs as MuiTabs } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { JSX } from "react";
@@ -15,12 +15,17 @@ export interface BlockAdminTabsProps {
 export function BlockAdminTabs({ children }: BlockAdminTabsProps): JSX.Element | null {
     const match = useRouteMatch();
     const tabRouteMatch = useRouteMatch<{ tab: string }>(`${match.path}/:tab`);
+    const notFound = useNotFound();
     const selected = tabRouteMatch?.params.tab;
     if (children.length < 1) {
         return null;
     }
     const [firstTab, ...otherTabs] = children;
-    const selectedTab = children.find((tab) => tab.key === selected) ? selected : firstTab.key; //fall back to first, as <Switch> does
+    const isKnownTab = !selected || children.some((tab) => tab.key === selected);
+    if (!isKnownTab && notFound) {
+        return <>{notFound}</>;
+    }
+    const selectedTab = isKnownTab ? (selected ?? firstTab.key) : firstTab.key;
     return (
         <Root key="tabs">
             <Tabs value={selectedTab} variant="scrollable" scrollButtons="auto">
