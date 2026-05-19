@@ -350,8 +350,8 @@ importers:
         specifier: ^0.217.0
         version: 0.217.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-node':
-        specifier: ^0.215.0
-        version: 0.215.0(@opentelemetry/api@1.9.1)
+        specifier: ^0.217.0
+        version: 0.217.0(@opentelemetry/api@1.9.1)
       '@sentry/node':
         specifier: ^9.37.0
         version: 9.46.0
@@ -546,8 +546,8 @@ importers:
         specifier: ^0.30.0
         version: 0.30.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-node':
-        specifier: ^0.215.0
-        version: 0.215.0(@opentelemetry/api@1.9.1)
+        specifier: ^0.217.0
+        version: 0.217.0(@opentelemetry/api@1.9.1)
       cache-manager:
         specifier: ^5.7.6
         version: 5.7.6
