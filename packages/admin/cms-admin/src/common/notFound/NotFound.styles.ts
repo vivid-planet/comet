@@ -1,7 +1,7 @@
 import { createComponentSlot } from "@comet/admin";
 import { Card, css, Divider, Typography } from "@mui/material";
 
-import { type NotFoundClassKey } from "./NotFound";
+import type { NotFoundClassKey } from "./NotFound";
 
 export const Root = createComponentSlot("div")<NotFoundClassKey>({
     componentName: "NotFound",

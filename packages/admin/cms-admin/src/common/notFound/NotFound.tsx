@@ -1,7 +1,7 @@
 import { Button, InlineAlert, type ThemedComponentBaseProps } from "@comet/admin";
 import { Error } from "@comet/admin-icons";
 import { type ComponentsOverrides, type Divider, type Theme, type Typography, useThemeProps } from "@mui/material";
-import { type FunctionComponent, type ReactNode } from "react";
+import type { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { CometLogo } from "../cometLogo/CometLogo";
