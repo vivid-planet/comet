@@ -1,3 +1,4 @@
+import { DataGridPro, GRID_REORDER_COL_DEF, useGridApiContext, useGridApiRef } from "@mui/x-data-grid-pro";
 import { useState } from "react";
 import { fireEvent, render, type RenderResult, waitFor, within } from "test-utils";
 import { expect } from "vitest";
@@ -7,11 +8,13 @@ import { MockRichTextBlock } from "../__mocks__/TableBlockData.mocks";
 import { TableBlockContextProvider } from "../TableBlockContext";
 import { TableBlockGrid } from "../TableBlockGrid";
 
+const mockDataGrid = { DataGridPro, GRID_REORDER_COL_DEF, useGridApiRef, useGridApiContext };
+
 export const renderTableBlock = (initialState: TableBlockState) => {
     const Component = () => {
         const [state, setState] = useState<TableBlockState>(initialState);
         return (
-            <TableBlockContextProvider RichTextBlock={MockRichTextBlock}>
+            <TableBlockContextProvider RichTextBlock={MockRichTextBlock} dataGrid={mockDataGrid}>
                 <TableBlockGrid state={state} updateState={setState} />
             </TableBlockContextProvider>
         );

@@ -10,12 +10,13 @@ import type { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
-import { TableBlockContextProvider } from "./table/TableBlockContext";
+import { type DataGridProDependencies, TableBlockContextProvider } from "./table/TableBlockContext";
 import { TableBlockGrid } from "./table/TableBlockGrid";
 import { BlockCategory, type BlockInterface, type BlockPreviewContext } from "./types";
 
 export type TableBlockFactoryOptions = {
     richText: RichTextBlock;
+    dataGrid: DataGridProDependencies;
 };
 
 interface TableBlockCellValueState {
@@ -36,7 +37,10 @@ export interface TableBlockState {
 
 type TableBlock = BlockInterface<TableBlockData, TableBlockState, TableBlockInput>;
 
-export const createTableBlock = ({ richText: RichTextBlock }: TableBlockFactoryOptions, override?: (block: TableBlock) => TableBlock): TableBlock => {
+export const createTableBlock = (
+    { richText: RichTextBlock, dataGrid }: TableBlockFactoryOptions,
+    override?: (block: TableBlock) => TableBlock,
+): TableBlock => {
     const getInitialTableState = (): TableBlockState => {
         const columnIdOne = uuid();
         const columnIdTwo = uuid();
@@ -136,7 +140,7 @@ export const createTableBlock = ({ richText: RichTextBlock }: TableBlockFactoryO
             };
 
             return (
-                <TableBlockContextProvider RichTextBlock={RichTextBlock}>
+                <TableBlockContextProvider RichTextBlock={RichTextBlock} dataGrid={dataGrid}>
                     <SelectPreviewComponent>
                         <BlocksFinalForm<TableBlockState> onSubmit={updateState} initialValues={state}>
                             <Dialog

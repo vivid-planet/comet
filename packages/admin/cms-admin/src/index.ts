@@ -80,6 +80,7 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
+export type { DataGridProDependencies } from "./blocks/table/TableBlockContext";
 export type { TipTapBlockStyle, TipTapBlockType, TipTapInlineStyle } from "./blocks/tipTap/createTipTapRichTextBlock";
 export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
 export type {

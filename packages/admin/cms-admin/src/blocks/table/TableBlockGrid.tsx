@@ -1,14 +1,7 @@
 import { DragIndicator } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import type { GridColDef, GridColumnHeaderParams, GridValidRowModel } from "@mui/x-data-grid";
-import {
-    DataGridPro,
-    GRID_REORDER_COL_DEF,
-    type GridEventListener,
-    type GridRenderCellParams,
-    type GridRenderEditCellParams,
-    useGridApiRef,
-} from "@mui/x-data-grid-pro";
+import type { DataGridPro as DataGridProType, GridEventListener, GridRenderCellParams, GridRenderEditCellParams } from "@mui/x-data-grid-pro";
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
 import type { TableBlockData } from "../../blocks.generated";
@@ -47,7 +40,8 @@ type Props = {
 };
 
 export const TableBlockGrid = ({ state, updateState }: Props) => {
-    const { RichTextBlock } = useTableBlockContext();
+    const { RichTextBlock, dataGrid } = useTableBlockContext();
+    const { DataGridPro, GRID_REORDER_COL_DEF, useGridApiRef } = dataGrid;
     const apiRef = useGridApiRef();
     const { recentlyPastedIds: recentlyPastedRowIds, addToRecentlyPastedIds: addToRecentlyPastedRowIds } = useRecentlyPastedIds();
     const { recentlyPastedIds: recentlyPastedColumnIds, addToRecentlyPastedIds: addToRecentlyPastedColumnIds } = useRecentlyPastedIds();
@@ -64,7 +58,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         });
     };
 
-    const processRowUpdate: ComponentProps<typeof DataGridPro>["processRowUpdate"] = (newRow) => {
+    const processRowUpdate: ComponentProps<typeof DataGridProType>["processRowUpdate"] = (newRow) => {
         const { id: newRowId, ...newRowValuesRecord } = newRow;
 
         setRowData((previousRowData) => {
