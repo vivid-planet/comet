@@ -27,7 +27,7 @@ importers:
         specifier: ^6.7.2
         version: 6.7.4(@vue/compiler-core@3.5.15)
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       dotenv-cli:
         specifier: ^9.0.0
@@ -208,7 +208,7 @@ importers:
         specifier: ^4.5.8
         version: 4.5.8
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       '@types/react':
         specifier: ^19.2.14
@@ -278,7 +278,7 @@ importers:
         version: 3.0.5
     devDependencies:
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
 
   demo/api:
@@ -462,7 +462,7 @@ importers:
         specifier: ^4.7.4
         version: 4.7.4
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       '@types/react':
         specifier: ^19.2.14
@@ -634,7 +634,7 @@ importers:
         specifier: ^4.15.0
         version: 4.15.0
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       '@types/react':
         specifier: ^19.2.14
@@ -870,7 +870,7 @@ importers:
         specifier: ^4.5.8
         version: 4.5.8
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       '@types/react':
         specifier: ^19.2.14
@@ -1173,7 +1173,7 @@ importers:
         specifier: workspace:*
         version: link:../../eslint-config
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       '@types/object-path':
         specifier: ^0.11.4
@@ -1243,7 +1243,7 @@ importers:
         specifier: ^3.11.6
         version: 3.11.6
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       '@types/react':
         specifier: ^19.2.14
@@ -1699,7 +1699,7 @@ importers:
         specifier: ^1.43.6
         version: 1.43.6
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       '@types/react':
         specifier: ^19.2.14
@@ -1826,7 +1826,7 @@ importers:
         specifier: ^29.5.14
         version: 29.5.14
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       '@types/pluralize':
         specifier: ^0.0.33
@@ -2194,7 +2194,7 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       '@types/nodemailer':
         specifier: ^6.4.23
@@ -2276,7 +2276,7 @@ importers:
         specifier: ^4.0.9
         version: 4.0.9
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       eslint:
         specifier: ^9.39.2
@@ -2703,7 +2703,7 @@ importers:
         specifier: ^8.26.0
         version: 8.26.0(@types/react@19.2.14)(react@19.2.6)
       '@types/node':
-        specifier: ^24.12.2
+        specifier: ^24.12.4
         version: 24.12.4
       apollo-link-rest:
         specifier: ^0.9.0
