@@ -1,10 +1,11 @@
 import { type ComponentsOverrides, Tab as MuiTab, type TabProps as MuiTabProps, Tabs, type TabsProps } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { Children, type ComponentType, isValidElement, type ReactElement, type ReactNode, type SyntheticEvent } from "react";
-import { Route, useHistory, useRouteMatch } from "react-router-dom";
+import { matchPath, Route, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { useNotFound } from "../notFound/NotFoundContext";
 import { useSubRoutePrefix } from "../router/SubRoute";
 import { useIsActiveStackSwitch } from "../stack/useIsActiveStackSwitch";
 import { TabScrollButton } from "./TabScrollButton";
@@ -77,7 +78,9 @@ export function RouterTabs(inProps: Props) {
     const history = useHistory();
     const subRoutePrefix = useSubRoutePrefix();
     const routeMatch = useRouteMatch();
+    const location = useLocation();
     const isActiveStackSwitch = useIsActiveStackSwitch();
+    const notFound = useNotFound();
 
     const childrenArr = Children.toArray(children);
 
@@ -99,6 +102,19 @@ export function RouterTabs(inProps: Props) {
         }
         return child.props.path;
     });
+
+    if (notFound) {
+        const tabMatch = matchPath<{ tab: string }>(location.pathname, {
+            path: deduplicateSlashesInUrl(`${subRoutePrefix}/:tab`),
+        });
+        if (tabMatch) {
+            const urlTab = `/${tabMatch.params.tab}`;
+            const isKnownTab = paths.some((path) => path != null && (path === urlTab || path.startsWith(`${urlTab}/`)));
+            if (!isKnownTab) {
+                return <>{notFound}</>;
+            }
+        }
+    }
 
     const rearrangedChildren = Children.toArray(children);
     const defaultPathIndex = paths.indexOf("");
