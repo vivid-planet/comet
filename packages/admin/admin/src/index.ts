@@ -71,7 +71,6 @@ export {
     type CrudMoreActionsMenuProps,
 } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, type CrudVisibilityProps } from "./dataGrid/CrudVisibility";
-export { DataGrid, type DataGridProps } from "./dataGrid/DataGrid";
 export { DataGridPanel, type DataGridPanelClassKey, type DataGridPanelProps } from "./dataGrid/DataGridPanel";
 export { type ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, type GridCellContentClassKey, type GridCellContentProps } from "./dataGrid/GridCellContent";
