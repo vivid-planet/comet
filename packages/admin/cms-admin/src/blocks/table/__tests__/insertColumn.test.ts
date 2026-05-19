@@ -34,7 +34,7 @@ describe("TableBlock: Insert a new column", () => {
 
         newCellValuesPerRow.forEach((newCellValues, rowIndex) => {
             expect(newCellValues).toHaveLength(originalNumberOfCellsInRow + 1);
-            const indexOffsetForDragHandleCell = 1;
+            const indexOffsetForDragHandleCell = 0;
             const actualTargetColumnIndex = targetColumnIndex + indexOffsetForDragHandleCell;
 
             newCellValues.forEach((newCellValue, cellIndex) => {
@@ -76,7 +76,7 @@ describe("TableBlock: Insert a new column", () => {
 
         newCellValuesPerRow.forEach((newCellValues, rowIndex) => {
             expect(newCellValues).toHaveLength(originalNumberOfCellsInRow + 1);
-            const indexOffsetForDragHandleCell = 1;
+            const indexOffsetForDragHandleCell = 0;
             const actualTargetColumnIndex = targetColumnIndex + indexOffsetForDragHandleCell;
 
             newCellValues.forEach((newCellValue, cellIndex) => {
@@ -117,7 +117,7 @@ describe("TableBlock: Insert a new column", () => {
 
         newCellValuesPerRow.forEach((newCellValues, rowIndex) => {
             expect(newCellValues).toHaveLength(originalNumberOfCellsInRow + 1);
-            const indexOffsetForDragHandleCell = 1;
+            const indexOffsetForDragHandleCell = 0;
             const actualTargetColumnIndex = targetColumnIndex + indexOffsetForDragHandleCell;
 
             newCellValues.forEach((newCellValue, cellIndex) => {

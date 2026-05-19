@@ -1,14 +1,12 @@
-import { DragIndicator } from "@comet/admin-icons";
-// eslint-disable-next-line no-restricted-imports
-import type { GridColDef, GridColumnHeaderParams, GridValidRowModel } from "@mui/x-data-grid";
+import type { GridColDef } from "@comet/admin";
 import {
-    DataGridPro,
-    GRID_REORDER_COL_DEF,
-    type GridEventListener,
+    DataGrid,
+    type GridColumnHeaderParams,
     type GridRenderCellParams,
     type GridRenderEditCellParams,
+    type GridValidRowModel,
     useGridApiRef,
-} from "@mui/x-data-grid-pro";
+} from "@mui/x-data-grid";
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
 import type { TableBlockData } from "../../blocks.generated";
@@ -64,7 +62,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         });
     };
 
-    const processRowUpdate: ComponentProps<typeof DataGridPro>["processRowUpdate"] = (newRow) => {
+    const processRowUpdate: ComponentProps<typeof DataGrid>["processRowUpdate"] = (newRow) => {
         const { id: newRowId, ...newRowValuesRecord } = newRow;
 
         setRowData((previousRowData) => {
@@ -85,51 +83,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         return newRow;
     };
 
-    const moveRow = (targetIndex: number, rowId: string) => {
-        updateState((state) => {
-            const movingRow = state.rows.find((row) => row.id === rowId);
-            if (!movingRow) {
-                return state;
-            }
-
-            const otherRows = state.rows.filter((row) => row.id !== rowId);
-            return {
-                ...state,
-                rows: [...otherRows.slice(0, targetIndex), movingRow, ...otherRows.slice(targetIndex)],
-            };
-        });
-    };
-
-    useEffect(() => {
-        const handleMoveColumn: GridEventListener<"columnHeaderDragEnd"> = ({ field: columnId }) => {
-            if (!apiRef.current) {
-                return;
-            }
-            const targetIndex = apiRef.current.getColumnIndex(columnId) - 1;
-
-            updateState((state) => {
-                const movingColumn = state.columns.find((column: TableBlockColumn) => column.id === columnId);
-                if (!movingColumn) {
-                    return state;
-                }
-
-                const otherColumns = state.columns.filter((column: TableBlockColumn) => column.id !== columnId);
-                return {
-                    ...state,
-                    columns: [...otherColumns.slice(0, targetIndex), movingColumn, ...otherColumns.slice(targetIndex)],
-                };
-            });
-        };
-
-        return apiRef.current?.subscribeEvent("columnHeaderDragEnd", handleMoveColumn);
-    }, [apiRef, updateState]);
-
     const dataGridColumns: GridColDef[] = [
-        {
-            ...GRID_REORDER_COL_DEF,
-            minWidth: 36,
-            maxWidth: 36,
-        },
         ...state.columns.map(({ id: columnId, highlighted, size }: TableBlockColumn, index: number) => ({
             field: columnId,
             editable: true,
@@ -186,27 +140,16 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
     });
 
     return (
-        <DataGridPro
+        <DataGrid
             columns={dataGridColumns}
             apiRef={apiRef}
             rows={rowsInDataGridFormat}
             rowHeight={55}
-            rowReordering
             disableColumnResize
             disableColumnMenu
             disableRowSelectionOnClick
             hideFooter
-            pinnedColumns={{
-                left: ["__reorder__"],
-                right: ["actions"],
-            }}
-            slots={{
-                rowReorderIcon: ({ color, ...restProps }) => <DragIndicator {...restProps} htmlColor={color} />,
-            }}
             sx={dataGridStyles}
-            onRowOrderChange={({ targetIndex, row }) => {
-                moveRow(targetIndex, row.id);
-            }}
             processRowUpdate={processRowUpdate}
         />
     );

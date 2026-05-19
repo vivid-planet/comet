@@ -35,7 +35,7 @@ describe("TableBlock: Delete a column", () => {
 
         newCellValuesPerRow.forEach((newCellValues, rowIndex) => {
             expect(newCellValues).toHaveLength(originalNumberOfCellsInRow - 1);
-            const indexOffsetForDragHandleCell = 1;
+            const indexOffsetForDragHandleCell = 0;
             const actualSourceColumnIndex = targetColumnIndex + indexOffsetForDragHandleCell;
 
             newCellValues.forEach((newCellValue, cellIndex) => {

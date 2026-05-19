@@ -25,9 +25,9 @@ describe("TableBlock: Insert a new row", () => {
 
         rows.forEach((row, rowIndex) => {
             const cells = within(row).getAllByRole("gridcell");
-            const cellsExcludingTheDragHandleAndActionsCells = cells.slice(1, cells.length - 1);
+            const cellsExcludingTheActionsCells = cells.slice(0, cells.length - 1);
 
-            cellsExcludingTheDragHandleAndActionsCells.forEach((cell, cellIndex) => {
+            cellsExcludingTheActionsCells.forEach((cell, cellIndex) => {
                 const isNewlyInsertedRow = rowIndex === 0;
                 if (isNewlyInsertedRow) {
                     expect(cell.textContent).toBe("");
@@ -54,9 +54,9 @@ describe("TableBlock: Insert a new row", () => {
 
         rows.forEach((row, rowIndex) => {
             const cells = within(row).getAllByRole("gridcell");
-            const cellsExcludingTheDragHandleAndActionsCells = cells.slice(1, cells.length - 1);
+            const cellsExcludingTheActionsCells = cells.slice(0, cells.length - 1);
 
-            cellsExcludingTheDragHandleAndActionsCells.forEach((cell, cellIndex) => {
+            cellsExcludingTheActionsCells.forEach((cell, cellIndex) => {
                 const isNewlyInsertedRow = rowIndex === targetRowIndex + 1;
                 if (isNewlyInsertedRow) {
                     expect(cell.textContent).toBe("");
@@ -82,9 +82,9 @@ describe("TableBlock: Insert a new row", () => {
 
         rows.forEach((row, rowIndex) => {
             const cells = within(row).getAllByRole("gridcell");
-            const cellsExcludingTheDragHandleAndActionsCells = cells.slice(1, cells.length - 1);
+            const cellsExcludingTheActionsCells = cells.slice(0, cells.length - 1);
 
-            cellsExcludingTheDragHandleAndActionsCells.forEach((cell, cellIndex) => {
+            cellsExcludingTheActionsCells.forEach((cell, cellIndex) => {
                 const isNewlyInsertedRow = rowIndex === targetRowIndex + 1;
                 const isBeforeNewlyInsertedRow = rowIndex <= targetRowIndex;
                 const isAfterNewlyInsertedRow = rowIndex > targetRowIndex + 1;

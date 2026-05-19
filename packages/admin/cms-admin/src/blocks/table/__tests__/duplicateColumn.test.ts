@@ -35,7 +35,7 @@ describe("TableBlock: Duplicate a column", () => {
 
         newCellValuesPerRow.forEach((newCellValues, rowIndex) => {
             expect(newCellValues).toHaveLength(originalNumberOfCellsInRow + 1);
-            const indexOffsetForDragHandleCell = 1;
+            const indexOffsetForDragHandleCell = 0;
             const actualSourceColumnIndex = sourceColumnIndex + indexOffsetForDragHandleCell;
 
             newCellValues.forEach((newCellValue, cellIndex) => {

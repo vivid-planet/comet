@@ -48,8 +48,7 @@ describe("TableBlock: Copy and paste a row", () => {
         const sourceRowValues = initialBlockData.rows[sourceRowIndex].cellValues.map((cellValue) => getPlainTextFromState(cellValue.value));
 
         sourceRowValues.forEach((originalCellValueInSourceRow, index) => {
-            const offsetForCellsWithActualContent = 1;
-            const cellIndexInSourceRow = index + offsetForCellsWithActualContent;
+            const cellIndexInSourceRow = index;
 
             const currentCellValueInSourceRow = sourceRowCells[cellIndexInSourceRow].textContent;
             const currentCellValueInNewRow = newRowCells[cellIndexInSourceRow].textContent;
