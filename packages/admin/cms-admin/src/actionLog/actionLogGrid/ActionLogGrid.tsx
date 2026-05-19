@@ -1,7 +1,7 @@
 import { type GridColDef, useBufferedRowCount, type useDataGridRemote, type usePersistentColumnState } from "@comet/admin";
 import { View } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
-import { DataGridPro, gridClasses, type GridRowSelectionModel, type GridSlotsComponent } from "@mui/x-data-grid-pro";
+import { DataGrid, gridClasses, type GridRowSelectionModel, type GridSlotsComponent } from "@mui/x-data-grid";
 import { type FunctionComponent, useMemo, useState } from "react";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 
@@ -131,7 +131,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({
                 }
             />
 
-            <DataGridPro
+            <DataGrid
                 sx={{
                     // Hide Column Header - Select All Checkbox
                     [`& .${gridClasses.columnHeaderCheckbox} .${gridClasses.columnHeaderTitleContainer}`]: {
@@ -154,7 +154,6 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({
                 onRowSelectionModelChange={(newSelectionModel) => {
                     setSelectionModel(newSelectionModel);
                 }}
-                pinnedColumns={{ right: ["actions"] }}
                 rowCount={rowCount}
                 rows={actionLogs?.nodes ?? []}
                 rowSelectionModel={selectionModel}
