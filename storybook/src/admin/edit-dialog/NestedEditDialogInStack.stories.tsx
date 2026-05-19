@@ -106,4 +106,4 @@ export const NestedEditDialogInStack = function Story() {
     );
 };
 
-NestedEditDialogInStack.name = "Nested Edit Dialog in Stack";
+NestedEditDialogInStack.storyName = "Nested Edit Dialog in Stack";
