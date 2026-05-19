@@ -14,4 +14,5 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
         { name: "list300", appliesTo: ["ordered-list", "unordered-list"] },
         { name: "list200", appliesTo: ["ordered-list", "unordered-list"] },
     ],
+    inlineStyles: [{ name: "highlight" }, { name: "tag", appliesTo: ["paragraph"] }],
 });

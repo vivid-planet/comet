@@ -1,13 +1,19 @@
-import { SectionHeadline } from "@comet/admin";
 import { Stack, Typography } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FormattedMessage } from "react-intl";
 
-export default {
-    title: "@comet/admin/SectionHeadline",
+import { SectionHeadline } from "../SectionHeadline";
+
+type Story = StoryObj<typeof SectionHeadline>;
+const config: Meta<typeof SectionHeadline> = {
+    component: SectionHeadline,
+    title: "components/section/SectionHeadline",
 };
 
-export const Default = () => {
-    return (
+export default config;
+
+export const Default: Story = {
+    render: () => (
         <Stack spacing={15}>
             <SectionHeadline supportText="Support Text" divider infoTooltipText="Tooltip Info Text">
                 Section Title
@@ -15,11 +21,11 @@ export const Default = () => {
 
             <SectionHeadline>Section Title</SectionHeadline>
         </Stack>
-    );
+    ),
 };
 
-export const InfoTooltipExamples = () => {
-    return (
+export const InfoTooltipExamples: Story = {
+    render: () => (
         <Stack spacing={4}>
             <SectionHeadline infoTooltipText="Hello">
                 Using <strong>deprecated</strong> infoTooltipText prop
@@ -57,5 +63,5 @@ export const InfoTooltipExamples = () => {
                 Using infoTooltip prop, using object for custom content
             </SectionHeadline>
         </Stack>
-    );
+    ),
 };

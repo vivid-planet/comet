@@ -14,8 +14,10 @@ import { BlockStyleContext } from "./BlockStyleContext";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
+import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { InlineStyleContext } from "./InlineStyleContext";
 import { TipTapToolbar } from "./TipTapToolbar";
 
 export type TipTapSupports =
@@ -68,6 +70,17 @@ export interface TipTapBlockStyle {
     element: ComponentType<HTMLAttributes<HTMLElement>>;
 }
 
+export interface TipTapInlineStyle {
+    name: string;
+    label: ReactNode;
+    /**
+     * Limits the inline style to the provided block types.
+     * If none is specified, the inline style is allowed for all block types.
+     */
+    appliesTo?: TipTapBlockType[];
+    element: ComponentType<HTMLAttributes<HTMLElement>>;
+}
+
 export interface TipTapRichTextBlockState {
     tipTapContent: JSONContent;
 }
@@ -83,6 +96,7 @@ interface TipTapRichTextBlockInput {
 interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
+    inlineStyles?: TipTapInlineStyle[];
     link?: BlockInterface & LinkBlockInterface;
     /**
      * Limits the maximum number of top-level blocks (paragraphs, headings, lists)
@@ -181,6 +195,7 @@ const TipTapEditor = ({
     updateState,
     supports,
     blockStyles,
+    inlineStyles,
     linkBlock,
     maxBlocks,
 }: {
@@ -188,10 +203,12 @@ const TipTapEditor = ({
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
+    inlineStyles: TipTapInlineStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
     maxBlocks?: number;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
+    const hasInlineStyles = inlineStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
 
     const editor = useEditor({
@@ -211,6 +228,7 @@ const TipTapEditor = ({
             }),
             ...(hasBlockStyles ? [BlockStyleParagraph] : []),
             ...(hasBlockStyles && supports.includes("heading") ? [BlockStyleHeading] : []),
+            ...(hasInlineStyles ? [InlineStyleMark] : []),
             ...(supports.includes("sup") ? [Superscript] : []),
             ...(supports.includes("sub") ? [Subscript] : []),
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
@@ -245,12 +263,14 @@ const TipTapEditor = ({
 
     return (
         <BlockStyleContext.Provider value={blockStyles}>
-            <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} linkBlock={linkBlock} />
-                <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
-                    <EditorContent editor={editor} />
+            <InlineStyleContext.Provider value={inlineStyles}>
+                <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
+                    <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} inlineStyles={inlineStyles} linkBlock={linkBlock} />
+                    <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
+                        <EditorContent editor={editor} />
+                    </Box>
                 </Box>
-            </Box>
+            </InlineStyleContext.Provider>
         </BlockStyleContext.Provider>
     );
 };
@@ -263,6 +283,7 @@ export const createTipTapRichTextBlock = (
 ): BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> => {
     let supports = options?.supports ?? defaultSupports;
     const blockStyles = options?.blockStyles ?? [];
+    const inlineStyles = options?.inlineStyles ?? [];
     const linkBlock = options?.link;
     const maxBlocks = options?.maxBlocks;
 
@@ -324,6 +345,7 @@ export const createTipTapRichTextBlock = (
                     updateState={updateState}
                     supports={supports}
                     blockStyles={blockStyles}
+                    inlineStyles={inlineStyles}
                     linkBlock={linkBlock}
                     maxBlocks={maxBlocks}
                 />
