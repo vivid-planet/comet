@@ -30,8 +30,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     blocks: [draftBlock({ type: "unstyled", text: "Hello" })],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
+            });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
             expect(tipTapContent).toEqual({
@@ -46,8 +45,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     blocks: [draftBlock({ type: "header-one", text: "Title" }), draftBlock({ type: "unstyled", text: "Body" })],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
+            });
             const searchText = data.searchText();
             expect(searchText).toEqual([{ weight: "h1", text: "Title" }, "Body"]);
         });
@@ -60,8 +58,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                 },
                 $$version: 1,
             };
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const data = block.blockDataFactory(input as any);
+            const data = block.blockDataFactory(input);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((data as any).tipTapContent).toEqual(input.tipTapContent);
         });
@@ -71,8 +68,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                 type: "doc",
                 content: [{ type: "paragraph", content: [{ type: "text", text: "pre-existing" }] }],
             };
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const data = block.blockDataFactory({ tipTapContent } as any);
+            const data = block.blockDataFactory({ tipTapContent });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((data as any).tipTapContent).toEqual(tipTapContent);
         });
@@ -96,10 +92,8 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     ],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const input = block.blockInputFactory({ tipTapContent: (data as any).tipTapContent });
+            });
+            const input = block.blockInputFactory(data);
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
@@ -130,12 +124,8 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                         },
                     },
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const tipTapContent = (data as any).tipTapContent;
-            const input = block.blockInputFactory({ tipTapContent });
+            });
+            const input = block.blockInputFactory(data);
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
 
@@ -161,11 +151,10 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                         "0": { type: "LINK", mutability: "MUTABLE", data: { href: "https://example.com" } },
                     },
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
+            });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
-            const input = block.blockInputFactory({ tipTapContent });
+            const input = block.blockInputFactory(data);
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
 
@@ -187,12 +176,10 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     ],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
-
+            });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
-            const input = block.blockInputFactory({ tipTapContent });
+            const input = block.blockInputFactory(data);
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
             expect(tipTapContent.content?.length ?? 0).toBeLessThanOrEqual(2);
@@ -208,8 +195,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     blocks: [draftBlock({ type: "header-one", text: "Title" })],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
+            });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
             expect(tipTapContent).toEqual({
@@ -240,8 +226,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     blocks: [draftBlock({ type: "paragraph-small", text: "tiny" })],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
+            });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
             expect(tipTapContent).toEqual({
@@ -270,8 +255,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     blocks: [draftBlock({ type: "unstyled", text: "key value soft­hyphen" })],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
+            });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
             expect(tipTapContent.content[0].content).toEqual([
@@ -306,8 +290,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     ],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
+            });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
             expect(tipTapContent.content[0].content).toEqual([
@@ -341,11 +324,10 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     ],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
+            });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
-            const input = block.blockInputFactory({ tipTapContent });
+            const input = block.blockInputFactory(data);
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
             const segments = tipTapContent.content[0].content;
@@ -359,11 +341,10 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     blocks: [draftBlock({ type: "header-one", text: "Title" })],
                     entityMap: {},
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any);
+            });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
-            const input = block.blockInputFactory({ tipTapContent });
+            const input = block.blockInputFactory(data);
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
             expect(tipTapContent.content[0].type).toBe("paragraph");
