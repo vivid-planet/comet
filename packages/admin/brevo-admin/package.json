@@ -107,6 +107,9 @@
     "peerDependenciesMeta": {
         "@mui/x-data-grid-premium": {
             "optional": true
+        },
+        "@mui/x-data-grid-pro": {
+            "optional": true
         }
     },
     "publishConfig": {

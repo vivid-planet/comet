@@ -59,7 +59,7 @@
         "packages/admin/brevo-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["**/*.generated.ts"],
-            "ignoreDependencies": ["@mui/x-data-grid-premium"]
+            "ignoreDependencies": ["@mui/x-data-grid-premium", "@mui/x-data-grid-pro"]
         },
         "packages/api/cms-api": {
             "entry": ["./src/**/migrations/*.ts"],
