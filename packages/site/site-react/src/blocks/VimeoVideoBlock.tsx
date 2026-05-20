@@ -92,7 +92,7 @@ export const VimeoVideoBlock = withPreview(
         const identifier = parseVimeoIdentifier(vimeoIdentifier);
 
         const searchParams = new URLSearchParams();
-        if (hasPreviewImage && !showPreviewImage) {
+        if (autoplay || (hasPreviewImage && !showPreviewImage)) {
             searchParams.append("autoplay", "1");
         }
         if (autoplay) {
