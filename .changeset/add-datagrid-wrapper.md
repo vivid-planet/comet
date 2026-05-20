@@ -1,5 +1,5 @@
 ---
-"@comet/admin": minor
+"@comet/cms-admin": minor
 ---
 
-Add `DataGrid` wrapper component that dynamically uses `DataGridPremium`, `DataGridPro`, or `DataGrid` based on which package is available at runtime
+Automatically use `DataGridPremium` or `DataGridPro` in cms-admin when available, falling back to the base `DataGrid`

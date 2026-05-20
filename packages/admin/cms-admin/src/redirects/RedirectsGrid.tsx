@@ -21,12 +21,13 @@ import {
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, getGridSingleSelectOperators } from "@mui/x-data-grid";
+import { getGridSingleSelectOperators } from "@mui/x-data-grid";
 import type { JSX } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { BlockPreviewContent } from "../blocks/common/blockRow/BlockPreviewContent";
 import type { BlockInterface } from "../blocks/types";
+import { DataGrid } from "../dataGrid/DataGrid";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
 import { type GQLPaginatedRedirectsQuery, type GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";

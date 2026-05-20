@@ -1,6 +1,6 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import type { GridSlotsComponent } from "@mui/x-data-grid";
+import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
 import { createMemoryHistory } from "history";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
@@ -11,7 +11,6 @@ import { afterEach, describe, expect, it } from "vitest";
 import { Button } from "./common/buttons/Button";
 import { FillSpace } from "./common/FillSpace";
 import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
-import { DataGrid } from "./dataGrid/DataGrid";
 import { EditDialog } from "./EditDialog";
 import type { IEditDialogApi } from "./EditDialogApiContext";
 import { FinalForm } from "./FinalForm";

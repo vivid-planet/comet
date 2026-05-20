@@ -18,10 +18,10 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { FormattedMessage } from "react-intl";
 
 import type { ContentScope } from "../../../contentScope/Provider";
+import { DataGrid } from "../../../dataGrid/DataGrid";
 import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
 import {
     type GQLOverrideContentScopesMutation,
