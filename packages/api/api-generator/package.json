@@ -14,6 +14,7 @@
     "bin": {
         "comet-api-generator": "bin/api-generator.js"
     },
+    "sideEffects": false,
     "files": [
         "bin/**/*.js",
         "lib/*"

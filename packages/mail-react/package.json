@@ -4,12 +4,18 @@
     "description": "Utilities for building HTML emails with React",
     "license": "BSD-2-Clause",
     "type": "module",
+    "repository": {
+        "directory": "packages/mail-react",
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet"
+    },
     "exports": {
         ".": "./lib/index.js",
         "./client": "./lib/client/index.js",
         "./server": "./lib/server/index.js",
         "./storybook": "./lib/storybook/index.js"
     },
+    "sideEffects": false,
     "files": [
         "lib/*"
     ],

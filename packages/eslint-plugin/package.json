@@ -5,6 +5,10 @@
     "type": "commonjs",
     "main": "lib/index.js",
     "license": "BSD-2-Clause",
+    "sideEffects": false,
+    "files": [
+        "lib"
+    ],
     "scripts": {
         "build": "pnpm run clean && tsc --project ./tsconfig.build.json",
         "clean": "rimraf lib",

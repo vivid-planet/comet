@@ -18,6 +18,7 @@
     "bin": {
         "comet-admin-generator": "bin/admin-generator.mjs"
     },
+    "sideEffects": false,
     "files": [
         "bin/**/*.mjs",
         "dist/*"

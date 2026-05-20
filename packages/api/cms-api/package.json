@@ -11,6 +11,7 @@
     "type": "commonjs",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
+    "sideEffects": false,
     "files": [
         "bin/**/*.js",
         "lib/*"
