@@ -1,7 +1,5 @@
 "use client";
 import {
-    defaultTipTapMarkMapping,
-    defaultTipTapNodeMapping,
     hasTipTapRichTextContent,
     PreviewSkeleton,
     type PropsWithData,
@@ -31,7 +29,6 @@ const headingLevelToVariant: Record<1 | 2 | 3 | 4 | 5 | 6, TypographyVariant> = 
 };
 
 const nodeMapping: Record<string, TipTapNodeHandler> = {
-    ...defaultTipTapNodeMapping,
     paragraph: ({ node, children }) => (
         <Typography variant={(node.attrs?.blockStyle as TypographyVariant | null) ?? undefined} bottomSpacing className={styles.text}>
             {children}
@@ -57,7 +54,6 @@ const nodeMapping: Record<string, TipTapNodeHandler> = {
 };
 
 const markMapping: Record<string, TipTapMarkHandler> = {
-    ...defaultTipTapMarkMapping,
     link: ({ mark, children }) => {
         const linkData = mark.attrs?.data as LinkBlockData | undefined;
         if (!linkData || !isValidLink(linkData)) {

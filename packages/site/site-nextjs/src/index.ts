@@ -27,8 +27,6 @@ export {
     createGraphQLFetch,
     createPersistedQueryGraphQLFetch,
     DamFileDownloadLinkBlock,
-    defaultTipTapMarkMapping,
-    defaultTipTapNodeMapping,
     EmailLinkBlock,
     ErrorHandlerBoundary,
     ErrorHandlerProvider,
