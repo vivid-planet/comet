@@ -15,15 +15,13 @@ import {
     ToolbarItem,
     ToolbarTitleItem,
 } from "@comet/admin";
-import { Card, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
 import { type ReactNode, useCallback } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
-import { useContentScope } from "../../contentScope/Provider";
+import { NotFound } from "../../common/notFound/NotFound";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DependentsList } from "../../dependencies/DependentsList";
 import type { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
@@ -75,28 +73,13 @@ const useInitialValues = (id: string) => {
 };
 
 const EditFile = ({ id, contentScopeIndicator }: EditFormProps) => {
-    const { match: scopeMatch } = useContentScope();
     const initialValues = useInitialValues(id);
     const file = initialValues.data?.damFile;
 
     if (initialValues.loading) {
         return <Loading behavior="fillPageHeight" />;
     } else if (initialValues.error || file === undefined) {
-        return (
-            <Card>
-                <CardContent>
-                    <Typography color="error">
-                        <FormattedMessage
-                            id="comet.dam.file.failedToLoad"
-                            defaultMessage="Failed to load file. <link>Go to Assets</link>"
-                            values={{
-                                link: (chunks) => <RouterLink to={`${scopeMatch.url}/assets`}>{chunks}</RouterLink>,
-                            }}
-                        />
-                    </Typography>
-                </CardContent>
-            </Card>
-        );
+        return <NotFound />;
     }
 
     return <EditFileInner file={file} id={id} contentScopeIndicator={contentScopeIndicator} />;
