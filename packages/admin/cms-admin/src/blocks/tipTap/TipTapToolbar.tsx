@@ -151,12 +151,14 @@ export const TipTapToolbar = ({
     blockStyles,
     inlineStyles,
     linkBlock,
+    listLevelMax,
 }: {
     editor: Editor;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
     inlineStyles: TipTapInlineStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    listLevelMax?: number;
 }) => {
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
@@ -200,6 +202,23 @@ export const TipTapToolbar = ({
                 const inlineStyleAttrs = e.getAttributes("inlineStyle");
                 return (inlineStyleAttrs.type as string) ?? "";
             })();
+
+            // Calculate current list nesting depth for listLevelMax enforcement
+            let canIndent = e.can().sinkListItem("listItem");
+            if (canIndent && listLevelMax !== undefined) {
+                const { $from } = e.state.selection;
+                let listDepth = 0;
+                for (let d = 0; d <= $from.depth; d++) {
+                    const node = $from.node(d);
+                    if (node.type.name === "bulletList" || node.type.name === "orderedList") {
+                        listDepth++;
+                    }
+                }
+                if (listDepth >= listLevelMax) {
+                    canIndent = false;
+                }
+            }
+
             return {
                 activeBlockType,
                 activeTipTapBlockType,
@@ -207,7 +226,7 @@ export const TipTapToolbar = ({
                 activeInlineStyle,
                 canUndo: e.can().undo(),
                 canRedo: e.can().redo(),
-                canIndent: e.can().sinkListItem("listItem"),
+                canIndent,
                 canDedent: e.can().liftListItem("listItem"),
                 isBoldActive: e.isActive("bold"),
                 isItalicActive: e.isActive("italic"),

@@ -2,18 +2,10 @@ name: Chromatic
 
 on:
     pull_request:
-        paths:
-            - packages/admin/admin/**
-            - packages/admin/cms-admin/**
-            - packages/mail-react/**
         branches:
             - main
             - next
     push:
-        paths:
-            - packages/admin/admin/**
-            - packages/admin/cms-admin/**
-            - packages/mail-react/**
         branches:
             - main
             - next
