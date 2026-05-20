@@ -228,7 +228,9 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
                         }
                         const matchedUrl = removeTrailingSlash(routeProps.match.url);
                         const currentPath = removeTrailingSlash(location.pathname);
-                        if (notFound && currentPath !== matchedUrl) {
+                        const remainder = currentPath.slice(matchedUrl.length);
+                        const isInitialPageInternalRoute = remainder === "/index" || remainder.startsWith("/index/");
+                        if (notFound && remainder.length > 0 && !isInitialPageInternalRoute) {
                             return notFound;
                         }
                         let initialPage: ReactElement<IStackPageProps> | null = null;
