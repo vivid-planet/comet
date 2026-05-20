@@ -1,4 +1,4 @@
-import { DataGrid as MuiDataGrid, type DataGridProps } from "@mui/x-data-grid";
+import { DataGrid as MuiDataGrid, type DataGridProps, type GridValidRowModel } from "@mui/x-data-grid";
 import { type ComponentType, lazy, Suspense } from "react";
 
 type DataGridComponent = ComponentType<DataGridProps>;
@@ -23,7 +23,7 @@ const ResolvedDataGrid = lazy(async () => {
  * DataGrid wrapper that automatically resolves to DataGridPremium or DataGridPro if available,
  * falling back to the base DataGrid from @mui/x-data-grid.
  */
-function DataGrid<R extends Record<string, unknown> = Record<string, unknown>>(props: DataGridProps<R>) {
+function DataGrid<R extends GridValidRowModel = GridValidRowModel>(props: DataGridProps<R>) {
     return (
         <Suspense fallback={null}>
             <ResolvedDataGrid {...(props as DataGridProps)} />
