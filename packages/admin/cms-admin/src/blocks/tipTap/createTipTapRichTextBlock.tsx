@@ -18,6 +18,7 @@ import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 import { InlineStyleContext } from "./InlineStyleContext";
+import { createListLevelMaxExtension, getListNestingDepthFromJson, trimListNesting } from "./listLevelMaxHelpers";
 import { TipTapToolbar } from "./TipTapToolbar";
 
 export type TipTapSupports =
@@ -103,6 +104,11 @@ interface TipTapRichTextBlockFactoryOptions {
      * that can be created in the editor.
      */
     maxBlocks?: number;
+    /**
+     * Limits the maximum nesting depth of list items.
+     * A value of 1 means only a flat list (no nesting), 2 allows one level of sub-lists, etc.
+     */
+    listLevelMax?: number;
 }
 
 function getPlainTextFromContent(content: JSONContent): string {
@@ -198,6 +204,7 @@ const TipTapEditor = ({
     inlineStyles,
     linkBlock,
     maxBlocks,
+    listLevelMax,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
@@ -206,6 +213,7 @@ const TipTapEditor = ({
     inlineStyles: TipTapInlineStyle[];
     linkBlock?: BlockInterface & LinkBlockInterface;
     maxBlocks?: number;
+    listLevelMax?: number;
 }) => {
     const hasBlockStyles = blockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
@@ -235,6 +243,7 @@ const TipTapEditor = ({
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasLink ? [CmsLink] : []),
             ...(maxBlocks !== undefined ? [createMaxBlocksExtension(maxBlocks)] : []),
+            ...(listLevelMax !== undefined ? [createListLevelMaxExtension(listLevelMax)] : []),
         ],
         content: state.tipTapContent,
         onUpdate: ({ editor }) => {
@@ -253,6 +262,18 @@ const TipTapEditor = ({
                 editor.view.dispatch(tr);
                 return;
             }
+
+            if (listLevelMax !== undefined) {
+                const json = editor.getJSON();
+                const currentDepth = getListNestingDepthFromJson(json);
+                if (currentDepth > listLevelMax) {
+                    // Trim nested lists that exceed the limit (e.g. from paste)
+                    const trimmed = trimListNesting(json, listLevelMax);
+                    editor.commands.setContent(trimmed);
+                    return;
+                }
+            }
+
             updateState({ tipTapContent: editor.getJSON() });
         },
     });
@@ -265,7 +286,14 @@ const TipTapEditor = ({
         <BlockStyleContext.Provider value={blockStyles}>
             <InlineStyleContext.Provider value={inlineStyles}>
                 <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                    <TipTapToolbar editor={editor} supports={supports} blockStyles={blockStyles} inlineStyles={inlineStyles} linkBlock={linkBlock} />
+                    <TipTapToolbar
+                        editor={editor}
+                        supports={supports}
+                        blockStyles={blockStyles}
+                        inlineStyles={inlineStyles}
+                        linkBlock={linkBlock}
+                        listLevelMax={listLevelMax}
+                    />
                     <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
                         <EditorContent editor={editor} />
                     </Box>
@@ -286,6 +314,7 @@ export const createTipTapRichTextBlock = (
     const inlineStyles = options?.inlineStyles ?? [];
     const linkBlock = options?.link;
     const maxBlocks = options?.maxBlocks;
+    const listLevelMax = options?.listLevelMax;
 
     // Auto-enable link support when a link block is provided
     if (linkBlock && !supports.includes("link")) {
@@ -348,6 +377,7 @@ export const createTipTapRichTextBlock = (
                     inlineStyles={inlineStyles}
                     linkBlock={linkBlock}
                     maxBlocks={maxBlocks}
+                    listLevelMax={listLevelMax}
                 />
             );
         },
