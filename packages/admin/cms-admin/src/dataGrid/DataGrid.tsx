@@ -5,13 +5,11 @@ type DataGridComponent = ComponentType<DataGridProps>;
 
 const ResolvedDataGrid = lazy(async () => {
     try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const { DataGridPremium } = require("@mui/x-data-grid-premium");
+        const { DataGridPremium } = await import("@mui/x-data-grid-premium");
         return { default: DataGridPremium as unknown as DataGridComponent };
     } catch {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const { DataGridPro } = require("@mui/x-data-grid-pro");
+            const { DataGridPro } = await import("@mui/x-data-grid-pro");
             return { default: DataGridPro as unknown as DataGridComponent };
         } catch {
             return { default: MuiDataGrid as DataGridComponent };
