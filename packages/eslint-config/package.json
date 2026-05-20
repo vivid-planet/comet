@@ -59,7 +59,7 @@
         "eslint-plugin-unused-imports": "^4.4.1",
         "globals": "^15.15.0",
         "npm-run-all2": "^8.0.4",
-        "typescript-eslint": "^8.53.0"
+        "typescript-eslint": "^8.59.3"
     },
     "devDependencies": {
         "eslint": "^9.39.4",
