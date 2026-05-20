@@ -15,6 +15,7 @@ import {
     MasterMenu,
     type MasterMenuData,
     MasterMenuRoutes,
+    NotFound,
     PagesPage,
     PublisherPage,
     UserPermissionsPage,
@@ -49,7 +50,7 @@ import { RedirectsPage } from "@src/redirects/RedirectsPage";
 import type { ContentScope } from "@src/site-configs";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Redirect, type RouteComponentProps } from "react-router";
+import type { RouteComponentProps } from "react-router";
 
 import { EditPageNode } from "./EditPageNode";
 
@@ -114,7 +115,7 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                     const category = urlParamToCategory(match.params.category);
 
                     if (category === undefined) {
-                        return <Redirect to={`${match.url}/dashboard`} />;
+                        return <NotFound />;
                     }
 
                     return (
