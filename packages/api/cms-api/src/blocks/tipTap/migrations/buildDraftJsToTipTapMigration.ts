@@ -59,6 +59,10 @@ export function buildDraftJsToTipTapMigration(options: BuildOptions): ClassConst
                 return { tipTapContent: converted };
             }
 
+            if (process.env.NODE_ENV === "development") {
+                throw new Error(`DraftJS->TipTap migration produced invalid content: ${JSON.stringify(converted)}`);
+            }
+
             const stripped = buildStrippedTipTapDoc(from.draftContent);
             if (isValidTipTapContentSync(stripped, schema, { maxBlocks })) {
                 console.warn("DraftJS->TipTap migration failed, using stripped content");
