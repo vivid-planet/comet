@@ -42,10 +42,14 @@ const config: StorybookConfig = {
 
 // On Netlify deploy-previews, `HEAD` is the PR source branch; on branch-deploys, `BRANCH` is the deployed branch.
 // Chromatic publishes a build per branch at `https://<sanitized-branch>--<projectId>.chromatic.com`,
-// where the branch is lowercased and non-alphanumeric characters become `-`.
+// where the branch is lowercased, runs of unsupported characters become a single `-`, and the
+// result is truncated to 37 characters. See https://www.chromatic.com/docs/permalinks/.
 function chromaticUrl(projectId: string): string {
     const branch = process.env.HEAD ?? process.env.BRANCH ?? "main";
-    const sanitizedBranch = branch.toLowerCase().replace(/[^a-z0-9]/g, "-");
+    const sanitizedBranch = branch
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .slice(0, 37);
     return `https://${sanitizedBranch}--${projectId}.chromatic.com`;
 }
 
