@@ -12,6 +12,7 @@ export interface PageTreeConfig {
         fragment: DocumentNode;
     };
     scopeParts?: string[];
+    allowPageDelete?: boolean;
 }
 
 export function usePageTreeConfig(): PageTreeConfig {
