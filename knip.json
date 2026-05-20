@@ -50,7 +50,7 @@
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["**/*.generated.ts"],
-            "ignoreDependencies": ["@mui/x-data-grid-pro"]
+            "ignoreDependencies": ["@mui/x-data-grid-pro", "jsdom"]
         },
         "packages/admin/admin-generator": {
             "entry": ["./src/index.ts", "./src/adminGenerator.ts"],
@@ -98,7 +98,8 @@
                 "./src/db/ormconfig.cli.ts",
                 "./src/db/migrations/**/*.ts",
                 "./src/auth/user.interface.ts",
-                "./src/auth/permission.interface.ts"
+                "./src/auth/permission.interface.ts",
+                "./src/reload.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@as-integrations/express5"],
