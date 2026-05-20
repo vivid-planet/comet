@@ -2,6 +2,6 @@
 "@comet/cms-admin": patch
 ---
 
-Remove `@mui/x-data-grid-pro` runtime usage from `TableBlock`
+Make `@mui/x-data-grid-pro` truly optional in `TableBlock`
 
-Replace `DataGridPro` with `DataGrid` from `@mui/x-data-grid` and remove Pro-only features (row reordering via drag-and-drop, column pinning) that required the Pro package at runtime. The `@mui/x-data-grid-pro` peer dependency remains optional and is no longer imported at runtime.
+The `TableBlock` grid now dynamically detects whether `@mui/x-data-grid-pro` is installed at runtime. When Pro is available, the full feature set (row reordering via drag-and-drop, column pinning) is used. When Pro is not installed, the component falls back to the community `DataGrid` without these Pro-only features.

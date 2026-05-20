@@ -52,8 +52,9 @@ export const getCellValuesPerColumn = (rendered: RenderResult) => {
     const cellValuesPerColumn: string[][] = [];
 
     firstRowCells.forEach((_, cellIndex) => {
+        const isDragHandleCell = cellIndex === 0;
         const isActionsCell = cellIndex === firstRowCells.length - 1;
-        if (isActionsCell) {
+        if (isDragHandleCell || isActionsCell) {
             return;
         }
 
@@ -69,6 +70,6 @@ export const getCellValuesPerColumn = (rendered: RenderResult) => {
     return cellValuesPerColumn;
 };
 
-export const getCellsExcludingTheActionsCells = (rowElement: HTMLElement): HTMLElement[] => {
-    return within(rowElement).queryAllByRole("gridcell").slice(0, -1);
+export const getCellsExcludingTheDragHandleAndActionsCells = (rowElement: HTMLElement): HTMLElement[] => {
+    return within(rowElement).queryAllByRole("gridcell").slice(1, -1);
 };

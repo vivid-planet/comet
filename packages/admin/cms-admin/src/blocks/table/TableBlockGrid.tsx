@@ -1,18 +1,22 @@
 import type { GridColDef } from "@comet/admin";
+import { DragIndicator } from "@comet/admin-icons";
 import {
     DataGrid,
     type GridColumnHeaderParams,
+    type GridEventListener,
     type GridRenderCellParams,
     type GridRenderEditCellParams,
     type GridValidRowModel,
     useGridApiRef,
 } from "@mui/x-data-grid";
+import type { DataGridProProps } from "@mui/x-data-grid-pro";
 import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
 import type { TableBlockData } from "../../blocks.generated";
 import type { TableBlockState } from "../createTableBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
+import { DataGridProComponent, GRID_REORDER_COL_DEF, isDataGridProAvailable } from "./dataGridProModule";
 import { dataGridStyles } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
 import { RowActionsCell } from "./RowActionsCell";
@@ -83,7 +87,55 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         return newRow;
     };
 
+    const moveRow = (targetIndex: number, rowId: string) => {
+        updateState((state) => {
+            const movingRow = state.rows.find((row) => row.id === rowId);
+            if (!movingRow) {
+                return state;
+            }
+
+            const otherRows = state.rows.filter((row) => row.id !== rowId);
+            return {
+                ...state,
+                rows: [...otherRows.slice(0, targetIndex), movingRow, ...otherRows.slice(targetIndex)],
+            };
+        });
+    };
+
+    useEffect(() => {
+        const handleMoveColumn: GridEventListener<"columnHeaderDragEnd"> = ({ field: columnId }) => {
+            if (!apiRef.current) {
+                return;
+            }
+            const targetIndex = apiRef.current.getColumnIndex(columnId) - 1;
+
+            updateState((state) => {
+                const movingColumn = state.columns.find((column: TableBlockColumn) => column.id === columnId);
+                if (!movingColumn) {
+                    return state;
+                }
+
+                const otherColumns = state.columns.filter((column: TableBlockColumn) => column.id !== columnId);
+                return {
+                    ...state,
+                    columns: [...otherColumns.slice(0, targetIndex), movingColumn, ...otherColumns.slice(targetIndex)],
+                };
+            });
+        };
+
+        return apiRef.current?.subscribeEvent("columnHeaderDragEnd", handleMoveColumn);
+    }, [apiRef, updateState]);
+
     const dataGridColumns: GridColDef[] = [
+        ...(isDataGridProAvailable && GRID_REORDER_COL_DEF
+            ? [
+                  {
+                      ...GRID_REORDER_COL_DEF,
+                      minWidth: 36,
+                      maxWidth: 36,
+                  },
+              ]
+            : []),
         ...state.columns.map(({ id: columnId, highlighted, size }: TableBlockColumn, index: number) => ({
             field: columnId,
             editable: true,
@@ -138,6 +190,39 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         });
         return dataGridRow;
     });
+
+    if (isDataGridProAvailable && DataGridProComponent) {
+        const GridComponent = DataGridProComponent;
+        const proProps: Partial<DataGridProProps> = {
+            rowReordering: true,
+            pinnedColumns: {
+                left: ["__reorder__"],
+                right: ["actions"],
+            },
+            onRowOrderChange: ({ targetIndex, row }) => {
+                moveRow(targetIndex, row.id);
+            },
+            slots: {
+                rowReorderIcon: ({ color, ...restProps }) => <DragIndicator {...restProps} htmlColor={color} />,
+            },
+        };
+
+        return (
+            <GridComponent
+                columns={dataGridColumns}
+                apiRef={apiRef as unknown as DataGridProProps["apiRef"]}
+                rows={rowsInDataGridFormat}
+                rowHeight={55}
+                disableColumnResize
+                disableColumnMenu
+                disableRowSelectionOnClick
+                hideFooter
+                sx={dataGridStyles}
+                processRowUpdate={processRowUpdate}
+                {...proProps}
+            />
+        );
+    }
 
     return (
         <DataGrid
