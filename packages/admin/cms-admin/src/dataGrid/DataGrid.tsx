@@ -1,8 +1,12 @@
-import { DataGrid as MuiDataGrid, type DataGridProps as MuiDataGridProps } from "@mui/x-data-grid";
+import { DataGrid as MuiDataGrid, type DataGridProps } from "@mui/x-data-grid";
 import { type ComponentType, lazy, Suspense } from "react";
 
-type DataGridComponent = ComponentType<MuiDataGridProps>;
+type DataGridComponent = ComponentType<DataGridProps>;
 
+/**
+ * DataGrid wrapper that automatically resolves to DataGridPremium or DataGridPro if available,
+ * falling back to the base DataGrid from @mui/x-data-grid.
+ */
 const ResolvedDataGrid = lazy(async () => {
     try {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -19,12 +23,10 @@ const ResolvedDataGrid = lazy(async () => {
     }
 });
 
-export type DataGridProps<R extends Record<string, unknown> = Record<string, unknown>> = MuiDataGridProps<R>;
-
 function DataGrid<R extends Record<string, unknown> = Record<string, unknown>>(props: DataGridProps<R>) {
     return (
         <Suspense fallback={null}>
-            <ResolvedDataGrid {...(props as MuiDataGridProps)} />
+            <ResolvedDataGrid {...(props as DataGridProps)} />
         </Suspense>
     );
 }
