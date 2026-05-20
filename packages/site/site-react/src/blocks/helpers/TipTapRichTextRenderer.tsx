@@ -34,10 +34,40 @@ export interface RenderTipTapRichTextOptions {
     markMapping?: Record<string, TipTapMarkHandler>;
 }
 
+const nonBreakingSpace = String.fromCodePoint(0xa0);
+const softHyphen = String.fromCodePoint(0xad);
+
+const defaultTipTapNodeMapping: Record<string, TipTapNodeHandler> = {
+    paragraph: ({ children }) => <p>{children}</p>,
+    heading: ({ node, children }) => {
+        const level = (node.attrs?.level as 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
+        const Tag = `h${level}` as const;
+        return <Tag>{children}</Tag>;
+    },
+    bulletList: ({ children }) => <ul>{children}</ul>,
+    orderedList: ({ children }) => <ol>{children}</ol>,
+    listItem: ({ children }) => <li>{children}</li>,
+    hardBreak: () => <br />,
+    nonBreakingSpace: () => nonBreakingSpace,
+    softHyphen: () => softHyphen,
+};
+
+const defaultTipTapMarkMapping: Record<string, TipTapMarkHandler> = {
+    bold: ({ children }) => <strong>{children}</strong>,
+    italic: ({ children }) => <em>{children}</em>,
+    strike: ({ children }) => <s>{children}</s>,
+    superscript: ({ children }) => <sup>{children}</sup>,
+    subscript: ({ children }) => <sub>{children}</sub>,
+};
+
 /**
  * @experimental
  */
-export function renderTipTapRichText({ content, nodeMapping, markMapping }: RenderTipTapRichTextOptions): ReactNode {
+export function renderTipTapRichText({
+    content,
+    nodeMapping = defaultTipTapNodeMapping,
+    markMapping = defaultTipTapMarkMapping,
+}: RenderTipTapRichTextOptions): ReactNode {
     const applyMarks = (children: ReactNode, node: TipTapNode): ReactNode => {
         if (!node.marks || node.marks.length === 0) {
             return children;
@@ -73,32 +103,6 @@ export function renderTipTapRichText({ content, nodeMapping, markMapping }: Rend
 
     return renderNode(content, undefined);
 }
-
-const nonBreakingSpace = String.fromCodePoint(0xa0);
-const softHyphen = String.fromCodePoint(0xad);
-
-export const defaultTipTapNodeMapping: Record<string, TipTapNodeHandler> = {
-    paragraph: ({ children }) => <p>{children}</p>,
-    heading: ({ node, children }) => {
-        const level = (node.attrs?.level as 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
-        const Tag = `h${level}` as const;
-        return <Tag>{children}</Tag>;
-    },
-    bulletList: ({ children }) => <ul>{children}</ul>,
-    orderedList: ({ children }) => <ol>{children}</ol>,
-    listItem: ({ children }) => <li>{children}</li>,
-    hardBreak: () => <br />,
-    nonBreakingSpace: () => nonBreakingSpace,
-    softHyphen: () => softHyphen,
-};
-
-export const defaultTipTapMarkMapping: Record<string, TipTapMarkHandler> = {
-    bold: ({ children }) => <strong>{children}</strong>,
-    italic: ({ children }) => <em>{children}</em>,
-    strike: ({ children }) => <s>{children}</s>,
-    superscript: ({ children }) => <sup>{children}</sup>,
-    subscript: ({ children }) => <sub>{children}</sub>,
-};
 
 export function hasTipTapRichTextContent(content: TipTapNode | null | undefined): boolean {
     if (!content?.content || !Array.isArray(content.content)) {

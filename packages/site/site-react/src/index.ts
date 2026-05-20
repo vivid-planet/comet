@@ -11,8 +11,6 @@ export type { SupportedBlocks } from "./blocks/factories/types";
 export { type PlayPauseButtonProps } from "./blocks/helpers/PlayPauseButton";
 export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
 export {
-    defaultTipTapMarkMapping,
-    defaultTipTapNodeMapping,
     hasTipTapRichTextContent,
     renderTipTapRichText,
     type RenderTipTapRichTextOptions,
