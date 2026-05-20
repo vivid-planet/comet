@@ -42,8 +42,6 @@ const nodeMapping: Record<string, TipTapNodeHandler> = {
             </Typography>
         );
     },
-    bulletList: ({ children }) => <ul>{children}</ul>,
-    orderedList: ({ children }) => <ol>{children}</ol>,
     listItem: ({ node, children }) => {
         const firstParagraph = node.content?.find((child) => child.type === "paragraph");
         const blockStyle = (firstParagraph?.attrs?.blockStyle as TypographyVariant | null) ?? undefined;
@@ -53,15 +51,9 @@ const nodeMapping: Record<string, TipTapNodeHandler> = {
             </Typography>
         );
     },
-    hardBreak: () => <br />,
 };
 
 const markMapping: Record<string, TipTapMarkHandler> = {
-    bold: ({ children }) => <strong>{children}</strong>,
-    italic: ({ children }) => <em>{children}</em>,
-    strike: ({ children }) => <s>{children}</s>,
-    superscript: ({ children }) => <sup>{children}</sup>,
-    subscript: ({ children }) => <sub>{children}</sub>,
     link: ({ mark, children }) => {
         const linkData = mark.attrs?.data as LinkBlockData | undefined;
         if (!linkData || !isValidLink(linkData)) {

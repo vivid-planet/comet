@@ -63,18 +63,16 @@ const defaultTipTapMarkMapping: Record<string, TipTapMarkHandler> = {
 /**
  * @experimental
  */
-export function renderTipTapRichText({
-    content,
-    nodeMapping = defaultTipTapNodeMapping,
-    markMapping = defaultTipTapMarkMapping,
-}: RenderTipTapRichTextOptions): ReactNode {
+export function renderTipTapRichText({ content, nodeMapping, markMapping }: RenderTipTapRichTextOptions): ReactNode {
+    const mergedNodeMapping = { ...defaultTipTapNodeMapping, ...nodeMapping };
+    const mergedMarkMapping = { ...defaultTipTapMarkMapping, ...markMapping };
     const applyMarks = (children: ReactNode, node: TipTapNode): ReactNode => {
         if (!node.marks || node.marks.length === 0) {
             return children;
         }
         let result = children;
         for (const mark of node.marks) {
-            const handler = markMapping?.[mark.type];
+            const handler = mergedMarkMapping[mark.type];
             if (handler) {
                 result = handler({ mark, node, children: result });
             }
@@ -96,7 +94,7 @@ export function renderTipTapRichText({
             return <>{renderedChildren}</>;
         }
 
-        const handler = nodeMapping?.[node.type];
+        const handler = mergedNodeMapping[node.type];
         const rendered = handler ? handler({ node, parent, children: renderedChildren }) : <>{renderedChildren}</>;
         return applyMarks(rendered, node);
     };
