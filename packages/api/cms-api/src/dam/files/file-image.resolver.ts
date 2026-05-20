@@ -25,7 +25,7 @@ export class FileImagesResolver {
 
         if (file) {
             const urlTemplate = this.imagesService.createUrlTemplate(
-                { file },
+                { file, cropArea: fileImage.cropArea },
                 {
                     previewDamUrls: Boolean(req.headers["x-preview-dam-urls"]),
                 },
