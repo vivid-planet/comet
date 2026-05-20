@@ -2161,7 +2161,7 @@ importers:
         specifier: ^9.37.0
         version: 9.46.0
       '@smithy/types':
-        specifier: ^4.12.0
+        specifier: ^4.14.2
         version: 4.14.2
       '@swc/core':
         specifier: ^1.15.33
