@@ -80,15 +80,23 @@ const EditFile = ({ id, contentScopeIndicator }: EditFormProps) => {
         return <Loading behavior="fillPageHeight" />;
     } else if (initialValues.error || file === undefined) {
         return (
-            <NotFound
-                title={<FormattedMessage id="comet.dam.file.notFound.title" defaultMessage="Asset not found (404)" />}
-                description={
-                    <FormattedMessage
-                        id="comet.dam.file.notFound.description"
-                        defaultMessage="The requested asset does not exist or has been deleted."
-                    />
-                }
-            />
+            <>
+                <Toolbar scopeIndicator={contentScopeIndicator}>
+                    <ToolbarBackButton />
+                    <ToolbarTitleItem>
+                        <FormattedMessage id="comet.dam.file.notFound.title" defaultMessage="Asset not found (404)" />
+                    </ToolbarTitleItem>
+                </Toolbar>
+                <NotFound
+                    title={<FormattedMessage id="comet.dam.file.notFound.title" defaultMessage="Asset not found (404)" />}
+                    description={
+                        <FormattedMessage
+                            id="comet.dam.file.notFound.description"
+                            defaultMessage="The requested asset does not exist or has been deleted."
+                        />
+                    }
+                />
+            </>
         );
     }
 
