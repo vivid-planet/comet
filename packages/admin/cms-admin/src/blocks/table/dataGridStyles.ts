@@ -16,20 +16,20 @@ export const dataGridStyles: SxProps<Theme> = (theme) => ({
 
     ".MuiDataGrid-columnHeader": {
         borderRight: `1px solid ${theme.palette.grey[100]}`,
+        backgroundColor: theme.palette.background.paper,
 
-        "&.MuiDataGrid-columnHeader--pinnedLeft.MuiDataGrid-columnHeader--withRightBorder": {
-            borderRight: `1px solid ${theme.palette.grey[100]}`,
-            boxShadow: "none",
+        '&[data-field="__reorder__"]': {
+            position: "sticky",
+            left: 0,
+            zIndex: 2,
         },
 
-        "&.MuiDataGrid-columnHeader--pinnedRight.MuiDataGrid-columnHeader--withLeftBorder": {
-            borderLeft: `1px solid ${theme.palette.grey[100]}`,
-            boxShadow: "none",
-        },
-
-        "&:nth-last-of-type(4)": {
-            // The last non-pinned cell should not have a border, as the pinned column already has one
+        '&[data-field="actions"]': {
+            position: "sticky",
+            right: 0,
+            zIndex: 2,
             borderRight: "none",
+            borderLeft: `1px solid ${theme.palette.grey[100]}`,
         },
     },
 
@@ -37,29 +37,26 @@ export const dataGridStyles: SxProps<Theme> = (theme) => ({
         borderBottom: `1px solid ${theme.palette.grey[100]}`,
         borderRight: `1px solid ${theme.palette.grey[100]}`,
         borderTop: "none",
+        backgroundColor: theme.palette.background.paper,
 
         "&.MuiDataGrid-cellEmpty[role='presentation']": {
             display: "none",
         },
 
-        "&.MuiDataGrid-cell--pinnedLeft.MuiDataGrid-cell--withRightBorder": {
-            borderRightWidth: 1,
-            boxShadow: "none",
-        },
-
-        "&.MuiDataGrid-cell--pinnedRight.MuiDataGrid-cell--withLeftBorder": {
-            borderLeftWidth: 1,
-            boxShadow: "none",
-        },
-
-        "&:nth-last-of-type(3)": {
-            // The last non-pinned cell should not have a border, as the pinned column already has one
-            borderRight: "none",
+        '&[data-field="__reorder__"]': {
+            position: "sticky",
+            left: 0,
+            zIndex: 1,
+            padding: 0,
         },
 
         '&[data-field="actions"]': {
+            position: "sticky",
+            right: 0,
+            zIndex: 1,
             display: "flex",
             borderRight: "none",
+            borderLeft: `1px solid ${theme.palette.grey[100]}`,
             justifyContent: "center",
             alignItems: "center",
             padding: 0,

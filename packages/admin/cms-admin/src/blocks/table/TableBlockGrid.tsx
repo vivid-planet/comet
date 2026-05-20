@@ -1,15 +1,15 @@
+import type { GridColDef } from "@comet/admin";
 import { DragIndicator } from "@comet/admin-icons";
-// eslint-disable-next-line no-restricted-imports
-import type { GridColDef, GridColumnHeaderParams, GridValidRowModel } from "@mui/x-data-grid";
+import { styled } from "@mui/material/styles";
 import {
-    DataGridPro,
-    GRID_REORDER_COL_DEF,
-    type GridEventListener,
+    DataGrid,
+    type GridColumnHeaderParams,
     type GridRenderCellParams,
     type GridRenderEditCellParams,
+    type GridValidRowModel,
     useGridApiRef,
-} from "@mui/x-data-grid-pro";
-import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
+} from "@mui/x-data-grid";
+import { type ComponentProps, type Dispatch, type DragEvent, type SetStateAction, useEffect } from "react";
 
 import type { TableBlockData } from "../../blocks.generated";
 import type { TableBlockState } from "../createTableBlock";
@@ -24,6 +24,9 @@ import { useRecentlyPastedIds } from "./utils/useRecentlyPastedIds";
 
 type ColumnSize = TableBlockData["columns"][number]["size"];
 type TableBlockColumn = TableBlockData["columns"][number];
+
+const REORDER_COLUMN_FIELD = "__reorder__";
+const ROW_REORDER_DATA_TRANSFER_TYPE = "application/x-comet-table-block-row-id";
 
 const widthForColumnSize: Record<ColumnSize, number> = {
     extraSmall: 100,
@@ -64,7 +67,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         });
     };
 
-    const processRowUpdate: ComponentProps<typeof DataGridPro>["processRowUpdate"] = (newRow) => {
+    const processRowUpdate: ComponentProps<typeof DataGrid>["processRowUpdate"] = (newRow) => {
         const { id: newRowId, ...newRowValuesRecord } = newRow;
 
         setRowData((previousRowData) => {
@@ -100,35 +103,22 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         });
     };
 
-    useEffect(() => {
-        const handleMoveColumn: GridEventListener<"columnHeaderDragEnd"> = ({ field: columnId }) => {
-            if (!apiRef.current) {
-                return;
-            }
-            const targetIndex = apiRef.current.getColumnIndex(columnId) - 1;
-
-            updateState((state) => {
-                const movingColumn = state.columns.find((column: TableBlockColumn) => column.id === columnId);
-                if (!movingColumn) {
-                    return state;
-                }
-
-                const otherColumns = state.columns.filter((column: TableBlockColumn) => column.id !== columnId);
-                return {
-                    ...state,
-                    columns: [...otherColumns.slice(0, targetIndex), movingColumn, ...otherColumns.slice(targetIndex)],
-                };
-            });
-        };
-
-        return apiRef.current?.subscribeEvent("columnHeaderDragEnd", handleMoveColumn);
-    }, [apiRef, updateState]);
-
     const dataGridColumns: GridColDef[] = [
         {
-            ...GRID_REORDER_COL_DEF,
+            field: REORDER_COLUMN_FIELD,
+            sortable: false,
+            filterable: false,
             minWidth: 36,
             maxWidth: 36,
+            align: "center",
+            headerAlign: "center",
+            disableColumnMenu: true,
+            resizable: false,
+            renderHeader: () => null,
+            renderCell: ({ row }: GridRenderCellParams) => {
+                const rowIndex = state.rows.findIndex((rowInState) => rowInState.id === row.id);
+                return <RowReorderCell rowId={row.id} rowIndex={rowIndex} onMoveRow={moveRow} />;
+            },
         },
         ...state.columns.map(({ id: columnId, highlighted, size }: TableBlockColumn, index: number) => ({
             field: columnId,
@@ -186,28 +176,66 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
     });
 
     return (
-        <DataGridPro
+        <DataGrid
             columns={dataGridColumns}
             apiRef={apiRef}
             rows={rowsInDataGridFormat}
             rowHeight={55}
-            rowReordering
             disableColumnResize
             disableColumnMenu
             disableRowSelectionOnClick
             hideFooter
-            pinnedColumns={{
-                left: ["__reorder__"],
-                right: ["actions"],
-            }}
-            slots={{
-                rowReorderIcon: ({ color, ...restProps }) => <DragIndicator {...restProps} htmlColor={color} />,
-            }}
             sx={dataGridStyles}
-            onRowOrderChange={({ targetIndex, row }) => {
-                moveRow(targetIndex, row.id);
-            }}
             processRowUpdate={processRowUpdate}
         />
     );
 };
+
+type RowReorderCellProps = {
+    rowId: string;
+    rowIndex: number;
+    onMoveRow: (targetIndex: number, rowId: string) => void;
+};
+
+const RowReorderCell = ({ rowId, rowIndex, onMoveRow }: RowReorderCellProps) => {
+    const handleDragStart = (event: DragEvent<HTMLDivElement>) => {
+        event.dataTransfer.setData(ROW_REORDER_DATA_TRANSFER_TYPE, rowId);
+        event.dataTransfer.effectAllowed = "move";
+    };
+
+    const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+        if (event.dataTransfer.types.includes(ROW_REORDER_DATA_TRANSFER_TYPE)) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "move";
+        }
+    };
+
+    const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+        const draggedRowId = event.dataTransfer.getData(ROW_REORDER_DATA_TRANSFER_TYPE);
+        if (!draggedRowId || draggedRowId === rowId) {
+            return;
+        }
+        event.preventDefault();
+        onMoveRow(rowIndex, draggedRowId);
+    };
+
+    return (
+        <RowReorderHandle draggable onDragStart={handleDragStart} onDragOver={handleDragOver} onDrop={handleDrop}>
+            <DragIndicator />
+        </RowReorderHandle>
+    );
+};
+
+const RowReorderHandle = styled("div")(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
+    cursor: "grab",
+    color: theme.palette.text.secondary,
+
+    "&:active": {
+        cursor: "grabbing",
+    },
+}));
