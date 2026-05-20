@@ -60,7 +60,7 @@ export function buildDraftJsToTipTapMigration(options: BuildOptions): ClassConst
             }
 
             if (process.env.NODE_ENV === "development") {
-                throw new Error(`DraftJS->TipTap migration produced invalid content: ${JSON.stringify(converted)}`);
+                throw new Error(`DraftJS->TipTap migration produced invalid content that doesn't pass validation`);
             }
 
             const stripped = buildStrippedTipTapDoc(from.draftContent);
