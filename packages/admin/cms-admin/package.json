@@ -148,6 +148,7 @@
         "@emotion/styled": "^11.3.0",
         "@mui/material": "^7.0.0",
         "@mui/x-data-grid": "^8.0.0",
+        "@mui/x-data-grid-premium": "^8.0.0",
         "@mui/x-data-grid-pro": "^8.0.0",
         "final-form": "^4.0.0",
         "graphql": "^15.0.0 || ^16.0.0",
@@ -161,6 +162,9 @@
         "react-router-dom": "^5.0.0"
     },
     "peerDependenciesMeta": {
+        "@mui/x-data-grid-premium": {
+            "optional": true
+        },
         "@mui/x-data-grid-pro": {
             "optional": true
         }
