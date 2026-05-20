@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { ArrayType, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { FullTextType } from "@mikro-orm/postgresql";
 
 // Note: This file is intentionally not named *.entity.ts to exclude it from MikroORM's CLI migration glob pattern.
@@ -15,6 +15,6 @@ export class EntityInfoFullTextObject {
     @Property({ type: FullTextType })
     fullText: string;
 
-    @Property({ type: "text", nullable: true })
-    requiredPermission: string | null;
+    @Property({ type: ArrayType })
+    requiredPermission: string[];
 }

@@ -10,6 +10,14 @@ function isEntityInfoSql(entityInfo: EntityInfo<AnyEntity>): entityInfo is Entit
     return typeof entityInfo === "object" && "sql" in entityInfo;
 }
 
+function requiredPermissionToSql(requiredPermission: string | string[] | undefined): string {
+    if (!requiredPermission) {
+        return "ARRAY[]::text[]";
+    }
+    const permissions = Array.isArray(requiredPermission) ? requiredPermission : [requiredPermission];
+    return `ARRAY[${permissions.map((p) => `'${p}'`).join(", ")}]::text[]`;
+}
+
 @Injectable()
 export class FullTextSearchService {
     constructor(
@@ -32,7 +40,7 @@ export class FullTextSearchService {
             if (typeof entityInfo === "string" || isEntityInfoSql(entityInfo)) {
                 if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
                     const requiredPermission = typeof entityInfo === "string" ? undefined : entityInfo.requiredPermission;
-                    const requiredPermissionSql = requiredPermission ? `'${requiredPermission}'` : "NULL::text";
+                    const requiredPermissionSql = requiredPermissionToSql(requiredPermission);
 
                     indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText",
                         ${requiredPermissionSql} AS "requiredPermission"
@@ -50,7 +58,7 @@ export class FullTextSearchService {
             const primary = metadata.primaryKeys[0];
 
             const fullTextSql = resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
-            const requiredPermissionSql = entityInfo.requiredPermission ? `'${entityInfo.requiredPermission}'` : "NULL::text";
+            const requiredPermissionSql = requiredPermissionToSql(entityInfo.requiredPermission);
 
             indexSelects.push(`SELECT
                             "${metadata.tableName}"."${primary}"::text "id",
@@ -63,7 +71,7 @@ export class FullTextSearchService {
         if (indexSelects.length === 0) {
             // Empty placeholder so the view always exists with the expected columns
             indexSelects.push(
-                `SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", NULL::text AS "requiredPermission" WHERE false`,
+                `SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", ARRAY[]::text[] AS "requiredPermission" WHERE false`,
             );
         }
 

@@ -30,7 +30,7 @@ export class FullTextSearchResolver {
             EntityInfoFullTextObject,
             {
                 fullText: { $fulltext: search },
-                requiredPermission: { $in: allowedPermissions },
+                requiredPermission: { $overlap: allowedPermissions },
             },
             { offset, limit },
         );
