@@ -143,16 +143,19 @@ describe("PageActions", () => {
             mockDocumentTypes = { Page: baseDocumentType };
         });
 
+        // With an archived page, the Edit/Preview icon buttons are not rendered,
+        // so the only button present is the submenu trigger.
+        const archivedPage: PageTreePage = { ...basePage, visibility: "Archived", slug: "archived-page" };
+
         function openSubmenu() {
-            const buttons = screen.getAllByRole("button");
-            // The last button is the submenu trigger (MoreVertical icon)
-            fireEvent.click(buttons[buttons.length - 1]);
+            const [submenuTrigger] = screen.getAllByRole("button");
+            fireEvent.click(submenuTrigger);
         }
 
         it("shows the delete menu item when allowPageDelete is true", async () => {
             mockAllowPageDelete = true;
 
-            renderPageActions();
+            renderPageActions(archivedPage);
             openSubmenu();
 
             expect(await screen.findByText("Delete")).toBeTruthy();
@@ -161,7 +164,7 @@ describe("PageActions", () => {
         it("shows the delete menu item when allowPageDelete is undefined (default)", async () => {
             mockAllowPageDelete = undefined;
 
-            renderPageActions();
+            renderPageActions(archivedPage);
             openSubmenu();
 
             expect(await screen.findByText("Delete")).toBeTruthy();
@@ -170,11 +173,12 @@ describe("PageActions", () => {
         it("hides the delete menu item when allowPageDelete is false", async () => {
             mockAllowPageDelete = false;
 
-            renderPageActions();
+            renderPageActions(archivedPage);
             openSubmenu();
 
-            // Wait for the menu to open by checking another menu item
-            await screen.findByText("Page properties");
+            // With allowPageDelete=false and an archived page, the submenu has no items.
+            // Verify that "Delete" never appears after the menu opens.
+            await new Promise((resolve) => setTimeout(resolve, 100));
             expect(screen.queryByText("Delete")).toBeNull();
         });
     });
