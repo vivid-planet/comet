@@ -1,4 +1,4 @@
-import { RouterMemoryRouter } from "../router/RouterMemoryRouter";
+import { RouterMemoryRouter } from "@comet/admin";
 import type { Decorator } from "@storybook/react-vite";
 import type { Action, History, UnregisterCallback } from "history";
 import { type PropsWithChildren, type ReactNode, useEffect } from "react";
