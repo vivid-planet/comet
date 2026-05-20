@@ -1,11 +1,16 @@
-import { Button, type ButtonProps } from "@comet/admin";
 import { Add, ArrowRight, Favorite, Wrench } from "@comet/admin-icons";
 import { Box, Chip, Stack } from "@mui/material";
+import type { Meta } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 
-export default {
-    title: "@comet/admin/Button",
+import { Button, type ButtonProps } from "../Button";
+
+const config: Meta<typeof Button> = {
+    component: Button,
+    title: "components/common/buttons/Button",
 };
+
+export default config;
 
 type DefaultStoryArgs = {
     variant: ButtonProps["variant"];

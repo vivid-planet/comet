@@ -900,4 +900,218 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(1);
         });
     });
+
+    describe("listLevelMax option", () => {
+        const block = createTipTapRichTextBlock({ listLevelMax: 2 }, "TestListLevelMax");
+
+        it("should accept a flat list (depth 1)", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "bulletList",
+                            content: [
+                                { type: "listItem", content: [{ type: "paragraph", content: [{ type: "text", text: "Item 1" }] }] },
+                                { type: "listItem", content: [{ type: "paragraph", content: [{ type: "text", text: "Item 2" }] }] },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should accept a nested list within limit (depth 2)", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "bulletList",
+                            content: [
+                                {
+                                    type: "listItem",
+                                    content: [
+                                        { type: "paragraph", content: [{ type: "text", text: "Item 1" }] },
+                                        {
+                                            type: "bulletList",
+                                            content: [
+                                                {
+                                                    type: "listItem",
+                                                    content: [{ type: "paragraph", content: [{ type: "text", text: "Nested" }] }],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should reject a nested list exceeding limit (depth 3)", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "bulletList",
+                            content: [
+                                {
+                                    type: "listItem",
+                                    content: [
+                                        { type: "paragraph", content: [{ type: "text", text: "Item 1" }] },
+                                        {
+                                            type: "bulletList",
+                                            content: [
+                                                {
+                                                    type: "listItem",
+                                                    content: [
+                                                        { type: "paragraph", content: [{ type: "text", text: "Nested" }] },
+                                                        {
+                                                            type: "bulletList",
+                                                            content: [
+                                                                {
+                                                                    type: "listItem",
+                                                                    content: [
+                                                                        {
+                                                                            type: "paragraph",
+                                                                            content: [{ type: "text", text: "Too deep" }],
+                                                                        },
+                                                                    ],
+                                                                },
+                                                            ],
+                                                        },
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+            expect(errors[0].property).toBe("tipTapContent");
+        });
+
+        it("should reject ordered list exceeding limit", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "orderedList",
+                            content: [
+                                {
+                                    type: "listItem",
+                                    content: [
+                                        { type: "paragraph", content: [{ type: "text", text: "Item 1" }] },
+                                        {
+                                            type: "orderedList",
+                                            content: [
+                                                {
+                                                    type: "listItem",
+                                                    content: [
+                                                        { type: "paragraph", content: [{ type: "text", text: "Nested" }] },
+                                                        {
+                                                            type: "orderedList",
+                                                            content: [
+                                                                {
+                                                                    type: "listItem",
+                                                                    content: [
+                                                                        {
+                                                                            type: "paragraph",
+                                                                            content: [{ type: "text", text: "Too deep" }],
+                                                                        },
+                                                                    ],
+                                                                },
+                                                            ],
+                                                        },
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+
+        it("should accept content without lists regardless of listLevelMax", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        { type: "paragraph", content: [{ type: "text", text: "Just text" }] },
+                        { type: "heading", attrs: { level: 1 }, content: [{ type: "text", text: "Heading" }] },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("should work with listLevelMax of 1 (flat lists only)", async () => {
+            const flatOnlyBlock = createTipTapRichTextBlock({ listLevelMax: 1 }, "TestListLevelMaxFlat");
+
+            const validInput = flatOnlyBlock.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "bulletList",
+                            content: [{ type: "listItem", content: [{ type: "paragraph", content: [{ type: "text", text: "Item" }] }] }],
+                        },
+                    ],
+                },
+            });
+            const validErrors = await validate(validInput);
+            expect(validErrors).toHaveLength(0);
+
+            const invalidInput = flatOnlyBlock.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "bulletList",
+                            content: [
+                                {
+                                    type: "listItem",
+                                    content: [
+                                        { type: "paragraph", content: [{ type: "text", text: "Item" }] },
+                                        {
+                                            type: "bulletList",
+                                            content: [
+                                                {
+                                                    type: "listItem",
+                                                    content: [{ type: "paragraph", content: [{ type: "text", text: "Nested" }] }],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const invalidErrors = await validate(invalidInput);
+            expect(invalidErrors).toHaveLength(1);
+        });
+    });
 });

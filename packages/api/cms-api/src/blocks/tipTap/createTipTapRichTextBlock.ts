@@ -1,7 +1,7 @@
 import { type Extensions, getSchema } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
-import type { Schema } from "@tiptap/pm/model";
+import { Node as ProseMirrorNode, type Schema } from "@tiptap/pm/model";
 import StarterKit from "@tiptap/starter-kit";
 import { plainToInstance } from "class-transformer";
 import { registerDecorator, validate, type ValidationOptions } from "class-validator";
@@ -30,7 +30,6 @@ import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
-import { isValidTipTapContentSync } from "./tipTapValidation";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TipTapContent = Record<string, any>;
@@ -102,6 +101,12 @@ export interface CreateTipTapRichTextBlockOptions {
      */
     maxBlocks?: number;
     /**
+     * Limits the maximum nesting depth of list items.
+     * A value of 1 means only a flat list (no nesting), 2 allows one level of sub-lists, etc.
+     * Content exceeding this limit will be rejected during validation.
+     */
+    listLevelMax?: number;
+    /**
      * Enables best-effort block migration of DraftJS-based RichTextBlock data
      * (`{ draftContent: { blocks, entityMap } }`) into TipTap data.
      *
@@ -152,6 +157,30 @@ function buildExtensions(
     ];
 }
 
+// checks the raw JSON for mark types that don't exist in the schema.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function containsUnknownMarks(json: any, schema: Schema): boolean {
+    if (typeof json !== "object" || json === null) {
+        return false;
+    }
+
+    if (Array.isArray(json.marks)) {
+        for (const mark of json.marks) {
+            if (typeof mark?.type === "string" && !schema.marks[mark.type]) {
+                return true;
+            }
+        }
+    }
+    if (Array.isArray(json.content)) {
+        for (const child of json.content) {
+            if (containsUnknownMarks(child, schema)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTapContent {
     if (!content || typeof content !== "object") {
@@ -198,6 +227,28 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
+function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
+    if (!content || typeof content !== "object") {
+        return 0;
+    }
+
+    const isListNode = content.type === "bulletList" || content.type === "orderedList";
+    const depth = isListNode ? currentDepth + 1 : currentDepth;
+
+    if (!Array.isArray(content.content)) {
+        return depth;
+    }
+
+    let maxDepth = depth;
+    for (const child of content.content) {
+        const childDepth = getListNestingDepth(child, depth);
+        if (childDepth > maxDepth) {
+            maxDepth = childDepth;
+        }
+    }
+    return maxDepth;
+}
+
 function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined {
     if (node.type === "paragraph") {
         return "paragraph";
@@ -235,7 +286,12 @@ function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: T
 
 function IsTipTapContent(
     schema: Schema,
-    { inlineStyles, linkBlock, maxBlocks }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number },
+    {
+        inlineStyles,
+        linkBlock,
+        maxBlocks,
+        listLevelMax,
+    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; listLevelMax?: number },
     validationOptions?: ValidationOptions,
 ) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
@@ -247,31 +303,57 @@ function IsTipTapContent(
             options: { message: "tipTapContent must be valid TipTap JSON content", ...validationOptions },
             validator: {
                 async validate(value: unknown) {
-                    if (!isValidTipTapContentSync(value, schema, { maxBlocks })) {
+                    if (typeof value !== "object" || value === null) {
                         return false;
                     }
+                    try {
+                        // Check for unknown marks before parsing (ProseMirror silently drops them)
+                        if (containsUnknownMarks(value, schema)) {
+                            return false;
+                        }
+                        const node = ProseMirrorNode.fromJSON(schema, value);
+                        node.check();
 
-                    // Validate inline style appliesTo constraints
-                    if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
-                        return false;
-                    }
+                        // Validate inline style appliesTo constraints
+                        if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
+                            return false;
+                        }
 
-                    // Validate link mark data
-                    if (linkBlock) {
-                        const linkMarks = collectLinkMarks(value as TipTapContent);
-                        for (const { data } of linkMarks) {
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
-                                forbidNonWhitelisted: true,
-                                whitelist: true,
-                            });
-                            if (validationErrors.length > 0) {
+                        // Enforce maxBlocks limit on top-level content nodes
+                        if (maxBlocks !== undefined) {
+                            const content = (value as TipTapContent).content;
+                            if (Array.isArray(content) && content.length > maxBlocks) {
                                 return false;
                             }
                         }
-                    }
 
-                    return true;
+                        // Enforce listLevelMax limit on list nesting depth
+                        if (listLevelMax !== undefined) {
+                            const depth = getListNestingDepth(value as TipTapContent);
+                            if (depth > listLevelMax) {
+                                return false;
+                            }
+                        }
+
+                        // Validate link mark data
+                        if (linkBlock) {
+                            const linkMarks = collectLinkMarks(value as TipTapContent);
+                            for (const { data } of linkMarks) {
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
+                                    forbidNonWhitelisted: true,
+                                    whitelist: true,
+                                });
+                                if (validationErrors.length > 0) {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        return true;
+                    } catch {
+                        return false;
+                    }
                 },
             },
         });
@@ -310,6 +392,7 @@ export function createTipTapRichTextBlock(
         indexSearchText = true,
         link: LinkBlock,
         maxBlocks,
+        listLevelMax,
         migrateFromDraftJs = false,
     }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
@@ -373,7 +456,7 @@ export function createTipTapRichTextBlock(
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks })
+        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, listLevelMax })
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 
