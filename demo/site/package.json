@@ -44,7 +44,7 @@
         "cache-manager": "^5.7.6",
         "clsx": "^2.1.1",
         "filesize": "^10.1.6",
-        "ioredis": "^5.6.1",
+        "ioredis": "^5.10.1",
         "lru-cache": "^11.2.4",
         "mjml": "^4.18.0",
         "mjml-browser": "^4.18.0",
