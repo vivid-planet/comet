@@ -49,7 +49,7 @@
         },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["**/*.generated.ts"],
+            "ignore": ["**/*.generated.ts", ".storybook/public/mockServiceWorker.js"],
             "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-data-grid-premium", "jsdom"]
         },
         "packages/admin/admin-generator": {
