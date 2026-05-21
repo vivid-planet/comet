@@ -173,6 +173,37 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 - }
 ```
 
+### Move `requiredPermission` from `@EntityInfo` to `@RequiredPermission` decorator
+
+The `requiredPermission` option has been removed from the `@EntityInfo` decorator. Use the existing `@RequiredPermission` decorator directly on entity classes instead:
+
+```diff
++ import { RequiredPermission } from "@comet/cms-api";
++
+  @EntityInfo<Product>({
+      name: "title",
+      secondaryInformation: "manufacturer.name",
+      visible: { status: { $eq: ProductStatus.Published } },
+      fullText: "fullText",
+-     requiredPermission: "products",
+  })
++ @RequiredPermission("products")
+  @Entity()
+  export class Product { ... }
+```
+
+For entities using the SQL string form:
+
+```diff
+  @EntityInfo<DamFile>({
+      sql: `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`,
+-     requiredPermission: "dam",
+  })
++ @RequiredPermission("dam")
+  @Entity()
+  export class DamFile { ... }
+```
+
 ### Fix dev dependency imports in API source code
 
 `@comet/eslint-config` v9 adds the `import/no-extraneous-dependencies` rule to the NestJS ESLint config.

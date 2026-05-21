@@ -5,17 +5,26 @@ import { DiscoverService } from "../dependencies/discover.service";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo, EntityInfoSql } from "../entity-info/entity-info.decorator";
 import { resolveFieldToSql } from "../entity-info/resolve-field-to-sql";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
+import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../user-permissions/decorators/required-permission.decorator";
 
 function isEntityInfoSql(entityInfo: EntityInfo<AnyEntity>): entityInfo is EntityInfoSql {
     return typeof entityInfo === "object" && "sql" in entityInfo;
 }
 
-function requiredPermissionToSql(requiredPermission: string | string[] | undefined): string {
-    if (!requiredPermission) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getRequiredPermissionFromEntity(entity: any): string[] {
+    const metadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, entity) as RequiredPermissionMetadata | undefined;
+    if (!metadata) {
+        return [];
+    }
+    return metadata.requiredPermission.filter((p) => p !== "disablePermissionCheck") as string[];
+}
+
+function requiredPermissionToSql(requiredPermission: string[]): string {
+    if (requiredPermission.length === 0) {
         return "ARRAY[]::text[]";
     }
-    const permissions = Array.isArray(requiredPermission) ? requiredPermission : [requiredPermission];
-    return `ARRAY[${permissions.map((p) => `'${p}'`).join(", ")}]::text[]`;
+    return `ARRAY[${requiredPermission.map((p) => `'${p}'`).join(", ")}]::text[]`;
 }
 
 @Injectable()
@@ -39,7 +48,7 @@ export class FullTextSearchService {
 
             if (typeof entityInfo === "string" || isEntityInfoSql(entityInfo)) {
                 if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
-                    const requiredPermission = typeof entityInfo === "string" ? undefined : entityInfo.requiredPermission;
+                    const requiredPermission = getRequiredPermissionFromEntity(targetEntity.entity);
                     const requiredPermissionSql = requiredPermissionToSql(requiredPermission);
 
                     indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText",
@@ -58,7 +67,7 @@ export class FullTextSearchService {
             const primary = metadata.primaryKeys[0];
 
             const fullTextSql = resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
-            const requiredPermissionSql = requiredPermissionToSql(entityInfo.requiredPermission);
+            const requiredPermissionSql = requiredPermissionToSql(getRequiredPermissionFromEntity(targetEntity.entity));
 
             indexSelects.push(`SELECT
                             "${metadata.tableName}"."${primary}"::text "id",

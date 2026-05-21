@@ -4,7 +4,6 @@ export const ENTITY_INFO_METADATA_KEY = "data:entity-info";
 
 export type EntityInfoSql = {
     sql: string;
-    requiredPermission?: string | string[];
 };
 
 export type EntityInfo<Entity> =
@@ -13,7 +12,6 @@ export type EntityInfo<Entity> =
           secondaryInformation?: AutoPath<Entity, PopulatePath.ALL> | string;
           visible?: ObjectQuery<Entity>;
           fullText?: keyof Entity & string;
-          requiredPermission?: string | string[];
       }
     | EntityInfoSql
     | string;

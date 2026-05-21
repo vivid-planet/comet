@@ -6,6 +6,7 @@ import {
     EntityInfo,
     FileUpload,
     ImportTargetInterface,
+    RequiredPermission,
     RootBlock,
     RootBlockEntity,
     RootBlockType,
@@ -95,8 +96,8 @@ export class ProductPriceRange {
     secondaryInformation: "manufacturer.name",
     visible: { status: { $eq: ProductStatus.Published } },
     fullText: "fullText",
-    requiredPermission: "products",
 })
+@RequiredPermission("products")
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })

@@ -2,6 +2,7 @@ import { AnyEntity, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
+import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../user-permissions/decorators/required-permission.decorator";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo, EntityInfoSql } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
 import { resolveFieldToSql } from "./resolve-field-to-sql";
@@ -10,12 +11,20 @@ function isEntityInfoSql(entityInfo: EntityInfo<AnyEntity>): entityInfo is Entit
     return typeof entityInfo === "object" && "sql" in entityInfo;
 }
 
-function requiredPermissionToSql(requiredPermission: string | string[] | undefined): string {
-    if (!requiredPermission) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getRequiredPermissionFromEntity(entity: any): string[] {
+    const metadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, entity) as RequiredPermissionMetadata | undefined;
+    if (!metadata) {
+        return [];
+    }
+    return metadata.requiredPermission.filter((p) => p !== "disablePermissionCheck") as string[];
+}
+
+function requiredPermissionToSql(requiredPermission: string[]): string {
+    if (requiredPermission.length === 0) {
         return "ARRAY[]::text[]";
     }
-    const permissions = Array.isArray(requiredPermission) ? requiredPermission : [requiredPermission];
-    return `ARRAY[${permissions.map((p) => `'${p}'`).join(", ")}]::text[]`;
+    return `ARRAY[${requiredPermission.map((p) => `'${p}'`).join(", ")}]::text[]`;
 }
 
 @Injectable()
@@ -36,10 +45,11 @@ export class EntityInfoService {
                 continue;
             }
 
+            const requiredPermission = getRequiredPermissionFromEntity(targetEntity.entity);
+            const requiredPermissionSql = requiredPermissionToSql(requiredPermission);
+
             if (typeof entityInfo === "string" || isEntityInfoSql(entityInfo)) {
                 const sql = typeof entityInfo === "string" ? entityInfo : entityInfo.sql;
-                const requiredPermission = typeof entityInfo === "string" ? undefined : entityInfo.requiredPermission;
-                const requiredPermissionSql = requiredPermissionToSql(requiredPermission);
 
                 indexSelects.push(
                     `SELECT sub."name", sub."secondaryInformation", sub."visible", sub."id", sub."entityName", ${requiredPermissionSql} AS "requiredPermission" FROM (${sql}) sub`,
@@ -68,8 +78,6 @@ export class EntityInfoService {
                     }
                     visibleSql = sqlWhereMatch[1];
                 }
-
-                const requiredPermissionSql = requiredPermissionToSql(entityInfo.requiredPermission);
 
                 const select = `SELECT
                                 ${nameSql} "name",
