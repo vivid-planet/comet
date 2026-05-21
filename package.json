@@ -38,7 +38,7 @@
         "lint:ci": "pnpm lint:root && pnpm --recursive run lint:ci && pnpm lint:knip",
         "lint:fix": "pnpm --recursive run lint:fix && pnpm lint:fix:root",
         "lint:fix:root": "pnpm exec prettier --write './!(demo|docs|packages|storybook)/**/*.{ts,js,json,md,yml,yaml}'",
-        "lint:root": "pnpm exec prettier --check './!(demo|docs|packages|storybook)/**/*.{ts,js,json,md,yml,yaml}' && pnpm cspell .changeset/*.md",
+        "lint:root": "pnpm exec prettier --check './!(demo|docs|packages|storybook)/**/*.{ts,js,json,md,yml,yaml}'",
         "lint:eslint": "pnpm --recursive run lint:eslint",
         "lint:tsc": "pnpm --recursive run lint:tsc",
         "lint:knip": "pnpm --recursive run api-generator && pnpm --recursive run gql:types && pnpm --recursive run build-server && knip --exports --files --dependencies --tags=-knipignore --no-gitignore --exclude enumMembers",
@@ -64,8 +64,7 @@
         "@comet/dev-oidc-provider": "^1.2.1",
         "@comet/dev-process-manager": "^3.1.0",
         "@formatjs/cli": "^6.7.2",
-        "@types/node": "^24.12.2",
-        "cspell": "^9.0.0",
+        "@types/node": "^24.12.4",
         "dotenv-cli": "^9.0.0",
         "husky": "^9.1.7",
         "knip": "^5.61.3",
@@ -76,10 +75,10 @@
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3"
     },
-    "packageManager": "pnpm@10.33.0",
+    "packageManager": "pnpm@10.33.4",
     "engines": {
         "node": "24",
-        "pnpm": "10.33.0"
+        "pnpm": "10.33.4"
     },
     "pnpm": {
         "peerDependencyRules": {

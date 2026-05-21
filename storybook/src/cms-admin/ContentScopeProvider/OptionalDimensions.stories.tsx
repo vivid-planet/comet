@@ -60,4 +60,4 @@ export const OptionalDimensions = function () {
     );
 };
 
-OptionalDimensions.name = "Optional dimensions";
+OptionalDimensions.storyName = "Optional dimensions";

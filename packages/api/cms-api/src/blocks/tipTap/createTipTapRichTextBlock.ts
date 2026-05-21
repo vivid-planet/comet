@@ -26,6 +26,7 @@ import type { SearchText, WeightedSearchText } from "../search/get-search-text";
 import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
 import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
+import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 
@@ -65,6 +66,15 @@ interface TipTapBlockStyle {
     appliesTo?: TipTapBlockType[];
 }
 
+interface TipTapInlineStyle {
+    name: string;
+    /**
+     * Limits the inline style to the provided block types.
+     * If none is specified, the inline style is allowed for all block types.
+     */
+    appliesTo?: TipTapBlockType[];
+}
+
 const defaultSupports: TipTapSupports[] = [
     "bold",
     "italic",
@@ -81,12 +91,30 @@ const defaultSupports: TipTapSupports[] = [
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
+    inlineStyles?: TipTapInlineStyle[];
     indexSearchText?: boolean;
     link?: Block;
+    /**
+     * Limits the maximum number of top-level blocks (paragraphs, headings, lists)
+     * that can be stored. Content exceeding this limit will be rejected during validation.
+     */
+    maxBlocks?: number;
+    /**
+     * Limits the maximum nesting depth of list items.
+     * A value of 1 means only a flat list (no nesting), 2 allows one level of sub-lists, etc.
+     * Content exceeding this limit will be rejected during validation.
+     */
+    listLevelMax?: number;
 }
 
-function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockStyle[], hasLink: boolean): Extensions {
+function buildExtensions(
+    supports: TipTapSupports[],
+    blockStyles: TipTapBlockStyle[],
+    inlineStyles: TipTapInlineStyle[],
+    hasLink: boolean,
+): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
+    const hasInlineStyles = inlineStyles.length > 0;
     return [
         StarterKit.configure({
             bold: supports.includes("bold") ? {} : false,
@@ -103,6 +131,7 @@ function buildExtensions(supports: TipTapSupports[], blockStyles: TipTapBlockSty
         }),
         ...(hasBlockStyles ? [BlockStyleParagraph] : []),
         ...(hasBlockStyles && supports.includes("heading") ? [BlockStyleHeading] : []),
+        ...(hasInlineStyles ? [InlineStyleMark] : []),
         ...(supports.includes("sup") ? [Superscript] : []),
         ...(supports.includes("sub") ? [Subscript] : []),
         ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
@@ -182,7 +211,73 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: ValidationOptions) {
+function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
+    if (!content || typeof content !== "object") {
+        return 0;
+    }
+
+    const isListNode = content.type === "bulletList" || content.type === "orderedList";
+    const depth = isListNode ? currentDepth + 1 : currentDepth;
+
+    if (!Array.isArray(content.content)) {
+        return depth;
+    }
+
+    let maxDepth = depth;
+    for (const child of content.content) {
+        const childDepth = getListNestingDepth(child, depth);
+        if (childDepth > maxDepth) {
+            maxDepth = childDepth;
+        }
+    }
+    return maxDepth;
+}
+
+function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined {
+    if (node.type === "paragraph") {
+        return "paragraph";
+    }
+    if (node.type === "heading" && node.attrs?.level) {
+        return `heading-${node.attrs.level}` as TipTapBlockType;
+    }
+    return undefined;
+}
+
+function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: TipTapInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
+    const currentBlockType = getBlockTypeFromNode(content) ?? parentBlockType;
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            // Check text nodes for inline style marks
+            if (child.type === "text" && Array.isArray(child.marks)) {
+                for (const mark of child.marks) {
+                    if (mark.type === "inlineStyle" && mark.attrs?.type) {
+                        const styleConfig = inlineStyles.find((s) => s.name === mark.attrs.type);
+                        if (styleConfig?.appliesTo && currentBlockType && !styleConfig.appliesTo.includes(currentBlockType)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            if (containsInvalidInlineStyleMarks(child, inlineStyles, currentBlockType)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+function IsTipTapContent(
+    schema: Schema,
+    {
+        inlineStyles,
+        linkBlock,
+        maxBlocks,
+        listLevelMax,
+    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; listLevelMax?: number },
+    validationOptions?: ValidationOptions,
+) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
@@ -202,6 +297,27 @@ function IsTipTapContent(schema: Schema, linkBlock?: Block, validationOptions?: 
                         }
                         const node = ProseMirrorNode.fromJSON(schema, value);
                         node.check();
+
+                        // Validate inline style appliesTo constraints
+                        if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
+                            return false;
+                        }
+
+                        // Enforce maxBlocks limit on top-level content nodes
+                        if (maxBlocks !== undefined) {
+                            const content = (value as TipTapContent).content;
+                            if (Array.isArray(content) && content.length > maxBlocks) {
+                                return false;
+                            }
+                        }
+
+                        // Enforce listLevelMax limit on list nesting depth
+                        if (listLevelMax !== undefined) {
+                            const depth = getListNestingDepth(value as TipTapContent);
+                            if (depth > listLevelMax) {
+                                return false;
+                            }
+                        }
 
                         // Validate link mark data
                         if (linkBlock) {
@@ -253,14 +369,22 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
  * @experimental
  */
 export function createTipTapRichTextBlock(
-    { supports = defaultSupports, blockStyles = [], indexSearchText = true, link: LinkBlock }: CreateTipTapRichTextBlockOptions = {},
+    {
+        supports = defaultSupports,
+        blockStyles = [],
+        inlineStyles = [],
+        indexSearchText = true,
+        link: LinkBlock,
+        maxBlocks,
+        listLevelMax,
+    }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, blockStyles, hasLink);
+    const extensions = buildExtensions(supports, blockStyles, inlineStyles, hasLink);
     const schema = getSchema(extensions);
 
     @BlockDataMigrationVersion(migrate.version)
@@ -296,7 +420,7 @@ export function createTipTapRichTextBlock(
     }
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, LinkBlock)
+        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, listLevelMax })
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 

@@ -76,7 +76,7 @@ const config = [
             formatjs: formatJs,
         },
         rules: {
-            "formatjs/enforce-default-message": "error",
+            "formatjs/enforce-default-message": ["error", "literal"],
             "formatjs/enforce-placeholders": "error",
         },
     },
@@ -84,6 +84,24 @@ const config = [
         files: ["**/*.ts", "**/*.tsx"],
         rules: {
             "@calm/react-intl/missing-formatted-message": ["error", { enforceLabels: true }],
+        },
+    },
+    {
+        files: ["**/*.ts", "**/*.tsx"],
+        ignores: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+        rules: {
+            "react/jsx-no-literals": [
+                "error",
+                {
+                    allowedStrings: ["…", "€", "$", "?", "–", "—", "/", "(", ")", "%"],
+                },
+            ],
+            "@typescript-eslint/consistent-type-exports": [
+                "error",
+                {
+                    fixMixedExportsWithInlineTypeSpecifier: true,
+                },
+            ],
         },
     },
     {
