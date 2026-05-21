@@ -1,9 +1,13 @@
+import { MikroORM } from "@mikro-orm/postgresql";
 import { CanActivate, ExecutionContext, Inject, Injectable, Logger } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
+import { CRUD_GENERATOR_METADATA_KEY, CrudGeneratorOptions } from "../../common/decorators/crud-generator.decorator";
 import { getRequestFromExecutionContext } from "../../common/decorators/utils";
+import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../../entity-info/entity-info.decorator";
+import { isEntityInfoSql } from "../../entity-info/entity-info.utils";
 import { ContentScopeService } from "../content-scope.service";
 import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
@@ -20,12 +24,13 @@ export class UserPermissionsGuard implements CanActivate {
         private readonly contentScopeService: ContentScopeService,
         @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
         @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptions,
+        private readonly orm: MikroORM,
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, REQUIRED_PERMISSION_METADATA_KEY);
+        let requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, REQUIRED_PERMISSION_METADATA_KEY);
         const skipScopeCheck = requiredPermission?.options?.skipScopeCheck ?? false;
 
         let requiredContentScopes: ContentScope[][] = [];
@@ -57,7 +62,12 @@ export class UserPermissionsGuard implements CanActivate {
             return true;
         }
         if (!requiredPermission) {
-            throw new Error(`RequiredPermission decorator is missing in ${location}`);
+            const entityPermission = this.getRequiredPermissionFromResolverEntity(context);
+            if (entityPermission) {
+                requiredPermission = entityPermission;
+            } else {
+                throw new Error(`RequiredPermission decorator is missing in ${location}`);
+            }
         }
         const requiredPermissions = requiredPermission.requiredPermission;
         if (requiredPermissions.includes(DisablePermissionCheck)) {
@@ -122,5 +132,61 @@ export class UserPermissionsGuard implements CanActivate {
             return parentType !== "Query" && parentType !== "Mutation";
         }
         return false;
+    }
+
+    private getRequiredPermissionFromResolverEntity(context: ExecutionContext): RequiredPermissionMetadata | undefined {
+        const resolverClass = context.getClass();
+        // NestJS @Resolver(() => Entity) stores the entity name via 'graphql:resolver_type' metadata
+        const resolverTypeName = Reflect.getMetadata("graphql:resolver_type", resolverClass) as string | undefined;
+        if (!resolverTypeName) {
+            return undefined;
+        }
+
+        const entityClass = this.findEntityClassByName(resolverTypeName);
+        if (!entityClass) {
+            return undefined;
+        }
+
+        return this.getRequiredPermissionFromEntity(entityClass);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private findEntityClassByName(name: string): (new (...args: any[]) => any) | undefined {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const entities = this.orm.config.get("entities") as Array<new (...args: any[]) => any>;
+        return entities.find((entity) => entity.name === name);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private getRequiredPermissionFromEntity(entityClass: new (...args: any[]) => any): RequiredPermissionMetadata | undefined {
+        // Check @CrudGenerator metadata first
+        const crudGeneratorOptions = Reflect.getMetadata(CRUD_GENERATOR_METADATA_KEY, entityClass) as CrudGeneratorOptions | undefined;
+        if (crudGeneratorOptions?.requiredPermission) {
+            const permission = crudGeneratorOptions.requiredPermission;
+            return {
+                requiredPermission: Array.isArray(permission) ? permission : [permission],
+                options: undefined,
+            };
+        }
+
+        // Check @EntityInfo metadata
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const entityInfo = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, entityClass) as EntityInfo<any> | undefined;
+        if (entityInfo && typeof entityInfo === "object" && !isEntityInfoSql(entityInfo) && entityInfo.requiredPermission) {
+            const permission = entityInfo.requiredPermission;
+            return {
+                requiredPermission: Array.isArray(permission) ? permission : [permission],
+                options: undefined,
+            };
+        }
+        if (entityInfo && isEntityInfoSql(entityInfo) && entityInfo.requiredPermission) {
+            const permission = entityInfo.requiredPermission;
+            return {
+                requiredPermission: Array.isArray(permission) ? permission : [permission],
+                options: undefined,
+            };
+        }
+
+        return undefined;
     }
 }

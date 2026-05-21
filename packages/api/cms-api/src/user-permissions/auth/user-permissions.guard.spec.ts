@@ -5,6 +5,8 @@ import { ModuleRef, Reflector } from "@nestjs/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
+import { CrudGenerator } from "../../common/decorators/crud-generator.decorator";
+import { EntityInfo } from "../../entity-info/entity-info.decorator";
 import { AbstractAccessControlService } from "../access-control.service";
 import { ContentScopeService } from "../content-scope.service";
 import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "../decorators/affected-entity.decorator";
@@ -24,6 +26,20 @@ const permissions = {
 
 @Entity()
 class TestEntity extends BaseEntity {
+    @PrimaryKey()
+    id: number;
+}
+
+@CrudGenerator({ requiredPermission: "p1" as Permission })
+@Entity()
+class TestEntityWithCrudGenerator extends BaseEntity {
+    @PrimaryKey()
+    id: number;
+}
+
+@EntityInfo<TestEntityWithEntityInfo>({ name: "id", requiredPermission: "p2" as Permission })
+@Entity()
+class TestEntityWithEntityInfo extends BaseEntity {
     @PrimaryKey()
     id: number;
 }
@@ -92,7 +108,7 @@ describe("UserPermissionsGuard", () => {
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
-                entities: [TestEntity],
+                entities: [TestEntity, TestEntityWithCrudGenerator, TestEntityWithEntityInfo],
                 connect: false,
                 allowGlobalContext: true,
             }),
@@ -100,7 +116,7 @@ describe("UserPermissionsGuard", () => {
         moduleRef = createMock<ModuleRef>();
         contentScopeService = new ContentScopeService(reflector, orm, moduleRef);
         accessControlService = new AccessControlService();
-        guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService, {});
+        guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService, {}, orm);
     });
 
     it("allows bypassing", async () => {
@@ -736,5 +752,100 @@ describe("UserPermissionsGuard", () => {
                 }),
             ),
         ).toBe(false);
+    });
+
+    describe("entity permission fallback", () => {
+        /* eslint-disable @typescript-eslint/no-explicit-any */
+        it("falls back to @CrudGenerator requiredPermission when no @RequiredPermission is set", async () => {
+            class TestResolver {}
+            Reflect.defineMetadata("graphql:resolver_type", "TestEntityWithCrudGenerator", TestResolver);
+
+            mockAnnotations({});
+            const context = createMock<ExecutionContext>({
+                getClass: () => TestResolver as any,
+                getHandler: () => (() => {}) as any,
+                switchToHttp: () => ({
+                    getRequest: () => ({
+                        user: {
+                            id: "1",
+                            name: "Admin",
+                            email: "demo@comet-dxp.com",
+                            permissions: [{ permission: permissions.p1, contentScopes: [{ a: "1" }] }],
+                        } satisfies CurrentUser,
+                        params: { scope: { a: "1" } },
+                    }),
+                }),
+            });
+            expect(await guard.canActivate(context)).toBe(true);
+        });
+
+        it("falls back to @EntityInfo requiredPermission when no @RequiredPermission is set", async () => {
+            class TestResolver {}
+            Reflect.defineMetadata("graphql:resolver_type", "TestEntityWithEntityInfo", TestResolver);
+
+            mockAnnotations({});
+            const context = createMock<ExecutionContext>({
+                getClass: () => TestResolver as any,
+                getHandler: () => (() => {}) as any,
+                switchToHttp: () => ({
+                    getRequest: () => ({
+                        user: {
+                            id: "1",
+                            name: "Admin",
+                            email: "demo@comet-dxp.com",
+                            permissions: [{ permission: permissions.p2, contentScopes: [{ a: "1" }] }],
+                        } satisfies CurrentUser,
+                        params: { scope: { a: "1" } },
+                    }),
+                }),
+            });
+            expect(await guard.canActivate(context)).toBe(true);
+        });
+
+        it("denies access when user lacks the entity permission from fallback", async () => {
+            class TestResolver {}
+            Reflect.defineMetadata("graphql:resolver_type", "TestEntityWithCrudGenerator", TestResolver);
+
+            mockAnnotations({});
+            const context = createMock<ExecutionContext>({
+                getClass: () => TestResolver as any,
+                getHandler: () => (() => {}) as any,
+                switchToHttp: () => ({
+                    getRequest: () => ({
+                        user: {
+                            id: "1",
+                            name: "Admin",
+                            email: "demo@comet-dxp.com",
+                            permissions: [{ permission: permissions.p2, contentScopes: [{ a: "1" }] }],
+                        } satisfies CurrentUser,
+                        params: { scope: { a: "1" } },
+                    }),
+                }),
+            });
+            expect(await guard.canActivate(context)).toBe(false);
+        });
+
+        it("throws error when no @RequiredPermission and entity has no requiredPermission", async () => {
+            class TestResolver {}
+            Reflect.defineMetadata("graphql:resolver_type", "TestEntity", TestResolver);
+
+            mockAnnotations({});
+            const context = createMock<ExecutionContext>({
+                getClass: () => TestResolver as any,
+                getHandler: () => (() => {}) as any,
+                switchToHttp: () => ({
+                    getRequest: () => ({
+                        user: {
+                            id: "1",
+                            name: "Admin",
+                            email: "demo@comet-dxp.com",
+                            permissions: [{ permission: permissions.p1, contentScopes: [] }],
+                        } satisfies CurrentUser,
+                        params: { scope: { a: "1" } },
+                    }),
+                }),
+            });
+            await expect(guard.canActivate(context)).rejects.toThrow("RequiredPermission decorator is missing");
+        });
     });
 });
