@@ -67,7 +67,7 @@
         "@types/node": "^24.12.4",
         "dotenv-cli": "^9.0.0",
         "husky": "^9.1.7",
-        "knip": "^5.61.3",
+        "knip": "^5.88.1",
         "lint-staged": "^16.2.7",
         "npm-run-all2": "^8.0.4",
         "open-cli": "^8.0.0",
