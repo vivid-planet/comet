@@ -29,14 +29,14 @@ export const ActionLogCompare: FunctionComponent<ActionLogCompareProps> = ({
     afterVersion,
     beforeVersion,
     error,
-    filterKeys: _filterKeys,
+    filterKeys: passedFilterKeys,
     id,
     loading,
     name,
     onClickShowVersionHistory,
 }) => {
     const [onlyShowChanges, setOnlyShowChanges] = useStoredState<boolean>("actionLogCompare.onlyShowChanges", false);
-    const filterKeys = _filterKeys != null ? [..._filterKeys, ...defaultFilterOutKeys] : defaultFilterOutKeys;
+    const filterKeys = passedFilterKeys != null ? [...passedFilterKeys, ...defaultFilterOutKeys] : defaultFilterOutKeys;
 
     const theme = useTheme();
     const smallBreakpoint = useMediaQuery(theme.breakpoints.down("md"));
