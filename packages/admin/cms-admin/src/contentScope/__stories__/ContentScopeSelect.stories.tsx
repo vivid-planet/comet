@@ -1,34 +1,37 @@
 import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
 import { Domain, Language } from "@comet/admin-icons";
-import { ContentScopeSelect, findTextMatches, MarkedMatches } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
 
-export default {
-    title: "@comet/cms-admin/Content Scope Select",
+import { findTextMatches, MarkedMatches } from "../../common/MarkedMatches";
+import { ContentScopeSelect } from "../ContentScopeSelect";
+import type { ContentScope } from "../Provider";
 
+const config: Meta<typeof ContentScopeSelect> = {
+    component: ContentScopeSelect,
+    title: "contentScope/ContentScopeSelect",
     decorators: [
-        (story) => (
+        (Story) => (
             <AppHeader position="relative" headerHeight={60}>
                 <AppHeaderMenuButton />
                 <CometLogo />
                 <FillSpace />
-                {story()}
+                <Story />
             </AppHeader>
         ),
     ],
-} as Meta<typeof ContentScopeSelect>;
+};
+
+export default config;
 
 export const Basic = {
     render: () => {
-        const [value, setValue] = useState({ domain: "main" });
+        const [value, setValue] = useState<ContentScope>({ domain: "main" });
         return (
             <ContentScopeSelect
                 value={value}
-                onChange={(value: { domain: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     { scope: { domain: "main" }, label: { domain: "Main" } },
                     { scope: { domain: "secondary" }, label: { domain: "Secondary" } },
@@ -41,13 +44,11 @@ export const Basic = {
 
 export const MultipleDimensions = {
     render: () => {
-        const [value, setValue] = useState({ domain: "main", language: "en" });
+        const [value, setValue] = useState<ContentScope>({ domain: "main", language: "en" });
         return (
             <ContentScopeSelect
                 value={value}
-                onChange={(value: { domain: string; language: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
                     { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
@@ -62,13 +63,11 @@ export const MultipleDimensions = {
 
 export const Searchable = {
     render: () => {
-        const [value, setValue] = useState({ domain: "main", language: "en" });
+        const [value, setValue] = useState<ContentScope>({ domain: "main", language: "en" });
         return (
             <ContentScopeSelect
                 value={value}
-                onChange={(value: { domain: string; language: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
                     { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
@@ -83,13 +82,11 @@ export const Searchable = {
 
 export const Groups = {
     render: () => {
-        const [value, setValue] = useState({ domain: "main", language: "en" });
+        const [value, setValue] = useState<ContentScope>({ domain: "main", language: "en" });
         return (
             <ContentScopeSelect
                 value={value}
-                onChange={(value: { domain: string; language: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
                     { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
@@ -105,13 +102,11 @@ export const Groups = {
 
 export const CustomIcon = {
     render: () => {
-        const [value, setValue] = useState({ domain: "main", language: "en" });
+        const [value, setValue] = useState<ContentScope>({ domain: "main", language: "en" });
         return (
             <ContentScopeSelect
                 value={value}
-                onChange={(value: { domain: string; language: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
                     { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
@@ -127,13 +122,11 @@ export const CustomIcon = {
 
 export const CustomRenderOption = {
     render: () => {
-        const [value, setValue] = useState({ domain: "main", language: "en" });
+        const [value, setValue] = useState<ContentScope>({ domain: "main", language: "en" });
         return (
             <ContentScopeSelect
                 value={value}
-                onChange={(value: { domain: string; language: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
                     { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
@@ -162,14 +155,12 @@ export const CustomRenderOption = {
 
 export const CustomRenderOptionWithSearchHighlighting = {
     render: () => {
-        const [value, setValue] = useState({ domain: "main", language: "en" });
+        const [value, setValue] = useState<ContentScope>({ domain: "main", language: "en" });
         return (
             <ContentScopeSelect
                 value={value}
                 searchable
-                onChange={(value: { domain: string; language: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     {
                         scope: { domain: "main", language: "en" },
@@ -201,13 +192,11 @@ export const CustomRenderOptionWithSearchHighlighting = {
 
 export const CustomRenderSelectedOption = {
     render: () => {
-        const [value, setValue] = useState({ domain: "main", language: "en" });
+        const [value, setValue] = useState<ContentScope>({ domain: "main", language: "en" });
         return (
             <ContentScopeSelect
                 value={value}
-                onChange={(value: { domain: string; language: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
                     { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
@@ -227,13 +216,11 @@ export const CustomRenderSelectedOption = {
 
 export const ThreeDimensions = {
     render: () => {
-        const [value, setValue] = useState({ company: "a-inc", country: "at", language: "de" });
+        const [value, setValue] = useState<ContentScope>({ company: "a-inc", country: "at", language: "de" });
         return (
             <ContentScopeSelect
                 value={value}
-                onChange={(value: { company: string; country: string; language: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     {
                         scope: { company: "a-inc", country: "at", language: "de" },
@@ -274,13 +261,11 @@ export const ThreeDimensions = {
 
 export const GroupingWithOptionalScopeParts = {
     render: () => {
-        const [value, setValue] = useState({ country: "at" });
+        const [value, setValue] = useState<ContentScope>({ country: "at" });
         return (
             <ContentScopeSelect
                 value={value}
-                onChange={(value: { country: string; company?: string }) => {
-                    setValue(value);
-                }}
+                onChange={setValue}
                 options={[
                     {
                         scope: { country: "at" },

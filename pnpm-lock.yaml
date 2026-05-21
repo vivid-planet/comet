@@ -1725,6 +1725,9 @@ importers:
       eslint:
         specifier: ^9.39.4
         version: 9.39.4(jiti@2.6.1)
+      eslint-plugin-storybook:
+        specifier: ^10.3.5
+        version: 10.3.5(eslint@9.39.4(jiti@2.6.1))(storybook@10.3.5(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.9.3)
       final-form:
         specifier: ^4.20.10
         version: 4.20.10
@@ -1737,6 +1740,9 @@ importers:
       jsdom:
         specifier: ^28.1.0
         version: 28.1.0(@noble/hashes@1.8.0)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@24.12.4)(typescript@5.9.3)
       npm-run-all2:
         specifier: ^8.0.4
         version: 8.0.4
