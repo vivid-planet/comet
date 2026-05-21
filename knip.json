@@ -35,8 +35,7 @@
         },
         "packages/admin/admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-data-grid-premium", "@mui/x-date-pickers-pro", "msw"],
-            "ignore": [".storybook/middleware.js"]
+            "ignoreDependencies": ["@mui/x-data-grid-premium", "msw"]
         },
         "packages/admin/admin-color-picker": {
             "project": ["./src/**/*.{ts,tsx}"]
@@ -49,11 +48,9 @@
         },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["**/*.generated.ts", ".storybook/public/mockServiceWorker.js"],
-            "ignoreDependencies": ["@mui/x-data-grid-pro", "jsdom"]
+            "ignore": ["**/*.generated.ts", ".storybook/public/mockServiceWorker.js"]
         },
         "packages/admin/admin-generator": {
-            "entry": ["./src/index.ts", "./src/adminGenerator.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/brevo-admin": {
@@ -62,8 +59,7 @@
         },
         "packages/api/cms-api": {
             "entry": ["./src/**/migrations/*.ts"],
-            "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@sentry/node"]
+            "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/api/api-generator": {
             "project": ["./src/**/*.{ts,tsx}"]
@@ -81,8 +77,7 @@
         },
         "packages/mail-react": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["./src/**/*.generated.ts"],
-            "ignoreDependencies": ["storybook"]
+            "ignore": ["./src/**/*.generated.ts"]
         },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
@@ -105,18 +100,10 @@
             ],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@as-integrations/express5"],
-            "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
+            "ignore": ["./src/**/generated/**"]
         },
         "demo/site": {
-            "entry": [
-                "./src/app/**",
-                "./cache-handler.ts",
-                "./server.ts",
-                "./opentelemetry-metrics.ts",
-                "./src/proxy.ts",
-                "tracing.dev.ts",
-                "tracing.production.ts"
-            ],
+            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "tracing.dev.ts", "tracing.production.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]
