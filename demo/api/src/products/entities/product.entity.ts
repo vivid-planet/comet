@@ -16,6 +16,8 @@ import {
     Collection,
     Entity,
     Enum,
+    FullTextType,
+    Index,
     ManyToMany,
     ManyToOne,
     OneToMany,
@@ -89,7 +91,12 @@ export class ProductPriceRange {
     max: number;
 }
 
-@EntityInfo<Product>({ name: "title", secondaryInformation: "manufacturer.name", visible: { status: { $eq: ProductStatus.Published } } })
+@EntityInfo<Product>({
+    name: "title",
+    secondaryInformation: "manufacturer.name",
+    visible: { status: { $eq: ProductStatus.Published } },
+    fullText: "fullText",
+})
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
@@ -244,4 +251,17 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @ManyToMany(() => DamFile)
     @Field(() => [DamFile])
     relatedImages = new Collection<DamFile>(this);
+
+    @Index({ type: "fulltext" })
+    @Property<Product>({
+        nullable: true,
+        type: new FullTextType(),
+        onUpdate: (page) => {
+            return {
+                A: page.title,
+                D: page.description,
+            };
+        },
+    })
+    fullText?: string;
 }

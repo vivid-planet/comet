@@ -51,6 +51,7 @@ enum Permission {
   warnings
   sitePreview
   blockPreview
+  fullTextSearch
 }
 
 type ContentScopeWithLabel {
@@ -85,6 +86,8 @@ type CurrentUser {
 }
 
 type EntityInfo {
+  id: String!
+  entityName: String!
   name: String!
   secondaryInformation: String
 }

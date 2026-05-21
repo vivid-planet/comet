@@ -79,6 +79,7 @@ const config = [
             ...packageJson.configs.recommended.rules,
             "package-json/require-type": "off",
             "package-json/require-description": "off",
+            "package-json/require-attribution": "off",
         },
     },
     {

@@ -6,7 +6,7 @@ type Story = StoryObj<typeof DeleteButton>;
 
 const config: Meta<typeof DeleteButton> = {
     component: DeleteButton,
-    title: "common/Buttons/DeleteButton",
+    title: "components/common/buttons/delete/DeleteButton",
 };
 
 export default config;

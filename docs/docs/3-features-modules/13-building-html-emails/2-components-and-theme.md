@@ -1,5 +1,5 @@
 ---
-title: Components & Theme
+title: Theme & Base Components
 ---
 
 ## Setting Up a Theme
@@ -121,7 +121,7 @@ export const MyStory: StoryObj = {
 
 ### Outside Storybook
 
-When rendering emails outside Storybook, wrap your content in `MjmlMailRoot` yourself and use `renderMailHtml` to convert the React tree to HTML — see [Rendering](./3-rendering.md) for full details.
+When rendering emails outside Storybook, wrap your content in `MjmlMailRoot` yourself and use `renderMailHtml` to convert the React tree to HTML — see [Rendering](./4-rendering.md) for full details.
 
 ```tsx title="src/emails/WelcomeEmail.tsx"
 import { MjmlColumn, MjmlMailRoot, MjmlSection, MjmlText, createTheme } from "@comet/mail-react";
@@ -145,7 +145,7 @@ function WelcomeEmail() {
 
 When no `theme` prop is provided, `MjmlMailRoot` uses the default theme (equivalent to `createTheme()` with no arguments).
 
-`MjmlMailRoot` also accepts an optional `config` prop that can be used to expose, e.g., environment-specific values to descendants via `useConfig`. See [Configuration](./4-customization.md#configuration).
+`MjmlMailRoot` also accepts an optional `config` prop that can be used to expose, e.g., environment-specific values to descendants via `useConfig`. See [Configuration](./5-customization.md#configuration).
 
 ### What MjmlMailRoot Configures
 
