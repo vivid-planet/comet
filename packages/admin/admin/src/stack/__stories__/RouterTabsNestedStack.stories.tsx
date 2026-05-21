@@ -1,10 +1,7 @@
 import { Button, RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 
-import { storyRouterDecorator } from "../../../.storybook/decorators/storyRouter.decorator";
-
 export default {
     title: "components/stack/RouterTabsNestedStack",
-    decorators: [storyRouterDecorator()],
 };
 
 export const RouterTabsWithNestedStack = {

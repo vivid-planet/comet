@@ -35,8 +35,8 @@
         },
         "packages/admin/admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-data-grid-premium", "@mui/x-date-pickers-pro", "msw"],
-            "ignore": [".storybook/middleware.js"]
+            "ignoreDependencies": ["@mui/x-data-grid-pro", "@mui/x-data-grid-premium", "@mui/x-date-pickers-pro"],
+            "ignore": [".storybook/middleware.js", ".storybook/public/mockServiceWorker.js"]
         },
         "packages/admin/admin-color-picker": {
             "project": ["./src/**/*.{ts,tsx}"]

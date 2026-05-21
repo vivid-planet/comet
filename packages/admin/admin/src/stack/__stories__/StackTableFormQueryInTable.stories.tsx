@@ -23,24 +23,15 @@ import { Edit } from "@comet/admin-icons";
 import { Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
 import { useContext } from "react";
 
-import { apolloRestStoryDecorator } from "../../../.storybook/decorators/apolloRestStory.decorator";
-import { storyRouterDecorator } from "../../../.storybook/decorators/storyRouter.decorator";
-
-const gqlRest = gql;
-
-const query = gqlRest`
-query users(
-    $query: String
-) {
-    users(
-        query: $query
-    ) @rest(type: "User", path: "users?q={args.query}") {
-        id
-        name
-        username
-        email
+const query = gql`
+    query users($query: String) {
+        users(query: $query) {
+            id
+            name
+            username
+            email
+        }
     }
-}
 `;
 
 interface IQueryData {
@@ -123,17 +114,13 @@ interface IExampleFormProps {
     id: number;
 }
 function ExampleForm(props: IExampleFormProps) {
-    const detailQuery = gqlRest`
-    query user(
-        $id: Int
-    ) {
-        user(
-            id: $id
-        ) @rest(type: "User", path: "users/{args.id}") {
-            id
-            name
+    const detailQuery = gql`
+        query user($id: Int) {
+            user(id: $id) {
+                id
+                name
+            }
         }
-    }
     `;
 
     const { loading, data, error } = useQuery(detailQuery, { variables: { id: props.id } });
@@ -175,7 +162,6 @@ function ExampleForm(props: IExampleFormProps) {
 
 export default {
     title: "components/stack/StackTableFormQueryInTable",
-    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
 
 export const StackTableFormQueryInTable = {

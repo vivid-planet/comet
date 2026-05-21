@@ -2,8 +2,6 @@ import { Stack, StackBackButton, StackBreadcrumbs, StackPage, StackSwitch, Stack
 import { useContext } from "react";
 import { Redirect, Route, Switch } from "react-router";
 
-import { storyRouterDecorator } from "../../../.storybook/decorators/storyRouter.decorator";
-
 function Page1() {
     const switchApi = useContext(StackSwitchApiContext);
     return (
@@ -36,7 +34,6 @@ function Story() {
 
 export default {
     title: "components/stack/StackBackButton",
-    decorators: [storyRouterDecorator()],
 };
 
 export const _StackBackButton = () => {

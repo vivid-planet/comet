@@ -2,8 +2,6 @@ import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } fr
 import { useState } from "react";
 import { Redirect, Route, Switch } from "react-router";
 
-import { storyRouterDecorator } from "../../../.storybook/decorators/storyRouter.decorator";
-
 function Page2() {
     const [counter, setCounter] = useState(0);
     const [StackSwitch, api] = useStackSwitch();
@@ -87,7 +85,6 @@ function Story() {
 
 export default {
     title: "components/stack/StackPageTitle",
-    decorators: [storyRouterDecorator()],
 };
 
 export const _StackPageTitle = () => {

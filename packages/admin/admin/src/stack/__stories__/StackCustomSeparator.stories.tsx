@@ -3,8 +3,6 @@ import { CometColor } from "@comet/admin-icons";
 import { useContext } from "react";
 import { Redirect, Route, Switch } from "react-router";
 
-import { storyRouterDecorator } from "../../../.storybook/decorators/storyRouter.decorator";
-
 function Page1() {
     const switchApi = useContext(StackSwitchApiContext);
     return (
@@ -34,7 +32,6 @@ function Story() {
 
 export default {
     title: "components/stack/StackCustomSeparator",
-    decorators: [storyRouterDecorator()],
 };
 
 export const StackCustomSeparator = () => {

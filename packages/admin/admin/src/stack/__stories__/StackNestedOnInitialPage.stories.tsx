@@ -2,8 +2,6 @@ import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@com
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 
-import { storyRouterDecorator } from "../../../.storybook/decorators/storyRouter.decorator";
-
 function Path() {
     const location = useLocation();
     const [, rerender] = useState(0);
@@ -50,7 +48,6 @@ function Story() {
 
 export default {
     title: "components/stack/StackNestedOnInitialPage",
-    decorators: [storyRouterDecorator()],
 };
 
 export const StackNestedOnInitialPage = () => {

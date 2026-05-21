@@ -2,8 +2,6 @@ import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext 
 import { useContext } from "react";
 import { Redirect, Route, Switch } from "react-router";
 
-import { storyRouterDecorator } from "../../../.storybook/decorators/storyRouter.decorator";
-
 function Page1() {
     const switchApi = useContext(StackSwitchApiContext);
     return (
@@ -49,7 +47,6 @@ function Story() {
 
 export default {
     title: "components/stack/StackNested",
-    decorators: [storyRouterDecorator()],
 };
 
 export const StackNested = () => {

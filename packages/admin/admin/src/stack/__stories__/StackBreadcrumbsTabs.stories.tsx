@@ -1,11 +1,8 @@
 import { RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
 import { useLocation } from "react-router";
 
-import { storyRouterDecorator } from "../../../.storybook/decorators/storyRouter.decorator";
-
 export default {
     title: "components/stack/StackBreadcrumbsTabs",
-    decorators: [storyRouterDecorator()],
 };
 
 export const StackBreadcrumbsWithNestedTabs = {

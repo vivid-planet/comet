@@ -1,17 +1,9 @@
 import { RouterMemoryRouter } from "@comet/admin";
 import type { Decorator } from "@storybook/react-vite";
 import type { Action, History, UnregisterCallback } from "history";
-import { type PropsWithChildren, type ReactNode, useEffect } from "react";
-import { type MemoryRouterProps, Route, type RouteComponentProps } from "react-router";
+import { type PropsWithChildren, useEffect } from "react";
+import { Route, type RouteComponentProps } from "react-router";
 import { action } from "storybook/actions";
-
-const StoryRouter = ({ children, routerProps }: { children: ReactNode; routerProps?: MemoryRouterProps }) => {
-    return (
-        <RouterMemoryRouter {...routerProps}>
-            <Route render={(props) => <HistoryWatcher {...props}>{children}</HistoryWatcher>} />
-        </RouterMemoryRouter>
-    );
-};
 
 function HistoryWatcher({ history, children }: PropsWithChildren<RouteComponentProps>) {
     useEffect(() => {
@@ -29,12 +21,14 @@ function HistoryWatcher({ history, children }: PropsWithChildren<RouteComponentP
     return <>{children}</>;
 }
 
-export function storyRouterDecorator(): Decorator {
-    return (Story) => {
-        return (
-            <StoryRouter>
-                <Story />
-            </StoryRouter>
-        );
-    };
-}
+export const RouterDecorator: Decorator = (Story) => (
+    <RouterMemoryRouter>
+        <Route
+            render={(props) => (
+                <HistoryWatcher {...props}>
+                    <Story />
+                </HistoryWatcher>
+            )}
+        />
+    </RouterMemoryRouter>
+);
