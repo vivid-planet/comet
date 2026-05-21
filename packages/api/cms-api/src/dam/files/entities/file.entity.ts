@@ -18,6 +18,7 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { EntityInfo } from "../../../entity-info/entity-info.decorator";
+import { RequiredPermission } from "../../../user-permissions/decorators/required-permission.decorator";
 import { CreateWarnings } from "../../../warnings/decorators/create-warnings.decorator";
 import { DamScopeInterface } from "../../types";
 import { DamMediaAlternative } from "../dam-media-alternatives/entities/dam-media-alternative.entity";
@@ -164,8 +165,8 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
     if (Scope) {
         @EntityInfo<DamFile>({
             sql: `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`,
-            requiredPermission: "dam",
         })
+        @RequiredPermission("dam")
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {
@@ -177,8 +178,8 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
     } else {
         @EntityInfo<DamFile>({
             sql: `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`,
-            requiredPermission: "dam",
         })
+        @RequiredPermission("dam")
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {}

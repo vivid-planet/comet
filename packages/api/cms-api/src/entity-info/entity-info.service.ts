@@ -2,6 +2,7 @@ import { AnyEntity, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
+import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../user-permissions/decorators/required-permission.decorator";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
 import { isEntityInfoSql, requiredPermissionToSql } from "./entity-info.utils";
@@ -27,8 +28,10 @@ export class EntityInfoService {
 
             if (typeof entityInfo === "string" || isEntityInfoSql(entityInfo)) {
                 const sql = typeof entityInfo === "string" ? entityInfo : entityInfo.sql;
-                const requiredPermission = typeof entityInfo === "string" ? undefined : entityInfo.requiredPermission;
-                const requiredPermissionSql = requiredPermissionToSql(requiredPermission);
+                const permissionMetadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, targetEntity.entity) as
+                    | RequiredPermissionMetadata
+                    | undefined;
+                const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
 
                 indexSelects.push(
                     `SELECT sub."name", sub."secondaryInformation", sub."visible", sub."id", sub."entityName", ${requiredPermissionSql} AS "requiredPermission" FROM (${sql}) sub`,
@@ -58,7 +61,10 @@ export class EntityInfoService {
                     visibleSql = sqlWhereMatch[1];
                 }
 
-                const requiredPermissionSql = requiredPermissionToSql(entityInfo.requiredPermission);
+                const permissionMetadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, targetEntity.entity) as
+                    | RequiredPermissionMetadata
+                    | undefined;
+                const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
 
                 const select = `SELECT
                                 ${nameSql} "name",

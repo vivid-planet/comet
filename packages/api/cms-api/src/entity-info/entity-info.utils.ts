@@ -1,13 +1,12 @@
 import type { AnyEntity } from "@mikro-orm/postgresql";
 
-import type { Permission } from "../user-permissions/user-permissions.types";
 import type { EntityInfo, EntityInfoSql } from "./entity-info.decorator";
 
 export function isEntityInfoSql(entityInfo: EntityInfo<AnyEntity>): entityInfo is EntityInfoSql {
     return typeof entityInfo === "object" && "sql" in entityInfo;
 }
 
-export function requiredPermissionToSql(requiredPermission: Permission | Permission[] | undefined): string {
+export function requiredPermissionToSql(requiredPermission: string | string[] | undefined): string {
     if (!requiredPermission) {
         return "ARRAY[]::text[]";
     }

@@ -6,6 +6,7 @@ import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../entity-info/entity-info
 import { isEntityInfoSql, requiredPermissionToSql } from "../entity-info/entity-info.utils";
 import { resolveFieldToSql } from "../entity-info/resolve-field-to-sql";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
+import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../user-permissions/decorators/required-permission.decorator";
 
 @Injectable()
 export class FullTextSearchService {
@@ -28,8 +29,10 @@ export class FullTextSearchService {
 
             if (typeof entityInfo === "string" || isEntityInfoSql(entityInfo)) {
                 if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
-                    const requiredPermission = typeof entityInfo === "string" ? undefined : entityInfo.requiredPermission;
-                    const requiredPermissionSql = requiredPermissionToSql(requiredPermission);
+                    const permissionMetadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, targetEntity.entity) as
+                        | RequiredPermissionMetadata
+                        | undefined;
+                    const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
 
                     indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText",
                         ${requiredPermissionSql} AS "requiredPermission"
@@ -47,7 +50,10 @@ export class FullTextSearchService {
             const primary = metadata.primaryKeys[0];
 
             const fullTextSql = resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
-            const requiredPermissionSql = requiredPermissionToSql(entityInfo.requiredPermission);
+            const permissionMetadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, targetEntity.entity) as
+                | RequiredPermissionMetadata
+                | undefined;
+            const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
 
             indexSelects.push(`SELECT
                             "${metadata.tableName}"."${primary}"::text "id",

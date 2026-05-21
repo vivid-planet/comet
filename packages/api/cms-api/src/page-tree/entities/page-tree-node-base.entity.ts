@@ -3,13 +3,14 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { EntityInfo } from "../../entity-info/entity-info.decorator";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility } from "../types";
 
 @EntityInfo({
     sql: `SELECT "name", "secondaryInformation", "visible", "id", 'PageTreeNode' AS "entityName" FROM "PageTreeNodeEntityInfo"`,
-    requiredPermission: "pageTree",
 })
+@RequiredPermission("pageTree")
 @Entity({ abstract: true })
 @ObjectType("PageTreeNodeBase", { isAbstract: true }) // ObjectType must be defined in base class! (The name "PageTreeNodeBase" is not used (we have no concrete type of PageTreeNodeBase))
 export abstract class PageTreeNodeBase extends BaseEntity {
