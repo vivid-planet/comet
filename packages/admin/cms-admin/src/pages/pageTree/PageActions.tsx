@@ -8,6 +8,7 @@ import { FormattedMessage } from "react-intl";
 import { useContentScope } from "../../contentScope/Provider";
 import { serializeInitialValues } from "../../form/serializeInitialValues";
 import { openSitePreviewWindow } from "../../preview/openSitePreviewWindow";
+import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
 import { usePageTreeConfig } from "../pageTreeConfig";
 import { CopyPasteMenuItem } from "./CopyPasteMenuItem";
 import { MovePageMenuItem } from "./MovePageMenuItem";
@@ -28,6 +29,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
     const { tree } = usePageTreeContext();
     const { match: contentScopeMatch } = useContentScope();
     const { documentTypes } = usePageTreeConfig();
+    const isAllowed = useUserPermissionCheck();
     const stackSwitchApi = useStackSwitchApi();
     const client = useApolloClient();
 
@@ -44,6 +46,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
         documentTypes,
     });
     const isEditable = !!(page.visibility !== "Archived" && documentType.editComponent);
+    const canDeletePageTreeNodes = isAllowed("pageTreeDeleteNode");
 
     const handleDeleteClick = async () => {
         const subTree = subTreeFromNode(page, tree);
@@ -143,17 +146,19 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                                 <FormattedMessage id="comet.translator.translate" defaultMessage="Translate" />
                             </RowActionsItem>
                         ),
-                        <Divider key="divider3" />,
                     ]}
-                    <RowActionsItem
-                        icon={<Delete />}
-                        disabled={page.slug === "home"}
-                        onClick={() => {
-                            setDeleteDialogOpen(true);
-                        }}
-                    >
-                        <FormattedMessage id="comet.pages.pages.page.delete" defaultMessage="Delete" />
-                    </RowActionsItem>
+                    {canDeletePageTreeNodes && page.visibility !== "Archived" && <Divider key="divider3" />}
+                    {canDeletePageTreeNodes && (
+                        <RowActionsItem
+                            icon={<Delete />}
+                            disabled={page.slug === "home"}
+                            onClick={() => {
+                                setDeleteDialogOpen(true);
+                            }}
+                        >
+                            <FormattedMessage id="comet.pages.pages.page.delete" defaultMessage="Delete" />
+                        </RowActionsItem>
+                    )}
                 </RowActionsMenu>
             </RowActionsMenu>
             {translateDialogs}

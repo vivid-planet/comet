@@ -1,6 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing";
+import type { ReactNode } from "react";
 import { cleanup, render, screen } from "test-utils";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { DocumentInterface } from "../../documents/types";
 import PageActions from "./PageActions";
@@ -16,6 +17,7 @@ vi.mock("../../contentScope/Provider", () => ({
 }));
 
 let mockDocumentTypes: Record<string, DocumentInterface>;
+let mockIsAllowed: (permission: string) => boolean;
 
 vi.mock("../pageTreeConfig", () => ({
     usePageTreeConfig: () => ({
@@ -23,10 +25,22 @@ vi.mock("../pageTreeConfig", () => ({
     }),
 }));
 
+vi.mock("../../userPermissions/hooks/currentUser", () => ({
+    useUserPermissionCheck: () => mockIsAllowed,
+}));
+
 vi.mock("./usePageTreeContext", () => ({
     usePageTreeContext: () => ({
         tree: new Map(),
     }),
+}));
+
+vi.mock("./MovePageMenuItem", () => ({
+    MovePageMenuItem: () => null,
+}));
+
+vi.mock("./CopyPasteMenuItem", () => ({
+    CopyPasteMenuItem: () => null,
 }));
 
 vi.mock("@comet/admin", async (importOriginal) => {
@@ -36,6 +50,8 @@ vi.mock("@comet/admin", async (importOriginal) => {
         useStackSwitchApi: () => ({
             activatePage: mockActivatePage,
         }),
+        RowActionsMenu: ({ children }: { children: ReactNode }) => <>{children}</>,
+        RowActionsItem: ({ children }: { children: ReactNode }) => <>{children}</>,
     };
 });
 
@@ -88,6 +104,10 @@ describe("PageActions", () => {
         vi.clearAllMocks();
     });
 
+    beforeEach(() => {
+        mockIsAllowed = () => true;
+    });
+
     describe("SitePreviewAction", () => {
         it("renders the custom SitePreviewAction component when provided", () => {
             const CustomPreviewAction = ({ pageTreeNode }: { pageTreeNode: PageTreePage }) => <button>Custom preview for {pageTreeNode.name}</button>;
@@ -125,6 +145,26 @@ describe("PageActions", () => {
             renderPageActions();
 
             expect(sitePreviewActionFn).toHaveBeenCalledWith(expect.objectContaining({ pageTreeNode: basePage }), undefined);
+        });
+    });
+
+    describe("delete action permission", () => {
+        it("renders delete action when user can delete page tree nodes", () => {
+            mockDocumentTypes = { Page: baseDocumentType };
+            mockIsAllowed = (permission) => permission === "pageTreeDeleteNode";
+
+            renderPageActions();
+
+            expect(screen.getByText(/Delete/)).toBeTruthy();
+        });
+
+        it("hides delete action when user cannot delete page tree nodes", () => {
+            mockDocumentTypes = { Page: baseDocumentType };
+            mockIsAllowed = () => false;
+
+            renderPageActions();
+
+            expect(screen.queryByText(/Delete/)).toBeNull();
         });
     });
 });

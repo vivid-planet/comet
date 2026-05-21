@@ -20,6 +20,7 @@ enum Permission {
   builds
   dam
   pageTree
+  pageTreeDeleteNode
   cronJobs
   translation
   userPermissions
