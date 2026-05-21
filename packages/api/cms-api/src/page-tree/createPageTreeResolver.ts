@@ -2,14 +2,10 @@ import { Inject, Type } from "@nestjs/common";
 import { Args, ArgsType, createUnionType, ID, Info, Int, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
-import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { CurrentUser } from "../user-permissions/dto/current-user";
-import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
@@ -77,7 +73,6 @@ export function createPageTreeResolver({
             protected readonly pageTreeReadApi: PageTreeReadApiService,
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
             private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
-            @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
         ) {}
 
         @Query(() => PageTreeNode, { nullable: true })
@@ -254,16 +249,13 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => Boolean)
+        @RequiredPermission(["pageTreeDeleteNode"], { skipScopeCheck: !hasNonEmptyScope })
         @AffectedEntity(PageTreeNode)
-        async deletePageTreeNode(@Args("id", { type: () => ID }) id: string, @GetCurrentUser() user: CurrentUser): Promise<boolean> {
+        async deletePageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
             });
             const pageTreeNode = await pageTreeReadApi.getNodeOrFail(id);
-
-            if (!this.accessControlService.isAllowed(user, "pageTreeDeleteNode", pageTreeNode.scope)) {
-                throw new GraphQLError('Missing permission "pageTreeDeleteNode" to delete page tree nodes.');
-            }
 
             return this.pageTreeService.delete(pageTreeNode);
         }
