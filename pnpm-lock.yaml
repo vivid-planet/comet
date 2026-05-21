@@ -2756,7 +2756,7 @@ importers:
         version: 10.4.0
       '@graphql-mocks/network-msw':
         specifier: ^0.4.4
-        version: 0.4.4(graphql-mocks@0.10.0(graphql@16.13.2))(msw@2.14.6(@types/node@24.12.4)(typescript@5.9.3))
+        version: 0.4.4(graphql-mocks@0.12.0(graphql@16.13.2))(msw@2.14.6(@types/node@24.12.4)(typescript@5.9.3))
       '@storybook/addon-docs':
         specifier: ^10.3.5
         version: 10.3.5(@types/react@19.2.14)(esbuild@0.27.4)(rollup@4.59.0)(storybook@10.3.5(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(vite@7.3.1(@types/node@24.12.4)(jiti@2.6.1)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3))(webpack@5.106.2(esbuild@0.27.4))
@@ -2803,8 +2803,8 @@ importers:
         specifier: ^10.3.5
         version: 10.3.5(eslint@9.39.4(jiti@2.6.1))(storybook@10.3.5(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.9.3)
       graphql-mocks:
-        specifier: ^0.10.0
-        version: 0.10.0(graphql@16.13.2)
+        specifier: ^0.12.0
+        version: 0.12.0(graphql@16.13.2)
       immutable:
         specifier: ^3.8.2
         version: 3.8.3
@@ -7917,9 +7917,6 @@ packages:
     resolution: {integrity: sha512-TV7t8GKYaJWsn00tFDqBw8+Uqmr8A0fRU1tvTQhyZzGv0sJCGRQL3JGMI3ucuKo3XIZdUP+Lx7/gh2t3lewy7g==}
     engines: {node: '>=14.16'}
 
-  '@sinonjs/commons@1.8.6':
-    resolution: {integrity: sha512-Ky+XkAkqPZSm3NLBeUng77EBQl3cmeJhITaGHdYH8kjVB+aun3S4XBRti2zt17mtt0mIUDiNxYeoJm6drVvBJQ==}
-
   '@sinonjs/commons@2.0.0':
     resolution: {integrity: sha512-uLa0j859mMrg2slwQYdO/AkrOfmH+X6LTVmNTS9CqexuE2IvVORIkSpJLqePAbEnKJ77aMmCwr1NUZ57120Xcg==}
 
@@ -7934,12 +7931,6 @@ packages:
 
   '@sinonjs/fake-timers@15.1.1':
     resolution: {integrity: sha512-cO5W33JgAPbOh07tvZjUOJ7oWhtaqGHiZw+11DPbyqh2kHTBc3eF/CjJDeQ4205RLQsX6rxCuYOroFQwl7JDRw==}
-
-  '@sinonjs/fake-timers@6.0.1':
-    resolution: {integrity: sha512-MZPUxrmFubI36XS1DI3qmI0YdN1gks62JtFZvxR67ljjSNCeK6U08Zx4msEWOXuofgqUt6zPHSi1H9fbjR/NRA==}
-
-  '@sinonjs/samsam@5.3.1':
-    resolution: {integrity: sha512-1Hc0b1TtyfBu8ixF/tpfSHTVWKwCBLY4QJbkgnE7HcwyvT2xArDxb4K7dMgqRm3szI+LJbzmW/s4xxEhv6hwDg==}
 
   '@sinonjs/samsam@8.0.3':
     resolution: {integrity: sha512-hw6HbX+GyVZzmaYNh82Ecj1vdGZrqVIn/keDTg63IgAwiQPO+xCz99uG6Woqgb4tM0mUiFENKZ4cqd7IX94AXQ==}
@@ -12120,11 +12111,11 @@ packages:
       cosmiconfig-toml-loader:
         optional: true
 
-  graphql-mocks@0.10.0:
-    resolution: {integrity: sha512-4timSCVgUOsPBoqIuovKZ22w5UrYjdjqEEEUJd8nyFiiwC5GDIJXbJaAqPu0CVth+29h1kLKN6AANYkCO9WeSg==}
-    engines: {node: '>= 16.0.0'}
+  graphql-mocks@0.12.0:
+    resolution: {integrity: sha512-SfDVtgamGf8xGR1PV/UArXc14hCFxvNuEmBREiBkV4MtDZgb7ciZg6r0dLMP8cDDX1uzimKn+q8XOi8QeJPb8g==}
+    engines: {node: '>= 24.0.0'}
     peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+      graphql: '>=16.0.0 <17'
 
   graphql-parse-resolve-info@4.14.1:
     resolution: {integrity: sha512-WKHukfEuZamP1ZONR84b8iT+4sJgEhtXMDArm1jpXEsU2vTb5EgkCZ4Obfl+v09oNTKXm0CJjPfBUZ5jcJ2Ykg==}
@@ -13234,9 +13225,6 @@ packages:
     engines: {node: '>=10.0.0'}
     hasBin: true
 
-  just-extend@4.2.1:
-    resolution: {integrity: sha512-g3UB796vUFIY90VIv/WX3L2c8CS2MdWUww3CNrYmqza1Fg0DURc2K/O4YrnklBdQarSJ/y8JnJYDGc+1iumQjg==}
-
   just-extend@6.2.0:
     resolution: {integrity: sha512-cYofQu2Xpom82S6qD778jBDpwvvy39s1l/hrYij2u9AMdQcGRpaBu6kY4mVhuno5kJVi1DAz4aiphA2WI1/OAw==}
 
@@ -13475,10 +13463,6 @@ packages:
 
   lodash.flatten@4.4.0:
     resolution: {integrity: sha512-C5N2Z3DgnnKr0LOpv/hKCgKdb7ZZwafIrsesve6lmzvZIRZRGaZ/l6Q8+2W7NaT+ZwO3fFlSCzCzrDCFdJfZ4g==}
-
-  lodash.get@4.4.2:
-    resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
-    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.groupby@4.6.0:
     resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==}
@@ -14278,9 +14262,6 @@ packages:
         optional: true
       sass:
         optional: true
-
-  nise@4.1.0:
-    resolution: {integrity: sha512-eQMEmGN/8arp0xsvGoQ+B1qvSkR73B1nWSCh7nOt5neMCtwcQVYQGdzQMhcNscktTsWB54xnlSQFzOAPJD8nXA==}
 
   nise@6.1.2:
     resolution: {integrity: sha512-zPM6UobDUDnhGcaWYjzig0tZCv4tXfF/1fnV58mfzL7pXSEwDLG0lXreuZ3u19O2ABghlYO8tFL1m1hrKUz/nw==}
@@ -15500,8 +15481,8 @@ packages:
     resolution: {integrity: sha512-k9lSsjl36EJdK7I06v7APZCbyGT2vMTsYSRX1Q2nbYmnkBqgUhRkAuzH08Ciotteu/PLJmIF2+tti7o3C/ts2g==}
     engines: {node: '>=18'}
 
-  ramda@0.28.0:
-    resolution: {integrity: sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==}
+  ramda@0.32.0:
+    resolution: {integrity: sha512-GQWAHhxhxWBWA8oIBr1XahFVjQ9Fic6MK9ikijfd4TZHfE2+urfk+irVlR5VOn48uwMgM+loRRBJd6Yjsbc0zQ==}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -16327,10 +16308,6 @@ packages:
 
   sinon@18.0.1:
     resolution: {integrity: sha512-a2N2TDY1uGviajJ6r4D1CyRAkzE9NNVlYOV1wX5xQDuAk0ONgzgRl0EjCQuRCPxOwp13ghsMwt9Gdldujs39qw==}
-
-  sinon@9.2.4:
-    resolution: {integrity: sha512-zljcULZQsJxVra28qIAL6ow1Z9tpattkCTEJR4RBP3TGc00FcttsP5pK284Nas5WjMZU5Yzy3kAIp3B3KRf5Yg==}
-    deprecated: 16.1.1
 
   sirv@2.0.4:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
@@ -21810,9 +21787,9 @@ snapshots:
       - encoding
       - supports-color
 
-  '@graphql-mocks/network-msw@0.4.4(graphql-mocks@0.10.0(graphql@16.13.2))(msw@2.14.6(@types/node@24.12.4)(typescript@5.9.3))':
+  '@graphql-mocks/network-msw@0.4.4(graphql-mocks@0.12.0(graphql@16.13.2))(msw@2.14.6(@types/node@24.12.4)(typescript@5.9.3))':
     dependencies:
-      graphql-mocks: 0.10.0(graphql@16.13.2)
+      graphql-mocks: 0.12.0(graphql@16.13.2)
       msw: 2.14.6(@types/node@24.12.4)(typescript@5.9.3)
 
   '@graphql-tools/apollo-engine-loader@8.0.13(graphql@16.13.2)':
@@ -24882,11 +24859,6 @@ snapshots:
 
   '@sindresorhus/is@5.6.0': {}
 
-  '@sinonjs/commons@1.8.6':
-    dependencies:
-      type-detect: 4.0.8
-    optional: true
-
   '@sinonjs/commons@2.0.0':
     dependencies:
       type-detect: 4.0.8
@@ -24906,18 +24878,6 @@ snapshots:
   '@sinonjs/fake-timers@15.1.1':
     dependencies:
       '@sinonjs/commons': 3.0.1
-
-  '@sinonjs/fake-timers@6.0.1':
-    dependencies:
-      '@sinonjs/commons': 1.8.6
-    optional: true
-
-  '@sinonjs/samsam@5.3.1':
-    dependencies:
-      '@sinonjs/commons': 1.8.6
-      lodash.get: 4.4.2
-      type-detect: 4.1.0
-    optional: true
 
   '@sinonjs/samsam@8.0.3':
     dependencies:
@@ -29969,12 +29929,12 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  graphql-mocks@0.10.0(graphql@16.13.2):
+  graphql-mocks@0.12.0(graphql@16.13.2):
     dependencies:
       graphql: 16.13.2
-      ramda: 0.28.0
+      ramda: 0.32.0
     optionalDependencies:
-      sinon: 9.2.4
+      sinon: 18.0.1
 
   graphql-parse-resolve-info@4.14.1(graphql@16.13.2):
     dependencies:
@@ -31387,9 +31347,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  just-extend@4.2.1:
-    optional: true
-
   just-extend@6.2.0: {}
 
   jwa@2.0.1:
@@ -31655,9 +31612,6 @@ snapshots:
   lodash.escaperegexp@4.1.2: {}
 
   lodash.flatten@4.4.0: {}
-
-  lodash.get@4.4.2:
-    optional: true
 
   lodash.groupby@4.6.0: {}
 
@@ -32902,15 +32856,6 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
-
-  nise@4.1.0:
-    dependencies:
-      '@sinonjs/commons': 1.8.6
-      '@sinonjs/fake-timers': 6.0.1
-      '@sinonjs/text-encoding': 0.7.3
-      just-extend: 4.2.1
-      path-to-regexp: 1.9.0
-    optional: true
 
   nise@6.1.2:
     dependencies:
@@ -34243,7 +34188,7 @@ snapshots:
 
   quick-lru@7.3.0: {}
 
-  ramda@0.28.0: {}
+  ramda@0.32.0: {}
 
   randombytes@2.1.0:
     dependencies:
@@ -35336,16 +35281,6 @@ snapshots:
       diff: 5.2.2
       nise: 6.1.2
       supports-color: 7.2.0
-
-  sinon@9.2.4:
-    dependencies:
-      '@sinonjs/commons': 1.8.6
-      '@sinonjs/fake-timers': 6.0.1
-      '@sinonjs/samsam': 5.3.1
-      diff: 4.0.2
-      nise: 4.1.0
-      supports-color: 7.2.0
-    optional: true
 
   sirv@2.0.4:
     dependencies:
