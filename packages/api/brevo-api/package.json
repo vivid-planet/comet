@@ -64,7 +64,6 @@
         "@nestjs/platform-express": "^11.1.21",
         "@types/inquirer": "^8.2.12",
         "@types/lodash.isequal": "^4.5.8",
-        "@types/uuid": "^11.0.0",
         "chokidar-cli": "^2.1.0",
         "eslint": "^9.39.4",
         "express": "^5.2.1",
