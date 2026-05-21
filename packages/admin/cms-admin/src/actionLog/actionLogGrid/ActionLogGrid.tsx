@@ -107,7 +107,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({
                 action={
                     <Typography variant="caption">
                         <FormattedMessage
-                            defaultMessage="Es können jeweils nur 2 Versionen verglichen werden."
+                            defaultMessage="You can only compare 2 versions at a time."
                             id="actionLog.actionLogGrid.info.onlyCompare2Versions"
                         />
                     </Typography>
