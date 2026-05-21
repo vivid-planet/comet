@@ -2,21 +2,10 @@ import { AnyEntity, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Optional } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
-import { ENTITY_INFO_METADATA_KEY, EntityInfo, EntityInfoSql } from "../entity-info/entity-info.decorator";
+import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../entity-info/entity-info.decorator";
+import { isEntityInfoSql, requiredPermissionToSql } from "../entity-info/entity-info.utils";
 import { resolveFieldToSql } from "../entity-info/resolve-field-to-sql";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
-
-function isEntityInfoSql(entityInfo: EntityInfo<AnyEntity>): entityInfo is EntityInfoSql {
-    return typeof entityInfo === "object" && "sql" in entityInfo;
-}
-
-function requiredPermissionToSql(requiredPermission: string | string[] | undefined): string {
-    if (!requiredPermission) {
-        return "ARRAY[]::text[]";
-    }
-    const permissions = Array.isArray(requiredPermission) ? requiredPermission : [requiredPermission];
-    return `ARRAY[${permissions.map((p) => `'${p}'`).join(", ")}]::text[]`;
-}
 
 @Injectable()
 export class FullTextSearchService {
