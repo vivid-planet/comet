@@ -10,7 +10,6 @@ import {
     AffectedEntity,
     BlocksTransformerService,
     DamImageBlock,
-    RequiredPermission,
     RootBlockDataScalar,
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
@@ -18,7 +17,6 @@ import {
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { News, NewsContentScope } from "../entities/news.entity";
 @Resolver(() => News)
-@RequiredPermission(["news"])
 export class NewsResolver {
     constructor(
         protected readonly entityManager: EntityManager,
