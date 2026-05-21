@@ -4,7 +4,6 @@ import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
-import { CRUD_GENERATOR_METADATA_KEY, CrudGeneratorOptions } from "../../common/decorators/crud-generator.decorator";
 import { getRequestFromExecutionContext } from "../../common/decorators/utils";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../../entity-info/entity-info.decorator";
 import { isEntityInfoSql } from "../../entity-info/entity-info.utils";
@@ -159,17 +158,6 @@ export class UserPermissionsGuard implements CanActivate {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private getRequiredPermissionFromEntity(entityClass: new (...args: any[]) => any): RequiredPermissionMetadata | undefined {
-        // Check @CrudGenerator metadata first
-        const crudGeneratorOptions = Reflect.getMetadata(CRUD_GENERATOR_METADATA_KEY, entityClass) as CrudGeneratorOptions | undefined;
-        if (crudGeneratorOptions?.requiredPermission) {
-            const permission = crudGeneratorOptions.requiredPermission;
-            return {
-                requiredPermission: Array.isArray(permission) ? permission : [permission],
-                options: undefined,
-            };
-        }
-
-        // Check @EntityInfo metadata
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const entityInfo = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, entityClass) as EntityInfo<any> | undefined;
         if (entityInfo && typeof entityInfo === "object" && !isEntityInfoSql(entityInfo) && entityInfo.requiredPermission) {

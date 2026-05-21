@@ -1,10 +1,23 @@
-import { type CrudSingleGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
+import { type CrudSingleGeneratorOptions, ENTITY_INFO_METADATA_KEY, type EntityInfo, hasCrudFieldFeature, isEntityInfoSql } from "@comet/cms-api";
 import type { EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
 import { buildOptions } from "../generateCrud/build-options";
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
 import type { GeneratedFile } from "../utils/write-generated-files";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function entityHasRequiredPermissionInEntityInfo(metadata: EntityMetadata<any>): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const entityInfo = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, metadata.class) as EntityInfo<any> | undefined;
+    if (!entityInfo || typeof entityInfo === "string") {
+        return false;
+    }
+    if (isEntityInfoSql(entityInfo)) {
+        return !!entityInfo.requiredPermission;
+    }
+    return !!entityInfo.requiredPermission;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
@@ -52,7 +65,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { ${classNameSingular}Input } from "./dto/${fileNameSingular}.input";
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${!entityHasRequiredPermissionInEntityInfo(metadata) ? `@RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})` : ""}
     export class ${classNameSingular}Resolver {
         constructor(
             protected readonly entityManager: EntityManager,

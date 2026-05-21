@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CRUD_GENERATOR_METADATA_KEY, type CrudGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
+import {
+    CRUD_GENERATOR_METADATA_KEY,
+    type CrudGeneratorOptions,
+    ENTITY_INFO_METADATA_KEY,
+    type EntityInfo,
+    hasCrudFieldFeature,
+    isEntityInfoSql,
+} from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
@@ -15,6 +22,17 @@ import { buildOptions } from "./build-options";
 import { generateEnumFilterDto } from "./generate-enum-filter-dto";
 import { generatePayloadObjectTypes } from "./generate-payload-object-types";
 import { generateServiceHookCall } from "./generate-service-hook-call";
+
+function entityHasRequiredPermissionInEntityInfo(metadata: EntityMetadata<any>): boolean {
+    const entityInfo = Reflect.getMetadata(ENTITY_INFO_METADATA_KEY, metadata.class) as EntityInfo<any> | undefined;
+    if (!entityInfo || typeof entityInfo === "string") {
+        return false;
+    }
+    if (isEntityInfoSql(entityInfo)) {
+        return !!entityInfo.requiredPermission;
+    }
+    return !!entityInfo.requiredPermission;
+}
 
 function generateFilterDto({
     generatorOptions,
@@ -686,7 +704,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
+    ${!entityHasRequiredPermissionInEntityInfo(metadata) ? `@RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})` : ""}
     export class ${classNameSingular}Resolver {
         ${needsBlocksTransformer ? `constructor(protected readonly blocksTransformer: BlocksTransformerService) {}` : ""}
         ${code}
@@ -913,7 +931,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${payloadObjectTypes.code}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
+    ${!entityHasRequiredPermissionInEntityInfo(metadata) ? `@RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})` : ""}
     export class ${classNameSingular}Resolver {
         constructor(
             protected readonly entityManager: EntityManager,${
