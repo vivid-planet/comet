@@ -262,7 +262,7 @@ export function createPageTreeResolver({
             const pageTreeNode = await pageTreeReadApi.getNodeOrFail(id);
 
             if (!this.accessControlService.isAllowed(user, "pageTreeDeleteNode", pageTreeNode.scope)) {
-                throw new Error("Access denied");
+                throw new GraphQLError('Missing permission "pageTreeDeleteNode" to delete page tree nodes.');
             }
 
             return this.pageTreeService.delete(pageTreeNode);

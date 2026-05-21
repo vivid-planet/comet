@@ -45,7 +45,8 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
         pages: [page],
         documentTypes,
     });
-    const isEditable = !!(page.visibility !== "Archived" && documentType.editComponent);
+    const isArchived = page.visibility === "Archived";
+    const isEditable = !!(!isArchived && documentType.editComponent);
     const canDeletePageTreeNodes = isAllowed("pageTreeDeleteNode");
 
     const handleDeleteClick = async () => {
@@ -72,7 +73,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
         <>
             <RowActionsMenu>
                 {children}
-                {page.visibility !== "Archived" && [
+                {!isArchived && [
                     <RowActionsItem
                         key="edit"
                         disabled={!isEditable}
@@ -104,7 +105,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     ),
                 ]}
                 <RowActionsMenu>
-                    {page.visibility !== "Archived" && [
+                    {!isArchived && [
                         <RowActionsItem
                             key="pageProperties"
                             icon={<Settings />}
@@ -147,7 +148,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                             </RowActionsItem>
                         ),
                     ]}
-                    {canDeletePageTreeNodes && page.visibility !== "Archived" && <Divider key="divider3" />}
+                    {canDeletePageTreeNodes && !isArchived && <Divider key="divider3" />}
                     {canDeletePageTreeNodes && (
                         <RowActionsItem
                             icon={<Delete />}
