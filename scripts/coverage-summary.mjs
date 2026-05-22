@@ -56,25 +56,25 @@ const overall = {
     functions: percentage(totals.functions.covered, totals.functions.total),
 };
 
-const linesBadge = (value, { label = "" } = {}) => {
+const metricBadge = (value, { label = "" } = {}) => {
     const encodedValue = encodeURIComponent(formatPercentage(value));
     const encodedLabel = encodeURIComponent(label);
     return `![${formatPercentage(value)}](https://img.shields.io/badge/${encodedLabel}-${encodedValue}-${badgeColor(value)}?style=flat)`;
 };
 
-console.log(linesBadge(overall.lines, { label: "Code Coverage" }));
+console.log(metricBadge(overall.lines, { label: "Code Coverage" }));
 console.log("");
 console.log("## Coverage report");
 console.log("");
 console.log("| Package | Lines | Statements | Branches | Functions |");
-console.log("| --- | :---: | ---: | ---: | ---: |");
+console.log("| --- | :---: | :---: | :---: | :---: |");
 for (const row of rows) {
     console.log(
-        `| \`packages/${row.package}\` | ${linesBadge(row.lines)} | ${formatPercentage(row.statements)} | ${formatPercentage(row.branches)} | ${formatPercentage(row.functions)} |`,
+        `| \`packages/${row.package}\` | ${metricBadge(row.lines)} | ${metricBadge(row.statements)} | ${metricBadge(row.branches)} | ${metricBadge(row.functions)} |`,
     );
 }
 console.log(
-    `| **Overall** | ${linesBadge(overall.lines)} | **${formatPercentage(overall.statements)}** | **${formatPercentage(overall.branches)}** | **${formatPercentage(overall.functions)}** |`,
+    `| **Overall** | ${metricBadge(overall.lines)} | ${metricBadge(overall.statements)} | ${metricBadge(overall.branches)} | ${metricBadge(overall.functions)} |`,
 );
 console.log("");
 console.log("Download the `coverage-report` artifact from this run for the full clickable HTML report.");
