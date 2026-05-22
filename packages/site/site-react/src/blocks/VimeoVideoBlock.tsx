@@ -142,7 +142,14 @@ export const VimeoVideoBlock = withPreview(
                         className={clsx(styles.videoContainer, fill && styles.fill)}
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
-                        <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
+                        <iframe
+                            ref={iframeRef}
+                            className={styles.vimeoContainer}
+                            src={vimeoUrl.toString()}
+                            allow="autoplay"
+                            allowFullScreen
+                            loading="lazy"
+                        />
                         {!showControls &&
                             (PlayPauseButtonComponent ? (
                                 <PlayPauseButtonComponent isPlaying={isPlaying} onClick={handlePlayPauseClick} />
