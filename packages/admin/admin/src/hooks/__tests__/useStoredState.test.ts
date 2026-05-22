@@ -3,6 +3,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useStoredState } from "../useStoredState";
 
+function stored<T>(value: T): string {
+    return JSON.stringify(value);
+}
+
+function fromStorage<T>(storage: Storage, key: string): T {
+    return JSON.parse(storage.getItem(key) as string) as T;
+}
+
 function createMockStorage(initial: Record<string, string> = {}): Storage {
     const store: Record<string, string> = { ...initial };
     return {
@@ -32,13 +40,15 @@ describe("useStoredState", () => {
     it("returns the initial value when no stored value exists", () => {
         const storage = createMockStorage();
         const { result } = renderHook(() => useStoredState("my-key", "hello", storage));
-        expect(result.current[0]).toBe("hello");
+        const [value] = result.current;
+        expect(value).toBe("hello");
     });
 
     it("returns the stored value when localStorage already has a value", () => {
-        const storage = createMockStorage({ "my-key": JSON.stringify("stored") });
+        const storage = createMockStorage({ "my-key": stored("stored") });
         const { result } = renderHook(() => useStoredState("my-key", "default", storage));
-        expect(result.current[0]).toBe("stored");
+        const [value] = result.current;
+        expect(value).toBe("stored");
     });
 
     it("persists state updates to storage", () => {
@@ -46,24 +56,29 @@ describe("useStoredState", () => {
         const { result } = renderHook(() => useStoredState<string>("my-key", "initial", storage));
 
         act(() => {
-            result.current[1]("updated");
+            const [, setValue] = result.current;
+            setValue("updated");
         });
 
-        expect(result.current[0]).toBe("updated");
-        expect(JSON.parse(storage.getItem("my-key") as string)).toBe("updated");
+        const [value] = result.current;
+        expect(value).toBe("updated");
+        expect(fromStorage<string>(storage, "my-key")).toBe("updated");
     });
 
     it("skips storage when key is false", () => {
         const storage = createMockStorage();
         const { result } = renderHook(() => useStoredState<string>(false, "default-value", storage));
 
-        expect(result.current[0]).toBe("default-value");
+        const [initialValue] = result.current;
+        expect(initialValue).toBe("default-value");
 
         act(() => {
-            result.current[1]("changed");
+            const [, setValue] = result.current;
+            setValue("changed");
         });
 
-        expect(result.current[0]).toBe("changed");
+        const [updatedValue] = result.current;
+        expect(updatedValue).toBe("changed");
         expect(storage.length).toBe(0);
     });
 
@@ -72,8 +87,9 @@ describe("useStoredState", () => {
         const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
 
         const { result } = renderHook(() => useStoredState("bad-key", 42, storage));
+        const [value] = result.current;
 
-        expect(result.current[0]).toBe(42);
+        expect(value).toBe(42);
         expect(consoleSpy).toHaveBeenCalled();
     });
 
@@ -81,24 +97,27 @@ describe("useStoredState", () => {
         const storage = createMockStorage();
         const init = vi.fn(() => "computed");
         const { result } = renderHook(() => useStoredState("fn-key", init, storage));
+        const [value] = result.current;
 
-        expect(result.current[0]).toBe("computed");
+        expect(value).toBe("computed");
         expect(init).toHaveBeenCalledOnce();
     });
 
     it("does NOT call the initializer function when a stored value exists", () => {
-        const storage = createMockStorage({ "fn-key": JSON.stringify("from-storage") });
+        const storage = createMockStorage({ "fn-key": stored("from-storage") });
         const init = vi.fn(() => "computed");
         const { result } = renderHook(() => useStoredState("fn-key", init, storage));
+        const [value] = result.current;
 
-        expect(result.current[0]).toBe("from-storage");
+        expect(value).toBe("from-storage");
         expect(init).not.toHaveBeenCalled();
     });
 
     it("correctly returns stored boolean false (truthy string 'false' parses to false)", () => {
-        const storage = createMockStorage({ "bool-key": JSON.stringify(false) });
+        const storage = createMockStorage({ "bool-key": stored(false) });
         const { result } = renderHook(() => useStoredState("bool-key", true, storage));
-        expect(result.current[0]).toBe(false);
+        const [value] = result.current;
+        expect(value).toBe(false);
     });
 
     it("works with complex object values", () => {
@@ -108,10 +127,12 @@ describe("useStoredState", () => {
 
         const updated = { count: 1, labels: ["a", "b", "c"] };
         act(() => {
-            result.current[1](updated);
+            const [, setValue] = result.current;
+            setValue(updated);
         });
 
-        expect(result.current[0]).toEqual(updated);
-        expect(JSON.parse(storage.getItem("obj-key") as string)).toEqual(updated);
+        const [value] = result.current;
+        expect(value).toEqual(updated);
+        expect(fromStorage<typeof updated>(storage, "obj-key")).toEqual(updated);
     });
 });
