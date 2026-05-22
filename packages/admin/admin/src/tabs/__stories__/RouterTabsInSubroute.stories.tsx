@@ -2,8 +2,6 @@ import { RouterTab, RouterTabs, SubRoute } from "@comet/admin";
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 function Story() {
     const match = useRouteMatch();
     return (
@@ -35,8 +33,7 @@ function Path() {
 }
 
 export default {
-    title: "@comet/admin/tabs",
-    decorators: [storyRouterDecorator()],
+    title: "components/tabs/RouterTabs in SubRoute",
 };
 
 export const RouterTabsInSubRoute = {

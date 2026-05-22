@@ -12,11 +12,8 @@ import {
 } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
 
-import { storyRouterDecorator } from "../../../story-router.decorator";
-
 export default {
-    title: "Docs/Components/Tabs/Tabs",
-    decorators: [storyRouterDecorator()],
+    title: "components/tabs/Tabs",
 };
 
 export const Basic = () => {
@@ -84,7 +81,6 @@ export const TabsInFormWithForceRender = {
 
 export const TabsInFormWithoutForceRender = {
     render: () => {
-        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
         return (
             <div>
                 <FinalForm
@@ -170,7 +166,6 @@ export const FormInTabsWithForceRender = {
 
 export const FormInTabsWithoutForceRender = {
     render: () => {
-        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
         return (
             <div>
                 <Tabs>

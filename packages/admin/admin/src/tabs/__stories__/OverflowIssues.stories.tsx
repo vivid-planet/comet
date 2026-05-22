@@ -1,14 +1,12 @@
 import { MainContent, RouterTab, RouterTabs, Toolbar, ToolbarAutomaticTitleItem } from "@comet/admin";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import type { Meta } from "@storybook/react-vite";
-import { type ComponentType, useState } from "react";
+import { useState } from "react";
 
-import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { MasterLayoutDecorator } from "../../../.storybook/decorators/MasterLayout.decorator";
 
 const storyConfig: Meta = {
-    title: "@comet/admin/MasterLayout/OverflowIssues",
-    decorators: [maxHeightDecorator()],
+    title: "components/tabs/Overflow Issues",
     parameters: {
         docs: {
             description: {
@@ -18,17 +16,6 @@ const storyConfig: Meta = {
         },
     },
 };
-
-function maxHeightDecorator() {
-    // Make sure the story is not too tall and can be scrolled - setting the story-height in the config only affects the min-height and does not make the content scrollable
-    return (Story: ComponentType) => {
-        return (
-            <Box maxHeight="400px">
-                <Story />
-            </Box>
-        );
-    };
-}
 
 export default storyConfig;
 
@@ -48,9 +35,10 @@ const ExampleContentBlock = () => {
 };
 
 export const RouterTabsInMasterContent = {
-    decorators: [masterLayoutDecorator(), stackRouteDecorator(), storyRouterDecorator()],
+    decorators: [MasterLayoutDecorator],
     parameters: {
         layout: "none",
+        stack: { topLevelTitle: "Example Page" },
     },
     render: () => {
         return (
@@ -71,9 +59,10 @@ export const RouterTabsInMasterContent = {
 };
 
 export const RouterTabsInMasterContentWithToolbar = {
-    decorators: [masterLayoutDecorator(), stackRouteDecorator(), storyRouterDecorator()],
+    decorators: [MasterLayoutDecorator],
     parameters: {
         layout: "none",
+        stack: { topLevelTitle: "Example Page" },
     },
     render: () => {
         return (
@@ -99,9 +88,10 @@ export const RouterTabsInMasterContentWithToolbar = {
 };
 
 export const MuiTabsInMasterContent = {
-    decorators: [masterLayoutDecorator(), stackRouteDecorator(), storyRouterDecorator()],
+    decorators: [MasterLayoutDecorator],
     parameters: {
         layout: "none",
+        stack: { topLevelTitle: "Example Page" },
     },
     render: () => {
         const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -120,9 +110,10 @@ export const MuiTabsInMasterContent = {
 };
 
 export const MuiTabsInMasterContentWithToolbar = {
-    decorators: [masterLayoutDecorator(), stackRouteDecorator(), storyRouterDecorator()],
+    decorators: [MasterLayoutDecorator],
     parameters: {
         layout: "none",
+        stack: { topLevelTitle: "Example Page" },
     },
     render: () => {
         const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -146,9 +137,9 @@ export const MuiTabsInMasterContentWithToolbar = {
 };
 
 export const RouterTabsInMainContent = {
-    decorators: [stackRouteDecorator(), storyRouterDecorator()],
     parameters: {
         layout: "none",
+        stack: { topLevelTitle: "Example Page" },
     },
     render: () => {
         return (
