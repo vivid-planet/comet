@@ -22,11 +22,13 @@
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "pnpm run test:unit",
+        "test:coverage": "vitest --run --coverage",
         "test:unit": "vitest --run",
         "test:watch": "vitest --watch"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.4",
+        "@vitest/coverage-v8": "4.1.8",
         "eslint": "^9.39.4",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-import": "^2.32.0",

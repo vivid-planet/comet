@@ -37,7 +37,8 @@
         "test": "pnpm run test:unit",
         "test:unit": "vitest --run",
         "test:updateSnapshot": "vitest --run --update",
-        "test:watch": "vitest --watch"
+        "test:watch": "vitest --watch",
+        "test:coverage": "vitest --run --coverage"
     },
     "dependencies": {
         "@comet/admin": "workspace:*",
@@ -64,6 +65,7 @@
         "@types/pluralize": "^0.0.33",
         "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
+        "@vitest/coverage-v8": "4.1.8",
         "eslint": "^9.39.4",
         "final-form": "^4.20.10",
         "npm-run-all2": "^8.0.4",

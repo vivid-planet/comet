@@ -14,7 +14,14 @@ export default defineConfig({
         outputFile: {
             junit: "./junit.xml",
         },
-        testTimeout: 20000,
-        hookTimeout: 20000,
+        testTimeout: 60000,
+        hookTimeout: 60000,
+        coverage: {
+            provider: "v8",
+            reporter: ["text", "lcov", "json", "json-summary"],
+            reportsDirectory: "./coverage",
+            include: ["src/**"],
+            exclude: ["**/*.{test,spec}.{ts,tsx}", "**/__tests__/**", "**/generated/**", "**/*.stories.{ts,tsx}", "**/*.d.ts", "**/migrations/**"],
+        },
     },
 });

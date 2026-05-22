@@ -33,6 +33,7 @@
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "pnpm run test:unit",
+        "test:coverage": "vitest --run --coverage",
         "test:unit": "vitest --run",
         "test:watch": "vitest --watch"
     },
@@ -112,6 +113,7 @@
         "@types/nodemailer": "^6.4.23",
         "@types/probe-image-size": "^7.2.5",
         "@types/request-ip": "^0.0.41",
+        "@vitest/coverage-v8": "4.1.8",
         "aws-sdk-client-mock": "^4.1.0",
         "chokidar-cli": "^3.0.0",
         "class-transformer": "^0.5.1",

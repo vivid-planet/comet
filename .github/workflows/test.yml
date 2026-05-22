@@ -15,6 +15,9 @@ jobs:
     test-unit:
         name: Test (unit)
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
         steps:
             - run: echo "${{ github.actor }}"
 
@@ -28,7 +31,7 @@ jobs:
                   build-packages: "true"
 
             - name: Test (unit)
-              run: pnpm run test:unit
+              run: pnpm run test:coverage
 
             - name: Upload test results
               uses: actions/upload-artifact@v7
@@ -39,6 +42,34 @@ jobs:
                       packages/*/junit-unit.xml
                       packages/*/*/junit-unit.xml
                   overwrite: true
+
+            - name: Merge coverage reports
+              if: success() || failure()
+              run: pnpm run coverage:report
+
+            - name: Upload coverage report
+              uses: actions/upload-artifact@v7
+              if: success() || failure()
+              with:
+                  name: coverage-report
+                  path: |
+                      coverage
+                      packages/*/coverage
+                      packages/*/*/coverage
+                  overwrite: true
+
+            - name: Build coverage summary
+              if: success() || failure()
+              run: |
+                  node scripts/coverage-summary.mjs > coverage-summary.md
+                  cat coverage-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+            - name: Comment coverage on pull request
+              if: github.event_name == 'pull_request' && (success() || failure())
+              uses: marocchino/sticky-pull-request-comment@v2
+              with:
+                  header: coverage-report
+                  path: coverage-summary.md
 
     test-storybook:
         name: Test (storybook)
