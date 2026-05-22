@@ -31,6 +31,7 @@ const context = libReport.createContext({
 
 reports.create("html", { skipEmpty: false }).execute(context);
 reports.create("lcov").execute(context);
+reports.create("cobertura").execute(context);
 reports.create("text-summary").execute(context);
 
 console.log("\nMerged report written to coverage/index.html");
