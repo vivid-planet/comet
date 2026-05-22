@@ -1,8 +1,6 @@
 import { Stack, StackBreadcrumbs, StackPage, useStackSwitch } from "@comet/admin";
 import { Redirect, Route, Switch } from "react-router";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 function Story() {
     const [StackSwitch, api] = useStackSwitch();
     // demonstrate how to access the StackSwitchApi in the component where StackSwich is created (useStackSwitchApi doesn't work)
@@ -31,8 +29,7 @@ function Story() {
 }
 
 export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
+    title: "components/stack/StackRefApi",
 };
 
 export const StackRefApi = () => {

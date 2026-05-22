@@ -1,7 +1,5 @@
 import { type BreadcrumbItem, Stack, StackBreadcrumbs, useStackApi } from "@comet/admin";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 const singleItem: BreadcrumbItem[] = [{ id: "one", parentId: "", url: "/one", title: "Breadcrumb One" }];
 const twoItems: BreadcrumbItem[] = [...singleItem, { id: "two", parentId: "one", url: "/two", title: "BC 2" }];
 const threeItems: BreadcrumbItem[] = [...twoItems, { id: "three", parentId: "two", url: "/three", title: "BrdCrmb 3" }];
@@ -53,8 +51,7 @@ function Story({ selectedBreadcrumbsNumber, selectedBreadcrumbsGroup }: Args) {
 }
 
 export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
+    title: "components/stack/StackBreadcrumbs",
     args: {
         selectedBreadcrumbsNumber: "Three",
         selectedBreadcrumbsGroup: "Normal",

@@ -2,8 +2,6 @@ import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } fr
 import { useState } from "react";
 import { Redirect, Route, Switch } from "react-router";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 function Page2() {
     const [counter, setCounter] = useState(0);
     const [StackSwitch, api] = useStackSwitch();
@@ -86,8 +84,7 @@ function Story() {
 }
 
 export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
+    title: "components/stack/StackPageTitle",
 };
 
 export const _StackPageTitle = () => {
