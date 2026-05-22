@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { glob } from "node:fs/promises";
 
-const WARN_THRESHOLD = 50;
-const OK_THRESHOLD = 75;
+const BADGE_WARN_THRESHOLD = 50;
+const BADGE_OK_THRESHOLD = 75;
 
 const summaryFiles = [];
 for await (const entry of glob("packages/**/coverage/coverage-summary.json")) {
@@ -25,14 +25,9 @@ const rows = [];
 
 const percentage = (covered, total) => (total === 0 ? 100 : (covered / total) * 100);
 const formatPercentage = (value) => `${value.toFixed(2)}%`;
-const indicator = (value) => {
-    if (value >= OK_THRESHOLD) return "✅";
-    if (value >= WARN_THRESHOLD) return "⚠️";
-    return "❌";
-};
 const badgeColor = (value) => {
-    if (value >= OK_THRESHOLD) return "brightgreen";
-    if (value >= WARN_THRESHOLD) return "yellow";
+    if (value >= BADGE_OK_THRESHOLD) return "brightgreen";
+    if (value >= BADGE_WARN_THRESHOLD) return "yellow";
     return "critical";
 };
 
@@ -68,17 +63,15 @@ console.log(`![Code Coverage](${badgeUrl})`);
 console.log("");
 console.log("## Coverage report");
 console.log("");
-console.log("| Package | Lines | Statements | Branches | Functions | Health |");
-console.log("| --- | ---: | ---: | ---: | ---: | :---: |");
+console.log("| Package | Lines | Statements | Branches | Functions |");
+console.log("| --- | ---: | ---: | ---: | ---: |");
 for (const row of rows) {
     console.log(
-        `| \`packages/${row.package}\` | ${formatPercentage(row.lines)} | ${formatPercentage(row.statements)} | ${formatPercentage(row.branches)} | ${formatPercentage(row.functions)} | ${indicator(row.lines)} |`,
+        `| \`packages/${row.package}\` | ${formatPercentage(row.lines)} | ${formatPercentage(row.statements)} | ${formatPercentage(row.branches)} | ${formatPercentage(row.functions)} |`,
     );
 }
 console.log(
-    `| **Overall** | **${formatPercentage(overall.lines)}** | **${formatPercentage(overall.statements)}** | **${formatPercentage(overall.branches)}** | **${formatPercentage(overall.functions)}** | ${indicator(overall.lines)} |`,
+    `| **Overall** | **${formatPercentage(overall.lines)}** | **${formatPercentage(overall.statements)}** | **${formatPercentage(overall.branches)}** | **${formatPercentage(overall.functions)}** |`,
 );
-console.log("");
-console.log(`Thresholds: ❌ <${WARN_THRESHOLD}% · ⚠️ ${WARN_THRESHOLD}–${OK_THRESHOLD}% · ✅ ≥${OK_THRESHOLD}%`);
 console.log("");
 console.log("Download the `coverage-report` artifact from this run for the full clickable HTML report.");
