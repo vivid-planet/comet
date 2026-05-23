@@ -238,6 +238,117 @@ describe("installFeatures – internal filtering", () => {
     });
 });
 
+describe("installFeatures – node_modules skills and rules", () => {
+    it("symlinks skills from node_modules packages", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/node_modules": ["some-tool"],
+                "/proj/node_modules/some-tool": ["skills", "package.json"],
+                "/proj/node_modules/some-tool/skills": ["tool-docs"],
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/proj/node_modules/some-tool/skills/tool-docs"),
+            path.join("/proj", ".agents", "skills", "tool-docs"),
+        );
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/proj/node_modules/some-tool/skills/tool-docs"),
+            path.join("/proj", ".claude", "skills", "tool-docs"),
+        );
+    });
+
+    it("symlinks rules from node_modules packages", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/node_modules": ["some-tool"],
+                "/proj/node_modules/some-tool": ["rules", "package.json"],
+                "/proj/node_modules/some-tool/rules": ["best-practices.md"],
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/proj/node_modules/some-tool/rules/best-practices.md"),
+            path.join("/proj", ".agents", "rules", "best-practices.md"),
+        );
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/proj/node_modules/some-tool/rules/best-practices.md"),
+            path.join("/proj", ".claude", "rules", "best-practices.md"),
+        );
+    });
+
+    it("discovers skills from @scoped packages", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/node_modules": ["@my-scope"],
+                "/proj/node_modules/@my-scope": ["my-tool"],
+                "/proj/node_modules/@my-scope/my-tool": ["skills", "package.json"],
+                "/proj/node_modules/@my-scope/my-tool/skills": ["scoped-skill"],
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(
+            path.resolve("/proj/node_modules/@my-scope/my-tool/skills/scoped-skill"),
+            path.join("/proj", ".agents", "skills", "scoped-skill"),
+        );
+    });
+
+    it("local skills take priority over node_modules skills", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/skills": ["shared"],
+                "/proj/node_modules": ["some-tool"],
+                "/proj/node_modules/some-tool": ["skills", "package.json"],
+                "/proj/node_modules/some-tool/skills": ["shared"],
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/skills/shared"), expect.any(String));
+        expect(fs.symlinkSync).not.toHaveBeenCalledWith(path.resolve("/proj/node_modules/some-tool/skills/shared"), expect.any(String));
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('CONFLICT: "shared"'));
+    });
+
+    it("filters internal skills from node_modules", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/node_modules": ["some-tool"],
+                "/proj/node_modules/some-tool": ["skills", "package.json"],
+                "/proj/node_modules/some-tool/skills": ["public-skill", "internal-skill"],
+            },
+            fileContents: {
+                "/proj/node_modules/some-tool/skills/internal-skill/SKILL.md": "---\nmetadata:\n  internal: true\n---\n# Internal",
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/node_modules/some-tool/skills/public-skill"), expect.any(String));
+        expect(fs.symlinkSync).not.toHaveBeenCalledWith(path.resolve("/proj/node_modules/some-tool/skills/internal-skill"), expect.any(String));
+    });
+
+    it("skips dotfiles and dotfolders in node_modules", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/node_modules": [".bin", ".package-lock.json", "some-tool"],
+                "/proj/node_modules/some-tool": ["skills", "package.json"],
+                "/proj/node_modules/some-tool/skills": ["my-skill"],
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/node_modules/some-tool/skills/my-skill"), expect.any(String));
+    });
+});
+
 describe("installFeatures – missing local sources", () => {
     it("runs cleanly when there are no local skills or rules", () => {
         mockFilesystem({});
