@@ -288,28 +288,34 @@ export function installFeatures(cwd: string, repos: string[], options: InstallOp
     for (const pkgDir of nodeModulesPackages) {
         const pkgName = pkgDir.includes(`${path.sep}@`) ? pkgDir.split(path.sep).slice(-2).join("/") : path.basename(pkgDir);
         for (const p of SKILL_SOURCE_PATHS) {
-            skillSources.push({
-                label: `node_modules ${pkgName} (${p}/)`,
-                directory: path.join(pkgDir, p),
-                discover: "folders",
-                symlink: true,
-                filterInternal: true,
-                installed: installedSkills,
-                itemLabelSingular: "skill",
-                itemLabelPlural: "skills",
-            });
+            const dir = path.join(pkgDir, p);
+            if (fs.existsSync(dir)) {
+                skillSources.push({
+                    label: `node_modules ${pkgName} (${p}/)`,
+                    directory: dir,
+                    discover: "folders",
+                    symlink: true,
+                    filterInternal: true,
+                    installed: installedSkills,
+                    itemLabelSingular: "skill",
+                    itemLabelPlural: "skills",
+                });
+            }
         }
         for (const p of RULE_SOURCE_PATHS) {
-            ruleSources.push({
-                label: `node_modules ${pkgName} (${p}/)`,
-                directory: path.join(pkgDir, p),
-                discover: "files",
-                symlink: true,
-                filterInternal: true,
-                installed: installedRules,
-                itemLabelSingular: "rule",
-                itemLabelPlural: "rules",
-            });
+            const dir = path.join(pkgDir, p);
+            if (fs.existsSync(dir)) {
+                ruleSources.push({
+                    label: `node_modules ${pkgName} (${p}/)`,
+                    directory: dir,
+                    discover: "files",
+                    symlink: true,
+                    filterInternal: true,
+                    installed: installedRules,
+                    itemLabelSingular: "rule",
+                    itemLabelPlural: "rules",
+                });
+            }
         }
     }
 

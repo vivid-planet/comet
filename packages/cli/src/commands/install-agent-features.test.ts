@@ -347,6 +347,22 @@ describe("installFeatures – node_modules skills and rules", () => {
 
         expect(fs.symlinkSync).toHaveBeenCalledWith(path.resolve("/proj/node_modules/some-tool/skills/my-skill"), expect.any(String));
     });
+
+    it("does not add a source entry for packages without a skills/ or rules/ directory", () => {
+        mockFilesystem({
+            listings: {
+                "/proj/node_modules": ["no-skills-tool"],
+                "/proj/node_modules/no-skills-tool": ["dist", "package.json"],
+                // no skills/ or rules/ entry
+            },
+        });
+
+        installFeatures("/proj", [], { dryRun: false });
+
+        // No symlinks and no "No skills found in node_modules" log noise
+        expect(fs.symlinkSync).not.toHaveBeenCalled();
+        expect(console.log).not.toHaveBeenCalledWith(expect.stringContaining("node_modules no-skills-tool"));
+    });
 });
 
 describe("installFeatures – missing local sources", () => {
