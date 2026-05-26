@@ -1,5 +1,5 @@
 import { act, renderHook } from "test-utils";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { useStoredState } from "../useStoredState";
 
@@ -30,11 +30,6 @@ function createMockStorage(initial: Record<string, string> = {}): Storage {
         key: (index: number) => Object.keys(store)[index] ?? null,
     };
 }
-
-afterEach(() => {
-    localStorage.clear();
-    vi.restoreAllMocks();
-});
 
 describe("useStoredState", () => {
     it("returns the initial value when no stored value exists", () => {
