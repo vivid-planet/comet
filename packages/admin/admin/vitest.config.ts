@@ -5,7 +5,7 @@ export default defineConfig({
     plugins: [tsconfigPaths()],
     test: {
         environment: "jsdom",
-        reporters: ["default", "junit"],
+        reporters: process.env.GITHUB_ACTIONS ? ["default", "junit", "github-actions"] : ["default", "junit"],
         outputFile: {
             junit: "./junit.xml",
         },

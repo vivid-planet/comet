@@ -6,7 +6,7 @@ export default defineConfig({
     test: {
         environment: "jsdom",
         setupFiles: ["./vitest.setup.ts"],
-        reporters: ["default", "junit"],
+        reporters: process.env.GITHUB_ACTIONS ? ["default", "junit", "github-actions"] : ["default", "junit"],
         outputFile: {
             junit: "./junit.xml",
         },
