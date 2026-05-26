@@ -11,9 +11,7 @@ export function withAdminRedirectMiddleware(middleware: CustomMiddleware) {
             if (siteConfig) {
                 const { domain, languages } = siteConfig.scope;
                 const language = languages[0];
-                if (language) {
-                    return NextResponse.redirect(new URL(`/${domain}/${language}`, process.env.ADMIN_URL));
-                }
+                return NextResponse.redirect(new URL(`/${domain}/${language}`, process.env.ADMIN_URL));
             }
             return NextResponse.redirect(new URL(process.env.ADMIN_URL));
         }
