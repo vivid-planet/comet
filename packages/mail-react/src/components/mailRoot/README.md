@@ -5,9 +5,3 @@ Solves the problem that every email template repeats the same boilerplate docume
 ## Non-goals
 
 - Does not render any visible content of its own; templates supply sections as children.
-
-## Dependencies
-
-- [theme](../../theme/README.md) — supplies the resolved values used for body width, background, breakpoint, and base font.
-- [config](../../config/README.md) — exposes consumer configuration to descendants when the optional `config` prop is passed.
-- [styles](../../styles/README.md) — emits the registered `<mj-style>` block inside `<MjmlHead>`.

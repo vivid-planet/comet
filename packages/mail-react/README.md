@@ -43,7 +43,7 @@ When a custom component replaces a re-export, describe the change against the pr
 
 ## Internal documentation per feature
 
-Features substantial enough to live in their own directory should have a `README.md` that records what the feature is, what it deliberately doesn't do, and what it depends on. These READMEs are internal — written for the people (and agents) maintaining the code, not for consumers. End-user usage docs live elsewhere (see [Consumer-facing documentation](#consumer-facing-documentation)).
+Features substantial enough to live in their own directory should have a `README.md` that records what the feature is and what it deliberately doesn't do. These READMEs are internal — written for the people (and agents) maintaining the code, not for consumers. End-user usage docs live elsewhere (see [Consumer-facing documentation](#consumer-facing-documentation)).
 
 ### What is a feature
 
@@ -59,13 +59,12 @@ A feature that warrants a README is organized as a directory, with the README at
 
 **Title.** Use the exact identifier when the feature is a single component or function (e.g. `MjmlSection`); otherwise use a sentence-case name (e.g. _Inline link_).
 
-Three sections, in order. Only the intro is required.
+Two sections, in order. Only the intro is required.
 
 1. **Intro.** One short paragraph: what problem the feature solves, and what it does to solve it.
 2. **Non-goals** (optional). Things the feature deliberately doesn't do, only when a reader might otherwise assume it does. Skip the obvious; skip future work; skip rejected alternatives — those belong in the commit that made the choice.
-3. **Dependencies** (optional). Other features this builds on, one sentence each.
 
-Other sections should be rare — only when content is durable, feature-specific, and doesn't fit the three above. Specifically not warranted: no Architecture (the code shows it), no Design decisions (commits carry them), no Usage (consumer docs).
+Other sections should be rare — only when content is durable, feature-specific, and doesn't fit the two above. Specifically not warranted: no Architecture (the code shows it), no Design decisions (commits carry them), no Usage (consumer docs), no Dependencies (imports show them; non-obvious cross-feature coupling belongs in the intro).
 
 **Express the rule, not the code.** Every line should say something the code doesn't. Don't restate type signatures, prop lists, formulas, or control flow — the code already shows those.
 
@@ -81,10 +80,6 @@ Other sections should be rare — only when content is durable, feature-specific
 ## Non-goals <!-- only if any -->
 
 - <Something the feature deliberately doesn't do, only when a reader might otherwise assume it does.>
-
-## Dependencies <!-- only if any -->
-
-- [<feature-name>](path/to/feature/README.md) — <what it provides>
 ```
 
 ### Living documents

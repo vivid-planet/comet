@@ -5,7 +5,3 @@ Solves the lack of a built-in way to define and reuse responsive, named text sty
 ## Non-goals
 
 - Not a heading component. Heading semantics (size, weight, spacing) are expressed as theme variants on the same text components, not as separate elements.
-
-## Dependencies
-
-- [theme](../../theme/README.md) — supplies the base text styles, the variants looked up by `variant`, and the `bottomSpacing` value.
