@@ -43,7 +43,7 @@ When a custom component replaces a re-export, describe the change against the pr
 
 ## Internal documentation per feature
 
-Features substantial enough to live in their own directory should have a `README.md` that records what the feature is and what it deliberately doesn't do. These READMEs are internal — written for the people (and agents) maintaining the code, not for consumers. End-user usage docs live elsewhere (see [Consumer-facing documentation](#consumer-facing-documentation)).
+Features substantial enough to live in their own directory should have a `README.md` that states the problem the feature solves and — when a maintainer might assume otherwise — the boundaries it deliberately doesn't cross. These READMEs are internal — written for the people (and agents) maintaining the code, not for consumers. End-user usage docs live elsewhere (see [Consumer-facing documentation](#consumer-facing-documentation)).
 
 ### What is a feature
 
