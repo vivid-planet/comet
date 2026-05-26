@@ -44,7 +44,18 @@ jobs:
               run: pnpm run build:packages
 
             - name: Test
-              run: pnpm --recursive --reporter=append-only run test
+              run: |
+                  set +e
+                  rc=0
+                  while IFS= read -r config; do
+                      dir=$(dirname "$config")
+                      echo "::group::$dir"
+                      (cd "$dir" && pnpm exec vitest --run)
+                      status=$?
+                      echo "::endgroup::"
+                      if [ $status -ne 0 ]; then rc=$status; fi
+                  done < <(find packages demo -name "vitest.config.ts" -not -path "*/node_modules/*" -not -path "*/lib/*" -not -path "*/dist/*")
+                  exit $rc
 
             - name: Upload test results
               uses: actions/upload-artifact@v7
