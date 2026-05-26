@@ -620,8 +620,15 @@ type EntityInfo {
 }
 
 input FileFilterInput {
+  """
+  Restrict the result to files with these IDs. When a non-empty list is provided, the folder constraint is bypassed and matches are returned regardless of which folder they live in.
+  """
   ids: [ID!]
   mimetypes: [String!]
+
+  """
+  Full-text search across file names. When set, the folder constraint is bypassed and results span the whole scope.
+  """
   searchText: String
 }
 
@@ -1905,7 +1912,20 @@ type Query {
   currentUser: CurrentUser!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput!): [FilenameResponse!]!
   damFile(id: ID!): DamFile!
-  damFilesList(filter: FileFilterInput, folderId: ID, includeArchived: Boolean = false, limit: Int! = 25, offset: Int! = 0, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamFiles!
+  damFilesList(
+    filter: FileFilterInput
+
+    """
+    Folder to list files from. When omitted, files at the scope root are returned. Ignored when filter.searchText or filter.ids is set.
+    """
+    folderId: ID
+    includeArchived: Boolean = false
+    limit: Int! = 25
+    offset: Int! = 0
+    scope: DamScopeInput!
+    sortColumnName: String
+    sortDirection: SortDirection! = ASC
+  ): PaginatedDamFiles!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID, scope: DamScopeInput!): DamFolder
   damFoldersFlat(scope: DamScopeInput!): [DamFolder!]!
