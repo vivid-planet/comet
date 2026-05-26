@@ -60,21 +60,9 @@ Run from the `docs/` folder:
 # Auto-fix ESLint issues
 pnpm run lint:eslint --fix
 
-# Verify all checks pass: prettier, eslint, cspell
+# Verify all checks pass: prettier, eslint
 pnpm run lint
 ```
-
-For cspell errors: add unknown words to `.cspellignore` at the repo root.
-
-### For `.changeset/*.md` files
-
-Run from the repo root:
-
-```bash
-pnpm cspell .changeset/*.md
-```
-
-Add unknown words to `.cspellignore` at the repo root.
 
 ## Demo application
 
