@@ -44,7 +44,7 @@ jobs:
               run: pnpm run build:packages
 
             - name: Test
-              run: pnpm run test
+              run: pnpm --recursive --reporter=append-only run test
 
             - name: Upload test results
               uses: actions/upload-artifact@v7
