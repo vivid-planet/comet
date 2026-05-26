@@ -4,5 +4,4 @@ Solves the difficulty of debugging emails during development. Stories rendered a
 
 ## Non-goals
 
-- Not a runtime email renderer. The decorator is for preview only; production sending uses `renderMailHtml` directly.
 - No public API surface beyond the addon name. Manager and preview files are referenced by filesystem path from the preset and are not in the package `exports` map.

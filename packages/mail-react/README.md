@@ -62,7 +62,9 @@ A feature that warrants a README is organized as a directory, with the README at
 Two sections, in order. Only the intro is required.
 
 1. **Intro.** One short paragraph: what problem the feature solves, and what it does to solve it.
-2. **Non-goals** (optional). Things the feature deliberately doesn't do, only when a reader might otherwise assume it does. Skip the obvious; skip future work; skip rejected alternatives — those belong in the commit that made the choice.
+2. **Non-goals** (optional). Things the feature deliberately doesn't do — only when a reader would reasonably assume it does, typically because the feature's name, its domain, or a sibling feature suggests so. The test: would a maintainer look here for this and be surprised it's missing? If not, leave it out. Skip the obvious; skip future work; skip rejected alternatives — those belong in the commit that made the choice.
+
+   Write each bullet as a noun phrase naming the thing not done (`Not a heading component`, `No CSS variables`). Add a single follow-up sentence only when the reader needs to be redirected to the alternative or told why.
 
 Other sections should be rare — only when content is durable, feature-specific, and doesn't fit the two above. Specifically not warranted: no Architecture (the code shows it), no Design decisions (commits carry them), no Usage (consumer docs), no Dependencies (imports show them; non-obvious cross-feature coupling belongs in the intro).
 
@@ -79,7 +81,7 @@ Other sections should be rare — only when content is durable, feature-specific
 
 ## Non-goals <!-- only if any -->
 
-- <Something the feature deliberately doesn't do, only when a reader might otherwise assume it does.>
+- <Noun phrase naming what the feature deliberately doesn't do.> <Optional follow-up sentence pointing to the alternative or stating the rationale.>
 ```
 
 ### Living documents
