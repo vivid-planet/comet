@@ -1,6 +1,7 @@
 import type { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { FileFilterInput } from "./dto/file.args";
 import type { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 
@@ -49,82 +50,71 @@ function createServiceWithMockQueryBuilder() {
     return { service, andWhereArgs, hasFolderConstraint };
 }
 
-describe("FilesService", () => {
-    describe("findAndCount — folder-by-default vs filter.ids", () => {
-        beforeEach(() => {
-            vi.clearAllMocks();
-        });
+type CallArgs = { folderId?: string; filter?: FileFilterInput };
 
-        it("constrains to the scope root (folder.id = null) when neither folderId nor filter.ids are provided", async () => {
-            const { service, andWhereArgs, hasFolderConstraint } = createServiceWithMockQueryBuilder();
+const callers = [
+    {
+        name: "findAll",
+        call: (service: FilesService, args: CallArgs) => service.findAll(args),
+    },
+    {
+        name: "findAndCount",
+        call: (service: FilesService, args: CallArgs) => service.findAndCount({ ...args, offset: 0, limit: 25 }),
+    },
+];
 
-            await service.findAndCount({ offset: 0, limit: 25 });
-
-            expect(hasFolderConstraint()).toBe(true);
-            expect(andWhereArgs).toContainEqual({ folder: { id: null } });
-        });
-
-        it("constrains to the given folder when folderId is provided and filter.ids is not", async () => {
-            const { service, andWhereArgs } = createServiceWithMockQueryBuilder();
-
-            await service.findAndCount({ offset: 0, limit: 25, folderId: FOLDER_ID });
-
-            expect(andWhereArgs).toContainEqual({ folder: { id: FOLDER_ID } });
-        });
-
-        it("does NOT apply any folder constraint when filter.ids is provided (fix for cross-folder lookups)", async () => {
-            const { service, andWhereArgs, hasFolderConstraint } = createServiceWithMockQueryBuilder();
-
-            await service.findAndCount({ offset: 0, limit: 25, filter: { ids: [FILE_ID_A, FILE_ID_B] } });
-
-            expect(hasFolderConstraint()).toBe(false);
-            expect(andWhereArgs).toContainEqual({ id: { $in: [FILE_ID_A, FILE_ID_B] } });
-        });
-
-        it("ignores an explicitly passed folderId when filter.ids is also provided", async () => {
-            const { service, hasFolderConstraint } = createServiceWithMockQueryBuilder();
-
-            await service.findAndCount({ offset: 0, limit: 25, folderId: FOLDER_ID, filter: { ids: [FILE_ID_A] } });
-
-            expect(hasFolderConstraint()).toBe(false);
-        });
-
-        it("still applies the folder default when filter.ids is an empty array (treated as no ids filter)", async () => {
-            const { service, andWhereArgs } = createServiceWithMockQueryBuilder();
-
-            await service.findAndCount({ offset: 0, limit: 25, filter: { ids: [] } });
-
-            expect(andWhereArgs).toContainEqual({ folder: { id: null } });
-        });
-
-        it("drops the folder constraint when searchText is provided (regression guard for existing behavior)", async () => {
-            const { service, hasFolderConstraint } = createServiceWithMockQueryBuilder();
-
-            await service.findAndCount({ offset: 0, limit: 25, filter: { searchText: "logo" } });
-
-            expect(hasFolderConstraint()).toBe(false);
-        });
+describe.each(callers)("FilesService.$name — folder-by-default vs filter.ids", ({ call }) => {
+    beforeEach(() => {
+        vi.clearAllMocks();
     });
 
-    describe("findAll — folder-by-default vs filter.ids", () => {
-        beforeEach(() => {
-            vi.clearAllMocks();
-        });
+    it("constrains to the scope root (folder.id = null) when neither folderId nor filter.ids are provided", async () => {
+        const { service, andWhereArgs, hasFolderConstraint } = createServiceWithMockQueryBuilder();
 
-        it("constrains to the scope root when neither folderId nor filter.ids are provided", async () => {
-            const { service, andWhereArgs } = createServiceWithMockQueryBuilder();
+        await call(service, {});
 
-            await service.findAll({});
+        expect(hasFolderConstraint()).toBe(true);
+        expect(andWhereArgs).toContainEqual({ folder: { id: null } });
+    });
 
-            expect(andWhereArgs).toContainEqual({ folder: { id: null } });
-        });
+    it("constrains to the given folder when folderId is provided and filter.ids is not", async () => {
+        const { service, andWhereArgs } = createServiceWithMockQueryBuilder();
 
-        it("does NOT apply any folder constraint when filter.ids is provided", async () => {
-            const { service, hasFolderConstraint } = createServiceWithMockQueryBuilder();
+        await call(service, { folderId: FOLDER_ID });
 
-            await service.findAll({ filter: { ids: [FILE_ID_A] } });
+        expect(andWhereArgs).toContainEqual({ folder: { id: FOLDER_ID } });
+    });
 
-            expect(hasFolderConstraint()).toBe(false);
-        });
+    it("does NOT apply any folder constraint when filter.ids is provided (fix for cross-folder lookups)", async () => {
+        const { service, andWhereArgs, hasFolderConstraint } = createServiceWithMockQueryBuilder();
+
+        await call(service, { filter: { ids: [FILE_ID_A, FILE_ID_B] } });
+
+        expect(hasFolderConstraint()).toBe(false);
+        expect(andWhereArgs).toContainEqual({ id: { $in: [FILE_ID_A, FILE_ID_B] } });
+    });
+
+    it("ignores an explicitly passed folderId when filter.ids is also provided", async () => {
+        const { service, hasFolderConstraint } = createServiceWithMockQueryBuilder();
+
+        await call(service, { folderId: FOLDER_ID, filter: { ids: [FILE_ID_A] } });
+
+        expect(hasFolderConstraint()).toBe(false);
+    });
+
+    it("still applies the folder default when filter.ids is an empty array (treated as no ids filter)", async () => {
+        const { service, andWhereArgs } = createServiceWithMockQueryBuilder();
+
+        await call(service, { filter: { ids: [] } });
+
+        expect(andWhereArgs).toContainEqual({ folder: { id: null } });
+    });
+
+    it("drops the folder constraint when searchText is provided (regression guard for existing behavior)", async () => {
+        const { service, hasFolderConstraint } = createServiceWithMockQueryBuilder();
+
+        await call(service, { filter: { searchText: "logo" } });
+
+        expect(hasFolderConstraint()).toBe(false);
     });
 });
