@@ -29,7 +29,7 @@ jobs:
 
             - uses: ./.github/actions/setup
               with:
-                  build: "false"
+                  buildPackages: "false"
 
             - name: Build docs
               run: pnpm build:docs

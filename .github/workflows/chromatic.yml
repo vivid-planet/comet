@@ -25,7 +25,7 @@ jobs:
             - uses: ./.github/actions/setup
               with:
                   node-version: "22"
-                  build: "false"
+                  buildPackages: "false"
 
             - run: pnpm --recursive --filter '@comet/*admin*' --filter '@comet/mail-react' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build
 

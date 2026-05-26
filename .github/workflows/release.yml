@@ -20,7 +20,7 @@ jobs:
 
             - uses: ./.github/actions/setup
               with:
-                  build: "false"
+                  buildPackages: "false"
 
             - name: Get version to be published
               run: |

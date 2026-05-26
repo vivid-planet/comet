@@ -18,7 +18,7 @@ jobs:
 
             - uses: ./.github/actions/setup
               with:
-                  build: "false"
+                  buildPackages: "false"
 
             - name: "Exit Prelease Mode"
               if: ${{ hashFiles('.changeset/pre.json') != '' }}

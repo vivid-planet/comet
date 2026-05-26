@@ -8,7 +8,7 @@ inputs:
     setup-ci:
         description: Whether to run `pnpm run setup:ci`.
         default: "true"
-    build:
+    buildPackages:
         description: Whether to run `pnpm run build:packages`.
         default: "true"
 
@@ -33,6 +33,6 @@ runs:
           run: pnpm run setup:ci
 
         - name: Build packages
-          if: ${{ inputs.build == 'true' }}
+          if: ${{ inputs.buildPackages == 'true' }}
           shell: bash
           run: pnpm run build:packages

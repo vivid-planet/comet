@@ -173,7 +173,7 @@ jobs:
             - uses: ./.github/actions/setup
               with:
                   setup-ci: "false"
-                  build: "false"
+                  buildPackages: "false"
 
             - name: Build @comet/cli and @comet/eslint-plugin (if not cached)
               run: |
