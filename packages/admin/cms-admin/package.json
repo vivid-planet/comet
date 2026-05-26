@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "9.0.0-beta.3",
+    "version": "9.0.0-beta.4",
     "description": "Comet CMS Admin package",
     "repository": {
         "directory": "packages/admin/cms-admin",
@@ -59,7 +59,7 @@
         "@tiptap/starter-kit": "^3.22.3",
         "change-case": "^4.1.2",
         "class-validator": "^0.14.3",
-        "date-fns": "^4.1.0",
+        "date-fns": "^4.2.1",
         "final-form-arrays": "^3.1.0",
         "final-form-set-field-touched": "^1.0.1",
         "js-cookie": "^3.0.7",
@@ -125,7 +125,7 @@
         "eslint": "^9.39.4",
         "eslint-plugin-storybook": "^10.3.5",
         "final-form": "^4.20.10",
-        "graphql": "^16.13.2",
+        "graphql": "^16.14.0",
         "history": "^4.10.1",
         "jsdom": "^28.1.0",
         "msw": "^2.14.6",

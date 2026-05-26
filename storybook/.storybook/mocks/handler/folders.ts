@@ -7,7 +7,7 @@ type FolderMockData = {
     name: string;
     parentId: string | null;
 };
-export const folders: FolderMockData[] = [
+const folders: FolderMockData[] = [
     { id: "1", name: "Media Root", parentId: null },
 
     // Level 1 (direct children of root)
