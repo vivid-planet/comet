@@ -29,6 +29,60 @@ interface InstallSource {
     itemLabelPlural: string;
 }
 
+function discoverNodeModulesPackages(cwd: string): string[] {
+    const nodeModulesDir = path.join(cwd, "node_modules");
+    if (!fs.existsSync(nodeModulesDir)) {
+        return [];
+    }
+
+    const packageDirs: string[] = [];
+    let entries: string[];
+    try {
+        entries = fs.readdirSync(nodeModulesDir);
+    } catch {
+        return [];
+    }
+
+    for (const entry of entries) {
+        if (entry.startsWith(".")) {
+            continue;
+        }
+        const fullPath = path.join(nodeModulesDir, entry);
+        if (entry.startsWith("@")) {
+            // Scoped package: read one level deeper
+            let scopedEntries: string[];
+            try {
+                scopedEntries = fs.readdirSync(fullPath);
+            } catch {
+                continue;
+            }
+            for (const scopedEntry of scopedEntries) {
+                if (scopedEntry.startsWith(".")) {
+                    continue;
+                }
+                const scopedPath = path.join(fullPath, scopedEntry);
+                try {
+                    if (fs.statSync(scopedPath).isDirectory()) {
+                        packageDirs.push(scopedPath);
+                    }
+                } catch {
+                    // skip unreadable entries
+                }
+            }
+        } else {
+            try {
+                if (fs.statSync(fullPath).isDirectory()) {
+                    packageDirs.push(fullPath);
+                }
+            } catch {
+                // skip unreadable entries
+            }
+        }
+    }
+
+    return packageDirs;
+}
+
 function parseRepoUrl(rawUrl: string): { repoUrl: string; ref: string | undefined } {
     const hashIndex = rawUrl.lastIndexOf("#");
     if (hashIndex === -1) {
@@ -228,6 +282,42 @@ export function installFeatures(cwd: string, repos: string[], options: InstallOp
         itemLabelSingular: "rule",
         itemLabelPlural: "rules",
     }));
+
+    // Discover skills/rules from node_modules (direct dependencies only, including @scoped packages)
+    const nodeModulesPackages = discoverNodeModulesPackages(cwd);
+    for (const pkgDir of nodeModulesPackages) {
+        const pkgName = pkgDir.includes(`${path.sep}@`) ? pkgDir.split(path.sep).slice(-2).join("/") : path.basename(pkgDir);
+        for (const p of SKILL_SOURCE_PATHS) {
+            const dir = path.join(pkgDir, p);
+            if (fs.existsSync(dir)) {
+                skillSources.push({
+                    label: `node_modules ${pkgName} (${p}/)`,
+                    directory: dir,
+                    discover: "folders",
+                    symlink: true,
+                    filterInternal: true,
+                    installed: installedSkills,
+                    itemLabelSingular: "skill",
+                    itemLabelPlural: "skills",
+                });
+            }
+        }
+        for (const p of RULE_SOURCE_PATHS) {
+            const dir = path.join(pkgDir, p);
+            if (fs.existsSync(dir)) {
+                ruleSources.push({
+                    label: `node_modules ${pkgName} (${p}/)`,
+                    directory: dir,
+                    discover: "files",
+                    symlink: true,
+                    filterInternal: true,
+                    installed: installedRules,
+                    itemLabelSingular: "rule",
+                    itemLabelPlural: "rules",
+                });
+            }
+        }
+    }
 
     const sparsePatterns = [...SKILL_SOURCE_PATHS, ...RULE_SOURCE_PATHS].map((p) => `${p}/`);
 
