@@ -1,0 +1,38 @@
+name: Setup
+description: Set up pnpm, Node.js, install dependencies, and optionally run setup:ci and build:packages.
+
+inputs:
+    node-version:
+        description: Node.js version to install.
+        default: "24"
+    setup-ci:
+        description: Whether to run `pnpm run setup:ci`.
+        default: "true"
+    build:
+        description: Whether to run `pnpm run build:packages`.
+        default: "true"
+
+runs:
+    using: composite
+    steps:
+        - uses: pnpm/action-setup@v6
+
+        - name: Use Node.js ${{ inputs.node-version }}.x
+          uses: actions/setup-node@v6
+          with:
+              node-version: ${{ inputs.node-version }}
+              registry-url: "https://registry.npmjs.org"
+              cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+
+        - shell: bash
+          run: pnpm install --frozen-lockfile
+
+        - name: Setup project for CI run
+          if: ${{ inputs.setup-ci == 'true' }}
+          shell: bash
+          run: pnpm run setup:ci
+
+        - name: Build packages
+          if: ${{ inputs.build == 'true' }}
+          shell: bash
+          run: pnpm run build:packages

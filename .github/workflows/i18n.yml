@@ -25,16 +25,9 @@ jobs:
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
                   path: "demo/admin/lang/comet-lang"
 
-            - uses: pnpm/action-setup@v6
-
-            - name: Use Node.js 24.x
-              uses: actions/setup-node@v6
+            - uses: ./.github/actions/setup
               with:
-                  node-version: 24
-                  registry-url: "https://registry.npmjs.org"
-                  cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
-
-            - run: pnpm install --frozen-lockfile
+                  build: "false"
 
             - name: "Library: Extract i18n strings"
               run: |

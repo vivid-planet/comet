@@ -56,15 +56,6 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/api/lang/comet-demo-lang"
 
-            - uses: pnpm/action-setup@v6
-
-            - name: Use Node.js 24.x
-              uses: actions/setup-node@v6
-              with:
-                  node-version: 24
-                  registry-url: "https://registry.npmjs.org"
-                  cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
-
             # Cache build outputs per package (before pnpm install to avoid hashing node_modules)
             # Hash patterns target source and config files, explicitly excluding lib/ build output
             - name: Cache @comet/cli build
@@ -179,7 +170,10 @@ jobs:
                   path: packages/site/site-react/lib
                   key: ${{ runner.os }}-build-site-react-${{ hashFiles('packages/site/site-react/src/**', 'packages/site/site-react/package.json', 'packages/site/site-react/tsconfig*.json', 'pnpm-lock.yaml') }}
 
-            - run: pnpm install --frozen-lockfile
+            - uses: ./.github/actions/setup
+              with:
+                  setup-ci: "false"
+                  build: "false"
 
             - name: Build @comet/cli and @comet/eslint-plugin (if not cached)
               run: |
