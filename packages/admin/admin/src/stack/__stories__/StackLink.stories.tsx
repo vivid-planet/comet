@@ -1,11 +1,8 @@
 import { Button, Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
 import { useLocation } from "react-router";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
+    title: "components/stack/StackLink",
 };
 
 export const _StackLink = {

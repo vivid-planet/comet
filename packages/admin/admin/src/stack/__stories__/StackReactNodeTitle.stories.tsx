@@ -1,11 +1,8 @@
 import { Button, Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
 import { Typography } from "@mui/material";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
+    title: "components/stack/StackReactNodeTitle",
 };
 
 export const StackWithReactReactNodeTitle = {

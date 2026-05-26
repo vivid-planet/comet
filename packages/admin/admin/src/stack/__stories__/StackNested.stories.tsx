@@ -1,8 +1,6 @@
-import { Stack, StackBackButton, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { useContext } from "react";
 import { Redirect, Route, Switch } from "react-router";
-
-import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Page1() {
     const switchApi = useContext(StackSwitchApiContext);
@@ -17,13 +15,10 @@ function Page1() {
     );
 }
 
-function Story() {
+function Page2() {
     return (
-        <Stack topLevelTitle="Stack">
-            <div style={{ display: "flex", flexDirection: "row" }}>
-                <StackBackButton />
-                <StackBreadcrumbs />
-            </div>
+        <Stack topLevelTitle="Stack Nested">
+            <StackBreadcrumbs />
             <StackSwitch>
                 <StackPage name="page1">
                     <Page1 />
@@ -34,12 +29,27 @@ function Story() {
     );
 }
 
+function Story() {
+    return (
+        <Stack topLevelTitle="Stack">
+            <StackBreadcrumbs />
+            <StackSwitch>
+                <StackPage name="page1">
+                    <Page1 />
+                </StackPage>
+                <StackPage name="page2">
+                    <Page2 />
+                </StackPage>
+            </StackSwitch>
+        </Stack>
+    );
+}
+
 export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
+    title: "components/stack/StackNested",
 };
 
-export const _StackBackButton = () => {
+export const StackNested = () => {
     return (
         <Switch>
             <Route exact path="/">

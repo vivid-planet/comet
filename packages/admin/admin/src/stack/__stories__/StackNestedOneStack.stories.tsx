@@ -2,8 +2,6 @@ import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, SubRoute, u
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 function Story() {
     const urlPrefix = useSubRoutePrefix();
     return (
@@ -48,8 +46,7 @@ function Path() {
 }
 
 export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
+    title: "components/stack/StackNestedOneStack",
 };
 
 export const StackNestedOneStack = {

@@ -1,11 +1,8 @@
 import { Stack, StackBreadcrumbs } from "@comet/admin";
 import { Typography } from "@mui/material";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
+    title: "components/stack/Stack",
 };
 
 export const _Stack = () => {

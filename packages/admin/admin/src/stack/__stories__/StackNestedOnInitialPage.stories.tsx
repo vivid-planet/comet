@@ -2,8 +2,6 @@ import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@com
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 function Path() {
     const location = useLocation();
     const [, rerender] = useState(0);
@@ -49,8 +47,7 @@ function Story() {
 }
 
 export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
+    title: "components/stack/StackNestedOnInitialPage",
 };
 
 export const StackNestedOnInitialPage = () => {
