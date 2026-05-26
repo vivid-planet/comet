@@ -1,6 +1,6 @@
 # Theme
 
-Solves the problem of keeping sizes, breakpoints, colors, and text styles consistent across every component in an email — without hard-coding them — while still letting each consuming project override any token and extend the theme with its own. Defaults are deep-merged with overrides by `createTheme`, distributed by `ThemeProvider`, and read by components via `useTheme`. Text styles additionally support named variants so components like `MjmlText` can pick a single `variant` instead of repeating individual style props on every usage.
+Without a shared theme, every component in an email would hard-code its sizes, breakpoints, colors, and text styles, leaving each consuming project with no path to override or extend any of them. `createTheme` deep-merges defaults with overrides, `ThemeProvider` distributes the result, and components read it via `useTheme`. Text styles additionally support named variants so components like `MjmlText` can pick a single `variant` instead of repeating individual style props on every usage.
 
 ## Non-goals
 

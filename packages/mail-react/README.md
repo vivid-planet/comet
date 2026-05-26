@@ -43,7 +43,7 @@ When a custom component replaces a re-export, describe the change against the pr
 
 ## Internal documentation per feature
 
-Features substantial enough to live in their own directory should have a `README.md` that states the problem the feature solves and — when a maintainer might assume otherwise — the boundaries it deliberately doesn't cross. These READMEs are internal — written for the people (and agents) maintaining the code, not for consumers. End-user usage docs live elsewhere (see [Consumer-facing documentation](#consumer-facing-documentation)).
+Features substantial enough to live in their own directory should have a `README.md` that describes the current state and how the feature changes it — and, when a maintainer might assume otherwise, the boundaries it deliberately doesn't cross. These READMEs are internal — written for the people (and agents) maintaining the code, not for consumers. End-user usage docs live elsewhere (see [Consumer-facing documentation](#consumer-facing-documentation)).
 
 ### What is a feature
 
@@ -61,7 +61,7 @@ A feature that warrants a README is organized as a directory, with the README at
 
 Two sections, in order. Only the intro is required.
 
-1. **Intro.** One short paragraph: what problem the feature solves, and what it does to solve it.
+1. **Intro.** One short paragraph: the current state, and how the feature changes it. Describe the current state as plain facts — what's there, what's required, what's missing — rather than framing it as "a problem the feature solves". Maintainers read this to work on the code, not to be sold on the feature's existence.
 2. **Non-goals** (optional). Things the feature deliberately doesn't do — only when a reader would reasonably assume it does, typically because the feature's name, its domain, or a sibling feature suggests so. The test: would a maintainer look here for this and be surprised it's missing? If not, leave it out. Skip the obvious; skip future work; skip rejected alternatives — those belong in the commit that made the choice.
 
     Write each bullet as a noun phrase naming the thing not done (`Not a heading component`, `No CSS variables`). Add a single follow-up sentence only when the reader needs to be redirected to the alternative or told why.
@@ -77,7 +77,7 @@ Other sections should be rare — only when content is durable, feature-specific
 ```md
 # <feature-name>
 
-<One short paragraph: what problem the feature solves, and what it does to solve it.>
+<One short paragraph: the current state, and how the feature changes it.>
 
 ## Non-goals <!-- only if any -->
 
