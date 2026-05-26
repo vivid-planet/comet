@@ -142,10 +142,12 @@ export class FilesService {
         scope?: DamScopeInterface,
     ): Promise<FileInterface[]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
+        const isFilteringByIds = filter?.ids !== undefined && filter.ids.length > 0;
+        const ignoreFolder = isSearching || isFilteringByIds;
 
         return withFilesSelect(this.selectQueryBuilder(), {
             archived: !includeArchived ? false : undefined,
-            folderId: !isSearching ? folderId || null : undefined,
+            folderId: !ignoreFolder ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
             ids: filter?.ids,
             query: filter?.searchText,
@@ -160,10 +162,12 @@ export class FilesService {
         scope?: DamScopeInterface,
     ): Promise<[FileInterface[], number]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
+        const isFilteringByIds = filter?.ids !== undefined && filter.ids.length > 0;
+        const ignoreFolder = isSearching || isFilteringByIds;
 
         const files = await withFilesSelect(this.selectQueryBuilder(), {
             archived: !includeArchived ? false : undefined,
-            folderId: !isSearching ? folderId || null : undefined,
+            folderId: !ignoreFolder ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
             ids: filter?.ids,
             query: filter?.searchText,
@@ -176,7 +180,7 @@ export class FilesService {
 
         const totalCount = await withFilesSelect(this.selectQueryBuilder(), {
             archived: !includeArchived ? false : undefined,
-            folderId: !isSearching ? folderId || null : undefined,
+            folderId: !ignoreFolder ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
             ids: filter?.ids,
             query: filter?.searchText,
