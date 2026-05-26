@@ -463,7 +463,20 @@ type Query {
   redirectSourceAvailable(scope: RedirectScopeInput! = {}, source: String!): Boolean!
   damItemsList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
   damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
-  damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
+  damFilesList(
+    offset: Int! = 0
+    limit: Int! = 25
+    sortColumnName: String
+    sortDirection: SortDirection! = ASC
+    scope: DamScopeInput! = {}
+
+    """
+    Folder to list files from. When omitted, files at the scope root are returned. Ignored when filter.searchText or filter.ids is set.
+    """
+    folderId: ID
+    includeArchived: Boolean = false
+    filter: FileFilterInput
+  ): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   findCopiesOfFileInScope(id: ID!, scope: DamScopeInput! = {}, imageCropArea: ImageCropAreaInput): [DamFile!]!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput! = {}, folderId: String): Boolean!
@@ -574,8 +587,15 @@ enum DamItemType {
 }
 
 input FileFilterInput {
+  """
+  Full-text search across file names. When set, the folder constraint is bypassed and results span the whole scope.
+  """
   searchText: String
   mimetypes: [String!]
+
+  """
+  Restrict the result to files with these IDs. When a non-empty list is provided, the folder constraint is bypassed and matches are returned regardless of which folder they live in.
+  """
   ids: [ID!]
 }
 
