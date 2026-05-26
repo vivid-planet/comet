@@ -10,9 +10,10 @@ export default defineConfig({
     test: {
         environment: "node",
         setupFiles: ["./vitest.setup.ts"],
-        reporters: ["default"],
+        reporters: ["default", "junit"],
+        outputFile: {
+            junit: "./junit.xml",
+        },
         testTimeout: 20000,
-        include: ["src/**/*.{spec,test}.ts"],
-        exclude: ["**/node_modules/**", "**/__tests__/\\.*"],
     },
 });

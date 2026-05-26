@@ -32,7 +32,7 @@
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "vitest --run",
-        "test:updateSnapshot": "vitest --run -u",
+        "test:updateSnapshot": "vitest --run --update",
         "test:watch": "vitest --watch"
     },
     "dependencies": {
