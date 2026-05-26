@@ -44,7 +44,7 @@
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/cms-admin": "workspace:*",
-        "date-fns": "^4.1.0",
+        "date-fns": "^4.2.1",
         "react-dropzone": "^14.2.3"
     },
     "devDependencies": {

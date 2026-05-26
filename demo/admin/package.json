@@ -46,7 +46,7 @@
         "@mui/x-date-pickers": "^8.28.5",
         "@mui/x-license": "^8.26.0",
         "change-case": "^5.4.4",
-        "date-fns": "^4.1.0",
+        "date-fns": "^4.2.1",
         "dnd-core": "^16.0.1",
         "final-form": "^4.20.10",
         "graphql": "^16.14.0",
