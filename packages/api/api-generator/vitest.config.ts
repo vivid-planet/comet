@@ -15,5 +15,6 @@ export default defineConfig({
             junit: "./junit.xml",
         },
         testTimeout: 20000,
+        hookTimeout: 20000,
     },
 });
