@@ -52,7 +52,7 @@ function isAbsoluteUrl(url: string): boolean {
     return !url.startsWith("/");
 }
 
-export const getOptimalAllowedImageWidth = (validSizes: number[], minimumWidth: number, contentWidth: number): number => {
+const getOptimalAllowedImageWidth = (validSizes: number[], minimumWidth: number, contentWidth: number): number => {
     const sortedValidSizes = validSizes.sort((a, b) => a - b);
 
     let width: number | null = null;
