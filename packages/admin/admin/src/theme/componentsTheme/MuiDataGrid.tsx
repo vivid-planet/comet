@@ -202,7 +202,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 },
             },
 
-            [`&:first-child .${gridClasses.filterFormLogicOperatorInput}`]: {
+            [`&:first-of-type .${gridClasses.filterFormLogicOperatorInput}`]: {
                 // The first "Operator"-select is fully hidden by default when there is only one filter.
                 // Setting `display: block` makes sure it takes up it's space as if it were visible to prevent the alignment from breaking.
                 // Even though `display: block` is set now, it's still not visible, due to it's default styling of `visibility: hidden`.
