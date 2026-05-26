@@ -27,16 +27,8 @@ jobs:
                   git config user.email github-actions@github.com
 
             - uses: ./.github/actions/setup
+              with:
+                  buildPackages: "true"
 
             - name: Test
               run: pnpm run test
-
-            - name: Upload test results
-              uses: actions/upload-artifact@v7
-              if: success() || failure()
-              with:
-                  name: test-results
-                  path: |
-                      packages/*/junit.xml
-                      packages/*/*/junit.xml
-                  overwrite: true

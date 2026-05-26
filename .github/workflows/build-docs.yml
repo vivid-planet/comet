@@ -28,8 +28,6 @@ jobs:
                   ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
             - uses: ./.github/actions/setup
-              with:
-                  buildPackages: "false"
 
             - name: Build docs
               run: pnpm build:docs

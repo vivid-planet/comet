@@ -26,8 +26,6 @@ jobs:
                   path: "demo/admin/lang/comet-lang"
 
             - uses: ./.github/actions/setup
-              with:
-                  buildPackages: "false"
 
             - name: "Library: Extract i18n strings"
               run: |

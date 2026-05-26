@@ -10,7 +10,7 @@ inputs:
         default: "true"
     buildPackages:
         description: Whether to run `pnpm run build:packages`.
-        default: "true"
+        default: "false"
 
 runs:
     using: composite
