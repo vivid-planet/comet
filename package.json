@@ -59,7 +59,7 @@
         "setup:download-mitmproxy": "dotenv -- sh -c 'pnpm exec comet download-mitmproxy -v $MITMPROXY_VERSION'"
     },
     "devDependencies": {
-        "@changesets/cli": "^2.29.8",
+        "@changesets/cli": "^2.31.0",
         "@comet/cli": "workspace:*",
         "@comet/dev-oidc-provider": "^1.2.1",
         "@comet/dev-process-manager": "^3.1.0",
