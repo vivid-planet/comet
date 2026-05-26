@@ -15,6 +15,7 @@ import type { ReactElement } from "react";
 import { FormattedDate, FormattedMessage } from "react-intl";
 
 import { version } from "../../..";
+import { useCometConfig } from "../../../config/CometConfigContext";
 import { useBuildInformation } from "./build-information/useBuildInformation";
 
 interface AboutModalProps {
@@ -25,6 +26,7 @@ interface AboutModalProps {
 
 export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo sx={{ width: "300px", height: "84px" }} /> }: AboutModalProps) {
     const buildInformation = useBuildInformation();
+    const { environmentLabel } = useCometConfig();
 
     return (
         <Modal open={open} onClose={onClose} closeAfterTransition BackdropComponent={Backdrop}>
@@ -43,6 +45,15 @@ export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo s
                 <DialogContent>
                     <LogoContainer>{logo}</LogoContainer>
                     <VersionContainer>
+                        {environmentLabel && (
+                            <Typography fontWeight={500}>
+                                <FormattedMessage
+                                    id="comet.about.dialog.environmentLabel"
+                                    defaultMessage="Environment: {environmentLabel}"
+                                    values={{ environmentLabel }}
+                                />
+                            </Typography>
+                        )}
                         <Typography fontWeight={500}>{`v${version}`}</Typography>
                         {buildInformation?.number && buildInformation.commitHash && (
                             <Typography>

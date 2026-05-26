@@ -1,5 +1,5 @@
 import { ErrorHandlerProvider } from "@comet/admin";
-import { createContext, type ErrorInfo, type PropsWithChildren, useContext } from "react";
+import { createContext, type ErrorInfo, type PropsWithChildren, useContext, useEffect, useRef } from "react";
 
 import { type BlocksConfig, BlocksConfigProvider } from "../blocks/config/BlocksConfigContext";
 import type { BlockContext } from "../blocks/context/BlockContext";
@@ -17,6 +17,7 @@ export interface CometConfig<SiteConfigs = unknown> {
     apiUrl: string;
     graphQLApiUrl: string;
     adminUrl: string;
+    environmentLabel?: string;
     pageTree?: PageTreeConfig;
     dam?: DamConfig;
     redirects?: RedirectsConfig;
@@ -35,6 +36,24 @@ const CometConfigContext = createContext<CometConfig | undefined>(undefined);
 
 export function CometConfigProvider<SiteConfigs = unknown>({ children, ...config }: PropsWithChildren<CometConfig<SiteConfigs>>) {
     const { context: blockContext = {}, ...blocksConfig } = config.blocks ?? {};
+    const originalDocumentTitle = useRef<string | undefined>(undefined);
+
+    useEffect(() => {
+        if (typeof document === "undefined" || !config.environmentLabel) {
+            return;
+        }
+
+        if (originalDocumentTitle.current === undefined) {
+            originalDocumentTitle.current = document.title;
+        }
+        document.title = `${originalDocumentTitle.current} [${config.environmentLabel}]`;
+
+        return () => {
+            if (originalDocumentTitle.current) {
+                document.title = originalDocumentTitle.current;
+            }
+        };
+    }, [config.environmentLabel]);
 
     return (
         <CometConfigContext.Provider value={config as CometConfig<unknown>}>

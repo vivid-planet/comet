@@ -1,5 +1,6 @@
 export const environment = [
     "ADMIN_URL",
+    "ENVIRONMENT_LABEL",
     "PREVIEW_URL",
     "PUBLIC_SITE_CONFIGS",
     "BUILD_DATE",
