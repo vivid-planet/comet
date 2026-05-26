@@ -13,12 +13,9 @@ import {
     ToolbarItem,
 } from "@comet/admin";
 import { ArrowRight, Save } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Box, Chip, Typography } from "@mui/material";
 import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
-
-import { storyRouterDecorator } from "../../story-router.decorator";
 
 function StackWrapper({ children }: { children: ReactNode }) {
     return (
@@ -60,8 +57,7 @@ function Story() {
 }
 
 export default {
-    title: "@comet/admin/toolbar",
-    decorators: [storyRouterDecorator()],
+    title: "components/toolbar/Toolbar",
 };
 
 export const _Toolbar = () => (
@@ -73,7 +69,7 @@ export const _Toolbar = () => (
 export const ToolbarWithHelp = () => {
     return (
         <Toolbar
-            scopeIndicator={<ContentScopeIndicator global />}
+            scopeIndicator={<Chip label="Global" />}
             topBarActions={
                 <HelpDialogButton
                     dialogTitle={<FormattedMessage id="story.toolbar.helpDialog.title" defaultMessage="Help" />}

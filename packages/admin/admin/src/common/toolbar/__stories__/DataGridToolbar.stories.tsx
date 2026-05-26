@@ -13,8 +13,6 @@ import { Add as AddIcon } from "@comet/admin-icons";
 import { DataGrid as DataGridCommunity } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 const data = [
     { id: "1f30a6a0-5b9d-4b25-8307-9e8b4a4d2b1c", firstname: "Emily", lastname: "Smith" },
     { id: "28b9bdf3-5646-4a22-9449-74112db67b5f", firstname: "Daniel", lastname: "Johnson" },
@@ -24,8 +22,7 @@ const data = [
 const gridOptions = ["Community", "Pro"] as const;
 
 export default {
-    title: "@comet/admin/DataGridToolbar",
-    decorators: [storyRouterDecorator()],
+    title: "components/toolbar/DataGridToolbar",
     argTypes: {
         gridVersion: {
             name: "Data Grid Version",
@@ -45,7 +42,7 @@ export const _DataGridToolbar = {
             { field: "lastname", headerName: "Last Name", width: 150 },
         ];
 
-        const Toolbar = () => {
+        const ToolbarSlot = () => {
             return (
                 <DataGridToolbar>
                     <GridToolbarQuickFilter />
@@ -68,7 +65,7 @@ export const _DataGridToolbar = {
                 columns={columns}
                 rows={data}
                 slots={{
-                    toolbar: Toolbar,
+                    toolbar: ToolbarSlot,
                 }}
                 showToolbar
             />
