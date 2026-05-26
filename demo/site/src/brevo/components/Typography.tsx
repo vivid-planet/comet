@@ -16,7 +16,7 @@ type VariantStyle = Omit<MjmlTextProps, "variant" | "bottomSpacing"> & {
     bottomSpacing: number;
 };
 
-export const typographyVariantStyles: Record<Variant, VariantStyle> = {
+const typographyVariantStyles: Record<Variant, VariantStyle> = {
     headline: {
         fontFamily: "Roboto Condensed, Helvetica, Arial, sans-serif",
         fontWeight: "500",
