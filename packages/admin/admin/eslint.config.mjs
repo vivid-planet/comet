@@ -9,6 +9,16 @@ export default defineConfig([
     globalIgnores(["src/*.generated.ts", "lib/**"]),
     ...eslintConfigReact,
     {
+        // `buildRestMutation.tsx` interpolates JS expressions into `gql` templates, which `@graphql-eslint/eslint-plugin` cannot parse.
+        files: ["src/buildRestMutation.tsx"],
+        processor: {
+            meta: { name: "no-op" },
+            preprocess: (code) => [code],
+            postprocess: (messages) => messages.flat(),
+            supportsAutofix: true,
+        },
+    },
+    {
         rules: {
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/no-non-null-assertion": "off",
