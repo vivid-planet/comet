@@ -1,5 +1,5 @@
 export { ActionLogCompare, actionLogCompareFragment } from "./actionLog/actionLogCompare/ActionLogCompare";
-export { ActionLogDialog, type ActionLogDialogValue } from "./actionLog/actionLogDialog/ActionLogDialog";
+export { ActionLogDialog } from "./actionLog/actionLogDialog/ActionLogDialog";
 export { ActionLogGrid, actionLogGridFragment } from "./actionLog/actionLogGrid/ActionLogGrid";
 export { ActionLogShowVersion, actionLogShowVersionFragment } from "./actionLog/actionLogShowVersion/ActionLogShowVersion";
 export { DiffHeader, type DiffHeaderProps } from "./actionLog/components/DiffHeader";
