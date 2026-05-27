@@ -24,7 +24,6 @@ import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
     DataGrid,
-    type DataGridProps,
     getGridSingleSelectOperators,
     type GridRowSelectionModel,
     type GridSlotsComponent,
@@ -212,11 +211,10 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
     const dataGridProps = {
         ...useDataGridRemote(),
         ...usePersistentColumnState("RedirectsGrid"),
-        rowSelectionModel: { type: "include", ids: new Set(selectedIds) } as DataGridProps["rowSelectionModel"],
-        onRowSelectionModelChange: (model: GridRowSelectionModel) => setSelectedIds([...model.ids] as string[]),
+        rowSelectionModel: selectedIds,
+        onRowSelectionModelChange: (model: GridRowSelectionModel) => setSelectedIds(model as string[]),
         checkboxSelection: true,
         keepNonExistentRowsSelected: true,
-        disableRowSelectionExcludeModel: true,
     };
     const sortModel = dataGridProps.sortModel;
 
@@ -252,7 +250,6 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                         onDeleteSelected: handleDeleteSelected,
                     } as RedirectsGridToolbarProps,
                 }}
-                showToolbar
             />
             <DeleteDialog
                 dialogOpen={deleteDialogOpen}
