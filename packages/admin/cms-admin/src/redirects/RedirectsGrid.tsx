@@ -22,7 +22,6 @@ import {
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-<<<<<<< HEAD
 import {
     DataGrid,
     type DataGridProps,
@@ -246,7 +245,6 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                slots={{ toolbar: RedirectsGridToolbar }}
                 slots={{ toolbar: RedirectsGridToolbar as GridSlotsComponent["toolbar"] }}
                 slotProps={{
                     toolbar: {
