@@ -6,6 +6,20 @@ export default defineConfig([
     globalIgnores(["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json"]),
     ...eslintConfigReact,
     {
+        // These files interpolate JS expressions into `gql` templates, which `@graphql-eslint/eslint-plugin` cannot parse.
+        files: [
+            "src/dependencies/createDependencyMethods.ts",
+            "src/dependencies/createDocumentDependencyMethods.ts",
+            "src/form/queryUpdatedAt.tsx",
+        ],
+        processor: {
+            meta: { name: "no-op" },
+            preprocess: (code) => [code],
+            postprocess: (messages) => messages.flat(),
+            supportsAutofix: true,
+        },
+    },
+    {
         rules: {
             "@comet/no-other-module-relative-import": "off",
         },
