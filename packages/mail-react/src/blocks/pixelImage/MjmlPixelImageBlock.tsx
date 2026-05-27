@@ -40,6 +40,7 @@ export function MjmlPixelImageBlock({
     );
 }
 
+// MJML inlines a fixed `height` on the inner <img>; !important overrides it for responsive scaling.
 registerStyles(
     (theme) => css`
         ${theme.breakpoints.default.belowMediaQuery} {

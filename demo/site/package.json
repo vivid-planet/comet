@@ -56,7 +56,7 @@
         "redraft": "^0.10.2",
         "swiper": "^12.1.4",
         "usehooks-ts": "^3.1.1",
-        "zod": "^4.3.5"
+        "zod": "^4.4.3"
     },
     "devDependencies": {
         "@babel/core": "^7.29.0",
