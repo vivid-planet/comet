@@ -81,6 +81,7 @@ export const TabsInFormWithForceRender = {
 
 export const TabsInFormWithoutForceRender = {
     render: () => {
+        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
         return (
             <div>
                 <FinalForm
@@ -166,6 +167,7 @@ export const FormInTabsWithForceRender = {
 
 export const FormInTabsWithoutForceRender = {
     render: () => {
+        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
         return (
             <div>
                 <Tabs>
