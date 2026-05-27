@@ -1,12 +1,20 @@
 import { MainContent, RouterTab, RouterTabs, Toolbar, ToolbarAutomaticTitleItem } from "@comet/admin";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
-import type { Meta } from "@storybook/react-vite";
+import type { Decorator, Meta } from "@storybook/react-vite";
 import { useState } from "react";
 
 import { MasterLayoutDecorator } from "../../../.storybook/decorators/MasterLayout.decorator";
 
+// Make sure the story is not too tall and can be scrolled - setting the story-height in the config only affects the min-height and does not make the content scrollable
+const MaxHeightDecorator: Decorator = (Story) => (
+    <Box maxHeight="400px">
+        <Story />
+    </Box>
+);
+
 const storyConfig: Meta = {
     title: "components/tabs/Overflow Issues",
+    decorators: [MaxHeightDecorator],
     parameters: {
         docs: {
             description: {
