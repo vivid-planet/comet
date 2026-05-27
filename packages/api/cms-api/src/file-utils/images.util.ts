@@ -79,5 +79,8 @@ export function getCenteredPosition(crop: ImageDimensions, area: ImageDimensions
 
 export function getSupportedMimeType(options: string[], accept = ""): string | undefined {
     const mimeType = mediaType(accept, options);
+    if (!mimeType) {
+        return undefined;
+    }
     return accept.includes(mimeType) ? mimeType : undefined;
 }
