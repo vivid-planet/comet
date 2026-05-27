@@ -960,6 +960,7 @@ type Mutation {
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
   deleteRedirect(id: ID!): Boolean!
+  deleteRedirects(ids: [ID!]!): Boolean!
   generateAltText(fileId: String!, language: String): String!
   generateImageTitle(fileId: String!, language: String): String!
   generateSeoTags(content: String!, language: String!): SeoTags!
