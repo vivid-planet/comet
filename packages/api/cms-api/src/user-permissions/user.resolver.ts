@@ -1,3 +1,4 @@
+import { Logger } from "@nestjs/common";
 import { Args, Int, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
@@ -16,6 +17,8 @@ class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(Us
 @Resolver(() => UserPermissionsUser)
 @RequiredPermission(["userPermissions", "impersonation"], { skipScopeCheck: true })
 export class UserResolver {
+    private readonly logger = new Logger(UserResolver.name);
+
     constructor(private readonly userService: UserPermissionsService) {}
 
     @Query(() => UserPermissionsUser)
@@ -117,12 +120,13 @@ export class UserResolver {
 
     @ResolveField(() => Boolean)
     async impersonationAllowed(@Parent() user: UserPermissionsUser, @GetCurrentUser() currentUser: CurrentUser): Promise<boolean> {
-        return (
-            currentUser.id !== user.id &&
-            AbstractAccessControlService.isEqualOrMorePermissions(
-                currentUser.permissions,
-                await this.userService.getPermissionsAndContentScopes(user),
-            )
+        if (currentUser.id === user.id) {
+            this.logger.debug(`Impersonation not allowed: current user (${currentUser.id}) cannot impersonate themselves.`);
+            return false;
+        }
+        return AbstractAccessControlService.isEqualOrMorePermissions(
+            currentUser.permissions,
+            await this.userService.getPermissionsAndContentScopes(user),
         );
     }
 }
