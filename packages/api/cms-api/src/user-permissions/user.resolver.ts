@@ -1,3 +1,4 @@
+import { Logger } from "@nestjs/common";
 import { Args, Int, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
@@ -18,6 +19,8 @@ class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(Us
 @RequiredPermission(["userPermissions", "impersonation"], { skipScopeCheck: true })
 export class UserResolver {
     constructor(private readonly userService: UserPermissionsService) {}
+
+    private readonly logger = new Logger(UserResolver.name);
 
     @Query(() => UserPermissionsUser)
     async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<UserPermissionsUser> {
@@ -118,13 +121,14 @@ export class UserResolver {
 
     @ResolveField(() => Boolean)
     async impersonationAllowed(@Parent() user: UserPermissionsUser, @GetCurrentUser() currentUser: CurrentUser): Promise<boolean> {
-        return (
-            currentUser.id !== user.id &&
-            AbstractAccessControlService.isEqualOrMorePermissions(
-                currentUser.permissions,
-                await this.userService.getPermissionsAndContentScopes(user),
-            )
-        );
+        if (currentUser.id === user.id) {
+            this.logger.debug(`impersonationAllowed: denied, currentUser ${currentUser.id} is the same as target user`);
+            return false;
+        }
+        const targetPermissions = await this.userService.getPermissionsAndContentScopes(user);
+        const allowed = AbstractAccessControlService.isEqualOrMorePermissions(currentUser.permissions, targetPermissions);
+        this.logger.debug(`impersonationAllowed: ${allowed} (currentUser=${currentUser.id}, targetUser=${user.id})`);
+        return allowed;
     }
 
     @ResolveField(() => [PermissionMismatchDto])
@@ -133,11 +137,16 @@ export class UserResolver {
         @GetCurrentUser() currentUser: CurrentUser,
     ): Promise<PermissionMismatchDto[]> {
         if (currentUser.id === user.id) {
+            this.logger.debug(`impersonationNotAllowedByPermissions: currentUser ${currentUser.id} is the same as target user, returning []`);
             return [];
         }
-        return AbstractAccessControlService.getPermissionMismatches(
+        const mismatches = AbstractAccessControlService.getPermissionMismatches(
             currentUser.permissions,
             await this.userService.getPermissionsAndContentScopes(user),
         );
+        this.logger.debug(
+            `impersonationNotAllowedByPermissions (currentUser=${currentUser.id}, targetUser=${user.id}): ${JSON.stringify(mismatches)}`,
+        );
+        return mismatches;
     }
 }

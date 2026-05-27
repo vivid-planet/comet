@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import isEqual from "lodash.isequal";
 
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
@@ -12,6 +12,8 @@ export interface PermissionMismatch {
 
 @Injectable()
 export abstract class AbstractAccessControlService implements AccessControlServiceInterface {
+    private static readonly logger = new Logger(AbstractAccessControlService.name);
+
     private checkContentScope(userContentScopes: ContentScope[], targetContentScope: ContentScope): boolean {
         return userContentScopes.some((userContentScope) =>
             Object.entries(targetContentScope).every(([dimension, targetContentScopeValue]) => {
@@ -52,6 +54,7 @@ export abstract class AbstractAccessControlService implements AccessControlServi
                 }
             }
         }
+        AbstractAccessControlService.logger.debug(`getPermissionMismatches: found ${mismatches.length} mismatch(es): ${JSON.stringify(mismatches)}`);
         return mismatches;
     }
 
