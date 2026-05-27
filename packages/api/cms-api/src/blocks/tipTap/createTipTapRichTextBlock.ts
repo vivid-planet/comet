@@ -406,9 +406,21 @@ export function createTipTapRichTextBlock(
 
     const draftJsBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.blockStyleMap : undefined;
     const draftJsInlineStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.inlineStyleMap : undefined;
+
+    if (migrateFromDraftJs && baseMigrate) {
+        if (baseMigrate.version == 1) {
+            throw new Error("version=1 is reserved for migrateFromDraftJs, start own migrations with 2");
+        }
+        for (const migration of baseMigrate.migrations) {
+            const migrationObj = new migration();
+            if (migrationObj.toVersion == 1) {
+                throw new Error("toVersion=1 is reserved for migrateFromDraftJs, start own migrations with 2");
+            }
+        }
+    }
     const migrate = migrateFromDraftJs
         ? {
-              version: baseMigrate.version + 1,
+              version: baseMigrate.version == 0 ? 1 : baseMigrate.version,
               migrations: [
                   buildDraftJsToTipTapMigration({
                       schema,
