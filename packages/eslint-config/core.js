@@ -51,6 +51,7 @@ const config = [
         },
         rules: {
             "@comet/no-other-module-relative-import": ["warn"],
+            "@comet/no-gql-fragment-name-suffix": ["error"],
         },
     },
     {
