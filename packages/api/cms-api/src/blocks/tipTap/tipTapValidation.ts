@@ -6,7 +6,7 @@ type TipTapContent = Record<string, any>;
 // ProseMirror's Node.fromJSON silently drops unknown marks. This function
 // checks the raw JSON for mark types that don't exist in the schema.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function containsUnknownMarks(json: any, schema: Schema): boolean {
+function containsUnknownMarks(json: any, schema: Schema): boolean {
     if (typeof json !== "object" || json === null) {
         return false;
     }
