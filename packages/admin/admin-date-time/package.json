@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-date-time",
-    "version": "9.0.0-beta.3",
+    "version": "9.0.0-beta.4",
     "description": "Comet Admin Date Time component",
     "repository": {
         "directory": "packages/admin/admin-date-time",
@@ -43,7 +43,7 @@
         "@comet/admin": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@mui/utils": "^7.3.11",
-        "date-fns": "^4.1.0",
+        "date-fns": "^4.2.1",
         "react-date-range": "^2.0.1"
     },
     "devDependencies": {

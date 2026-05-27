@@ -13,7 +13,7 @@ export class DataTransformerPipe implements ImporterPipe {
     }
 }
 
-export class DataTransformer extends StreamTransform {
+class DataTransformer extends StreamTransform {
     constructor(
         private readonly logger: LoggerService,
         private readonly inputClass: ImporterInputClass,

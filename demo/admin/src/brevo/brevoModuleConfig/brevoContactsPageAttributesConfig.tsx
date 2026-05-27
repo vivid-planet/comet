@@ -55,10 +55,6 @@ interface AdditionalFormConfigInputProps extends EditBrevoContactFormValues {
     };
 }
 
-export const additionalFormConfig = {
-    nodeFragment: attributesFragment,
-};
-
 export interface BrevoContactConfig {
     additionalGridFields: GridColDef<GQLBrevoContactAttributesFragmentFragment>[];
     additionalFormFields: ReactNode;

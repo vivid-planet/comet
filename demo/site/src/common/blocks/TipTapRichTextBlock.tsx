@@ -67,7 +67,7 @@ const markMapping: Record<string, TipTapMarkHandler> = {
     },
 };
 
-export const TipTapRichTextBlock = withPreview(
+const TipTapRichTextBlock = withPreview(
     ({ data }: PropsWithData<TipTapRichTextBlockData>) => {
         const content = data.tipTapContent as TipTapNode;
         return (

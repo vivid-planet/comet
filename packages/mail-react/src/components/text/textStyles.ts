@@ -4,7 +4,7 @@ import { css } from "../../utils/css.js";
 
 type StylePropertyKey = Exclude<keyof TextVariantStyles, "bottomSpacing">;
 
-export const textStyleCssProperties: ReadonlyArray<[StylePropertyKey, string]> = [
+const textStyleCssProperties: ReadonlyArray<[StylePropertyKey, string]> = [
     ["fontFamily", "font-family"],
     ["fontSize", "font-size"],
     ["fontWeight", "font-weight"],
