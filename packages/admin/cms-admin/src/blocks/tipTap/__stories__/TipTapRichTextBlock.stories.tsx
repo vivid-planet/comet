@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, chipClasses, Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type HTMLAttributes, type ReactNode, useState } from "react";
 import { expect, waitFor, within } from "storybook/test";
@@ -212,7 +212,7 @@ function PlaceholdersStory() {
 
 export const Placeholders: StoryObj<typeof PlaceholdersStory> = {
     render: () => <PlaceholdersStory />,
-    play: async ({ canvas, step }) => {
+    play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready with placeholder button", async () => {
             await waitFor(
                 () => {
@@ -221,9 +221,44 @@ export const Placeholders: StoryObj<typeof PlaceholdersStory> = {
                 { timeout: 5000 },
             );
 
-            // Should have a placeholder button in the toolbar
-            const buttons = canvas.getAllByRole("button");
-            expect(buttons.length).toBeGreaterThanOrEqual(1);
+            // The placeholder button is identified by its accessible name, not by index among all toolbar buttons
+            expect(canvas.getByRole("button", { name: "Insert placeholder" })).toBeInTheDocument();
+        });
+
+        await step("Open the placeholder menu and insert 'First Name'", async () => {
+            await userEvent.click(canvas.getByRole("button", { name: "Insert placeholder" }));
+
+            // The menu is rendered in a portal, so it lives in document.body rather than within the canvas
+            await waitFor(
+                () => {
+                    expect(within(document.body).getByRole("menuitem", { name: "First Name" })).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+
+            await userEvent.click(within(document.body).getByRole("menuitem", { name: "First Name" }));
+        });
+
+        await step("Inserted placeholder is rendered as a chip in the editor", async () => {
+            const editor = canvas.getByRole("textbox");
+            // Placeholders render as chips labelled `{{name}}`
+            await waitFor(
+                () => {
+                    expect(within(editor).getByText("{{firstName}}")).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Block state contains the placeholder node", async () => {
+            await waitFor(
+                () => {
+                    const state = JSON.parse(canvas.getByText(/"tipTapContent"/).textContent ?? "{}");
+                    const [paragraph] = state.tipTapContent.content;
+                    expect(paragraph.content).toContainEqual({ type: "placeholder", attrs: { name: "firstName" } });
+                },
+                { timeout: 3000 },
+            );
         });
     },
 };
@@ -273,13 +308,32 @@ function PlaceholdersWithContentStory() {
 export const PlaceholdersWithContent: StoryObj<typeof PlaceholdersWithContentStory> = {
     render: () => <PlaceholdersWithContentStory />,
     play: async ({ canvas, step }) => {
-        await step("Editor renders pre-filled placeholders as chips", async () => {
+        await step("Editor is ready", async () => {
             await waitFor(
                 () => {
                     expect(canvas.getByRole("textbox")).toBeInTheDocument();
                 },
                 { timeout: 5000 },
             );
+        });
+
+        await step("Pre-filled placeholders are rendered as chips", async () => {
+            const editor = canvas.getByRole("textbox");
+
+            await waitFor(
+                () => {
+                    // Each placeholder is rendered as a chip labelled `{{name}}` (not as plain text)
+                    for (const name of ["firstName", "lastName", "email"]) {
+                        const chipLabel = within(editor).getByText(`{{${name}}}`);
+                        expect(chipLabel.closest(`.${chipClasses.root}`)).toBeInTheDocument();
+                    }
+                },
+                { timeout: 3000 },
+            );
+
+            // Text surrounding the chips is preserved
+            expect(editor).toHaveTextContent("Hello {{firstName}} {{lastName}}, welcome to our platform!");
+            expect(editor).toHaveTextContent("Your registered email is: {{email}}");
         });
     },
 };

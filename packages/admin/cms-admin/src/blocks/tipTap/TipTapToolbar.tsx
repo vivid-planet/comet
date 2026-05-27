@@ -33,7 +33,7 @@ import {
 import { grey as muiGreyPalette } from "@mui/material/colors";
 import { type Editor, useEditorState } from "@tiptap/react";
 import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type RefAttributes, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import type { BlockInterface, LinkBlockInterface } from "../types";
 import type { TipTapBlockStyle, TipTapBlockType, TipTapInlineStyle, TipTapPlaceholder, TipTapSupports } from "./createTipTapRichTextBlock";
@@ -163,6 +163,7 @@ export const TipTapToolbar = ({
     linkBlock?: BlockInterface & LinkBlockInterface;
     listLevelMax?: number;
 }) => {
+    const intl = useIntl();
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [placeholderAnchorEl, setPlaceholderAnchorEl] = useState<null | HTMLElement>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
@@ -549,6 +550,10 @@ export const TipTapToolbar = ({
                         <Box
                             component="button"
                             type="button"
+                            aria-label={intl.formatMessage({
+                                id: "comet.blocks.tipTapRichText.placeholder.tooltip",
+                                defaultMessage: "Insert placeholder",
+                            })}
                             onMouseDown={(e: MouseEvent) => {
                                 e.preventDefault();
                                 setPlaceholderAnchorEl(e.currentTarget as HTMLElement);
