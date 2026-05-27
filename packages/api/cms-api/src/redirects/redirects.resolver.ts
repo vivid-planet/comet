@@ -268,6 +268,7 @@ export function createRedirectsResolver({
         }
 
         @Mutation(() => Boolean)
+        @AffectedEntity(Redirect, { idArg: "ids" })
         async deleteRedirects(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<boolean> {
             const entities = await this.repository.find({ id: { $in: ids } });
             if (entities.length !== ids.length) {
