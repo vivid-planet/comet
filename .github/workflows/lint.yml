@@ -54,22 +54,9 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/api/lang/comet-demo-lang"
 
-            - uses: pnpm/action-setup@v6
-
-            - name: Use Node.js 24.x
-              uses: actions/setup-node@v6
+            - uses: ./.github/actions/setup
               with:
-                  node-version: 24
-                  registry-url: "https://registry.npmjs.org"
-                  cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
-
-            - run: pnpm install --frozen-lockfile
-
-            - name: Setup project for CI run
-              run: pnpm run setup:ci
-
-            - name: Build
-              run: pnpm run build:packages
+                  build-packages: "true"
 
             - name: Lint
               run: |
