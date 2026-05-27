@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    CometDataGrid as DataGrid,
     DataGridToolbar,
     type GridColDef,
     GridToolbarQuickFilter,
@@ -9,7 +10,6 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import type { ContentScope } from "@comet/cms-admin";
-import { DataGrid } from "@mui/x-data-grid";
 import type { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 

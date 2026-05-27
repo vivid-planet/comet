@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import {
     Button,
     CancelButton,
+    CometDataGrid as DataGrid,
     DataGridToolbar,
     FieldSet,
     FillSpace,
@@ -19,7 +20,7 @@ import {
     DialogTitle,
     Typography,
 } from "@mui/material";
-import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import { type GridToolbarProps } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";

@@ -1,6 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CancelButton,
+    CometDataGrid as DataGrid,
     DataGridToolbar,
     Field,
     FillSpace,
@@ -18,7 +19,6 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { FormattedMessage } from "react-intl";
 
 import type { ContentScope } from "../../../contentScope/Provider";

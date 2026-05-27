@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    CometDataGrid as DataGrid,
     CrudContextMenu,
     DataGridToolbar,
     FillSpace,
@@ -16,7 +17,7 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, type GridRenderCellParams, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
+import { type GridRenderCellParams, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactNode, useContext, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 

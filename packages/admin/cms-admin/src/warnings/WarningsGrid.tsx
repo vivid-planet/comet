@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    CometDataGrid as DataGrid,
     dataGridDateTimeColumn,
     DataGridToolbar,
     GridCellContent,
@@ -16,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Chip } from "@mui/material";
-import { DataGrid, type GridFilterModel } from "@mui/x-data-grid";
+import { type GridFilterModel } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
 import { FormattedMessage, useIntl } from "react-intl";

@@ -1,6 +1,7 @@
 import { type QueryResult, type TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import {
     Alert,
+    CometDataGrid as DataGrid,
     DataGridToolbar,
     FillSpace,
     type GqlFilter,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@comet/admin-icons";
 import { Box, Chip, IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
+import { type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";

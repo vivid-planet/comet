@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import type { GridColDef } from "@comet/admin";
-import { DataGrid } from "@mui/x-data-grid";
+import { CometDataGrid as DataGrid, type GridColDef } from "@comet/admin";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
 

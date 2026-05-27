@@ -16,6 +16,7 @@ import { css, Global } from "@emotion/react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LicenseInfo } from "@mui/x-license";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
 import { PageTreeNodeDependency } from "@src/pageTree/PageTreeNodeDependency";
@@ -70,6 +71,7 @@ export function App() {
         <CometConfigProvider
             {...config}
             graphQLApiUrl={`${config.apiUrl}/graphql`}
+            dataGrid={DataGridPro}
             onError={(error, errorInfo) => {
                 console.error("Error caught by error boundary", error, errorInfo.componentStack);
             }}

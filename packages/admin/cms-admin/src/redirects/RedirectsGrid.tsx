@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import {
     Button,
+    CometDataGrid as DataGrid,
     CrudMoreActionsMenu,
     dataGridDateTimeColumn,
     DataGridToolbar,
@@ -24,7 +25,6 @@ import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
-    DataGrid,
     type DataGridProps,
     getGridSingleSelectOperators,
     type GridRowSelectionModel,

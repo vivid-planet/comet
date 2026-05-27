@@ -1,6 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     type BreadcrumbItem,
+    CometDataGrid as DataGrid,
     DataGridToolbar,
     EditDialog,
     FillSpace,
@@ -20,7 +21,6 @@ import {
 import { Info as InfoIcon } from "@comet/admin-icons";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
 import {
-    DataGrid,
     GridColumnHeaderTitle,
     type GridRowClassNameParams,
     type GridRowSelectionModel,

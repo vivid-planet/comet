@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { Alert, Button, CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
+import { Alert, Button, CancelButton, CometDataGrid as DataGrid, LocalErrorScopeApolloContext } from "@comet/admin";
 import {
     CircularProgress,
     // eslint-disable-next-line no-restricted-imports
@@ -8,7 +8,7 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid";
+import { type GridRowSelectionModel } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 

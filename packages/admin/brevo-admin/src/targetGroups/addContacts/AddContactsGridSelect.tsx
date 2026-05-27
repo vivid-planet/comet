@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import {
     Button,
     CancelButton,
+    CometDataGrid as DataGrid,
     CrudMoreActionsMenu,
     DataGridToolbar,
     Dialog,
@@ -20,7 +21,7 @@ import { Add, Close, Remove, Save } from "@comet/admin-icons";
 import type { ContentScope } from "@comet/cms-admin";
 import { DialogActions, DialogTitle, IconButton, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
+import { type GridSlotsComponent } from "@mui/x-data-grid";
 import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { MemoryRouter } from "react-router";

@@ -1,6 +1,7 @@
 import { type DocumentNode, gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
+    CometDataGrid as DataGrid,
     CrudMoreActionsMenu,
     DataGridToolbar,
     type GridColDef,
@@ -18,7 +19,7 @@ import {
 import { Add, Block, Check, Delete, Edit } from "@comet/admin-icons";
 import type { ContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
+import { type GridSlotsComponent } from "@mui/x-data-grid";
 import type { ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 

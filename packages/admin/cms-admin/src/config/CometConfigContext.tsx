@@ -1,4 +1,4 @@
-import { ErrorHandlerProvider } from "@comet/admin";
+import { DataGridProvider, type DataGridProviderProps, ErrorHandlerProvider } from "@comet/admin";
 import { createContext, type ErrorInfo, type PropsWithChildren, useContext } from "react";
 
 import { type BlocksConfig, BlocksConfigProvider } from "../blocks/config/BlocksConfigContext";
@@ -29,6 +29,11 @@ export interface CometConfig<SiteConfigs = unknown> {
     };
     warnings?: WarningsConfig;
     onError?: (error: Error, errorInfo: ErrorInfo) => void;
+    /**
+     * Configuration for the DataGrid component used throughout the application.
+     * Pass `DataGridPro` or `DataGridPremium` to enable Pro/Premium features.
+     */
+    dataGrid?: DataGridProviderProps["dataGrid"];
 }
 
 const CometConfigContext = createContext<CometConfig | undefined>(undefined);
@@ -39,9 +44,11 @@ export function CometConfigProvider<SiteConfigs = unknown>({ children, ...config
     return (
         <CometConfigContext.Provider value={config as CometConfig<unknown>}>
             <ErrorHandlerProvider onError={config.onError}>
-                <BlockContextProvider value={blockContext}>
-                    <BlocksConfigProvider {...blocksConfig}>{children}</BlocksConfigProvider>
-                </BlockContextProvider>
+                <DataGridProvider dataGrid={config.dataGrid}>
+                    <BlockContextProvider value={blockContext}>
+                        <BlocksConfigProvider {...blocksConfig}>{children}</BlocksConfigProvider>
+                    </BlockContextProvider>
+                </DataGridProvider>
             </ErrorHandlerProvider>
         </CometConfigContext.Provider>
     );
