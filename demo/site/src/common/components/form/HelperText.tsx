@@ -1,17 +1,11 @@
 import clsx from "clsx";
-import type { ReactNode } from "react";
+import type { HTMLAttributes } from "react";
 
 import styles from "./HelperText.module.scss";
 
-type HelperTextProps = {
-    children: ReactNode;
-    id?: string;
-    className?: string;
-};
-
-export const HelperText: React.FC<HelperTextProps> = ({ children, id, className }) => {
+export const HelperText = ({ children, className, ...restProps }: HTMLAttributes<HTMLDivElement>) => {
     return (
-        <div id={id} className={clsx(styles.root, className)}>
+        <div className={clsx(styles.root, className)} {...restProps}>
             {children}
         </div>
     );
