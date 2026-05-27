@@ -1,18 +1,26 @@
 import { type Rule } from "eslint";
 
-const FRAGMENT_NAME_REGEX = /\bfragment\s+(\w*Fragment)\b/g;
+const KIND_TO_SUFFIX = {
+    fragment: "Fragment",
+    query: "Query",
+    mutation: "Mutation",
+    subscription: "Subscription",
+} as const;
+type Kind = keyof typeof KIND_TO_SUFFIX;
+
+const KIND_NAME_REGEX = /\b(fragment|query|mutation|subscription)\s+(\w+)/g;
 
 export default {
     meta: {
         type: "problem",
         docs: {
             description:
-                "Disallow GraphQL fragment names ending with 'Fragment'. GraphQL code generation appends 'Fragment' to the generated type, which would otherwise produce duplicated 'FragmentFragment' type names.",
+                "Disallow GraphQL fragment, query, mutation, and subscription names that end with their own kind (e.g., `FooFragment`, `BarQuery`). GraphQL code generation appends the kind to the generated type name, which would otherwise produce duplicated suffixes such as `FragmentFragment` or `QueryQuery`.",
         },
         schema: [],
         messages: {
-            fragmentSuffix:
-                "GraphQL fragment name '{{name}}' must not end with 'Fragment'. Code generation appends 'Fragment' to the type name, which would result in a duplicated 'FragmentFragment' suffix.",
+            redundantSuffix:
+                "GraphQL {{kind}} name '{{name}}' must not end with '{{suffix}}'. Code generation appends '{{suffix}}' to the type name, which would result in a duplicated '{{suffix}}{{suffix}}' suffix.",
         },
     },
     create(context) {
@@ -39,18 +47,22 @@ export default {
                     // quasi.range[0] points to the opening "`" or "}" character; the cooked text starts one character later.
                     const textStartIndex = quasi.range[0] + 1;
 
-                    FRAGMENT_NAME_REGEX.lastIndex = 0;
+                    KIND_NAME_REGEX.lastIndex = 0;
                     let match: RegExpExecArray | null;
-                    while ((match = FRAGMENT_NAME_REGEX.exec(text)) !== null) {
-                        const fragmentName = match[1];
-                        const nameOffsetInMatch = match[0].lastIndexOf(fragmentName);
+                    while ((match = KIND_NAME_REGEX.exec(text)) !== null) {
+                        const kind = match[1] as Kind;
+                        const name = match[2];
+                        const suffix = KIND_TO_SUFFIX[kind];
+                        if (!name.endsWith(suffix)) continue;
+
+                        const nameOffsetInMatch = match[0].lastIndexOf(name);
                         const start = sourceCode.getLocFromIndex(textStartIndex + match.index + nameOffsetInMatch);
-                        const end = sourceCode.getLocFromIndex(textStartIndex + match.index + nameOffsetInMatch + fragmentName.length);
+                        const end = sourceCode.getLocFromIndex(textStartIndex + match.index + nameOffsetInMatch + name.length);
 
                         context.report({
                             loc: { start, end },
-                            messageId: "fragmentSuffix",
-                            data: { name: fragmentName },
+                            messageId: "redundantSuffix",
+                            data: { kind, name, suffix },
                         });
                     }
                 }

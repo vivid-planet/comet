@@ -17,4 +17,4 @@ The rules previously only available via `@comet/eslint-config/future/*` are now 
 - `nestjs.js`:
     - `node-cache` is restricted via `no-restricted-imports` (and `restrictedImportPaths` is now exported)
 - `react.js` and `nextjs.js`:
-    - `@comet/no-gql-fragment-name-suffix` forbids GraphQL fragment names ending with `Fragment`, which would otherwise produce duplicated `FragmentFragment` types via code generation
+    - `@comet/no-gql-redundant-name-suffix` forbids GraphQL fragment/query/mutation/subscription names that end with their own kind (e.g. `FooFragment`, `BarQuery`), which would otherwise produce duplicated suffixes such as `FragmentFragment` or `QueryQuery` via code generation

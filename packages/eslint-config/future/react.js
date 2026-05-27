@@ -11,7 +11,7 @@ const config = [
             "@comet": cometPlugin,
         },
         rules: {
-            "@comet/no-gql-fragment-name-suffix": "error",
+            "@comet/no-gql-redundant-name-suffix": "error",
         },
     },
 ];

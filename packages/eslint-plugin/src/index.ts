@@ -1,4 +1,4 @@
-import noGqlFragmentNameSuffix from "./rules/no-gql-fragment-name-suffix";
+import noGqlRedundantNameSuffix from "./rules/no-gql-redundant-name-suffix";
 import noOtherModuleRelativeImport from "./rules/no-other-module-relative-import";
 import noPrivateSiblingImport from "./rules/no-private-sibling-import";
 
@@ -6,7 +6,7 @@ const plugin = {
     rules: {
         "no-private-sibling-import": noPrivateSiblingImport,
         "no-other-module-relative-import": noOtherModuleRelativeImport,
-        "no-gql-fragment-name-suffix": noGqlFragmentNameSuffix,
+        "no-gql-redundant-name-suffix": noGqlRedundantNameSuffix,
     },
 };
 export type Plugin = typeof plugin;
