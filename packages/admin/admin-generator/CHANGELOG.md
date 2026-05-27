@@ -1,5 +1,7 @@
 # @comet/admin-generator
 
+## 8.23.4
+
 ## 8.23.3
 
 ## 8.23.2

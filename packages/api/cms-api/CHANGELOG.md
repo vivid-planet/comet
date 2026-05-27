@@ -1,5 +1,13 @@
 # @comet/cms-api
 
+## 8.23.4
+
+### Patch Changes
+
+- 8651f82: Log the reason when a permission check denies access
+
+    `AbstractAccessControlService.isEqualOrMorePermissions` now emits a NestJS `Logger.debug` line identifying the missing permission or content scope whenever it returns `false`. The `impersonationAllowed` resolver field additionally logs when a user attempts to impersonate themselves.
+
 ## 8.23.3
 
 ### Patch Changes
