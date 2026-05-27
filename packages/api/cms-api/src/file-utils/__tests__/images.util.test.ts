@@ -90,16 +90,16 @@ describe("getSupportedMimeType", () => {
         expect(getSupportedMimeType(["image/webp", "image/jpeg"], "image/webp")).toBe("image/webp");
     });
 
-    it("returns empty string when accept header does not include a supported type", () => {
-        expect(getSupportedMimeType(["image/webp"], "image/jpeg")).toBe("");
+    it("returns undefined when accept header does not include a supported type", () => {
+        expect(getSupportedMimeType(["image/webp"], "image/jpeg")).toBeUndefined();
     });
 
-    it("returns empty string when accept is empty", () => {
-        expect(getSupportedMimeType(["image/webp", "image/jpeg"], "")).toBe("");
+    it("returns undefined when accept is empty", () => {
+        expect(getSupportedMimeType(["image/webp", "image/jpeg"], "")).toBeUndefined();
     });
 
-    it("returns empty string when no option matches the accept header", () => {
-        expect(getSupportedMimeType(["image/webp"], "image/jpeg, image/png")).toBe("");
+    it("returns undefined when no option matches the accept header", () => {
+        expect(getSupportedMimeType(["image/webp"], "image/jpeg, image/png")).toBeUndefined();
     });
 
     it("picks the best match from a comma-separated accept header", () => {
