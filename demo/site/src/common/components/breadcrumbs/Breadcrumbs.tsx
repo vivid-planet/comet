@@ -41,7 +41,7 @@ export const Breadcrumbs = ({ scope, name, path, parentNodes }: GQLBreadcrumbsFr
 
     return (
         <>
-            <JsonLd<BreadcrumbList> data={breadcrumbList} />
+            <JsonLd data={breadcrumbList} />
             <PageLayout grid className={styles.root}>
                 <button
                     className={styles.mobileHomeButton}
