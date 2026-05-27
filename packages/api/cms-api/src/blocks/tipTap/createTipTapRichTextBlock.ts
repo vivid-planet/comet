@@ -28,6 +28,7 @@ import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
+import { Placeholder } from "./extensions/Placeholder";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
 
@@ -89,10 +90,15 @@ const defaultSupports: TipTapSupports[] = [
     "soft-hyphen",
 ];
 
+interface TipTapPlaceholder {
+    name: string;
+}
+
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
     inlineStyles?: TipTapInlineStyle[];
+    placeholders?: TipTapPlaceholder[];
     indexSearchText?: boolean;
     link?: Block;
     /**
@@ -128,10 +134,12 @@ function buildExtensions(
     supports: TipTapSupports[],
     blockStyles: TipTapBlockStyle[],
     inlineStyles: TipTapInlineStyle[],
+    placeholders: TipTapPlaceholder[],
     hasLink: boolean,
 ): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
+    const hasPlaceholders = placeholders.length > 0;
     return [
         StarterKit.configure({
             bold: supports.includes("bold") ? {} : false,
@@ -153,6 +161,7 @@ function buildExtensions(
         ...(supports.includes("sub") ? [Subscript] : []),
         ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
         ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
+        ...(hasPlaceholders ? [Placeholder] : []),
         ...(hasLink ? [CmsLink] : []),
     ];
 }
@@ -227,6 +236,22 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
+function collectPlaceholderNames(content: TipTapContent): string[] {
+    const names: string[] = [];
+
+    if (content.type === "placeholder" && content.attrs?.name) {
+        names.push(content.attrs.name as string);
+    }
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            names.push(...collectPlaceholderNames(child));
+        }
+    }
+
+    return names;
+}
+
 function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
     if (!content || typeof content !== "object") {
         return 0;
@@ -290,8 +315,9 @@ function IsTipTapContent(
         inlineStyles,
         linkBlock,
         maxBlocks,
+        allowedPlaceholderNames,
         listLevelMax,
-    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; listLevelMax?: number },
+    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; allowedPlaceholderNames?: string[]; listLevelMax?: number },
     validationOptions?: ValidationOptions,
 ) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
@@ -350,6 +376,16 @@ function IsTipTapContent(
                             }
                         }
 
+                        // Validate placeholder names
+                        if (allowedPlaceholderNames) {
+                            const usedNames = collectPlaceholderNames(value as TipTapContent);
+                            for (const name of usedNames) {
+                                if (!allowedPlaceholderNames.includes(name)) {
+                                    return false;
+                                }
+                            }
+                        }
+
                         return true;
                     } catch {
                         return false;
@@ -389,6 +425,7 @@ export function createTipTapRichTextBlock(
         supports = defaultSupports,
         blockStyles = [],
         inlineStyles = [],
+        placeholders = [],
         indexSearchText = true,
         link: LinkBlock,
         maxBlocks,
@@ -401,7 +438,7 @@ export function createTipTapRichTextBlock(
     const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, blockStyles, inlineStyles, hasLink);
+    const extensions = buildExtensions(supports, blockStyles, inlineStyles, placeholders, hasLink);
     const schema = getSchema(extensions);
 
     const draftJsBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.blockStyleMap : undefined;
@@ -467,8 +504,10 @@ export function createTipTapRichTextBlock(
         }
     }
 
+    const allowedPlaceholderNames = placeholders.length > 0 ? placeholders.map((p) => p.name) : undefined;
+
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, listLevelMax })
+        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, allowedPlaceholderNames, listLevelMax })
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 

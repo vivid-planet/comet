@@ -6,7 +6,7 @@ import type { TableBlockRowState, TableBlockState } from "../../createTableBlock
 import { getNewColumn } from "./column";
 import { rteSchema } from "./rteSchema";
 
-export const getNewRow = (cellValues: TableBlockRowState["cellValues"], newRowId: string = uuid()): TableBlockRowState => {
+const getNewRow = (cellValues: TableBlockRowState["cellValues"], newRowId: string = uuid()): TableBlockRowState => {
     return { id: newRowId, highlighted: false, cellValues };
 };
 

@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "9.0.0-beta.3",
+    "version": "9.0.0-beta.4",
     "description": "Comet API Generator CLI tool",
     "repository": {
         "directory": "packages/api/api-generator",
@@ -61,7 +61,7 @@
         "reflect-metadata": "^0.2.2",
         "rimraf": "^6.1.2",
         "ts-jest": "^29.4.9",
-        "uuid": "^11.1.0"
+        "uuid": "^11.1.1"
     },
     "peerDependencies": {
         "@mikro-orm/cli": "^6.0.0",
