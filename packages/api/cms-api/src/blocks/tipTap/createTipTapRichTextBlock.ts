@@ -1,4 +1,4 @@
-import { type Extensions, getSchema } from "@tiptap/core";
+import { type Extensions, getSchema, type JSONContent } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { Node as ProseMirrorNode, type Schema } from "@tiptap/pm/model";
@@ -29,9 +29,6 @@ import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { SoftHyphen } from "./extensions/SoftHyphen";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TipTapContent = Record<string, any>;
 
 type TipTapSupports =
     | "bold"
@@ -166,14 +163,14 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTapContent {
+function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
     if (!content || typeof content !== "object") {
         return content;
     }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
-        result.marks = result.marks.map((mark: TipTapContent) => {
+        result.marks = result.marks.map((mark) => {
             if (mark.type === "link" && mark.attrs?.data) {
                 return { ...mark, attrs: { ...mark.attrs, data: fn(mark.attrs.data) } };
             }
@@ -182,17 +179,17 @@ function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTa
     }
 
     if (Array.isArray(result.content)) {
-        result.content = result.content.map((child: TipTapContent) => mapLinkMarksData(child, fn));
+        result.content = result.content.map((child: JSONContent) => mapLinkMarksData(child, fn));
     }
 
     return result;
 }
 
-function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapContent"]): Array<{ data: unknown; path: string[] }> {
+function collectLinkMarks(content: JSONContent, basePath: string[] = ["tipTapContent"]): Array<{ data: unknown; path: string[] }> {
     const results: Array<{ data: unknown; path: string[] }> = [];
 
     if (Array.isArray(content.marks)) {
-        content.marks.forEach((mark: TipTapContent, markIdx: number) => {
+        content.marks.forEach((mark, markIdx) => {
             if (mark.type === "link" && mark.attrs?.data) {
                 results.push({
                     data: mark.attrs.data,
@@ -203,7 +200,7 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     }
 
     if (Array.isArray(content.content)) {
-        content.content.forEach((child: TipTapContent, childIdx: number) => {
+        content.content.forEach((child: JSONContent, childIdx: number) => {
             results.push(...collectLinkMarks(child, [...basePath, "content", String(childIdx)]));
         });
     }
@@ -211,7 +208,7 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
+function getListNestingDepth(content: JSONContent, currentDepth = 0): number {
     if (!content || typeof content !== "object") {
         return 0;
     }
@@ -233,7 +230,7 @@ function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
     return maxDepth;
 }
 
-function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined {
+function getBlockTypeFromNode(node: JSONContent): TipTapBlockType | undefined {
     if (node.type === "paragraph") {
         return "paragraph";
     }
@@ -243,7 +240,7 @@ function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined 
     return undefined;
 }
 
-function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: TipTapInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
+function containsInvalidInlineStyleMarks(content: JSONContent, inlineStyles: TipTapInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
     const currentBlockType = getBlockTypeFromNode(content) ?? parentBlockType;
 
     if (Array.isArray(content.content)) {
@@ -252,7 +249,8 @@ function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: T
             if (child.type === "text" && Array.isArray(child.marks)) {
                 for (const mark of child.marks) {
                     if (mark.type === "inlineStyle" && mark.attrs?.type) {
-                        const styleConfig = inlineStyles.find((s) => s.name === mark.attrs.type);
+                        const markAttrs = mark.attrs;
+                        const styleConfig = inlineStyles.find((s) => s.name === markAttrs.type);
                         if (styleConfig?.appliesTo && currentBlockType && !styleConfig.appliesTo.includes(currentBlockType)) {
                             return true;
                         }
@@ -299,13 +297,13 @@ function IsTipTapContent(
                         node.check();
 
                         // Validate inline style appliesTo constraints
-                        if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
+                        if (containsInvalidInlineStyleMarks(value as JSONContent, inlineStyles)) {
                             return false;
                         }
 
                         // Enforce maxBlocks limit on top-level content nodes
                         if (maxBlocks !== undefined) {
-                            const content = (value as TipTapContent).content;
+                            const content = (value as JSONContent).content;
                             if (Array.isArray(content) && content.length > maxBlocks) {
                                 return false;
                             }
@@ -313,7 +311,7 @@ function IsTipTapContent(
 
                         // Enforce listLevelMax limit on list nesting depth
                         if (listLevelMax !== undefined) {
-                            const depth = getListNestingDepth(value as TipTapContent);
+                            const depth = getListNestingDepth(value as JSONContent);
                             if (depth > listLevelMax) {
                                 return false;
                             }
@@ -321,7 +319,7 @@ function IsTipTapContent(
 
                         // Validate link mark data
                         if (linkBlock) {
-                            const linkMarks = collectLinkMarks(value as TipTapContent);
+                            const linkMarks = collectLinkMarks(value as JSONContent);
                             for (const { data } of linkMarks) {
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
@@ -349,7 +347,7 @@ interface TextEntry {
     headingLevel?: number;
 }
 
-function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEntry[] {
+function extractTextEntries(node: JSONContent, headingLevel?: number): TextEntry[] {
     const results: TextEntry[] = [];
     const currentHeadingLevel = node.type === "heading" ? (node.attrs?.level as number) : headingLevel;
 
@@ -390,7 +388,7 @@ export function createTipTapRichTextBlock(
     @BlockDataMigrationVersion(migrate.version)
     class TipTapRichTextBlockData extends BlockData {
         @BlockField({ type: "json" })
-        tipTapContent: TipTapContent;
+        tipTapContent: JSONContent;
 
         searchText(): SearchText[] {
             if (!indexSearchText) {
@@ -422,7 +420,7 @@ export function createTipTapRichTextBlock(
     class TipTapRichTextBlockInput implements BlockInputInterface {
         @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, listLevelMax })
         @BlockField({ type: "json" })
-        tipTapContent: TipTapContent;
+        tipTapContent: JSONContent;
 
         transformToBlockData(): TipTapRichTextBlockData {
             let tipTapContent = this.tipTapContent;
