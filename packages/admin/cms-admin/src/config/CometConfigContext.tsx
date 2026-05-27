@@ -1,5 +1,6 @@
 import { ErrorHandlerProvider } from "@comet/admin";
-import { createContext, type ErrorInfo, type PropsWithChildren, useContext } from "react";
+import type { DataGridProps } from "@mui/x-data-grid";
+import { type ComponentType, createContext, type ErrorInfo, type PropsWithChildren, useContext } from "react";
 
 import { type BlocksConfig, BlocksConfigProvider } from "../blocks/config/BlocksConfigContext";
 import type { BlockContext } from "../blocks/context/BlockContext";
@@ -28,6 +29,9 @@ export interface CometConfig<SiteConfigs = unknown> {
         context?: Omit<BlockContext, "apiUrl" | "apolloClient">;
     };
     warnings?: WarningsConfig;
+    dataGrid?: {
+        component?: ComponentType<DataGridProps>;
+    };
     onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
