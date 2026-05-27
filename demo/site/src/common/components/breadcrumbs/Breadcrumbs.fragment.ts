@@ -9,7 +9,6 @@ export const breadcrumbsFragment = gql`
             path
         }
         scope {
-            domain
             language
         }
     }
