@@ -56,7 +56,7 @@ jobs:
 
             - uses: ./.github/actions/setup
               with:
-                  buildPackages: "true"
+                  build-packages: "true"
 
             - name: Lint
               run: |
