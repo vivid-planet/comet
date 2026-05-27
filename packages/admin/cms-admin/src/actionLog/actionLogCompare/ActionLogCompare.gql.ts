@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const actionLogCompareFragment = gql`
-    fragment ActionLogCompareFragment on ActionLog {
+    fragment ActionLogCompare on ActionLog {
         id
         version
         snapshot
