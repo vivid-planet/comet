@@ -21,7 +21,7 @@ import { ProductType } from "./product-type.enum";
 
 @ObjectType()
 @InputType("AlternativeAddressInput")
-export class AlternativeAddress {
+class AlternativeAddress {
     @Field()
     @Property()
     @IsString()
@@ -58,7 +58,7 @@ export class Address extends AlternativeAddress {
 @Embeddable()
 @ObjectType()
 @InputType("AlternativeAddressAsEmbeddableInput")
-export class AlternativeAddressAsEmbeddable {
+class AlternativeAddressAsEmbeddable {
     @Field()
     @Property()
     @IsString()

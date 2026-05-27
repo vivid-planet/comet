@@ -1,5 +1,60 @@
 # @comet/site-react
 
+## 9.0.0-beta.4
+
+### Major Changes
+
+- 8b3932d: Move server-only exports to `/server` subpath
+
+    Server-only exports have been moved to a separate `/server` entry point to prevent server-only code from being pulled into client bundles. While tree-shaking previously removed unused server code, this is an optional optimization — Vite's dev server, for example, does not tree-shake, causing errors when importing these packages in non-server environments (e.g., Storybook).
+
+    **`@comet/site-nextjs`**: `sitePreviewRoute`, `legacyPagesRouterSitePreviewApiHandler`, `previewParams`, `legacyPagesRouterPreviewParams`, and `persistedQueryRoute` must now be imported from `@comet/site-nextjs/server`:
+
+    ```diff
+    - import { sitePreviewRoute } from "@comet/site-nextjs";
+    + import { sitePreviewRoute } from "@comet/site-nextjs/server";
+    ```
+
+    ```diff
+    - import { previewParams } from "@comet/site-nextjs";
+    + import { previewParams } from "@comet/site-nextjs/server";
+    ```
+
+    ```diff
+    - import { persistedQueryRoute } from "@comet/site-nextjs";
+    + import { persistedQueryRoute } from "@comet/site-nextjs/server";
+    ```
+
+    **`@comet/site-react`**: `persistedQueryRoute` must now be imported from `@comet/site-react/server`:
+
+    ```diff
+    - import { persistedQueryRoute } from "@comet/site-react";
+    + import { persistedQueryRoute } from "@comet/site-react/server";
+    ```
+
+### Minor Changes
+
+- ab5e547: Add `JsonLd` component for typed schema.org structured data
+
+    Renders any [`schema-dts`](https://www.npmjs.com/package/schema-dts) entity inside a `<script type="application/ld+json">` tag. The payload is escaped so a `</script>` sequence in user content cannot break out of the script tag.
+
+    ```tsx
+    import { JsonLd } from "@comet/site-react";
+    import type { Organization } from "schema-dts";
+
+    <JsonLd<Organization>
+        data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Acme",
+            url: "https://acme.example",
+            logo: "https://acme.example/logo.png",
+        }}
+    />;
+    ```
+
+    Also re-exported from `@comet/site-nextjs`.
+
 ## 9.0.0-beta.3
 
 ### Patch Changes

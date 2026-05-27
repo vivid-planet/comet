@@ -38,6 +38,36 @@ Then, install the updated dependencies:
 npm install
 ```
 
+### Replace `install-agent-skills` with `install-agent-features`
+
+The `install-agent-skills` command and its `agent-skills.json` config have been removed and replaced by `install-agent-features`, a combined installer for agent skills and agent rules.
+
+Rename `agent-skills.json` to `agent-features.json` (the schema is identical):
+
+```sh
+mv agent-skills.json agent-features.json
+```
+
+Replace the `install-agent-skills` invocation in `package.json`:
+
+```diff title="package.json"
+{
+    "scripts": {
+-       "install-agent-skills": "npx @comet/cli install-agent-skills"
++       "install-agent-features": "npx @comet/cli install-agent-features"
+    }
+}
+```
+
+And in `install.sh`:
+
+```diff title="install.sh"
+- npx @comet/cli install-agent-skills
++ npx @comet/cli install-agent-features
+```
+
+See the [Installing agent features](../guides/installing-agent-features) guide for more information.
+
 ### Verify lint passes
 
 ```sh
@@ -509,13 +539,19 @@ Callers should conditionally render the component instead of passing the `hasCle
 **Before:**
 
 ```tsx
-<ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
+<ClearInputAdornment
+    position="end"
+    hasClearableContent={Boolean(value)}
+    onClick={() => onChange("")}
+/>
 ```
 
 **After:**
 
 ```tsx
-{value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+{
+    value && <ClearInputAdornment position="end" onClick={() => onChange("")} />;
+}
 ```
 
 ### Replacement of `@comet/admin-date-time`

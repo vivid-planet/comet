@@ -25,4 +25,5 @@ junit.xml
 .cursor/rules/
 .claude/skills/
 .claude/rules/
+.claude/worktrees/
 .github/instructions/
