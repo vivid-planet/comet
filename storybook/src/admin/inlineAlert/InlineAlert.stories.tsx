@@ -23,7 +23,7 @@ export default config;
  * Demonstrates the base appearance of the error component.
  */
 export const InlineAlertStory: Story = {};
-InlineAlertStory.name = "InlineAlert";
+InlineAlertStory.storyName = "InlineAlert";
 
 /**
  * Displays the `InlineAlert` component with a warning variant.

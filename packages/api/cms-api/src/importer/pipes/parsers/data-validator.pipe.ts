@@ -10,7 +10,7 @@ export class DataValidatorPipe implements ImporterPipe {
     }
 }
 
-export class DataValidator extends StreamTransform {
+class DataValidator extends StreamTransform {
     constructor(private readonly logger: LoggerService) {
         super({ writableObjectMode: true, objectMode: true });
         this.logger = logger;

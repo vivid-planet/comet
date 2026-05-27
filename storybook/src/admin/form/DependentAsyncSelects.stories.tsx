@@ -82,4 +82,4 @@ export const DependentAsyncSelects = function () {
     );
 };
 
-DependentAsyncSelects.name = "Dependent async selects";
+DependentAsyncSelects.storyName = "Dependent async selects";

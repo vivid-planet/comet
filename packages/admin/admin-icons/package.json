@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "9.0.0-beta.3",
+    "version": "9.0.0-beta.4",
     "description": "A collection of icons for Comet Admin",
     "repository": {
         "directory": "packages/admin/admin-icons",
@@ -39,22 +39,22 @@
     },
     "dependencies": {
         "use-constant": "^2.0.0",
-        "uuid": "^11.1.0"
+        "uuid": "^11.1.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.28.6",
-        "@babel/core": "^7.28.6",
+        "@babel/core": "^7.29.0",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@mui/material": "^7.3.7",
+        "@mui/material": "^7.3.11",
         "@types/cli-progress": "^3.11.6",
-        "@types/node": "^24.12.2",
+        "@types/node": "^24.12.4",
         "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
         "change-case": "^4.1.2",
         "cli-progress": "^3.12.0",
-        "eslint": "^9.39.2",
-        "fast-xml-parser": "^5.7.1",
+        "eslint": "^9.39.4",
+        "fast-xml-parser": "^5.8.0",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "react": "^19.2.6",

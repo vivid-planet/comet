@@ -105,6 +105,12 @@ export interface CreateTipTapRichTextBlockOptions {
      * that can be stored. Content exceeding this limit will be rejected during validation.
      */
     maxBlocks?: number;
+    /**
+     * Limits the maximum nesting depth of list items.
+     * A value of 1 means only a flat list (no nesting), 2 allows one level of sub-lists, etc.
+     * Content exceeding this limit will be rejected during validation.
+     */
+    listLevelMax?: number;
 }
 
 function buildExtensions(
@@ -230,6 +236,28 @@ function collectPlaceholderNames(content: TipTapContent): string[] {
     return names;
 }
 
+function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
+    if (!content || typeof content !== "object") {
+        return 0;
+    }
+
+    const isListNode = content.type === "bulletList" || content.type === "orderedList";
+    const depth = isListNode ? currentDepth + 1 : currentDepth;
+
+    if (!Array.isArray(content.content)) {
+        return depth;
+    }
+
+    let maxDepth = depth;
+    for (const child of content.content) {
+        const childDepth = getListNestingDepth(child, depth);
+        if (childDepth > maxDepth) {
+            maxDepth = childDepth;
+        }
+    }
+    return maxDepth;
+}
+
 function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined {
     if (node.type === "paragraph") {
         return "paragraph";
@@ -272,7 +300,8 @@ function IsTipTapContent(
         linkBlock,
         maxBlocks,
         allowedPlaceholderNames,
-    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; allowedPlaceholderNames?: string[] },
+        listLevelMax,
+    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; allowedPlaceholderNames?: string[]; listLevelMax?: number },
     validationOptions?: ValidationOptions,
 ) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
@@ -304,6 +333,14 @@ function IsTipTapContent(
                         if (maxBlocks !== undefined) {
                             const content = (value as TipTapContent).content;
                             if (Array.isArray(content) && content.length > maxBlocks) {
+                                return false;
+                            }
+                        }
+
+                        // Enforce listLevelMax limit on list nesting depth
+                        if (listLevelMax !== undefined) {
+                            const depth = getListNestingDepth(value as TipTapContent);
+                            if (depth > listLevelMax) {
                                 return false;
                             }
                         }
@@ -376,6 +413,7 @@ export function createTipTapRichTextBlock(
         indexSearchText = true,
         link: LinkBlock,
         maxBlocks,
+        listLevelMax,
     }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
@@ -421,7 +459,7 @@ export function createTipTapRichTextBlock(
     const allowedPlaceholderNames = placeholders.length > 0 ? placeholders.map((p) => p.name) : undefined;
 
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, allowedPlaceholderNames })
+        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, allowedPlaceholderNames, listLevelMax })
         @BlockField({ type: "json" })
         tipTapContent: TipTapContent;
 

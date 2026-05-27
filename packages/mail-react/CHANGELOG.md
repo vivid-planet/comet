@@ -1,5 +1,52 @@
 # @comet/mail-react
 
+## 9.0.0-beta.4
+
+### Minor Changes
+
+- 0cc1b06: Add config context with `Config`, `ConfigProvider`, and `useConfig`
+
+    `Config` is an augmentable interface for runtime configuration — intended for environment-specific data. Add custom keys via TypeScript interface declaration merging:
+
+    ```ts
+    declare module "@comet/mail-react" {
+        interface Config {
+            myKey?: { foo: string };
+        }
+    }
+    ```
+
+    Define the config using the `config` prop on `MjmlMailRoot` or by mounting `ConfigProvider` directly. Use the `useConfig` hook to read the value.
+
+- ba777cf: Add `HtmlPixelImageBlock` and `MjmlPixelImageBlock` for rendering Comet CMS `PixelImageBlockData` in emails
+
+    Configure `MjmlMailRoot.config.pixelImageBlock` once with the API's allowed image sizes and base URL; the blocks resolve the render width and build the image URL.
+
+    Pass `aspectRatio` (e.g. `"16x9"`) to override the DAM crop ratio.
+
+    ```tsx
+    <MjmlMailRoot
+        config={{
+            pixelImageBlock: {
+                validSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
+                baseUrl: process.env.API_URL,
+            },
+        }}
+    >
+        <MjmlPixelImageBlock data={pixelImageData} width={536} />
+    </MjmlMailRoot>
+    ```
+
+- a7bb900: Add `head` and `attributes` props to `MjmlMailRoot`
+    - `head` — `ReactNode` appended inside `<MjmlHead>` after the registered styles block.
+    - `attributes` — `ReactNode` appended inside `<MjmlAttributes>` after the default `<MjmlAll>`.
+
+    ```tsx
+    <MjmlMailRoot attributes={<MjmlClass name="link" color="blue" />} head={<MjmlFont name="Foo" href="https://example.com/foo.css" />}>
+        {/* email body */}
+    </MjmlMailRoot>
+    ```
+
 ## 9.0.0-beta.3
 
 ### Minor Changes

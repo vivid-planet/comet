@@ -16,7 +16,7 @@ jobs:
             - name: Checkout Repo
               uses: actions/checkout@v6
 
-            - uses: pnpm/action-setup@v4
+            - uses: pnpm/action-setup@v6
 
             - name: Use Node.js 24.x
               uses: actions/setup-node@v6
@@ -44,7 +44,7 @@ jobs:
                   echo >> .changeset/canary.md
                   echo fake change to always get a canary release >> .changeset/canary.md
                   pnpm exec changeset version --snapshot canary
-                  pnpm run publish --tag canary --no-git-checks
+                  pnpm run publish --tag canary
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -57,6 +57,6 @@ jobs:
                   echo >> .changeset/canary.md
                   echo fake change to always get a canary release >> .changeset/canary.md
                   pnpm exec changeset version --snapshot canary
-                  pnpm run publish --tag next-canary --no-git-checks
+                  pnpm run publish --tag next-canary
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

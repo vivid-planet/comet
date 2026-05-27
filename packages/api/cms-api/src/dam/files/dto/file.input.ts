@@ -115,7 +115,7 @@ export class CreateFileInput {
 }
 
 @InputType({ isAbstract: true })
-export class UpdateImageFileInput {
+class UpdateImageFileInput {
     @Field(() => ImageCropAreaInput, {
         nullable: true,
     })

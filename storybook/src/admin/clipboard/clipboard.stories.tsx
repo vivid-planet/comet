@@ -46,4 +46,4 @@ export const ClipboardFallbackSizeLimit = function () {
     );
 };
 
-ClipboardFallbackSizeLimit.name = "Clipboard fallback size limit";
+ClipboardFallbackSizeLimit.storyName = "Clipboard fallback size limit";

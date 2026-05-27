@@ -59,26 +59,26 @@
         "setup:download-mitmproxy": "dotenv -- sh -c 'pnpm exec comet download-mitmproxy -v $MITMPROXY_VERSION'"
     },
     "devDependencies": {
-        "@changesets/cli": "^2.29.8",
+        "@changesets/cli": "^2.31.0",
         "@comet/cli": "workspace:*",
         "@comet/dev-oidc-provider": "^1.2.1",
         "@comet/dev-process-manager": "^3.1.0",
         "@formatjs/cli": "^6.7.2",
-        "@types/node": "^24.12.2",
+        "@types/node": "^24.12.4",
         "dotenv-cli": "^9.0.0",
         "husky": "^9.1.7",
-        "knip": "^5.61.3",
-        "lint-staged": "^16.2.7",
+        "knip": "^5.88.1",
+        "lint-staged": "^16.4.0",
         "npm-run-all2": "^8.0.4",
         "open-cli": "^8.0.0",
         "prettier": "^3.6.2",
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3"
     },
-    "packageManager": "pnpm@10.33.0",
+    "packageManager": "pnpm@10.33.4",
     "engines": {
         "node": "24",
-        "pnpm": "10.33.0"
+        "pnpm": "10.33.4"
     },
     "pnpm": {
         "peerDependencyRules": {

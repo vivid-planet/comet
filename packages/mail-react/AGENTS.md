@@ -1,12 +1,12 @@
 # Agent Instructions — @comet/mail-react
 
-## OpenSpec CLI
+## About this package
 
-Run all OpenSpec commands via `pnpm exec openspec`, not directly:
+[README.md](README.md) explains what this package is, the design decisions behind it (e.g. `useOptionalTheme()` over `useTheme()`), and the conventions its code follows. Read it before working in here. If a change reverses a decision or shifts a convention, update the README in the same PR.
 
-- `pnpm exec openspec new change "<name>"`
-- `pnpm exec openspec status --change "<name>" --json`
-- `pnpm exec openspec instructions <artifact> --change "<name>" --json`
+## When creating a changeset
+
+Before adding a new changeset, check `.changeset/` at the repo root for an existing one covering the same feature (e.g. from an unmerged PR) — update it rather than creating a new file. Only add a new changeset when nothing existing fits.
 
 ## Running processes (dev-pm)
 
