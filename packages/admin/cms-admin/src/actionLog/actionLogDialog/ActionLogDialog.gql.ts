@@ -2,14 +2,14 @@ import { gql } from "@apollo/client";
 import type { DocumentNode } from "graphql";
 
 import { actionLogCompareFragment } from "../actionLogCompare/ActionLogCompare";
-import type { GQLActionLogCompareFragmentFragment } from "../actionLogCompare/ActionLogCompare.gql.generated";
+import type { GQLActionLogCompareFragment } from "../actionLogCompare/ActionLogCompare.gql.generated";
 import { actionLogGridFragment } from "../actionLogGrid/ActionLogGrid";
-import type { GQLActionLogGridFragmentFragment } from "../actionLogGrid/ActionLogGrid.gql.generated";
+import type { GQLActionLogGridFragment } from "../actionLogGrid/ActionLogGrid.gql.generated";
 import { actionLogShowVersionFragment } from "../actionLogShowVersion/ActionLogShowVersion";
-import type { GQLActionLogShowVersionFragmentFragment } from "../actionLogShowVersion/ActionLogShowVersion.gql.generated";
+import type { GQLActionLogShowVersionFragment } from "../actionLogShowVersion/ActionLogShowVersion.gql.generated";
 
 export type ActionLogDialogGridQueryResult = {
-    entity: { actionLogs: { nodes: GQLActionLogGridFragmentFragment[]; totalCount: number } } | null;
+    entity: { actionLogs: { nodes: GQLActionLogGridFragment[]; totalCount: number } } | null;
 };
 
 export type ActionLogDialogGridQueryVariables = {
@@ -20,7 +20,7 @@ export type ActionLogDialogGridQueryVariables = {
 };
 
 export type ActionLogDialogShowVersionQueryResult = {
-    entity: { actionLog: GQLActionLogShowVersionFragmentFragment | null } | null;
+    entity: { actionLog: GQLActionLogShowVersionFragment | null } | null;
 };
 
 export type ActionLogDialogShowVersionQueryVariables = {
@@ -30,8 +30,8 @@ export type ActionLogDialogShowVersionQueryVariables = {
 
 export type ActionLogDialogCompareQueryResult = {
     entity: {
-        beforeVersion: GQLActionLogCompareFragmentFragment | null;
-        afterVersion: GQLActionLogCompareFragmentFragment | null;
+        beforeVersion: GQLActionLogCompareFragment | null;
+        afterVersion: GQLActionLogCompareFragment | null;
     } | null;
 };
 
@@ -46,7 +46,7 @@ export const createActionLogDialogGridQuery = (rootField: string): DocumentNode 
         entity: ${rootField}(id: $id) {
             actionLogs(offset: $offset, limit: $limit, sort: $sort) {
                 nodes {
-                    ...ActionLogGridFragment
+                    ...ActionLogGrid
                 }
                 totalCount
             }
@@ -59,7 +59,7 @@ export const createActionLogDialogShowVersionQuery = (rootField: string): Docume
     query ActionLogDialogShowVersion($id: ID!, $versionId: ID!) {
         entity: ${rootField}(id: $id) {
             actionLog(id: $versionId) {
-                ...ActionLogShowVersionFragment
+                ...ActionLogShowVersion
             }
         }
     }
@@ -70,10 +70,10 @@ export const createActionLogDialogCompareQuery = (rootField: string): DocumentNo
     query ActionLogDialogCompare($id: ID!, $beforeVersionId: ID!, $afterVersionId: ID!) {
         entity: ${rootField}(id: $id) {
             beforeVersion: actionLog(id: $beforeVersionId) {
-                ...ActionLogCompareFragment
+                ...ActionLogCompare
             }
             afterVersion: actionLog(id: $afterVersionId) {
-                ...ActionLogCompareFragment
+                ...ActionLogCompare
             }
         }
     }

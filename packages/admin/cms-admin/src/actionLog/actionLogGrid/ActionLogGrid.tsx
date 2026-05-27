@@ -7,11 +7,11 @@ import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 
 import { ActionLogHeader } from "../components/header/ActionLogHeader";
 import { ActionGridToolbar, type ActionGridToolbarProps } from "./actionGridToolbar/ActionGridToolbar";
-import type { GQLActionLogGridFragmentFragment } from "./ActionLogGrid.gql.generated";
+import type { GQLActionLogGridFragment } from "./ActionLogGrid.gql.generated";
 import { Root } from "./ActionLogGrid.sc";
 import { UserCell } from "./userCell/UserCell";
 
-type ActionGridRow = GQLActionLogGridFragmentFragment;
+type ActionGridRow = GQLActionLogGridFragment;
 
 type ActionLogGridProps = ReturnType<typeof useDataGridRemote> &
     ReturnType<typeof usePersistentColumnState> & {

@@ -8,12 +8,12 @@ import { defaultFilterOutKeys, filterOutKeys } from "../actionLog.utils";
 import { DiffHeader } from "../components/DiffHeader";
 import { DiffViewer } from "../components/diffViewer/DiffViewer";
 import { ActionLogHeader } from "../components/header/ActionLogHeader";
-import type { GQLActionLogCompareFragmentFragment } from "./ActionLogCompare.gql.generated";
+import type { GQLActionLogCompareFragment } from "./ActionLogCompare.gql.generated";
 import { LoadingContainer, PaperStyled, Root } from "./ActionLogCompare.styles";
 
 type ActionLogCompareProps = {
-    afterVersion: GQLActionLogCompareFragmentFragment | undefined;
-    beforeVersion: GQLActionLogCompareFragmentFragment | undefined;
+    afterVersion: GQLActionLogCompareFragment | undefined;
+    beforeVersion: GQLActionLogCompareFragment | undefined;
     error?: boolean;
     filterKeys?: string[];
     id: string;

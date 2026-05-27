@@ -8,11 +8,11 @@ import { defaultFilterOutKeys, filterOutKeys } from "../actionLog.utils";
 import { DiffHeader } from "../components/DiffHeader";
 import { DiffViewer } from "../components/diffViewer/DiffViewer";
 import { ActionLogHeader } from "../components/header/ActionLogHeader";
-import type { GQLActionLogShowVersionFragmentFragment } from "./ActionLogShowVersion.gql.generated";
+import type { GQLActionLogShowVersionFragment } from "./ActionLogShowVersion.gql.generated";
 import { DiffViewerContainer, LoadingContainer, Root } from "./ActionLogShowVersion.styles";
 
 type ActionLogShowVersionProps = {
-    actionLog: GQLActionLogShowVersionFragmentFragment | undefined;
+    actionLog: GQLActionLogShowVersionFragment | undefined;
     error?: boolean;
     filterKeys?: string[];
     id: string;

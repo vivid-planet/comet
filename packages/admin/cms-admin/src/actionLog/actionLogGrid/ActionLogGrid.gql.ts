@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const actionLogGridFragment = gql`
-    fragment ActionLogGridFragment on ActionLog {
+    fragment ActionLogGrid on ActionLog {
         id
         userId
         entityName
