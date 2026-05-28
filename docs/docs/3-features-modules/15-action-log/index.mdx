@@ -47,19 +47,33 @@ The API exposes two GraphQL fields on every tracked entity type:
 
 #### ActionLogButton
 
-Drop the component onto your entity's edit page. It manages the dialog's open/close state for you:
+Place the component in your entity's edit-page toolbar. It renders the button and manages the dialog's open/close state for you:
 
 ```tsx title="EditProduct.tsx"
+import { MainContent, Toolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { ActionLogButton } from "@comet/cms-admin";
 
 import type { GQLQuery } from "../graphql.generated";
+import { ProductForm } from "./ProductForm";
 
 export function EditProduct({ id, name }: { id: string; name?: string }) {
-    return <ActionLogButton<GQLQuery> id={id} rootField="product" name={name} />;
+    return (
+        <>
+            <Toolbar>
+                <ToolbarBackButton />
+                <ToolbarTitleItem>{name}</ToolbarTitleItem>
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <ActionLogButton<GQLQuery> id={id} rootField="product" name={name} />
+                </ToolbarActions>
+            </Toolbar>
+            <MainContent>
+                <ProductForm id={id} />
+            </MainContent>
+        </>
+    );
 }
 ```
-
-<StorybookCmsAdminStoryIframe storyId="action-log-action-log-button--default" height={120} />
 
 Pass your application's generated `GQLQuery` type as a generic to constrain `rootField` to entities that actually expose `actionLog`/`actionLogs` – typos are caught at compile time.
 
@@ -72,6 +86,10 @@ The default label is "Action Log". Pass `children` to customise it, and any stan
 ```
 
 If you need to open the dialog from elsewhere (a menu item, a row action, …), use `<ActionLogDialog />` directly and manage the `open` state yourself.
+
+**Example** – click the button to open the dialog:
+
+<StorybookCmsAdminStoryIframe storyId="action-log-action-log-button--default" height={900} />
 
 The dialog itself has three views:
 
