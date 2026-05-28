@@ -203,6 +203,22 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 - }
 ```
 
+### Update dependency filters and service signatures
+
+`DependencyFilter.targetGraphqlObjectType` and `DependentFilter.rootGraphqlObjectType` now use `StringFilter` instead of `string`.
+Update any code passing a plain string to use `{ equal: "..." }` instead.
+
+`DependenciesService.getDependents()` and `getDependencies()` now take a single options object instead of separate `filter`, `paginationArgs`, and `options` parameters.
+Merge the arguments:
+
+```ts
+// Before
+service.getDependents(target, filter, { offset, limit }, { forceRefresh, sort });
+
+// After
+service.getDependents(target, { filter, offset, limit, forceRefresh, sort });
+```
+
 ### Fix dev dependency imports in API source code
 
 `@comet/eslint-config` v9 adds the `import/no-extraneous-dependencies` rule to the NestJS ESLint config.
@@ -352,6 +368,65 @@ The `DependencyList` component has been replaced by two focused components:
 
 - <DependencyList query={myDependenciesQuery} variables={{ id }} />
 + <DependenciesList query={myDependenciesQuery} variables={{ id }} />
+```
+
+### Update `DependenciesList` and `DependentsList` queries for filtering and sorting
+
+`DependenciesList` and `DependentsList` now pass `filter` and `sort` variables to their queries (a default filter shows only visible items).
+Update your queries to accept `$filter` and `$sort` and forward them to the `dependencies`/`dependents` field:
+
+```graphql
+# DependentsList
+query MyDependents(
+    $id: ID!
+    $offset: Int!
+    $limit: Int!
+    $forceRefresh: Boolean = false
+    $filter: DependentFilter
+    $sort: [DependencySort!]
+) {
+    item: myEntity(id: $id) {
+        id
+        dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+            nodes {
+                rootGraphqlObjectType
+                rootId
+                rootColumnName
+                jsonPath
+                name
+                secondaryInformation
+                visible
+            }
+            totalCount
+        }
+    }
+}
+
+# DependenciesList
+query MyDependencies(
+    $id: ID!
+    $offset: Int!
+    $limit: Int!
+    $forceRefresh: Boolean = false
+    $filter: DependencyFilter
+    $sort: [DependencySort!]
+) {
+    item: myEntity(id: $id) {
+        id
+        dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+            nodes {
+                targetGraphqlObjectType
+                targetId
+                rootColumnName
+                jsonPath
+                name
+                secondaryInformation
+                visible
+            }
+            totalCount
+        }
+    }
+}
 ```
 
 ### Admin packages are now ESM-only
