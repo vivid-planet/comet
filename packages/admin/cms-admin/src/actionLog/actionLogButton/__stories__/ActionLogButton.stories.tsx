@@ -1,21 +1,8 @@
-import {
-    AppHeader,
-    AppHeaderMenuButton,
-    MainContent,
-    MainNavigation,
-    MainNavigationItemRouterLink,
-    MasterLayout,
-    SaveButton,
-    Toolbar,
-    ToolbarActions,
-    ToolbarBackButton,
-    ToolbarFillSpace,
-    ToolbarTitleItem,
-} from "@comet/admin";
-import { Dashboard, Store } from "@comet/admin-icons";
+import { MainContent, SaveButton, Toolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Stack, TextField, Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import { MasterLayoutDecorator } from "../../../storybook/MasterLayoutDecorator";
 import { ActionLogButton } from "../ActionLogButton";
 
 type ActionLogButtonStoryArgs = {
@@ -45,22 +32,10 @@ export const CustomLabel: Story = {
     render: (args) => <ActionLogButton {...args}>Show history</ActionLogButton>,
 };
 
-const StoryAppHeader = () => (
-    <AppHeader>
-        <AppHeaderMenuButton />
-    </AppHeader>
-);
-
-const StoryMainNavigation = () => (
-    <MainNavigation>
-        <MainNavigationItemRouterLink primary="Dashboard" to="/" icon={<Dashboard />} />
-        <MainNavigationItemRouterLink primary="Products" to="/products" icon={<Store />} />
-    </MainNavigation>
-);
-
 export const InEditPage: Story = {
+    decorators: [MasterLayoutDecorator],
     render: (args) => (
-        <MasterLayout menuComponent={StoryMainNavigation} headerComponent={StoryAppHeader}>
+        <>
             <Toolbar>
                 <ToolbarBackButton />
                 <ToolbarTitleItem>{args.name ?? "Product"}</ToolbarTitleItem>
@@ -78,6 +53,6 @@ export const InEditPage: Story = {
                     <TextField label="Description" multiline rows={4} fullWidth />
                 </Stack>
             </MainContent>
-        </MasterLayout>
+        </>
     ),
 };
