@@ -3,7 +3,7 @@
 "@comet/cms-admin": minor
 ---
 
-Add per-entity Action Log queries and admin page
+Add per-entity Action Log queries and grid
 
 The existing per-entity action log is exposed as a `ResolveField` on each entity (`news(id) { actionLogs }`) and therefore can't return rows for already-deleted entities — exactly the case where the action log matters most for non-admin users. Adding a top-level query that's gated by the entity's own permission keeps "who deleted this?" answerable without needing a global action log permission.
 
@@ -15,7 +15,7 @@ The existing per-entity action log is exposed as a `ResolveField` on each entity
 
 **Admin**
 
-A new `EntityActionLogPage` (and underlying `EntityActionLogGrid`) renders the per-entity log with columns Date / Time, Action, Entity (display name + id), User. Clicking a row opens the version dialog directly from the row data so the flow also works for deleted entities. The page is the per-entity counterpart to `ActionLogPage` and uses the new top-level entity-scoped query.
+A new `EntityActionLogGrid` renders the per-entity log with columns Date / Time, Action, Entity (display name + id), User. Clicking a row opens the version dialog directly from the row data so the flow also works for deleted entities. The grid takes a single typed `queryName` prop — passing your app's `GQLQuery` as the generic type-checks it against the available top-level action log queries, so misspellings or unknown entities are caught at compile time.
 
 **Example — embedding inside the entity's existing `Stack`**
 
@@ -44,5 +44,3 @@ import type { GQLQuery } from "@src/graphql.generated";
     <EntityActionLogGrid<GQLQuery> queryName="newsActionLogs" />
 </StackPage>
 ```
-
-Passing your app's `GQLQuery` as the generic type-checks `queryName` against the available top-level action log queries, so misspellings or unknown entities are caught at compile time. Alternatively, `EntityActionLogPage` is a ready-made standalone page that can be wired up as its own admin menu entry.

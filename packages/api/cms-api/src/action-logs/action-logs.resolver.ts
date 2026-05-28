@@ -5,7 +5,7 @@ import { ActionLogAction } from "./dto/action-log-action.enum";
 import { ActionLog } from "./entities/action-log.entity";
 
 @Resolver(() => ActionLog)
-export class ActionLogResolver {
+export class ActionLogsResolver {
     constructor(private readonly entityManager: EntityManager<PostgreSqlDriver>) {}
 
     @ResolveField(() => ActionLogAction)

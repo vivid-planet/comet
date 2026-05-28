@@ -2,7 +2,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import type { AnyEntity } from "@mikro-orm/postgresql";
 import type { DynamicModule, Type } from "@nestjs/common";
 
-import { ActionLogResolver } from "./action-log.resolver";
+import { ActionLogsResolver } from "./action-logs.resolver";
 import { ActionLogsResolverFactory } from "./action-logs.resolver.factory";
 import { ActionLogsService } from "./action-logs.service";
 import { ActionLogsSubscriber } from "./action-logs.subscriber";
@@ -14,7 +14,7 @@ export class ActionLogsModule {
         return {
             module: ActionLogsModule,
             imports: [MikroOrmModule.forFeature([ActionLog])],
-            providers: [ActionLogsSubscriber, ActionLogsService, ActionLogResolver],
+            providers: [ActionLogsSubscriber, ActionLogsService, ActionLogsResolver],
         };
     }
 
