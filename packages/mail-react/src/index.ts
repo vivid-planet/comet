@@ -8,6 +8,10 @@ export type { HtmlPixelImageBlockProps } from "./blocks/pixelImage/HtmlPixelImag
 export { HtmlPixelImageBlock } from "./blocks/pixelImage/HtmlPixelImageBlock.js";
 export type { MjmlPixelImageBlockProps } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
 export { MjmlPixelImageBlock } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
+export type { HtmlImageProps } from "./components/image/HtmlImage.js";
+export { HtmlImage } from "./components/image/HtmlImage.js";
+export type { MjmlImageProps } from "./components/image/MjmlImage.js";
+export { MjmlImage } from "./components/image/MjmlImage.js";
 export type { HtmlInlineLinkProps } from "./components/inlineLink/HtmlInlineLink.js";
 export { HtmlInlineLink } from "./components/inlineLink/HtmlInlineLink.js";
 export { MjmlMailRoot } from "./components/mailRoot/MjmlMailRoot.js";
@@ -81,8 +85,6 @@ export {
     type IMjmlHtmlAttributeProps as MjmlHtmlAttributeProps,
     MjmlHtmlAttributes,
     type IMjmlHtmlAttributesProps as MjmlHtmlAttributesProps,
-    MjmlImage,
-    type IMjmlImageProps as MjmlImageProps,
     MjmlInclude,
     type IMjmlIncludeProps as MjmlIncludeProps,
     MjmlNavbar,

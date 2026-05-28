@@ -1,13 +1,11 @@
-import { type IMjmlImageProps, MjmlImage } from "@faire/mjml-react";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 
-import { registerStyles } from "../../styles/registerStyles.js";
-import { css } from "../../utils/css.js";
+import { MjmlImage, type MjmlImageProps } from "../../components/image/MjmlImage.js";
 import type { PixelImageBlockBaseProps } from "./common.js";
 import { usePixelImageBlockData } from "./usePixelImageBlockData.js";
 
-export type MjmlPixelImageBlockProps = Omit<IMjmlImageProps, "src" | "width" | "height"> & PixelImageBlockBaseProps;
+export type MjmlPixelImageBlockProps = Omit<MjmlImageProps, "src" | "width" | "height"> & PixelImageBlockBaseProps;
 
 /**
  * Renders a pixel-image from the DAM as `MjmlImage`. Must be placed within an
@@ -39,14 +37,3 @@ export function MjmlPixelImageBlock({
         />
     );
 }
-
-// MJML inlines a fixed `height` on the inner <img>; !important overrides it for responsive scaling.
-registerStyles(
-    (theme) => css`
-        ${theme.breakpoints.default.belowMediaQuery} {
-            .mjmlPixelImageBlock img {
-                height: auto !important;
-            }
-        }
-    `,
-);
