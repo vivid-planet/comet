@@ -22,15 +22,14 @@ A new `EntityActionLogPage` (and underlying `EntityActionLogGrid`) renders the p
 ```tsx
 import { Button, StackLink, StackPage, StackToolbar, ToolbarActions, ToolbarAutomaticTitleItem, ToolbarBackButton } from "@comet/admin";
 import { Time } from "@comet/admin-icons";
-import { createEntityActionLogsQuery, EntityActionLogGrid } from "@comet/cms-admin";
-
-const newsActionLogsQuery = createEntityActionLogsQuery("newsActionLogs");
+import { EntityActionLogGrid } from "@comet/cms-admin";
+import type { GQLQuery } from "@src/graphql.generated";
 
 // inside <StackSwitch> of NewsPage:
 <StackPage name="grid">
     <StackToolbar>
         <ToolbarActions>
-            <Button startIcon={<Time />} component={StackLink} pageName="action-log" payload="">
+            <Button startIcon={<Time />} component={StackLink} pageName="action-log" payload="action-log">
                 Action Log
             </Button>
         </ToolbarActions>
@@ -42,12 +41,8 @@ const newsActionLogsQuery = createEntityActionLogsQuery("newsActionLogs");
         <ToolbarBackButton />
         <ToolbarAutomaticTitleItem />
     </StackToolbar>
-    <EntityActionLogGrid
-        actionLogsQuery={newsActionLogsQuery}
-        queryResultKey="newsActionLogs"
-        persistentColumnStateKey="NewsActionLogGrid"
-    />
+    <EntityActionLogGrid<GQLQuery> queryName="newsActionLogs" />
 </StackPage>
 ```
 
-Alternatively, `EntityActionLogPage` is a ready-made standalone page that can be wired up as its own admin menu entry.
+Passing your app's `GQLQuery` as the generic type-checks `queryName` against the available top-level action log queries, so misspellings or unknown entities are caught at compile time. Alternatively, `EntityActionLogPage` is a ready-made standalone page that can be wired up as its own admin menu entry.

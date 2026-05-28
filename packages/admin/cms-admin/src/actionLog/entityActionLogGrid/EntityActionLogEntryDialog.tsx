@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import { Dialog, InlineAlert, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
-import type { DocumentNode } from "graphql";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -8,6 +7,7 @@ import { type ContentScope, useContentScope } from "../../contentScope/Provider"
 import { ActionLogCompare } from "../actionLogCompare/ActionLogCompare";
 import { ActionLogGrid } from "../actionLogGrid/ActionLogGrid";
 import { ActionLogShowVersion } from "../actionLogShowVersion/ActionLogShowVersion";
+import { buildEntityActionLogsQuery, type EntityActionLogQueryName } from "./EntityActionLogGrid";
 import type { GQLEntityActionLogGridFragment } from "./EntityActionLogGrid.gql.generated";
 
 type EntityActionLogEntryDialogView =
@@ -15,9 +15,8 @@ type EntityActionLogEntryDialogView =
     | { type: "showVersion"; row: GQLEntityActionLogGridFragment }
     | { type: "compareVersions"; before: GQLEntityActionLogGridFragment; after: GQLEntityActionLogGridFragment };
 
-type EntityActionLogEntryDialogProps = {
-    actionLogsQuery: DocumentNode;
-    queryResultKey: string;
+type EntityActionLogEntryDialogProps<TQuery> = {
+    queryName: EntityActionLogQueryName<TQuery>;
     entityId: string;
     open: boolean;
     onClose: () => void;
@@ -27,7 +26,12 @@ type EntityActionLogsQueryResult = {
     [key: string]: { nodes: GQLEntityActionLogGridFragment[]; totalCount: number };
 };
 
-export function EntityActionLogEntryDialog({ actionLogsQuery, queryResultKey, entityId, open, onClose }: EntityActionLogEntryDialogProps) {
+export function EntityActionLogEntryDialog<TQuery = Record<string, unknown>>({
+    queryName,
+    entityId,
+    open,
+    onClose,
+}: EntityActionLogEntryDialogProps<TQuery>) {
     const intl = useIntl();
     const { scope } = useContentScope();
     const [view, setView] = useState<EntityActionLogEntryDialogView>({ type: "grid" });
@@ -38,8 +42,9 @@ export function EntityActionLogEntryDialog({ actionLogsQuery, queryResultKey, en
         }
     }, [open]);
 
+    const actionLogsQuery = useMemo(() => buildEntityActionLogsQuery(queryName), [queryName]);
     const dataGridRemote = useDataGridRemote({ initialSort: [{ field: "version", sort: "desc" }] });
-    const persistentColumnState = usePersistentColumnState(`EntityActionLogEntryDialog-${queryResultKey}`);
+    const persistentColumnState = usePersistentColumnState(`EntityActionLogEntryDialog-${queryName}`);
 
     const filter = useMemo(() => ({ entityId: { equal: entityId } }), [entityId]);
 
@@ -57,7 +62,7 @@ export function EntityActionLogEntryDialog({ actionLogsQuery, queryResultKey, en
         skip: !open,
     });
 
-    const result = data?.[queryResultKey];
+    const result = data?.[queryName];
     const rows = result?.nodes ?? [];
 
     return (

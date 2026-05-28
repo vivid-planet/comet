@@ -19,8 +19,9 @@ import {
     useStackSwitch,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Time } from "@comet/admin-icons";
-import { ContentScopeIndicator, createEntityActionLogsQuery, EntityActionLogGrid } from "@comet/cms-admin";
+import { ContentScopeIndicator, EntityActionLogGrid } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
+import type { GQLQuery } from "@src/graphql.generated";
 import { ProductVariantsGrid } from "@src/products/generator/generated/ProductVariantsGrid";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -28,8 +29,6 @@ import { ProductForm } from "./generated/ProductForm";
 import { ProductPriceForm } from "./generated/ProductPriceForm";
 import { ProductsGrid } from "./generated/ProductsGrid";
 import { ProductVariantForm } from "./generated/ProductVariantForm";
-
-const productActionLogsQuery = createEntityActionLogsQuery("productActionLogs");
 
 const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
@@ -192,11 +191,7 @@ export function ProductsPage() {
                         <ToolbarBackButton />
                         <ToolbarAutomaticTitleItem />
                     </StackToolbar>
-                    <EntityActionLogGrid
-                        actionLogsQuery={productActionLogsQuery}
-                        queryResultKey="productActionLogs"
-                        persistentColumnStateKey="ProductsActionLogGrid"
-                    />
+                    <EntityActionLogGrid<GQLQuery> queryName="productActionLogs" />
                 </StackPage>
             </ProductsStackSwitch>
         </Stack>

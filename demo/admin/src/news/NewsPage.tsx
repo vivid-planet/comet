@@ -14,13 +14,12 @@ import {
     ToolbarBackButton,
 } from "@comet/admin";
 import { Time } from "@comet/admin-icons";
-import { ContentScopeIndicator, createEntityActionLogsQuery, EntityActionLogGrid, useContentScopeConfig } from "@comet/cms-admin";
+import { ContentScopeIndicator, EntityActionLogGrid, useContentScopeConfig } from "@comet/cms-admin";
+import type { GQLQuery } from "@src/graphql.generated";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { NewsForm } from "./generated/NewsForm";
 import { NewsGrid } from "./generated/NewsGrid";
-
-const newsActionLogsQuery = createEntityActionLogsQuery("newsActionLogs");
 
 const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator />}>
@@ -78,11 +77,7 @@ export function NewsPage() {
                         <ToolbarBackButton />
                         <ToolbarAutomaticTitleItem />
                     </StackToolbar>
-                    <EntityActionLogGrid
-                        actionLogsQuery={newsActionLogsQuery}
-                        queryResultKey="newsActionLogs"
-                        persistentColumnStateKey="NewsActionLogGrid"
-                    />
+                    <EntityActionLogGrid<GQLQuery> queryName="newsActionLogs" />
                 </StackPage>
             </StackSwitch>
         </Stack>

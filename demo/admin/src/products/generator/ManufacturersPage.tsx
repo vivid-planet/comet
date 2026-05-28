@@ -14,13 +14,12 @@ import {
     ToolbarBackButton,
 } from "@comet/admin";
 import { Time } from "@comet/admin-icons";
-import { ContentScopeIndicator, createEntityActionLogsQuery, EntityActionLogGrid } from "@comet/cms-admin";
+import { ContentScopeIndicator, EntityActionLogGrid } from "@comet/cms-admin";
+import type { GQLQuery } from "@src/graphql.generated";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ManufacturerForm } from "./generated/ManufacturerForm";
 import { ManufacturersGrid } from "./generated/ManufacturersGrid";
-
-const manufacturerActionLogsQuery = createEntityActionLogsQuery("manufacturerActionLogs");
 
 const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
@@ -75,11 +74,7 @@ export function ManufacturersPage() {
                         <ToolbarBackButton />
                         <ToolbarAutomaticTitleItem />
                     </StackToolbar>
-                    <EntityActionLogGrid
-                        actionLogsQuery={manufacturerActionLogsQuery}
-                        queryResultKey="manufacturerActionLogs"
-                        persistentColumnStateKey="ManufacturersActionLogGrid"
-                    />
+                    <EntityActionLogGrid<GQLQuery> queryName="manufacturerActionLogs" />
                 </StackPage>
             </StackSwitch>
         </Stack>
