@@ -51,7 +51,7 @@
         "@storybook/react-vite": "^10.3.5",
         "@types/mjml": "^4.7.4",
         "@types/mjml-browser": "^4.15.0",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.4",
