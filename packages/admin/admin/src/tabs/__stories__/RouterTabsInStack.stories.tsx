@@ -1,8 +1,6 @@
 import { RouterTab, RouterTabs, Stack, StackPage, StackSwitch } from "@comet/admin";
 import { useEffect, useRef, useState } from "react";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 const mountCount: Record<string, number> = {};
 
 function RenderCount(props: { name: string }) {
@@ -30,8 +28,7 @@ function PrintMountCount() {
 }
 
 export default {
-    title: "@comet/admin/tabs",
-    decorators: [storyRouterDecorator()],
+    title: "components/tabs/RouterTabs in Stack",
 };
 
 export const RouterTabsInStack = {

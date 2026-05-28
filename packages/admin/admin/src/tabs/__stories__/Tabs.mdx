@@ -1,7 +1,6 @@
-import { Canvas, Meta, Source } from "@storybook/addon-docs/blocks";
-import dedent from "ts-dedent";
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
 
-import * as TabsStories from "./01_Tabs.stories";
+import * as TabsStories from "./Tabs.stories";
 
 <Meta of={TabsStories} />
 
@@ -83,59 +82,35 @@ With `MuiTabs`, you have to manage the state yourself (`value`) and ensure that 
 You can use `MuiTabs` and `MuiTab` only for creating the tab labels.
 The tab content has to be defined separately.
 
-<Source
-    language="tsx"
-    code={dedent`
-        // based on https://v4.mui.com/components/tabs/#SimpleTabs.tsx
-        const [value, setValue] = useState(0);
-        const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
-            setValue(newValue);
-        };
-        return (
-            <div>
-                <MuiAppBar>
-                    <MuiTabs value={value} onChange={handleChange}>
-                        <MuiTab label="Label One" />
-                        <MuiTab label="Label Two" />
-                        <MuiTab label="Label Three" />
-                    </MuiTabs>
-                </MuiAppBar>
-                <div hidden={value !== 0}>
-                    {value === 0 && (
-                        Content One
-                    )}
-                </div>
-                <div hidden={value !== 1}>
-                    {value === 1 && (
-                        Content Two
-                    )}
-                </div>
-                <div hidden={value !== 2}>
-                    {value === 2 && (
-                        Content Three
-                    )}
-                </div>
-            </div>
-        );
-`}
-/>
+```tsx
+// based on https://v4.mui.com/components/tabs/#SimpleTabs.tsx
+const [value, setValue] = useState(0);
+const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
+    setValue(newValue);
+};
+return (
+    <div>
+        <MuiAppBar>
+            <MuiTabs value={value} onChange={handleChange}>
+                <MuiTab label="Label One" />
+                <MuiTab label="Label Two" />
+                <MuiTab label="Label Three" />
+            </MuiTabs>
+        </MuiAppBar>
+        <div hidden={value !== 0}>{value === 0 && Content One}</div>
+        <div hidden={value !== 1}>{value === 1 && Content Two}</div>
+        <div hidden={value !== 2}>{value === 2 && Content Three}</div>
+    </div>
+);
+```
 
 With Comet Admin `Tabs`, the state management and rendering logic are built-in.
 And you can simply pass the tab content as child to the `Tab` component.
 
-<Source
-    language="tsx"
-    code={dedent`
-        <Tabs>
-            <Tab label="Label One">
-                Content One
-            </Tab>
-            <Tab label="Label Two">
-                Content Two
-            </Tab>
-            <Tab label="Label Three">
-                Content Three
-            </Tab>
-        </Tabs>
-`}
-/>
+```tsx
+<Tabs>
+    <Tab label="Label One">Content One</Tab>
+    <Tab label="Label Two">Content Two</Tab>
+    <Tab label="Label Three">Content Three</Tab>
+</Tabs>
+```
