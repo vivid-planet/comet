@@ -1,20 +1,20 @@
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { UserPermissionsService } from "../user-permissions/user-permissions.service";
-import { ActionLogUser } from "./dto/action-log-user";
+import { ActionLogsUser } from "./dto/action-logs-user";
 import { ActionLog } from "./entities/action-log.entity";
 
 @Resolver(() => ActionLog)
-export class ActionLogResolver {
+export class ActionLogsResolver {
     constructor(private readonly userPermissionsService: UserPermissionsService) {}
 
-    @ResolveField(() => ActionLogUser, { nullable: true })
-    async user(@Parent() actionLog: ActionLog): Promise<ActionLogUser | null> {
+    @ResolveField(() => ActionLogsUser)
+    async user(@Parent() actionLog: ActionLog): Promise<ActionLogsUser> {
         try {
             const user = await this.userPermissionsService.getUser(actionLog.userId);
             return { id: user.id, name: user.name };
         } catch {
-            return null;
+            return { id: actionLog.userId };
         }
     }
 }

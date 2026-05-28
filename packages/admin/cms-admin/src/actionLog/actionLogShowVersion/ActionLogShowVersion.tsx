@@ -74,8 +74,8 @@ export const ActionLogShowVersion: FunctionComponent<ActionLogShowVersionProps> 
                         leftTitle={
                             <DiffHeader
                                 createdAt={version.createdAt}
-                                userId={version.userId}
-                                userName={version.user?.name}
+                                userId={version.user.id}
+                                userName={version.user.name ?? undefined}
                                 version={version.version}
                             />
                         }

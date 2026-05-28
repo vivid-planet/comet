@@ -108,23 +108,23 @@ export const ActionLogCompare: FunctionComponent<ActionLogCompareProps> = ({
                                 <>
                                     <DiffHeader
                                         createdAt={beforeVersion?.createdAt}
-                                        userId={beforeVersion?.userId}
-                                        userName={beforeVersion?.user?.name}
+                                        userId={beforeVersion?.user.id}
+                                        userName={beforeVersion?.user.name ?? undefined}
                                         version={beforeVersion?.version}
                                     />
 
                                     <DiffHeader
                                         createdAt={afterVersion?.createdAt}
-                                        userId={afterVersion?.userId}
-                                        userName={afterVersion?.user?.name}
+                                        userId={afterVersion?.user.id}
+                                        userName={afterVersion?.user.name ?? undefined}
                                         version={afterVersion?.version}
                                     />
                                 </>
                             ) : (
                                 <DiffHeader
                                     createdAt={beforeVersion?.createdAt}
-                                    userId={beforeVersion?.userId}
-                                    userName={beforeVersion?.user?.name}
+                                    userId={beforeVersion?.user.id}
+                                    userName={beforeVersion?.user.name ?? undefined}
                                     version={beforeVersion?.version}
                                 />
                             )
@@ -134,8 +134,8 @@ export const ActionLogCompare: FunctionComponent<ActionLogCompareProps> = ({
                         rightTitle={
                             <DiffHeader
                                 createdAt={afterVersion?.createdAt}
-                                userId={afterVersion?.userId}
-                                userName={afterVersion?.user?.name}
+                                userId={afterVersion?.user.id}
+                                userName={afterVersion?.user.name ?? undefined}
                                 version={afterVersion?.version}
                             />
                         }

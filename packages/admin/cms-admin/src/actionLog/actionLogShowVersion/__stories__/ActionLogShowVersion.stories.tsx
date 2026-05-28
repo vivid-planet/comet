@@ -9,8 +9,7 @@ const mockActionLog = {
     version: 1,
     snapshot: { title: "My Page", slug: "my-page", createdAt: "2023-10-01T12:00:00Z" },
     createdAt: "2023-10-01T12:00:00Z",
-    userId: "1",
-    user: { __typename: "ActionLogUser" as const, id: "1", name: "Max Mustermann" },
+    user: { __typename: "ActionLogsUser" as const, id: "1", name: "Max Mustermann" },
     entityName: "TestEntity",
 };
 

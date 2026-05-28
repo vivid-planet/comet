@@ -9,7 +9,6 @@ const mockActionLogs = {
     nodes: [
         {
             id: "log3",
-            userId: "1",
             user: { id: "1", name: "Max Mustermann" },
             entityName: "TestEntity",
             version: 3,
@@ -17,7 +16,6 @@ const mockActionLogs = {
         },
         {
             id: "log2",
-            userId: "2",
             user: { id: "2", name: "Jane Doe" },
             entityName: "TestEntity",
             version: 2,
@@ -25,8 +23,7 @@ const mockActionLogs = {
         },
         {
             id: "log1",
-            userId: "deleted-user-id",
-            user: null,
+            user: { id: "deleted-user-id", name: null },
             entityName: "TestEntity",
             version: 1,
             createdAt: "2023-10-01T12:00:00Z",
