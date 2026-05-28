@@ -7,9 +7,8 @@ reCAPTCHA protects your forms from spam and abuse by assessing risk on the serve
 
 ## Prerequisites
 
-- A Google Cloud project with the [reCAPTCHA Enterprise API](https://cloud.google.com/recaptcha/docs/set-up-on-google-cloud-console) enabled
-- A reCAPTCHA Enterprise **site key** (score-based key)
-- A Google Cloud **service account** with the `reCAPTCHA Enterprise Agent` role
+- A reCAPTCHA Enterprise **site key**
+- A Google Cloud **service account key** with the `reCAPTCHA Enterprise Agent` role
 
 ## Install dependencies
 
