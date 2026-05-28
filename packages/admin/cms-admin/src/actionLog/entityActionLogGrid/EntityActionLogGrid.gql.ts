@@ -14,9 +14,6 @@ export const entityActionLogGridFragment = gql`
         scope
         snapshot
         ...ActionLogCompare
-        previousVersion {
-            ...ActionLogCompare
-        }
     }
     ${actionLogCompareFragment}
 `;

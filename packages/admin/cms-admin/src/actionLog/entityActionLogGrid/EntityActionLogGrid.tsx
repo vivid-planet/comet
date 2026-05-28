@@ -153,9 +153,7 @@ export function EntityActionLogGrid<TQuery = Record<string, unknown>>({ queryNam
                 sortable: false,
                 filterable: false,
                 renderCell: ({ row }) => {
-                    const displayName =
-                        extractDisplayName(row.snapshot as Record<string, unknown> | null | undefined) ??
-                        extractDisplayName(row.previousVersion?.snapshot as Record<string, unknown> | null | undefined);
+                    const displayName = extractDisplayName(row.snapshot as Record<string, unknown> | null | undefined);
                     return <GridCellContent primaryText={displayName ?? row.entityId} secondaryText={displayName ? row.entityId : undefined} />;
                 },
             },
@@ -231,7 +229,12 @@ export function EntityActionLogGrid<TQuery = Record<string, unknown>>({ queryNam
                 slots={{ toolbar: EntityActionLogGridToolbar }}
                 showToolbar
             />
-            <EntityActionLogShowVersionDialog actionLog={selectedRow} open={selectedRow !== null} onClose={() => setSelectedRow(null)} />
+            <EntityActionLogShowVersionDialog
+                queryName={queryName}
+                row={selectedRow}
+                open={selectedRow !== null}
+                onClose={() => setSelectedRow(null)}
+            />
             {openEntityId !== null && (
                 <EntityActionLogEntryDialog queryName={queryName} entityId={openEntityId} open onClose={() => setOpenEntityId(null)} />
             )}

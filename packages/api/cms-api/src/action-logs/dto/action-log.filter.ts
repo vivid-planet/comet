@@ -5,6 +5,7 @@ import { ValidateNested } from "class-validator";
 import { DateTimeFilter } from "../../common/filter/date-time.filter";
 import { createEnumFilter, type EnumFilterInterface } from "../../common/filter/enum.filter.factory";
 import { IdFilter } from "../../common/filter/id.filter";
+import { NumberFilter } from "../../common/filter/number.filter";
 import { StringFilter } from "../../common/filter/string.filter";
 import { IsUndefinable } from "../../common/validators/is-undefinable";
 import { ActionLogAction } from "./action-log-action.enum";
@@ -25,6 +26,12 @@ export class ActionLogFilter {
     @Type(() => IdFilter)
     @IsUndefinable()
     entityId?: IdFilter;
+
+    @Field(() => NumberFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => NumberFilter)
+    @IsUndefinable()
+    version?: NumberFilter;
 
     @Field(() => ActionLogActionFilter, { nullable: true })
     @ValidateNested()

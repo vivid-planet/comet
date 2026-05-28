@@ -1,20 +1,51 @@
+import { useQuery } from "@apollo/client";
 import { Dialog } from "@comet/admin";
+import { useMemo } from "react";
 import { useIntl } from "react-intl";
 
+import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { ActionLogCompare } from "../actionLogCompare/ActionLogCompare";
-import type { GQLActionLogCompareFragment } from "../actionLogCompare/ActionLogCompare.gql.generated";
 import { ActionLogShowVersion } from "../actionLogShowVersion/ActionLogShowVersion";
+import { buildEntityActionLogsQuery, type EntityActionLogQueryName } from "./EntityActionLogGrid";
+import type { GQLEntityActionLogGridFragment } from "./EntityActionLogGrid.gql.generated";
 
-type EntityActionLogShowVersionDialogProps = {
-    actionLog: (GQLActionLogCompareFragment & { previousVersion?: GQLActionLogCompareFragment | null }) | null;
+type EntityActionLogShowVersionDialogProps<TQuery> = {
+    queryName: EntityActionLogQueryName<TQuery>;
+    row: GQLEntityActionLogGridFragment | null;
     open: boolean;
     onClose: () => void;
 };
 
-export function EntityActionLogShowVersionDialog({ actionLog, open, onClose }: EntityActionLogShowVersionDialogProps) {
+type EntityActionLogsQueryResult = {
+    [key: string]: { nodes: GQLEntityActionLogGridFragment[]; totalCount: number };
+};
+
+export function EntityActionLogShowVersionDialog<TQuery = Record<string, unknown>>({
+    queryName,
+    row,
+    open,
+    onClose,
+}: EntityActionLogShowVersionDialogProps<TQuery>) {
     const intl = useIntl();
-    const previous = actionLog?.previousVersion ?? undefined;
-    const hasDiff = actionLog != null && previous != null;
+    const { scope } = useContentScope();
+    const actionLogsQuery = useMemo(() => buildEntityActionLogsQuery(queryName), [queryName]);
+
+    const { data, loading } = useQuery<EntityActionLogsQueryResult>(actionLogsQuery, {
+        variables: {
+            scope: scope as ContentScope,
+            offset: 0,
+            limit: 1,
+            filter: {
+                entityId: { equal: row?.entityId },
+                version: { lowerThan: row?.version },
+            },
+            sort: [{ field: "version", direction: "DESC" }],
+        },
+        skip: !open || row === null || row.version <= 1,
+    });
+
+    const previous = data?.[queryName]?.nodes[0] ?? undefined;
+    const hasDiff = row != null && previous != null;
 
     return (
         <Dialog
@@ -27,10 +58,8 @@ export function EntityActionLogShowVersionDialog({ actionLog, open, onClose }: E
                 defaultMessage: "Action Log",
             })}
         >
-            {actionLog && hasDiff && (
-                <ActionLogCompare afterVersion={actionLog} beforeVersion={previous} error={false} loading={false} id={actionLog.id} />
-            )}
-            {actionLog && !hasDiff && <ActionLogShowVersion actionLog={actionLog} error={false} loading={false} id={actionLog.id} />}
+            {row && hasDiff && <ActionLogCompare afterVersion={row} beforeVersion={previous} error={false} loading={loading} id={row.id} />}
+            {row && !hasDiff && <ActionLogShowVersion actionLog={row} error={false} loading={loading} id={row.id} />}
         </Dialog>
     );
 }

@@ -8,7 +8,6 @@ type ActionLog {
   entityId: ID!
   entityName: String!
   id: ID!
-  previousVersion: ActionLog
   scope: [JSONObject!]
   snapshot: JSONObject
   userId: ID!
@@ -34,6 +33,7 @@ input ActionLogFilter {
   entityId: IdFilter
   or: [ActionLogFilter!]
   userId: StringFilter
+  version: NumberFilter
 }
 
 input ActionLogSort {
