@@ -43,6 +43,7 @@ export function NewsPage() {
             <StackSwitch>
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator />}>
+                        <ToolbarAutomaticTitleItem />
                         <FillSpace />
                         <ToolbarActions>
                             <Button variant="textDark" startIcon={<Time />} component={StackLink} pageName="action-log" payload="action-log">

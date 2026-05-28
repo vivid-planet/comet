@@ -40,6 +40,7 @@ export function ManufacturersPage() {
             <StackSwitch>
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                        <ToolbarAutomaticTitleItem />
                         <FillSpace />
                         <ToolbarActions>
                             <Button variant="textDark" startIcon={<Time />} component={StackLink} pageName="action-log" payload="action-log">

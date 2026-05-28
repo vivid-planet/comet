@@ -9,20 +9,22 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     ToolbarItem,
+    Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { View } from "@comet/admin-icons";
+import { Time, View } from "@comet/admin-icons";
 import { Chip, type ChipProps, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import type { DocumentNode } from "graphql";
 import { useMemo, useState } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { UserCell } from "../actionLogGrid/userCell/UserCell";
+import { EntityActionLogEntryDialog } from "./EntityActionLogEntryDialog";
 import { entityActionLogGridFragment } from "./EntityActionLogGrid.gql";
 import type { GQLEntityActionLogGridFragment } from "./EntityActionLogGrid.gql.generated";
 import { EntityActionLogShowVersionDialog } from "./EntityActionLogShowVersionDialog";
@@ -96,6 +98,7 @@ export function EntityActionLogGrid({ actionLogsQuery, queryResultKey, persisten
     const intl = useIntl();
     const { scope } = useContentScope();
     const [selectedRow, setSelectedRow] = useState<SelectedRow | null>(null);
+    const [openEntityId, setOpenEntityId] = useState<string | null>(null);
 
     const dataGridProps = {
         ...useDataGridRemote({ initialSort: [{ field: "createdAt", sort: "desc" }] }),
@@ -148,13 +151,29 @@ export function EntityActionLogGrid({ actionLogsQuery, queryResultKey, persisten
                 field: "actions",
                 type: "actions",
                 headerName: "",
-                width: 60,
+                width: 100,
                 sortable: false,
                 filterable: false,
                 renderCell: ({ row }) => (
-                    <IconButton color="primary" onClick={() => setSelectedRow(row)}>
-                        <View />
-                    </IconButton>
+                    <>
+                        <Tooltip title={<FormattedMessage id="comet.actionLog.entity.actions.showVersion" defaultMessage="Show version" />}>
+                            <IconButton color="primary" onClick={() => setSelectedRow(row)}>
+                                <View />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip
+                            title={
+                                <FormattedMessage
+                                    id="comet.actionLog.entity.actions.showEntityActionLog"
+                                    defaultMessage="Show action log for this entity"
+                                />
+                            }
+                        >
+                            <IconButton onClick={() => setOpenEntityId(row.entityId)}>
+                                <Time />
+                            </IconButton>
+                        </Tooltip>
+                    </>
                 ),
             },
         ],
@@ -194,6 +213,15 @@ export function EntityActionLogGrid({ actionLogsQuery, queryResultKey, persisten
                 showToolbar
             />
             <EntityActionLogShowVersionDialog actionLog={selectedRow} open={selectedRow !== null} onClose={() => setSelectedRow(null)} />
+            {openEntityId !== null && (
+                <EntityActionLogEntryDialog
+                    actionLogsQuery={actionLogsQuery}
+                    queryResultKey={queryResultKey}
+                    entityId={openEntityId}
+                    open
+                    onClose={() => setOpenEntityId(null)}
+                />
+            )}
         </MainContent>
     );
 }
