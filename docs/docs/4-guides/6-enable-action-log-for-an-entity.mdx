@@ -2,6 +2,8 @@
 title: Enable Action Log for an Entity
 ---
 
+import { StorybookCmsAdminStoryIframe } from "@site/src/components/StorybookCmsAdminStoryIframe";
+
 This guide walks you through enabling the [Action Log](/docs/features-modules/action-log/) for an existing entity – both on the API side (recording changes) and on the admin side (showing the version history to editors).
 
 The example uses a `Product` entity, but the steps are the same for any entity.
@@ -149,7 +151,7 @@ A few notes:
 5. In the grid, click the _eye_ icon to view a version's full snapshot.
 6. Tick the checkboxes of two rows and click **Compare** to open the side-by-side diff. Toggle **Show changes only** to hide unchanged lines.
 
-![Action Log dialog rendered for an entity with three versions](../3-features-modules/15-action-log/images/action-log-dialog.png)
+<StorybookCmsAdminStoryIframe storyId="action-log-action-log-dialog--default" height={780} />
 
 ## Customising
 
