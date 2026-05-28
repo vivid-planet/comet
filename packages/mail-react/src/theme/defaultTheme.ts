@@ -16,6 +16,10 @@ export const defaultTheme: Theme = {
         lineHeight: "20px",
         bottomSpacing: "16px",
     },
+    divider: {
+        height: 4,
+        backgroundColor: "#000000",
+    },
     colors: {
         background: {
             body: "#F2F2F2",
