@@ -266,6 +266,17 @@ export function createRedirectsResolver({
             await this.entityManager.removeAndFlush(entity);
             return true;
         }
+
+        @Mutation(() => Boolean)
+        @AffectedEntity(Redirect, { idArg: "ids" })
+        async deleteRedirects(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<boolean> {
+            const entities = await this.repository.find({ id: { $in: ids } });
+            if (entities.length !== ids.length) {
+                throw new Error("Couldn't find all redirects that were passed as input");
+            }
+            await this.entityManager.removeAndFlush(entities);
+            return true;
+        }
     }
 
     return RedirectsResolver;
