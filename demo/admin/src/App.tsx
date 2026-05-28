@@ -13,6 +13,8 @@ import {
     SitePreview,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
+import type { DataGridProps } from "@mui/x-data-grid";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LicenseInfo } from "@mui/x-license";
@@ -23,6 +25,7 @@ import type { ContentScope as BaseContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { enUS } from "date-fns/locale";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
+import type { ComponentType } from "react";
 import { DndProvider } from "react-dnd-multi-backend";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router";
@@ -81,6 +84,9 @@ export function App() {
             }}
             redirects={{
                 scopeParts: ["domain"],
+            }}
+            dataGrid={{
+                component: DataGridPro as ComponentType<DataGridProps>,
             }}
             dam={{
                 ...config.dam,
