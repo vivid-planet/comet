@@ -2,13 +2,7 @@ import { MasterLayout } from "@comet/admin";
 import { Dashboard } from "@comet/admin-icons";
 import { MasterMenu, type MasterMenuData, MasterMenuRoutes } from "@comet/cms-admin";
 
-import { CurrentUserProviderDecorator } from "../../../.storybook/decorators/CurrentUserProvider.decorator";
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
-import { storyRouterDecorator } from "../../story-router.decorator";
-
-export default {
-    decorators: [CurrentUserProviderDecorator, apolloStoryDecorator("/graphql"), storyRouterDecorator()],
-};
+export default {};
 
 // --------------- One item ------------------------
 

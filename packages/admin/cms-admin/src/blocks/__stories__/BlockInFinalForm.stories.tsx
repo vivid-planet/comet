@@ -1,13 +1,23 @@
-import { Field, FinalForm, SaveBoundary } from "@comet/admin";
+import { Field, FinalForm, SaveBoundary, SnackbarProvider } from "@comet/admin";
 import { BlockAdminComponentRoot, createFinalFormBlock, createListBlock, ExternalLinkBlock } from "@comet/cms-admin";
+import type { Decorator } from "@storybook/react-vite";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { apolloStoryDecorator } from "../apollo-story.decorator";
-import { dndProviderDecorator } from "../dnd.decorator";
-import { snackbarDecorator } from "../docs/components/Snackbar/snackbar.decorator";
-import { storyRouterDecorator } from "../story-router.decorator";
+const snackbarDecorator: Decorator = (Story) => (
+    <SnackbarProvider>
+        <Story />
+    </SnackbarProvider>
+);
+
+const dndProviderDecorator: Decorator = (Story) => (
+    <DndProvider backend={HTML5Backend}>
+        <Story />
+    </DndProvider>
+);
 
 export default {
-    decorators: [apolloStoryDecorator("/graphql"), snackbarDecorator(), storyRouterDecorator(), dndProviderDecorator()],
+    decorators: [snackbarDecorator, dndProviderDecorator],
 };
 
 export const BlockInFinalFormWithSaveBoundary = () => {

@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 type Story = StoryObj<typeof FileUploadField>;
 const config: Meta<typeof FileUploadField> = {
     component: FileUploadField,
-    title: "@comet/cms-admin/form/file/FileUploadField",
+    title: "form/file/FileUploadField",
 };
 export default config;
 

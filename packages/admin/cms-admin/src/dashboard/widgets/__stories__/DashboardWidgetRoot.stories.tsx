@@ -7,7 +7,7 @@ type Story = StoryObj<typeof DashboardWidgetRoot>;
 
 const config: Meta<typeof DashboardWidgetRoot> = {
     component: DashboardWidgetRoot,
-    title: "@comet/cms-admin/dashboard/widgets/DashboardWidgetRoot",
+    title: "dashboard/widgets/DashboardWidgetRoot",
 };
 
 export default config;
