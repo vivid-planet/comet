@@ -37,8 +37,6 @@ Every custom component has a story in `src/components/<concern>/__stories__/<Com
 
 ### Changesets
 
-A changeset describes what changes for the consumer. If the public API and end-user behavior are unchanged, no changeset is needed.
-
 When a custom component replaces a re-export, describe the change against the previous re-export — the added props, features, or behavior. Consumers don't need to know the internal component is new; they only see what's different in the API they use.
 
 ## Living document
