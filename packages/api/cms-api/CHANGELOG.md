@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 8.24.0
+
+### Minor Changes
+
+- 0653a34: Add support for deleting multiple redirects in the grid
+
 ## 8.23.4
 
 ### Patch Changes

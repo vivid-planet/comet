@@ -1,5 +1,18 @@
 # @comet/cms-admin
 
+## 8.24.0
+
+### Minor Changes
+
+- 0653a34: Add support for deleting multiple redirects in the grid
+
+### Patch Changes
+
+- @comet/admin@8.24.0
+- @comet/admin-date-time@8.24.0
+- @comet/admin-icons@8.24.0
+- @comet/admin-rte@8.24.0
+
 ## 8.23.4
 
 ### Patch Changes
