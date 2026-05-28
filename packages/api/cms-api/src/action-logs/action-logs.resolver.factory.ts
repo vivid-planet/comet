@@ -70,7 +70,9 @@ export class ActionLogsResolverFactory {
                 const andFilters: ObjectQuery<ActionLog>[] = [{ entityName: classRef.name }];
 
                 if (Object.keys(scope).length > 0) {
-                    andFilters.push({ scope: { $contains: [scope] } });
+                    // Action log rows for entities without a scope have scope=NULL; match those too so
+                    // unscoped entities still surface their logs when the page is rendered inside a scoped layout.
+                    andFilters.push({ $or: [{ scope: null }, { scope: { $contains: [scope] } }] });
                 }
 
                 if (search) {
