@@ -28,18 +28,9 @@ export function EntityActionLogShowVersionDialog({ actionLog, open, onClose }: E
             })}
         >
             {actionLog && hasDiff && (
-                <ActionLogCompare
-                    afterVersion={actionLog}
-                    beforeVersion={previous}
-                    error={false}
-                    loading={false}
-                    id={actionLog.id}
-                    onClickShowVersionHistory={onClose}
-                />
+                <ActionLogCompare afterVersion={actionLog} beforeVersion={previous} error={false} loading={false} id={actionLog.id} />
             )}
-            {actionLog && !hasDiff && (
-                <ActionLogShowVersion actionLog={actionLog} error={false} loading={false} id={actionLog.id} onClickShowVersionHistory={onClose} />
-            )}
+            {actionLog && !hasDiff && <ActionLogShowVersion actionLog={actionLog} error={false} loading={false} id={actionLog.id} />}
         </Dialog>
     );
 }
