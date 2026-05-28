@@ -30,11 +30,12 @@ import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { Placeholder } from "./extensions/Placeholder";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TipTapContent = Record<string, any>;
 
-type TipTapSupports =
+export type TipTapSupports =
     | "bold"
     | "italic"
     | "strike"
@@ -111,6 +112,22 @@ export interface CreateTipTapRichTextBlockOptions {
      * Content exceeding this limit will be rejected during validation.
      */
     listLevelMax?: number;
+    /**
+     * Enables best-effort block migration of DraftJS-based RichTextBlock data
+     * (`{ draftContent: { blocks, entityMap } }`) into TipTap data.
+     *
+     * The migration uses the `supports`, `blockStyles`, `link`, and `maxBlocks` options
+     * to build the target schema, validates the converted document, and falls back to a
+     * stripped-down plain-text-paragraph document if validation fails.
+     *
+     * Pass an object with `blockStyleMap` to map DraftJS custom block types (e.g.
+     * `paragraph-small` from a DraftJS `blocktypeMap`) to TipTap paragraph `blockStyle`
+     * attribute values.
+     *
+     * Pass an object with `inlineStyleMap` to map DraftJS custom inline style names (e.g.
+     * `highlight` from a DraftJS `customInlineStyles`) to TipTap `inlineStyle` mark type values.
+     */
+    migrateFromDraftJs?: boolean | { blockStyleMap?: Record<string, string>; inlineStyleMap?: Record<string, string> };
 }
 
 function buildExtensions(
@@ -149,7 +166,6 @@ function buildExtensions(
     ];
 }
 
-// ProseMirror's Node.fromJSON silently drops unknown marks. This function
 // checks the raw JSON for mark types that don't exist in the schema.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function containsUnknownMarks(json: any, schema: Schema): boolean {
@@ -414,15 +430,47 @@ export function createTipTapRichTextBlock(
         link: LinkBlock,
         maxBlocks,
         listLevelMax,
+        migrateFromDraftJs = false,
     }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
-    const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
+    const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
     const extensions = buildExtensions(supports, blockStyles, inlineStyles, placeholders, hasLink);
     const schema = getSchema(extensions);
+
+    const draftJsBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.blockStyleMap : undefined;
+    const draftJsInlineStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.inlineStyleMap : undefined;
+
+    if (migrateFromDraftJs && baseMigrate) {
+        if (baseMigrate.version == 1) {
+            throw new Error("version=1 is reserved for migrateFromDraftJs, start own migrations with 2");
+        }
+        for (const migration of baseMigrate.migrations) {
+            const migrationObj = new migration();
+            if (migrationObj.toVersion == 1) {
+                throw new Error("toVersion=1 is reserved for migrateFromDraftJs, start own migrations with 2");
+            }
+        }
+    }
+    const migrate = migrateFromDraftJs
+        ? {
+              version: baseMigrate.version == 0 ? 1 : baseMigrate.version,
+              migrations: [
+                  buildDraftJsToTipTapMigration({
+                      schema,
+                      supports,
+                      link: LinkBlock,
+                      maxBlocks,
+                      blockStyleMap: draftJsBlockStyleMap,
+                      inlineStyleMap: draftJsInlineStyleMap,
+                  }),
+                  ...baseMigrate.migrations,
+              ],
+          }
+        : baseMigrate;
 
     @BlockDataMigrationVersion(migrate.version)
     class TipTapRichTextBlockData extends BlockData {
