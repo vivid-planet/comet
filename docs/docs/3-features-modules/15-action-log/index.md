@@ -1,0 +1,163 @@
+---
+title: Action Log
+---
+
+The Action Log records the history of changes for selected entities. Whenever a tracked entity is created, updated or deleted, a snapshot of its data is written to the database together with the user who made the change and a timestamp. Editors can then open a version history in the admin, view a single version's content, and compare two versions side by side.
+
+## Why use it
+
+- **Audit trail**: see who changed what and when.
+- **Recoverable history**: every past version is kept as a JSON snapshot.
+- **Comparison**: a diff viewer highlights what actually changed between two versions.
+
+The Action Log is opt-in per entity. Only entities you mark with `@ActionLogs()` are tracked.
+
+## How it works
+
+The Action Log consists of two parts:
+
+**API (`@comet/cms-api`)**
+A MikroORM subscriber listens for entity changes during each flush. For every change on an entity that is decorated with `@ActionLogs()`, the subscriber writes a new `ActionLog` row containing:
+
+| Field        | Description                                                                |
+| ------------ | -------------------------------------------------------------------------- |
+| `version`    | Per-entity, auto-incrementing version number (starts at 1)                 |
+| `userId`     | The user who performed the change (taken from the request context)         |
+| `createdAt`  | Timestamp of the change                                                    |
+| `entityName` | Class name of the changed entity (e.g. `Product`)                          |
+| `entityId`   | Primary key of the changed entity                                          |
+| `snapshot`   | JSON representation of all non-relation fields (`null` on delete)          |
+| `scope`      | Content scope of the entity (auto-derived from `scope` or `@ScopedEntity`) |
+
+Relation fields are intentionally excluded from snapshots to keep them stable and self-contained.
+
+The API exposes two GraphQL fields on every tracked entity type:
+
+- `actionLogs(offset, limit, sort)` – paginated list of versions
+- `actionLog(id)` – a single version
+
+**Admin (`@comet/cms-admin`)**
+A ready-to-use `<ActionLogDialog />` opens a modal with the version history. It contains three views:
+
+- **Grid** – paginated list of all versions for the entity, sorted by version. Select any two rows and click _Compare_ to open the diff view.
+- **Show version** – formatted JSON of a single snapshot.
+- **Compare versions** – side-by-side diff viewer with an optional _Show changes only_ toggle.
+
+Lower-level building blocks (`ActionLogGrid`, `ActionLogShowVersion`, `ActionLogCompare`, `DiffViewer`, `DiffHeader`, `ActionLogHeader`) are exported as well, so you can compose your own layouts.
+
+## Setup
+
+### 1. Register the module
+
+Add `ActionLogsModule.forRoot()` to your `AppModule`. This registers the global subscriber that writes the log entries.
+
+```ts title="app.module.ts"
+import { ActionLogsModule } from "@comet/cms-api";
+
+@Module({
+    imports: [
+        // ...
+        ActionLogsModule.forRoot(),
+    ],
+})
+export class AppModule {}
+```
+
+### 2. Mark entities to track
+
+Add `@ActionLogs()` to every entity whose changes should be recorded.
+
+```ts title="product.entity.ts"
+import { ActionLogs } from "@comet/cms-api";
+
+@Entity()
+@ObjectType()
+@ActionLogs()
+export class Product extends BaseEntity {
+    // ...
+}
+```
+
+### 3. Expose the GraphQL fields
+
+In the entity's NestJS module, register `ActionLogsModule.forFeature([...])` with all tracked entities of that module. This adds the `actionLog` and `actionLogs` fields to their GraphQL types.
+
+```ts title="products.module.ts"
+import { ActionLogsModule } from "@comet/cms-api";
+
+@Module({
+    imports: [
+        MikroOrmModule.forFeature([Product, Manufacturer /* ... */]),
+        ActionLogsModule.forFeature([Product, Manufacturer]),
+    ],
+})
+export class ProductsModule {}
+```
+
+### 4. Run the migration
+
+The Action Log table is created by a built-in migration shipped with `@comet/cms-api`. Run your project's regular migration command (e.g. `npm --prefix api run mikro-orm migration:up`).
+
+### 5. Console commands
+
+The Action Log reads the current user from `UserPermissionsStorageService`, which is populated automatically for HTTP/GraphQL requests. When running console commands, set the user yourself so writes done from a command are attributed correctly:
+
+```ts title="console.ts"
+import { UserPermissionsStorageService } from "@comet/cms-api";
+
+await app.get(UserPermissionsStorageService).runWith({ user: SYSTEM_USER_NAME }, async () => {
+    await CommandFactory.runApplication(app);
+});
+```
+
+## Admin: showing the history
+
+Embed `<ActionLogDialog />` anywhere in your admin (typically behind a "History" button on an edit page):
+
+```tsx title="EditProduct.tsx"
+import { ActionLogDialog } from "@comet/cms-admin";
+import { useState } from "react";
+
+export function EditProduct({ id, name }: { id: string; name?: string }) {
+    const [historyOpen, setHistoryOpen] = useState(false);
+
+    return (
+        <>
+            <Button onClick={() => setHistoryOpen(true)}>Version history</Button>
+
+            <ActionLogDialog
+                id={id}
+                rootField="product"
+                name={name}
+                open={historyOpen}
+                onClose={() => setHistoryOpen(false)}
+            />
+        </>
+    );
+}
+```
+
+**Props**
+
+| Prop        | Type         | Description                                                                               |
+| ----------- | ------------ | ----------------------------------------------------------------------------------------- |
+| `id`        | `string`     | The id of the entity whose history should be shown                                        |
+| `rootField` | `string`     | The GraphQL root query field that returns the entity (e.g. `"product"`, `"manufacturer"`) |
+| `name`      | `string?`    | Optional, displayed in the dialog titles (e.g. the entity's current name)                 |
+| `open`      | `boolean`    | Whether the dialog is open                                                                |
+| `onClose`   | `() => void` | Close handler                                                                             |
+
+Pass your application's generated `GQLQuery` type as a generic to constrain `rootField` to entities that actually expose `actionLog`/`actionLogs`:
+
+```tsx
+<ActionLogDialog<GQLQuery> id={id} rootField="product" /* ... */ />
+```
+
+A step-by-step walkthrough is available in [How to enable the Action Log for an entity](/docs/guides/enable-action-log-for-an-entity/).
+
+## Notes and limitations
+
+- The Action Log only sees changes that go through MikroORM's unit-of-work. Raw SQL updates or migrations are not tracked.
+- Relations are excluded from the snapshot. If you need to capture related data, keep it on the same entity or denormalize what you want logged.
+- A delete creates a log entry with `snapshot = null` – use the previous version to see what was there.
+- Snapshots can grow large for wide or frequently changing entities. Take this into account when enabling the log.
