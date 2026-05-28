@@ -43,9 +43,15 @@ The API exposes two GraphQL fields on every tracked entity type:
 **Admin (`@comet/cms-admin`)**
 A ready-to-use `<ActionLogDialog />` opens a modal with the version history. It contains three views:
 
-- **Grid** – paginated list of all versions for the entity, sorted by version. Select any two rows and click _Compare_ to open the diff view.
-- **Show version** – formatted JSON of a single snapshot.
-- **Compare versions** – side-by-side diff viewer with an optional _Show changes only_ toggle.
+**Grid** – paginated list of all versions for the entity, sorted by version. Select any two rows and click _Compare_ to open the diff view.
+
+<StorybookCmsAdminStoryIframe storyId="action-log-action-log-grid--standard" height={520} />
+
+**Show version** – formatted JSON of a single snapshot.
+
+<StorybookCmsAdminStoryIframe storyId="action-log-action-log-show-version--standard" height={420} />
+
+**Compare versions** – side-by-side diff viewer with an optional _Show changes only_ toggle.
 
 <StorybookCmsAdminStoryIframe storyId="action-log-action-log-compare--standard" height={620} />
 
@@ -158,8 +164,6 @@ Pass your application's generated `GQLQuery` type as a generic to constrain `roo
 ```tsx
 <ActionLogDialog<GQLQuery> id={id} rootField="product" /* ... */ />
 ```
-
-A step-by-step walkthrough is available in [How to enable the Action Log for an entity](/docs/guides/enable-action-log-for-an-entity/).
 
 ## Notes and limitations
 
