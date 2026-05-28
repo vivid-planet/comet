@@ -4,6 +4,8 @@ title: Action Log
 
 The Action Log records the history of changes for selected entities. Whenever a tracked entity is created, updated or deleted, a snapshot of its data is written to the database together with the user who made the change and a timestamp. Editors can then open a version history in the admin, view a single version's content, and compare two versions side by side.
 
+![Action Log dialog showing the version history of an entity](./images/action-log-dialog.png)
+
 ## Why use it
 
 - **Audit trail**: see who changed what and when.
@@ -42,6 +44,8 @@ A ready-to-use `<ActionLogDialog />` opens a modal with the version history. It 
 - **Grid** – paginated list of all versions for the entity, sorted by version. Select any two rows and click _Compare_ to open the diff view.
 - **Show version** – formatted JSON of a single snapshot.
 - **Compare versions** – side-by-side diff viewer with an optional _Show changes only_ toggle.
+
+![Side-by-side comparison of two Action Log versions](./images/action-log-compare.png)
 
 Lower-level building blocks (`ActionLogGrid`, `ActionLogShowVersion`, `ActionLogCompare`, `DiffViewer`, `DiffHeader`, `ActionLogHeader`) are exported as well, so you can compose your own layouts.
 

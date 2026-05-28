@@ -149,6 +149,8 @@ A few notes:
 5. In the grid, click the _eye_ icon to view a version's full snapshot.
 6. Tick the checkboxes of two rows and click **Compare** to open the side-by-side diff. Toggle **Show changes only** to hide unchanged lines.
 
+![Action Log dialog rendered for an entity with three versions](../3-features-modules/15-action-log/images/action-log-dialog.png)
+
 ## Customising
 
 Need a custom layout instead of the all-in-one dialog? Use the building blocks individually:
