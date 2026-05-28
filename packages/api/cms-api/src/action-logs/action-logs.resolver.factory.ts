@@ -1,6 +1,7 @@
 import { AnyEntity, EntityManager, type FilterQuery, type ObjectQuery, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Args, ArgsType, Field, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { IsObject } from "class-validator";
 import { GraphQLJSONObject } from "graphql-scalars";
 
 import { CRUD_GENERATOR_METADATA_KEY, type CrudGeneratorOptions } from "../common/decorators/crud-generator.decorator";
@@ -16,6 +17,7 @@ import { ActionLog } from "./entities/action-log.entity";
 @ArgsType()
 class EntityActionLogsArgs extends ActionLogsArgs {
     @Field(() => GraphQLJSONObject)
+    @IsObject()
     scope: ContentScope;
 }
 
