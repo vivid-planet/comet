@@ -1,8 +1,10 @@
 import {
+    Button,
     FillSpace,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackLink,
     StackMainContent,
     StackPage,
     StackSwitch,
@@ -11,11 +13,14 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
 } from "@comet/admin";
-import { ContentScopeIndicator } from "@comet/cms-admin";
-import { useIntl } from "react-intl";
+import { Time } from "@comet/admin-icons";
+import { ContentScopeIndicator, createEntityActionLogsQuery, EntityActionLogGrid } from "@comet/cms-admin";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ManufacturerForm } from "./generated/ManufacturerForm";
 import { ManufacturersGrid } from "./generated/ManufacturersGrid";
+
+const manufacturerActionLogsQuery = createEntityActionLogsQuery("manufacturerActionLogs");
 
 const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
@@ -34,7 +39,14 @@ export function ManufacturersPage() {
         <Stack topLevelTitle={intl.formatMessage({ id: "manufacturers.manufacturers", defaultMessage: "Manufacturers" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                        <FillSpace />
+                        <ToolbarActions>
+                            <Button responsive variant="textLight" startIcon={<Time />} component={StackLink} pageName="action-log" payload="">
+                                <FormattedMessage id="manufacturers.actionLog" defaultMessage="Action Log" />
+                            </Button>
+                        </ToolbarActions>
+                    </StackToolbar>
                     <StackMainContent fullHeight>
                         <ManufacturersGrid />
                     </StackMainContent>
@@ -56,6 +68,17 @@ export function ManufacturersPage() {
                             </StackMainContent>
                         </SaveBoundary>
                     )}
+                </StackPage>
+                <StackPage name="action-log" title={intl.formatMessage({ id: "manufacturers.actionLog", defaultMessage: "Action Log" })}>
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                        <ToolbarBackButton />
+                        <ToolbarAutomaticTitleItem />
+                    </StackToolbar>
+                    <EntityActionLogGrid
+                        actionLogsQuery={manufacturerActionLogsQuery}
+                        queryResultKey="manufacturerActionLogs"
+                        persistentColumnStateKey="ManufacturersActionLogGrid"
+                    />
                 </StackPage>
             </StackSwitch>
         </Stack>

@@ -17,14 +17,37 @@ The existing per-entity action log is exposed as a `ResolveField` on each entity
 
 A new `EntityActionLogPage` (and underlying `EntityActionLogGrid`) renders the per-entity log with columns Date / Time, Action, Entity (display name + id), User. Clicking a row opens the version dialog directly from the row data so the flow also works for deleted entities. The page is the per-entity counterpart to `ActionLogPage` and uses the new top-level entity-scoped query.
 
-**Example**
+**Example — embedding inside the entity's existing `Stack`**
 
 ```tsx
-import { EntityActionLogPage } from "@comet/cms-admin";
+import { Button, StackLink, StackPage, StackToolbar, ToolbarActions, ToolbarAutomaticTitleItem, ToolbarBackButton } from "@comet/admin";
+import { Time } from "@comet/admin-icons";
+import { createEntityActionLogsQuery, EntityActionLogGrid } from "@comet/cms-admin";
 
-export function NewsActionLogPage() {
-    return <EntityActionLogPage queryName="newsActionLogs" title="News Action Log" />;
-}
+const newsActionLogsQuery = createEntityActionLogsQuery("newsActionLogs");
+
+// inside <StackSwitch> of NewsPage:
+<StackPage name="grid">
+    <StackToolbar>
+        <ToolbarActions>
+            <Button startIcon={<Time />} component={StackLink} pageName="action-log" payload="">
+                Action Log
+            </Button>
+        </ToolbarActions>
+    </StackToolbar>
+    {/* …existing grid… */}
+</StackPage>
+<StackPage name="action-log" title="Action Log">
+    <StackToolbar>
+        <ToolbarBackButton />
+        <ToolbarAutomaticTitleItem />
+    </StackToolbar>
+    <EntityActionLogGrid
+        actionLogsQuery={newsActionLogsQuery}
+        queryResultKey="newsActionLogs"
+        persistentColumnStateKey="NewsActionLogGrid"
+    />
+</StackPage>
 ```
 
-Add it to your admin menu next to the entity's main page, gated by that entity's permission (e.g. `news`).
+Alternatively, `EntityActionLogPage` is a ready-made standalone page that can be wired up as its own admin menu entry.

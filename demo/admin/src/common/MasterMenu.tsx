@@ -31,7 +31,6 @@ import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
 import type { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
-import { NewsActionLogPage } from "@src/news/NewsActionLogPage";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
@@ -42,10 +41,8 @@ import { ProductsPage } from "@src/products/generator/ProductsPage";
 import { ProductsWithLowPricePage } from "@src/products/generator/ProductsWithLowPricePage";
 import { ProductTagsPage } from "@src/products/generator/ProductTagsPage";
 import { ProductHighlightsPage as ProductHighlightsHandmadePage } from "@src/products/highlights/ProductHighlightsPage";
-import { ManufacturersActionLogPage } from "@src/products/ManufacturersActionLogPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import { ProductCategoriesPage as ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
-import { ProductsActionLogPage } from "@src/products/ProductsActionLogPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import { ProductTagsPage as ProductTagsHandmadePage } from "@src/products/tags/ProductTagsPage";
 import { RedirectsPage } from "@src/redirects/RedirectsPage";
@@ -157,14 +154,6 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                     route: {
                         path: "/structured-content/news",
                         component: NewsPage,
-                    },
-                },
-                {
-                    type: "route",
-                    primary: <FormattedMessage id="menu.newsActionLog" defaultMessage="News Action Log" />,
-                    route: {
-                        path: "/structured-content/news-action-log",
-                        component: NewsActionLogPage,
                     },
                 },
             ],
@@ -327,15 +316,6 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                         },
                         {
                             type: "route",
-                            primary: <FormattedMessage id="menu.productsActionLog" defaultMessage="Products Action Log" />,
-                            route: {
-                                path: "/products-action-log",
-                                component: ProductsActionLogPage,
-                            },
-                            requiredPermission: "products",
-                        },
-                        {
-                            type: "route",
                             primary: <FormattedMessage id="menu.createCapProduct" defaultMessage="Create Cap Product" />,
                             route: {
                                 path: "/create-cap-product",
@@ -349,15 +329,6 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                                 path: "/manufacturers",
                                 component: ManufacturersPage,
                             },
-                        },
-                        {
-                            type: "route",
-                            primary: <FormattedMessage id="menu.manufacturersActionLog" defaultMessage="Manufacturers Action Log" />,
-                            route: {
-                                path: "/manufacturers-action-log",
-                                component: ManufacturersActionLogPage,
-                            },
-                            requiredPermission: "manufacturers",
                         },
                         {
                             type: "route",

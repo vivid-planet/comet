@@ -18,8 +18,8 @@ import {
     ToolbarBackButton,
     useStackSwitch,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+import { Add as AddIcon, Edit, Time } from "@comet/admin-icons";
+import { ContentScopeIndicator, createEntityActionLogsQuery, EntityActionLogGrid } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { ProductVariantsGrid } from "@src/products/generator/generated/ProductVariantsGrid";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -28,6 +28,8 @@ import { ProductForm } from "./generated/ProductForm";
 import { ProductPriceForm } from "./generated/ProductPriceForm";
 import { ProductsGrid } from "./generated/ProductsGrid";
 import { ProductVariantForm } from "./generated/ProductVariantForm";
+
+const productActionLogsQuery = createEntityActionLogsQuery("productActionLogs");
 
 const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
@@ -49,7 +51,14 @@ export function ProductsPage() {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <ProductsStackSwitch>
                 <StackPage name="grid">
-                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                        <FillSpace />
+                        <ToolbarActions>
+                            <Button responsive variant="textLight" startIcon={<Time />} component={StackLink} pageName="action-log" payload="">
+                                <FormattedMessage id="products.actionLog" defaultMessage="Action Log" />
+                            </Button>
+                        </ToolbarActions>
+                    </StackToolbar>
                     <StackMainContent fullHeight>
                         <ProductsGrid
                             toolbarAction={
@@ -176,6 +185,17 @@ export function ProductsPage() {
                             />
                         </MainContent>
                     </SaveBoundary>
+                </StackPage>
+                <StackPage name="action-log" title={intl.formatMessage({ id: "products.actionLog", defaultMessage: "Action Log" })}>
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                        <ToolbarBackButton />
+                        <ToolbarAutomaticTitleItem />
+                    </StackToolbar>
+                    <EntityActionLogGrid
+                        actionLogsQuery={productActionLogsQuery}
+                        queryResultKey="productActionLogs"
+                        persistentColumnStateKey="ProductsActionLogGrid"
+                    />
                 </StackPage>
             </ProductsStackSwitch>
         </Stack>
