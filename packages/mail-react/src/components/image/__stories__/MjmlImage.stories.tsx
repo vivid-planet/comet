@@ -16,10 +16,12 @@ const config: Meta<typeof MjmlImage> = {
     component: MjmlImage,
     tags: ["autodocs"],
     args: {
-        src: `https://picsum.photos/seed/mjml-image/${sectionInnerWidth}/268`,
         width: sectionInnerWidth,
         height: 268,
         alt: "Placeholder image",
+    },
+    argTypes: {
+        src: { control: false },
     },
 };
 
@@ -29,7 +31,7 @@ export const Default: Story = {
     render: (args) => (
         <MjmlSection indent>
             <MjmlColumn>
-                <MjmlImage {...args} />
+                <MjmlImage {...args} src={`https://picsum.photos/seed/mjml-image/${args.width}/${args.height}`} />
             </MjmlColumn>
         </MjmlSection>
     ),
@@ -37,14 +39,13 @@ export const Default: Story = {
 
 export const FullWidth: Story = {
     args: {
-        src: `https://picsum.photos/seed/mjml-image-full-width/${defaultTheme.sizes.bodyWidth}/300`,
         width: defaultTheme.sizes.bodyWidth,
         height: 300,
     },
     render: (args) => (
         <MjmlSection>
             <MjmlColumn>
-                <MjmlImage {...args} />
+                <MjmlImage {...args} src={`https://picsum.photos/seed/mjml-image-full-width/${args.width}/${args.height}`} />
             </MjmlColumn>
         </MjmlSection>
     ),
