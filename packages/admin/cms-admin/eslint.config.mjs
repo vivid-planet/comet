@@ -3,7 +3,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import storybook from "eslint-plugin-storybook";
 
 export default defineConfig([
-    globalIgnores(["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json"]),
+    globalIgnores(["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json", "storybook-static/**"]),
     ...eslintConfigReact,
     {
         // These files interpolate JS expressions into `gql` templates, which `@graphql-eslint/eslint-plugin` cannot parse.

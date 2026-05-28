@@ -56,7 +56,7 @@ export const globalTypes: GlobalTypes = {
 
 const preview: Preview = {
     tags: ["autodocs"],
-    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, RouterDecorator, ApolloDecorator, CometConfigProviderDecorator, CurrentUserProviderDecorator, SnackbarDecorator, DndProviderDecorator],
+    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, RouterDecorator, CometConfigProviderDecorator, SnackbarDecorator, DndProviderDecorator, CurrentUserProviderDecorator, ApolloDecorator],
     loaders: [
         async () => {
             await mswReady;

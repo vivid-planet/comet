@@ -1,6 +1,5 @@
+import { CurrentUserProvider } from "@comet/cms-admin";
 import type { Decorator } from "@storybook/react-vite";
-
-import { CurrentUserProvider } from "../../src/userPermissions/hooks/currentUser";
 
 export const CurrentUserProviderDecorator: Decorator = (Story) => (
     <CurrentUserProvider>
