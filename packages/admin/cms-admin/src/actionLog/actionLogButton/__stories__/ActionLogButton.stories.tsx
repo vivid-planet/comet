@@ -1,5 +1,19 @@
-import { MainContent, Toolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import {
+    AppHeader,
+    AppHeaderMenuButton,
+    MainContent,
+    MainNavigation,
+    MainNavigationItemRouterLink,
+    MasterLayout,
+    SaveButton,
+    Toolbar,
+    ToolbarActions,
+    ToolbarBackButton,
+    ToolbarFillSpace,
+    ToolbarTitleItem,
+} from "@comet/admin";
+import { Dashboard, Store } from "@comet/admin-icons";
+import { Stack, TextField, Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { ActionLogButton } from "../ActionLogButton";
@@ -31,15 +45,29 @@ export const CustomLabel: Story = {
     render: (args) => <ActionLogButton {...args}>Show history</ActionLogButton>,
 };
 
+const StoryAppHeader = () => (
+    <AppHeader>
+        <AppHeaderMenuButton />
+    </AppHeader>
+);
+
+const StoryMainNavigation = () => (
+    <MainNavigation>
+        <MainNavigationItemRouterLink primary="Dashboard" to="/" icon={<Dashboard />} />
+        <MainNavigationItemRouterLink primary="Products" to="/products" icon={<Store />} />
+    </MainNavigation>
+);
+
 export const InEditPage: Story = {
     render: (args) => (
-        <Box sx={{ height: "100vh", display: "flex", flexDirection: "column", backgroundColor: "background.default" }}>
+        <MasterLayout menuComponent={StoryMainNavigation} headerComponent={StoryAppHeader}>
             <Toolbar>
                 <ToolbarBackButton />
                 <ToolbarTitleItem>{args.name ?? "Product"}</ToolbarTitleItem>
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <ActionLogButton {...args} />
+                    <SaveButton />
                 </ToolbarActions>
             </Toolbar>
             <MainContent>
@@ -50,6 +78,6 @@ export const InEditPage: Story = {
                     <TextField label="Description" multiline rows={4} fullWidth />
                 </Stack>
             </MainContent>
-        </Box>
+        </MasterLayout>
     ),
 };
