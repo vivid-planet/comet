@@ -1,5 +1,6 @@
 import { IsBoolean, IsOptional } from "class-validator";
 
+import { IsUndefinable } from "../common/validators/is-undefinable";
 import { BlockData, BlockInput, blockInputToData, createBlock } from "./block";
 import { BlockField } from "./decorators/field";
 import { IsLinkTarget } from "./validator/is-link-target.validator";
@@ -25,7 +26,7 @@ class ExternalLinkBlockInput extends BlockInput {
     @BlockField()
     openInNewWindow: boolean;
 
-    @IsOptional()
+    @IsUndefinable()
     @IsBoolean()
     @BlockField({ nullable: true })
     noFollow?: boolean;
