@@ -1,4 +1,5 @@
-import { CheckboxField, Field, FinalFormInput } from "@comet/admin";
+import { CheckboxField, Field, FinalFormInput, Tooltip } from "@comet/admin";
+import { Info } from "@comet/admin-icons";
 import { FormattedMessage } from "react-intl";
 
 import type { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
@@ -80,11 +81,22 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         name="openInNewWindow"
                     />
                     <CheckboxField
-                        label={<FormattedMessage id="comet.blocks.link.external.noFollow" defaultMessage="No follow" />}
-                        name="noFollow"
-                        helperText={
-                            <FormattedMessage id="comet.blocks.link.external.noFollow.helperText" defaultMessage='Sets rel="nofollow" on the link.' />
+                        label={
+                            <>
+                                <FormattedMessage id="comet.blocks.link.external.noFollow" defaultMessage="No follow" />
+                                <Tooltip
+                                    title={
+                                        <FormattedMessage
+                                            id="comet.blocks.link.external.noFollow.tooltip"
+                                            defaultMessage='Adds rel="nofollow" to the link, telling search engines not to follow it. Use for sponsored, paid, user-generated or untrusted links so that no SEO authority is passed to the target.'
+                                        />
+                                    }
+                                >
+                                    <Info sx={{ marginLeft: 1, fontSize: 16, verticalAlign: "middle" }} />
+                                </Tooltip>
+                            </>
                         }
+                        name="noFollow"
                     />
                 </BlocksFinalForm>
             </SelectPreviewComponent>
