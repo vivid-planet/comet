@@ -6,7 +6,7 @@ import { ActionGridToolbar } from "../ActionGridToolbar";
 type Story = StoryFn<typeof ActionGridToolbar>;
 const config: Meta<typeof ActionGridToolbar> = {
     component: ActionGridToolbar,
-    title: "Action log/Action log grid/Action grid toolbar",
+    title: "actionLog/actionLogGrid/actionGridToolbar/ActionGridToolbar",
 };
 export default config;
 

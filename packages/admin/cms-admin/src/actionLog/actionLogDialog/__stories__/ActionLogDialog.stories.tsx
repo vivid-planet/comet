@@ -15,7 +15,7 @@ type Story = StoryObj<ActionLogDialogStoryArgs>;
 const meta: Meta<ActionLogDialogStoryArgs> = {
     component: ActionLogDialog,
     tags: ["!autodocs"],
-    title: "Action log/Action log dialog",
+    title: "actionLog/actionLogDialog/ActionLogDialog",
     args: {
         id: "550e8400-e29b-41d4-a716-446655440000",
         rootField: "manufacturer",
