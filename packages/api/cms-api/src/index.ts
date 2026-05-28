@@ -59,7 +59,7 @@ export { AnnotationBlockMeta, BlockField } from "./blocks/decorators/field";
 export { RootBlock } from "./blocks/decorators/root-block";
 export { RootBlockEntity } from "./blocks/decorators/root-block-entity";
 export { EmailLinkBlock } from "./blocks/email-link.block";
-export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
+export { ExternalLinkBlock } from "./blocks/externalLink/external-link.block";
 export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";
 export {
     BaseBlocksBlockItemData,

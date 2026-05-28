@@ -18,7 +18,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
 
     displayName: <FormattedMessage id="comet.blocks.externalLink" defaultMessage="External Link" />,
 
-    defaultValues: () => ({ targetUrl: undefined, openInNewWindow: false }),
+    defaultValues: () => ({ targetUrl: undefined, openInNewWindow: false, noFollow: false }),
 
     category: BlockCategory.Navigation,
 
@@ -30,6 +30,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
         return {
             targetUrl: state.targetUrl,
             openInNewWindow: state.openInNewWindow,
+            noFollow: state.noFollow,
         };
     },
 
@@ -37,6 +38,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
         return {
             targetUrl: output.targetUrl,
             openInNewWindow: output.openInNewWindow,
+            noFollow: output.noFollow,
         };
     },
 
@@ -49,6 +51,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
             return {
                 targetUrl: url,
                 openInNewWindow: false,
+                noFollow: false,
             };
         }
 
@@ -76,6 +79,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
                         name="openInNewWindow"
                     />
+                    <CheckboxField label={<FormattedMessage id="comet.blocks.link.external.noFollow" defaultMessage="No follow" />} name="noFollow" />
                 </BlocksFinalForm>
             </SelectPreviewComponent>
         );

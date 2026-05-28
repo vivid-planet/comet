@@ -1,7 +1,7 @@
 import { validate } from "class-validator";
 import { describe, expect, it } from "vitest";
 
-import { ExternalLinkBlock } from "../ExternalLinkBlock";
+import { ExternalLinkBlock } from "../externalLink/external-link.block";
 import { createLinkBlock } from "../factories/createLinkBlock";
 import { createTipTapRichTextBlock } from "./createTipTapRichTextBlock";
 
@@ -698,7 +698,7 @@ describe("createTipTapRichTextBlock validation", () => {
                                                     attachedBlocks: [
                                                         {
                                                             type: "external",
-                                                            props: { targetUrl: "https://example.com", openInNewWindow: false },
+                                                            props: { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false },
                                                         },
                                                     ],
                                                     activeType: "external",
@@ -746,7 +746,7 @@ describe("createTipTapRichTextBlock validation", () => {
                                                     attachedBlocks: [
                                                         {
                                                             type: "external",
-                                                            props: { targetUrl: "https://example.com", openInNewWindow: false },
+                                                            props: { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false },
                                                         },
                                                     ],
                                                     activeType: "external",
@@ -767,7 +767,7 @@ describe("createTipTapRichTextBlock validation", () => {
                                                     attachedBlocks: [
                                                         {
                                                             type: "external",
-                                                            props: { targetUrl: "https://other.com", openInNewWindow: true },
+                                                            props: { targetUrl: "https://other.com", openInNewWindow: true, noFollow: false },
                                                         },
                                                     ],
                                                     activeType: "external",
