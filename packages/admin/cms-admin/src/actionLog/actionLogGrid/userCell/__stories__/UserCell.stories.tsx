@@ -5,7 +5,7 @@ import { UserCell } from "../UserCell";
 type Story = StoryObj<typeof UserCell>;
 const meta: Meta<typeof UserCell> = {
     component: UserCell,
-    title: "Action log/Action log grid/User cell",
+    title: "actionLog/actionLogGrid/userCell/UserCell",
 };
 export default meta;
 

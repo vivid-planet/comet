@@ -24,7 +24,7 @@ const meta: Meta<typeof ActionLogGrid> = {
         ),
     ],
     tags: ["!autodocs"],
-    title: "Action log/Action log grid",
+    title: "actionLog/actionLogGrid/ActionLogGrid",
 };
 export default meta;
 
