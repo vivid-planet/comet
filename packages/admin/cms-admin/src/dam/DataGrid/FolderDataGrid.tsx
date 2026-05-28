@@ -12,6 +12,7 @@ import {
     ToolbarActions,
     ToolbarItem,
     Tooltip,
+    useBufferedRowCount,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
@@ -435,6 +436,8 @@ const FolderDataGrid = ({
         },
     });
 
+    const rowCount = useBufferedRowCount(dataGridData?.damItemsList.totalCount);
+
     const { matches } = useDamSearchHighlighting({
         items: dataGridData?.damItemsList.nodes ?? [],
         query: filterApi.current.searchText ?? "",
@@ -658,7 +661,7 @@ const FolderDataGrid = ({
                     {...dataGridProps}
                     rowHeight={58}
                     rows={dataGridData?.damItemsList.nodes ?? []}
-                    rowCount={dataGridData?.damItemsList.totalCount ?? undefined}
+                    rowCount={rowCount}
                     loading={loading}
                     pageSizeOptions={[10, 20, 50]}
                     getRowClassName={getRowClassName}
