@@ -1,4 +1,4 @@
-export const defaultFilterOutKeys = ["updatedAt", "createdAt"];
+export const defaultFilterOutKeys = ["updatedAt", "createdAt", "fullText"];
 
 export function filterOutKeys<T>(value: T, keysToBeRemoved: readonly string[]): T {
     if (Array.isArray(value)) {
