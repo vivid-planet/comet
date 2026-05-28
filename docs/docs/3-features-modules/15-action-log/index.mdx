@@ -43,7 +43,37 @@ The API exposes two GraphQL fields on every tracked entity type:
 
 ### Admin (`@comet/cms-admin`)
 
-`<ActionLogButton />` is the recommended entry point: it renders a button that opens an `<ActionLogDialog />` modal containing the version history. The dialog has three views:
+`<ActionLogButton />` is the recommended entry point. It renders a button that opens an `<ActionLogDialog />` modal containing the version history.
+
+#### ActionLogButton
+
+Drop the component onto your entity's edit page. It manages the dialog's open/close state for you:
+
+```tsx title="EditProduct.tsx"
+import { ActionLogButton } from "@comet/cms-admin";
+
+import type { GQLQuery } from "../graphql.generated";
+
+export function EditProduct({ id, name }: { id: string; name?: string }) {
+    return <ActionLogButton<GQLQuery> id={id} rootField="product" name={name} />;
+}
+```
+
+<StorybookCmsAdminStoryIframe storyId="action-log-action-log-button--default" height={120} />
+
+Pass your application's generated `GQLQuery` type as a generic to constrain `rootField` to entities that actually expose `actionLog`/`actionLogs` – typos are caught at compile time.
+
+The default label is "Action Log". Pass `children` to customise it, and any standard `Button` prop (e.g. `variant`, `startIcon`) to restyle:
+
+```tsx
+<ActionLogButton<GQLQuery> id={id} rootField="product" name={name}>
+    Version history
+</ActionLogButton>
+```
+
+If you need to open the dialog from elsewhere (a menu item, a row action, …), use `<ActionLogDialog />` directly and manage the `open` state yourself.
+
+The dialog itself has three views:
 
 #### Grid
 
@@ -62,6 +92,8 @@ Formatted JSON of a single snapshot.
 Side-by-side diff viewer with an optional _Show changes only_ toggle.
 
 <StorybookCmsAdminStoryIframe storyId="action-log-action-log-compare--standard" height={620} />
+
+For the full list of props, see the [Action log stories in Storybook](https://storybook.comet-dxp.com/?path=/story/comet-cms-admin-action-log-action-log-button--default).
 
 ## Setup
 
@@ -127,36 +159,6 @@ await app.get(UserPermissionsStorageService).runWith({ user: SYSTEM_USER_NAME },
     await CommandFactory.runApplication(app);
 });
 ```
-
-## Admin: showing the history
-
-Drop `<ActionLogButton />` onto your entity's edit page. It renders a button that opens `<ActionLogDialog />` and manages its open/close state for you:
-
-<StorybookCmsAdminStoryIframe storyId="action-log-action-log-button--default" height={120} />
-
-```tsx title="EditProduct.tsx"
-import { ActionLogButton } from "@comet/cms-admin";
-
-import type { GQLQuery } from "../graphql.generated";
-
-export function EditProduct({ id, name }: { id: string; name?: string }) {
-    return <ActionLogButton<GQLQuery> id={id} rootField="product" name={name} />;
-}
-```
-
-Pass your application's generated `GQLQuery` type as a generic to constrain `rootField` to entities that actually expose `actionLog`/`actionLogs` – typos are caught at compile time.
-
-The default label is "Action Log". Pass `children` to customise it, and any standard `Button` prop (e.g. `variant`, `startIcon`) to restyle:
-
-```tsx
-<ActionLogButton<GQLQuery> id={id} rootField="product" name={name}>
-    Version history
-</ActionLogButton>
-```
-
-If you need more control (e.g. opening the dialog from a menu item or from another component), use `<ActionLogDialog />` directly and manage the open state yourself.
-
-For the full list of props of `ActionLogButton`, `ActionLogDialog` and the underlying components, see the [Action log stories in Storybook](https://storybook.comet-dxp.com/?path=/story/comet-cms-admin-action-log-action-log-button--default).
 
 ## Notes and limitations
 
