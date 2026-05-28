@@ -43,7 +43,7 @@ The API exposes two GraphQL fields on every tracked entity type:
 
 ### Admin (`@comet/cms-admin`)
 
-A ready-to-use `<ActionLogDialog />` opens a modal with the version history. It contains three views:
+`<ActionLogButton />` is the recommended entry point: it renders a button that opens an `<ActionLogDialog />` modal containing the version history. The dialog has three views:
 
 #### Grid
 
@@ -130,38 +130,33 @@ await app.get(UserPermissionsStorageService).runWith({ user: SYSTEM_USER_NAME },
 
 ## Admin: showing the history
 
-Embed `<ActionLogDialog />` anywhere in your admin (typically behind a "History" button on an edit page):
+Drop `<ActionLogButton />` onto your entity's edit page. It renders a button that opens `<ActionLogDialog />` and manages its open/close state for you:
+
+<StorybookCmsAdminStoryIframe storyId="action-log-action-log-button--default" height={120} />
 
 ```tsx title="EditProduct.tsx"
-import { ActionLogDialog } from "@comet/cms-admin";
-import { useState } from "react";
+import { ActionLogButton } from "@comet/cms-admin";
+
+import type { GQLQuery } from "../graphql.generated";
 
 export function EditProduct({ id, name }: { id: string; name?: string }) {
-    const [historyOpen, setHistoryOpen] = useState(false);
-
-    return (
-        <>
-            <Button onClick={() => setHistoryOpen(true)}>Version history</Button>
-
-            <ActionLogDialog
-                id={id}
-                rootField="product"
-                name={name}
-                open={historyOpen}
-                onClose={() => setHistoryOpen(false)}
-            />
-        </>
-    );
+    return <ActionLogButton<GQLQuery> id={id} rootField="product" name={name} />;
 }
 ```
 
-Pass your application's generated `GQLQuery` type as a generic to constrain `rootField` to entities that actually expose `actionLog`/`actionLogs`:
+Pass your application's generated `GQLQuery` type as a generic to constrain `rootField` to entities that actually expose `actionLog`/`actionLogs` – typos are caught at compile time.
+
+The default label is "Action Log". Pass `children` to customise it, and any standard `Button` prop (e.g. `variant`, `startIcon`) to restyle:
 
 ```tsx
-<ActionLogDialog<GQLQuery> id={id} rootField="product" /* ... */ />
+<ActionLogButton<GQLQuery> id={id} rootField="product" name={name}>
+    Version history
+</ActionLogButton>
 ```
 
-For the full list of props of `ActionLogDialog` and the underlying components, see the [Action log stories in Storybook](https://storybook.comet-dxp.com/?path=/story/comet-cms-admin-action-log-action-log-dialog--default).
+If you need more control (e.g. opening the dialog from a menu item or from another component), use `<ActionLogDialog />` directly and manage the open state yourself.
+
+For the full list of props of `ActionLogButton`, `ActionLogDialog` and the underlying components, see the [Action log stories in Storybook](https://storybook.comet-dxp.com/?path=/story/comet-cms-admin-action-log-action-log-button--default).
 
 ## Notes and limitations
 
