@@ -72,7 +72,7 @@
         "@types/mjml": "^4.7.4",
         "@types/mjml-browser": "^4.15.0",
         "@types/node": "^24.12.4",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",

@@ -103,7 +103,7 @@
         "@types/inquirer": "^8.2.12",
         "@types/mjml": "^4.7.4",
         "@types/node": "^24.12.4",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "@types/response-time": "^2.3.9",
         "check-node-version": "^4.2.1",
