@@ -1,3 +1,4 @@
+export { ActionLogButton } from "./actionLog/actionLogButton/ActionLogButton";
 export { ActionLogCompare, actionLogCompareFragment } from "./actionLog/actionLogCompare/ActionLogCompare";
 export { ActionLogDialog } from "./actionLog/actionLogDialog/ActionLogDialog";
 export { ActionLogGrid, actionLogGridFragment } from "./actionLog/actionLogGrid/ActionLogGrid";
