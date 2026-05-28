@@ -2,9 +2,7 @@ import { IsBoolean, IsOptional } from "class-validator";
 
 import { BlockData, BlockInput, blockInputToData, createBlock } from "../block";
 import { BlockField } from "../decorators/field";
-import { typeSafeBlockMigrationPipe } from "../migrations/typeSafeBlockMigrationPipe";
 import { IsLinkTarget } from "../validator/is-link-target.validator";
-import { AddNoFollowMigration } from "./migrations/1-add-no-follow.migration";
 
 class ExternalLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
@@ -13,8 +11,8 @@ class ExternalLinkBlockData extends BlockData {
     @BlockField()
     openInNewWindow: boolean;
 
-    @BlockField()
-    noFollow: boolean;
+    @BlockField({ nullable: true })
+    noFollow?: boolean;
 }
 
 class ExternalLinkBlockInput extends BlockInput {
@@ -27,19 +25,14 @@ class ExternalLinkBlockInput extends BlockInput {
     @BlockField()
     openInNewWindow: boolean;
 
+    @IsOptional()
     @IsBoolean()
-    @BlockField()
-    noFollow: boolean;
+    @BlockField({ nullable: true })
+    noFollow?: boolean;
 
     transformToBlockData(): ExternalLinkBlockData {
         return blockInputToData(ExternalLinkBlockData, this);
     }
 }
 
-export const ExternalLinkBlock = createBlock(ExternalLinkBlockData, ExternalLinkBlockInput, {
-    name: "ExternalLink",
-    migrate: {
-        version: 1,
-        migrations: typeSafeBlockMigrationPipe([AddNoFollowMigration]),
-    },
-});
+export const ExternalLinkBlock = createBlock(ExternalLinkBlockData, ExternalLinkBlockInput, "ExternalLink");
