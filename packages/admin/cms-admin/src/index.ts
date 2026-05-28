@@ -6,6 +6,8 @@ export { ActionLogShowVersion, actionLogShowVersionFragment } from "./actionLog/
 export { DiffHeader, type DiffHeaderProps } from "./actionLog/components/DiffHeader";
 export { DiffViewer, type DiffViewerProps } from "./actionLog/components/diffViewer/DiffViewer";
 export { ActionLogHeader, type ActionLogHeaderProps } from "./actionLog/components/header/ActionLogHeader";
+export { createEntityActionLogsQuery, EntityActionLogGrid, entityActionLogGridFragment } from "./actionLog/entityActionLogGrid/EntityActionLogGrid";
+export { EntityActionLogPage } from "./actionLog/entityActionLogGrid/EntityActionLogPage";
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { BlockAdminComponentButton } from "./blocks/common/BlockAdminComponentButton";
 export { BlockAdminComponentNestedButton } from "./blocks/common/BlockAdminComponentNestedButton";
