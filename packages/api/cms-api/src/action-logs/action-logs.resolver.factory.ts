@@ -67,7 +67,11 @@ export class ActionLogsResolverFactory {
 
             @Query(() => PaginatedActionLogs, { name: listQueryName })
             async list(@Args() { scope, search, filter, offset, limit, sort }: EntityActionLogsArgs): Promise<PaginatedActionLogs> {
-                const andFilters: ObjectQuery<ActionLog>[] = [{ entityName: classRef.name }, { scope: { $contains: [scope] } }];
+                const andFilters: ObjectQuery<ActionLog>[] = [{ entityName: classRef.name }];
+
+                if (Object.keys(scope).length > 0) {
+                    andFilters.push({ scope: { $contains: [scope] } });
+                }
 
                 if (search) {
                     andFilters.push(searchToMikroOrmQuery(search, ["userId"]));
