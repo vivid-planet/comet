@@ -20,7 +20,8 @@ The Action Log is opt-in per entity. Only entities you mark with `@ActionLogs()`
 
 The Action Log consists of two parts:
 
-**API (`@comet/cms-api`)**
+### API (`@comet/cms-api`)
+
 A MikroORM subscriber listens for entity changes during each flush. For every change on an entity that is decorated with `@ActionLogs()`, the subscriber writes a new `ActionLog` row containing:
 
 | Field        | Description                                                                |
@@ -40,18 +41,25 @@ The API exposes two GraphQL fields on every tracked entity type:
 - `actionLogs(offset, limit, sort)` – paginated list of versions
 - `actionLog(id)` – a single version
 
-**Admin (`@comet/cms-admin`)**
+### Admin (`@comet/cms-admin`)
+
 A ready-to-use `<ActionLogDialog />` opens a modal with the version history. It contains three views:
 
-**Grid** – paginated list of all versions for the entity, sorted by version. Select any two rows and click _Compare_ to open the diff view.
+#### Grid
+
+Paginated list of all versions for the entity, sorted by version. Select any two rows and click _Compare_ to open the diff view.
 
 <StorybookCmsAdminStoryIframe storyId="action-log-action-log-grid--standard" height={520} />
 
-**Show version** – formatted JSON of a single snapshot.
+#### Show version
+
+Formatted JSON of a single snapshot.
 
 <StorybookCmsAdminStoryIframe storyId="action-log-action-log-show-version--standard" height={420} />
 
-**Compare versions** – side-by-side diff viewer with an optional _Show changes only_ toggle.
+#### Compare versions
+
+Side-by-side diff viewer with an optional _Show changes only_ toggle.
 
 <StorybookCmsAdminStoryIframe storyId="action-log-action-log-compare--standard" height={620} />
 
