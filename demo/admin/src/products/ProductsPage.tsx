@@ -16,7 +16,7 @@ import {
     ToolbarBackButton,
     useStackSwitch,
 } from "@comet/admin";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+import { ActionLogButton, ContentScopeIndicator } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
 
 import { ProductForm } from "./ProductForm";
@@ -25,12 +25,13 @@ import { ProductsGrid } from "./ProductsGrid";
 import { ProductVariantForm } from "./ProductVariantForm";
 import { ProductVariantsGrid } from "./ProductVariantsGrid";
 
-const FormToolbar = () => (
+const FormToolbar = ({ id }: { id?: string }) => (
     <StackToolbar>
         <ToolbarBackButton />
         <ToolbarAutomaticTitleItem />
         <FillSpace />
         <ToolbarActions>
+            {id && <ActionLogButton id={id} rootField="product" />}
             <SaveBoundarySaveButton />
         </ToolbarActions>
     </StackToolbar>
@@ -53,7 +54,7 @@ const ProductsPage = () => {
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
-                            <FormToolbar />
+                            <FormToolbar id={selectedProductId} />
                             <StackMainContent>
                                 <RouterTabs>
                                     <RouterTab
