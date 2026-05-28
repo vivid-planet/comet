@@ -1,5 +1,7 @@
 import { ErrorHandlerProvider } from "@comet/admin";
 import type { DataGridProps } from "@mui/x-data-grid";
+import type { DataGridPremiumProps } from "@mui/x-data-grid-premium";
+import type { DataGridProProps } from "@mui/x-data-grid-pro";
 import { type ComponentType, createContext, type ErrorInfo, type PropsWithChildren, useContext } from "react";
 
 import { type BlocksConfig, BlocksConfigProvider } from "../blocks/config/BlocksConfigContext";
@@ -30,7 +32,7 @@ export interface CometConfig<SiteConfigs = unknown> {
     };
     warnings?: WarningsConfig;
     dataGrid?: {
-        component?: ComponentType<DataGridProps>;
+        component?: ComponentType<DataGridProps> | ComponentType<DataGridProProps> | ComponentType<DataGridPremiumProps>;
     };
     onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
