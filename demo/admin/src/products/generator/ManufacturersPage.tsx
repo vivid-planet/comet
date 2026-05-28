@@ -42,7 +42,7 @@ export function ManufacturersPage() {
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                         <FillSpace />
                         <ToolbarActions>
-                            <Button variant="textDark" startIcon={<Time />} component={StackLink} pageName="action-log" payload="">
+                            <Button variant="textDark" startIcon={<Time />} component={StackLink} pageName="action-log" payload="action-log">
                                 <FormattedMessage id="manufacturers.actionLog" defaultMessage="Action Log" />
                             </Button>
                         </ToolbarActions>
