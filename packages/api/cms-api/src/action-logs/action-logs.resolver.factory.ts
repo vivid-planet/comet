@@ -1,6 +1,6 @@
 import { AnyEntity, EntityManager, type FilterQuery, type ObjectQuery, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
-import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ArgsType, Field, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
 import { CRUD_GENERATOR_METADATA_KEY, type CrudGeneratorOptions } from "../common/decorators/crud-generator.decorator";
@@ -12,6 +12,12 @@ import { ActionLogsArgs } from "./dto/action-logs.args";
 import { PaginatedActionLogs } from "./dto/paginated-action-logs";
 import { PaginatedActionLogsArgs } from "./dto/paginated-action-logs.args";
 import { ActionLog } from "./entities/action-log.entity";
+
+@ArgsType()
+class EntityActionLogsArgs extends ActionLogsArgs {
+    @Field(() => GraphQLJSONObject)
+    scope: ContentScope;
+}
 
 function classNameToInstanceName(className: string): string {
     return className[0].toLocaleLowerCase() + className.slice(1);
@@ -58,10 +64,7 @@ export class ActionLogsResolverFactory {
             }
 
             @Query(() => PaginatedActionLogs, { name: listQueryName })
-            async list(
-                @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope,
-                @Args() { search, filter, offset, limit, sort }: ActionLogsArgs,
-            ): Promise<PaginatedActionLogs> {
+            async list(@Args() { scope, search, filter, offset, limit, sort }: EntityActionLogsArgs): Promise<PaginatedActionLogs> {
                 const andFilters: ObjectQuery<ActionLog>[] = [{ entityName: classRef.name }, { scope: { $contains: [scope] } }];
 
                 if (search) {
