@@ -63,6 +63,7 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/api/api-generator": {
+            "entry": ["./src/**/__tests__/**/*.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/api/brevo-api": {
