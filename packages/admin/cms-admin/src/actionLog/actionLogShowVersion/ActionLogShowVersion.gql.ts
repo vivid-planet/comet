@@ -7,6 +7,10 @@ export const actionLogShowVersionFragment = gql`
         snapshot
         createdAt
         userId
+        user {
+            id
+            name
+        }
         entityName
     }
 `;

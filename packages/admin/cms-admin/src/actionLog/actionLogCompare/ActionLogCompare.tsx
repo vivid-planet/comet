@@ -109,18 +109,36 @@ export const ActionLogCompare: FunctionComponent<ActionLogCompareProps> = ({
                                     <DiffHeader
                                         createdAt={beforeVersion?.createdAt}
                                         userId={beforeVersion?.userId}
+                                        userName={beforeVersion?.user?.name}
                                         version={beforeVersion?.version}
                                     />
 
-                                    <DiffHeader createdAt={afterVersion?.createdAt} userId={afterVersion?.userId} version={afterVersion?.version} />
+                                    <DiffHeader
+                                        createdAt={afterVersion?.createdAt}
+                                        userId={afterVersion?.userId}
+                                        userName={afterVersion?.user?.name}
+                                        version={afterVersion?.version}
+                                    />
                                 </>
                             ) : (
-                                <DiffHeader createdAt={beforeVersion?.createdAt} userId={beforeVersion?.userId} version={beforeVersion?.version} />
+                                <DiffHeader
+                                    createdAt={beforeVersion?.createdAt}
+                                    userId={beforeVersion?.userId}
+                                    userName={beforeVersion?.user?.name}
+                                    version={beforeVersion?.version}
+                                />
                             )
                         }
                         newValue={JSON.stringify(filteredSnapshotAfterVersion, null, 8)}
                         oldValue={JSON.stringify(filteredSnapshotBeforeVersion, null, 8)}
-                        rightTitle={<DiffHeader createdAt={afterVersion?.createdAt} userId={afterVersion?.userId} version={afterVersion?.version} />}
+                        rightTitle={
+                            <DiffHeader
+                                createdAt={afterVersion?.createdAt}
+                                userId={afterVersion?.userId}
+                                userName={afterVersion?.user?.name}
+                                version={afterVersion?.version}
+                            />
+                        }
                         showDiffOnly={onlyShowChanges}
                         splitView={!smallBreakpoint}
                     />

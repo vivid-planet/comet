@@ -9,7 +9,8 @@ const mockVersion1 = {
     version: 1,
     snapshot: { title: "My Page", slug: "my-page", createdAt: "2023-10-01T12:00:00Z" },
     createdAt: "2023-10-01T12:00:00Z",
-    userId: "system-user",
+    userId: "1",
+    user: { __typename: "ActionLogUser" as const, id: "1", name: "Max Mustermann" },
     entityName: "TestEntity",
 };
 
@@ -19,7 +20,8 @@ const mockVersion2 = {
     version: 2,
     snapshot: { title: "My Page (updated)", slug: "my-page", createdAt: "2023-10-01T12:00:00Z" },
     createdAt: "2023-10-02T12:00:00Z",
-    userId: "user2",
+    userId: "2",
+    user: { __typename: "ActionLogUser" as const, id: "2", name: "Jane Doe" },
     entityName: "TestEntity",
 };
 

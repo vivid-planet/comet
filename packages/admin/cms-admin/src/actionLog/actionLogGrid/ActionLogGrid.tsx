@@ -57,7 +57,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({
                 headerName: intl.formatMessage({ defaultMessage: "Geändert von", id: "actionLog.actionLogGrid.columns.userId" }),
                 minWidth: 400,
                 renderCell: ({ row }) => {
-                    return <UserCell name={row.userId} />;
+                    return <UserCell id={row.userId} name={row.user?.name} />;
                 },
             },
             {

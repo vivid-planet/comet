@@ -1,29 +1,24 @@
 import { type Theme, Typography, useTheme } from "@mui/material";
 import type { FunctionComponent } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { AvatarStyled, Root } from "./UserCell.sc";
 
 type UserCellProps = {
+    id: string;
     name?: string;
-    initials?: string;
-    avatarColor?: string;
 };
 
-const initialsForName = (name?: string) => {
-    if (name) {
-        const splitName = name.split(" ");
-        if (splitName.length > 1) {
-            return `${splitName[0].substring(0, 1).toUpperCase()}${splitName[1].substring(0, 1).toUpperCase()}`;
-        }
-        const dashSplitNames = name.split("-");
-        if (dashSplitNames.length > 1) {
-            return `${dashSplitNames[0].substring(0, 1).toUpperCase()}${dashSplitNames[1].substring(0, 1).toUpperCase()}`;
-        }
-
-        return name.substring(0, 2);
+const initialsForName = (name: string) => {
+    const splitName = name.split(" ");
+    if (splitName.length > 1) {
+        return `${splitName[0].substring(0, 1).toUpperCase()}${splitName[1].substring(0, 1).toUpperCase()}`;
     }
-
-    return undefined;
+    const dashSplitNames = name.split("-");
+    if (dashSplitNames.length > 1) {
+        return `${dashSplitNames[0].substring(0, 1).toUpperCase()}${dashSplitNames[1].substring(0, 1).toUpperCase()}`;
+    }
+    return name.substring(0, 2);
 };
 
 const stringToColor = (string: string) => {
@@ -44,24 +39,22 @@ const stringToColor = (string: string) => {
     return color;
 };
 
-const resolveBackgroundColor = (options: { name?: string; avatarColor?: string; theme: Theme }) => {
-    if (options.avatarColor) {
-        return options.avatarColor;
+const resolveBackgroundColor = (name: string | undefined, theme: Theme) => {
+    if (name) {
+        return stringToColor(name);
     }
-    if (options.name) {
-        return stringToColor(options.name);
-    }
-    return options.theme.palette.primary.main;
+    return theme.palette.grey[500];
 };
 
-export const UserCell: FunctionComponent<UserCellProps> = ({ name, initials = initialsForName(name), avatarColor }) => {
+export const UserCell: FunctionComponent<UserCellProps> = ({ id, name }) => {
     const theme = useTheme();
 
     return (
         <Root>
-            <AvatarStyled backgroundColor={resolveBackgroundColor({ name, avatarColor, theme })}>{initials}</AvatarStyled>
-
-            <Typography>{name}</Typography>
+            <AvatarStyled backgroundColor={resolveBackgroundColor(name, theme)}>{name ? initialsForName(name) : "?"}</AvatarStyled>
+            <Typography>
+                {name ?? <FormattedMessage defaultMessage="Unknown user ({id})" id="actionLog.actionLogGrid.userCell.unknownUser" values={{ id }} />}
+            </Typography>
         </Root>
     );
 };
