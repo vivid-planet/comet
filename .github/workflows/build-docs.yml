@@ -24,8 +24,6 @@ jobs:
             - run: echo "${{ github.actor }}"
 
             - uses: actions/checkout@v6
-              with:
-                  ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
             - uses: ./.github/actions/setup
 
