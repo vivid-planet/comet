@@ -54,7 +54,7 @@ export function ProductsPage() {
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                         <FillSpace />
                         <ToolbarActions>
-                            <Button responsive variant="textLight" startIcon={<Time />} component={StackLink} pageName="action-log" payload="">
+                            <Button variant="textDark" startIcon={<Time />} component={StackLink} pageName="action-log" payload="">
                                 <FormattedMessage id="products.actionLog" defaultMessage="Action Log" />
                             </Button>
                         </ToolbarActions>
