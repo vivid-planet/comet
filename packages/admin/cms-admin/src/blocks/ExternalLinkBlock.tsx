@@ -79,7 +79,13 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
                         name="openInNewWindow"
                     />
-                    <CheckboxField label={<FormattedMessage id="comet.blocks.link.external.noFollow" defaultMessage="No follow" />} name="noFollow" />
+                    <CheckboxField
+                        label={<FormattedMessage id="comet.blocks.link.external.noFollow" defaultMessage="No follow" />}
+                        name="noFollow"
+                        helperText={
+                            <FormattedMessage id="comet.blocks.link.external.noFollow.helperText" defaultMessage='Sets rel="nofollow" on the link.' />
+                        }
+                    />
                 </BlocksFinalForm>
             </SelectPreviewComponent>
         );
