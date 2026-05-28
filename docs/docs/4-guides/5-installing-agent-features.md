@@ -82,6 +82,35 @@ Local skills and rules are **symlinked**, so edits are reflected immediately wit
 
 If your repo is also used as a source by other projects, see [Internal rules and skills](#internal-rules-and-skills) to prevent local-only items from being installed by consumers.
 
+## npm packages (node_modules)
+
+The command automatically scans direct dependencies in `node_modules/` (including `@scoped` packages) for `skills/` and `rules/` directories and creates symlinks to the agent-specific directories. This is compatible with the [npm-based Agent Skills convention](https://github.com/antfu/skills-npm/blob/HEAD/PROPOSAL.md) and extends it to also support rules.
+
+No additional configuration is needed — any installed npm package that ships a `skills/` or `rules/` directory at its package root will be discovered automatically. Packages without these directories are silently skipped.
+
+For example, given a package `some-tool` with the following structure:
+
+```
+node_modules/some-tool/
+├── skills/
+│   └── some-tool-docs/
+│       └── SKILL.md
+└── rules/
+    └── best-practices.md
+```
+
+After running `npx @comet/cli install-agent-features`, symlinks are created:
+
+```
+.agents/skills/some-tool-docs -> node_modules/some-tool/skills/some-tool-docs
+.claude/skills/some-tool-docs -> node_modules/some-tool/skills/some-tool-docs
+.agents/rules/best-practices.md -> node_modules/some-tool/rules/best-practices.md
+.claude/rules/best-practices.md -> node_modules/some-tool/rules/best-practices.md
+...
+```
+
+Skills and rules from `node_modules` are **symlinked** and have their internal items filtered (skills with `metadata.internal: true` in SKILL.md frontmatter are excluded). They have higher priority than external git repos but lower priority than local sources.
+
 ## External repos
 
 You can install skills and rules from external git repositories. This allows you to consume items provided by libraries. The source repos are listed in `agent-features.json`:
@@ -100,7 +129,11 @@ Items with `metadata.internal: true` in their frontmatter are excluded when inst
 
 ## Priority order
 
-When the same skill or rule name exists in multiple sources, the higher-priority source wins. Local always takes priority over external.
+When the same skill or rule name exists in multiple sources, the higher-priority source wins. The priority order (highest to lowest) is:
+
+1. **Local** — `skills/`, `agentic-plugin/skills/`, and `rules/` at the repo root
+2. **npm packages** — `node_modules` dependencies
+3. **External repos** — git repositories listed in `agent-features.json`
 
 Skills and rules have separate namespaces: a skill and a rule may share a name without conflicting.
 
@@ -111,6 +144,8 @@ Example output:
 ```
 Installing 1 skill from local skills/...
   Symlinked: code-style
+Installing 1 skill from node_modules some-tool (skills/)...
+  Symlinked: tool-docs
 Installing 2 skills from external https://github.com/vivid-planet/comet.git (skills/)...
   CONFLICT: "code-style" from external https://github.com/vivid-planet/comet.git (skills/) skipped (already installed from a higher-priority source)
   Copied: api-conventions
@@ -150,7 +185,29 @@ npx @comet/cli install-agent-features --dry-run
 
 ## For library maintainers: Providing features to consumers
 
-If you maintain a library, you can add agent skills and rules to your repository so that projects using your library can pull them in via `agent-features.json`.
+If you maintain a library, you can provide agent skills and rules to consumers in two ways:
+
+### Via npm package
+
+Place `skills/` and/or `rules/` directories at the root of your published npm package. Consumers who install your package will automatically pick up these features — no extra configuration is needed on their side.
+
+```
+your-package/
+├── skills/
+│   └── your-library-conventions/
+│       └── SKILL.md
+├── rules/
+│   └── naming-conventions.md
+├── src/
+│   └── ...
+└── package.json
+```
+
+This approach is the simplest for consumers: they just install your package with `npm install` and run `install-agent-features`. Internal items (those with `metadata.internal: true`) are automatically excluded.
+
+### Via git repository
+
+Alternatively, you can add skills and rules to your git repository so that consumers reference it in their `agent-features.json`.
 
 Place skill folders inside a `skills/` directory (or `agentic-plugin/skills/` if you ship them as a Claude Code plugin) and rule files inside a `rules/` directory at your repo root:
 
