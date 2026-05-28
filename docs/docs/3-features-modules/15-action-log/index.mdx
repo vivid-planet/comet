@@ -155,21 +155,13 @@ export function EditProduct({ id, name }: { id: string; name?: string }) {
 }
 ```
 
-**Props**
-
-| Prop        | Type         | Description                                                                               |
-| ----------- | ------------ | ----------------------------------------------------------------------------------------- |
-| `id`        | `string`     | The id of the entity whose history should be shown                                        |
-| `rootField` | `string`     | The GraphQL root query field that returns the entity (e.g. `"product"`, `"manufacturer"`) |
-| `name`      | `string?`    | Optional, displayed in the dialog titles (e.g. the entity's current name)                 |
-| `open`      | `boolean`    | Whether the dialog is open                                                                |
-| `onClose`   | `() => void` | Close handler                                                                             |
-
 Pass your application's generated `GQLQuery` type as a generic to constrain `rootField` to entities that actually expose `actionLog`/`actionLogs`:
 
 ```tsx
 <ActionLogDialog<GQLQuery> id={id} rootField="product" /* ... */ />
 ```
+
+For the full list of props of `ActionLogDialog` and the underlying components, see the [Action log stories in Storybook](https://storybook.comet-dxp.com/?path=/story/comet-cms-admin-action-log-action-log-dialog--default).
 
 ## Notes and limitations
 
