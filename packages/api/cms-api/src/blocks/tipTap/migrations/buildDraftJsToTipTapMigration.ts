@@ -1,3 +1,4 @@
+import type { JSONContent } from "@tiptap/core";
 import type { Schema } from "@tiptap/pm/model";
 import type { ClassConstructor } from "class-transformer";
 
@@ -7,16 +8,13 @@ import type { BlockMigrationInterface } from "../../migrations/types";
 import { isValidTipTapContentSync } from "../tipTapValidation";
 import { buildStrippedTipTapDoc, convertDraftJsToTipTap, type ConvertOptions, type DraftJsContent } from "./convertDraftJsToTipTap";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TipTapContent = Record<string, any>;
-
 interface From {
     draftContent?: DraftJsContent;
-    tipTapContent?: TipTapContent;
+    tipTapContent?: JSONContent;
 }
 
 interface To {
-    tipTapContent: TipTapContent;
+    tipTapContent: JSONContent;
 }
 
 function isDraftJsContent(value: unknown): value is DraftJsContent {
@@ -37,7 +35,7 @@ interface BuildOptions extends ConvertOptions {
     link?: Block;
 }
 
-const EMPTY_DOC: TipTapContent = { type: "doc", content: [{ type: "paragraph" }] };
+const EMPTY_DOC: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
 
 export function buildDraftJsToTipTapMigration(options: BuildOptions): ClassConstructor<BlockMigrationInterface> {
     const { schema, maxBlocks, supports, link, blockStyleMap, inlineStyleMap } = options;
