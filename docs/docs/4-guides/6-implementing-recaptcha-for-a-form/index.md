@@ -282,20 +282,17 @@ export async function POST(
 }
 ```
 
-## Hide the reCAPTCHA badge and add a disclaimer
+## Hide the reCAPTCHA badge and add a disclaimer (optional)
 
-Google [requires a disclaimer](https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed) when hiding the reCAPTCHA badge.
-
-Hide the badge with CSS in your form component's stylesheet:
+To hide the reCAPTCHA badge, add the following CSS to your form component's stylesheet:
 
 ```css title="YourFormBlock.module.scss"
-/* Hide the reCAPTCHA badge – adding a disclaimer text is required by Google instead */
 :global(.grecaptcha-badge) {
     visibility: hidden;
 }
 ```
 
-Add the required disclaimer text near the submit button:
+When hiding the badge, Google [requires you to add a disclaimer](https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed) near the submit button instead:
 
 ```tsx
 <p>
