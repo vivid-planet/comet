@@ -1,6 +1,6 @@
 # Divider
 
-MJML's built-in `mj-divider` paints its line via `border-top`, which leaves no room for a gradient overlay and pins consumers to upstream's prop surface. `MjmlDivider` and `HtmlDivider` instead render a `<table>`/`<td>` pair where the colored bar lives in the cell's `background-color`. Height, `backgroundColor`, `backgroundImage`, and named variants — including responsive overrides per breakpoint — come from `theme.divider`. A theme `backgroundImage` (typically a gradient) sits on top of the `backgroundColor` fallback so clients that ignore `background-image` still render the solid color.
+MJML's built-in `mj-divider` paints its line via `border-top`, which leaves no room for a gradient overlay and pins consumers to upstream's prop surface. `MjmlDivider` and `HtmlDivider` instead render a `<table>`/`<td>` pair where the colored bar lives in the cell's `background-color`. Height, `backgroundColor`, and `backgroundImage` come from `theme.divider`. A theme `backgroundImage` (typically a gradient) sits on top of the `backgroundColor` fallback so clients that ignore `background-image` still render the solid color.
 
 ## Non-goals
 

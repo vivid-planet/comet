@@ -25,6 +25,14 @@ We extend `@faire/mjml-react` rather than fork it. A few rules keep that working
 - **Media queries** via `registerStyles` are progressive enhancement for mobile, where modern CSS (flex, grid) is fine. Use `theme.breakpoints.*.belowMediaQuery` (max-width queries) to target viewports below a breakpoint.
 - **BEM, camelCase blocks.** Block `mjmlSection`, element `mjmlSection__item`, modifier `mjmlSection--indented`. Every component applies its block class and merges any consumer-provided `className` with `clsx`: `clsx("mjmlSection", className)`.
 
+### Theme variants
+
+Themed components expose their styling through the theme: a flat base entry and an optional, consumer-extensible variants map.
+
+- **Base theme entry covers the unstyled use.** Components render from `theme.<component>` when no variant is picked. The `variant` prop is optional; the package ships no built-in variants.
+- **Variants are declared by the consumer.** Variant names are added via TypeScript module augmentation against the variant-name type for that component. A `defaultVariant` on the theme entry makes one of them the implicit pick.
+- **Responsive values appear only inside variants.** Base entries use plain types per property. Variant entries can declare a `ResponsiveValue<T>` — a `{ default, ...overrides }` shape with override keys drawn from `theme.breakpoints`.
+
 ### File layout
 
 - **Location.** Custom components live in `src/components/<concern>/` (e.g. `src/components/section/MjmlSection.tsx`).
