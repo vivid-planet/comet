@@ -63,7 +63,7 @@
         "@types/draft-js": "^0.11.20",
         "@types/history": "^4.7.11",
         "@types/qs": "^6.15.1",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",

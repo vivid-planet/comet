@@ -713,6 +713,32 @@ DateTimePicker:
 - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
 - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
 
+### Rename GraphQL operations and fragments with redundant kind suffixes
+
+`@comet/eslint-config` v9 adds the `@graphql-eslint/naming-convention` rule from `@graphql-eslint/eslint-plugin`. The rule forbids GraphQL fragment, query, mutation, and subscription names that end with their own kind (e.g. `FooFragment`, `BarQuery`), which would otherwise produce duplicated suffixes such as `FragmentFragment` or `QueryQuery` in generated TypeScript types.
+
+After upgrading, run the lint to surface any violations:
+
+```sh
+cd admin
+npm run lint
+```
+
+For each `@graphql-eslint/naming-convention` error, rename the operation/fragment to drop the redundant suffix and update any generated TypeScript type references accordingly:
+
+```diff
+const attributesFragment = gql`
+-     fragment BrevoContactAttributesFragment on BrevoContact {
++     fragment BrevoContactAttributes on BrevoContact {
+        ...
+    }
+`;
+- import type { GQLBrevoContactAttributesFragmentFragment } from "./generated";
++ import type { GQLBrevoContactAttributesFragment } from "./generated";
+```
+
+After renaming, re-run code generation to update the `*.generated.ts` files.
+
 ### Verify lint passes
 
 ```sh
@@ -977,6 +1003,10 @@ Similarly, if you import `persistedQueryRoute` directly from `@comet/site-react`
 - import { persistedQueryRoute } from "@comet/site-react";
 + import { persistedQueryRoute } from "@comet/site-react/server";
 ```
+
+### Rename GraphQL operations and fragments with redundant kind suffixes
+
+`@comet/eslint-config` v9 adds the `@graphql-eslint/naming-convention` rule. See the [Admin section](#rename-graphql-operations-and-fragments-with-redundant-kind-suffixes) for details and apply the same renames in `site`.
 
 ### Verify lint passes
 

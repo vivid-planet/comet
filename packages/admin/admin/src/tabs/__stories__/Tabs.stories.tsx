@@ -12,11 +12,8 @@ import {
 } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
 
-import { storyRouterDecorator } from "../../../story-router.decorator";
-
 export default {
-    title: "Docs/Components/Tabs/Tabs",
-    decorators: [storyRouterDecorator()],
+    title: "components/tabs/Tabs",
 };
 
 export const Basic = () => {

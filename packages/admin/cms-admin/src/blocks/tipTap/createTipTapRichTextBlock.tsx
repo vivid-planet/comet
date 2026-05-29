@@ -16,6 +16,7 @@ import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
+import { Placeholder } from "./extensions/Placeholder";
 import { SoftHyphen } from "./extensions/SoftHyphen";
 import { InlineStyleContext } from "./InlineStyleContext";
 import { createListLevelMaxExtension, getListNestingDepthFromJson, trimListNesting } from "./listLevelMaxHelpers";
@@ -94,10 +95,16 @@ interface TipTapRichTextBlockInput {
     tipTapContent: JSONContent;
 }
 
+export interface TipTapPlaceholder {
+    name: string;
+    label: ReactNode;
+}
+
 interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
     inlineStyles?: TipTapInlineStyle[];
+    placeholders?: TipTapPlaceholder[];
     link?: BlockInterface & LinkBlockInterface;
     /**
      * Limits the maximum number of top-level blocks (paragraphs, headings, lists)
@@ -202,6 +209,7 @@ const TipTapEditor = ({
     supports,
     blockStyles,
     inlineStyles,
+    placeholders,
     linkBlock,
     maxBlocks,
     listLevelMax,
@@ -211,6 +219,7 @@ const TipTapEditor = ({
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
     inlineStyles: TipTapInlineStyle[];
+    placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
     maxBlocks?: number;
     listLevelMax?: number;
@@ -218,6 +227,7 @@ const TipTapEditor = ({
     const hasBlockStyles = blockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
+    const hasPlaceholders = placeholders.length > 0;
 
     const editor = useEditor({
         extensions: [
@@ -241,6 +251,7 @@ const TipTapEditor = ({
             ...(supports.includes("sub") ? [Subscript] : []),
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
+            ...(hasPlaceholders ? [Placeholder] : []),
             ...(hasLink ? [CmsLink] : []),
             ...(maxBlocks !== undefined ? [createMaxBlocksExtension(maxBlocks)] : []),
             ...(listLevelMax !== undefined ? [createListLevelMaxExtension(listLevelMax)] : []),
@@ -291,6 +302,7 @@ const TipTapEditor = ({
                         supports={supports}
                         blockStyles={blockStyles}
                         inlineStyles={inlineStyles}
+                        placeholders={placeholders}
                         linkBlock={linkBlock}
                         listLevelMax={listLevelMax}
                     />
@@ -312,6 +324,7 @@ export const createTipTapRichTextBlock = (
     let supports = options?.supports ?? defaultSupports;
     const blockStyles = options?.blockStyles ?? [];
     const inlineStyles = options?.inlineStyles ?? [];
+    const placeholders = options?.placeholders ?? [];
     const linkBlock = options?.link;
     const maxBlocks = options?.maxBlocks;
     const listLevelMax = options?.listLevelMax;
@@ -375,6 +388,7 @@ export const createTipTapRichTextBlock = (
                     supports={supports}
                     blockStyles={blockStyles}
                     inlineStyles={inlineStyles}
+                    placeholders={placeholders}
                     linkBlock={linkBlock}
                     maxBlocks={maxBlocks}
                     listLevelMax={listLevelMax}

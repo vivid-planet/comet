@@ -17,6 +17,7 @@ We extend `@faire/mjml-react` rather than fork it. A few rules keep that working
 - **Additive only.** A custom component must work everywhere the base did. Only add props — never remove or rename them, and don't require new providers or context. For theme access, prefer `useOptionalTheme()` over `useTheme()`.
 - **Wrap, don't reimplement.** Custom components delegate to `@faire/mjml-react`. Less to maintain, and we stay close to upstream behaviour.
 - **One export per name.** When we ship a custom version, it replaces the re-export. Consumers should never need to import from `@faire/mjml-react` directly.
+- **Public-facing documentation doesn't reference `@faire/mjml-react`.** TSDoc, story descriptions, and changeset entries describe behavior in terms of this package only. Internal places (feature READMEs, commit messages) can mention upstream when it adds maintainer context.
 
 ### Styling
 
@@ -34,6 +35,8 @@ We extend `@faire/mjml-react` rather than fork it. A few rules keep that working
 ### Storybook
 
 Every custom component has a story in `src/components/<concern>/__stories__/<Component>.stories.tsx`. Wrap non-section stories in `<MjmlSection indent>` to show a realistic indented layout.
+
+Placeholder images use the `picsum.photos` seed URL pattern — `https://picsum.photos/seed/<seed>/<width>/<height>` — so the same seed renders the same image on every build.
 
 ### Changesets
 

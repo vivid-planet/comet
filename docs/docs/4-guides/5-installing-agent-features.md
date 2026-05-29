@@ -82,6 +82,12 @@ Local skills and rules are **symlinked**, so edits are reflected immediately wit
 
 If your repo is also used as a source by other projects, see [Internal rules and skills](#internal-rules-and-skills) to prevent local-only items from being installed by consumers.
 
+## Node modules packages
+
+The command also scans direct dependencies in `node_modules` (including `@scoped` packages) for `skills/`, `agentic-plugin/skills/`, and `rules/` folders. Any items found there are **symlinked** into the target directories. This follows the [npm-based Agent Skills convention](https://github.com/antfu/skills-npm/blob/HEAD/PROPOSAL.md) and extends it to rules as well.
+
+Items with `metadata.internal: true` are excluded when discovered from `node_modules`, just like external repos.
+
 ## External repos
 
 You can install skills and rules from external git repositories. This allows you to consume items provided by libraries. The source repos are listed in `agent-features.json`:
@@ -100,7 +106,11 @@ Items with `metadata.internal: true` in their frontmatter are excluded when inst
 
 ## Priority order
 
-When the same skill or rule name exists in multiple sources, the higher-priority source wins. Local always takes priority over external.
+When the same skill or rule name exists in multiple sources, the higher-priority source wins. Priority is:
+
+1. Local skills and rules
+2. `node_modules` packages
+3. External repos
 
 Skills and rules have separate namespaces: a skill and a rule may share a name without conflicting.
 
@@ -111,6 +121,8 @@ Example output:
 ```
 Installing 1 skill from local skills/...
   Symlinked: code-style
+Installing 1 skill from node_modules some-tool (skills/)...
+  Symlinked: tool-docs
 Installing 2 skills from external https://github.com/vivid-planet/comet.git (skills/)...
   CONFLICT: "code-style" from external https://github.com/vivid-planet/comet.git (skills/) skipped (already installed from a higher-priority source)
   Copied: api-conventions
@@ -182,6 +194,8 @@ To pin consumers to a specific release:
 ```
 
 Skills and rules in your `skills/` and `rules/` folders have lower priority than the consuming project's own local items. This means consumers can always override your items locally without conflict.
+
+If you publish your library to npm, projects that install it as a direct dependency will have its skills and rules discovered automatically from `node_modules` (no `agent-features.json` needed).
 
 ### Internal rules and skills
 

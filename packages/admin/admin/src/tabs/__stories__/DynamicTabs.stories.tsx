@@ -2,8 +2,6 @@ import { Button, RouterTab, RouterTabs, Tab, Tabs } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { useState } from "react";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 export const DynamicRouterTabs = ({ showFourthTab }: { showFourthTab: boolean }) => {
     const content = ["Two", "Three"];
 
@@ -43,8 +41,7 @@ export const DynamicTabs = ({ showFourthTab }: { showFourthTab: boolean }) => {
 };
 
 export default {
-    title: "@comet/admin/tabs",
-    decorators: [storyRouterDecorator()],
+    title: "components/tabs/Dynamic Tabs",
     excludeStories: ["DynamicRouterTabs", "DynamicTabs"],
 };
 
