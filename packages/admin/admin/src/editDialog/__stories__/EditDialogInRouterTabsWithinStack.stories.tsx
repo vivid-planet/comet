@@ -27,11 +27,8 @@ import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [storyRouterDecorator()],
+    title: "components/editDialog",
 };
 
 const products = [
@@ -223,7 +220,7 @@ export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
                         </MainContent>
                     </StackPage>
                     <StackPage name="stocksEdit" title={intl.formatMessage({ id: "products.editStocks", defaultMessage: "Edit Stocks" })}>
-                        {(selectedStockId) => (
+                        {(selectedStockId: string) => (
                             <SaveBoundary>
                                 <MainContent fullHeight disablePadding>
                                     <StackToolbar>
@@ -303,7 +300,7 @@ export const EditDialogInRouterTabsWithinStack = {
                             </MainContent>
                         </StackPage>
                         <StackPage name="productEdit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product" })}>
-                            {(productId) => (
+                            {(productId: string) => (
                                 <MainContent fullHeight disablePadding>
                                     <SaveBoundary>
                                         <StackToolbar>

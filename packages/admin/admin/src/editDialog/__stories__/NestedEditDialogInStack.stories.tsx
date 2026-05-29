@@ -3,8 +3,6 @@ import { Edit } from "@comet/admin-icons";
 import { DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 const products = [
     { id: "1", name: "Product 1" },
     { id: "2", name: "Product 2" },
@@ -68,8 +66,7 @@ function ProductDetail({ id: stackSelectionId }: { id: string }) {
 }
 
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [storyRouterDecorator()],
+    title: "components/editDialog",
 };
 
 export const NestedEditDialogInStack = function Story() {
@@ -99,7 +96,7 @@ export const NestedEditDialogInStack = function Story() {
                     </MainContent>
                 </StackPage>
                 <StackPage name="detail" title="Edit product detail">
-                    {(productId) => <ProductDetail id={productId} />}
+                    {(productId: string) => <ProductDetail id={productId} />}
                 </StackPage>
             </StackSwitch>
         </Stack>

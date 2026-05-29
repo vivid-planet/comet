@@ -6,11 +6,8 @@ import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { useLocation } from "react-router";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [storyRouterDecorator()],
+    title: "components/editDialog",
 };
 
 interface ToolbarProps extends GridToolbarProps {

@@ -2,8 +2,6 @@ import { Button, Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, Stac
 import { DialogContent } from "@mui/material";
 import { useState } from "react";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 interface RootPageProps {
     counter: number;
 }
@@ -90,7 +88,7 @@ const InnerNestedStack = ({ counter }: InnerNestedStackProps) => {
                 <RootPage counter={counter} />
             </StackPage>
             <StackPage name="nested" title={`Page ${nestedCounter}`}>
-                {(counter) => {
+                {(counter: string) => {
                     setNestedCounter(Number(counter));
                     return <InnerNestedStack counter={Number(counter)} />;
                 }}
@@ -100,8 +98,7 @@ const InnerNestedStack = ({ counter }: InnerNestedStackProps) => {
 };
 
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [storyRouterDecorator()],
+    title: "components/editDialog",
 };
 
 export const EditDialogWithFormInStack = {
