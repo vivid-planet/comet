@@ -2,8 +2,6 @@ import { Button, SubRoute, useEditDialog } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { Stack, Typography } from "@mui/material";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 const FirstComponent = () => {
     const [EditDialog, selection, editDialogApi] = useEditDialog();
     return (
@@ -87,6 +85,5 @@ export const MultipleEditDialogs = () => {
 };
 
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [storyRouterDecorator()],
+    title: "components/edit-dialog",
 };

@@ -7,7 +7,7 @@ type Story = StoryObj<typeof Dialog>;
 
 const config: Meta<typeof Dialog> = {
     component: Dialog,
-    title: "@comet/admin/common/Dialog",
+    title: "components/common/Dialog",
 };
 
 export default config;

@@ -1,11 +1,8 @@
 import { Button, Field, FinalForm, FinalFormInput, useEditDialog } from "@comet/admin";
 import { DialogContent } from "@mui/material";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [storyRouterDecorator()],
+    title: "components/edit-dialog",
 };
 
 export const EditDialogStory = {
@@ -20,7 +17,7 @@ export const EditDialogStory = {
                     <DialogContent>
                         <FinalForm
                             mode="add"
-                            onSubmit={({ name }) => {
+                            onSubmit={({ name }: { name: string }) => {
                                 return new Promise<void>((resolve, reject) => {
                                     console.log("Loading ...");
                                     setTimeout(() => {

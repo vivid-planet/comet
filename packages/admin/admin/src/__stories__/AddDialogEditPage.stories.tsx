@@ -15,12 +15,11 @@ import { DialogContent, Typography } from "@mui/material";
 import type { StoryObj } from "@storybook/react-vite";
 import { expect, waitFor, within } from "storybook/test";
 
-import { stackRouteDecorator } from "../../helpers/storyDecorators";
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [stackRouteDecorator(), storyRouterDecorator()],
+    title: "components/edit-dialog",
+    parameters: {
+        stack: { topLevelTitle: "Example Page" },
+    },
 };
 
 const Form = ({ id }: { id?: string }) => {
@@ -63,7 +62,7 @@ const Page = () => {
                 </EditDialog>
             </StackPage>
             <StackPage name="edit">
-                {(id) => (
+                {(id: string) => (
                     <SaveBoundary>
                         <StackMainContent>
                             <FieldSet title="Edit form" endAdornment={<StackBackButton />}>
