@@ -94,7 +94,6 @@ pnpm run create-site-configs-env
 
 # --- download dev proxies ---
 pnpm run setup:download-oauth2-proxy
-pnpm run setup:download-mitmproxy
 
 
 exit 0
