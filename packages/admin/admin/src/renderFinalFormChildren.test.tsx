@@ -1,5 +1,6 @@
-import { isValidElement, type ReactElement } from "react";
+import type { ReactElement } from "react";
 import type { FormRenderProps } from "react-final-form";
+import { render, screen } from "test-utils";
 import { describe, expect, it, vi } from "vitest";
 
 import { renderFinalFormChildren } from "./renderFinalFormChildren";
@@ -14,10 +15,9 @@ const minimalFormRenderProps = {
 
 describe("renderFinalFormChildren", () => {
     it("should render a component when the component prop is provided", () => {
-        const MyComponent = () => null;
-        const result = renderFinalFormChildren({ component: MyComponent }, minimalFormRenderProps);
-        expect(isValidElement(result)).toBe(true);
-        expect((result as ReactElement).type).toBe(MyComponent);
+        const MyComponent = () => <div>component output</div>;
+        render(renderFinalFormChildren({ component: MyComponent }, minimalFormRenderProps) as ReactElement);
+        expect(screen.getByText("component output")).toBeDefined();
     });
 
     it("should call the render prop with formRenderProps when render is provided", () => {
