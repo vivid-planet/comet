@@ -289,7 +289,7 @@ const launchesPastRest = http.get("/launches", (info) => {
     return HttpResponse.json(allLaunches);
 });
 
-export type Manufacturer = {
+type Manufacturer = {
     id: string;
     name: string;
 };
@@ -312,7 +312,7 @@ const manufacturers: GraphQLFieldResolver<unknown, unknown> = async (source, arg
     });
 };
 
-export type Product = {
+type Product = {
     id: string;
     name: string;
     manufacturer: Manufacturer;
