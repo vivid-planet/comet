@@ -45,9 +45,11 @@ if [ "$CLAUDE_CODE_REMOTE" = "true" ]; then
         echo ">>> nvm.sh not found at $NVM_DIR/nvm.sh, skipping node setup"
     fi
 
-    # playwright-cli
-    npm install -g @playwright/cli@latest
-    playwright-cli install --skills
+    if command -v playwright-cli >/dev/null 2>&1; then
+        playwright-cli install --skills
+    else
+        echo "playwright-cli not found, skipping (install in environment setup script)"
+    fi
 fi
 
 
