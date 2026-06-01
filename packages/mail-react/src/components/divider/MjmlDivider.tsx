@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { ReactNode } from "react";
 
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
-import type { DividerProps } from "./common.js";
+import type { DividerProps } from "./dividerProps.js";
 import { HtmlDivider } from "./HtmlDivider.js";
 
 export type MjmlDividerProps = DividerProps;

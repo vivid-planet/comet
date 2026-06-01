@@ -1,4 +1,4 @@
-import { defaultDividerStyles } from "../components/divider/defaultStyles.js";
+import { defaultDividerStyles } from "../components/divider/defaultDividerStyles.js";
 import { createBreakpoint } from "./createBreakpoint.js";
 import type { Theme } from "./themeTypes.js";
 

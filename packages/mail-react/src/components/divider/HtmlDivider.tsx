@@ -5,9 +5,9 @@ import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultOrUndefined } from "../../theme/responsiveValue.js";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
 import type { DividerVariantStyles, Theme, ThemeDivider } from "../../theme/themeTypes.js";
-import type { DividerProps } from "./common.js";
-import { defaultDividerStyles } from "./defaultStyles.js";
-import { generateResponsiveDividerCss } from "./dividerStyles.js";
+import { defaultDividerStyles } from "./defaultDividerStyles.js";
+import type { DividerProps } from "./dividerProps.js";
+import { generateResponsiveDividerCss } from "./generateResponsiveDividerCss.js";
 
 // U+200B keeps the cell from collapsing in clients that drop empty <td>s,
 // without contributing visible width.
