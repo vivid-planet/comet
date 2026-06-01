@@ -238,6 +238,19 @@ Reinstall dependencies after updating `package.json`:
 npm install
 ```
 
+### Replace `/lib` imports from `@comet/*` packages
+
+`@comet/eslint-config` v9 forbids importing from `@comet/*/lib` and `@comet/*/lib/**`. Only the package root (and explicit subpath exports like `@comet/site-nextjs/server`) may be imported. Reaching into `/lib` couples your project to internal file layout and breaks whenever a package is restructured.
+
+```diff
+- import { Something } from "@comet/cms-api/lib/some/internal/path";
++ import { Something } from "@comet/cms-api";
+```
+
+If the symbol you need isn't exported from the package root, **do not copy the code from `/lib` into your project**. The duplicate drifts out of sync with the library, misses bug fixes, and defeats the purpose of using the package.
+
+Instead, open a pull request in [vivid-planet/comet](https://github.com/vivid-planet/comet) that adds the missing export to the package's `src/index.ts` (plus a changeset). Once merged and released, import it from the package root.
+
 ### Verify lint passes
 
 ```sh
