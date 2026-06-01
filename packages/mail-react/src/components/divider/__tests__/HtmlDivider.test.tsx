@@ -10,7 +10,7 @@ function renderHtmlDivider(element: React.ReactElement): string {
 }
 
 describe("HtmlDivider", () => {
-    it("applies theme height and background color as inline styles", () => {
+    it("renders default theme styles across modern, Outlook, and legacy clients", () => {
         const theme = createTheme();
         const html = renderHtmlDivider(
             <ThemeProvider theme={theme}>
@@ -18,31 +18,14 @@ describe("HtmlDivider", () => {
             </ThemeProvider>,
         );
 
+        // Modern clients: inline height and background color.
         expect(html).toContain("height:4px");
         expect(html).toContain("background-color:#000000");
-    });
-
-    it("applies mso-line-height-rule and matching line-height for Outlook fidelity", () => {
-        const theme = createTheme();
-        const html = renderHtmlDivider(
-            <ThemeProvider theme={theme}>
-                <HtmlDivider />
-            </ThemeProvider>,
-        );
-
+        // Outlook: mso-line-height-rule with matching line-height; font-size:0 keeps the spacer character from adding height.
         expect(html).toContain("mso-line-height-rule:exactly");
         expect(html).toContain("line-height:4px");
         expect(html).toContain("font-size:0");
-    });
-
-    it("emits both bgcolor attribute and height attribute for legacy Outlook", () => {
-        const theme = createTheme();
-        const html = renderHtmlDivider(
-            <ThemeProvider theme={theme}>
-                <HtmlDivider />
-            </ThemeProvider>,
-        );
-
+        // Legacy Outlook: attribute fallbacks for clients that ignore inline CSS.
         expect(html).toContain('bgcolor="#000000"');
         expect(html).toContain('height="4"');
     });
