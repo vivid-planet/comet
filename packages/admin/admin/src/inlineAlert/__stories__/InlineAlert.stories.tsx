@@ -20,21 +20,38 @@ const config: Meta<typeof InlineAlert> = {
 
 export default config;
 
+/**
+ * Renders the `InlineAlert` component with default settings.
+ * Demonstrates the base appearance of the error component.
+ */
 export const InlineAlertStory: Story = {};
 InlineAlertStory.storyName = "InlineAlert";
 
+/**
+ * Displays the `InlineAlert` component with a warning variant.
+ * This variation visually represents a warning message to the user.
+ */
 export const InlineAlertWithWarning: Story = {
     args: {
         severity: "warning",
     },
 };
 
+/**
+ * Displays the `InlineAlert` component with an info variant.
+ * This variant is used for informational messages rather than errors.
+ */
 export const InlineAlertWithInfo: Story = {
     args: {
         severity: "info",
     },
 };
 
+/**
+ * Displays the `InlineAlert` component with custom content.
+ * Includes a custom icon, title, and description to illustrate how
+ * the component can be adjusted for different use cases.
+ */
 export const InlineAlertWithCustomContent: Story = {
     args: {
         icon: <CometColor sx={{ fontSize: "32px" }} />,
@@ -43,6 +60,9 @@ export const InlineAlertWithCustomContent: Story = {
     },
 };
 
+/**
+ * Displays the `InlineAlert` component with custom icons by using `iconMapping` prop.
+ */
 export const InlineAlertWithIconMapper: Story = {
     args: {
         severity: "warning",
@@ -54,6 +74,11 @@ export const InlineAlertWithIconMapper: Story = {
     },
 };
 
+/**
+ * Displays the `InlineAlert` component with an action button.
+ * The button allows the user to retry an action when an error occurs.
+ * Clicking the button triggers an alert as an example interaction.
+ */
 export const InlineAlertWithActions: Story = {
     args: {
         actions: (
@@ -70,6 +95,11 @@ export const InlineAlertWithActions: Story = {
     },
 };
 
+/**
+ * Displays the `InlineAlert` component with multiple actions.
+ * Includes a retry button and a clear button to demonstrate
+ * how multiple interactions can be provided to the user.
+ */
 export const InlineAlertWithMultipleActions: Story = {
     args: {
         actions: (
