@@ -125,11 +125,29 @@ export class UserPermissionsService {
         throw new Error("For this functionality you need to define `findUserOrThrow` (or the deprecated `getUser`) in the userService.");
     }
 
+    async findUser(id: string): Promise<User | null> {
+        if (this.userService?.findUser) {
+            return this.userService.findUser(id);
+        }
+        if (this.userService?.getUser) {
+            try {
+                return await this.userService.getUser(id);
+            } catch {
+                return null;
+            }
+        }
+        throw new Error("For this functionality you need to define `findUser` (or the deprecated `getUser`) in the userService.");
+    }
+
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
         if (!this.userService) {
             throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
         }
         return this.userService.findUsers(args);
+    }
+
+    isSystemUser(id: string): boolean {
+        return this.options.systemUsers?.includes(id) ?? false;
     }
 
     async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
