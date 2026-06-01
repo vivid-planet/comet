@@ -484,6 +484,23 @@ Add `disableRowSelectionExcludeModel` to opt out of the new exclude selection mo
   />
 ```
 
+### Provide the DataGrid component via `CometConfig`
+
+The `CometConfig` context now exposes the DataGrid component used by `@comet/cms-admin`'s `DataGrid` wrapper.
+If you use `DataGridPro`/`DataGridPremium`, provide it in your `CometConfigProvider`:
+
+```tsx
+import { DataGridPro } from "@mui/x-data-grid-pro";
+import { CometConfigProvider } from "@comet/cms-admin";
+
+<CometConfigProvider
+    dataGrid={{ component: DataGridPro }}
+    // ...rest of config
+>
+    {children}
+</CometConfigProvider>
+```
+
 ### Upgrade MUI X Date Pickers to v8
 
 The MUI X Date Pickers peer dependency has been bumped to v8.

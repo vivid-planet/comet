@@ -16,12 +16,13 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Chip } from "@mui/material";
-import { DataGrid, type GridFilterModel } from "@mui/x-data-grid";
+import type { GridFilterModel } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../contentScope/Provider";
+import { DataGrid } from "../dataGrid/DataGrid";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { WarningActions } from "./WarningActions";
 import { WarningMessage } from "./WarningMessage";

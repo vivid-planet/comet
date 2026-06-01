@@ -20,10 +20,11 @@ import {
 import { Add, Delete, Edit } from "@comet/admin-icons";
 import type { ContentScope } from "@comet/cms-admin";
 import { Box, IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
+import type { GridSlotsComponent } from "@mui/x-data-grid";
 import type { ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 
+import { DataGrid } from "../dataGrid/DataGrid";
 import type {
     GQLBrevoContactsListFragment,
     GQLBrevoTestContactsGridQuery,

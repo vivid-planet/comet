@@ -24,7 +24,6 @@ import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
-    DataGrid,
     type DataGridProps,
     getGridSingleSelectOperators,
     type GridRowSelectionModel,
@@ -36,6 +35,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { BlockPreviewContent } from "../blocks/common/blockRow/BlockPreviewContent";
 import type { BlockInterface } from "../blocks/types";
+import { DataGrid } from "../dataGrid/DataGrid";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, deleteRedirectsMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
 import {
