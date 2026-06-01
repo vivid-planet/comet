@@ -1,4 +1,4 @@
-import path from "path";
+import { resolve } from "path";
 import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
@@ -12,7 +12,7 @@ const config: StorybookConfig = {
         config.resolve ??= {};
         config.resolve.alias = {
             ...config.resolve.alias,
-            "@comet/cms-admin": path.resolve(__dirname, "../src/index.ts"),
+            "@comet/cms-admin": resolve(import.meta.dirname, "../src/index.ts"),
         };
         return config;
     },
