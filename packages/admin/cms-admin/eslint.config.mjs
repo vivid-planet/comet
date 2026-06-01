@@ -11,7 +11,7 @@ const dataGridImportRestrictions = ["@mui/x-data-grid", "@mui/x-data-grid-pro", 
 );
 
 export default defineConfig([
-    globalIgnores(["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json", "storybook-static/**"]),
+    globalIgnores(["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json", "storybook-static/**", ".storybook/public/**"]),
     ...eslintConfigReact,
     {
         // These files interpolate JS expressions into `gql` templates, which `@graphql-eslint/eslint-plugin` cannot parse.
