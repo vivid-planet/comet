@@ -1,7 +1,8 @@
 import { InfoFilled } from "@comet/admin-icons";
-import { DashboardWidgetRoot } from "@comet/cms-admin";
 import { Grid } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { DashboardWidgetRoot } from "../DashboardWidgetRoot";
 
 type Story = StoryObj<typeof DashboardWidgetRoot>;
 

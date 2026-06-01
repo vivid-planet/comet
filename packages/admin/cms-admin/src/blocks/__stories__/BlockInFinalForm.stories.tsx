@@ -1,5 +1,9 @@
 import { Field, FinalForm, SaveBoundary } from "@comet/admin";
-import { BlockAdminComponentRoot, createFinalFormBlock, createListBlock, ExternalLinkBlock } from "@comet/cms-admin";
+
+import { BlockAdminComponentRoot } from "../common/BlockAdminComponentRoot";
+import { ExternalLinkBlock } from "../ExternalLinkBlock";
+import { createListBlock } from "../factories/createListBlock";
+import { createFinalFormBlock } from "../form/createFinalFormBlock";
 
 export default {
     title: "blocks/BlockInFinalForm",

@@ -1,8 +1,10 @@
 import { Stack } from "@comet/admin";
 import { DensityComfortable, DensityCompact, DensityStandard } from "@comet/admin-icons";
-import { createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
+
+import { createCompositeBlock } from "../../factories/createCompositeBlock";
+import { createCompositeBlockSelectField } from "../createCompositeBlockSelectField";
 
 export default {
     title: "blocks/helpers/createCompositeBlockSelectField",

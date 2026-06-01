@@ -1,6 +1,8 @@
 import { MasterLayout } from "@comet/admin";
 import { Dashboard } from "@comet/admin-icons";
-import { MasterMenu, type MasterMenuData, MasterMenuRoutes } from "@comet/cms-admin";
+
+import { MasterMenu, type MasterMenuData } from "../MasterMenu";
+import { MasterMenuRoutes } from "../MasterMenuRoutes";
 
 export default {
     title: "common/MasterMenuInMasterLayout",
