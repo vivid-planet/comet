@@ -6,7 +6,7 @@ import storybook from "eslint-plugin-storybook";
 import cometPlugin from "@comet/eslint-plugin";
 
 export default defineConfig([
-    globalIgnores(["src/*.generated.ts", "lib/**"]),
+    globalIgnores(["src/*.generated.ts", "lib/**", ".storybook/public/**"]),
     ...eslintConfigReact,
     {
         // `buildRestMutation.tsx` interpolates JS expressions into `gql` templates, which `@graphql-eslint/eslint-plugin` cannot parse.

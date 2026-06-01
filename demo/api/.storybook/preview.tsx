@@ -1,5 +1,5 @@
 import { Controls, Description, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
-import { type Decorator, type Preview } from "@storybook/react-vite";
+import type { Decorator, Preview } from "@storybook/react-vite";
 import React from "react";
 import { IntlProvider } from "react-intl";
 

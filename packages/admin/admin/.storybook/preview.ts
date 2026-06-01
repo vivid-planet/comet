@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react-vite";
-import { type GlobalTypes } from "storybook/internal/csf";
+import type { GlobalTypes } from "storybook/internal/csf";
 
 import { ApolloDecorator } from "./decorators/Apollo.decorator";
 import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
