@@ -19,7 +19,7 @@ describe("getDateValue", () => {
         const result = getDateValue("2023-06-15");
         expect(result).toBeInstanceOf(Date);
         expect(result?.getFullYear()).toBe(2023);
-        expect(result?.getMonth()).toBe(5); // June is 0-indexed
+        expect(result?.getMonth()).toBe(5); // Month is 0-indexed -> June = 5
         expect(result?.getDate()).toBe(15);
     });
 
