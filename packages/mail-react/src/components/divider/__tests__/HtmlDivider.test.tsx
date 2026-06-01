@@ -158,6 +158,17 @@ describe("HtmlDivider", () => {
         expect(html).toContain("background-color:#000000");
         expect(html).toContain("background-image:linear-gradient(to right, red, blue)");
     });
+
+    it("falls back to default styles when used without a ThemeProvider", () => {
+        const html = renderHtmlDivider(<HtmlDivider />);
+
+        expect(html).toContain("height:4px");
+        expect(html).toContain("background-color:#000000");
+    });
+
+    it("throws when variant is set without a ThemeProvider", () => {
+        expect(() => renderHtmlDivider(<HtmlDivider variant="thin" />)).toThrow();
+    });
 });
 
 describe("generateHtmlDividerStyles", () => {

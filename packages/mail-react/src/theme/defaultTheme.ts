@@ -1,3 +1,4 @@
+import { defaultDividerStyles } from "../components/divider/defaultStyles.js";
 import { createBreakpoint } from "./createBreakpoint.js";
 import type { Theme } from "./themeTypes.js";
 
@@ -16,10 +17,7 @@ export const defaultTheme: Theme = {
         lineHeight: "20px",
         bottomSpacing: "16px",
     },
-    divider: {
-        height: 4,
-        backgroundColor: "#000000",
-    },
+    divider: defaultDividerStyles,
     colors: {
         background: {
             body: "#F2F2F2",

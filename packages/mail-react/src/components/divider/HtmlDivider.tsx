@@ -3,9 +3,10 @@ import type { CSSProperties, ReactNode } from "react";
 
 import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultOrUndefined } from "../../theme/responsiveValue.js";
-import { useTheme } from "../../theme/ThemeProvider.js";
-import type { DividerVariantStyles, Theme } from "../../theme/themeTypes.js";
+import { useOptionalTheme } from "../../theme/ThemeProvider.js";
+import type { DividerVariantStyles, Theme, ThemeDivider } from "../../theme/themeTypes.js";
 import type { DividerProps } from "./common.js";
+import { defaultDividerStyles } from "./defaultStyles.js";
 import { generateResponsiveDividerCss } from "./dividerStyles.js";
 
 // U+200B keeps the cell from collapsing in clients that drop empty <td>s,
@@ -25,9 +26,14 @@ export function HtmlDivider({
     className,
     style,
 }: HtmlDividerProps): ReactNode {
-    const theme = useTheme();
+    const theme = useOptionalTheme();
 
-    const { defaultVariant, variants, ...baseStyles } = theme.divider;
+    if (theme === null && variantProp !== undefined) {
+        throw new Error("The `variant` prop requires being wrapped in a ThemeProvider or MjmlMailRoot.");
+    }
+
+    const themeDivider: ThemeDivider = theme?.divider ?? defaultDividerStyles;
+    const { defaultVariant, variants, ...baseStyles } = themeDivider;
     const activeVariant = variantProp ?? defaultVariant;
     const variantStyles = activeVariant ? variants?.[activeVariant] : undefined;
 
