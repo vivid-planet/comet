@@ -251,12 +251,11 @@ const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
 };
 
 function EditDialogInRouterTabsWithinStackStory() {
-    const intl = useIntl();
     const editDialogApi = useRef<IEditDialogApi>(null);
 
     return (
         <>
-            <Stack topLevelTitle={intl.formatMessage({ id: "products.title", defaultMessage: "Products Page" })}>
+            <Stack topLevelTitle="Products Page">
                 <StackSwitch initialPage="productsGrid">
                     <StackPage name="productsGrid">
                         <MainContent fullHeight disablePadding>
@@ -298,7 +297,7 @@ function EditDialogInRouterTabsWithinStackStory() {
                             />
                         </MainContent>
                     </StackPage>
-                    <StackPage name="productEdit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product" })}>
+                    <StackPage name="productEdit" title="Product">
                         {(productId: string) => (
                             <MainContent fullHeight disablePadding>
                                 <SaveBoundary>
