@@ -3,6 +3,7 @@
         "rootDir": "src"
     },
     "exclude": [
+        ".storybook/**",
         "**/*.test.tsx",
         "**/*.test.ts",
         "**/*.spec.tsx",

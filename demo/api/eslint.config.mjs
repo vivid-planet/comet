@@ -12,7 +12,14 @@ export default defineConfig([
         "lang/**",
         "lang-compiled/**",
         "lang-extracted/**",
+        ".storybook/public/**",
     ]),
     ...eslintConfigNestJs,
     ...storybook.configs["flat/recommended"],
+    {
+        files: [".storybook/main.@(ts|tsx|js|jsx|mjs|cjs)"],
+        rules: {
+            "storybook/no-uninstalled-addons": ["error", { ignore: ["@comet/mail-react/storybook"] }],
+        },
+    },
 ]);

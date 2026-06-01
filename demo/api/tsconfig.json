@@ -22,5 +22,6 @@
         "strictPropertyInitialization": false,
         "target": "ES2023",
         "useDefineForClassFields": false
-    }
+    },
+    "include": ["src", ".storybook/**/*.ts", ".storybook/**/*.tsx"]
 }
