@@ -1,6 +1,6 @@
-import { Button, DataGridToolbar, FillSpace, FinalForm, MainContent, useDataGridRemote, useEditDialog } from "@comet/admin";
+import { Button, DataGridToolbar, FillSpace, FinalForm, MainContent, TextField, useDataGridRemote, useEditDialog } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
-import { DialogContent, TextField } from "@mui/material";
+import { DialogContent } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
