@@ -33,7 +33,6 @@ export default defineConfig([
         },
     },
     {
-        ignores: ["src/dataGrid/DataGrid.tsx"],
         rules: {
             "no-restricted-imports": [
                 "error",
