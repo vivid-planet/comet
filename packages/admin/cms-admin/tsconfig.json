@@ -5,10 +5,10 @@
         "paths": {
             "test-utils": ["./testing/test-utils"]
         },
-        "rootDir": "src",
+        "rootDir": ".",
         "strict": true
     },
     "exclude": [],
     "extends": "../tsconfig.base.json",
-    "include": ["./src"]
+    "include": ["./src", ".storybook/**/*.ts", ".storybook/**/*.tsx"]
 }
