@@ -234,6 +234,12 @@ export default defineConfig({
             name: "demo-api-storybook",
             script: "pnpm --filter comet-demo-api run storybook",
         },
+        {
+            name: "demo-mcp-server",
+            script: "pnpm --filter comet-demo-mcp-server run build && pnpm --filter comet-demo-mcp-server run start",
+            group: ["demo-api", "demo"],
+            waitOn: ["tcp:$API_PORT"],
+        },
 
         //group demo site
         {

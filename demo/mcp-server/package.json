@@ -1,0 +1,45 @@
+{
+    "name": "comet-demo-mcp-server",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "run-s gql:types generate-block-types && tsup",
+        "generate-block-types": "comet generate-block-types --output-file blocks.generated.ts",
+        "gql:types": "graphql-codegen",
+        "lint": "run-s gql:types generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
+        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
+        "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
+        "lint:fix:eslint": "pnpm run lint:eslint --fix",
+        "lint:fix:prettier": "pnpm run lint:prettier --write",
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc --project .",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.27.1",
+        "graphql": "^16.14.0",
+        "graphql-request": "^7.1.2",
+        "zod": "^3.25.7"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.29.0",
+        "@comet/cli": "workspace:*",
+        "@comet/eslint-config": "workspace:*",
+        "@graphql-codegen/cli": "^5.0.7",
+        "@graphql-codegen/near-operation-file-preset": "^3.1.0",
+        "@graphql-codegen/typescript": "^4.1.6",
+        "@graphql-codegen/typescript-operations": "^4.6.1",
+        "@parcel/watcher": "^2.5.6",
+        "@types/node": "^24.12.4",
+        "eslint": "^9.39.4",
+        "npm-run-all2": "^8.0.4",
+        "prettier": "^3.6.2",
+        "tsup": "^8.5.1",
+        "typescript": "^5.9.3"
+    },
+    "engines": {
+        "node": "24"
+    }
+}
