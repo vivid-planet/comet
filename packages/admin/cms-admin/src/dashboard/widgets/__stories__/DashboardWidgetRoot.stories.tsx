@@ -1,13 +1,14 @@
 import { InfoFilled } from "@comet/admin-icons";
-import { DashboardWidgetRoot } from "@comet/cms-admin";
 import { Grid } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { DashboardWidgetRoot } from "../DashboardWidgetRoot";
 
 type Story = StoryObj<typeof DashboardWidgetRoot>;
 
 const config: Meta<typeof DashboardWidgetRoot> = {
     component: DashboardWidgetRoot,
-    title: "@comet/cms-admin/dashboard/widgets/DashboardWidgetRoot",
+    title: "dashboard/widgets/DashboardWidgetRoot",
 };
 
 export default config;

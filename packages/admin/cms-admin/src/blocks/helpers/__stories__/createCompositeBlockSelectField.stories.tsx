@@ -1,15 +1,13 @@
 import { Stack } from "@comet/admin";
 import { DensityComfortable, DensityCompact, DensityStandard } from "@comet/admin-icons";
-import { createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { createCompositeBlock } from "../../factories/createCompositeBlock";
+import { createCompositeBlockSelectField } from "../createCompositeBlockSelectField";
 
 export default {
-    title: "@comet/cms-admin/createCompositeBlock/createCompositeBlockSelectField",
-    decorators: [apolloStoryDecorator("/graphql"), storyRouterDecorator()],
+    title: "blocks/helpers/createCompositeBlockSelectField",
 };
 
 export const Basic = () => {
