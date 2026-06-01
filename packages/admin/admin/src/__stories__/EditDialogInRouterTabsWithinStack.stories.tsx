@@ -250,7 +250,7 @@ const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
     );
 };
 
-function EditDialogInRouterTabsWithinStackStory() {
+export function EditDialogInRouterTabsWithinStack() {
     const editDialogApi = useRef<IEditDialogApi>(null);
 
     return (
@@ -320,8 +320,3 @@ function EditDialogInRouterTabsWithinStackStory() {
         </>
     );
 }
-
-export const EditDialogInRouterTabsWithinStack = {
-    render: EditDialogInRouterTabsWithinStackStory,
-    name: "EditDialog in RouterTabs within Stack",
-};
