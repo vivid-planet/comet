@@ -134,6 +134,7 @@ type DamFileImage {
   exif: JSONObject
   dominantColor: String
   cropArea: ImageCropArea!
+  urlTemplate: String
   url(width: Int!, height: Int!): String
 }
 
