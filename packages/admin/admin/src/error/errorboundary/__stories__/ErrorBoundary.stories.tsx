@@ -20,7 +20,7 @@ const ViewWithError = () => {
 };
 
 export default {
-    title: "@comet/admin/error-handling/error-boundaries",
+    title: "components/error/errorboundary/ErrorBoundary",
     args: {
         renderViewWithErrors: false,
     },

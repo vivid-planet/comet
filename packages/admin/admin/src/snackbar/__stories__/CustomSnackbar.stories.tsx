@@ -45,7 +45,7 @@ const CustomSnackbar = () => {
 };
 
 export default {
-    title: "@comet/admin/snackbar",
+    title: "components/snackbar/CustomSnackbar",
 };
 
 export const _CustomSnackbar = () => {

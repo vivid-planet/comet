@@ -34,7 +34,7 @@ const UndoSnackbarExample = () => {
 };
 
 export default {
-    title: "@comet/admin/snackbar",
+    title: "components/snackbar/UndoSnackbar",
 };
 
 export const _UndoSnackbar = () => {

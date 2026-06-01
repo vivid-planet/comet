@@ -18,7 +18,7 @@ type CapturedError = {
 };
 
 export default {
-    title: "@comet/admin/error-handling/error-handler-provider",
+    title: "components/error/errorHandler/ErrorHandlerProvider",
     args: {
         renderViewWithErrors: false,
     },

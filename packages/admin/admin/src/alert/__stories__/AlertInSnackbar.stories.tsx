@@ -3,7 +3,7 @@ import { Snackbar } from "@mui/material";
 import { useState } from "react";
 
 export default {
-    title: "@comet/admin/alert/Alert",
+    title: "components/alert/AlertInSnackbar",
 };
 
 export const AlertInSnackbar = {

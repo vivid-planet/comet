@@ -2,8 +2,6 @@ import { Alert, MainNavigation, MainNavigationItemRouterLink, MasterLayout, Rout
 import { Card, CardContent, Typography } from "@mui/material";
 import { Redirect, Route, Switch } from "react-router";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 const ViewWithNoError = () => {
     return (
         <Card variant="outlined">
@@ -39,8 +37,7 @@ function MasterMenu() {
 }
 
 export default {
-    title: "@comet/admin/error-handling/error-boundaries",
-    decorators: [storyRouterDecorator()],
+    title: "components/error/errorboundary/RouteWithErrorBoundary",
 };
 
 export const _RouteWithErrorBoundary = {
