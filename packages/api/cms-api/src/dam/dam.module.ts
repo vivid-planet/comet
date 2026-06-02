@@ -9,6 +9,7 @@ import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transf
 import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-transformer.service";
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { DamConfig } from "./dam.config";
+import { DAM_DEFAULT_BASE_PATH } from "./dam.constants";
 import { DamFileModule } from "./dam-file.module";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
@@ -46,7 +47,7 @@ export class DamModule {
     }: DamModuleOptions): DynamicModule {
         const damConfig = {
             ...options.damConfig,
-            basePath: options.damConfig.basePath ?? "dam",
+            basePath: options.damConfig.basePath ?? DAM_DEFAULT_BASE_PATH,
         };
 
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });

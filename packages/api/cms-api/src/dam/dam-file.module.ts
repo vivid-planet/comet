@@ -5,7 +5,7 @@ import { BlobStorageModule } from "../blob-storage/blob-storage.module";
 import { FileValidationService } from "../file-utils/file-validation.service";
 import { damDefaultAcceptedMimetypes } from "./common/mimeTypes/dam-default-accepted-mimetypes";
 import { DamConfig } from "./dam.config";
-import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE } from "./dam.constants";
+import { DAM_CONFIG, DAM_DEFAULT_BASE_PATH, DAM_FILE_VALIDATION_SERVICE } from "./dam.constants";
 import { DamMediaAlternative } from "./files/dam-media-alternatives/entities/dam-media-alternative.entity";
 import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/file.entity";
 import { DamFileImage } from "./files/entities/file-image.entity";
@@ -50,7 +50,7 @@ export class DamFileModule {
 
         const damConfig = {
             ...options.damConfig,
-            basePath: options.damConfig.basePath ?? "dam",
+            basePath: options.damConfig.basePath ?? DAM_DEFAULT_BASE_PATH,
         };
 
         if (File.name !== FILE_ENTITY) {
