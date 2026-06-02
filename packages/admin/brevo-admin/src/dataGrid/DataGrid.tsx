@@ -1,4 +1,5 @@
 import { useCometConfig } from "@comet/cms-admin";
+// eslint-disable-next-line no-restricted-imports
 import { DataGrid as MuiDataGrid, type DataGridProps, type GridValidRowModel } from "@mui/x-data-grid";
 
 export function DataGrid<R extends GridValidRowModel = GridValidRowModel>(props: DataGridProps<R>) {

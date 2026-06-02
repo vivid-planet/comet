@@ -2,6 +2,14 @@ import eslintConfigReact, { restrictedImportPaths } from "@comet/eslint-config/f
 import { defineConfig, globalIgnores } from "eslint/config";
 import storybook from "eslint-plugin-storybook";
 
+const dataGridImportRestrictions = ["@mui/x-data-grid", "@mui/x-data-grid-pro", "@mui/x-data-grid-premium"].flatMap((name) =>
+    ["DataGrid", "DataGridPro", "DataGridPremium"].map((importName) => ({
+        name,
+        importNames: [importName],
+        message: "Please use DataGrid from `@comet/cms-admin` instead, which resolves the configured grid via `CometConfig`.",
+    })),
+);
+
 export default defineConfig([
     globalIgnores(["src/*.generated.ts", "lib/**", "**/*.generated.ts", "block-meta.json", "storybook-static/**"]),
     ...eslintConfigReact,
@@ -22,6 +30,16 @@ export default defineConfig([
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",
+        },
+    },
+    {
+        rules: {
+            "no-restricted-imports": [
+                "error",
+                {
+                    paths: [...restrictedImportPaths, ...dataGridImportRestrictions],
+                },
+            ],
         },
     },
     {

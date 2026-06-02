@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { DataGrid as MuiDataGrid, type DataGridProps, type GridValidRowModel } from "@mui/x-data-grid";
 
 import { useCometConfig } from "../config/CometConfigContext";
