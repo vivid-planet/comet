@@ -8,6 +8,10 @@ export type { HtmlPixelImageBlockProps } from "./blocks/pixelImage/HtmlPixelImag
 export { HtmlPixelImageBlock } from "./blocks/pixelImage/HtmlPixelImageBlock.js";
 export type { MjmlPixelImageBlockProps } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
 export { MjmlPixelImageBlock } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
+export type { HtmlDividerProps } from "./components/divider/HtmlDivider.js";
+export { HtmlDivider } from "./components/divider/HtmlDivider.js";
+export type { MjmlDividerProps } from "./components/divider/MjmlDivider.js";
+export { MjmlDivider } from "./components/divider/MjmlDivider.js";
 export type { HtmlImageProps } from "./components/image/HtmlImage.js";
 export { HtmlImage } from "./components/image/HtmlImage.js";
 export type { MjmlImageProps } from "./components/image/MjmlImage.js";
@@ -31,6 +35,9 @@ export type { ResponsiveValue } from "./theme/responsiveValue.js";
 export { getDefaultFromResponsiveValue, getResponsiveOverrides } from "./theme/responsiveValue.js";
 export { ThemeProvider, useTheme } from "./theme/ThemeProvider.js";
 export type {
+    DividerStyles,
+    DividerVariants,
+    DividerVariantStyles,
     TextStyles,
     TextVariants,
     TextVariantStyles,
@@ -39,6 +46,7 @@ export type {
     ThemeBreakpoint,
     ThemeBreakpoints,
     ThemeColors,
+    ThemeDivider,
     ThemeSizes,
     ThemeText,
 } from "./theme/themeTypes.js";
@@ -71,8 +79,6 @@ export {
     type IMjmlClassProps as MjmlClassProps,
     MjmlColumn,
     type IMjmlColumnProps as MjmlColumnProps,
-    MjmlDivider,
-    type IMjmlDividerProps as MjmlDividerProps,
     MjmlFont,
     type IMjmlFontProps as MjmlFontProps,
     MjmlGroup,
