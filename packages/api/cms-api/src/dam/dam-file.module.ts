@@ -31,12 +31,23 @@ interface DamFileModuleOptions {
 @Global()
 @Module({})
 export class DamFileModule {
+    private static registered = false;
+
     static register({
         Scope,
         Folder = createFolderEntity({ Scope }),
         File = createFileEntity({ Scope, Folder }),
         ...options
     }: DamFileModuleOptions): DynamicModule {
+        // Both modules are global and declare the same controllers. DamModule registers DamFileModule internally, so
+        // registering both would result in duplicate routes. Guard against it instead of leaving it to chance.
+        if (DamFileModule.registered) {
+            throw new Error(
+                "DamFileModule has already been registered. It is registered automatically by DamModule, so register only one of the two.",
+            );
+        }
+        DamFileModule.registered = true;
+
         const damConfig = {
             ...options.damConfig,
             basePath: options.damConfig.basePath ?? "dam",
