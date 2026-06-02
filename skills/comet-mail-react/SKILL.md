@@ -273,7 +273,7 @@ const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
 | `MjmlSection`         | Full-width row, supports `indent` and `disableResponsiveBehavior` | `.mjmlSection`, `.mjmlSection--indented`                        |
 | `MjmlColumn`          | Vertical column inside a section                                  | —                                                               |
 | `MjmlText`            | Themed text block with `variant` and `bottomSpacing`              | `.mjmlText`, `.mjmlText--{variant}`, `.mjmlText--bottomSpacing` |
-| `MjmlImage`           | Image                                                             | —                                                               |
+| `MjmlImage`           | Responsive image                                                  | `.mjmlImage`                                                    |
 | `MjmlPixelImageBlock` | Renders a Comet CMS `PixelImageBlockData` via `MjmlImage`         | `.mjmlPixelImageBlock`                                          |
 | `MjmlButton`          | Button (ending tag)                                               | —                                                               |
 | `MjmlDivider`         | Horizontal divider                                                | —                                                               |
@@ -286,6 +286,7 @@ const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
 | --------------------- | -------------------------------------------------------- | --------------------------------------------------------------- |
 | `HtmlText`            | Themed text as HTML element (default `<td>`)             | `.htmlText`, `.htmlText--{variant}`, `.htmlText--bottomSpacing` |
 | `HtmlInlineLink`      | `<a>` that inherits parent text styles, works in Outlook | `.htmlInlineLink`                                               |
+| `HtmlImage`           | Responsive image (`<img>`)                               | `.htmlImage`                                                    |
 | `HtmlPixelImageBlock` | Renders a Comet CMS `PixelImageBlockData` as `<img>`     | `.htmlPixelImageBlock`                                          |
 
 Text components (`MjmlText`, `HtmlText`) support `variant` and `bottomSpacing` props tied to the theme. Variants define typography presets (font size, weight, line height, color). Both support responsive values that change at different breakpoints. Set a `defaultVariant` in the theme to apply a variant automatically when none is specified.
