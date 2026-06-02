@@ -206,7 +206,7 @@ const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKe
         gap: 5px;
         height: 45px;
         align-self: flex-start;
-        padding-right: ${theme.spacing(4)};
+        padding-right: ${theme.spacing(3)};
     `,
 );
 
