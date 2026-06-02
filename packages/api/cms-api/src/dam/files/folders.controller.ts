@@ -8,7 +8,13 @@ import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FoldersService } from "./folders.service";
 
-export const createFoldersController = ({ damBasePath }: { damBasePath: string }): Type<unknown> => {
+export const createFoldersController = ({
+    damBasePath,
+    disableScopeAccessControl = false,
+}: {
+    damBasePath: string;
+    disableScopeAccessControl?: boolean;
+}): Type<unknown> => {
     @Controller(`${damBasePath}/folders`)
     class FoldersController {
         constructor(
@@ -16,9 +22,21 @@ export const createFoldersController = ({ damBasePath }: { damBasePath: string }
             @Optional() @Inject(ACCESS_CONTROL_SERVICE) private accessControlService?: AccessControlServiceInterface,
         ) {}
 
+        // Fail closed: without an access control service the scope check below would be silently skipped, leaving the
+        // endpoint unauthorized. Require the consuming application to opt out explicitly when it handles authorization itself.
+        private assertScopeAccessControlAvailable(): void {
+            if (!this.accessControlService && !disableScopeAccessControl) {
+                throw new ForbiddenException(
+                    "DAM scope access control is not available. Register an access control service or set `disableScopeAccessControl: true` on the DAM module to handle authorization outside of the DAM module.",
+                );
+            }
+        }
+
         @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in method
         @Get("/:folderId/zip")
         async createZip(@Param("folderId") folderId: string, @Res() res: Response, @GetCurrentUser() user: CurrentUser): Promise<void> {
+            this.assertScopeAccessControlAvailable();
+
             const folder = await this.foldersService.findOneById(folderId);
             if (!folder) {
                 throw new NotFoundException("Folder not found");
