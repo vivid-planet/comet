@@ -1,7 +1,7 @@
 import { Button, InlineAlert } from "@comet/admin";
 import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@comet/admin-icons";
 import { Box } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof InlineAlert>;
 
@@ -23,7 +23,7 @@ export default config;
  * Demonstrates the base appearance of the error component.
  */
 export const InlineAlertStory: Story = {};
-InlineAlertStory.name = "InlineAlert";
+InlineAlertStory.storyName = "InlineAlert";
 
 /**
  * Displays the `InlineAlert` component with a warning variant.

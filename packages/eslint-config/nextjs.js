@@ -1,4 +1,5 @@
 import coreConfig, { restrictedImportPatterns } from "./core.js";
+import graphqlPlugin from "@graphql-eslint/eslint-plugin";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
@@ -13,6 +14,10 @@ export const restrictedImportPaths = [
         name: "next/image",
         importNames: ["default"],
         message: "Don't use next/image. See https://docs.comet-dxp.com/docs/faqs/next-image-import-restriction",
+    },
+    {
+        name: "node-cache",
+        message: "node-cache is abandonware. Use cache-manager or @cacheable/node-cache instead",
     },
 ];
 
@@ -65,6 +70,35 @@ const config = [
             "react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
             "react/react-in-jsx-scope": "off",
             "@next/next/no-img-element": "off",
+        },
+    },
+    {
+        files: ["**/*.{ts,tsx,js,jsx}"],
+        processor: graphqlPlugin.processor,
+    },
+    {
+        files: ["**/*.graphql"],
+        languageOptions: {
+            parser: graphqlPlugin.parser,
+        },
+        plugins: {
+            "@graphql-eslint": graphqlPlugin,
+        },
+        rules: {
+            // Type-info rules from typescript-eslint cannot run on virtual GraphQL blocks extracted by the processor.
+            "@typescript-eslint/consistent-type-imports": "off",
+            "@typescript-eslint/consistent-type-exports": "off",
+            "@graphql-eslint/naming-convention": [
+                "error",
+                {
+                    OperationDefinition: {
+                        forbiddenSuffixes: ["Query", "Mutation", "Subscription"],
+                    },
+                    FragmentDefinition: {
+                        forbiddenSuffixes: ["Fragment"],
+                    },
+                },
+            ],
         },
     },
 ];

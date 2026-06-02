@@ -189,6 +189,14 @@ export function createOptionalBlock<T extends BlockInterface>(
 
             return [];
         },
+        translateContent: async (state, translate) => {
+            if (state.block === undefined) {
+                return state;
+            }
+
+            const translatedBlock = decoratedBlock.translateContent ? await decoratedBlock.translateContent(state.block, translate) : state.block;
+            return { ...state, block: translatedBlock };
+        },
     };
 
     if (override) {

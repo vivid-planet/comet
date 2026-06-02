@@ -1,6 +1,6 @@
 {
     "name": "@comet/cli",
-    "version": "9.0.0-beta.2",
+    "version": "9.0.0-beta.4",
     "description": "A collection of CLI tools for Comet projects",
     "repository": {
         "directory": "packages/cli",
@@ -14,6 +14,7 @@
     "bin": {
         "comet": "bin/comet.js"
     },
+    "sideEffects": false,
     "files": [
         "bin/**/*.js",
         "lib/*"
@@ -42,8 +43,8 @@
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
         "@types/js-yaml": "^4.0.9",
-        "@types/node": "^24.12.2",
-        "eslint": "^9.39.2",
+        "@types/node": "^24.12.4",
+        "eslint": "^9.39.4",
         "npm-run-all2": "^8.0.4",
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3",

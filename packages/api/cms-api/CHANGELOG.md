@@ -1,5 +1,109 @@
 # @comet/cms-api
 
+## 9.0.0-beta.4
+
+### Minor Changes
+
+- c6703db: Add `ids` filter to `damFilesList`
+
+    `FileFilterInput` now accepts an optional `ids: [ID!]` to restrict the result set to specific files. Useful for batch-loading a known selection (e.g. after a multi-file picker confirms) in a single request.
+
+- 127a492: Add TipTapRichTextBlock as an alternative to RichTextBlock
+- 2fe9d4b: Add support for translating page and document content
+
+    Content translation can now be applied to entire documents at once, in addition to the existing field-level translation.
+
+    **Setup**
+
+    Wrap the application with `AzureAiTranslatorProvider` (supports `batchTranslate` automatically):
+
+    ```tsx
+    <AzureAiTranslatorProvider enabled showApplyTranslationDialog>
+        {children}
+    </AzureAiTranslatorProvider>
+    ```
+
+    **Making a document type translatable**
+
+    Add `createDocumentTranslationMethods` and the `TranslatableInterface` type to the document definition:
+
+    ```tsx
+    import { createDocumentTranslationMethods, type TranslatableInterface } from "@comet/cms-admin";
+
+    const rootBlocks = {
+        content: PageContentBlock,
+        seo: SeoBlock,
+    };
+
+    export const Page: DocumentInterface & TranslatableInterface & DependencyInterface = {
+        // ...existing config
+        ...createDocumentRootBlocksMethods(rootBlocks),
+        ...createDocumentTranslationMethods(rootBlocks),
+    };
+    ```
+
+    **Adding translate action to the edit page**
+
+    `createUsePage` now returns a `translateContent` function. Use it with `TranslateContentMenuItem` inside a `CrudMoreActionsMenu`:
+
+    ```tsx
+    const { translateContent /* ...other fields */ } = usePage({ pageId: id });
+
+    <CrudMoreActionsMenu overallActions={[<TranslateContentMenuItem translateContent={translateContent} />]} />;
+    ```
+
+    **Page tree integration**
+
+    The page tree context menu and bulk action toolbar automatically show a "Translate" action for pages. This translates the page name, slug, and document content.
+
+### Patch Changes
+
+- fa5c7a4: Fix `FileField` breaking image block selection
+
+    The `DamFileFieldFile` fragment lost the image dimensions (`width`, `height`, `cropArea`) needed by `DamImageBlock`/`PixelImageBlock`. Selecting an image inside an image block crashed because those fields were missing. Restored them on the fragment.
+
+    Composing the fragment into a parent collection (e.g. a many-to-many to `DamFile`) exposed a Mikro-ORM gotcha: `Collection.loadItems()` does not honor `eager: true`, so each loaded `DamFile` had an uninitialized `image` Reference and GraphQL threw `Cannot return null for non-nullable field DamFileImage.width`. Added an `image` `@ResolveField` on `FilesResolver` that initializes the Reference if needed, so consumers don't have to remember to populate it.
+
+- 31d9296: Fix duplicate TipTap `'link'` extension warning by explicitly disabling StarterKit's built-in Link extension
+
+    StarterKit (v3+) includes `@tiptap/extension-link` by default. Since we register our own `CmsLink` mark (also named `"link"`), this caused a "Duplicate extension names found: ['link']" warning. Setting `link: false` in `StarterKit.configure()` resolves this.
+
+## 9.0.0-beta.3
+
+### Major Changes
+
+- 0e7d7e9: Import blob storage backends dynamically
+
+    `BlobStorageAzureConfig`, `BlobStorageAzureStorage`, `BlobStorageFileConfig`, and `BlobStorageFileStorage` are no longer exported from `@comet/cms-api` as they are now loaded dynamically based on the configured driver. Only the relevant backend class is imported, which avoids loading unused optional dependencies (e.g., `@azure/storage-blob` or `aws-sdk`).
+
+- 962a320: Remove `importDamFileByDownload` mutation
+- 2ea835c: Rename `RedirectSourceTypeValues` to `RedirectSourceType`
+
+### Minor Changes
+
+- a50793a: Add `listFiles` method to `BlobStorageBackendService`
+- cac2b3b: Add fullText query support for PageTree (pageTreeFullTextSearch query)
+
+    To enable add a fullText column for a PageTree document (Page or others):
+
+    ```ts
+    @Index({ type: "fulltext" })
+    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.content) })
+    searchableContent?: string;
+    ```
+
+    and enable fullText option for PageTreeModule
+
+- dd51208: Update TypeScript compilation target to ES2023 and lib to ES2023 to match the required Node.js v22
+
+### Patch Changes
+
+- f6a2932: Fix `MODULE_NOT_FOUND` errors caused by extensionless deep imports of `@nestjs/graphql` internals. `@nestjs/graphql` 13.3.0 tightened its `exports` map so that the `"./*": "./*"` pattern no longer maps to `.js` automatically. All deep imports of `@nestjs/graphql` internals now use explicit `.js` extensions.
+- 71dce06: Support sorting folders by size (child count) in `FoldersService`
+- 802b0b8: Remove `sharp` dependency by parsing the dominant color directly from the 1x1 PNG produced by imgproxy
+- 8bf0e5b: Remove unused `ts-morph` dependency
+- 8722deb: Upgrade `file-type` dependency from v16 to v21
+
 ## 9.0.0-beta.2
 
 ### Patch Changes

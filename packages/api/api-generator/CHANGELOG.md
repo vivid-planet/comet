@@ -1,5 +1,42 @@
 # @comet/api-generator
 
+## 9.0.0-beta.4
+
+### Patch Changes
+
+- 16c0e64: Fix missing import for nested `ManyToOne` resolver target entities
+
+    `@comet/api-generator` now imports nested `ManyToOne` target entities in generated resolvers so generated code compiles without unresolved symbol errors.
+
+- Updated dependencies [c6703db]
+- Updated dependencies [127a492]
+- Updated dependencies [fa5c7a4]
+- Updated dependencies [31d9296]
+- Updated dependencies [2fe9d4b]
+    - @comet/cms-api@9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+### Minor Changes
+
+- dd51208: Update TypeScript compilation target to ES2023 and lib to ES2023 to match the required Node.js v22
+
+### Patch Changes
+
+- 8642996: Fix `MODULE_NOT_FOUND` errors caused by extensionless deep imports of `@nestjs/graphql` internals. `@nestjs/graphql` 13.3.0 tightened its `exports` map so that the `"./*": "./*"` pattern no longer maps to `.js` automatically. All deep imports of `@nestjs/graphql` internals now use explicit `.js` extensions.
+- Updated dependencies [a50793a]
+- Updated dependencies [cac2b3b]
+- Updated dependencies [f6a2932]
+- Updated dependencies [71dce06]
+- Updated dependencies [0e7d7e9]
+- Updated dependencies [962a320]
+- Updated dependencies [802b0b8]
+- Updated dependencies [8bf0e5b]
+- Updated dependencies [2ea835c]
+- Updated dependencies [dd51208]
+- Updated dependencies [8722deb]
+    - @comet/cms-api@9.0.0-beta.3
+
 ## 9.0.0-beta.2
 
 ### Patch Changes

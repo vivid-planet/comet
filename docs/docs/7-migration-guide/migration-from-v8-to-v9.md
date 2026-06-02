@@ -38,6 +38,36 @@ Then, install the updated dependencies:
 npm install
 ```
 
+### Replace `install-agent-skills` with `install-agent-features`
+
+The `install-agent-skills` command and its `agent-skills.json` config have been removed and replaced by `install-agent-features`, a combined installer for agent skills and agent rules.
+
+Rename `agent-skills.json` to `agent-features.json` (the schema is identical):
+
+```sh
+mv agent-skills.json agent-features.json
+```
+
+Replace the `install-agent-skills` invocation in `package.json`:
+
+```diff title="package.json"
+{
+    "scripts": {
+-       "install-agent-skills": "npx @comet/cli install-agent-skills"
++       "install-agent-features": "npx @comet/cli install-agent-features"
+    }
+}
+```
+
+And in `install.sh`:
+
+```diff title="install.sh"
+- npx @comet/cli install-agent-skills
++ npx @comet/cli install-agent-features
+```
+
+See the [Installing agent features](../guides/installing-agent-features) guide for more information.
+
 ### Verify lint passes
 
 ```sh
@@ -45,6 +75,23 @@ npm run lint:root
 ```
 
 Repeat this step, fixing all lint errors, until the lint passes.
+
+## All packages
+
+The following changes apply to API, Admin, and Site. Run the steps in each package that consumes `@comet/*` packages.
+
+### Replace `/lib` imports from `@comet/*` packages
+
+`@comet/eslint-config` v9 forbids importing from `@comet/*/lib` and `@comet/*/lib/**`. Only the package root (and explicit subpath exports like `@comet/site-nextjs/server`) may be imported. Reaching into `/lib` couples your project to internal file layout and breaks whenever a package is restructured.
+
+```diff
+- import { Something } from "@comet/cms-api/lib/some/internal/path";
++ import { Something } from "@comet/cms-api";
+```
+
+If the symbol you need isn't exported from the package root, **do not copy the code from `/lib` into your project**. The duplicate drifts out of sync with the library, misses bug fixes, and defeats the purpose of using the package.
+
+Instead, open a pull request in [vivid-planet/comet](https://github.com/vivid-planet/comet) that adds the missing export to the package's `src/index.ts` (plus a changeset). Once merged and released, import it from the package root.
 
 ## API
 
@@ -171,6 +218,41 @@ Don't forget to remove all custom services that implemented `EntityInfoServiceIn
 -         return { name: entity.title, secondaryInformation: entity.slug };
 -     }
 - }
+```
+
+### Fix dev dependency imports in API source code
+
+`@comet/eslint-config` v9 adds the `import/no-extraneous-dependencies` rule to the NestJS ESLint config.
+This rule prevents production source files from importing packages that are listed as `devDependencies` in `package.json`.
+Dev dependencies may still be imported in test files (`*.spec.ts`, `*.test.ts`).
+
+After upgrading, run the lint to surface any violations:
+
+```sh
+cd api
+npm run lint
+```
+
+For each `import/no-extraneous-dependencies` error, move the imported package from `devDependencies` to the appropriate section in `api/package.json`:
+
+- **Packages used only as types or utilities in source code** → move to `dependencies`
+- **Packages that consumers of your package are expected to install themselves** → move to `peerDependencies`
+
+```diff title="api/package.json"
+{
+    "dependencies": {
++       "some-package": "^1.0.0",
+    },
+-   "devDependencies": {
+-       "some-package": "^1.0.0",
+-   }
+}
+```
+
+Reinstall dependencies after updating `package.json`:
+
+```sh
+npm install
 ```
 
 ### Verify lint passes
@@ -419,6 +501,23 @@ Add `disableRowSelectionExcludeModel` to opt out of the new exclude selection mo
   />
 ```
 
+### Provide the DataGrid component via `CometConfig`
+
+The `CometConfig` context now exposes the DataGrid component used by `@comet/cms-admin`'s `DataGrid` wrapper.
+If you use `DataGridPro`/`DataGridPremium`, provide it in your `CometConfigProvider`:
+
+```tsx
+import { DataGridPro } from "@mui/x-data-grid-pro";
+import { CometConfigProvider } from "@comet/cms-admin";
+
+<CometConfigProvider
+    dataGrid={{ component: DataGridPro }}
+    // ...rest of config
+>
+    {children}
+</CometConfigProvider>
+```
+
 ### Upgrade MUI X Date Pickers to v8
 
 The MUI X Date Pickers peer dependency has been bumped to v8.
@@ -474,13 +573,19 @@ Callers should conditionally render the component instead of passing the `hasCle
 **Before:**
 
 ```tsx
-<ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
+<ClearInputAdornment
+    position="end"
+    hasClearableContent={Boolean(value)}
+    onClick={() => onChange("")}
+/>
 ```
 
 **After:**
 
 ```tsx
-{value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+{
+    value && <ClearInputAdornment position="end" onClick={() => onChange("")} />;
+}
 ```
 
 ### Replacement of `@comet/admin-date-time`
@@ -624,6 +729,32 @@ DateTimePicker:
 - `CometAdminFuture_DateRangePicker-*` -> `CometAdminDateRangePicker-*`
 - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
 - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
+
+### Rename GraphQL operations and fragments with redundant kind suffixes
+
+`@comet/eslint-config` v9 adds the `@graphql-eslint/naming-convention` rule from `@graphql-eslint/eslint-plugin`. The rule forbids GraphQL fragment, query, mutation, and subscription names that end with their own kind (e.g. `FooFragment`, `BarQuery`), which would otherwise produce duplicated suffixes such as `FragmentFragment` or `QueryQuery` in generated TypeScript types.
+
+After upgrading, run the lint to surface any violations:
+
+```sh
+cd admin
+npm run lint
+```
+
+For each `@graphql-eslint/naming-convention` error, rename the operation/fragment to drop the redundant suffix and update any generated TypeScript type references accordingly:
+
+```diff
+const attributesFragment = gql`
+-     fragment BrevoContactAttributesFragment on BrevoContact {
++     fragment BrevoContactAttributes on BrevoContact {
+        ...
+    }
+`;
+- import type { GQLBrevoContactAttributesFragmentFragment } from "./generated";
++ import type { GQLBrevoContactAttributesFragment } from "./generated";
+```
+
+After renaming, re-run code generation to update the `*.generated.ts` files.
 
 ### Verify lint passes
 
@@ -849,6 +980,50 @@ export function createGraphQLFetch() {
     );
 }
 ```
+
+### Import server-only modules from `@comet/site-nextjs/server`
+
+Server-only exports (`sitePreviewRoute`, `legacyPagesRouterSitePreviewApiHandler`, `previewParams`, `legacyPagesRouterPreviewParams`, `persistedQueryRoute`) have been moved from `@comet/site-nextjs` to `@comet/site-nextjs/server`.
+
+This prevents server-only code (which depends on `next/headers`, `fs/promises`, `server-only`, etc.) from being pulled into client bundles. Previously, tree-shaking would remove unused server code, but this is an optional optimization — for example, Vite's dev server does not tree-shake, causing errors when importing `@comet/site-nextjs` in non-server environments (e.g., Storybook).
+
+Update all imports in your site that use these functions:
+
+```diff
+- import { sitePreviewRoute } from "@comet/site-nextjs";
++ import { sitePreviewRoute } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { previewParams } from "@comet/site-nextjs";
++ import { previewParams } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { legacyPagesRouterPreviewParams } from "@comet/site-nextjs";
++ import { legacyPagesRouterPreviewParams } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { legacyPagesRouterSitePreviewApiHandler } from "@comet/site-nextjs";
++ import { legacyPagesRouterSitePreviewApiHandler } from "@comet/site-nextjs/server";
+```
+
+```diff
+- import { persistedQueryRoute } from "@comet/site-nextjs";
++ import { persistedQueryRoute } from "@comet/site-nextjs/server";
+```
+
+Similarly, if you import `persistedQueryRoute` directly from `@comet/site-react`:
+
+```diff
+- import { persistedQueryRoute } from "@comet/site-react";
++ import { persistedQueryRoute } from "@comet/site-react/server";
+```
+
+### Rename GraphQL operations and fragments with redundant kind suffixes
+
+`@comet/eslint-config` v9 adds the `@graphql-eslint/naming-convention` rule. See the [Admin section](#rename-graphql-operations-and-fragments-with-redundant-kind-suffixes) for details and apply the same renames in `site`.
 
 ### Verify lint passes
 

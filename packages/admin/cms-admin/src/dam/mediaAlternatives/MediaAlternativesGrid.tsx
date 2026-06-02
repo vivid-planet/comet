@@ -19,10 +19,11 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DialogContent, IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
+import type { GridSlotsComponent, GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { DataGrid } from "../../dataGrid/DataGrid";
 import type { GQLDamMediaAlternativeType } from "../../graphql.generated";
 import { VideoPreviewCaptionsQueryName } from "../FileForm/previews/VideoPreview";
 import { MediaAlternativeForm } from "./MediaAlternativeForm";

@@ -1,5 +1,47 @@
 # @comet/eslint-config
 
+## 9.0.0-beta.4
+
+### Major Changes
+
+- 695a9c9: Promote `future/*` ESLint rules into the main configs
+
+    The rules previously only available via `@comet/eslint-config/future/*` are now part of the main configs and apply by default. The `future/*` subpaths are kept as aliases that re-export the main configs, so existing imports continue to work without changes.
+
+    **Newly active rules in the main configs**
+    - `react.js`:
+        - `react/jsx-no-literals` (with a small allowlist of common symbols)
+        - `@typescript-eslint/consistent-type-exports`
+        - `formatjs/enforce-default-message` is now enforced as `"literal"`
+    - `nextjs.js`:
+        - `node-cache` is restricted via `no-restricted-imports`
+    - `nestjs.js`:
+        - `node-cache` is restricted via `no-restricted-imports` (and `restrictedImportPaths` is now exported)
+
+### Patch Changes
+
+- @comet/eslint-plugin@9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+### Major Changes
+
+- 23a09c2: Add `curly` ESLint rule to enforce braces for control statements
+
+    This rule requires braces around the body of all control statements (if, else, for, while, etc.) to improve code readability and reduce diff size when adding statements.
+
+- 1f903b6: Enable `@typescript-eslint/no-import-type-side-effects` rule
+- 77a371e: Prevent importing dev dependencies in the API
+
+    Add `import/no-extraneous-dependencies` rule with `devDependencies` restriction to the NestJS ESLint config, preventing accidental imports of dev-only packages in production source files. Dev dependencies may only be imported in test files.
+
+    Fix `@comet/brevo-api` to correctly declare `@nestjs/graphql`, `graphql`, `graphql-scalars`, `lodash.isequal`, and `uuid` as dependencies/peerDependencies instead of devDependencies, since they are imported in source code.
+
+### Patch Changes
+
+- c57e54e: Allow `console.info` and `console.debug` in the `no-console` ESLint rule
+    - @comet/eslint-plugin@9.0.0-beta.3
+
 ## 9.0.0-beta.2
 
 ### Major Changes

@@ -1,5 +1,25 @@
 # @comet/admin-date-time
 
+## 9.0.0-beta.4
+
+### Patch Changes
+
+- Updated dependencies [d7b77af]
+- Updated dependencies [8e40458]
+- Updated dependencies [2fe9d4b]
+- Updated dependencies [460cbfb]
+    - @comet/admin@9.0.0-beta.4
+    - @comet/admin-icons@9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+### Patch Changes
+
+- Updated dependencies [cabba53]
+- Updated dependencies [3c81ff0]
+    - @comet/admin@9.0.0-beta.3
+    - @comet/admin-icons@9.0.0-beta.3
+
 ## 9.0.0-beta.2
 
 ### Patch Changes

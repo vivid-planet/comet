@@ -54,7 +54,7 @@ The `/site-preview` route must be on its own domain (the preview domain) when de
 The site exposes a `/site-preview` route that handles the handshake. With the App Router (Next.js), this is a route handler that calls `sitePreviewRoute` from `@comet/site-nextjs`:
 
 ```ts title="app/site-preview/route.ts"
-import { sitePreviewRoute } from "@comet/site-nextjs";
+import { sitePreviewRoute } from "@comet/site-nextjs/server";
 import { type NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
 
 ### 4. Site Reads the Cookie to Determine the Scope
 
-After the redirect, the normal site rendering pipeline runs. The middleware calls `getSiteConfigForHost`, which internally calls `previewParams()` from `@comet/site-nextjs`:
+After the redirect, the normal site rendering pipeline runs. The middleware calls `getSiteConfigForHost`, which internally calls `previewParams()` from `@comet/site-nextjs/server`:
 
 ```ts
 // Simplified version of getSiteConfigForHost

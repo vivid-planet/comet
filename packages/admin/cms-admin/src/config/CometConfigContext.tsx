@@ -1,4 +1,8 @@
-import { createContext, type PropsWithChildren, useContext } from "react";
+import { ErrorHandlerProvider } from "@comet/admin";
+import type { DataGridProps } from "@mui/x-data-grid";
+import type { DataGridPremiumProps } from "@mui/x-data-grid-premium";
+import type { DataGridProProps } from "@mui/x-data-grid-pro";
+import { type ComponentType, createContext, type ErrorInfo, type PropsWithChildren, useContext } from "react";
 
 import { type BlocksConfig, BlocksConfigProvider } from "../blocks/config/BlocksConfigContext";
 import type { BlockContext } from "../blocks/context/BlockContext";
@@ -27,6 +31,10 @@ export interface CometConfig<SiteConfigs = unknown> {
         context?: Omit<BlockContext, "apiUrl" | "apolloClient">;
     };
     warnings?: WarningsConfig;
+    dataGrid?: {
+        component?: ComponentType<DataGridProps> | ComponentType<DataGridProProps> | ComponentType<DataGridPremiumProps>;
+    };
+    onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
 const CometConfigContext = createContext<CometConfig | undefined>(undefined);
@@ -36,9 +44,11 @@ export function CometConfigProvider<SiteConfigs = unknown>({ children, ...config
 
     return (
         <CometConfigContext.Provider value={config as CometConfig<unknown>}>
-            <BlockContextProvider value={blockContext}>
-                <BlocksConfigProvider {...blocksConfig}>{children}</BlocksConfigProvider>
-            </BlockContextProvider>
+            <ErrorHandlerProvider onError={config.onError}>
+                <BlockContextProvider value={blockContext}>
+                    <BlocksConfigProvider {...blocksConfig}>{children}</BlocksConfigProvider>
+                </BlockContextProvider>
+            </ErrorHandlerProvider>
         </CometConfigContext.Provider>
     );
 }

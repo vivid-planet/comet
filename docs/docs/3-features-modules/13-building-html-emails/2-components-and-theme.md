@@ -1,5 +1,5 @@
 ---
-title: Components & Theme
+title: Theme & Base Components
 ---
 
 ## Setting Up a Theme
@@ -121,7 +121,7 @@ export const MyStory: StoryObj = {
 
 ### Outside Storybook
 
-When rendering emails outside Storybook, wrap your content in `MjmlMailRoot` yourself and use `renderMailHtml` to convert the React tree to HTML — see [Rendering](./3-rendering.md) for full details.
+When rendering emails outside Storybook, wrap your content in `MjmlMailRoot` yourself and use `renderMailHtml` to convert the React tree to HTML — see [Rendering](./4-rendering.md) for full details.
 
 ```tsx title="src/emails/WelcomeEmail.tsx"
 import { MjmlColumn, MjmlMailRoot, MjmlSection, MjmlText, createTheme } from "@comet/mail-react";
@@ -145,6 +145,8 @@ function WelcomeEmail() {
 
 When no `theme` prop is provided, `MjmlMailRoot` uses the default theme (equivalent to `createTheme()` with no arguments).
 
+`MjmlMailRoot` also accepts an optional `config` prop that can be used to expose, e.g., environment-specific values to descendants via `useConfig`. See [Configuration](./5-customization.md#configuration).
+
 ### What MjmlMailRoot Configures
 
 From the theme, `MjmlMailRoot` automatically sets:
@@ -155,9 +157,16 @@ From the theme, `MjmlMailRoot` automatically sets:
 - **Base font family** — from `theme.text.fontFamily`
 - **Zero default padding** — so components start with no padding
 
+### Extending `<MjmlHead>` and `<MjmlAttributes>`
+
+Two optional slot props let consumers contribute content the theme can't express:
+
+- `head` — `ReactNode` appended inside `<MjmlHead>` after the registered styles block (e.g. `<MjmlFont>`, `<MjmlConditionalComment>`, `<MjmlPreview>`)
+- `attributes` — `ReactNode` appended inside `<MjmlAttributes>` after the default `<MjmlAll>` (e.g. `<MjmlClass>` or per-element defaults)
+
 ## MjmlSection
 
-`MjmlSection` wraps the MJML section with theme integration. It automatically applies `theme.colors.background.content` as the background color. To change the default for all sections, set it in the theme:
+`MjmlSection` wraps the MJML section with theme integration. It automatically applies `theme.colors.background.content` as the background color — unless the section is rendered inside an [`MjmlWrapper`](#mjmlwrapper), in which case the wrapper's background is used instead. To change the default for all sections, set it in the theme:
 
 ```ts
 const theme = createTheme({
@@ -213,6 +222,31 @@ By default, columns in a section stack vertically on mobile. To keep them side-b
 This wraps the children in an `MjmlGroup`, preventing the columns from stacking.
 
 **CSS class names:** `.mjmlSection`, `.mjmlSection--indented` (when `indent` is set).
+
+## MjmlWrapper
+
+`MjmlWrapper` groups multiple `MjmlSection`s that share a background. Like a section, it must be a direct child of the body; sections go inside the wrapper.
+
+When a theme is present, `MjmlWrapper` applies `theme.colors.background.content` as its default `backgroundColor`. Sections rendered inside a wrapper suppress their own theme-default background so the wrapper's color shows through. An explicit `backgroundColor` on an inner `MjmlSection` still wins.
+
+Use this to paint a different background behind a group of sections — for example, a footer with its own color:
+
+```tsx
+<MjmlWrapper backgroundColor="#2d4a6e">
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">First row</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+    <MjmlSection indent>
+        <MjmlColumn>
+            <MjmlText color="#ffffff">Second row</MjmlText>
+        </MjmlColumn>
+    </MjmlSection>
+</MjmlWrapper>
+```
+
+For a region that also needs different default text color or variants, combine `MjmlWrapper` with a scoped `ThemeProvider` (see [Scoped Theming](#scoped-theming) below).
 
 ## Text
 
@@ -390,6 +424,10 @@ To set a custom link color that persists across all viewports, use `!important` 
 
 `ThemeProvider` makes a theme available to its children via React context. `MjmlMailRoot` uses it internally, so you don't need it for the top-level theme. Its main use case is **scoped theming** — applying a different theme to a subsection of the email.
 
+:::tip
+If all you need to change is the **background color** behind a group of sections, reach for [`MjmlWrapper`](#mjmlwrapper) instead — no theme cloning required.
+:::
+
 ### Creating a Dark Section
 
 A common pattern is wrapping a section in a `ThemeProvider` with a modified theme to create a visually distinct area, such as a dark-background footer. Copy the project's theme and override only what needs to change — this preserves the rest of the theme (font family, sizes, breakpoints, variants, etc.):
@@ -399,9 +437,20 @@ import { MjmlColumn, MjmlSection, MjmlText, ThemeProvider } from "@comet/mail-re
 
 import { theme } from "./theme";
 
-const darkSectionTheme = structuredClone(theme);
-darkSectionTheme.colors.background.content = "#1A1A2E";
-darkSectionTheme.text.color = "#FFFFFF";
+const darkSectionTheme = {
+    ...theme,
+    colors: {
+        ...theme.colors,
+        background: {
+            ...theme.colors.background,
+            content: "#1A1A2E",
+        },
+    },
+    text: {
+        ...theme.text,
+        color: "#FFFFFF",
+    },
+};
 
 function EmailWithDarkFooter() {
     return (

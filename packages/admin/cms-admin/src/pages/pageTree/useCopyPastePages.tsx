@@ -10,10 +10,10 @@ import { useDamScope } from "../../dam/config/useDamScope";
 import type { GQLDocument, GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
 import { usePageTreeScope } from "../config/usePageTreeScope";
 import { usePageTreeConfig } from "../pageTreeConfig";
-import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
 import { sendPages, type SendPagesOptions } from "./useCopyPastePages/sendPages";
 import type { GQLPageTreePageFragment } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
+import { useProgressDialog } from "./useProgressDialog";
 
 export type PageClipboard = GQLPageTreePageFragment & { document?: GQLDocument | null };
 
