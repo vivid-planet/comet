@@ -289,7 +289,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                                 <Wrapper key={item.url} style={{ paddingLeft: `calc(${index * 16}px + 32px)` }} {...wrapperSlotProps}>
                                     {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
                                     {isActive ? (
-                                        <ExpandedMenuActiveItem {...slotProps?.expandedMenuActiveItem} fontWeight="bold">
+                                        <ExpandedMenuActiveItem {...slotProps?.expandedMenuActiveItem} variant="subtitle2">
                                             {item.title}
                                         </ExpandedMenuActiveItem>
                                     ) : (
