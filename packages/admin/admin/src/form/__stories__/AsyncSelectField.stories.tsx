@@ -1,9 +1,11 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Alert, AsyncSelectField, FinalForm } from "@comet/admin";
 import { Info, WarningSolid } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import type { Manufacturer } from "../../../.storybook/mocks/handlers";
+import { Alert } from "../../alert/Alert";
+import { FinalForm } from "../../FinalForm";
+import { AsyncSelectField } from "../../form/fields/AsyncSelectField";
 
 type Story = StoryObj<typeof AsyncSelectField>;
 const config: Meta<typeof AsyncSelectField> = {

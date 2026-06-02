@@ -1,6 +1,8 @@
-import { FileSelect, type FileSelectItem } from "@comet/admin";
 import { Box, Grid, Typography } from "@mui/material";
 import { useState } from "react";
+
+import { FileSelect } from "../../../form/file/FileSelect";
+import type { FileSelectItem } from "../../../form/file/fileSelectItemTypes";
 
 type StoryProps = {
     noBackground?: boolean;

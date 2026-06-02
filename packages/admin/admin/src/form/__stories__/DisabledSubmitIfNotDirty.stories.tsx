@@ -1,4 +1,8 @@
-import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@comet/admin";
+import { SaveButton } from "../../common/buttons/SaveButton";
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { FormSection } from "../../form/FormSection";
 
 export default {
     title: "stories/form/FinalForm",

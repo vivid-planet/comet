@@ -1,20 +1,18 @@
-import {
-    Button,
-    Field,
-    FillSpace,
-    FinalForm,
-    FinalFormInput,
-    FinalFormSaveCancelButtonsLegacy,
-    Stack,
-    StackPage,
-    StackSwitch,
-    StackSwitchApiContext,
-    Toolbar,
-    ToolbarActions,
-} from "@comet/admin";
 import { Box, Card, CardContent } from "@mui/material";
 import type { SubmissionErrors } from "final-form";
 import { useContext } from "react";
+
+import { Button } from "../../common/buttons/Button";
+import { FillSpace } from "../../common/FillSpace";
+import { ToolbarActions } from "../../common/toolbar/actions/ToolbarActions";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { FinalForm } from "../../FinalForm";
+import { FinalFormSaveCancelButtonsLegacy } from "../../FinalFormSaveCancelButtonsLegacy";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackSwitch, StackSwitchApiContext } from "../../stack/Switch";
 
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
     const errors = [];

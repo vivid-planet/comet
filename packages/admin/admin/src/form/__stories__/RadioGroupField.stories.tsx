@@ -1,5 +1,9 @@
-import { Alert, FieldSet, FinalForm, RadioGroupField, type RadioGroupFieldProps } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { Alert } from "../../alert/Alert";
+import { FieldSet } from "../../common/FieldSet";
+import { FinalForm } from "../../FinalForm";
+import { RadioGroupField, type RadioGroupFieldProps } from "../../form/fields/RadioGroupField";
 
 type Story = StoryObj<typeof RadioGroupField>;
 const config: Meta<typeof RadioGroupField> = {

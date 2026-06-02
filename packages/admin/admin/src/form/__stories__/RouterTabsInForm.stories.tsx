@@ -1,6 +1,10 @@
-import { Field, FinalForm, FinalFormInput, RouterTab, RouterTabs } from "@comet/admin";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { RouterTab, RouterTabs } from "../../tabs/RouterTabs";
 
 function Path() {
     const location = useLocation();

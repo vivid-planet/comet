@@ -1,6 +1,10 @@
-import { Button, Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { useState } from "react";
+
+import { Button } from "../../common/buttons/Button";
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
 
 interface FormValues {
     foo: string;

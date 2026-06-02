@@ -1,7 +1,8 @@
-import { FileDropzone, type FileDropzoneProps } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
+
+import { FileDropzone, type FileDropzoneProps } from "../../../form/file/FileDropzone";
 
 type FileRejections = Parameters<Required<FileDropzoneProps>["onDropRejected"]>[0];
 

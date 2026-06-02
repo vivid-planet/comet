@@ -1,6 +1,8 @@
-import { type FileSelectItem, FileSelectListItem } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
 import type { Meta } from "@storybook/react-vite";
+
+import type { FileSelectItem } from "../../../form/file/fileSelectItemTypes";
+import { FileSelectListItem } from "../../../form/file/FileSelectListItem";
 
 const fileSize = 1.8 * 1024 * 1024; // 1.8 MB
 

@@ -1,7 +1,12 @@
-import { Button, Field, FinalFormRangeInput, Toolbar, ToolbarTitleItem } from "@comet/admin";
 import { Box, Card, CardContent, SliderThumb, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Form } from "react-final-form";
+
+import { Button } from "../../common/buttons/Button";
+import { ToolbarTitleItem } from "../../common/toolbar/titleitem/ToolbarTitleItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { Field } from "../../form/Field";
+import { FinalFormRangeInput } from "../../form/FinalFormRangeInput";
 
 const Thumb = styled(SliderThumb)`
     && {

@@ -1,8 +1,10 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { AsyncSelectField, FinalForm, OnChangeField } from "@comet/admin";
 import { Box } from "@mui/material";
 
 import type { Manufacturer, Product } from "../../../.storybook/mocks/handlers";
+import { FinalForm } from "../../FinalForm";
+import { AsyncSelectField } from "../../form/fields/AsyncSelectField";
+import { OnChangeField } from "../../form/helpers/OnChangeField";
 
 interface FormValues {
     manufacturer?: Manufacturer;

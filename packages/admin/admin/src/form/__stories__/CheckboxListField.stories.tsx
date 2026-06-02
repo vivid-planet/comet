@@ -1,5 +1,9 @@
-import { Alert, CheckboxListField, type CheckboxListFieldProps, FieldSet, FinalForm } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { Alert } from "../../alert/Alert";
+import { FieldSet } from "../../common/FieldSet";
+import { FinalForm } from "../../FinalForm";
+import { CheckboxListField, type CheckboxListFieldProps } from "../../form/fields/CheckboxListField";
 
 type Story = StoryObj<typeof CheckboxListField>;
 const config: Meta<typeof CheckboxListField> = {

@@ -1,5 +1,10 @@
-import { Alert, FinalForm, SaveBoundary, SaveBoundarySaveButton, TextField } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { Alert } from "../../alert/Alert";
+import { FinalForm } from "../../FinalForm";
+import { TextField } from "../../form/fields/TextField";
+import { SaveBoundary } from "../../saveBoundary/SaveBoundary";
+import { SaveBoundarySaveButton } from "../../saveBoundary/SaveBoundarySaveButton";
 
 type Story = StoryObj;
 const config: Meta = {

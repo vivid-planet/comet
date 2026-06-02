@@ -1,6 +1,11 @@
-import { Button, Field, FinalForm, FinalFormInput, Tab, Tabs } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
 import { useState } from "react";
+
+import { Button } from "../../common/buttons/Button";
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { Tab, Tabs } from "../../tabs/Tabs";
 
 export default {
     title: "components/form",

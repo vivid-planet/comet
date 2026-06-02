@@ -1,6 +1,7 @@
-import { SwitchField } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
 import { Form } from "react-final-form";
+
+import { SwitchField } from "../../form/fields/SwitchField";
 
 export default {
     title: "components/form",

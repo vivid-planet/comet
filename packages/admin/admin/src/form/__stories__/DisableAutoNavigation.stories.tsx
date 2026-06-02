@@ -1,21 +1,19 @@
-import {
-    Field,
-    FinalForm,
-    FinalFormInput,
-    MainContent,
-    Stack,
-    StackPage,
-    StackSwitch,
-    StackSwitchApiContext,
-    Table,
-    Toolbar,
-    ToolbarBackButton,
-    ToolbarItem,
-} from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { Box, Card, CardContent, IconButton, Paper, Typography } from "@mui/material";
 import { useContext } from "react";
 import { Switch } from "react-router";
+
+import { MainContent } from "../../common/MainContent";
+import { ToolbarBackButton } from "../../common/toolbar/backbutton/ToolbarBackButton";
+import { ToolbarItem } from "../../common/toolbar/item/ToolbarItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackSwitch, StackSwitchApiContext } from "../../stack/Switch";
+import { Table } from "../../table/Table";
 
 const SampleTable = () => {
     const stackApi = useContext(StackSwitchApiContext);

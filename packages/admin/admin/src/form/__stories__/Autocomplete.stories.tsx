@@ -1,5 +1,10 @@
-import { Button, Field, FinalFormAutocomplete, FinalFormSelect, useAsyncOptionsProps } from "@comet/admin";
 import { Form } from "react-final-form";
+
+import { Button } from "../../common/buttons/Button";
+import { FinalFormAutocomplete } from "../../form/Autocomplete";
+import { Field } from "../../form/Field";
+import { FinalFormSelect } from "../../form/FinalFormSelect";
+import { useAsyncOptionsProps } from "../../hooks/useAsyncOptionsProps";
 
 interface Option {
     value: string;

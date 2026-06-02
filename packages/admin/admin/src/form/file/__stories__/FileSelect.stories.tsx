@@ -1,6 +1,8 @@
-import { FileSelect, type FileSelectItem } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
 import type { Meta } from "@storybook/react-vite";
+
+import { FileSelect } from "../../../form/file/FileSelect";
+import type { FileSelectItem } from "../../../form/file/fileSelectItemTypes";
 
 export default {
     title: "components/form/File",

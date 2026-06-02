@@ -1,5 +1,9 @@
-import { Field, FinalForm, FinalFormInput, FormSection } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
+
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { FormSection } from "../../form/FormSection";
 
 function VerticalFields() {
     return (

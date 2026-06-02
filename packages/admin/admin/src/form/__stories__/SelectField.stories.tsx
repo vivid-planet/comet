@@ -1,7 +1,10 @@
-import { Alert, FinalForm, SelectField } from "@comet/admin";
 import { Lock } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { Alert } from "../../alert/Alert";
+import { FinalForm } from "../../FinalForm";
+import { SelectField } from "../../form/fields/SelectField";
 
 type Story = StoryObj<typeof SelectField>;
 const config: Meta<typeof SelectField> = {

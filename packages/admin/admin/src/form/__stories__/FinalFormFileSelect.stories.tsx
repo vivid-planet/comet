@@ -1,6 +1,8 @@
-import { Field, FinalFormFileSelect } from "@comet/admin";
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import { Form } from "react-final-form";
+
+import { Field } from "../../form/Field";
+import { FinalFormFileSelect } from "../../form/FinalFormFileSelect";
 
 type FormValues = {
     singleFile: File;

@@ -1,4 +1,3 @@
-import { Alert, FinalForm, NumberField, TextField, ToggleButtonGroupField } from "@comet/admin";
 import {
     FocusPointCenter,
     FocusPointEast,
@@ -18,6 +17,12 @@ import {
 import { Box, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { Alert } from "../../alert/Alert";
+import { FinalForm } from "../../FinalForm";
+import { NumberField } from "../../form/fields/NumberField";
+import { TextField } from "../../form/fields/TextField";
+import { ToggleButtonGroupField } from "../../form/fields/ToggleButtonGroupField";
 
 type Story = StoryObj<typeof ToggleButtonGroupField>;
 const config: Meta<typeof ToggleButtonGroupField> = {

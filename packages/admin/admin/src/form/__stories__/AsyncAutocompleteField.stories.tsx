@@ -1,9 +1,13 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Alert, AsyncAutocompleteField, FinalForm, SaveButton, TextField } from "@comet/admin";
 import { WarningSolid } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import type { Manufacturer } from "../../../.storybook/mocks/handlers";
+import { Alert } from "../../alert/Alert";
+import { SaveButton } from "../../common/buttons/SaveButton";
+import { FinalForm } from "../../FinalForm";
+import { AsyncAutocompleteField } from "../../form/fields/AsyncAutocompleteField";
+import { TextField } from "../../form/fields/TextField";
 
 type Story = StoryObj<typeof AsyncAutocompleteField>;
 const config: Meta<typeof AsyncAutocompleteField> = {

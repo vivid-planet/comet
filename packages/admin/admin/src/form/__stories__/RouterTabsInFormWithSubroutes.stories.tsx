@@ -1,6 +1,15 @@
-import { Button, Field, FinalForm, FinalFormInput, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+
+import { Button } from "../../common/buttons/Button";
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackLink } from "../../stack/StackLink";
+import { StackSwitch } from "../../stack/Switch";
+import { RouterTab, RouterTabs } from "../../tabs/RouterTabs";
 
 function Path() {
     const location = useLocation();

@@ -1,7 +1,9 @@
-import { Field, FieldContainer } from "@comet/admin";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
 import { Form } from "react-final-form";
 import { FormattedDate } from "react-intl";
+
+import { Field } from "../../form/Field";
+import { FieldContainer } from "../../form/FieldContainer";
 
 export default {
     title: "components/form",

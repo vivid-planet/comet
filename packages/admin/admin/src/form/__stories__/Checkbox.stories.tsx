@@ -1,6 +1,8 @@
-import { CheckboxField, FieldContainer } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
 import { Form } from "react-final-form";
+
+import { FieldContainer } from "../../form/FieldContainer";
+import { CheckboxField } from "../../form/fields/CheckboxField";
 
 export default {
     title: "components/form",

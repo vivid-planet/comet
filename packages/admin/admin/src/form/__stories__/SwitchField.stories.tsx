@@ -1,6 +1,10 @@
-import { Alert, FieldSet, FinalForm, SwitchField } from "@comet/admin";
 import { Stack } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { Alert } from "../../alert/Alert";
+import { FieldSet } from "../../common/FieldSet";
+import { FinalForm } from "../../FinalForm";
+import { SwitchField } from "../../form/fields/SwitchField";
 
 type Story = StoryObj<typeof SwitchField>;
 const config: Meta<typeof SwitchField> = {
