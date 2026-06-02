@@ -107,7 +107,9 @@ const Separator = createComponentSlot("div")<BreadcrumbsClassKey>({
 const EllipsisButton = createComponentSlot(ButtonBase)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "ellipsisButton",
-})(css``);
+})(css`
+    cursor: pointer;
+`);
 
 const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
@@ -115,7 +117,6 @@ const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
 })(css`
     margin-right: 5px;
     color: inherit;
-    cursor: pointer;
 `);
 
 const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
