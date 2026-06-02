@@ -22,11 +22,7 @@ describe("HtmlDivider", () => {
             </ThemeProvider>,
         );
 
-        expect(html).toMatchInlineSnapshot(
-            // The snapshot intentionally contains the U+200B emitted by HtmlDivider.
-            // eslint-disable-next-line no-irregular-whitespace
-            `"<table role="presentation" cellPadding="0" cellSpacing="0" border="0" width="100%" class="htmlDivider"><tbody><tr><td bgcolor="#000000" height="4" style="height:4px;line-height:4px;font-size:0;background-color:#000000;mso-line-height-rule:exactly">​</td></tr></tbody></table>"`,
-        );
+        expect(html).toMatchSnapshot();
     });
 
     it("applies variant styles over base theme styles", () => {
