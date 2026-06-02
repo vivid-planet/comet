@@ -108,7 +108,7 @@ export const DamVideoBlock = withPreview(
                 ) : (
                     <div className={styles.root}>
                         <video
-                            autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
+                            autoPlay={autoplay}
                             controls={showControls}
                             loop={loop}
                             playsInline
