@@ -56,7 +56,7 @@ The server reads the following environment variables (with development defaults)
 
 | Variable                              | Default                     | Description                             |
 | ------------------------------------- | --------------------------- | --------------------------------------- |
-| `PORT`                                | `3001`                      | Port the HTTP server listens on         |
+| `MCP_PORT`                            | `3001`                      | Port the HTTP server listens on         |
 | `API_URL`                             | `http://localhost:4000`     | Base URL of the demo API                |
 | `API_BASIC_AUTH_SYSTEM_USER_PASSWORD` | `aPasswordWith16Characters` | Password for the basic-auth system user |
 
@@ -72,7 +72,7 @@ Start the server first:
 pnpm --filter comet-demo-mcp-server run start
 ```
 
-It listens on `http://localhost:3001/mcp` (configurable via `PORT`). Then register the running server with
+It listens on `http://localhost:3001/mcp` (configurable via `MCP_PORT`). Then register the running server with
 an MCP client that supports the Streamable HTTP transport:
 
 ```json

@@ -61,7 +61,7 @@ function createMcpServer(): McpServer {
 // Start server (Streamable HTTP transport)
 // ---------------------------------------------------------------------------
 
-const PORT = Number(process.env.PORT ?? 3001);
+const PORT = Number(process.env.MCP_PORT ?? 3001);
 const MCP_ENDPOINT = "/mcp";
 
 // Map of session ID -> transport, so requests for an established session are
