@@ -16,6 +16,7 @@ import {
     Res,
     Type,
     UploadedFile,
+    UseGuards,
     UseInterceptors,
 } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
@@ -39,6 +40,7 @@ import { AccessControlServiceInterface } from "../../user-permissions/user-permi
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
+import { DamScopeAccessControlGuard } from "./dam-scope-access-control.guard";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createUploadFileBody, ReplaceFileByIdBody, UploadFileBodyInterface } from "./dto/file.body";
@@ -47,18 +49,11 @@ import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 import { FoldersService } from "./folders.service";
 import { scopesAreEqual } from "./scopes-are-equal.util";
+import { SkipDamScopeAccessControl } from "./skip-dam-scope-access-control.decorator";
 
 const fileUrl = `:fileId/:filename`;
 
-export function createFilesController({
-    Scope: PassedScope,
-    damBasePath,
-    disableScopeAccessControl = false,
-}: {
-    Scope?: Type<DamScopeInterface>;
-    damBasePath: string;
-    disableScopeAccessControl?: boolean;
-}): Type<unknown> {
+export function createFilesController({ Scope: PassedScope, damBasePath }: { Scope?: Type<DamScopeInterface>; damBasePath: string }): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
     const hasNonEmptyScope = PassedScope != null;
 
@@ -70,6 +65,7 @@ export function createFilesController({
 
     @Controller(`${damBasePath}/files`)
     @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
+    @UseGuards(DamScopeAccessControlGuard)
     class FilesController {
         private readonly logger = new Logger(FilesController.name);
         constructor(
@@ -80,16 +76,6 @@ export function createFilesController({
             @Optional() @Inject(ACCESS_CONTROL_SERVICE) private accessControlService?: AccessControlServiceInterface,
         ) {}
 
-        // Fail closed: without an access control service the scope checks below would be silently skipped, leaving the
-        // endpoints unauthorized. Require the consuming application to opt out explicitly when it handles authorization itself.
-        private assertScopeAccessControlAvailable(): void {
-            if (!this.accessControlService && !disableScopeAccessControl) {
-                throw new ForbiddenException(
-                    "DAM scope access control is not available. Register an access control service or set `disableScopeAccessControl: true` on the DAM module to handle authorization outside of the DAM module.",
-                );
-            }
-        }
-
         @Post("upload")
         @UseInterceptors(DamUploadFileInterceptor())
         async upload(
@@ -98,8 +84,6 @@ export function createFilesController({
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
-            this.assertScopeAccessControlAvailable();
-
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -139,8 +123,6 @@ export function createFilesController({
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
-            this.assertScopeAccessControlAvailable();
-
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -193,8 +175,6 @@ export function createFilesController({
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
-            this.assertScopeAccessControlAvailable();
-
             const transformedBody = plainToInstance(ReplaceFileByIdBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -228,8 +208,6 @@ export function createFilesController({
             @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
         ): Promise<void> {
-            this.assertScopeAccessControlAvailable();
-
             const file = await this.filesService.findOneById(fileId);
 
             if (file === null) {
@@ -254,8 +232,6 @@ export function createFilesController({
             @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
         ): Promise<void> {
-            this.assertScopeAccessControlAvailable();
-
             const file = await this.filesService.findOneById(fileId);
 
             if (file === null) {
@@ -275,6 +251,7 @@ export function createFilesController({
         }
 
         @DisableCometGuards()
+        @SkipDamScopeAccessControl()
         @Get(`/download/:hash{/:contentHash}/${fileUrl}`)
         async downloadFile(
             @Param() { hash, contentHash, ...params }: HashFileParams,
@@ -300,6 +277,7 @@ export function createFilesController({
         }
 
         @DisableCometGuards()
+        @SkipDamScopeAccessControl()
         @Get(`/:hash{/:contentHash}/${fileUrl}`)
         async hashedFileUrl(
             @Param() { hash, contentHash, ...params }: HashFileParams,

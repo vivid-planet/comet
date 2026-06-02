@@ -5,8 +5,9 @@ import { BlobStorageModule } from "../blob-storage/blob-storage.module";
 import { FileValidationService } from "../file-utils/file-validation.service";
 import { damDefaultAcceptedMimetypes } from "./common/mimeTypes/dam-default-accepted-mimetypes";
 import { DamConfig } from "./dam.config";
-import { DAM_CONFIG, DAM_DEFAULT_BASE_PATH, DAM_FILE_VALIDATION_SERVICE } from "./dam.constants";
+import { DAM_CONFIG, DAM_DEFAULT_BASE_PATH, DAM_FILE_VALIDATION_SERVICE, DAM_SCOPE_ACCESS_CONTROL_DISABLED } from "./dam.constants";
 import { DamMediaAlternative } from "./files/dam-media-alternatives/entities/dam-media-alternative.entity";
+import { DamScopeAccessControlGuard } from "./files/dam-scope-access-control.guard";
 import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/file.entity";
 import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
@@ -76,15 +77,27 @@ export class DamCoreModule {
             }),
         };
 
+        const scopeAccessControlDisabledProvider: ValueProvider<boolean> = {
+            provide: DAM_SCOPE_ACCESS_CONTROL_DISABLED,
+            useValue: options.disableScopeAccessControl ?? false,
+        };
+
         const entitiesModule = MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]);
 
         return {
             module: DamCoreModule,
             imports: [entitiesModule, BlobStorageModule],
-            providers: [damConfigProvider, fileValidationServiceProvider, FilesService, FoldersService],
+            providers: [
+                damConfigProvider,
+                fileValidationServiceProvider,
+                scopeAccessControlDisabledProvider,
+                DamScopeAccessControlGuard,
+                FilesService,
+                FoldersService,
+            ],
             controllers: [
-                createFilesController({ Scope, damBasePath: damConfig.basePath, disableScopeAccessControl: options.disableScopeAccessControl }),
-                createFoldersController({ damBasePath: damConfig.basePath, disableScopeAccessControl: options.disableScopeAccessControl }),
+                createFilesController({ Scope, damBasePath: damConfig.basePath }),
+                createFoldersController({ damBasePath: damConfig.basePath }),
             ],
             exports: [entitiesModule, damConfigProvider, FilesService, FoldersService],
         };
