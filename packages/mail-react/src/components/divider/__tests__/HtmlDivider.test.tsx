@@ -11,6 +11,10 @@ function renderHtmlDivider(element: React.ReactElement): string {
 
 describe("HtmlDivider", () => {
     it("renders default theme styles across modern, Outlook, and legacy clients", () => {
+        // The exact HTML shape is the contract: modern clients use the inline styles,
+        // Outlook honors `mso-line-height-rule:exactly` with the matching `line-height`,
+        // and legacy clients that ignore inline CSS fall back to the `bgcolor` / `height`
+        // attributes. A snapshot locks every styling method in at once.
         const theme = createTheme();
         const html = renderHtmlDivider(
             <ThemeProvider theme={theme}>
@@ -18,16 +22,11 @@ describe("HtmlDivider", () => {
             </ThemeProvider>,
         );
 
-        // Modern clients: inline height and background color.
-        expect(html).toContain("height:4px");
-        expect(html).toContain("background-color:#000000");
-        // Outlook: mso-line-height-rule with matching line-height; font-size:0 keeps the spacer character from adding height.
-        expect(html).toContain("mso-line-height-rule:exactly");
-        expect(html).toContain("line-height:4px");
-        expect(html).toContain("font-size:0");
-        // Legacy Outlook: attribute fallbacks for clients that ignore inline CSS.
-        expect(html).toContain('bgcolor="#000000"');
-        expect(html).toContain('height="4"');
+        expect(html).toMatchInlineSnapshot(
+            // The snapshot intentionally contains the U+200B emitted by HtmlDivider.
+            // eslint-disable-next-line no-irregular-whitespace
+            `"<table role="presentation" cellPadding="0" cellSpacing="0" border="0" width="100%" class="htmlDivider"><tbody><tr><td bgcolor="#000000" height="4" style="height:4px;line-height:4px;font-size:0;background-color:#000000;mso-line-height-rule:exactly">​</td></tr></tbody></table>"`,
+        );
     });
 
     it("applies variant styles over base theme styles", () => {
