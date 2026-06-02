@@ -1,4 +1,3 @@
-import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
@@ -14,9 +13,7 @@ import { DamFileModule } from "./dam-file.module";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
 import { createDamMediaAlternativeResolver } from "./files/dam-media-alternatives/dam-media-alternative.resolver";
-import { DamMediaAlternative } from "./files/dam-media-alternatives/entities/dam-media-alternative.entity";
 import { createFileEntity, FileInterface } from "./files/entities/file.entity";
-import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
@@ -24,7 +21,6 @@ import { FileWarningService } from "./files/file-warning.service";
 import { createFilesResolver } from "./files/files.resolver";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { CalculateDominantImageColorCommand } from "./images/calculateDominantImageColor.command";
-import { ImageCropArea } from "./images/entities/image-crop-area.entity";
 import { createImagesController } from "./images/images.controller";
 import { ImagesService } from "./images/images.service";
 import { IsAllowedImageAspectRatioConstraint } from "./images/validators/is-allowed-aspect-ratio.validator";
@@ -80,11 +76,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [
-                DamFileModule.register({ damConfig, Scope, Folder, File }),
-                MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]),
-                ImgproxyModule,
-            ],
+            imports: [DamFileModule.register({ damConfig, Scope, Folder, File }), ImgproxyModule],
             providers: [
                 DamItemsResolver,
                 DamItemsService,
