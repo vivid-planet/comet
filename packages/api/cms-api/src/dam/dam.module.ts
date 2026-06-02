@@ -10,7 +10,7 @@ import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { DamConfig } from "./dam.config";
 import { DAM_DEFAULT_BASE_PATH } from "./dam.constants";
-import { DamFileModule } from "./dam-file.module";
+import { DamCoreModule } from "./dam-core.module";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
 import { createDamMediaAlternativeResolver } from "./files/dam-media-alternatives/dam-media-alternative.resolver";
@@ -77,7 +77,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [DamFileModule.register({ damConfig, Scope, Folder, File }), ImgproxyModule],
+            imports: [DamCoreModule.register({ damConfig, Scope, Folder, File }), ImgproxyModule],
             providers: [
                 DamItemsResolver,
                 DamItemsService,
@@ -101,7 +101,7 @@ export class DamModule {
             ],
             controllers: [createImagesController({ damBasePath: damConfig.basePath })],
             exports: [
-                DamFileModule,
+                DamCoreModule,
                 ImagesService,
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,

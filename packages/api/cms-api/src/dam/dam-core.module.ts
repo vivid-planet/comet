@@ -17,7 +17,7 @@ import { FoldersService } from "./files/folders.service";
 import { ImageCropArea } from "./images/entities/image-crop-area.entity";
 import { DamScopeInterface } from "./types";
 
-interface DamFileModuleOptions {
+interface DamCoreModuleOptions {
     damConfig: Omit<DamConfig, "basePath"> & { basePath?: string };
     Scope?: Type<DamScopeInterface>;
     Folder?: Type<FolderInterface>;
@@ -30,7 +30,7 @@ interface DamFileModuleOptions {
 
 @Global()
 @Module({})
-export class DamFileModule {
+export class DamCoreModule {
     private static registered = false;
 
     static register({
@@ -38,15 +38,15 @@ export class DamFileModule {
         Folder = createFolderEntity({ Scope }),
         File = createFileEntity({ Scope, Folder }),
         ...options
-    }: DamFileModuleOptions): DynamicModule {
-        // Both modules are global and declare the same controllers. DamModule registers DamFileModule internally, so
+    }: DamCoreModuleOptions): DynamicModule {
+        // Both modules are global and declare the same controllers. DamModule registers DamCoreModule internally, so
         // registering both would result in duplicate routes. Guard against it instead of leaving it to chance.
-        if (DamFileModule.registered) {
+        if (DamCoreModule.registered) {
             throw new Error(
-                "DamFileModule has already been registered. It is registered automatically by DamModule, so register only one of the two.",
+                "DamCoreModule has already been registered. It is registered automatically by DamModule, so register only one of the two.",
             );
         }
-        DamFileModule.registered = true;
+        DamCoreModule.registered = true;
 
         const damConfig = {
             ...options.damConfig,
@@ -54,11 +54,11 @@ export class DamFileModule {
         };
 
         if (File.name !== FILE_ENTITY) {
-            throw new Error(`DamFileModule: Your File entity must be named ${FILE_ENTITY}`);
+            throw new Error(`DamCoreModule: Your File entity must be named ${FILE_ENTITY}`);
         }
 
         if (options.disableScopeAccessControl) {
-            new Logger(DamFileModule.name).warn(
+            new Logger(DamCoreModule.name).warn(
                 "Scope-based access control is disabled. The DAM file and folder endpoints perform no authorization on their own — make sure they are protected by other means (e.g. an authentication guard).",
             );
         }
@@ -79,7 +79,7 @@ export class DamFileModule {
         const entitiesModule = MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]);
 
         return {
-            module: DamFileModule,
+            module: DamCoreModule,
             imports: [entitiesModule, BlobStorageModule],
             providers: [damConfigProvider, fileValidationServiceProvider, FilesService, FoldersService],
             controllers: [
