@@ -7,6 +7,7 @@ import {
     Get,
     Headers,
     Inject,
+    InternalServerErrorException,
     Logger,
     NotFoundException,
     Optional,
@@ -366,7 +367,8 @@ export function createFilesController({
                         contentLength,
                     );
                 } catch (err) {
-                    throw new Error(`File-Stream error: (storage.getPartialFile) - ${(err as Error).message}`);
+                    this.logger.error("Failed to stream file from storage (getPartialFile)", err);
+                    throw new InternalServerErrorException("File could not be streamed");
                 }
 
                 stream.on("error", (error) => {
@@ -389,7 +391,8 @@ export function createFilesController({
                 try {
                     stream = await this.blobStorageBackendService.getFile(this.damConfig.filesDirectory, createHashedPath(file.contentHash));
                 } catch (err) {
-                    throw new Error(`File-Stream error: (storage.getFile) - ${(err as Error).message}`);
+                    this.logger.error("Failed to stream file from storage (getFile)", err);
+                    throw new InternalServerErrorException("File could not be streamed");
                 }
 
                 stream.on("error", (error) => {
