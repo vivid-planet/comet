@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
+import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
-import express from "express";
 
 import { registerBlockMetaResource } from "./resources/blockMeta/blockMeta";
 import { registerBlockTypesResource } from "./resources/blockTypes/blockTypes";
@@ -64,22 +64,34 @@ function createMcpServer(): McpServer {
 const PORT = Number(process.env.PORT ?? 3001);
 const MCP_ENDPOINT = "/mcp";
 
-const app = express();
-app.use(express.json());
-
 // Map of session ID -> transport, so requests for an established session are
 // routed to the transport that owns its MCP server instance.
 const transports: Record<string, StreamableHTTPServerTransport> = {};
 
+function sendJson(res: ServerResponse, statusCode: number, body: unknown): void {
+    res.writeHead(statusCode, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(body));
+}
+
+async function readJsonBody(req: IncomingMessage): Promise<unknown> {
+    const chunks: Buffer[] = [];
+    for await (const chunk of req) {
+        chunks.push(chunk as Buffer);
+    }
+    const raw = Buffer.concat(chunks).toString("utf8");
+    return raw.length > 0 ? JSON.parse(raw) : undefined;
+}
+
 // Handles client-to-server requests (initialization and tool/resource calls).
-app.post(MCP_ENDPOINT, async (req, res) => {
+async function handlePost(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const sessionId = req.headers["mcp-session-id"] as string | undefined;
+    const body = await readJsonBody(req);
 
     let transport: StreamableHTTPServerTransport;
     if (sessionId && transports[sessionId]) {
         // Reuse the transport for an existing session.
         transport = transports[sessionId];
-    } else if (!sessionId && isInitializeRequest(req.body)) {
+    } else if (!sessionId && isInitializeRequest(body)) {
         // New initialization request: create a transport and MCP server instance.
         transport = new StreamableHTTPServerTransport({
             sessionIdGenerator: () => randomUUID(),
@@ -98,7 +110,7 @@ app.post(MCP_ENDPOINT, async (req, res) => {
         await server.connect(transport);
     } else {
         // Invalid request: no session ID and not an initialization request.
-        res.status(400).json({
+        sendJson(res, 400, {
             jsonrpc: "2.0",
             error: {
                 code: -32000,
@@ -109,25 +121,52 @@ app.post(MCP_ENDPOINT, async (req, res) => {
         return;
     }
 
-    await transport.handleRequest(req, res, req.body);
-});
+    await transport.handleRequest(req, res, body);
+}
 
 // Handles server-to-client notifications (GET, via SSE) and session teardown (DELETE).
-const handleSessionRequest = async (req: express.Request, res: express.Response) => {
+async function handleSessionRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const sessionId = req.headers["mcp-session-id"] as string | undefined;
     if (!sessionId || !transports[sessionId]) {
-        res.status(400).send("Invalid or missing session ID");
+        res.writeHead(400, { "Content-Type": "text/plain" });
+        res.end("Invalid or missing session ID");
         return;
     }
 
     const transport = transports[sessionId];
     await transport.handleRequest(req, res);
-};
+}
 
-app.get(MCP_ENDPOINT, handleSessionRequest);
-app.delete(MCP_ENDPOINT, handleSessionRequest);
+const httpServer = createServer((req, res) => {
+    const url = new URL(req.url ?? "/", `http://${req.headers.host ?? "localhost"}`);
 
-app.listen(PORT, () => {
+    if (url.pathname !== MCP_ENDPOINT) {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("Not Found");
+        return;
+    }
+
+    const handler = req.method === "POST" ? handlePost : req.method === "GET" || req.method === "DELETE" ? handleSessionRequest : undefined;
+
+    if (!handler) {
+        res.writeHead(405, { "Content-Type": "text/plain" });
+        res.end("Method Not Allowed");
+        return;
+    }
+
+    handler(req, res).catch((error) => {
+        console.error("Error handling MCP request:", error);
+        if (!res.headersSent) {
+            sendJson(res, 500, {
+                jsonrpc: "2.0",
+                error: { code: -32603, message: "Internal server error" },
+                id: null,
+            });
+        }
+    });
+});
+
+httpServer.listen(PORT, () => {
     // eslint-disable-next-line no-console
     console.log(`Comet Demo MCP server listening on http://localhost:${PORT}${MCP_ENDPOINT}`);
 });
