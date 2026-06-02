@@ -525,7 +525,7 @@ importers:
         specifier: ^16.14.0
         version: 16.14.0
       graphql-request:
-        specifier: ^7.1.2
+        specifier: ^7.4.0
         version: 7.4.0(graphql@16.14.0)
       zod:
         specifier: ^3.25.7
@@ -12880,9 +12880,6 @@ packages:
   jose@5.10.0:
     resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
 
-  jose@6.1.1:
-    resolution: {integrity: sha512-GWSqjfOPf4cWOkBzw5THBjtGPhXKqYnfRBzh4Ni+ArTrQQ9unvmsA3oFLqaYKoKe5sjWmGu5wVKg9Ft1i+LQfg==}
-
   jose@6.2.3:
     resolution: {integrity: sha512-YYVDInQKFJfR/xa3ojUTl8c2KoTwiL1R5Wg9YCydwH0x0B9grbzlg5HC7mMjCtUJjbQ/YnGEZIhI5tCgfTb4Hw==}
 
@@ -22407,7 +22404,7 @@ snapshots:
       remark-mdx: 3.1.0
       remark-parse: 11.0.0
       remark-rehype: 11.1.1
-      source-map: 0.7.4
+      source-map: 0.7.6
       unified: 11.0.5
       unist-util-position-from-estree: 2.0.0
       unist-util-stringify-position: 4.0.0
@@ -28657,7 +28654,7 @@ snapshots:
     dependencies:
       '@types/estree-jsx': 1.0.5
       astring: 1.9.0
-      source-map: 0.7.4
+      source-map: 0.7.6
 
   estree-util-value-to-estree@3.2.1:
     dependencies:
@@ -30356,8 +30353,6 @@ snapshots:
   jose@4.15.9: {}
 
   jose@5.10.0: {}
-
-  jose@6.1.1: {}
 
   jose@6.2.3: {}
 
@@ -32200,7 +32195,7 @@ snapshots:
       '@koa/router': 14.0.0
       debug: 4.4.3
       eta: 4.4.1
-      jose: 6.1.1
+      jose: 6.2.3
       jsesc: 3.1.0
       koa: 3.1.1
       nanoid: 5.1.6

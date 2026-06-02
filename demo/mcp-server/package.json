@@ -20,7 +20,7 @@
     "dependencies": {
         "@modelcontextprotocol/sdk": "^1.27.1",
         "graphql": "^16.14.0",
-        "graphql-request": "^7.1.2",
+        "graphql-request": "^7.4.0",
         "zod": "^3.25.7"
     },
     "devDependencies": {
