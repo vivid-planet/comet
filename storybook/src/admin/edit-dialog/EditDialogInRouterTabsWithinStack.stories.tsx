@@ -153,7 +153,7 @@ type ProductDetailsProps = {
     productId: string;
 };
 
-export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
+const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
     const intl = useIntl();
     const editDialogApi = useRef<IEditDialogApi>(null);
 
