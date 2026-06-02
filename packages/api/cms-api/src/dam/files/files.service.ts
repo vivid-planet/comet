@@ -584,11 +584,12 @@ export class FilesService {
             );
 
         const imgUrl = this.imgproxyService.getSignedUrl(path);
-        let imageResponse: Response;
-        try {
-            imageResponse = await fetch(imgUrl);
-        } catch (error) {
+        const imageResponse = await fetch(imgUrl).catch((error: unknown) => {
             this.logger.error("Failed to calculate dominant color: imgproxy is not available", error);
+            return undefined;
+        });
+
+        if (!imageResponse) {
             return undefined;
         }
 
