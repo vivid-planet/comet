@@ -36,6 +36,7 @@
         "lint:tsc": "tsc",
         "storybook": "storybook dev -p 6066 --no-open",
         "test": "vitest --run",
+        "test:update-snapshots": "vitest --run -u",
         "test:watch": "vitest --watch"
     },
     "dependencies": {
