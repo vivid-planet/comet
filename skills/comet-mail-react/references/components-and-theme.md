@@ -11,8 +11,9 @@ Detailed reference for all `@comet/mail-react` components, the theme system, mod
 5. [MjmlWrapper](#mjmlwrapper)
 6. [Text Components](#text-components)
 7. [HtmlInlineLink](#htmlinlinelink)
-8. [Scoped Theming](#scoped-theming)
-9. [MJML Component Re-exports](#mjml-component-re-exports)
+8. [Image](#image)
+9. [Scoped Theming](#scoped-theming)
+10. [MJML Component Re-exports](#mjml-component-re-exports)
 
 ---
 
@@ -334,6 +335,14 @@ Use `!important` when setting a custom link color — the responsive reset uses 
 
 ---
 
+## Image
+
+`MjmlImage` and `HtmlImage` are responsive — the image scales down to fit narrow viewports.
+
+**CSS classes:** `.mjmlImage`, `.htmlImage`.
+
+---
+
 ## Scoped Theming
 
 `ThemeProvider` applies a different theme to a subtree. Common use: dark-background sections.
@@ -390,6 +399,6 @@ Theme-aware `registerStyles` entries always resolve against the **root theme** f
 
 `@comet/mail-react` re-exports all MJML components from `@faire/mjml-react`. Consumers import everything from `@comet/mail-react` — never from `@faire/mjml-react` directly.
 
-Common re-exports: `MjmlColumn`, `MjmlImage`, `MjmlButton`, `MjmlDivider`, `MjmlSpacer`, `MjmlTable`, `MjmlRaw`, `MjmlGroup`, `MjmlAttributes`, `MjmlAll`, `MjmlClass`, `MjmlStyle`, `MjmlComment`, `MjmlConditionalComment`.
+Common re-exports: `MjmlColumn`, `MjmlButton`, `MjmlDivider`, `MjmlSpacer`, `MjmlTable`, `MjmlRaw`, `MjmlGroup`, `MjmlAttributes`, `MjmlAll`, `MjmlClass`, `MjmlStyle`, `MjmlComment`, `MjmlConditionalComment`.
 
 For the full MJML tag reference: https://documentation.mjml.io/

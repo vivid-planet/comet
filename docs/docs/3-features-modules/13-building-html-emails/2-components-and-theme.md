@@ -420,6 +420,12 @@ To set a custom link color that persists across all viewports, use `!important` 
 
 **CSS class name:** `.htmlInlineLink`.
 
+## Image
+
+`MjmlImage` and `HtmlImage` are responsive — the image scales down to fit narrow viewports.
+
+**CSS class names:** `.mjmlImage`, `.htmlImage`.
+
 ## Scoped Theming
 
 `ThemeProvider` makes a theme available to its children via React context. `MjmlMailRoot` uses it internally, so you don't need it for the top-level theme. Its main use case is **scoped theming** — applying a different theme to a subsection of the email.
