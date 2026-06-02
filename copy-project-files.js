@@ -36,11 +36,11 @@ const files = [
     },
     {
         file: "demo/api/block-meta.json",
-        targetDir: ["demo/admin", "demo/site", "demo/mcp-server"],
+        targetDir: ["demo/admin", "demo/site"],
     },
     {
         file: "demo/api/schema.gql",
-        targetDir: ["demo/admin", "demo/site", "demo/mcp-server"],
+        targetDir: ["demo/admin", "demo/site"],
     },
     {
         file: "demo/api/src/comet-config.json",
