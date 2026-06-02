@@ -110,6 +110,12 @@
             "ignoreDependencies": ["@babel/core"],
             "ignore": ["**/*.generated.ts"]
         },
+        "demo/mcp-server": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["**/*.generated.ts"],
+            "ignoreDependencies": ["@babel/core", "@parcel/watcher"]
+        },
         "storybook": {
             "entry": ["./src/**/*.stories.tsx"],
             "project": ["./src/**/*.{ts,tsx}"],
