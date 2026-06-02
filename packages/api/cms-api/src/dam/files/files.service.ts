@@ -1,6 +1,6 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw, Utils } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, Logger, Optional } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
 import { createReadStream } from "fs";
@@ -22,7 +22,6 @@ import { slugifyFilename } from "../../file-utils/files.utils";
 import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
-import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
@@ -37,6 +36,7 @@ import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FoldersService } from "./folders.service";
+import { scopesAreEqual } from "./scopes-are-equal.util";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
 
@@ -127,10 +127,9 @@ export class FilesService {
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
-        private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
-        private readonly contentScopeService: ContentScopeService,
         private readonly entityManager: EntityManager,
+        @Optional() private readonly imgproxyService?: ImgproxyService,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -346,8 +345,7 @@ export class FilesService {
         const updatedFiles = [];
 
         for (const file of files) {
-            // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (targetFolder?.scope !== undefined && !this.contentScopeService.scopesAreEqual(file.scope, targetFolder.scope)) {
+            if (targetFolder?.scope !== undefined && !scopesAreEqual(file.scope, targetFolder.scope)) {
                 throw new Error("Target folder scope doesn't match file scope");
             }
 
@@ -413,7 +411,7 @@ export class FilesService {
                 ...assignData,
             });
 
-            if (result.image) {
+            if (result.image && this.imgproxyService) {
                 // We do not want for our users to await the dominant color calculation. To prevent concurrency issues we must use a separate Unit of
                 // Work. This can be achieved by forking the EntityManager instance.
                 // See https://mikro-orm.io/docs/faq#you-cannot-call-emflush-from-inside-lifecycle-hook-handlers and
@@ -573,6 +571,10 @@ export class FilesService {
     }
 
     async calculateDominantColor(contentHash: string): Promise<string | undefined> {
+        if (!this.imgproxyService) {
+            return undefined;
+        }
+
         const path = this.imgproxyService
             .builder()
             .resize(ResizingType.AUTO, 1)

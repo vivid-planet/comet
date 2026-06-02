@@ -1,9 +1,8 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
+import { DynamicModule, Global, Module, Type } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
-import { FileValidationService } from "../file-utils/file-validation.service";
+import { DependentsResolverFactory } from "..";
 import { ImgproxyModule } from "../imgproxy/imgproxy.module";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
 import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
@@ -11,23 +10,19 @@ import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transf
 import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-transformer.service";
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { DamConfig } from "./dam.config";
-import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE } from "./dam.constants";
+import { DamFileModule } from "./dam-file.module";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
 import { createDamMediaAlternativeResolver } from "./files/dam-media-alternatives/dam-media-alternative.resolver";
 import { DamMediaAlternative } from "./files/dam-media-alternatives/entities/dam-media-alternative.entity";
-import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/file.entity";
+import { createFileEntity, FileInterface } from "./files/entities/file.entity";
 import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
 import { FileWarningService } from "./files/file-warning.service";
-import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
-import { FilesService } from "./files/files.service";
-import { createFoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
-import { FoldersService } from "./files/folders.service";
 import { CalculateDominantImageColorCommand } from "./images/calculateDominantImageColor.command";
 import { ImageCropArea } from "./images/entities/image-crop-area.entity";
 import { createImagesController } from "./images/images.controller";
@@ -58,23 +53,6 @@ export class DamModule {
             basePath: options.damConfig.basePath ?? "dam",
         };
 
-        if (File.name !== FILE_ENTITY) {
-            throw new Error(`DamModule: Your File entity must be named ${FILE_ENTITY}`);
-        }
-
-        const damConfigProvider: ValueProvider<DamConfig> = {
-            provide: DAM_CONFIG,
-            useValue: damConfig,
-        };
-
-        const fileValidationServiceProvider = {
-            provide: DAM_FILE_VALIDATION_SERVICE,
-            useValue: new FileValidationService({
-                maxFileSize: damConfig.maxFileSize,
-                acceptedMimeTypes: damConfig.acceptedMimeTypes ?? damDefaultAcceptedMimetypes,
-            }),
-        };
-
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
         const FilesResolver = createFilesResolver({ File, Folder, Scope });
         const FileDependentsResolver = DependentsResolverFactory.create(File);
@@ -102,18 +80,18 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]), BlobStorageModule, ImgproxyModule],
+            imports: [
+                DamFileModule.register({ damConfig, Scope, Folder, File }),
+                MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]),
+                ImgproxyModule,
+            ],
             providers: [
-                damConfigProvider,
                 DamItemsResolver,
                 DamItemsService,
-                fileValidationServiceProvider,
                 FilesResolver,
                 FileDependentsResolver,
-                FilesService,
                 FileLicensesResolver,
                 FoldersResolver,
-                FoldersService,
                 ImagesService,
                 IsAllowedImageSizeConstraint,
                 IsAllowedImageAspectRatioConstraint,
@@ -128,16 +106,10 @@ export class DamModule {
                 FileWarningService,
                 DamMediaAlternativeResolver,
             ],
-            controllers: [
-                createFilesController({ Scope, damBasePath: damConfig.basePath }),
-                createFoldersController({ damBasePath: damConfig.basePath }),
-                createImagesController({ damBasePath: damConfig.basePath }),
-            ],
+            controllers: [createImagesController({ damBasePath: damConfig.basePath })],
             exports: [
-                FilesService,
-                FoldersService,
+                DamFileModule,
                 ImagesService,
-                damConfigProvider,
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,
                 DamVideoBlockTransformerService,
