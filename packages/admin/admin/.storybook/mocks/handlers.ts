@@ -63,15 +63,6 @@ const manufacturersQueryHandler = graphql.query<{ manufacturers: Manufacturer[] 
     });
 });
 
-const manufacturersQueryHandlerLower = graphql.query<{ manufacturers: Manufacturer[] }, { search?: string }>("manufacturers", ({ variables }) => {
-    const search = variables.search?.toLowerCase() ?? "";
-    return HttpResponse.json({
-        data: {
-            manufacturers: search ? manufacturers.filter((m) => m.name.toLowerCase().includes(search)) : manufacturers,
-        },
-    });
-});
-
 const productsQueryHandler = graphql.query<{ products: Product[] }, { manufacturer?: string }>("Products", ({ variables }) => {
     const manufacturerId = variables.manufacturer;
     return HttpResponse.json({
@@ -81,13 +72,4 @@ const productsQueryHandler = graphql.query<{ products: Product[] }, { manufactur
     });
 });
 
-const productsQueryHandlerLower = graphql.query<{ products: Product[] }, { manufacturer?: string }>("products", ({ variables }) => {
-    const manufacturerId = variables.manufacturer;
-    return HttpResponse.json({
-        data: {
-            products: manufacturerId ? products.filter((p) => p.manufacturer.id === manufacturerId) : products,
-        },
-    });
-});
-
-export const handlers = [usersQueryHandler, userQueryHandler, manufacturersQueryHandler, manufacturersQueryHandlerLower, productsQueryHandler, productsQueryHandlerLower];
+export const handlers = [usersQueryHandler, userQueryHandler, manufacturersQueryHandler, productsQueryHandler];
