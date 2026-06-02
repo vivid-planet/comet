@@ -1,5 +1,44 @@
 import { graphql, HttpResponse } from "msw";
 
+export type Manufacturer = { id: string; name: string };
+export type Product = { id: string; name: string; manufacturer: Manufacturer };
+
+const manufacturers: Manufacturer[] = [
+    { id: "1", name: "Acme Corp" },
+    { id: "2", name: "Globex Corporation" },
+    { id: "3", name: "Initech" },
+    { id: "4", name: "Umbrella Corporation" },
+    { id: "5", name: "Soylent Corp" },
+];
+
+const products: Product[] = [
+    { id: "1", name: "Widget A", manufacturer: manufacturers[0] },
+    { id: "2", name: "Widget B", manufacturer: manufacturers[0] },
+    { id: "3", name: "Gadget X", manufacturer: manufacturers[1] },
+    { id: "4", name: "Gadget Y", manufacturer: manufacturers[1] },
+    { id: "5", name: "Doohickey", manufacturer: manufacturers[2] },
+    { id: "6", name: "Thingamajig", manufacturer: manufacturers[3] },
+    { id: "7", name: "Whatchamacallit", manufacturer: manufacturers[4] },
+];
+
+const manufacturersQueryHandler = graphql.query<{ manufacturers: Manufacturer[] }, { search?: string }>("Manufacturers", ({ variables }) => {
+    const search = variables.search?.toLowerCase() ?? "";
+    return HttpResponse.json({
+        data: {
+            manufacturers: search ? manufacturers.filter((m) => m.name.toLowerCase().includes(search)) : manufacturers,
+        },
+    });
+});
+
+const productsQueryHandler = graphql.query<{ products: Product[] }, { manufacturer?: string }>("Products", ({ variables }) => {
+    const manufacturerId = variables.manufacturer;
+    return HttpResponse.json({
+        data: {
+            products: manufacturerId ? products.filter((p) => p.manufacturer.id === manufacturerId) : products,
+        },
+    });
+});
+
 const users = [
     { id: 1, name: "Leanne Graham", username: "Bret", email: "Sincere@april.biz" },
     { id: 2, name: "Ervin Howell", username: "Antonette", email: "Shanna@melissa.tv" },
@@ -30,4 +69,4 @@ const userQueryHandler = graphql.query<{ user: (typeof users)[number] | null }, 
     });
 });
 
-export const handlers = [usersQueryHandler, userQueryHandler];
+export const handlers = [manufacturersQueryHandler, productsQueryHandler, usersQueryHandler, userQueryHandler];
