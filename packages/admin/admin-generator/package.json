@@ -34,7 +34,8 @@
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
-        "test": "vitest --run",
+        "test": "pnpm run test:unit",
+        "test:unit": "vitest --run",
         "test:updateSnapshot": "vitest --run --update",
         "test:watch": "vitest --watch"
     },
