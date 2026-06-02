@@ -6,6 +6,8 @@ Code, Claude Desktop) read and edit demo CMS content via natural language.
 
 It talks to the demo API over GraphQL, so the demo API must be running and reachable.
 
+The server uses the [Streamable HTTP](https://modelcontextprotocol.io/docs/concepts/transports#streamable-http) transport and listens on `http://localhost:3001/mcp` by default.
+
 ## Tools
 
 | Tool                               | Description                                             |
@@ -54,6 +56,7 @@ The server reads the following environment variables (with development defaults)
 
 | Variable                              | Default                     | Description                             |
 | ------------------------------------- | --------------------------- | --------------------------------------- |
+| `PORT`                                | `3001`                      | Port the HTTP server listens on         |
 | `API_URL`                             | `http://localhost:4000`     | Base URL of the demo API                |
 | `API_BASIC_AUTH_SYSTEM_USER_PASSWORD` | `aPasswordWith16Characters` | Password for the basic-auth system user |
 
@@ -63,24 +66,28 @@ The server reads the following environment variables (with development defaults)
 
 ## Usage with an MCP client
 
-MCP clients spawn the server over stdio. After building, register it with a command like:
+Start the server first:
+
+```bash
+pnpm --filter comet-demo-mcp-server run start
+```
+
+It listens on `http://localhost:3001/mcp` (configurable via `PORT`). Then register the running server with
+an MCP client that supports the Streamable HTTP transport:
 
 ```json
 {
     "mcpServers": {
         "comet-demo": {
-            "command": "node",
-            "args": ["demo/mcp-server/dist/index.js"],
-            "env": {
-                "API_URL": "http://localhost:4000",
-                "API_BASIC_AUTH_SYSTEM_USER_PASSWORD": "aPasswordWith16Characters"
-            }
+            "type": "http",
+            "url": "http://localhost:3001/mcp"
         }
     }
 }
 ```
 
-Use an absolute path to `dist/index.js` if the client's working directory differs from the repository root.
+The demo API URL and credentials are configured via the server's environment variables (see
+[Configuration](#configuration)), not the client.
 
 ## Development
 
