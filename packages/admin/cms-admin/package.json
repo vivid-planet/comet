@@ -62,7 +62,7 @@
         "date-fns": "^4.2.1",
         "final-form-arrays": "^3.1.0",
         "final-form-set-field-touched": "^1.0.1",
-        "js-cookie": "^3.0.7",
+        "js-cookie": "^3.0.8",
         "lodash.escaperegexp": "^4.1.2",
         "lodash.isequal": "^4.5.0",
         "mime-db": "^1.54.0",
