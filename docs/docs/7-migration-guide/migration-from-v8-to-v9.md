@@ -1003,7 +1003,12 @@ Query `paginatedRedirects` with `sourceType: { equal: "domain" }` to fetch all a
 import { gql } from "@comet/site-nextjs";
 
 const domainRedirectsQuery = gql`
-    query DomainRedirects($scope: RedirectScopeInput!, $filter: RedirectFilter, $offset: Int, $limit: Int) {
+    query DomainRedirects(
+        $scope: RedirectScopeInput!
+        $filter: RedirectFilter
+        $offset: Int
+        $limit: Int
+    ) {
         paginatedRedirects(scope: $scope, filter: $filter, offset: $offset, limit: $limit) {
             nodes {
                 id
@@ -1052,10 +1057,17 @@ memoryCache.on("refresh", ({ error }) => {
 The admin stores the redirect target as a `RedirectsLinkBlock` which can point to an internal page, an external URL, or (if your project has it) a news item. Add a helper that turns the stored `block` into a fully-qualified URL:
 
 ```ts title="site/src/middleware/redirectToMainHost.ts"
-import { type ExternalLinkBlockData, type InternalLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
+import {
+    type ExternalLinkBlockData,
+    type InternalLinkBlockData,
+    type RedirectsLinkBlockData,
+} from "@src/blocks.generated";
 import { createSitePath } from "@src/util/createSitePath";
 
-function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], targetBaseUrl: string): string | undefined {
+function getRedirectTargetUrl(
+    block: RedirectsLinkBlockData["block"],
+    targetBaseUrl: string,
+): string | undefined {
     if (!block) return undefined;
     switch (block.type) {
         case "internal": {
@@ -1097,7 +1109,9 @@ async function fetchDomainRedirects(scope: { domain: string }) {
 }
 
 async function fetchDomainRedirectsForAllScopes() {
-    return (await Promise.all(getSiteConfigs().map((config) => fetchDomainRedirects(config.scope)))).flat();
+    return (
+        await Promise.all(getSiteConfigs().map((config) => fetchDomainRedirects(config.scope)))
+    ).flat();
 }
 
 export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
@@ -1113,10 +1127,15 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
             if (redirectSiteConfig) {
                 // 1. First, check for an admin-configured domain redirect for this scope
                 const domainRedirects = await fetchDomainRedirects(redirectSiteConfig.scope);
-                const redirect = domainRedirects.find((r) => normalizeHost(r.source) === normalizeHost(host));
+                const redirect = domainRedirects.find(
+                    (r) => normalizeHost(r.source) === normalizeHost(host),
+                );
 
                 if (redirect) {
-                    const destination = getRedirectTargetUrl(redirect.target.block, `https://${redirectSiteConfig.domains.main}`);
+                    const destination = getRedirectTargetUrl(
+                        redirect.target.block,
+                        `https://${redirectSiteConfig.domains.main}`,
+                    );
                     if (destination) {
                         if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
                             throw new Error(`Redirect loop detected: ${host} -> ${destination}`);
@@ -1128,7 +1147,9 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 // 2. Otherwise, redirect to the main host (previous behavior)
                 const mainHost = normalizeHost(redirectSiteConfig.domains.main);
                 if (mainHost === normalizeHost(host)) {
-                    throw new Error(`Redirect loop detected: main host ${mainHost} equals current host`);
+                    throw new Error(
+                        `Redirect loop detected: main host ${mainHost} equals current host`,
+                    );
                 }
                 return NextResponse.redirect(
                     `https://${redirectSiteConfig.domains.main}${request.nextUrl.pathname}${request.nextUrl.search}`,
@@ -1138,13 +1159,22 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
 
             // 3. Host doesn't match any site-config — check cross-scope domain redirects as a last resort
             const domainRedirects = await fetchDomainRedirectsForAllScopes();
-            const redirect = domainRedirects.find((r) => normalizeHost(r.source) === normalizeHost(host));
+            const redirect = domainRedirects.find(
+                (r) => normalizeHost(r.source) === normalizeHost(host),
+            );
             if (redirect) {
-                const scopedSiteConfig = getSiteConfigs().find((c) => c.scope.domain === redirect.scope.domain);
+                const scopedSiteConfig = getSiteConfigs().find(
+                    (c) => c.scope.domain === redirect.scope.domain,
+                );
                 if (!scopedSiteConfig) {
-                    throw new Error(`Got redirect to domain ${redirect.scope.domain}, but couldn't find corresponding site-config.`);
+                    throw new Error(
+                        `Got redirect to domain ${redirect.scope.domain}, but couldn't find corresponding site-config.`,
+                    );
                 }
-                const destination = getRedirectTargetUrl(redirect.target.block, `https://${scopedSiteConfig.domains.main}`);
+                const destination = getRedirectTargetUrl(
+                    redirect.target.block,
+                    `https://${scopedSiteConfig.domains.main}`,
+                );
                 if (destination) {
                     if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
                         throw new Error(`Redirect loop detected: ${host} -> ${destination}`);
@@ -1170,7 +1200,8 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
 
 Next.js no longer caches `fetch` requests by default.
 Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-15#fetch-requests) for more information.
-Add `cache: "force-cache"` to `createGraphQLFetch()`:
+Add `cache: "force-cache"` to `createGraphQLFetch()`.
+The file might be named differently in some Comet projects (e.g. `createGraphQLFetch.ts`):
 
 ```diff title="site/src/util/graphQLClient.ts"
 export function createGraphQLFetch() {
