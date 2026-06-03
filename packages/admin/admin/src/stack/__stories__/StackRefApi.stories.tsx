@@ -1,5 +1,9 @@
-import { Stack, StackBreadcrumbs, StackPage, useStackSwitch } from "@comet/admin";
 import { Redirect, Route, Switch } from "react-router";
+
+import { StackBreadcrumbs } from "../breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../Page";
+import { Stack } from "../Stack";
+import { useStackSwitch } from "../Switch";
 
 function Story() {
     const [StackSwitch, api] = useStackSwitch();

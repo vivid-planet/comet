@@ -1,16 +1,14 @@
-import {
-    Field,
-    FillSpace,
-    FinalForm,
-    FinalFormInput,
-    FinalFormSaveButton,
-    Tab,
-    Tabs,
-    Toolbar,
-    ToolbarActions,
-    ToolbarBackButton,
-} from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
+
+import { FillSpace } from "../../common/FillSpace";
+import { ToolbarActions } from "../../common/toolbar/actions/ToolbarActions";
+import { ToolbarBackButton } from "../../common/toolbar/backbutton/ToolbarBackButton";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { FinalForm } from "../../FinalForm";
+import { FinalFormSaveButton } from "../../FinalFormSaveButton";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { Tab, Tabs } from "../Tabs";
 
 export default {
     title: "components/tabs/Tabs",

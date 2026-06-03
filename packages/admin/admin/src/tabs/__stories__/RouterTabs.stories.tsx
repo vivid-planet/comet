@@ -1,5 +1,6 @@
-import { RouterTab, RouterTabs } from "@comet/admin";
 import { useLocation } from "react-router";
+
+import { RouterTab, RouterTabs } from "../RouterTabs";
 
 export default {
     title: "components/tabs/RouterTabs",

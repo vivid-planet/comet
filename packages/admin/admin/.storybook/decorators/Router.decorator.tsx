@@ -1,9 +1,11 @@
-import { RouterMemoryRouter, Stack } from "@comet/admin";
 import type { Decorator } from "@storybook/react-vite";
 import type { Action, History, UnregisterCallback } from "history";
 import { type PropsWithChildren, useEffect } from "react";
 import { Route, type RouteComponentProps } from "react-router";
 import { action } from "storybook/actions";
+
+import { RouterMemoryRouter } from "../../src/router/MemoryRouter";
+import { Stack } from "../../src/stack/Stack";
 
 declare module "storybook/internal/csf" {
     interface Parameters {

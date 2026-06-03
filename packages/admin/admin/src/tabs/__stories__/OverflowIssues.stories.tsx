@@ -1,9 +1,12 @@
-import { MainContent, RouterTab, RouterTabs, Toolbar, ToolbarAutomaticTitleItem } from "@comet/admin";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import type { Decorator, Meta } from "@storybook/react-vite";
 import { useState } from "react";
 
 import { MasterLayoutDecorator } from "../../../.storybook/decorators/MasterLayout.decorator";
+import { MainContent } from "../../common/MainContent";
+import { ToolbarAutomaticTitleItem } from "../../common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { RouterTab, RouterTabs } from "../RouterTabs";
 
 // Make sure the story is not too tall and can be scrolled - setting the story-height in the config only affects the min-height and does not make the content scrollable
 const MaxHeightDecorator: Decorator = (Story) => (
