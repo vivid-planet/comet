@@ -6,7 +6,10 @@ export const actionLogCompareFragment = gql`
         version
         snapshot
         createdAt
-        userId
+        user {
+            id
+            name
+        }
         entityName
     }
 `;

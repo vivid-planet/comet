@@ -71,7 +71,14 @@ export const ActionLogShowVersion: FunctionComponent<ActionLogShowVersionProps> 
             {version != null && (
                 <DiffViewerContainer>
                     <DiffViewer
-                        leftTitle={<DiffHeader createdAt={version.createdAt} userId={version.userId} version={version.version} />}
+                        leftTitle={
+                            <DiffHeader
+                                createdAt={version.createdAt}
+                                userId={version.user.id}
+                                userName={version.user.name ?? undefined}
+                                version={version.version}
+                            />
+                        }
                         newValue={JSON.stringify(filteredVersionSnapshot, null, 8)}
                         oldValue={JSON.stringify(filteredVersionSnapshot, null, 8)}
                         showDiffOnly={false}

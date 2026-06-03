@@ -6,10 +6,11 @@ import { Root } from "./DiffHeader.sc";
 export interface DiffHeaderProps {
     createdAt?: string;
     userId?: string;
+    userName?: string;
     version?: number;
 }
 
-export const DiffHeader = ({ createdAt, userId, version }: DiffHeaderProps) => {
+export const DiffHeader = ({ createdAt, userId, userName, version }: DiffHeaderProps) => {
     return (
         <Root>
             <Typography color="white" variant="subtitle1">
@@ -18,17 +19,23 @@ export const DiffHeader = ({ createdAt, userId, version }: DiffHeaderProps) => {
 
             <Typography color="textSecondary" variant="caption">
                 <FormattedMessage
-                    defaultMessage="{userId} on {date}"
-                    id="actionLog.actionLogCompare.diffHeader.userIdAndTime"
+                    defaultMessage="{user} on {date}"
+                    id="actionLog.actionLogCompare.diffHeader.userAndTime"
                     values={{
                         date: (
                             <Typography color="textSecondary" variant="overline" component="span">
                                 <FormattedDate dateStyle="short" timeStyle="short" value={createdAt} />
                             </Typography>
                         ),
-                        userId: (
+                        user: (
                             <Typography color="textSecondary" variant="overline" component="span">
-                                {userId}
+                                {userName ?? (
+                                    <FormattedMessage
+                                        defaultMessage="Unknown user ({id})"
+                                        id="actionLog.actionLogCompare.diffHeader.unknownUser"
+                                        values={{ id: userId }}
+                                    />
+                                )}
                             </Typography>
                         ),
                     }}

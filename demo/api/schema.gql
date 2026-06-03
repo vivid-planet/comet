@@ -9,7 +9,7 @@ type ActionLog {
   id: ID!
   scope: [JSONObject!]
   snapshot: JSONObject
-  userId: ID!
+  user: ActionLogsUser!
   version: Int!
 }
 
@@ -20,8 +20,12 @@ input ActionLogSort {
 
 enum ActionLogSortField {
   createdAt
-  userId
   version
+}
+
+type ActionLogsUser {
+  id: ID!
+  name: String
 }
 
 input AddBrevoContactsInput {

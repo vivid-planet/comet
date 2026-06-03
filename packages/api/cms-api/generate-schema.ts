@@ -21,6 +21,7 @@ import {
     PageTreeNodeCategory,
     PaginatedPageTreeNodesFactory,
 } from "./src";
+import { ActionLogsResolver } from "./src/action-logs/action-logs.resolver";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { GenerateAltTextResolver } from "./src/content-generation/generate-alt-text.resolver";
 import { GenerateImageTitleResolver } from "./src/content-generation/generate-image-title.resolver";
@@ -102,6 +103,7 @@ async function generateSchema(): Promise<void> {
     registerEnumType(CombinedPermission, { name: "Permission" });
 
     const schema = await gqlSchemaFactory.create([
+        ActionLogsResolver,
         BuildsResolver,
         BuildTemplatesResolver,
         redirectsResolver,

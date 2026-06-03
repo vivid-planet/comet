@@ -9,36 +9,22 @@ const meta: Meta<typeof UserCell> = {
 };
 export default meta;
 
-export const SystemUser: Story = {
-    args: {
-        name: "system-user",
-    },
-};
-
 export const MaxMustermann: Story = {
     args: {
+        id: "abc-123",
         name: "Max Mustermann",
     },
 };
 
 export const OneName: Story = {
     args: {
+        id: "abc-123",
         name: "Max",
     },
 };
 
-export const NoName: Story = {};
-
-export const RedBackgroundColor: Story = {
+export const UnknownUser: Story = {
     args: {
-        name: "Max",
-        avatarColor: "#ff0000",
-    },
-};
-
-export const CustomInitials: Story = {
-    args: {
-        name: "Max",
-        initials: "XY",
+        id: "abc-123",
     },
 };

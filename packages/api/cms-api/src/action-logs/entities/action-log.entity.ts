@@ -22,7 +22,6 @@ export class ActionLog extends BaseEntity {
     @Index({ type: "gin" })
     scope?: ContentScope[];
 
-    @Field(() => ID)
     @Property({ type: "text", index: true })
     userId: string;
 

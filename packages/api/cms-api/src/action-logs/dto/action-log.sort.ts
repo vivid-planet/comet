@@ -4,7 +4,6 @@ import { IsEnum } from "class-validator";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 
 enum ActionLogSortField {
-    userId = "userId",
     version = "version",
     createdAt = "createdAt",
 }
