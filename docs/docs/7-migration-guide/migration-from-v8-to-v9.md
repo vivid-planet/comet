@@ -42,19 +42,24 @@ npm install
 
 The `install-agent-skills` command and its `agent-skills.json` config have been removed and replaced by `install-agent-features`, a combined installer for agent skills and agent rules.
 
-Rename `agent-skills.json` to `agent-features.json` (the schema is identical):
+Comet's skills and rules are now shipped via the `@comet/agent-features` npm package, which is discovered automatically from `node_modules` — you no longer need an `agent-features.json` file to reference the Comet repo.
+
+Delete the old `agent-skills.json`:
 
 ```sh
-mv agent-skills.json agent-features.json
+rm agent-skills.json
 ```
 
-Replace the `install-agent-skills` invocation in `package.json`:
+Add `@comet/agent-features` to the root `package.json` and replace the `install-agent-skills` script:
 
 ```diff title="package.json"
 {
     "scripts": {
 -       "install-agent-skills": "npx @comet/cli install-agent-skills"
 +       "install-agent-features": "npx @comet/cli install-agent-features"
+    },
+    "devDependencies": {
++       "@comet/agent-features": "9.0.0",
     }
 }
 ```
@@ -63,10 +68,10 @@ And in `install.sh`:
 
 ```diff title="install.sh"
 - npx @comet/cli install-agent-skills
-+ npx @comet/cli install-agent-features
++ npm run install-agent-features
 ```
 
-See the [Installing agent features](../guides/installing-agent-features) guide for more information.
+If you need to pull in additional skills/rules from external git repos, create an `agent-features.json` as described in the [Installing agent features](../guides/installing-agent-features) guide.
 
 ### Verify lint passes
 
