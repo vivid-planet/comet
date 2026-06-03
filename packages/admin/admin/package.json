@@ -37,7 +37,9 @@
         "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "storybook": "storybook dev -p 26646 --no-open --disable-telemetry",
-        "test": "vitest --run",
+        "test": "pnpm run test:unit && pnpm run test:storybook",
+        "test:storybook": "vitest --run --project storybook --outputFile.junit=./junit-storybook.xml",
+        "test:unit": "vitest --run --project unit --outputFile.junit=./junit-unit.xml",
         "test:watch": "vitest --watch"
     },
     "dependencies": {
@@ -72,6 +74,7 @@
         "@mui/x-date-pickers": "^8.28.7",
         "@mui/x-date-pickers-pro": "^8.28.7",
         "@storybook/addon-docs": "^10.3.5",
+        "@storybook/addon-vitest": "10.3.5",
         "@storybook/react-vite": "^10.3.5",
         "@testing-library/dom": "^10.4.1",
         "@testing-library/jest-dom": "^6.9.1",
@@ -86,6 +89,8 @@
         "@types/react-dom": "^19.2.3",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",
+        "@vitest/browser": "4.0.16",
+        "@vitest/browser-playwright": "4.0.16",
         "eslint": "^9.39.4",
         "eslint-plugin-storybook": "^10.3.5",
         "final-form": "^4.20.10",
@@ -94,6 +99,7 @@
         "jsdom": "^28.1.0",
         "msw": "^2.10.4",
         "npm-run-all2": "^8.0.4",
+        "playwright": "^1.49.1",
         "prettier": "^3.6.2",
         "react": "^19.2.6",
         "react-dnd": "^16.0.1",
@@ -106,6 +112,7 @@
         "storybook": "^10.3.5",
         "storybook-addon-tag-badges": "^3.1.0",
         "typescript": "^5.9.3",
+        "vite": "^7.3.1",
         "vite-tsconfig-paths": "^6.0.4",
         "vitest": "^4.0.16"
     },

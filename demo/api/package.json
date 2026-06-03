@@ -37,7 +37,8 @@
         "start:dev": "pnpm check-node-version && run-p dev:*",
         "start:prod": "node dist/main",
         "storybook": "storybook dev -p 4004 --no-open --disable-telemetry",
-        "test": "pnpm api-generator && vitest --run",
+        "test": "pnpm run test:unit",
+        "test:unit": "pnpm api-generator && vitest --run",
         "test:watch": "vitest --watch"
     },
     "dependencies": {

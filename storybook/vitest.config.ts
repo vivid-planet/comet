@@ -8,16 +8,17 @@ export default defineConfig({
         outputFile: { junit: "./junit.xml" },
         projects: [
             {
-                test: {
-                    name: "unit",
-                    environment: "node",
-                    exclude: ["lib/**", "node_modules/**"],
-                },
-            },
-            {
                 plugins: [storybookTest({ configDir: ".storybook" })],
+                define: {
+                    global: "globalThis",
+                },
                 optimizeDeps: {
                     include: ["storybook/internal/csf", "@storybook/react-vite"],
+                    esbuildOptions: {
+                        define: {
+                            global: "globalThis",
+                        },
+                    },
                 },
                 test: {
                     name: "storybook",
