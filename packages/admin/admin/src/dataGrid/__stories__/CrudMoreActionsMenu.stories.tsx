@@ -1,9 +1,10 @@
-import { CrudMoreActionsMenu, CrudMoreActionsMenuItem } from "@comet/admin";
 import { Delete, Download, Excel, Favorite, Move } from "@comet/admin-icons";
 import { ListItemIcon } from "@mui/material";
 
+import { CrudMoreActionsMenu, CrudMoreActionsMenuItem } from "../CrudMoreActionsMenu";
+
 export default {
-    title: "@comet/admin/data-grid/CrudMoreActionsMenu",
+    title: "components/dataGrid/CrudMoreActionsMenu",
 };
 
 export const Basic = () => {

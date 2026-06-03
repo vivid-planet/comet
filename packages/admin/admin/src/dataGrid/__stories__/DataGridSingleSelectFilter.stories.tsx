@@ -1,10 +1,14 @@
-import { DataGridToolbar, GridCellContent, type GridColDef, GridFilterButton } from "@comet/admin";
 import { Check, Close, Education } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
+import { DataGridToolbar } from "../../common/toolbar/DataGridToolbar";
+import { GridCellContent } from "../GridCellContent";
+import type { GridColDef } from "../GridColDef";
+import { GridFilterButton } from "../GridFilterButton";
+
 export default {
-    title: "@comet/admin/mui/DataGrid/SingleSelect Filter",
+    title: "components/dataGrid/DataGridSingleSelectFilter",
 };
 
 // Sample data
