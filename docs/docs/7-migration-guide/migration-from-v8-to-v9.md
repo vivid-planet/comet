@@ -860,6 +860,36 @@ const nextConfig: NextConfig = {
 };
 ```
 
+### Remove deprecated `experimental.instrumentationHook`
+
+In Next.js 16, the instrumentation hook is built in and the experimental flag is no longer valid.
+Leaving it in place logs a deprecation warning on every start.
+
+```diff title="site/next.config.(js|mjs|ts)"
+const nextConfig: NextConfig = {
+    experimental: {
+-       instrumentationHook: true,
+        optimizePackageImports: ["@comet/site-nextjs"],
+    },
+};
+```
+
+### Update `tsconfig.server.json`
+
+If you have a separate `tsconfig.server.json` for `server.ts` / `tracing.ts` / `cache-handler.ts` that sets `module: "commonjs"`, you must also override `moduleResolution`.
+Otherwise `tsc` fails with `TS5095: Option 'bundler' can only be used when 'module' is set to 'preserve' or to 'es2015' or later` — because Next 16 enforces `moduleResolution: "bundler"` in the base `tsconfig.json` and rewrites it back if you change it.
+
+```diff title="site/tsconfig.server.json"
+{
+    "compilerOptions": {
+        "module": "commonjs",
++       "moduleResolution": "node",
+        // ...
+    },
+    "extends": "./tsconfig.json"
+}
+```
+
 ### Disable Turbopack
 
 Our site packages currently aren't compatible with Turbopack.
@@ -967,6 +997,16 @@ Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/versio
 
 ```sh
 mv site/src/middleware.ts site/src/proxy.ts
+```
+
+Next.js 16 requires `proxy.ts` to export a function named `proxy` (or a default export).
+The previously exported `middleware` function must be renamed — otherwise every request fails at runtime with `must export a function named "proxy" or a default function`:
+
+```diff title="site/src/proxy.ts"
+- export async function middleware(request: NextRequest) {
++ export async function proxy(request: NextRequest) {
+      // ...
+  }
 ```
 
 :::note
