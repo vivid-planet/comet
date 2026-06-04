@@ -1,5 +1,8 @@
+import { MainContent, SaveButton, Toolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { Stack, TextField, Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import { MasterLayoutDecorator } from "../../../storybook/MasterLayoutDecorator";
 import { ActionLogButton } from "../ActionLogButton";
 
 type ActionLogButtonStoryArgs = {
@@ -27,4 +30,29 @@ export const Default: Story = {};
 
 export const CustomLabel: Story = {
     render: (args) => <ActionLogButton {...args}>Show history</ActionLogButton>,
+};
+
+export const InEditPage: Story = {
+    decorators: [MasterLayoutDecorator],
+    render: (args) => (
+        <>
+            <Toolbar>
+                <ToolbarBackButton />
+                <ToolbarTitleItem>{args.name ?? "Product"}</ToolbarTitleItem>
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <ActionLogButton {...args} />
+                    <SaveButton />
+                </ToolbarActions>
+            </Toolbar>
+            <MainContent>
+                <Stack spacing={3} sx={{ maxWidth: 600 }}>
+                    <Typography variant="h4">Edit Product</Typography>
+                    <TextField label="Name" defaultValue={args.name ?? "My Page"} fullWidth />
+                    <TextField label="Slug" defaultValue="my-page" fullWidth />
+                    <TextField label="Description" multiline rows={4} fullWidth />
+                </Stack>
+            </MainContent>
+        </>
+    ),
 };
