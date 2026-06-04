@@ -1,9 +1,9 @@
-import { RouterPrompt } from "@comet/admin";
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { ForcePromptRoute } from "../ForcePromptRoute";
+import { RouterPrompt } from "../Prompt";
 
 function Story() {
     return (
@@ -11,18 +11,27 @@ function Story() {
             <Route path="/foo">
                 <RouterPrompt
                     message={() => {
-                        return "sure?";
+                        return "rly?";
                     }}
-                    subRoutePath="/foo/s"
+                    subRoutePath="/foo"
                 >
-                    <Link to="/foo/s/sub">subLink</Link>
-                    <Link to="/foo">fooLink</Link>
-                    <Route path="/foo">
-                        <div>foo</div>
+                    <ul>
+                        <li>
+                            <Link to="/foo/sub1">/foo/sub1</Link> (no prompt)
+                        </li>
+                        <li>
+                            <Link to="/foo/sub2">/foo/sub2</Link> (force prompt)
+                        </li>
+                        <li>
+                            <Link to="/foo">/foo</Link> (back)
+                        </li>
+                    </ul>
+                    <Route path="/foo/sub1">
+                        <div>sub1</div>
                     </Route>
-                    <Route path="/foo/s/sub">
-                        <div>sub</div>
-                    </Route>
+                    <ForcePromptRoute path="/foo/sub2">
+                        <div>sub2</div>
+                    </ForcePromptRoute>
                 </RouterPrompt>
             </Route>
             <Redirect to="/foo" />
@@ -44,10 +53,9 @@ function Path() {
 
 export default {
     title: "@comet/admin/router",
-    decorators: [storyRouterDecorator()],
 };
 
-export const NestedRouteWithNonSubPathRouteInPrompt = {
+export const _ForcePromptRoute = {
     render: () => {
         return (
             <>
@@ -57,5 +65,5 @@ export const NestedRouteWithNonSubPathRouteInPrompt = {
         );
     },
 
-    name: "Nested route with non-sub-path route in Prompt",
+    name: "ForcePromptRoute",
 };
