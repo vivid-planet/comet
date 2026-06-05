@@ -12,9 +12,107 @@ on:
             - next
 
 jobs:
+    discover:
+        name: Discover affected packages
+        runs-on: ubuntu-latest
+        outputs:
+            any-affected: ${{ steps.matrix.outputs.any-affected }}
+            run-all: ${{ steps.detect.outputs.run-all }}
+            lint-matrix: ${{ steps.matrix.outputs.lint-matrix }}
+            test-unit-matrix: ${{ steps.matrix.outputs.test-unit-matrix }}
+            test-storybook-matrix: ${{ steps.matrix.outputs.test-storybook-matrix }}
+            chromatic-needed: ${{ steps.matrix.outputs.chromatic-needed }}
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - uses: pnpm/action-setup@v6
+
+            - uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: Determine base SHA
+              id: base
+              run: |
+                  if [ "${{ github.event_name }}" = "pull_request" ]; then
+                      git fetch --depth=50 origin "${{ github.base_ref }}"
+                      base_sha=$(git rev-parse "origin/${{ github.base_ref }}")
+                  else
+                      base_sha=$(git rev-parse HEAD~1)
+                  fi
+                  echo "sha=$base_sha" >> "$GITHUB_OUTPUT"
+                  echo "Base SHA: $base_sha"
+                  echo "Head SHA: $(git rev-parse HEAD)"
+
+            - name: Detect infrastructure changes
+              id: detect
+              run: |
+                  base="${{ steps.base.outputs.sha }}"
+                  changed=$(git diff --name-only "$base"...HEAD)
+                  echo "Changed files:"
+                  echo "$changed" | sed 's/^/  /'
+                  if echo "$changed" | grep -E '^(pnpm-lock\.yaml|package\.json|tsconfig.*\.json|\.github/(workflows|actions)/|\.prettierrc|\.editorconfig|knip\.json|lint-staged\.config\.|copy-project-files\.js)' > /dev/null; then
+                      echo "run-all=true" >> "$GITHUB_OUTPUT"
+                      echo "→ infrastructure change detected, will run full matrix"
+                  else
+                      echo "run-all=false" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Compute affected matrices
+              id: matrix
+              run: |
+                  base="${{ steps.base.outputs.sha }}"
+                  run_all="${{ steps.detect.outputs.run-all }}"
+
+                  if [ "$run_all" = "true" ]; then
+                      filter='*'
+                  else
+                      filter="...[$base]"
+                  fi
+
+                  paths=$(pnpm --silent --filter "$filter" exec pwd 2>/dev/null || true)
+
+                  echo "Affected package directories:"
+                  echo "$paths" | sed 's/^/  /'
+
+                  result=$(PATHS="$paths" node -e '
+                    const fs = require("fs");
+                    const path = require("path");
+                    const paths = process.env.PATHS.split("\n").filter(Boolean);
+                    const pkgs = paths.map(p => {
+                      try {
+                        const pj = JSON.parse(fs.readFileSync(path.join(p, "package.json"), "utf8"));
+                        return { name: pj.name, scripts: pj.scripts || {} };
+                      } catch { return null; }
+                    }).filter(p => p && p.name && p.name !== "root");
+                    const slug = n => n.replace(/^@comet\//, "").replace(/^comet-/, "");
+                    const entry = p => ({ package: p.name, slug: slug(p.name) });
+                    const chromaticPkgs = ["@comet/admin", "@comet/cms-admin", "@comet/mail-react"];
+                    console.log(JSON.stringify({
+                      lint: pkgs.filter(p => p.scripts["lint:ci"]).map(entry),
+                      testUnit: pkgs.filter(p => p.scripts["test:unit"]).map(entry),
+                      testStorybook: pkgs.filter(p => p.scripts["test:storybook"]).map(entry),
+                      chromaticNeeded: pkgs.some(p => chromaticPkgs.includes(p.name)),
+                      anyAffected: pkgs.length > 0,
+                    }));
+                  ')
+
+                  echo "Result: $result"
+
+                  echo "lint-matrix=$(echo "$result" | jq -c '.lint')" >> "$GITHUB_OUTPUT"
+                  echo "test-unit-matrix=$(echo "$result" | jq -c '.testUnit')" >> "$GITHUB_OUTPUT"
+                  echo "test-storybook-matrix=$(echo "$result" | jq -c '.testStorybook')" >> "$GITHUB_OUTPUT"
+                  echo "chromatic-needed=$(echo "$result" | jq -r '.chromaticNeeded')" >> "$GITHUB_OUTPUT"
+                  echo "any-affected=$(echo "$result" | jq -r '.anyAffected')" >> "$GITHUB_OUTPUT"
+
     build-packages:
         name: Build packages
         runs-on: ubuntu-latest
+        needs: discover
+        if: needs.discover.outputs.any-affected == 'true'
         steps:
             - uses: actions/checkout@v6
             - run: |
@@ -44,33 +142,12 @@ jobs:
     lint-package:
         name: Lint ${{ matrix.package }}
         runs-on: ubuntu-latest
-        needs: build-packages
+        needs: [discover, build-packages]
+        if: needs.discover.outputs.lint-matrix != '[]'
         strategy:
             fail-fast: false
             matrix:
-                include:
-                    - { package: "@comet/admin", slug: "admin" }
-                    - { package: "@comet/admin-color-picker", slug: "admin-color-picker" }
-                    - { package: "@comet/admin-date-time", slug: "admin-date-time" }
-                    - { package: "@comet/admin-generator", slug: "admin-generator" }
-                    - { package: "@comet/admin-icons", slug: "admin-icons" }
-                    - { package: "@comet/admin-rte", slug: "admin-rte" }
-                    - { package: "@comet/api-generator", slug: "api-generator" }
-                    - { package: "@comet/brevo-admin", slug: "brevo-admin" }
-                    - { package: "@comet/brevo-api", slug: "brevo-api" }
-                    - { package: "@comet/cli", slug: "cli" }
-                    - { package: "@comet/cms-admin", slug: "cms-admin" }
-                    - { package: "@comet/cms-api", slug: "cms-api" }
-                    - { package: "@comet/eslint-config", slug: "eslint-config" }
-                    - { package: "@comet/eslint-plugin", slug: "eslint-plugin" }
-                    - { package: "@comet/mail-react", slug: "mail-react" }
-                    - { package: "@comet/site-nextjs", slug: "site-nextjs" }
-                    - { package: "@comet/site-react", slug: "site-react" }
-                    - { package: "comet-demo-admin", slug: "demo-admin" }
-                    - { package: "comet-demo-api", slug: "demo-api" }
-                    - { package: "comet-demo-site", slug: "demo-site" }
-                    - { package: "comet-docs", slug: "docs" }
-                    - { package: "comet-storybook", slug: "storybook" }
+                include: ${{ fromJSON(needs.discover.outputs.lint-matrix) }}
         steps:
             - run: echo "${{ github.actor }}"
 
@@ -124,7 +201,8 @@ jobs:
     lint-root:
         name: Lint (root)
         runs-on: ubuntu-latest
-        needs: build-packages
+        needs: [discover, build-packages]
+        if: needs.discover.outputs.any-affected == 'true'
         steps:
             - run: echo "${{ github.actor }}"
 
@@ -170,31 +248,26 @@ jobs:
         steps:
             - name: Verify all lint jobs succeeded
               run: |
-                  if [ "${{ needs.lint-package.result }}" != "success" ] || [ "${{ needs.lint-root.result }}" != "success" ]; then
-                      echo "lint-package=${{ needs.lint-package.result }}, lint-root=${{ needs.lint-root.result }}"
+                  lp="${{ needs.lint-package.result }}"
+                  lr="${{ needs.lint-root.result }}"
+                  if [ "$lp" != "success" ] && [ "$lp" != "skipped" ]; then
+                      echo "lint-package=$lp"
+                      exit 1
+                  fi
+                  if [ "$lr" != "success" ] && [ "$lr" != "skipped" ]; then
+                      echo "lint-root=$lr"
                       exit 1
                   fi
 
     test-unit:
         name: Test (unit) ${{ matrix.package }}
         runs-on: ubuntu-latest
-        needs: build-packages
+        needs: [discover, build-packages]
+        if: needs.discover.outputs.test-unit-matrix != '[]'
         strategy:
             fail-fast: false
             matrix:
-                include:
-                    - { package: "@comet/admin", slug: "admin" }
-                    - { package: "@comet/admin-generator", slug: "admin-generator" }
-                    - { package: "@comet/admin-rte", slug: "admin-rte" }
-                    - { package: "@comet/brevo-api", slug: "brevo-api" }
-                    - { package: "@comet/cli", slug: "cli" }
-                    - { package: "@comet/cms-admin", slug: "cms-admin" }
-                    - { package: "@comet/cms-api", slug: "cms-api" }
-                    - { package: "@comet/eslint-plugin", slug: "eslint-plugin" }
-                    - { package: "@comet/mail-react", slug: "mail-react" }
-                    - { package: "@comet/site-nextjs", slug: "site-nextjs" }
-                    - { package: "@comet/site-react", slug: "site-react" }
-                    - { package: "comet-demo-api", slug: "demo-api" }
+                include: ${{ fromJSON(needs.discover.outputs.test-unit-matrix) }}
         steps:
             - run: echo "${{ github.actor }}"
 
@@ -237,23 +310,21 @@ jobs:
         steps:
             - name: Verify all unit test lanes succeeded
               run: |
-                  if [ "${{ needs.test-unit.result }}" != "success" ]; then
-                      echo "One or more unit test lanes failed: ${{ needs.test-unit.result }}"
+                  r="${{ needs.test-unit.result }}"
+                  if [ "$r" != "success" ] && [ "$r" != "skipped" ]; then
+                      echo "test-unit=$r"
                       exit 1
                   fi
 
     test-storybook:
         name: Test (storybook) ${{ matrix.package }}
         runs-on: ubuntu-latest
-        needs: build-packages
+        needs: [discover, build-packages]
+        if: needs.discover.outputs.test-storybook-matrix != '[]'
         strategy:
             fail-fast: false
             matrix:
-                include:
-                    - { package: "@comet/admin", slug: "admin" }
-                    - { package: "@comet/cms-admin", slug: "cms-admin" }
-                    - { package: "@comet/mail-react", slug: "mail-react" }
-                    - { package: "comet-storybook", slug: "storybook" }
+                include: ${{ fromJSON(needs.discover.outputs.test-storybook-matrix) }}
         steps:
             - run: echo "${{ github.actor }}"
 
@@ -302,16 +373,19 @@ jobs:
         steps:
             - name: Verify all storybook test lanes succeeded
               run: |
-                  if [ "${{ needs.test-storybook.result }}" != "success" ]; then
-                      echo "One or more storybook test lanes failed: ${{ needs.test-storybook.result }}"
+                  r="${{ needs.test-storybook.result }}"
+                  if [ "$r" != "success" ] && [ "$r" != "skipped" ]; then
+                      echo "test-storybook=$r"
                       exit 1
                   fi
 
     chromatic:
         name: Chromatic
         runs-on: ubuntu-latest
-        needs: build-packages
-        if: github.event_name == 'push' || github.base_ref == 'main' || github.base_ref == 'next'
+        needs: [discover, build-packages]
+        if: |
+            (github.event_name == 'push' || github.base_ref == 'main' || github.base_ref == 'next')
+            && needs.discover.outputs.chromatic-needed == 'true'
         steps:
             - run: echo "${{ github.actor }}"
 
