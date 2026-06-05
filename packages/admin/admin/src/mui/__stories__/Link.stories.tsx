@@ -1,7 +1,7 @@
 import { Link } from "@mui/material";
 
 export default {
-    title: "@comet/admin/mui",
+    title: "components/mui/Link",
 };
 
 export const _Link = () => {

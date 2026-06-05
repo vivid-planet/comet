@@ -1,20 +1,17 @@
-import {
-    AppHeader,
-    AppHeaderButton,
-    AppHeaderDropdown,
-    AppHeaderMenuButton,
-    Button,
-    CometLogo,
-    FillSpace,
-    MainContent,
-    MainNavigation,
-    MainNavigationItemRouterLink,
-    MasterLayout,
-} from "@comet/admin";
 import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icons";
 import { Avatar, Box, Divider, MenuItem, MenuList } from "@mui/material";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { Button } from "../../common/buttons/Button";
+import { CometLogo } from "../../common/CometLogo";
+import { FillSpace } from "../../common/FillSpace";
+import { MainContent } from "../../common/MainContent";
+import { MainNavigationItemRouterLink } from "../../mui/mainNavigation/ItemRouterLink";
+import { MainNavigation } from "../../mui/mainNavigation/MainNavigation";
+import { MasterLayout } from "../../mui/MasterLayout";
+import { AppHeader } from "../AppHeader";
+import { AppHeaderButton } from "../button/AppHeaderButton";
+import { AppHeaderDropdown } from "../dropdown/AppHeaderDropdown";
+import { AppHeaderMenuButton } from "../menuButton/AppHeaderMenuButton";
 
 function AccountHeaderItem() {
     return (
@@ -78,9 +75,7 @@ function MasterHeader() {
 }
 
 export default {
-    title: "@comet/admin/mui",
-    decorators: [storyRouterDecorator()],
-    excludeStories: ["Story"],
+    title: "components/appHeader/AppHeader",
 };
 
 export const _AppHeader = {

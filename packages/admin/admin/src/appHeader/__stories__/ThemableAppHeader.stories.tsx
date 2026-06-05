@@ -1,7 +1,10 @@
-import { AppHeader, CometLogo, createCometTheme, MuiThemeProvider } from "@comet/admin";
+import { CometLogo } from "../../common/CometLogo";
+import { MuiThemeProvider } from "../../mui/ThemeProvider";
+import { createCometTheme } from "../../theme/createCometTheme";
+import { AppHeader } from "../AppHeader";
 
 export default {
-    title: "@comet/admin/theming",
+    title: "components/appHeader/ThemableAppHeader",
 };
 
 export const ThemableAppHeader = {
