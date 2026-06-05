@@ -51,7 +51,7 @@ jobs:
 
             - name: Discover affected packages
               id: discover
-              run: node .github/scripts/discover.mjs "${{ steps.base.outputs.sha }}"
+              run: node .github/scripts/discover.mts "${{ steps.base.outputs.sha }}"
 
     build-packages:
         name: Build packages
