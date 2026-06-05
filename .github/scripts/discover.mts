@@ -14,76 +14,30 @@ const INFRA_PATTERN =
 
 const CHROMATIC_PACKAGES = new Set(["@comet/admin", "@comet/cms-admin", "@comet/mail-react"]);
 
-type Pkg = {
-    name: string;
-    scripts: Record<string, string>;
-    slug: string;
-};
-
-type MatrixEntry = {
-    package: string;
-    slug: string;
-};
-
-type Outputs = {
-    "run-all": boolean;
-    "any-affected": boolean;
-    "lint-matrix": string;
-    "test-unit-matrix": string;
-    "test-storybook-matrix": string;
-    "chromatic-needed": boolean;
-};
+type Pkg = { name: string; scripts: Record<string, string> };
 
 function sh(cmd: string): string[] {
     return execSync(cmd, { encoding: "utf8" }).trim().split("\n").filter(Boolean);
 }
 
-function slug(name: string): string {
-    return name.replace(/^@comet\//, "").replace(/^comet-/, "");
-}
-
-function getChangedFiles(baseSha: string): string[] {
-    return sh(`git diff --name-only ${baseSha}...HEAD`);
-}
-
-function isInfraChange(changedFiles: string[]): boolean {
-    return changedFiles.some((f) => INFRA_PATTERN.test(f));
-}
-
-function getAffectedPackagePaths(baseSha: string, runAll: boolean): string[] {
-    const filter = runAll ? "*" : `...[${baseSha}]`;
-    return sh(`pnpm --silent --filter "${filter}" exec pwd`);
-}
-
 function loadPackage(dir: string): Pkg | null {
     try {
         const { name, scripts = {} } = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
-        if (!name || name === "root") return null;
-        return { name, scripts, slug: slug(name) };
+        return name && name !== "root" ? { name, scripts } : null;
     } catch {
         return null;
     }
 }
 
-function buildMatrix(packages: Pkg[], script: string): string {
-    const entries: MatrixEntry[] = packages.filter((p) => p.scripts[script]).map(({ name, slug }) => ({ package: name, slug }));
+function matrix(packages: Pkg[], script: string): string {
+    const entries = packages
+        .filter((p) => p.scripts[script])
+        .map((p) => ({ package: p.name, slug: p.name.replace(/^@comet\//, "").replace(/^comet-/, "") }));
     return JSON.stringify(entries);
 }
 
-function buildOutputs(packages: Pkg[], runAll: boolean): Outputs {
-    return {
-        "run-all": runAll,
-        "any-affected": packages.length > 0,
-        "lint-matrix": buildMatrix(packages, "lint:ci"),
-        "test-unit-matrix": buildMatrix(packages, "test:unit"),
-        "test-storybook-matrix": buildMatrix(packages, "test:storybook"),
-        "chromatic-needed": packages.some((p) => CHROMATIC_PACKAGES.has(p.name)),
-    };
-}
-
-function writeOutputs(outputs: Outputs): void {
-    if (!process.env.GITHUB_OUTPUT) return;
-    for (const [key, value] of Object.entries(outputs)) {
+function setOutput(key: string, value: unknown): void {
+    if (process.env.GITHUB_OUTPUT) {
         appendFileSync(process.env.GITHUB_OUTPUT, `${key}=${value}\n`);
     }
 }
@@ -95,22 +49,26 @@ function main(): void {
         process.exit(2);
     }
 
-    const changedFiles = getChangedFiles(baseSha);
-    const runAll = isInfraChange(changedFiles);
-
+    // 1. Did anything infrastructural change? If so we run the full matrix.
+    const changedFiles = sh(`git diff --name-only ${baseSha}...HEAD`);
+    const runAll = changedFiles.some((f) => INFRA_PATTERN.test(f));
     console.log("Changed files:");
     changedFiles.forEach((f) => console.log(`  ${f}`));
     if (runAll) console.log("→ infrastructure change detected, running full matrix");
 
-    const paths = getAffectedPackagePaths(baseSha, runAll);
+    // 2. Which workspace packages are affected (incl. their dependents)?
+    const filter = runAll ? "*" : `...[${baseSha}]`;
+    const paths = sh(`pnpm --silent --filter "${filter}" exec pwd`);
     const packages = paths.map(loadPackage).filter((p): p is Pkg => p !== null);
-
     console.log(`Affected packages: ${packages.map((p) => p.name).join(", ") || "(none)"}`);
 
-    const outputs = buildOutputs(packages, runAll);
-    console.log("Outputs:", outputs);
-
-    writeOutputs(outputs);
+    // 3. Emit GitHub Actions outputs.
+    setOutput("run-all", runAll);
+    setOutput("any-affected", packages.length > 0);
+    setOutput("lint-matrix", matrix(packages, "lint:ci"));
+    setOutput("test-unit-matrix", matrix(packages, "test:unit"));
+    setOutput("test-storybook-matrix", matrix(packages, "test:storybook"));
+    setOutput("chromatic-needed", packages.some((p) => CHROMATIC_PACKAGES.has(p.name)));
 }
 
 main();
