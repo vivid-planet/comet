@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { glob } from "node:fs/promises";
 import libCoverage from "istanbul-lib-coverage";
 import libReport from "istanbul-lib-report";
@@ -8,6 +8,9 @@ const coverageMap = libCoverage.createCoverageMap({});
 const sources = [];
 
 for await (const file of glob("packages/**/coverage/coverage-final.json")) {
+    sources.push(file);
+}
+for await (const file of glob("packages/**/coverage-storybook/coverage-final.json")) {
     sources.push(file);
 }
 sources.sort();
@@ -32,5 +35,7 @@ const context = libReport.createContext({
 reports.create("html", { skipEmpty: false }).execute(context);
 reports.create("lcov").execute(context);
 reports.create("text-summary").execute(context);
+
+await writeFile("coverage/coverage-final.json", JSON.stringify(coverageMap.toJSON()));
 
 console.log("\nMerged report written to coverage/index.html");

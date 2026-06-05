@@ -47,6 +47,7 @@
         "test:storybook": "pnpm --recursive --if-present run test:storybook",
         "test:unit": "pnpm --recursive --if-present run test:unit",
         "test:coverage": "pnpm --recursive --if-present run test:coverage",
+        "test:coverage:storybook": "pnpm --recursive --if-present run test:coverage:storybook",
         "coverage:report": "node scripts/coverage-merge.mjs",
         "prepare": "husky",
         "version": "pnpm changeset version && pnpm install --lockfile-only",

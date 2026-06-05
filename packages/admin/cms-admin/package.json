@@ -43,6 +43,7 @@
         "storybook": "storybook dev -p 26647 --no-open --disable-telemetry",
         "test": "pnpm run test:unit && pnpm run test:storybook",
         "test:coverage": "vitest --run --project unit --coverage",
+        "test:coverage:storybook": "vitest --run --project storybook --coverage --coverage.reportsDirectory=./coverage-storybook --outputFile.junit=./junit-storybook.xml",
         "test:storybook": "vitest --run --project storybook --outputFile.junit=./junit-storybook.xml",
         "test:unit": "vitest --run --project unit --outputFile.junit=./junit-unit.xml",
         "test:watch": "vitest --watch"

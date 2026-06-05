@@ -40,24 +40,15 @@ jobs:
                       packages/*/*/junit-unit.xml
                   overwrite: true
 
-            - name: Merge coverage reports
-              if: success() || failure()
-              run: pnpm run coverage:report
-
-            - name: Upload coverage report
+            - name: Upload coverage data
               uses: actions/upload-artifact@v7
               if: success() || failure()
               with:
-                  name: coverage-report
+                  name: coverage-data-unit
                   path: |
-                      coverage
                       packages/*/coverage
                       packages/*/*/coverage
                   overwrite: true
-
-            - name: Write coverage summary to job summary
-              if: success() || failure()
-              run: node scripts/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
 
     test-storybook:
         name: Test (storybook)
@@ -81,7 +72,7 @@ jobs:
               run: pnpm --filter comet-storybook exec playwright install chromium-headless-shell
 
             - name: Test (storybook)
-              run: pnpm run test:storybook
+              run: pnpm run test:coverage:storybook
 
             - name: Upload test results
               uses: actions/upload-artifact@v7
@@ -93,3 +84,57 @@ jobs:
                       packages/*/*/junit-storybook.xml
                       storybook/junit.xml
                   overwrite: true
+
+            - name: Upload coverage data
+              uses: actions/upload-artifact@v7
+              if: success() || failure()
+              with:
+                  name: coverage-data-storybook
+                  path: |
+                      packages/*/coverage-storybook
+                      packages/*/*/coverage-storybook
+                  overwrite: true
+
+    coverage-report:
+        name: Coverage report
+        runs-on: ubuntu-latest
+        needs: [test-unit, test-storybook]
+        if: success() || failure()
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: ./.github/actions/setup
+              with:
+                  setup-ci: "false"
+
+            - name: Download unit coverage data
+              uses: actions/download-artifact@v7
+              continue-on-error: true
+              with:
+                  name: coverage-data-unit
+                  path: .
+
+            - name: Download storybook coverage data
+              uses: actions/download-artifact@v7
+              continue-on-error: true
+              with:
+                  name: coverage-data-storybook
+                  path: .
+
+            - name: Merge coverage reports
+              run: pnpm run coverage:report
+
+            - name: Upload coverage report
+              uses: actions/upload-artifact@v7
+              with:
+                  name: coverage-report
+                  path: |
+                      coverage
+                      packages/*/coverage
+                      packages/*/*/coverage
+                      packages/*/coverage-storybook
+                      packages/*/*/coverage-storybook
+                  overwrite: true
+
+            - name: Write coverage summary to job summary
+              run: node scripts/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
