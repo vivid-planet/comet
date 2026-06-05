@@ -1,16 +1,9 @@
 #!/usr/bin/env node
-// Discover which workspace packages are affected by the current change and
-// emit GitHub Actions matrix outputs.
+// Decide which CI matrix lanes need to run for the current change.
 //
 // Usage:  node .github/scripts/discover.mjs <base-sha>
-//
-// Outputs (via $GITHUB_OUTPUT):
-//   run-all                 — true if an "infrastructure" file changed (forces full matrix)
-//   any-affected            — true if at least one workspace package is affected
-//   lint-matrix             — JSON array of { package, slug } for the lint matrix
-//   test-unit-matrix        — JSON array for the test:unit matrix
-//   test-storybook-matrix   — JSON array for the test:storybook matrix
-//   chromatic-needed        — true if any package Chromatic publishes is affected
+// Writes GITHUB_OUTPUT: run-all, any-affected, lint-matrix,
+// test-unit-matrix, test-storybook-matrix, chromatic-needed.
 
 import { execSync } from "node:child_process";
 import { readFileSync, appendFileSync } from "node:fs";
@@ -22,53 +15,46 @@ if (!baseSha) {
     process.exit(2);
 }
 
-// Files that, when changed, force a full matrix run.
 const INFRA_PATTERN =
     /^(pnpm-lock\.yaml|package\.json|tsconfig.*\.json|\.github\/(workflows|actions)\/|knip\.json|lint-staged\.config\.|copy-project-files\.js|\.prettierrc|\.editorconfig)/;
 
-// Packages published to Chromatic — if any are affected, run the chromatic job.
-const CHROMATIC_PACKAGES = ["@comet/admin", "@comet/cms-admin", "@comet/mail-react"];
+const CHROMATIC_PACKAGES = new Set(["@comet/admin", "@comet/cms-admin", "@comet/mail-react"]);
 
-const changedFiles = execSync(`git diff --name-only ${baseSha}...HEAD`, { encoding: "utf8" })
-    .trim()
-    .split("\n")
-    .filter(Boolean);
+const sh = (cmd) => execSync(cmd, { encoding: "utf8" }).trim().split("\n").filter(Boolean);
+const slug = (name) => name.replace(/^@comet\//, "").replace(/^comet-/, "");
+
+const changedFiles = sh(`git diff --name-only ${baseSha}...HEAD`);
+const runAll = changedFiles.some((f) => INFRA_PATTERN.test(f));
 
 console.log("Changed files:");
 changedFiles.forEach((f) => console.log(`  ${f}`));
+if (runAll) console.log("→ infrastructure change detected, running full matrix");
 
-const runAll = changedFiles.some((f) => INFRA_PATTERN.test(f));
-if (runAll) console.log("→ infrastructure change detected, will run full matrix");
-
-const filter = runAll ? "*" : `...[${baseSha}]`;
-const paths = execSync(`pnpm --silent --filter "${filter}" exec pwd`, { encoding: "utf8" })
-    .trim()
-    .split("\n")
-    .filter(Boolean);
+const paths = sh(`pnpm --silent --filter "${runAll ? "*" : `...[${baseSha}]`}" exec pwd`);
 
 const packages = paths
     .map((p) => {
         try {
-            const pj = JSON.parse(readFileSync(join(p, "package.json"), "utf8"));
-            return { name: pj.name, scripts: pj.scripts ?? {} };
+            const { name, scripts = {} } = JSON.parse(readFileSync(join(p, "package.json"), "utf8"));
+            return name && name !== "root" ? { name, scripts, slug: slug(name) } : null;
         } catch {
             return null;
         }
     })
-    .filter((p) => p && p.name && p.name !== "root");
+    .filter(Boolean);
 
 console.log(`Affected packages: ${packages.map((p) => p.name).join(", ") || "(none)"}`);
 
-const slug = (name) => name.replace(/^@comet\//, "").replace(/^comet-/, "");
-const matrixEntry = (p) => ({ package: p.name, slug: slug(p.name) });
+const matrix = (script) =>
+    JSON.stringify(packages.filter((p) => p.scripts[script]).map(({ name, slug }) => ({ package: name, slug })));
 
 const outputs = {
     "run-all": runAll,
     "any-affected": packages.length > 0,
-    "lint-matrix": JSON.stringify(packages.filter((p) => p.scripts["lint:ci"]).map(matrixEntry)),
-    "test-unit-matrix": JSON.stringify(packages.filter((p) => p.scripts["test:unit"]).map(matrixEntry)),
-    "test-storybook-matrix": JSON.stringify(packages.filter((p) => p.scripts["test:storybook"]).map(matrixEntry)),
-    "chromatic-needed": packages.some((p) => CHROMATIC_PACKAGES.includes(p.name)),
+    "lint-matrix": matrix("lint:ci"),
+    "test-unit-matrix": matrix("test:unit"),
+    "test-storybook-matrix": matrix("test:storybook"),
+    "chromatic-needed": packages.some((p) => CHROMATIC_PACKAGES.has(p.name)),
 };
 
 console.log("Outputs:", outputs);
