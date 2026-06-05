@@ -1,7 +1,9 @@
-import { Button, Dialog } from "@comet/admin";
 import { Box } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+
+import { Button } from "../buttons/Button";
+import { Dialog } from "../Dialog";
 
 type Story = StoryObj<typeof Dialog>;
 

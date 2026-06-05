@@ -1,31 +1,29 @@
-import {
-    Button,
-    DataGridToolbar,
-    EditDialog,
-    FillSpace,
-    FinalForm,
-    type IEditDialogApi,
-    MainContent,
-    messages,
-    RouterTab,
-    RouterTabs,
-    SaveBoundary,
-    SaveBoundarySaveButton,
-    Stack,
-    StackLink,
-    StackPage,
-    StackSwitch,
-    StackToolbar,
-    TextField,
-    ToolbarActions,
-    ToolbarAutomaticTitleItem,
-    ToolbarBackButton,
-} from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+
+import { Button } from "../common/buttons/Button";
+import { FillSpace } from "../common/FillSpace";
+import { MainContent } from "../common/MainContent";
+import { ToolbarActions } from "../common/toolbar/actions/ToolbarActions";
+import { ToolbarAutomaticTitleItem } from "../common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
+import { ToolbarBackButton } from "../common/toolbar/backbutton/ToolbarBackButton";
+import { DataGridToolbar } from "../common/toolbar/DataGridToolbar";
+import { StackToolbar } from "../common/toolbar/StackToolbar";
+import { EditDialog } from "../EditDialog";
+import type { IEditDialogApi } from "../EditDialogApiContext";
+import { FinalForm } from "../FinalForm";
+import { TextField } from "../form/fields/TextField";
+import { messages } from "../messages";
+import { SaveBoundary } from "../saveBoundary/SaveBoundary";
+import { SaveBoundarySaveButton } from "../saveBoundary/SaveBoundarySaveButton";
+import { StackPage } from "../stack/Page";
+import { Stack } from "../stack/Stack";
+import { StackLink } from "../stack/StackLink";
+import { StackSwitch } from "../stack/Switch";
+import { RouterTab, RouterTabs } from "../tabs/RouterTabs";
 
 export default {
     title: "components/edit-dialog",

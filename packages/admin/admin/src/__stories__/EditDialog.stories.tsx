@@ -1,5 +1,10 @@
-import { Button, Field, FinalForm, FinalFormInput, useEditDialog } from "@comet/admin";
 import { DialogContent } from "@mui/material";
+
+import { Button } from "../common/buttons/Button";
+import { useEditDialog } from "../EditDialog";
+import { FinalForm } from "../FinalForm";
+import { Field } from "../form/Field";
+import { FinalFormInput } from "../form/FinalFormInput";
 
 export default {
     title: "components/edit-dialog",

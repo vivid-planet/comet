@@ -1,6 +1,9 @@
-import { Button, SubRoute, useEditDialog } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { Stack, Typography } from "@mui/material";
+
+import { Button } from "../common/buttons/Button";
+import { useEditDialog } from "../EditDialog";
+import { SubRoute } from "../router/SubRoute";
 
 const FirstComponent = () => {
     const [EditDialog, selection, editDialogApi] = useEditDialog();

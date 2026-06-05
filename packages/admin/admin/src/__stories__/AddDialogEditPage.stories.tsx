@@ -1,19 +1,18 @@
-import {
-    Button,
-    FieldSet,
-    SaveBoundary,
-    StackBackButton,
-    StackLink,
-    StackMainContent,
-    StackPage,
-    StackSwitch,
-    Tooltip,
-    useEditDialog,
-} from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { DialogContent, Typography } from "@mui/material";
 import type { StoryObj } from "@storybook/react-vite";
 import { expect, waitFor, within } from "storybook/test";
+
+import { Button } from "../common/buttons/Button";
+import { FieldSet } from "../common/FieldSet";
+import { StackMainContent } from "../common/MainContent";
+import { Tooltip } from "../common/Tooltip";
+import { useEditDialog } from "../EditDialog";
+import { SaveBoundary } from "../saveBoundary/SaveBoundary";
+import { StackBackButton } from "../stack/backbutton/StackBackButton";
+import { StackPage } from "../stack/Page";
+import { StackLink } from "../stack/StackLink";
+import { StackSwitch } from "../stack/Switch";
 
 export default {
     title: "components/edit-dialog",
