@@ -112,14 +112,14 @@ jobs:
               continue-on-error: true
               with:
                   name: coverage-data-unit
-                  path: .
+                  path: packages
 
             - name: Download storybook coverage data
               uses: actions/download-artifact@v7
               continue-on-error: true
               with:
                   name: coverage-data-storybook
-                  path: .
+                  path: packages
 
             - name: Merge coverage reports
               run: pnpm run coverage:report

@@ -9,7 +9,6 @@ export default defineConfig({
         outputFile: {
             junit: "./junit.xml",
         },
-        testTimeout: 15000,
         coverage: {
             provider: "v8",
             reporter: ["text", "lcov", "json", "json-summary"],
@@ -24,6 +23,7 @@ export default defineConfig({
                     name: "unit",
                     environment: "jsdom",
                     setupFiles: ["./vitest.setup.ts"],
+                    testTimeout: 15000,
                 },
             },
             {
