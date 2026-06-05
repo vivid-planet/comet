@@ -48,6 +48,8 @@ export type TipTapSupports =
     | "soft-hyphen"
     | "link";
 
+export type { JSONContent as TipTapRichTextBlockContent } from "@tiptap/core";
+
 type TipTapBlockType =
     | "paragraph"
     | "heading-1"

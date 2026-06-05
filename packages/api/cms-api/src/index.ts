@@ -103,7 +103,11 @@ export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar"
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
 export { blockToMikroOrmFullText, getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
-export { createTipTapRichTextBlock, type CreateTipTapRichTextBlockOptions } from "./blocks/tipTap/createTipTapRichTextBlock";
+export {
+    createTipTapRichTextBlock,
+    type CreateTipTapRichTextBlockOptions,
+    type TipTapRichTextBlockContent,
+} from "./blocks/tipTap/createTipTapRichTextBlock";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { IsLinkTarget } from "./blocks/validator/is-link-target.validator";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
