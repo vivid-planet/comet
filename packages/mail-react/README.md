@@ -38,7 +38,10 @@ Themed components expose their styling through the theme: a flat base entry and 
 - **Location.** Custom components live in `src/components/<concern>/` (e.g. `src/components/section/MjmlSection.tsx`).
 - **File order.** Imports → types/props → component → styles. `registerStyles` calls go below the component.
 - **Module format.** ESM only (`type: module`). Use `.js` extensions in imports.
-- **TSDoc.** Short TSDoc — one line where possible — on exported components and props.
+- **TSDoc.** Short — one line where possible — on exported components and props.
+- **Prop defaults.** Add `@defaultValue` when the default isn't obvious from the type — runtime defaults, and theme-derived ones the consumer can't see in the shipped types.
+- **Phrasing a default.** Name where the value comes from, not the value itself. One theme token: name it in backticks, as in "The theme's `colors.background.content`". Computed from several: name what it depends on, as in "The theme's `divider` height for the active variant".
+- **Defaults on inherited props.** Redeclare the prop locally (`Omit` it from the base, re-add it with the same type) so the tag is on the prop itself. Never document the default in the component's TSDoc.
 
 ### Storybook
 
@@ -97,9 +100,13 @@ Other sections should be rare — only when content is durable, feature-specific
 
 Feature READMEs (this one included) should stay current. Update them in the same PR as any change that makes them inaccurate or adds context worth recording.
 
-## Consumer-facing documentation
+## Usage documentation
 
-- Docs: [docs/docs/3-features-modules/13-building-html-emails/](../../docs/docs/3-features-modules/13-building-html-emails/)
-- Agent skill: [skills/comet-mail-react/SKILL.md](../../skills/comet-mail-react/SKILL.md)
+Two artifacts document how to _use_ this package, for two readers:
 
-When a change here affects usage patterns, component APIs, or styling conventions, update these alongside the library change.
+- **Docs** — [docs/docs/3-features-modules/13-building-html-emails/](../../docs/docs/3-features-modules/13-building-html-emails/) — for people building emails with the package.
+- **Agent skill** — [skills/comet-mail-react/SKILL.md](../../skills/comet-mail-react/SKILL.md) — the same guidance for AI agents working in a project that uses this package.
+
+Both teach the same things: what the package is for, how to build emails with it, the patterns to reach for, and the email-client pitfalls — markup that's fine in a browser can render wrong in clients like Outlook. They differ in one respect — an agent already has the package's types and TSDoc in its project, so the skill doesn't restate type signatures, prop lists, or defaults; those live in the types and TSDoc, and it spends its words on everything they can't convey on their own.
+
+When a change affects how the package is used — components added/removed/renamed, changed behavior, new usage patterns, or styling conventions — update both in the same PR; consider a separate docs commit so reviewers can take them on their own.
