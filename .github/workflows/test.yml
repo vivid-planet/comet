@@ -72,8 +72,16 @@ jobs:
                   fi
 
     test-storybook:
-        name: Test (storybook)
+        name: Test (storybook) ${{ matrix.package }}
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - { package: "@comet/admin", slug: "admin" }
+                    - { package: "@comet/cms-admin", slug: "cms-admin" }
+                    - { package: "@comet/mail-react", slug: "mail-react" }
+                    - { package: "comet-storybook", slug: "storybook" }
         steps:
             - run: echo "${{ github.actor }}"
 
@@ -90,18 +98,32 @@ jobs:
                   build-packages: "true"
 
             - name: Install Playwright Browsers
-              run: pnpm --filter comet-storybook exec playwright install chromium-headless-shell
+              run: pnpm --filter '${{ matrix.package }}' exec playwright install chromium-headless-shell
 
             - name: Test (storybook)
-              run: pnpm run test:storybook
+              run: pnpm --filter '${{ matrix.package }}' run test:storybook
 
             - name: Upload test results
               uses: actions/upload-artifact@v7
               if: success() || failure()
               with:
-                  name: test-results-storybook
+                  name: test-results-storybook-${{ matrix.slug }}
                   path: |
                       packages/*/junit-storybook.xml
                       packages/*/*/junit-storybook.xml
                       storybook/junit.xml
                   overwrite: true
+                  if-no-files-found: ignore
+
+    test-storybook-all:
+        name: Test (storybook)
+        runs-on: ubuntu-latest
+        needs: test-storybook
+        if: ${{ !cancelled() }}
+        steps:
+            - name: Verify all storybook test lanes succeeded
+              run: |
+                  if [ "${{ needs.test-storybook.result }}" != "success" ]; then
+                      echo "One or more storybook test lanes failed: ${{ needs.test-storybook.result }}"
+                      exit 1
+                  fi
