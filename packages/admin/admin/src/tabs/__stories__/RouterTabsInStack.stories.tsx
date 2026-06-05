@@ -1,5 +1,9 @@
-import { RouterTab, RouterTabs, Stack, StackPage, StackSwitch } from "@comet/admin";
 import { useEffect, useRef, useState } from "react";
+
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackSwitch } from "../../stack/Switch";
+import { RouterTab, RouterTabs } from "../RouterTabs";
 
 const mountCount: Record<string, number> = {};
 

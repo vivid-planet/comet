@@ -1,5 +1,10 @@
-import { RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch } from "@comet/admin";
 import { useLocation } from "react-router";
+
+import { StackBreadcrumbs } from "../../stack/breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackSwitch } from "../../stack/Switch";
+import { RouterTab, RouterTabs } from "../RouterTabs";
 
 export default {
     title: "components/tabs/Nested StackSwitch with RouterTabs",

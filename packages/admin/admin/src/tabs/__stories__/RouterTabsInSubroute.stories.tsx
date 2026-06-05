@@ -1,6 +1,8 @@
-import { RouterTab, RouterTabs, SubRoute } from "@comet/admin";
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router";
+
+import { SubRoute } from "../../router/SubRoute";
+import { RouterTab, RouterTabs } from "../RouterTabs";
 
 function Story() {
     const match = useRouteMatch();

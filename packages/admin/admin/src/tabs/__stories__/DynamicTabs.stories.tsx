@@ -1,6 +1,9 @@
-import { Button, RouterTab, RouterTabs, Tab, Tabs } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { useState } from "react";
+
+import { Button } from "../../common/buttons/Button";
+import { RouterTab, RouterTabs } from "../RouterTabs";
+import { Tab, Tabs } from "../Tabs";
 
 export const DynamicRouterTabs = ({ showFourthTab }: { showFourthTab: boolean }) => {
     const content = ["Two", "Three"];
