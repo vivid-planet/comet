@@ -3,7 +3,7 @@ import { Box, Card, CardContent, Chip, ListItemIcon, ListItemText, Menu, MenuIte
 import { type MouseEvent, useState } from "react";
 
 export default {
-    title: "@comet/admin/mui",
+    title: "components/mui/ChipMenu",
 };
 
 export const ChipMenu = {

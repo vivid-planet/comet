@@ -1,24 +1,21 @@
-import {
-    AppHeader,
-    AppHeaderMenuButton,
-    CometLogo,
-    FillSpace,
-    MainContent,
-    MainNavigation,
-    MainNavigationCollapsibleItem,
-    MainNavigationItemAnchorLink,
-    MainNavigationItemRouterLink,
-    MasterLayout,
-    useMainNavigation,
-    useWindowSize,
-} from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { AppHeader } from "../../../appHeader/AppHeader";
+import { AppHeaderMenuButton } from "../../../appHeader/menuButton/AppHeaderMenuButton";
+import { CometLogo } from "../../../common/CometLogo";
+import { FillSpace } from "../../../common/FillSpace";
+import { MainContent } from "../../../common/MainContent";
+import { useWindowSize } from "../../../helpers/useWindowSize";
+import { MasterLayout } from "../../MasterLayout";
+import { MainNavigationCollapsibleItem } from "../CollapsibleItem";
+import { useMainNavigation } from "../Context";
+import { MainNavigationItemAnchorLink } from "../ItemAnchorLink";
+import { MainNavigationItemRouterLink } from "../ItemRouterLink";
+import { MainNavigation } from "../MainNavigation";
 
 const permanentMenuMinWidth = 1024;
 const pathsToAlwaysUseTemporaryMenu = ["/foo3", "/foo4"];
@@ -117,8 +114,7 @@ const Content = ({ children }: { children: string }) => (
 );
 
 export default {
-    title: "@comet/admin/mui",
-    decorators: [storyRouterDecorator()],
+    title: "components/mui/mainNavigation/MenuDynamicVariants",
 };
 
 export const MenuDynamicVariants = {

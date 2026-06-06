@@ -1,9 +1,10 @@
-import { Button } from "@comet/admin";
 import { ArrowRight, Reload } from "@comet/admin-icons";
 import { Card, CardContent, CardHeader, Grid, IconButton, Typography } from "@mui/material";
 
+import { Button } from "../../common/buttons/Button";
+
 export default {
-    title: "@comet/admin/mui",
+    title: "components/mui/Card",
 };
 
 export const _Card = () => {

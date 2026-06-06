@@ -2,7 +2,7 @@ import { ChevronDown } from "@comet/admin-icons";
 import { Box, Card, CardContent, Chip, Grid, Stack, Typography } from "@mui/material";
 
 export default {
-    title: "@comet/admin/mui",
+    title: "components/mui/Chip",
     args: {
         color: "default",
         variant: "filled",
