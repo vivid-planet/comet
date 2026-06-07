@@ -86,8 +86,8 @@
     },
     "devDependencies": {
         "@apollo/client": "^3.14.1",
-        "@babel/cli": "^7.28.6",
-        "@babel/core": "^7.29.0",
+        "@babel/cli": "^7.29.7",
+        "@babel/core": "^7.29.7",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
