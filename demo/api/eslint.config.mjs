@@ -16,10 +16,4 @@ export default defineConfig([
     ]),
     ...eslintConfigNestJs,
     ...storybook.configs["flat/recommended"],
-    {
-        files: [".storybook/main.@(ts|tsx|js|jsx|mjs|cjs)"],
-        rules: {
-            "storybook/no-uninstalled-addons": ["error", { ignore: ["@comet/mail-react/storybook"] }],
-        },
-    },
 ]);
