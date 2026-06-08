@@ -114,33 +114,6 @@ export class UserPermissionsService {
         }
     }
 
-    async findUserOrThrow(id: string): Promise<User> {
-        if (!this.userService) {
-            throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
-        }
-        if (this.userService.findUserOrThrow) {
-            return this.userService.findUserOrThrow(id);
-        }
-        if (this.userService.getUser) {
-            return this.userService.getUser(id);
-        }
-        if (this.userService.findUser) {
-            const user = await this.userService.findUser(id);
-            if (!user) {
-                throw new Error(`User not found: ${id}`);
-            }
-            return user;
-        }
-        throw new Error("The userService must implement `findUserOrThrow`, `findUser` or `getUser`.");
-    }
-
-    /**
-     * @deprecated Use `findUserOrThrow` instead.
-     */
-    async getUser(id: string): Promise<User> {
-        return this.findUserOrThrow(id);
-    }
-
     async findUserForLogin(id: string): Promise<User | null> {
         if (this.userService?.findUserForLogin) {
             return this.userService.findUserForLogin(id);
@@ -166,6 +139,33 @@ export class UserPermissionsService {
             }
             return user;
         }
+        return this.findUserOrThrow(id);
+    }
+
+    async findUserOrThrow(id: string): Promise<User> {
+        if (!this.userService) {
+            throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+        }
+        if (this.userService.findUserOrThrow) {
+            return this.userService.findUserOrThrow(id);
+        }
+        if (this.userService.getUser) {
+            return this.userService.getUser(id);
+        }
+        if (this.userService.findUser) {
+            const user = await this.userService.findUser(id);
+            if (!user) {
+                throw new Error(`User not found: ${id}`);
+            }
+            return user;
+        }
+        throw new Error("The userService must implement `findUserOrThrow`, `findUser` or `getUser`.");
+    }
+
+    /**
+     * @deprecated Use `findUserOrThrow` instead.
+     */
+    async getUser(id: string): Promise<User> {
         return this.findUserOrThrow(id);
     }
 

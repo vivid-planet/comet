@@ -59,7 +59,13 @@ export class CometAuthGuard implements CanActivate {
                     throw new UnauthorizedException(`User authenticated by ID but no user service given: ${userId}`);
                 }
                 try {
-                    user = await this.service.findUserForLoginOrThrow(userId);
+                    if (userService.findUserForLoginOrThrow) {
+                        user = await userService.findUserForLoginOrThrow(userId);
+                    } else if (userService.getUserForLogin) {
+                        user = await userService.getUserForLogin(userId);
+                    } else {
+                        user = await this.service.findUserOrThrow(userId);
+                    }
                 } catch (e) {
                     throw new UnauthorizedException(`Could not get user from UserService: ${userId} - ${(e as Error).message}`);
                 }

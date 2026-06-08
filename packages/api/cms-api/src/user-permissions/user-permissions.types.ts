@@ -34,10 +34,7 @@ export interface AccessControlServiceInterface {
 }
 
 export interface UserPermissionsUserServiceInterface {
-    /**
-     * @deprecated Implement `findUserForLogin` and `findUserForLoginOrThrow` instead.
-     */
-    getUserForLogin?: (id: string) => Promise<User> | User;
+    findUser?: (id: string) => Promise<User | null> | User | null;
     /**
      * Optional method to look up the user for login if a different code path from the default `findUser` is required.
      */
@@ -46,13 +43,16 @@ export interface UserPermissionsUserServiceInterface {
      * Optional method to look up the user for login if a different code path from the default `findUserOrThrow` is required.
      */
     findUserForLoginOrThrow?: (id: string) => Promise<User> | User;
+    findUserOrThrow?: (id: string) => Promise<User> | User;
+    findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
     /**
      * @deprecated Implement `findUser` and `findUserOrThrow` instead.
      */
     getUser?: (id: string) => Promise<User> | User;
-    findUser?: (id: string) => Promise<User | null> | User | null;
-    findUserOrThrow?: (id: string) => Promise<User> | User;
-    findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
+    /**
+     * @deprecated Implement `findUserForLogin` and `findUserForLoginOrThrow` instead.
+     */
+    getUserForLogin?: (id: string) => Promise<User> | User;
     getAccountUrl?: (user: User) => Promise<string> | string;
 }
 
