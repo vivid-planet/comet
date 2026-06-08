@@ -169,6 +169,13 @@ export class UserPermissionsService {
         return this.findUserOrThrow(id);
     }
 
+    /**
+     * @deprecated Use `findUserForLoginOrThrow` instead.
+     */
+    async getUserForLogin(id: string): Promise<User> {
+        return this.findUserForLoginOrThrow(id);
+    }
+
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
         if (!this.userService) {
             throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
