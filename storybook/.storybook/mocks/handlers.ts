@@ -3,11 +3,11 @@ import { GraphQLHandler } from "graphql-mocks";
 import { http } from "msw";
 
 import { currentUserHandler } from "./currentUserHandler";
-import { fileUploadsHandler } from "./handler/fileUploads";
-import { folderHandler, subfolderHandler } from "./handler/folders";
-import { launchesPastPagePagingResolver, launchesPastRestHandler, launchesPastResultResolver } from "./handler/launchesPast";
+import { fileUploadsHandler } from "./fileUploadsHandler";
+import { folderHandler, subfolderHandler } from "./foldersHandler";
+import { launchesPastPagePagingResolver, launchesPastRestHandler, launchesPastResultResolver } from "./launchesPastHandler";
 
-export type { LaunchesPastPagePagingResult, LaunchesPastResult } from "./handler/launchesPast";
+export type { LaunchesPastPagePagingResult, LaunchesPastResult } from "./launchesPastHandler";
 
 const graphqlSchema = `
 schema {

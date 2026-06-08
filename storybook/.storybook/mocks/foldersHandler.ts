@@ -1,6 +1,6 @@
 import type { GraphQLFieldResolver } from "graphql";
 
-import { sleep } from "../handlers";
+import { sleep } from "./handlers";
 
 type FolderMockData = {
     id: string;
