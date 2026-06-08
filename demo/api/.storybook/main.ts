@@ -7,6 +7,7 @@ const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const config: StorybookConfig = {
     stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
     staticDirs: ["./public"],
+    // eslint-disable-next-line storybook/no-uninstalled-addons -- subpath addon exports aren't recognized by the rule
     addons: ["@storybook/addon-docs", "@comet/mail-react/storybook"],
     framework: "@storybook/react-vite",
     viteFinal: (config) => {
