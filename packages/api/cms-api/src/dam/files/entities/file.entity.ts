@@ -179,7 +179,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @EntityInfo<DamFile>({
             sql: `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`,
         })
-        @RequiredPermission("dam")
+        @RequiredPermission("dam", { skipScopeCheck: true })
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {}

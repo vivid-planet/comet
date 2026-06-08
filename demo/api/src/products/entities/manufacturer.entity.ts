@@ -95,7 +95,7 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
     name: "name",
     fullText: "fullText",
 })
-@RequiredPermission("manufacturers")
+@RequiredPermission("manufacturers", { skipScopeCheck: true })
 @Entity()
 @ObjectType()
 @CrudGenerator({ requiredPermission: ["manufacturers"] })

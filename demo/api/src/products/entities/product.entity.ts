@@ -97,7 +97,7 @@ export class ProductPriceRange {
     visible: { status: { $eq: ProductStatus.Published } },
     fullText: "fullText",
 })
-@RequiredPermission("products")
+@RequiredPermission("products", { skipScopeCheck: true })
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
