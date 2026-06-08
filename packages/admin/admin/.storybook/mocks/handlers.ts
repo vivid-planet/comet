@@ -1,4 +1,4 @@
-import { graphql, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 
 const users = [
     { id: 1, name: "Leanne Graham", username: "Bret", email: "Sincere@april.biz" },
@@ -72,4 +72,6 @@ const productsQueryHandler = graphql.query<{ products: Product[] }, { manufactur
     });
 });
 
-export const handlers = [usersQueryHandler, userQueryHandler, manufacturersQueryHandler, productsQueryHandler];
+const launchesHandler = http.get("/launches", () => HttpResponse.json([]));
+
+export const handlers = [usersQueryHandler, userQueryHandler, manufacturersQueryHandler, productsQueryHandler, launchesHandler];
