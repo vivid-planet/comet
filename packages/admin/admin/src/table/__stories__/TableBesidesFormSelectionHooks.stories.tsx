@@ -1,23 +1,16 @@
 import { gql } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, type ISelectionApi, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@comet/admin";
 import { Grid } from "@mui/material";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-import { storyRouterDecorator } from "../../story-router.decorator";
-
-const gqlRest = gql;
-
-const query = gqlRest`
-query users {
-    users @rest(type: "User", path: "users") {
-        id
-        name
-        username
-        email
-    }
-}
-`;
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { Selected } from "../../Selected";
+import type { ISelectionApi } from "../../SelectionApi";
+import { useSelectionRoute } from "../../SelectionRoute";
+import { Table } from "../Table";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
 
 interface IUser {
     id: number;
@@ -74,12 +67,24 @@ function ExampleForm(props: IExampleFormProps) {
 
 function Story() {
     const [Selection, selection, selectionApi] = useSelectionRoute();
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, Record<string, any>>()(query, {
-        resolveTableData: (data) => ({
-            data: data.users,
-            totalCount: data.users.length,
-        }),
-    });
+    const { tableData, api, loading, error } = useTableQuery<IQueryData, Record<string, unknown>>()(
+        gql`
+            query users {
+                users {
+                    id
+                    name
+                    username
+                    email
+                }
+            }
+        `,
+        {
+            resolveTableData: (data) => ({
+                data: data.users,
+                totalCount: data.users.length,
+            }),
+        },
+    );
 
     const location = useLocation();
 
@@ -114,7 +119,6 @@ function Story() {
 
 export default {
     title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
 
 export const BesidesFormSelectionHooks = () => {

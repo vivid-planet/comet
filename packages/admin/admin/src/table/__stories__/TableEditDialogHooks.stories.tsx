@@ -1,26 +1,22 @@
-import {
-    Button,
-    Field,
-    FillSpace,
-    FinalForm,
-    FinalFormInput,
-    MainContent,
-    Selected,
-    Table,
-    Toolbar,
-    ToolbarActions,
-    ToolbarItem,
-    useEditDialog,
-} from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DialogContent, IconButton, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { Button } from "../../common/buttons/Button";
+import { FillSpace } from "../../common/FillSpace";
+import { MainContent } from "../../common/MainContent";
+import { ToolbarActions } from "../../common/toolbar/actions/ToolbarActions";
+import { ToolbarItem } from "../../common/toolbar/item/ToolbarItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { useEditDialog } from "../../EditDialog";
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { Selected } from "../../Selected";
+import { Table } from "../Table";
 
 export default {
     title: "@comet/admin/table",
-    decorators: [storyRouterDecorator()],
 };
 
 export const EditDialogHooks = {
