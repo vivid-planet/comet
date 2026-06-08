@@ -1,5 +1,6 @@
-import { createFetch, FetchProvider, useFetch } from "@comet/admin";
 import { useEffect, useState } from "react";
+
+import { createFetch, FetchProvider, useFetch } from "../fetch";
 
 function ExampleFetch() {
     const fetch = useFetch();
@@ -15,7 +16,7 @@ function ExampleFetch() {
 }
 
 export default {
-    title: "@comet/admin/fetch-provider",
+    title: "components/fetchProvider/FetchProvider",
 };
 
 export const _FetchProvider = {

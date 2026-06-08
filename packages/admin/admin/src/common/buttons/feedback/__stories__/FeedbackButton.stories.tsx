@@ -1,9 +1,10 @@
-import { FeedbackButton } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Card, CardContent, Stack } from "@mui/material";
 
+import { FeedbackButton } from "../FeedbackButton";
+
 export default {
-    title: "@comet/admin/FeedbackButton",
+    title: "components/common/buttons/FeedbackButton",
 };
 
 export const Default = {

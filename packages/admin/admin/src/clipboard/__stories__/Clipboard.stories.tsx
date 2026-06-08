@@ -1,9 +1,13 @@
-import { Alert, Button, readClipboardText, writeClipboardText } from "@comet/admin";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 
+import { Alert } from "../../alert/Alert";
+import { Button } from "../../common/buttons/Button";
+import { readClipboardText } from "../readClipboardText";
+import { writeClipboardText } from "../writeClipboardText";
+
 export default {
-    title: "@comet/admin/clipboard",
+    title: "components/clipboard/Clipboard",
 };
 
 export const ClipboardFallbackSizeLimit = function () {

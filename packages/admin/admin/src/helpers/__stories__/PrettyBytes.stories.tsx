@@ -1,6 +1,7 @@
-import { PrettyBytes } from "@comet/admin";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+
+import { PrettyBytes } from "../PrettyBytes";
 
 const Content = styled("div")`
     display: grid;
@@ -135,7 +136,7 @@ function CustomMaximumFractionDigits() {
 }
 
 export default {
-    title: "@comet/admin/helpers",
+    title: "components/helpers/PrettyBytes",
 };
 
 export const _PrettyBytes = {

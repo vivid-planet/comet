@@ -1,13 +1,15 @@
-import { Button, InlineAlert } from "@comet/admin";
 import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { Button } from "../../common/buttons/Button";
+import { InlineAlert } from "../InlineAlert";
 
 type Story = StoryObj<typeof InlineAlert>;
 
 const config: Meta<typeof InlineAlert> = {
     component: InlineAlert,
-    title: "@comet/admin/inlineAlert/Inline Alert",
+    title: "components/inlineAlert/InlineAlert",
     argTypes: {
         severity: {
             control: "select",

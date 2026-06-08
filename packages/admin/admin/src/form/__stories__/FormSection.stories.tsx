@@ -1,9 +1,10 @@
-import { FormSection } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
+import { FormSection } from "../FormSection";
+
 export default {
-    title: "@comet/admin/FormSection",
+    title: "components/form/FormSection",
 };
 
 export const InfoTooltipExamples = {

@@ -1,5 +1,7 @@
-import { Savable, SaveBoundary, SaveBoundarySaveButton } from "@comet/admin";
 import { useCallback, useState } from "react";
+
+import { Savable, SaveBoundary } from "../SaveBoundary";
+import { SaveBoundarySaveButton } from "../SaveBoundarySaveButton";
 
 async function delay(ms: number): Promise<void> {
     return new Promise((resolve) => {
@@ -42,7 +44,7 @@ function SaveButtonContainer() {
 }
 
 export default {
-    title: "@comet/admin/save-range",
+    title: "components/saveBoundary/SaveBoundary",
 };
 
 export const _SaveBoundary = {

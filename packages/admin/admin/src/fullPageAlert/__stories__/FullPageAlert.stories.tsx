@@ -1,12 +1,13 @@
-import { FullPageAlert } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { FullPageAlert } from "../FullPageAlert";
 
 type Story = StoryObj<typeof FullPageAlert>;
 
 const config: Meta<typeof FullPageAlert> = {
     component: FullPageAlert,
-    title: "@comet/admin/Full Page Alert",
+    title: "components/fullPageAlert/FullPageAlert",
 };
 
 export default config;
