@@ -1,4 +1,5 @@
-import { SortDirection, Table, useTableQuerySort } from "@comet/admin";
+import { Table } from "../Table";
+import { SortDirection, useTableQuerySort } from "../useTableQuerySort";
 
 interface IExampleRow {
     id: number;

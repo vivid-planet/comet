@@ -1,8 +1,12 @@
-import { Button, Stack, StackLink, StackPage, StackSwitch, TableDndOrder, TableLocalChanges } from "@comet/admin";
 import { Stack as MuiStack } from "@mui/material";
 
-import { dndProviderDecorator } from "../../dnd.decorator";
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { Button } from "../../common/buttons/Button";
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackLink } from "../../stack/StackLink";
+import { StackSwitch } from "../../stack/Switch";
+import { TableDndOrder } from "../TableDndOrder";
+import { TableLocalChanges } from "../TableLocalChanges";
 
 interface IRow {
     id: string; // TODO add support for number in TableLocalChanges
@@ -12,7 +16,6 @@ interface IRow {
 
 export default {
     title: "@comet/admin/table",
-    decorators: [storyRouterDecorator(), dndProviderDecorator()],
 };
 
 export const DnDOrder = {

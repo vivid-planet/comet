@@ -1,5 +1,13 @@
-import { Field, FinalFormInput, MainContent, Table, TableFilterFinalForm, Toolbar, ToolbarItem, useTableQueryFilter } from "@comet/admin";
 import { Typography } from "@mui/material";
+
+import { MainContent } from "../../common/MainContent";
+import { ToolbarItem } from "../../common/toolbar/item/ToolbarItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { Table } from "../Table";
+import { TableFilterFinalForm } from "../TableFilterFinalForm";
+import { useTableQueryFilter } from "../useTableQueryFilter";
 
 interface IExampleRow {
     id: number;
