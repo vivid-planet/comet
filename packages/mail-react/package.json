@@ -20,10 +20,10 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "pnpm run clean && pnpm run generate-block-types && tsc --project ./tsconfig.build.json",
+        "build": "pnpm run clean && pnpm run generate-block-types && tsc",
         "build-storybook": "storybook build",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
-        "dev": "pnpm run clean && pnpm generate-block-types && tsc --project ./tsconfig.build.json --watch",
+        "dev": "pnpm run clean && pnpm generate-block-types && tsc --watch",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
         "lint": "pnpm generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
@@ -33,7 +33,7 @@
         "lint:fix:eslint": "pnpm run lint:eslint --fix",
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --noEmit",
+        "lint:tsc": "tsc",
         "storybook": "storybook dev -p 6066 --no-open",
         "test": "pnpm run test:unit && pnpm run test:storybook",
         "test:storybook": "vitest --run --project storybook --outputFile.junit=./junit-storybook.xml",

@@ -1,8 +1,0 @@
-{
-    "compilerOptions": {
-        "rootDir": "src"
-    },
-    "exclude": [".storybook/**", "node_modules", "lib"],
-    "extends": "./tsconfig.json",
-    "include": ["./src"]
-}

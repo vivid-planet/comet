@@ -4,10 +4,10 @@
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "outDir": "lib",
-        "rootDir": ".",
+        "rootDir": "src",
         "target": "ES2022"
     },
     "exclude": ["node_modules", "lib"],
     "extends": "../../tsconfig.core.json",
-    "include": ["./src", ".storybook/**/*.ts", ".storybook/**/*.tsx"]
+    "include": ["./src"]
 }
