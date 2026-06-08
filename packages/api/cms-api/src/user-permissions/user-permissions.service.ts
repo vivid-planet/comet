@@ -110,11 +110,26 @@ export class UserPermissionsService {
         return this.userService.getUser(id);
     }
 
+    async findUser(id: string): Promise<User | null> {
+        if (!this.userService) {
+            throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+        }
+        try {
+            return await this.userService.getUser(id);
+        } catch {
+            return null;
+        }
+    }
+
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
         if (!this.userService) {
             throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
         }
         return this.userService.findUsers(args);
+    }
+
+    isSystemUser(id: string): boolean {
+        return this.options.systemUsers?.includes(id) ?? false;
     }
 
     async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {

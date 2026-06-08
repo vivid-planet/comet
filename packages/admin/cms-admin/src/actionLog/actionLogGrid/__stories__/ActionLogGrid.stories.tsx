@@ -5,8 +5,15 @@ import { MemoryRouter } from "react-router";
 import { ActionLogGrid } from "../ActionLogGrid";
 
 const mockActionLogs = {
-    totalCount: 3,
+    totalCount: 4,
     nodes: [
+        {
+            id: "log4",
+            user: { id: "system-user", name: "system-user" },
+            entityName: "TestEntity",
+            version: 4,
+            createdAt: "2023-10-04T12:00:00Z",
+        },
         {
             id: "log3",
             user: { id: "1", name: "Max Mustermann" },
