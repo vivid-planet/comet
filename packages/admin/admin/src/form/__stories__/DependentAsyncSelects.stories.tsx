@@ -51,19 +51,21 @@ export const DependentAsyncSelects = function () {
                         <AsyncSelectField
                             name="product"
                             loadOptions={async () => {
-                                const { data } = await client.query<{ products: Product[] }>({
+                                const { data } = await client.query<{ products: { nodes: Product[] } }>({
                                     query: gql`
                                         query Products($manufacturer: ID) {
                                             products(manufacturer: $manufacturer) {
-                                                id
-                                                name
+                                                nodes {
+                                                    id
+                                                    name
+                                                }
                                             }
                                         }
                                     `,
                                     variables: { manufacturer: values.manufacturer?.id },
                                 });
 
-                                return data.products;
+                                return data.products.nodes;
                             }}
                             getOptionLabel={(option) => option.name}
                             label="Product"

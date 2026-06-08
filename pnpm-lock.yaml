@@ -511,7 +511,7 @@ importers:
         version: 5.9.3
       vite-tsconfig-paths:
         specifier: ^6.0.4
-        version: 6.0.4(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.3)
+        version: 6.0.4(typescript@5.9.3)(vite@7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3))
       vitest:
         specifier: ^4.0.16
         version: 4.0.16(@opentelemetry/api@1.9.1)(@types/node@24.12.4)(@vitest/browser-playwright@4.0.16)(jiti@2.7.0)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.12.4)(typescript@5.9.3))(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3)
@@ -818,6 +818,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
       '@mui/material':
         specifier: ^7.3.11
         version: 7.3.11(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -929,6 +932,9 @@ importers:
       react-dnd:
         specifier: ^16.0.1
         version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.12.4)(@types/react@19.2.15)(react@19.2.6)
+      react-dnd-html5-backend:
+        specifier: ^16.0.1
+        version: 16.0.1
       react-dom:
         specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
@@ -961,7 +967,7 @@ importers:
         version: 7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3)
       vite-tsconfig-paths:
         specifier: ^6.0.4
-        version: 6.0.4(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.3)
+        version: 6.0.4(typescript@5.9.3)(vite@7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3))
       vitest:
         specifier: ^4.0.16
         version: 4.0.16(@opentelemetry/api@1.9.1)(@types/node@24.12.4)(@vitest/browser-playwright@4.0.16)(jiti@2.7.0)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.12.4)(typescript@5.9.3))(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3)
@@ -1817,7 +1823,7 @@ importers:
         version: 7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3)
       vite-tsconfig-paths:
         specifier: ^6.0.3
-        version: 6.0.4(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.3)
+        version: 6.0.4(typescript@5.9.3)(vite@7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3))
       vitest:
         specifier: ^4.0.16
         version: 4.0.16(@opentelemetry/api@1.9.1)(@types/node@24.12.4)(@vitest/browser-playwright@4.0.16)(jiti@2.7.0)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.12.4)(typescript@5.9.3))(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3)
@@ -17233,6 +17239,11 @@ packages:
 
   vite-tsconfig-paths@6.0.4:
     resolution: {integrity: sha512-iIsEJ+ek5KqRTK17pmxtgIxXtqr3qDdE6OxrP9mVeGhVDNXRJTKN/l9oMbujTQNzMLe6XZ8qmpztfbkPu2TiFQ==}
+    peerDependencies:
+      vite: '*'
+    peerDependenciesMeta:
+      vite:
+        optional: true
 
   vite@7.3.1:
     resolution: {integrity: sha512-w+N7Hifpc3gRjZ63vYBXA56dvvRlNWRczTdmCBBa+CotUzAPf5b7YMdMR/8CQoeYE5LX3W4wj6RYTgonm1b9DA==}
@@ -35663,26 +35674,16 @@ snapshots:
       pathe: 0.2.0
       vite: 7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3)
 
-  vite-tsconfig-paths@6.0.4(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.3):
+  vite-tsconfig-paths@6.0.4(typescript@5.9.3)(vite@7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3)):
     dependencies:
       debug: 4.4.3
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.9.3)
+    optionalDependencies:
       vite: 7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3)
     transitivePeerDependencies:
-      - '@types/node'
-      - jiti
-      - less
-      - lightningcss
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
       - supports-color
-      - terser
-      - tsx
       - typescript
-      - yaml
 
   vite@7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3):
     dependencies:
