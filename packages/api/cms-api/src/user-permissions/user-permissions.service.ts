@@ -104,17 +104,11 @@ export class UserPermissionsService {
     }
 
     async findUser(id: string): Promise<User | null> {
-        if (!this.userService?.findUser) {
-            return null;
-        }
-        return this.userService.findUser(id);
+        return this.userService?.findUser?.(id) ?? null;
     }
 
     async findUserForLogin(id: string): Promise<User | null> {
-        if (!this.userService?.findUserForLogin) {
-            return null;
-        }
-        return this.userService.findUserForLogin(id);
+        return this.userService?.findUserForLogin?.(id) ?? null;
     }
 
     async findUserForLoginOrThrow(id: string): Promise<User> {
