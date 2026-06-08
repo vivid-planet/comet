@@ -1,5 +1,5 @@
 import { Add as AddIcon } from "@comet/admin-icons";
-import { DialogContent } from "@mui/material";
+import { DialogContent, TextField } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
@@ -11,7 +11,6 @@ import { MainContent } from "../../common/MainContent";
 import { DataGridToolbar } from "../../common/toolbar/DataGridToolbar";
 import { useDataGridRemote } from "../../dataGrid/useDataGridRemote";
 import { FinalForm } from "../../FinalForm";
-import { TextField } from "../../form/fields/TextField";
 import { useEditDialog } from "../EditDialog";
 
 export default {
