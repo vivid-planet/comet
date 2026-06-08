@@ -3,5 +3,6 @@
         "incremental": false,
         "noEmit": true
     },
+    "exclude": [".storybook/**"],
     "extends": "./tsconfig.json"
 }
