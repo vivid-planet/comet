@@ -77,12 +77,32 @@ const manufacturersQueryHandler = graphql.query<{ manufacturers: Manufacturer[] 
     });
 });
 
-const productsQueryHandler = graphql.query<{ products: Product[] }, { manufacturer?: string }>("Products", ({ variables }) => {
-    const manufacturerId = variables.manufacturer;
+const productsQueryHandler = graphql.query<
+    { products: { nodes: Product[]; totalCount: number } },
+    { offset?: number; limit?: number; search?: string; manufacturer?: string; sort?: { field: keyof Product; direction: "ASC" | "DESC" }[] }
+>("products", ({ variables }) => {
+    const offset = variables.offset ?? 0;
+    const search = variables.search?.toLowerCase() ?? "";
+    const sort = variables.sort ?? [];
+
+    let result = [...products];
+    if (search) result = result.filter((p) => p.name.toLowerCase().includes(search));
+    if (variables.manufacturer) result = result.filter((p) => p.manufacturer.id === variables.manufacturer);
+
+    for (const { field, direction } of [...sort].reverse()) {
+        result = result.sort((a, b) => {
+            const aVal = String(a[field] ?? "");
+            const bVal = String(b[field] ?? "");
+            const cmp = aVal.localeCompare(bVal);
+            return direction === "DESC" ? -cmp : cmp;
+        });
+    }
+
+    const totalCount = result.length;
+    const nodes = variables.limit !== undefined ? result.slice(offset, offset + variables.limit) : result;
+
     return HttpResponse.json({
-        data: {
-            products: manufacturerId ? products.filter((p) => p.manufacturer.id === manufacturerId) : products,
-        },
+        data: { products: { nodes, totalCount } },
     });
 });
 
