@@ -1,6 +1,8 @@
-import { Alert, Button } from "@comet/admin";
 import { Snackbar } from "@mui/material";
 import { useState } from "react";
+
+import { Button } from "../../common/buttons/Button";
+import { Alert } from "../Alert";
 
 export default {
     title: "components/alert/AlertInSnackbar",

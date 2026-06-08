@@ -1,7 +1,10 @@
-import { Alert, ErrorBoundary, ErrorHandlerProvider } from "@comet/admin";
 import { Box, Card, CardContent, Link, List, ListItem, ListItemText, Typography } from "@mui/material";
 import type { Meta } from "@storybook/react-vite";
 import { type ErrorInfo, useState } from "react";
+
+import { Alert } from "../../../alert/Alert";
+import { ErrorBoundary } from "../../errorboundary/ErrorBoundary";
+import { ErrorHandlerProvider } from "../ErrorHandlerProvider";
 
 const ThrowingView = () => {
     throw new Error("Some error occurred");

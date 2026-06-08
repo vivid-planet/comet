@@ -1,6 +1,8 @@
-import { Alert, ErrorBoundary } from "@comet/admin";
 import { Box, Card, CardContent, Link, Typography } from "@mui/material";
 import type { Meta } from "@storybook/react-vite";
+
+import { Alert } from "../../../alert/Alert";
+import { ErrorBoundary } from "../ErrorBoundary";
 
 const ViewWithNoError = () => {
     return (

@@ -1,5 +1,7 @@
-import { Button, SnackbarProvider, useSnackbarApi } from "@comet/admin";
 import { List, ListItem, Snackbar } from "@mui/material";
+
+import { Button } from "../../common/buttons/Button";
+import { SnackbarProvider, useSnackbarApi } from "../SnackbarProvider";
 
 let counter = 0;
 

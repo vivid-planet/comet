@@ -1,6 +1,11 @@
-import { Alert, MainNavigation, MainNavigationItemRouterLink, MasterLayout, RouteWithErrorBoundary } from "@comet/admin";
 import { Card, CardContent, Typography } from "@mui/material";
 import { Redirect, Route, Switch } from "react-router";
+
+import { Alert } from "../../../alert/Alert";
+import { MainNavigationItemRouterLink } from "../../../mui/mainNavigation/ItemRouterLink";
+import { MainNavigation } from "../../../mui/mainNavigation/MainNavigation";
+import { MasterLayout } from "../../../mui/MasterLayout";
+import { RouteWithErrorBoundary } from "../RouteWithErrorBoundary";
 
 const ViewWithNoError = () => {
     return (

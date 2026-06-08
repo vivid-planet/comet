@@ -1,6 +1,8 @@
-import { SnackbarProvider, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { type MouseEvent, useState } from "react";
+
+import { SnackbarProvider, useSnackbarApi } from "../SnackbarProvider";
+import { UndoSnackbar } from "../UndoSnackbar";
 
 const UndoSnackbarExample = () => {
     const [chosenOption, setChosenOption] = useState("one");
