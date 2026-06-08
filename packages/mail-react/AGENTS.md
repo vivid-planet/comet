@@ -6,6 +6,8 @@
 
 Many subdirectories also have a `README.md` describing the feature that lives there (see the convention in the root README). When you work in a directory, read its README first; if your change makes it inaccurate or adds context worth recording, update it in the same PR.
 
+When your change affects how the package is used (components, behavior, patterns, styling), update the docs and the agent skill (`skills/comet-mail-react/SKILL.md`) — see _Usage documentation_ in the README; consider a separate docs commit. The skill is the agent-facing usage guide; it doesn't restate props, types, or defaults — those live in the package's types and TSDoc.
+
 ## When creating a changeset
 
 Before adding a new changeset, check `.changeset/` at the repo root for an existing one covering the same feature (e.g. from an unmerged PR) — update it rather than creating a new file. Only add a new changeset when nothing existing fits.
