@@ -13,16 +13,30 @@ const users = [
     { id: 10, name: "Clementina DuBuque", username: "Moriah.Stanton", email: "Rey.Padberg@karina.biz" },
 ];
 
-const usersQueryHandler = graphql.query<{ users: typeof users }, { query?: string }>("users", ({ variables }) => {
+type User = (typeof users)[number];
+
+const usersQueryHandler = graphql.query<{ users: User[] }, { query?: string; sort?: string; order?: string }>("users", ({ variables }) => {
     const query = variables.query?.toLowerCase() ?? "";
+    const sort = variables.sort;
+    const order = variables.order?.toUpperCase() ?? "ASC";
+
+    let result = query ? users.filter((user) => user.name.toLowerCase().includes(query)) : [...users];
+
+    if (sort) {
+        result = result.sort((a, b) => {
+            const aVal = a[sort as keyof User] as string | number;
+            const bVal = b[sort as keyof User] as string | number;
+            const cmp = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+            return order === "DESC" ? -cmp : cmp;
+        });
+    }
+
     return HttpResponse.json({
-        data: {
-            users: query ? users.filter((user) => user.name.toLowerCase().includes(query)) : users,
-        },
+        data: { users: result },
     });
 });
 
-const userQueryHandler = graphql.query<{ user: (typeof users)[number] | null }, { id: number }>("user", ({ variables }) => {
+const userQueryHandler = graphql.query<{ user: User | null }, { id: number }>("user", ({ variables }) => {
     return HttpResponse.json({
         data: {
             user: users.find((user) => user.id === variables.id) ?? null,

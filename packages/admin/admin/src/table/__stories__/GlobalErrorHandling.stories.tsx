@@ -1,29 +1,24 @@
 import { gql } from "@apollo/client";
-import { Table, TableQuery, useTableQuery } from "@comet/admin";
 
-import { apolloSwapiStoryDecorator } from "../../apollo-story.decorator";
-import { errorDialogStoryProviderDecorator } from "../../docs/components/ErrorHandling/ErrorDialog/error-dialog-provider.decorator";
+import { Table } from "../Table";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
 
-interface People {
-    id: string;
+interface User {
+    id: number;
     name: string;
-    birthYear: string;
-    gender: string;
-    homeworld: {
-        name: string;
-    };
+    username: string;
+    email: string;
 }
+
 interface QueryData {
-    allPeople: {
-        people: People[];
-    };
+    users: User[];
 }
 
 export default {
     title: "@comet/admin/table/globalErrorHandling",
-    decorators: [apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()],
     args: {
-        query: "query StarWarsPeople {allPeople { people { id name birthYear gender homeworld{ name } } }}",
+        query: "query users { users { id name username email } }",
     },
     argTypes: {
         query: {
@@ -38,14 +33,14 @@ type Args = {
 
 export const GlobalErrorHandling = {
     render: ({ query }: Args) => {
-        const { tableData, api, loading, error } = useTableQuery<QueryData, Record<string, any>>()(
+        const { tableData, api, loading, error } = useTableQuery<QueryData, Record<string, unknown>>()(
             gql`
                 ${query}
             `,
             {
                 resolveTableData: (data) => ({
-                    data: data.allPeople.people,
-                    totalCount: data.allPeople.people.length,
+                    data: data.users,
+                    totalCount: data.users.length,
                 }),
                 globalErrorHandling: true,
             },
@@ -66,16 +61,12 @@ export const GlobalErrorHandling = {
                                 header: "Name",
                             },
                             {
-                                name: "birthYear",
-                                header: "Birthyear",
+                                name: "username",
+                                header: "Username",
                             },
                             {
-                                name: "gender",
-                                header: "Gender",
-                            },
-                            {
-                                name: "homeworld.name",
-                                header: "Homeworld",
+                                name: "email",
+                                header: "Email",
                             },
                         ]}
                     />

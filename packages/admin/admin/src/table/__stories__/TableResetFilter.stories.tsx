@@ -1,78 +1,47 @@
 import { gql } from "@apollo/client";
-import { AutocompleteField, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
 import { Grid } from "@mui/material";
-import * as qs from "qs";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
-const gqlRest = gql;
-
-const query = gqlRest`
-query users(
-    $pathFunction: any
-    $selectQuery: String
-) {
-    users(
-        selectQuery: $selectQuery
-    ) @rest(type: "User", pathBuilder: $pathFunction) {
-        id
-        name
-        username
-        email
-    }
-}
-`;
-function pathFunction({ args }: { args: { [key: string]: any } }) {
-    interface IPathMapping {
-        [arg: string]: string;
-    }
-    const paramMapping: IPathMapping = {
-        selectQuery: "q",
-    };
-
-    const q = Object.keys(args).reduce((acc: { [key: string]: any }, key: string): { [key: string]: any } => {
-        if (paramMapping[key] && args[key]) {
-            acc[paramMapping[key]] = args[key];
-        }
-        return acc;
-    }, {});
-    return `users?${qs.stringify(q, { arrayFormat: "brackets" })}`;
-}
-
-interface IQueryData {
-    users: Array<{
-        id: number;
-        name: string;
-        username: string;
-        email: string;
-    }>;
-}
+import { AutocompleteField } from "../../form/fields/AutocompleteField";
+import { Table } from "../Table";
+import { TableFilterFinalForm } from "../TableFilterFinalForm";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
+import { useTableQueryFilter } from "../useTableQueryFilter";
 
 interface IFilterValues {
     selectQuery?: { label: string; value: string };
 }
-interface IVariables {
-    selectQuery?: string;
-    pathFunction: any;
-}
 
 export default {
     title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const ResetFilter = () => {
     const filterApi = useTableQueryFilter<IFilterValues>({});
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
-        variables: {
-            selectQuery: filterApi.current.selectQuery?.value,
-            pathFunction,
+    const { tableData, api, loading, error } = useTableQuery<
+        { users: { id: number; name: string; username: string; email: string }[] },
+        { query?: string }
+    >()(
+        gql`
+            query users($query: String) {
+                users(query: $query) {
+                    id
+                    name
+                    username
+                    email
+                }
+            }
+        `,
+        {
+            variables: {
+                query: filterApi.current.selectQuery?.value,
+            },
+            resolveTableData: (data) => ({
+                data: data.users,
+                totalCount: data.users.length,
+            }),
         },
-        resolveTableData: (data) => ({
-            data: data.users,
-            totalCount: data.users.length,
-        }),
-    });
+    );
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
