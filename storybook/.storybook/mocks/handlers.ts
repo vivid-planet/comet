@@ -31,14 +31,7 @@ type Launch = {
     launch_date_local: Date;
 };
 
-export type LaunchesPastResult = {
-    data: Launch[];
-    result: {
-        totalCount: number;
-    };
-};
-
-export type LaunchesPastPagePagingResult = {
+type LaunchesPastPagePagingResult = {
     nodes: Launch[];
     totalCount: number;
     nextPage?: number;
