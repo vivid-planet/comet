@@ -29,10 +29,8 @@ if [ "$CLAUDE_CODE_REMOTE" = "true" ]; then
         set +e
         . "$NVM_DIR/nvm.sh"
         set -e
-        echo ">>> nvm install (.nvmrc: $(cat .nvmrc 2>/dev/null || echo 'not found'))"
-        nvm install
-        echo ">>> nvm use"
-        nvm use
+        echo ">>> nvm use || nvm install (.nvmrc: $(cat .nvmrc 2>/dev/null || echo 'not found'))"
+        nvm use || nvm install
         node_bin=$(dirname "$(nvm which current)")
         echo ">>> node_bin=$node_bin"
         mkdir -p "$HOME/.local/bin"
