@@ -1,16 +1,16 @@
 import { DialogContent } from "@mui/material";
 import { useState } from "react";
 
-import { Button } from "../common/buttons/Button";
+import { Button } from "../../common/buttons/Button";
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { StackBreadcrumbs } from "../../stack/breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackLink } from "../../stack/StackLink";
+import { StackSwitch } from "../../stack/Switch";
 import { useEditDialog } from "../EditDialog";
-import { FinalForm } from "../FinalForm";
-import { Field } from "../form/Field";
-import { FinalFormInput } from "../form/FinalFormInput";
-import { StackBreadcrumbs } from "../stack/breadcrumbs/StackBreadcrumbs";
-import { StackPage } from "../stack/Page";
-import { Stack } from "../stack/Stack";
-import { StackLink } from "../stack/StackLink";
-import { StackSwitch } from "../stack/Switch";
 
 export default {
     title: "components/edit-dialog",

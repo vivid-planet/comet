@@ -3,8 +3,8 @@ import { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
+import type { ISelectionApi } from "../editDialog/SelectionApi";
 import { messages } from "../messages";
-import type { ISelectionApi } from "../SelectionApi";
 
 interface IProps {
     selectionApi: ISelectionApi;

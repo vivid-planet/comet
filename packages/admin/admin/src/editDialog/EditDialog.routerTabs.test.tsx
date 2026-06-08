@@ -8,15 +8,15 @@ import { Router } from "react-router";
 import { cleanup, render, screen, waitFor } from "test-utils";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { Button } from "./common/buttons/Button";
-import { FillSpace } from "./common/FillSpace";
-import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
+import { Button } from "../common/buttons/Button";
+import { FillSpace } from "../common/FillSpace";
+import { DataGridToolbar } from "../common/toolbar/DataGridToolbar";
+import { FinalForm } from "../FinalForm";
+import { TextField } from "../form/fields/TextField";
+import { StackLink } from "../stack/StackLink";
+import { RouterTab, RouterTabs } from "../tabs/RouterTabs";
 import { EditDialog } from "./EditDialog";
 import type { IEditDialogApi } from "./EditDialogApiContext";
-import { FinalForm } from "./FinalForm";
-import { TextField } from "./form/fields/TextField";
-import { StackLink } from "./stack/StackLink";
-import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 
 describe("EditDialog with Stack, Router Tabs and Grid", () => {
     type DialogProps = {

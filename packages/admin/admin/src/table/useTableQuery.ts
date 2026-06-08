@@ -2,8 +2,8 @@ import { type OperationVariables, type QueryHookOptions, type QueryResult, useQu
 import type { DocumentNode } from "graphql";
 import { useEffect } from "react";
 
+import type { ISelectionApi } from "../editDialog/SelectionApi";
 import { LocalErrorScopeApolloContext } from "../error/errordialog/ErrorScope";
-import type { ISelectionApi } from "../SelectionApi";
 import type { IPagingInfo } from "./paging/IPagingInfo";
 import type { ITableQueryApi } from "./TableQueryContext";
 

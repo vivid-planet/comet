@@ -1,7 +1,7 @@
 import { type ComponentType, type PropsWithChildren, type ReactNode, useCallback, useMemo } from "react";
 import { Route, useHistory, useRouteMatch } from "react-router";
 
-import { useSubRoutePrefix } from "./router/SubRoute";
+import { useSubRoutePrefix } from "../router/SubRoute";
 import type { ISelectionApi } from "./SelectionApi";
 
 interface IRouteParams {

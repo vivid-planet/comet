@@ -2,15 +2,15 @@ import { Edit } from "@comet/admin-icons";
 import { DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-import { MainContent } from "../common/MainContent";
+import { MainContent } from "../../common/MainContent";
+import { FinalForm } from "../../FinalForm";
+import { TextField } from "../../form/fields/TextField";
+import { StackBreadcrumbs } from "../../stack/breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackLink } from "../../stack/StackLink";
+import { StackSwitch } from "../../stack/Switch";
 import { useEditDialog } from "../EditDialog";
-import { FinalForm } from "../FinalForm";
-import { TextField } from "../form/fields/TextField";
-import { StackBreadcrumbs } from "../stack/breadcrumbs/StackBreadcrumbs";
-import { StackPage } from "../stack/Page";
-import { Stack } from "../stack/Stack";
-import { StackLink } from "../stack/StackLink";
-import { StackSwitch } from "../stack/Switch";
 
 export default {
     title: "components/edit-dialog",

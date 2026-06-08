@@ -1,10 +1,10 @@
 import { DialogContent } from "@mui/material";
 
-import { Button } from "../common/buttons/Button";
+import { Button } from "../../common/buttons/Button";
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
 import { useEditDialog } from "../EditDialog";
-import { FinalForm } from "../FinalForm";
-import { Field } from "../form/Field";
-import { FinalFormInput } from "../form/FinalFormInput";
 
 export default {
     title: "components/edit-dialog",
