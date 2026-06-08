@@ -104,17 +104,25 @@ export class UserPermissionsService {
     }
 
     async findUser(id: string): Promise<User | null> {
-        if (!this.userService?.findUser) {
-            throw new Error("For this functionality you need to define `findUser` in the userService.");
+        if (this.userService?.findUser) {
+            return this.userService.findUser(id);
         }
-        return this.userService.findUser(id);
+        try {
+            return await this.findUserOrThrow(id);
+        } catch {
+            return null;
+        }
     }
 
     async findUserForLogin(id: string): Promise<User | null> {
-        if (!this.userService?.findUserForLogin) {
-            throw new Error("For this functionality you need to define `findUserForLogin` in the userService.");
+        if (this.userService?.findUserForLogin) {
+            return this.userService.findUserForLogin(id);
         }
-        return this.userService.findUserForLogin(id);
+        try {
+            return await this.findUserForLoginOrThrow(id);
+        } catch {
+            return null;
+        }
     }
 
     async findUserForLoginOrThrow(id: string): Promise<User> {
