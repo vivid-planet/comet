@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, chipClasses, Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type HTMLAttributes, type ReactNode, useState } from "react";
 import { expect, waitFor, within } from "storybook/test";
@@ -187,6 +187,153 @@ export const BlockStyles: StoryObj<typeof BlockStylesStory> = {
                 },
                 { timeout: 3000 },
             );
+        });
+    },
+};
+
+const PlaceholdersBlock = createTipTapRichTextBlock({
+    placeholders: [
+        { name: "firstName", label: "First Name" },
+        { name: "lastName", label: "Last Name" },
+        { name: "email", label: "Email Address" },
+        { name: "company", label: "Company" },
+    ],
+});
+
+function PlaceholdersStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(PlaceholdersBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <PlaceholdersBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const Placeholders: StoryObj<typeof PlaceholdersStory> = {
+    render: () => <PlaceholdersStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Editor is ready with placeholder button", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+
+            // The placeholder button is identified by its accessible name, not by index among all toolbar buttons
+            expect(canvas.getByRole("button", { name: "Insert placeholder" })).toBeInTheDocument();
+        });
+
+        await step("Open the placeholder menu and insert 'First Name'", async () => {
+            await userEvent.click(canvas.getByRole("button", { name: "Insert placeholder" }));
+
+            // The menu is rendered in a portal, so it lives in document.body rather than within the canvas
+            await waitFor(
+                () => {
+                    expect(within(document.body).getByRole("menuitem", { name: "First Name" })).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+
+            await userEvent.click(within(document.body).getByRole("menuitem", { name: "First Name" }));
+        });
+
+        await step("Inserted placeholder is rendered as a chip in the editor", async () => {
+            const editor = canvas.getByRole("textbox");
+            // Placeholders render as chips labelled `{{name}}`
+            await waitFor(
+                () => {
+                    expect(within(editor).getByText("{{firstName}}")).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Block state contains the placeholder node", async () => {
+            await waitFor(
+                () => {
+                    const state = JSON.parse(canvas.getByText(/"tipTapContent"/).textContent ?? "{}");
+                    const [paragraph] = state.tipTapContent.content;
+                    expect(paragraph.content).toContainEqual({ type: "placeholder", attrs: { name: "firstName" } });
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};
+
+const PlaceholdersWithContentBlock = createTipTapRichTextBlock({
+    supports: ["bold", "italic"],
+    placeholders: [
+        { name: "firstName", label: "First Name" },
+        { name: "lastName", label: "Last Name" },
+        { name: "email", label: "Email Address" },
+    ],
+});
+
+function PlaceholdersWithContentStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>({
+        tipTapContent: {
+            type: "doc",
+            content: [
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "Hello " },
+                        { type: "placeholder", attrs: { name: "firstName" } },
+                        { type: "text", text: " " },
+                        { type: "placeholder", attrs: { name: "lastName" } },
+                        { type: "text", text: ", welcome to our platform!" },
+                    ],
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "Your registered email is: " },
+                        { type: "placeholder", attrs: { name: "email" } },
+                    ],
+                },
+            ],
+        },
+    });
+
+    return (
+        <StoryWrapper state={state}>
+            <PlaceholdersWithContentBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const PlaceholdersWithContent: StoryObj<typeof PlaceholdersWithContentStory> = {
+    render: () => <PlaceholdersWithContentStory />,
+    play: async ({ canvas, step }) => {
+        await step("Editor is ready", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Pre-filled placeholders are rendered as chips", async () => {
+            const editor = canvas.getByRole("textbox");
+
+            await waitFor(
+                () => {
+                    // Each placeholder is rendered as a chip labelled `{{name}}` (not as plain text)
+                    for (const name of ["firstName", "lastName", "email"]) {
+                        const chipLabel = within(editor).getByText(`{{${name}}}`);
+                        expect(chipLabel.closest(`.${chipClasses.root}`)).toBeInTheDocument();
+                    }
+                },
+                { timeout: 3000 },
+            );
+
+            // Text surrounding the chips is preserved
+            expect(editor).toHaveTextContent("Hello {{firstName}} {{lastName}}, welcome to our platform!");
+            expect(editor).toHaveTextContent("Your registered email is: {{email}}");
         });
     },
 };
@@ -731,6 +878,81 @@ export const InlineStyles: StoryObj<typeof InlineStylesStory> = {
             await waitFor(
                 () => {
                     expect(document.querySelector("[data-inline-style]")).toBeNull();
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};
+
+const ListLevelMaxBlock = createTipTapRichTextBlock({ listLevelMax: 2 });
+
+function ListLevelMaxStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(ListLevelMaxBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <ListLevelMaxBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const ListLevelMax: StoryObj<typeof ListLevelMaxStory> = {
+    render: () => <ListLevelMaxStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Editor is ready", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Create a bullet list", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.click(editor);
+            await userEvent.keyboard("Item 1");
+
+            // Toggle bullet list using keyboard shortcut
+            const mod = /Mac/i.test(navigator.platform) ? "Meta" : "Control";
+            await userEvent.keyboard(`{${mod}>}{Shift>}8{/Shift}{/${mod}}`);
+
+            await waitFor(
+                () => {
+                    expect(editor.querySelector("ul")).toBeTruthy();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Create a second list item and indent it (allowed, depth 2)", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.keyboard("{Enter}");
+            await userEvent.keyboard("Item 2");
+            await userEvent.keyboard("{Tab}");
+
+            await waitFor(
+                () => {
+                    // Should have nested ul (depth 2)
+                    const nestedUl = editor.querySelector("ul ul");
+                    expect(nestedUl).toBeTruthy();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Try to indent further (should be blocked, depth would exceed 2)", async () => {
+            const editor = canvas.getByRole("textbox");
+            await userEvent.keyboard("{Enter}");
+            await userEvent.keyboard("Item 3");
+            await userEvent.keyboard("{Tab}");
+
+            await waitFor(
+                () => {
+                    // Should NOT have triple-nested ul (depth 3 not allowed)
+                    const tripleNestedUl = editor.querySelector("ul ul ul");
+                    expect(tripleNestedUl).toBeNull();
                 },
                 { timeout: 3000 },
             );

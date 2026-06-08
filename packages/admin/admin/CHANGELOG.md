@@ -1,5 +1,95 @@
 # @comet/admin
 
+## 9.0.0-beta.5
+
+### Patch Changes
+
+- fdabaf1: Fix `MainContent` with `fullHeight` growing past the viewport after returning from a scrolled detail page
+
+    `useTopOffset` used `getBoundingClientRect().top`, which is viewport-relative. When navigating back from a scrolled page, the browser could restore the previous scroll position before the offset was measured, producing a too-small offset and a `calc(100vh - topOffset)` larger than the viewport. The offset is now measured relative to the document by adding `window.scrollY`.
+    - @comet/admin-icons@9.0.0-beta.5
+
+## 9.0.0-beta.4
+
+### Minor Changes
+
+- d7b77af: Add `ErrorHandlerProvider` and `useErrorHandler` for centralized error reporting from `ErrorBoundary`
+
+    `ErrorBoundary` now invokes an optional `onError(error, errorInfo)` callback provided through `ErrorHandlerProvider`'s context whenever it catches an error. The visible Alert UI of `ErrorBoundary` is unchanged — the callback is purely additive and intended for forwarding errors to a reporting service (e.g., Sentry).
+
+    **Example**
+
+    ```tsx
+    import { ErrorHandlerProvider } from "@comet/admin";
+
+    <ErrorHandlerProvider
+        onError={(error, errorInfo) => {
+            // Report the error to your error tracking service
+            console.error(error, errorInfo.componentStack);
+        }}
+    >
+        {children}
+    </ErrorHandlerProvider>;
+    ```
+
+- 2fe9d4b: Add support for translating page and document content
+
+    Content translation can now be applied to entire documents at once, in addition to the existing field-level translation.
+
+    **Setup**
+
+    Wrap the application with `AzureAiTranslatorProvider` (supports `batchTranslate` automatically):
+
+    ```tsx
+    <AzureAiTranslatorProvider enabled showApplyTranslationDialog>
+        {children}
+    </AzureAiTranslatorProvider>
+    ```
+
+    **Making a document type translatable**
+
+    Add `createDocumentTranslationMethods` and the `TranslatableInterface` type to the document definition:
+
+    ```tsx
+    import { createDocumentTranslationMethods, type TranslatableInterface } from "@comet/cms-admin";
+
+    const rootBlocks = {
+        content: PageContentBlock,
+        seo: SeoBlock,
+    };
+
+    export const Page: DocumentInterface & TranslatableInterface & DependencyInterface = {
+        // ...existing config
+        ...createDocumentRootBlocksMethods(rootBlocks),
+        ...createDocumentTranslationMethods(rootBlocks),
+    };
+    ```
+
+    **Adding translate action to the edit page**
+
+    `createUsePage` now returns a `translateContent` function. Use it with `TranslateContentMenuItem` inside a `CrudMoreActionsMenu`:
+
+    ```tsx
+    const { translateContent /* ...other fields */ } = usePage({ pageId: id });
+
+    <CrudMoreActionsMenu overallActions={[<TranslateContentMenuItem translateContent={translateContent} />]} />;
+    ```
+
+    **Page tree integration**
+
+    The page tree context menu and bulk action toolbar automatically show a "Translate" action for pages. This translates the page name, slug, and document content.
+
+- 460cbfb: Add translation support for textarea fields in `FinalFormInput`
+
+    Previously, only `type="text"` fields supported content translation. Now `type="textarea"` fields (used by `TextAreaField`) also show the translate button and use a multiline translation dialog.
+
+### Patch Changes
+
+- 8e40458: Fix `Stack` crash when location changes before any breadcrumb is registered
+
+    `Stack` accessed the last entry of an empty breadcrumb array on location change, causing a `TypeError: Cannot set properties of undefined`. Guarded the update to skip when no breadcrumbs are registered yet.
+    - @comet/admin-icons@9.0.0-beta.4
+
 ## 9.0.0-beta.3
 
 ### Major Changes

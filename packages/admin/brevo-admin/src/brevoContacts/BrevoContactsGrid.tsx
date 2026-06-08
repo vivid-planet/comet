@@ -18,11 +18,12 @@ import {
 import { Add, Block, Check, Delete, Edit } from "@comet/admin-icons";
 import type { ContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
+import type { GridSlotsComponent } from "@mui/x-data-grid";
 import type { ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 
 import { useContactImportFromCsv } from "../common/contactImport/useContactImportFromCsv";
+import { DataGrid } from "../dataGrid/DataGrid";
 import type { GQLEmailCampaignContentScopeInput } from "../graphql.generated";
 import {
     type GQLBrevoContactsGridQuery,

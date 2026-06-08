@@ -10,6 +10,17 @@ export { OptionalBlock } from "./blocks/factories/OptionalBlock";
 export type { SupportedBlocks } from "./blocks/factories/types";
 export { type PlayPauseButtonProps } from "./blocks/helpers/PlayPauseButton";
 export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
+export {
+    hasTipTapRichTextContent,
+    renderTipTapRichText,
+    type RenderTipTapRichTextOptions,
+    type TipTapMark,
+    type TipTapMarkHandler,
+    type TipTapMarkHandlerProps,
+    type TipTapNode,
+    type TipTapNodeHandler,
+    type TipTapNodeHandlerProps,
+} from "./blocks/helpers/TipTapRichTextRenderer";
 export { useIsElementInViewport } from "./blocks/helpers/useIsElementInViewport";
 export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
 export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";

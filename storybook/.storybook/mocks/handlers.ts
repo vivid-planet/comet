@@ -104,24 +104,13 @@ input LaunchesPastFilter {
     and: [LaunchesPastFilter!]
 }
 
-type Manufacturer {
-    id: ID!
-    name: String!
-
-}
-
-type Product {
-    id: ID!
-    name: String!
-    manufacturer: Manufacturer!
-}
-
 type CurrentUser {
   id: String!
   name: String!
   email: String!
   permissions: [CurrentUserPermission!]!
   impersonated: Boolean
+  accountUrl: String
   authenticatedUser: UserPermissionsUser
   permissionsForScope(scope: JSONObject!): [String!]!
   allowedContentScopes: [ContentScopeWithLabel!]!
@@ -145,8 +134,6 @@ enum Permission {
   dependencies
   warnings
   news
-  products
-  manufacturers
 }
 
 type UserPermissionsUser {
@@ -171,8 +158,6 @@ type Folder {
 type Query {
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
-    manufacturers(search: String): [Manufacturer!]!
-    products(manufacturer: ID): [Product!]!
     currentUser: CurrentUser!
     folder(id: ID): Folder
     subfolder(id: ID): [Folder!]!
@@ -289,62 +274,11 @@ const launchesPastRest = http.get("/launches", (info) => {
     return HttpResponse.json(allLaunches);
 });
 
-export type Manufacturer = {
-    id: string;
-    name: string;
-};
-
-const allManufacturers: Manufacturer[] = [];
-
-for (let i = 0; i < 10; i += 1) {
-    allManufacturers.push({
-        id: faker.string.uuid(),
-        name: faker.company.name(),
-    });
-}
-
-export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const manufacturers: GraphQLFieldResolver<unknown, unknown> = async (source, args, context, info) => {
-    await sleep(500);
-    return allManufacturers.filter((manufacturer) => {
-        return !args.search || manufacturer.name.toLowerCase().includes(args.search.toLowerCase());
-    });
-};
-
-export type Product = {
-    id: string;
-    name: string;
-    manufacturer: Manufacturer;
-};
-
-const allProducts: Product[] = [];
-
-for (let i = 0; i < 100; i += 1) {
-    allProducts.push({
-        id: faker.string.uuid(),
-        name: faker.commerce.product(),
-        manufacturer: faker.helpers.arrayElement(allManufacturers),
-    });
-}
-
-const products: GraphQLFieldResolver<unknown, unknown, { manufacturer?: string }> = async (source, { manufacturer }) => {
-    await sleep(500);
-
-    if (manufacturer) {
-        return allProducts.filter((product) => product.manufacturer.id === manufacturer);
-    }
-
-    return allProducts;
-};
-
 const graphqlHandler = new GraphQLHandler({
     resolverMap: {
         Query: {
             launchesPastResult,
             launchesPastPagePaging,
-            manufacturers,
-            products,
             currentUser: currentUserHandler,
             folder: folderHandler,
             subfolder: subfolderHandler,
@@ -355,5 +289,7 @@ const graphqlHandler = new GraphQLHandler({
         graphqlSchema,
     },
 });
+
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const handlers = [http.post("/graphql", mswResolver(graphqlHandler)), fileUploadsHandler, launchesPastRest];

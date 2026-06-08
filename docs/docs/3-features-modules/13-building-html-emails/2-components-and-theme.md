@@ -420,6 +420,34 @@ To set a custom link color that persists across all viewports, use `!important` 
 
 **CSS class name:** `.htmlInlineLink`.
 
+## Image
+
+`MjmlImage` and `HtmlImage` are responsive — the image scales down to fit narrow viewports.
+
+**CSS class names:** `.mjmlImage`, `.htmlImage`.
+
+## Divider
+
+`MjmlDivider` and `HtmlDivider` render a themed horizontal line. Set `height`, `backgroundColor`, and `backgroundImage` directly as props, or define named `variant`s under `theme.divider` with an optional `defaultVariant`.
+
+```tsx
+const theme = createTheme({
+    divider: {
+        defaultVariant: "thin",
+        variants: {
+            thin: { height: 1, backgroundColor: "#999999" },
+            thick: { height: { default: 12, mobile: 8 }, backgroundColor: "#222222" },
+        },
+    },
+});
+
+<MjmlDivider variant="thick" />;
+```
+
+A `backgroundImage` (typically a gradient) renders on top of `backgroundColor`. Clients that ignore `background-image` fall back to the solid color, so set both when using a gradient.
+
+**CSS class names:** `.mjmlDivider`, `.htmlDivider`, and `.mjmlDivider--{variant}` / `.htmlDivider--{variant}`.
+
 ## Scoped Theming
 
 `ThemeProvider` makes a theme available to its children via React context. `MjmlMailRoot` uses it internally, so you don't need it for the top-level theme. Its main use case is **scoped theming** — applying a different theme to a subsection of the email.

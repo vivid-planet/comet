@@ -54,9 +54,17 @@ export const globalTypes: GlobalTypes = {
     },
 };
 
+const workerStarted = worker.start({ onUnhandledRequest: "bypass" });
+
 const preview: Preview = {
     tags: ["autodocs"],
     decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, CometConfigProviderDecorator],
+    loaders: [
+        async () => {
+            await workerStarted;
+            return {};
+        },
+    ],
     parameters: {
         options: {
             /**
@@ -147,5 +155,3 @@ const preview: Preview = {
 };
 
 export default preview;
-
-worker.start();

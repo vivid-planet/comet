@@ -59,5 +59,10 @@ export default defineConfig([
             "jsonc/sort-keys": "error",
         },
     },
-    packageJson.configs.recommended,
+    {
+        ...packageJson.configs.recommended,
+        rules: {
+            "package-json/require-attribution": "off",
+        },
+    },
 ]);

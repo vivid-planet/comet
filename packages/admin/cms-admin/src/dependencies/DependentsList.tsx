@@ -17,12 +17,13 @@ import {
 } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@comet/admin-icons";
 import { Box, Chip, IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent, type GridToolbarProps } from "@mui/x-data-grid";
+import type { GridSlotsComponent, GridToolbarProps } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
+import { DataGrid } from "../dataGrid/DataGrid";
 import type { GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
 import { getDisplayNameString } from "./getDisplayNameString";

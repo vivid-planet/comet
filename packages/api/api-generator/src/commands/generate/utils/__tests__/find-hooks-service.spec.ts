@@ -2,6 +2,7 @@ import { CrudGenerator, CrudGeneratorHooksService, CurrentUser, MutationError } 
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { findHooksService } from "../find-hooks-service";
 import { testPermission } from "../test-helper";
