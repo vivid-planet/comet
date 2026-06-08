@@ -23,6 +23,7 @@ import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFac
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
 import type { SearchText, WeightedSearchText } from "../search/get-search-text";
+import { CmsBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
@@ -109,6 +110,11 @@ export interface CreateTipTapRichTextBlockOptions {
     indexSearchText?: boolean;
     link?: Block;
     /**
+     * Child blocks that can be inserted into the editor (e.g. via the toolbar's "+" menu).
+     * Each block is stored as an atomic `cmsBlock` node with its data kept in the node's `data` attribute.
+     */
+    childBlocks?: Block[];
+    /**
      * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be stored. Content exceeding this limit will be rejected during validation.
      */
@@ -143,6 +149,7 @@ function buildExtensions(
     inlineStyles: TipTapInlineStyle[],
     placeholders: TipTapPlaceholder[],
     hasLink: boolean,
+    hasChildBlocks: boolean,
 ): Extensions {
     const hasTextBlockStyles = textBlockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
@@ -170,6 +177,7 @@ function buildExtensions(
         ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
         ...(hasPlaceholders ? [Placeholder] : []),
         ...(hasLink ? [CmsLink] : []),
+        ...(hasChildBlocks ? [CmsBlock] : []),
     ];
 }
 
@@ -241,6 +249,47 @@ function collectLinkMarks(content: JSONContent, basePath: string[] = ["tipTapCon
     }
 
     return results;
+}
+
+function collectCmsBlockNodes(
+    content: JSONContent,
+    basePath: string[] = ["tipTapContent"],
+): Array<{ blockType: string; data: unknown; path: string[] }> {
+    const results: Array<{ blockType: string; data: unknown; path: string[] }> = [];
+
+    if (content.type === "cmsBlock" && content.attrs?.blockType) {
+        results.push({
+            blockType: content.attrs.blockType as string,
+            data: content.attrs.data,
+            path: [...basePath, "attrs", "data"],
+        });
+    }
+
+    if (Array.isArray(content.content)) {
+        content.content.forEach((child: JSONContent, childIdx: number) => {
+            results.push(...collectCmsBlockNodes(child, [...basePath, "content", String(childIdx)]));
+        });
+    }
+
+    return results;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapCmsBlockNodesData(content: JSONContent, fn: (blockType: string, data: any) => any): JSONContent {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (result.type === "cmsBlock" && result.attrs?.blockType) {
+        result.attrs = { ...result.attrs, data: fn(result.attrs.blockType, result.attrs.data) };
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = result.content.map((child: JSONContent) => mapCmsBlockNodesData(child, fn));
+    }
+
+    return result;
 }
 
 function collectPlaceholderNames(content: JSONContent): string[] {
@@ -326,10 +375,18 @@ function IsTipTapContent(
     {
         inlineStyles,
         linkBlock,
+        childBlocks,
         maxTextBlocks,
         allowedPlaceholderNames,
         listLevelMax,
-    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxTextBlocks?: number; allowedPlaceholderNames?: string[]; listLevelMax?: number },
+    }: {
+        inlineStyles: TipTapInlineStyle[];
+        linkBlock?: Block;
+        childBlocks?: Record<string, Block>;
+        maxTextBlocks?: number;
+        allowedPlaceholderNames?: string[];
+        listLevelMax?: number;
+    },
     validationOptions?: ValidationOptions,
 ) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
@@ -388,6 +445,28 @@ function IsTipTapContent(
                             }
                         }
 
+                        // Validate child block nodes
+                        if (childBlocks) {
+                            const blockNodes = collectCmsBlockNodes(value as JSONContent);
+                            for (const { blockType, data } of blockNodes) {
+                                const childBlock = childBlocks[blockType];
+                                if (!childBlock) {
+                                    return false;
+                                }
+                                const validationErrors = await validate(
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    childBlock.blockInputFactory(data as any),
+                                    {
+                                        forbidNonWhitelisted: true,
+                                        whitelist: true,
+                                    },
+                                );
+                                if (validationErrors.length > 0) {
+                                    return false;
+                                }
+                            }
+                        }
+
                         // Validate placeholder names
                         if (allowedPlaceholderNames) {
                             const usedNames = collectPlaceholderNames(value as JSONContent);
@@ -440,6 +519,7 @@ export function createTipTapRichTextBlock(
         placeholders = [],
         indexSearchText = true,
         link: LinkBlock,
+        childBlocks: childBlocksArray = [],
         maxTextBlocks,
         listLevelMax,
         migrateFromDraftJs = false,
@@ -450,7 +530,9 @@ export function createTipTapRichTextBlock(
     const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, textBlockStyles, inlineStyles, placeholders, hasLink);
+    const childBlocks: Record<string, Block> = Object.fromEntries(childBlocksArray.map((block) => [block.name, block]));
+    const hasChildBlocks = childBlocksArray.length > 0;
+    const extensions = buildExtensions(supports, textBlockStyles, inlineStyles, placeholders, hasLink, hasChildBlocks);
     const schema = getSchema(extensions);
 
     const draftJsTextBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.textBlockStyleMap : undefined;
@@ -504,22 +586,48 @@ export function createTipTapRichTextBlock(
         }
 
         childBlocksInfo(): ChildBlockInfo[] {
-            if (!LinkBlock) {
-                return [];
+            const info: ChildBlockInfo[] = [];
+
+            if (LinkBlock) {
+                for (const { data, path } of collectLinkMarks(this.tipTapContent)) {
+                    info.push({
+                        visible: true,
+                        relJsonPath: path,
+                        block: data as BlockDataInterface,
+                        name: LinkBlock.name,
+                    });
+                }
             }
-            return collectLinkMarks(this.tipTapContent).map(({ data, path }) => ({
-                visible: true,
-                relJsonPath: path,
-                block: data as BlockDataInterface,
-                name: LinkBlock.name,
-            }));
+
+            if (hasChildBlocks) {
+                for (const { blockType, data, path } of collectCmsBlockNodes(this.tipTapContent)) {
+                    const childBlock = childBlocks[blockType];
+                    if (childBlock) {
+                        info.push({
+                            visible: true,
+                            relJsonPath: path,
+                            block: data as BlockDataInterface,
+                            name: childBlock.name,
+                        });
+                    }
+                }
+            }
+
+            return info;
         }
     }
 
     const allowedPlaceholderNames = placeholders.length > 0 ? placeholders.map((p) => p.name) : undefined;
 
     class TipTapRichTextBlockInput implements TipTapRichTextBlockInputInterface {
-        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxTextBlocks, allowedPlaceholderNames, listLevelMax })
+        @IsTipTapContent(schema, {
+            inlineStyles,
+            linkBlock: LinkBlock,
+            childBlocks: hasChildBlocks ? childBlocks : undefined,
+            maxTextBlocks,
+            allowedPlaceholderNames,
+            listLevelMax,
+        })
         @BlockField({ type: "json" })
         tipTapContent: JSONContent;
 
@@ -529,6 +637,12 @@ export function createTipTapRichTextBlock(
                 tipTapContent = mapLinkMarksData(tipTapContent, (data) =>
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     LinkBlock.blockInputFactory(data as any).transformToBlockData(),
+                );
+            }
+            if (hasChildBlocks) {
+                tipTapContent = mapCmsBlockNodesData(tipTapContent, (blockType, data) =>
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    childBlocks[blockType].blockInputFactory(data as any).transformToBlockData(),
                 );
             }
             return plainToInstance(TipTapRichTextBlockData, { tipTapContent });
@@ -543,6 +657,9 @@ export function createTipTapRichTextBlock(
         let tipTapContent = o.tipTapContent;
         if (LinkBlock) {
             tipTapContent = mapLinkMarksData(tipTapContent, (data) => LinkBlock.blockDataFactory(data));
+        }
+        if (hasChildBlocks) {
+            tipTapContent = mapCmsBlockNodesData(tipTapContent, (blockType, data) => childBlocks[blockType].blockDataFactory(data));
         }
         return plainToInstance(TipTapRichTextBlockData, { tipTapContent });
     };

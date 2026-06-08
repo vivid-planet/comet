@@ -1,5 +1,6 @@
 import { greyPalette, Tooltip } from "@comet/admin";
 import {
+    Add,
     MoreHorizontal,
     RteBold,
     RteClearLink,
@@ -35,8 +36,9 @@ import { type Editor, useEditorState } from "@tiptap/react";
 import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type RefAttributes, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import type { BlockInterface, LinkBlockInterface } from "../types";
+import type { BlockInterface, BlockState, LinkBlockInterface } from "../types";
 import type { TipTapInlineStyle, TipTapPlaceholder, TipTapSupports, TipTapTextBlockStyle, TipTapTextBlockType } from "./createTipTapRichTextBlock";
+import { TipTapBlockDialog } from "./TipTapBlockDialog";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {
@@ -153,6 +155,7 @@ export const TipTapToolbar = ({
     inlineStyles,
     placeholders,
     linkBlock,
+    childBlocks,
     listLevelMax,
 }: {
     editor: Editor;
@@ -161,11 +164,14 @@ export const TipTapToolbar = ({
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    childBlocks: BlockInterface[];
     listLevelMax?: number;
 }) => {
     const intl = useIntl();
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [placeholderAnchorEl, setPlaceholderAnchorEl] = useState<null | HTMLElement>(null);
+    const [childBlockAnchorEl, setChildBlockAnchorEl] = useState<null | HTMLElement>(null);
+    const [insertBlock, setInsertBlock] = useState<BlockInterface | null>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
     const hasInlineFormatButtons = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
@@ -174,6 +180,7 @@ export const TipTapToolbar = ({
     const hasLink = supports.includes("link") && !!linkBlock;
     const hasPlaceholders = placeholders.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
+    const hasChildBlocks = childBlocks.length > 0;
 
     const editorState = useEditorState({
         editor,
@@ -254,6 +261,11 @@ export const TipTapToolbar = ({
 
     const handlePlaceholderClose = () => {
         setPlaceholderAnchorEl(null);
+        setTimeout(() => editor.commands.focus(), 0);
+    };
+
+    const handleChildBlockClose = () => {
+        setChildBlockAnchorEl(null);
         setTimeout(() => editor.commands.focus(), 0);
     };
 
@@ -602,7 +614,52 @@ export const TipTapToolbar = ({
                     />
                 </ToolbarGroup>
             )}
+            {hasChildBlocks && (
+                <ToolbarGroup>
+                    <Tooltip title={<FormattedMessage id="comet.blocks.tipTapRichText.insertBlock.tooltip" defaultMessage="Insert block" />}>
+                        <Box
+                            component="button"
+                            type="button"
+                            aria-label={intl.formatMessage({
+                                id: "comet.blocks.tipTapRichText.insertBlock.tooltip",
+                                defaultMessage: "Insert block",
+                            })}
+                            onMouseDown={(e: MouseEvent) => {
+                                e.preventDefault();
+                                setChildBlockAnchorEl(e.currentTarget as HTMLElement);
+                            }}
+                            sx={toolbarButtonSx}
+                        >
+                            <Add sx={{ fontSize: 15 }} color="inherit" />
+                        </Box>
+                    </Tooltip>
+                    <Menu open={Boolean(childBlockAnchorEl)} anchorEl={childBlockAnchorEl} onClose={handleChildBlockClose}>
+                        {childBlocks.map((block) => (
+                            <MenuItem
+                                key={block.name}
+                                onClick={() => {
+                                    handleChildBlockClose();
+                                    setInsertBlock(block);
+                                }}
+                            >
+                                {block.displayName}
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </ToolbarGroup>
+            )}
             {linkDialogOpen && linkBlock && <TipTapLinkDialog editor={editor} linkBlock={linkBlock} onClose={() => setLinkDialogOpen(false)} />}
+            {insertBlock && (
+                <TipTapBlockDialog
+                    block={insertBlock}
+                    initialState={insertBlock.defaultValues() as BlockState<typeof insertBlock>}
+                    isEditing={false}
+                    onSubmit={(data) => {
+                        editor.commands.insertCmsBlock({ blockType: insertBlock.name, data });
+                    }}
+                    onClose={() => setInsertBlock(null)}
+                />
+            )}
         </Box>
     );
 };
