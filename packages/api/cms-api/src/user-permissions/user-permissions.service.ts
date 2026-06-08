@@ -103,11 +103,55 @@ export class UserPermissionsService {
         return this.userService;
     }
 
-    async getUser(id: string): Promise<User> {
+    async findUser(id: string): Promise<User | null> {
         if (!this.userService) {
             throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
         }
-        return this.userService.getUser(id);
+        if (this.userService.findUser) {
+            return this.userService.findUser(id);
+        }
+        if (this.userService.findUserOrThrow) {
+            try {
+                return await this.userService.findUserOrThrow(id);
+            } catch {
+                return null;
+            }
+        }
+        if (this.userService.getUser) {
+            try {
+                return await this.userService.getUser(id);
+            } catch {
+                return null;
+            }
+        }
+        throw new Error("The userService must implement `findUser`, `findUserOrThrow` or `getUser`.");
+    }
+
+    async findUserOrThrow(id: string): Promise<User> {
+        if (!this.userService) {
+            throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+        }
+        if (this.userService.findUserOrThrow) {
+            return this.userService.findUserOrThrow(id);
+        }
+        if (this.userService.findUser) {
+            const user = await this.userService.findUser(id);
+            if (!user) {
+                throw new Error(`User not found: ${id}`);
+            }
+            return user;
+        }
+        if (this.userService.getUser) {
+            return this.userService.getUser(id);
+        }
+        throw new Error("The userService must implement `findUserOrThrow`, `findUser` or `getUser`.");
+    }
+
+    /**
+     * @deprecated Use `findUserOrThrow` instead.
+     */
+    async getUser(id: string): Promise<User> {
+        return this.findUserOrThrow(id);
     }
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
