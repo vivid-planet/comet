@@ -105,14 +105,14 @@ export class UserPermissionsService {
 
     async findUser(id: string): Promise<User | null> {
         if (!this.userService?.findUser) {
-            throw new Error("For this functionality you need to define `findUser` in the userService.");
+            return null;
         }
         return this.userService.findUser(id);
     }
 
     async findUserForLogin(id: string): Promise<User | null> {
         if (!this.userService?.findUserForLogin) {
-            throw new Error("For this functionality you need to define `findUserForLogin` in the userService.");
+            return null;
         }
         return this.userService.findUserForLogin(id);
     }
