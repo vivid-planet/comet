@@ -1,5 +1,15 @@
-import { type ITableRowProps, Table, TableBodyRow, TableColumns, useWindowSize } from "@comet/admin";
 import { TableCell } from "@mui/material";
+
+import { useWindowSize } from "../../helpers/useWindowSize";
+import { type ITableRowProps, Table, TableColumns } from "../Table";
+import { TableBodyRow } from "../TableBodyRow";
+
+interface IExampleRow {
+    id: number;
+    foo1: string;
+    foo2: string;
+    bar: string;
+}
 
 function ExampleTableRow({ columns, row, showSecondRow, rowProps }: ITableRowProps<IExampleRow> & { showSecondRow: boolean }) {
     return (
@@ -14,13 +24,6 @@ function ExampleTableRow({ columns, row, showSecondRow, rowProps }: ITableRowPro
             )}
         </>
     );
-}
-
-interface IExampleRow {
-    id: number;
-    foo1: string;
-    foo2: string;
-    bar: string;
 }
 
 export default {

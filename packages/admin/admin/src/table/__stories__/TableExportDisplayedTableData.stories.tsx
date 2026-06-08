@@ -1,15 +1,13 @@
-import {
-    ExcelExportButton,
-    FillSpace,
-    type IRow,
-    MainContent,
-    Table,
-    Toolbar,
-    ToolbarActions,
-    ToolbarItem,
-    useExportDisplayedTableData,
-} from "@comet/admin";
 import { Typography } from "@mui/material";
+
+import { FillSpace } from "../../common/FillSpace";
+import { MainContent } from "../../common/MainContent";
+import { ToolbarActions } from "../../common/toolbar/actions/ToolbarActions";
+import { ToolbarItem } from "../../common/toolbar/item/ToolbarItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { useExportDisplayedTableData } from "../excelexport/useExportDisplayedTableData";
+import { ExcelExportButton } from "../ExcelExportButton";
+import { type IRow, Table } from "../Table";
 
 interface IExampleRow extends IRow {
     id: number;

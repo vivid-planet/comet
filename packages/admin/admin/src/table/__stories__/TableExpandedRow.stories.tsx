@@ -1,8 +1,10 @@
-import { type ITableHeadRowProps, type ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "@comet/admin";
 import { AddNoCircle } from "@comet/admin-icons";
 import { IconButton, TableCell } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
 import { useState } from "react";
+
+import { type ITableHeadRowProps, type ITableRowProps, Table, TableColumns, TableHeadColumns } from "../Table";
+import { TableBodyRow } from "../TableBodyRow";
 
 interface IRow {
     id: number;
