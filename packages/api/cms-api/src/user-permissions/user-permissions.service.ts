@@ -135,20 +135,14 @@ export class UserPermissionsService {
      * @deprecated Use `findUserOrThrow` instead.
      */
     async getUser(id: string): Promise<User> {
-        if (!this.userService?.getUser) {
-            throw new Error("For this functionality you need to define `getUser` in the userService.");
-        }
-        return this.userService.getUser(id);
+        return this.findUserOrThrow(id);
     }
 
     /**
      * @deprecated Use `findUserForLoginOrThrow` instead.
      */
     async getUserForLogin(id: string): Promise<User> {
-        if (!this.userService?.getUserForLogin) {
-            throw new Error("For this functionality you need to define `getUserForLogin` in the userService.");
-        }
-        return this.userService.getUserForLogin(id);
+        return this.findUserForLoginOrThrow(id);
     }
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
