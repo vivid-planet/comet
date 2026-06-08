@@ -4,7 +4,7 @@ import type { DocumentNode } from "graphql";
 import { type ComponentType, Fragment, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { Loading } from "../common/Loading";
+import { Loading } from "./common/Loading";
 
 interface IProps<Data extends { id: string | number } = { id: string | number }> {
     selectionMode?: "edit" | "add";

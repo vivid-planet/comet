@@ -7,7 +7,7 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { Component, createRef, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 
-import type { ISelectionApi } from "../editDialog/SelectionApi";
+import type { ISelectionApi } from "../SelectionApi";
 import type { IExportApi } from "./excelexport/IExportApi";
 import { isVisible } from "./isVisible";
 import { TablePagination } from "./Pagination";

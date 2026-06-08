@@ -117,10 +117,6 @@ export { TimePickerField, type TimePickerFieldProps } from "./dateTime/timePicke
 export { DeleteMutation } from "./DeleteMutation";
 export { EditDialog, useEditDialog } from "./editDialog/EditDialog";
 export { EditDialogApiContext, type IEditDialogApi, useEditDialogApi } from "./editDialog/EditDialogApiContext";
-export { Selected } from "./editDialog/Selected";
-export { type ISelectionRenderPropArgs, Selection, useSelection } from "./editDialog/Selection";
-export type { ISelectionApi } from "./editDialog/SelectionApi";
-export { type ISelectionRouterRenderPropArgs, SelectionRoute, SelectionRouteInner, useSelectionRoute } from "./editDialog/SelectionRoute";
 export { ErrorBoundary, type ErrorBoundaryClassKey, type ErrorBoundaryProps } from "./error/errorboundary/ErrorBoundary";
 export { RouteWithErrorBoundary } from "./error/errorboundary/RouteWithErrorBoundary";
 export { createErrorDialogApolloLink } from "./error/errordialog/createErrorDialogApolloLink";
@@ -238,6 +234,10 @@ export {
     type SectionHeadlineClassKey,
     type SectionHeadlineProps,
 } from "./section/SectionHeadline";
+export { Selected } from "./Selected";
+export { type ISelectionRenderPropArgs, Selection, useSelection } from "./Selection";
+export type { ISelectionApi } from "./SelectionApi";
+export { type ISelectionRouterRenderPropArgs, SelectionRoute, SelectionRouteInner, useSelectionRoute } from "./SelectionRoute";
 export { type SnackbarApi, SnackbarProvider, useSnackbarApi } from "./snackbar/SnackbarProvider";
 export { UndoSnackbar, type UndoSnackbarProps } from "./snackbar/UndoSnackbar";
 export { type IStackApi, type IWithApiProps, StackApiContext, useStackApi, withStackApi } from "./stack/Api";

@@ -23,9 +23,9 @@ import { CancelButton } from "../common/buttons/cancel/CancelButton";
 import { messages } from "../messages";
 import { SaveBoundary } from "../saveBoundary/SaveBoundary";
 import { SaveBoundarySaveButton } from "../saveBoundary/SaveBoundarySaveButton";
+import type { ISelectionApi } from "../SelectionApi";
+import { useSelectionRoute } from "../SelectionRoute";
 import type { CloseDialogOptions, IEditDialogApi } from "./EditDialogApiContext";
-import type { ISelectionApi } from "./SelectionApi";
-import { useSelectionRoute } from "./SelectionRoute";
 
 interface ITitle {
     edit: ReactNode;
