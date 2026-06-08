@@ -9,8 +9,9 @@ import {
     type TipTapNodeHandler,
     withPreview,
 } from "@comet/site-nextjs";
-import type { LinkBlockData, TipTapRichTextBlockData } from "@src/blocks.generated";
+import type { LinkBlockData, ProductPriceBlockData, TipTapRichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import { ProductPriceBlock } from "@src/products/blocks/ProductPriceBlock";
 
 import { Typography, type TypographyProps } from "../components/Typography";
 import { isValidLink } from "../helpers/HiddenIfInvalidLink";
@@ -50,6 +51,12 @@ const nodeMapping: Record<string, TipTapNodeHandler> = {
                 {children}
             </Typography>
         );
+    },
+    cmsBlock: ({ node }) => {
+        if (node.attrs?.blockType === "ProductPrice") {
+            return <ProductPriceBlock data={node.attrs?.data as ProductPriceBlockData} />;
+        }
+        return null;
     },
 };
 

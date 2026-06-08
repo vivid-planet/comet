@@ -1,4 +1,5 @@
 import { createTipTapRichTextBlock } from "@comet/cms-admin";
+import { ProductPriceBlock } from "@src/products/blocks/ProductPriceBlock";
 import type { HTMLAttributes } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -6,6 +7,7 @@ import { LinkBlock } from "./LinkBlock";
 
 export const TipTapRichTextBlock = createTipTapRichTextBlock({
     link: LinkBlock,
+    childBlocks: [ProductPriceBlock],
     textBlockStyles: [
         {
             name: "paragraph300",
