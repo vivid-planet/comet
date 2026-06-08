@@ -35,9 +35,17 @@ export interface AccessControlServiceInterface {
 
 export interface UserPermissionsUserServiceInterface {
     /**
-     * Optional method to get the user for login if a different code path from the default `findUserOrThrow` is required
+     * @deprecated Implement `findUserForLogin` and `findUserForLoginOrThrow` instead.
      */
     getUserForLogin?: (id: string) => Promise<User> | User;
+    /**
+     * Optional method to look up the user for login if a different code path from the default `findUser` is required.
+     */
+    findUserForLogin?: (id: string) => Promise<User | null> | User | null;
+    /**
+     * Optional method to look up the user for login if a different code path from the default `findUserOrThrow` is required.
+     */
+    findUserForLoginOrThrow?: (id: string) => Promise<User> | User;
     /**
      * @deprecated Implement `findUser` and `findUserOrThrow` instead.
      */

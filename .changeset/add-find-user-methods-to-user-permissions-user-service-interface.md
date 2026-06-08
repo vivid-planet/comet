@@ -2,14 +2,14 @@
 "@comet/cms-api": minor
 ---
 
-Add `findUser` and `findUserOrThrow` to `UserPermissionsUserServiceInterface`
+Add `findUser` / `findUserOrThrow` (and `findUserForLogin` / `findUserForLoginOrThrow`) to `UserPermissionsUserServiceInterface`
 
-The `getUser` method on `UserPermissionsUserServiceInterface` is now deprecated in favor of two new methods:
+The throwing `getUser` and `getUserForLogin` methods on `UserPermissionsUserServiceInterface` are now deprecated in favor of paired find methods:
 
-- `findUser(id): Promise<User | null>` — returns `null` when the user does not exist
-- `findUserOrThrow(id): Promise<User>` — throws when the user does not exist
+- `findUser(id): Promise<User | null>` / `findUserOrThrow(id): Promise<User>`
+- `findUserForLogin(id): Promise<User | null>` / `findUserForLoginOrThrow(id): Promise<User>`
 
-This lets consumers opt into a non-throwing path without wrapping `getUser` calls in `try`/`catch`. Existing implementations that only define `getUser` continue to work; the service falls back to it.
+This lets consumers opt into a non-throwing path without wrapping lookups in `try`/`catch`. Existing implementations that only define `getUser` / `getUserForLogin` continue to work; the service falls back to them.
 
 **Example**
 

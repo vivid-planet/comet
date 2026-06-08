@@ -141,6 +141,34 @@ export class UserPermissionsService {
         return this.findUserOrThrow(id);
     }
 
+    async findUserForLogin(id: string): Promise<User | null> {
+        if (this.userService?.findUserForLogin) {
+            return this.userService.findUserForLogin(id);
+        }
+        try {
+            return await this.findUserForLoginOrThrow(id);
+        } catch {
+            return null;
+        }
+    }
+
+    async findUserForLoginOrThrow(id: string): Promise<User> {
+        if (this.userService?.findUserForLoginOrThrow) {
+            return this.userService.findUserForLoginOrThrow(id);
+        }
+        if (this.userService?.getUserForLogin) {
+            return this.userService.getUserForLogin(id);
+        }
+        if (this.userService?.findUserForLogin) {
+            const user = await this.userService.findUserForLogin(id);
+            if (!user) {
+                throw new Error(`User not found: ${id}`);
+            }
+            return user;
+        }
+        return this.findUserOrThrow(id);
+    }
+
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
         if (!this.userService) {
             throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
