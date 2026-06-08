@@ -163,10 +163,10 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
         });
     });
 
-    describe("maxBlocks fallback", () => {
-        const block = createTipTapRichTextBlock({ maxBlocks: 2, migrateFromDraftJs: true }, "MigratedRichTextMaxBlocks");
+    describe("maxTextBlocks fallback", () => {
+        const block = createTipTapRichTextBlock({ maxTextBlocks: 2, migrateFromDraftJs: true }, "MigratedRichTextMaxBlocks");
 
-        it("falls back to a valid doc when conversion exceeds maxBlocks", async () => {
+        it("falls back to a valid doc when conversion exceeds maxTextBlocks", async () => {
             const data = block.blockDataFactory({
                 draftContent: {
                     blocks: [

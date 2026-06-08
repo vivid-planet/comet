@@ -28,7 +28,7 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
     return false;
 }
 
-export function isValidTipTapContentSync(value: unknown, schema: Schema, { maxBlocks }: { maxBlocks?: number } = {}): boolean {
+export function isValidTipTapContentSync(value: unknown, schema: Schema, { maxTextBlocks }: { maxTextBlocks?: number } = {}): boolean {
     if (typeof value !== "object" || value === null) {
         return false;
     }
@@ -39,9 +39,9 @@ export function isValidTipTapContentSync(value: unknown, schema: Schema, { maxBl
         const node = ProseMirrorNode.fromJSON(schema, value);
         node.check();
 
-        if (maxBlocks !== undefined) {
+        if (maxTextBlocks !== undefined) {
             const content = (value as TipTapContent).content;
-            if (Array.isArray(content) && content.length > maxBlocks) {
+            if (Array.isArray(content) && content.length > maxTextBlocks) {
                 return false;
             }
         }

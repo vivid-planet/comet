@@ -282,23 +282,23 @@ describe("createTipTapRichTextBlock validation", () => {
         });
     });
 
-    describe("schema with block styles", () => {
+    describe("schema with text block styles", () => {
         const block = createTipTapRichTextBlock(
             {
                 supports: ["bold", "heading"],
-                blockStyles: [{ name: "intro", appliesTo: ["paragraph"] }, { name: "highlight" }],
+                textBlockStyles: [{ name: "intro", appliesTo: ["paragraph"] }, { name: "highlight" }],
             },
             "TestBlockStyles",
         );
 
-        it("should accept a paragraph with blockStyle attribute", async () => {
+        it("should accept a paragraph with textBlockStyle attribute", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
                     content: [
                         {
                             type: "paragraph",
-                            attrs: { blockStyle: "intro" },
+                            attrs: { textBlockStyle: "intro" },
                             content: [{ type: "text", text: "Intro text" }],
                         },
                     ],
@@ -308,14 +308,14 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept a heading with blockStyle attribute", async () => {
+        it("should accept a heading with textBlockStyle attribute", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
                     content: [
                         {
                             type: "heading",
-                            attrs: { level: 1, blockStyle: "highlight" },
+                            attrs: { level: 1, textBlockStyle: "highlight" },
                             content: [{ type: "text", text: "Highlighted heading" }],
                         },
                     ],
@@ -325,14 +325,14 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept a paragraph with null blockStyle", async () => {
+        it("should accept a paragraph with null textBlockStyle", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
                     content: [
                         {
                             type: "paragraph",
-                            attrs: { blockStyle: null },
+                            attrs: { textBlockStyle: null },
                             content: [{ type: "text", text: "Default" }],
                         },
                     ],
@@ -343,11 +343,11 @@ describe("createTipTapRichTextBlock validation", () => {
         });
     });
 
-    describe("schema with block styles and lists", () => {
+    describe("schema with text block styles and lists", () => {
         const block = createTipTapRichTextBlock(
             {
                 supports: ["bold", "heading", "ordered-list", "unordered-list"],
-                blockStyles: [
+                textBlockStyles: [
                     { name: "intro", appliesTo: ["paragraph"] },
                     { name: "listStyle", appliesTo: ["ordered-list", "unordered-list"] },
                     { name: "highlight" },
@@ -356,7 +356,7 @@ describe("createTipTapRichTextBlock validation", () => {
             "TestBlockStylesList",
         );
 
-        it("should accept a paragraph with blockStyle inside an ordered list", async () => {
+        it("should accept a paragraph with textBlockStyle inside an ordered list", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
@@ -369,7 +369,7 @@ describe("createTipTapRichTextBlock validation", () => {
                                     content: [
                                         {
                                             type: "paragraph",
-                                            attrs: { blockStyle: "listStyle" },
+                                            attrs: { textBlockStyle: "listStyle" },
                                             content: [{ type: "text", text: "Styled list item" }],
                                         },
                                     ],
@@ -383,7 +383,7 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept a paragraph with blockStyle inside a bullet list", async () => {
+        it("should accept a paragraph with textBlockStyle inside a bullet list", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
@@ -396,7 +396,7 @@ describe("createTipTapRichTextBlock validation", () => {
                                     content: [
                                         {
                                             type: "paragraph",
-                                            attrs: { blockStyle: "highlight" },
+                                            attrs: { textBlockStyle: "highlight" },
                                             content: [{ type: "text", text: "Highlighted bullet" }],
                                         },
                                     ],
@@ -410,7 +410,7 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept a list item paragraph with null blockStyle", async () => {
+        it("should accept a list item paragraph with null textBlockStyle", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
@@ -423,7 +423,7 @@ describe("createTipTapRichTextBlock validation", () => {
                                     content: [
                                         {
                                             type: "paragraph",
-                                            attrs: { blockStyle: null },
+                                            attrs: { textBlockStyle: null },
                                             content: [{ type: "text", text: "Default bullet" }],
                                         },
                                     ],
@@ -839,10 +839,10 @@ describe("createTipTapRichTextBlock validation", () => {
         });
     });
 
-    describe("maxBlocks option", () => {
-        const block = createTipTapRichTextBlock({ maxBlocks: 2 }, "TestMaxBlocks");
+    describe("maxTextBlocks option", () => {
+        const block = createTipTapRichTextBlock({ maxTextBlocks: 2 }, "TestMaxBlocks");
 
-        it("should accept content within maxBlocks limit", async () => {
+        it("should accept content within maxTextBlocks limit", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
@@ -856,7 +856,7 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept content with fewer blocks than maxBlocks", async () => {
+        it("should accept content with fewer blocks than maxTextBlocks", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
@@ -867,7 +867,7 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(0);
         });
 
-        it("should reject content exceeding maxBlocks limit", async () => {
+        it("should reject content exceeding maxTextBlocks limit", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
