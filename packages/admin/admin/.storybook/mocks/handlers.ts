@@ -1,4 +1,4 @@
-import { graphql, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 
 const users = [
     { id: 1, name: "Leanne Graham", username: "Bret", email: "Sincere@april.biz" },
@@ -72,4 +72,12 @@ const productsQueryHandler = graphql.query<{ products: Product[] }, { manufactur
     });
 });
 
-export const handlers = [usersQueryHandler, userQueryHandler, manufacturersQueryHandler, productsQueryHandler];
+const launchesQueryHandler = http.get("/launches", () => {
+    return HttpResponse.json([
+        { id: "1", name: "FalconSat", date: "2006-03-24" },
+        { id: "2", name: "DemoSat", date: "2007-03-21" },
+        { id: "3", name: "Trailblazer", date: "2008-08-03" },
+    ]);
+});
+
+export const handlers = [usersQueryHandler, userQueryHandler, manufacturersQueryHandler, productsQueryHandler, launchesQueryHandler];
