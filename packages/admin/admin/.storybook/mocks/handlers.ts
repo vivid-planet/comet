@@ -22,6 +22,10 @@ const usersQueryHandler = graphql.query<{ users: typeof users }, { query?: strin
     });
 });
 
+const usersRestHandler = http.get("/users", () => {
+    return HttpResponse.json(users);
+});
+
 const userQueryHandler = graphql.query<{ user: (typeof users)[number] | null }, { id: number }>("user", ({ variables }) => {
     return HttpResponse.json({
         data: {
@@ -72,12 +76,4 @@ const productsQueryHandler = graphql.query<{ products: Product[] }, { manufactur
     });
 });
 
-const launchesQueryHandler = http.get("/launches", () => {
-    return HttpResponse.json([
-        { id: "1", name: "FalconSat", date: "2006-03-24" },
-        { id: "2", name: "DemoSat", date: "2007-03-21" },
-        { id: "3", name: "Trailblazer", date: "2008-08-03" },
-    ]);
-});
-
-export const handlers = [usersQueryHandler, userQueryHandler, manufacturersQueryHandler, productsQueryHandler, launchesQueryHandler];
+export const handlers = [usersQueryHandler, usersRestHandler, userQueryHandler, manufacturersQueryHandler, productsQueryHandler];
