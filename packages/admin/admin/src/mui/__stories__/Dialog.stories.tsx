@@ -1,7 +1,14 @@
-import { Button, CancelButton, CheckboxField, Dialog, OkayButton, SelectField, TextField } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
 import { DialogActions, DialogContent, DialogContentText, type DialogProps } from "@mui/material";
 import { Form } from "react-final-form";
+
+import { Button } from "../../common/buttons/Button";
+import { CancelButton } from "../../common/buttons/cancel/CancelButton";
+import { OkayButton } from "../../common/buttons/okay/OkayButton";
+import { Dialog } from "../../common/Dialog";
+import { CheckboxField } from "../../form/fields/CheckboxField";
+import { SelectField } from "../../form/fields/SelectField";
+import { TextField } from "../../form/fields/TextField";
 
 type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth" | "fullScreen";
 
@@ -26,7 +33,7 @@ const selectOptions = [
 ];
 
 export default {
-    title: "@comet/admin/mui",
+    title: "components/mui/Dialog",
     args: {
         selectedDialogSize: "sm",
         selectedDialogTitle: "Dialog Title Example",

@@ -1,10 +1,11 @@
-import { Button } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper } from "@mui/material";
 import { useRef, useState } from "react";
 
+import { Button } from "../../common/buttons/Button";
+
 export default {
-    title: "@comet/admin/mui",
+    title: "components/mui/ListAndMenu",
 };
 
 export const ListAndMenu = {
