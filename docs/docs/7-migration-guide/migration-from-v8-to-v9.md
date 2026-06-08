@@ -42,19 +42,24 @@ npm install
 
 The `install-agent-skills` command and its `agent-skills.json` config have been removed and replaced by `install-agent-features`, a combined installer for agent skills and agent rules.
 
-Rename `agent-skills.json` to `agent-features.json` (the schema is identical):
+Comet's skills and rules are now shipped via the `@comet/agent-features` npm package, which is discovered automatically from `node_modules` — you no longer need an `agent-features.json` file to reference the Comet repo.
+
+Delete the old `agent-skills.json`:
 
 ```sh
-mv agent-skills.json agent-features.json
+rm agent-skills.json
 ```
 
-Replace the `install-agent-skills` invocation in `package.json`:
+Add `@comet/agent-features` to the root `package.json` and replace the `install-agent-skills` script:
 
 ```diff title="package.json"
 {
     "scripts": {
 -       "install-agent-skills": "npx @comet/cli install-agent-skills"
 +       "install-agent-features": "npx @comet/cli install-agent-features"
+    },
+    "devDependencies": {
++       "@comet/agent-features": "9.0.0",
     }
 }
 ```
@@ -63,10 +68,10 @@ And in `install.sh`:
 
 ```diff title="install.sh"
 - npx @comet/cli install-agent-skills
-+ npx @comet/cli install-agent-features
++ npm run install-agent-features
 ```
 
-See the [Installing agent features](../guides/installing-agent-features) guide for more information.
+If you need to pull in additional skills/rules from external git repos, create an `agent-features.json` as described in the [Installing agent features](../guides/installing-agent-features) guide.
 
 ### Verify lint passes
 
@@ -126,7 +131,7 @@ npm install
 
 ### API Generator: Remove the `targetDirectory` option
 
-The `targetDirectory` option of the `@CrudGenerator` decorator has been removed.
+The `targetDirectory` option of the `@CrudGenerator` and `@CrudSingleGenerator` decorators has been removed.
 Generated files are now always written to `${__dirname}/../generated/`, which was a commonly used default.
 
 ```diff title="api/src/products/entities/product.entity.ts"
@@ -135,6 +140,14 @@ Generated files are now always written to `${__dirname}/../generated/`, which wa
     requiredPermission: ["products"],
 })
 export class Product extends BaseEntity {}
+```
+
+```diff title="api/src/footers/entities/footer.entity.ts"
+@CrudSingleGenerator({
+-   targetDirectory: `${__dirname}/../generated/`,
+    requiredPermission: "pageTree",
+})
+export class Footer extends BaseEntity {}
 ```
 
 ### Enable MikroORM dataloader for generated CRUD resolvers
@@ -301,7 +314,7 @@ Update all `@comet/*` dependencies in `admin/package.json` to version `9.0.0` an
 +       "@mui/x-data-grid-pro": "^8.27.5",
 -       "@mui/x-date-pickers": "^7.29.4",
 -       "@mui/x-date-pickers-pro": "^7.29.4",
--       "@mui/x-license": "^7.29.1",
+-       "@mui/x-license-pro": "^7.29.1",
 +       "@mui/x-date-pickers": "^8.27.2",
 +       "@mui/x-date-pickers-pro": "^8.27.2",
 +       "@mui/x-license": "^8.26.0",
@@ -515,7 +528,16 @@ import { CometConfigProvider } from "@comet/cms-admin";
     // ...rest of config
 >
     {children}
-</CometConfigProvider>
+</CometConfigProvider>;
+```
+
+### Update `LicenseInfo` import
+
+In MUI X v8, `LicenseInfo` is now exported from `@mui/x-license`:
+
+```diff
+-import { LicenseInfo } from "@mui/x-license-pro";
++import { LicenseInfo } from "@mui/x-license";
 ```
 
 ### Upgrade MUI X Date Pickers to v8
@@ -843,6 +865,36 @@ const nextConfig: NextConfig = {
 };
 ```
 
+### Remove deprecated `experimental.instrumentationHook`
+
+In Next.js 16, the instrumentation hook is built in and the experimental flag is no longer valid.
+Leaving it in place logs a deprecation warning on every start.
+
+```diff title="site/next.config.(js|mjs|ts)"
+const nextConfig: NextConfig = {
+    experimental: {
+-       instrumentationHook: true,
+        optimizePackageImports: ["@comet/site-nextjs"],
+    },
+};
+```
+
+### Update `tsconfig.server.json`
+
+If you have a separate `tsconfig.server.json` for `server.ts` / `tracing.ts` / `cache-handler.ts` that sets `module: "commonjs"`, you must also override `moduleResolution`.
+Otherwise `tsc` fails with `TS5095: Option 'bundler' can only be used when 'module' is set to 'preserve' or to 'es2015' or later` — because Next 16 enforces `moduleResolution: "bundler"` in the base `tsconfig.json` and rewrites it back if you change it.
+
+```diff title="site/tsconfig.server.json"
+{
+    "compilerOptions": {
+        "module": "commonjs",
++       "moduleResolution": "node",
+        // ...
+    },
+    "extends": "./tsconfig.json"
+}
+```
+
 ### Disable Turbopack
 
 Our site packages currently aren't compatible with Turbopack.
@@ -880,12 +932,28 @@ See the official React 19 [migration guide](https://react.dev/blog/2024/04/25/re
 
 ### Change to Next.js Async Request APIs
 
-Multiple Next.js APIs (e.g., `headers()`) are now asynchronous.
+Multiple Next.js APIs are now asynchronous and must be `await`ed. This applies to:
+
+- `headers()`
+- `cookies()`
+- `draftMode()`
+- `params` and `searchParams` on pages, layouts, and route handlers
+
 Update your usages to support the asynchronous APIs.
 Use the new props helper types.
 Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-16#async-request-apis-breaking-change) for more information.
 
 #### Examples
+
+```diff title="site/src/app/[visibility]/[domain]/[language]/layout.tsx"
+- const isDraftModeEnabled = draftMode().isEnabled;
++ const isDraftModeEnabled = (await draftMode()).isEnabled;
+```
+
+```diff title="site/src/app/api/example/route.ts"
+- const cookieStore = cookies();
++ const cookieStore = await cookies();
+```
 
 ```diff title="site/src/app/[visibility]/[domain]/[language]/[[...path]]/page.tsx"
 - type PageProps = {
@@ -936,6 +1004,16 @@ Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/versio
 mv site/src/middleware.ts site/src/proxy.ts
 ```
 
+Next.js 16 requires `proxy.ts` to export a function named `proxy` (or a default export).
+The previously exported `middleware` function must be renamed — otherwise every request fails at runtime with `must export a function named "proxy" or a default function`:
+
+```diff title="site/src/proxy.ts"
+- export async function middleware(request: NextRequest) {
++ export async function proxy(request: NextRequest) {
+      // ...
+  }
+```
+
 :::note
 
 If you're using Knip, you may need to add `proxy.ts` as entry point:
@@ -957,13 +1035,218 @@ If you're using Knip, you may need to add `proxy.ts` as entry point:
 
 ### Domain Redirects
 
-Domain redirects can now be set in the admin. It is necessary to update your middleware — most likely the `redirectToMainHost` middleware — to handle domain redirects. See example in the demo here: https://github.com/vivid-planet/comet/blob/main/demo/site/src/middleware/redirectToMainHost.ts
+Domain redirects can now be set in the admin. It is necessary to update your middleware — most likely the `redirectToMainHost` middleware — to handle domain redirects.
+
+The full reference implementation is in the demo: https://github.com/vivid-planet/comet/blob/main/demo/site/src/middleware/redirectToMainHost.ts.
+The essential steps are outlined below.
+
+#### 1. Add a `DomainRedirects` query
+
+Query `paginatedRedirects` with `sourceType: { equal: "domain" }` to fetch all admin-configured domain redirects for a given scope:
+
+```ts title="site/src/middleware/redirectToMainHost.ts"
+import { gql } from "@comet/site-nextjs";
+
+const domainRedirectsQuery = gql`
+    query DomainRedirects(
+        $scope: RedirectScopeInput!
+        $filter: RedirectFilter
+        $offset: Int
+        $limit: Int
+    ) {
+        paginatedRedirects(scope: $scope, filter: $filter, offset: $offset, limit: $limit) {
+            nodes {
+                id
+                source
+                target
+                sourceType
+                scope {
+                    domain
+                }
+            }
+            totalCount
+        }
+    }
+`;
+```
+
+Note: the new `RedirectFilter.sourceType: RedirectSourceTypeEnumFilter` input and the `domain` value on the `RedirectSourceTypeValues` enum are part of the regenerated v9 schema — make sure your project has regenerated `schema.gql` / GraphQL types before running the codegen for this query.
+
+#### 2. Add an in-memory cache for the redirects
+
+Domain redirects are hit on every non-resolving request, so cache them in memory. Using `cache-manager` with a `keyv` store:
+
+```sh
+npm install cache-manager keyv
+```
+
+```ts title="site/src/middleware/cache.ts"
+import { createCache } from "cache-manager";
+import Keyv from "keyv";
+
+export const memoryCache = createCache({
+    stores: [new Keyv()],
+    ttl: 15 * 60 * 1000, // 15 minutes
+    refreshThreshold: 5 * 60 * 1000, // refresh if less than 5 minutes TTL are remaining
+});
+
+memoryCache.on("refresh", ({ error }) => {
+    if (error) {
+        console.error("Error refreshing cache in background", error);
+    }
+});
+```
+
+#### 3. Resolve redirect targets to destination URLs
+
+The admin stores the redirect target as a `RedirectsLinkBlock` which can point to an internal page, an external URL, or (if your project has it) a news item. Add a helper that turns the stored `block` into a fully-qualified URL:
+
+```ts title="site/src/middleware/redirectToMainHost.ts"
+import {
+    type ExternalLinkBlockData,
+    type InternalLinkBlockData,
+    type RedirectsLinkBlockData,
+} from "@src/blocks.generated";
+import { createSitePath } from "@src/util/createSitePath";
+
+function getRedirectTargetUrl(
+    block: RedirectsLinkBlockData["block"],
+    targetBaseUrl: string,
+): string | undefined {
+    if (!block) return undefined;
+    switch (block.type) {
+        case "internal": {
+            const internalLink = block.props as InternalLinkBlockData;
+            if (internalLink.targetPage) {
+                return `${targetBaseUrl}${createSitePath({ path: internalLink.targetPage.path })}`;
+            }
+            break;
+        }
+        case "external":
+            return (block.props as ExternalLinkBlockData).targetUrl;
+    }
+    return undefined;
+}
+```
+
+Extend the `switch` with a `case "news"` (or any other link types your project registers) as needed.
+
+#### 4. Update the middleware to look up domain redirects
+
+Before falling back to "redirect to main host", check whether there is a domain redirect for the current host — both when the host matches one of the site-config's additional/pattern domains and when it doesn't match any site-config at all. Detect redirect loops, since misconfigured redirects (e.g. pointing a host at itself) would otherwise 301 in a tight loop.
+
+```ts title="site/src/middleware/redirectToMainHost.ts"
+import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { getHostByHeaders, getSiteConfigForHost, getSiteConfigs } from "@src/util/siteConfig";
+import { type NextRequest, NextResponse } from "next/server";
+import { memoryCache } from "./cache";
+
+function normalizeHost(value: string): string {
+    return value.replace(/^https?:\/\//, "");
+}
+
+async function fetchDomainRedirects(scope: { domain: string }) {
+    return memoryCache.wrap(`domainRedirects-${scope.domain}`, async () => {
+        const graphQLFetch = createGraphQLFetch();
+        // ... paginate through paginatedRedirects with filter: { sourceType: { equal: "domain" } }
+        // and return the collected nodes
+    });
+}
+
+async function fetchDomainRedirectsForAllScopes() {
+    return (
+        await Promise.all(getSiteConfigs().map((config) => fetchDomainRedirects(config.scope)))
+    ).flat();
+}
+
+export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
+    return async (request: NextRequest) => {
+        const host = getHostByHeaders(request.headers);
+        const siteConfig = await getSiteConfigForHost(host);
+
+        if (!siteConfig) {
+            const redirectSiteConfig =
+                getSiteConfigs().find((c) => matchesHostWithAdditionalDomain(c, host)) ||
+                getSiteConfigs().find((c) => matchesHostWithPattern(c, host));
+
+            if (redirectSiteConfig) {
+                // 1. First, check for an admin-configured domain redirect for this scope
+                const domainRedirects = await fetchDomainRedirects(redirectSiteConfig.scope);
+                const redirect = domainRedirects.find(
+                    (r) => normalizeHost(r.source) === normalizeHost(host),
+                );
+
+                if (redirect) {
+                    const destination = getRedirectTargetUrl(
+                        redirect.target.block,
+                        `https://${redirectSiteConfig.domains.main}`,
+                    );
+                    if (destination) {
+                        if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
+                            throw new Error(`Redirect loop detected: ${host} -> ${destination}`);
+                        }
+                        return NextResponse.redirect(destination, { status: 301 });
+                    }
+                }
+
+                // 2. Otherwise, redirect to the main host (previous behavior)
+                const mainHost = normalizeHost(redirectSiteConfig.domains.main);
+                if (mainHost === normalizeHost(host)) {
+                    throw new Error(
+                        `Redirect loop detected: main host ${mainHost} equals current host`,
+                    );
+                }
+                return NextResponse.redirect(
+                    `https://${redirectSiteConfig.domains.main}${request.nextUrl.pathname}${request.nextUrl.search}`,
+                    { status: 301 },
+                );
+            }
+
+            // 3. Host doesn't match any site-config — check cross-scope domain redirects as a last resort
+            const domainRedirects = await fetchDomainRedirectsForAllScopes();
+            const redirect = domainRedirects.find(
+                (r) => normalizeHost(r.source) === normalizeHost(host),
+            );
+            if (redirect) {
+                const scopedSiteConfig = getSiteConfigs().find(
+                    (c) => c.scope.domain === redirect.scope.domain,
+                );
+                if (!scopedSiteConfig) {
+                    throw new Error(
+                        `Got redirect to domain ${redirect.scope.domain}, but couldn't find corresponding site-config.`,
+                    );
+                }
+                const destination = getRedirectTargetUrl(
+                    redirect.target.block,
+                    `https://${scopedSiteConfig.domains.main}`,
+                );
+                if (destination) {
+                    if (normalizeHost(new URL(destination).host) === normalizeHost(host)) {
+                        throw new Error(`Redirect loop detected: ${host} -> ${destination}`);
+                    }
+                    return NextResponse.redirect(destination, { status: 301 });
+                }
+            }
+
+            return NextResponse.json({ error: `Cannot resolve domain: ${host}` }, { status: 404 });
+        }
+        return middleware(request);
+    };
+}
+```
+
+:::note
+
+`createGraphQLFetch` must be callable from a proxy. In Next.js 16 the proxy runs in the Node.js runtime by default, so a non-edge `createGraphQLFetch` works here. If your project previously had an edge-runtime guard in `createGraphQLFetch` (e.g. a `throw` when `process.env.NEXT_RUNTIME === "edge"`), you can remove it — or call the fetch inside `memoryCache.wrap` so the throw only fires on a real edge deploy.
+
+:::
 
 ### Add `cache: "force-cache"` to GraphQL fetch
 
 Next.js no longer caches `fetch` requests by default.
 Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-15#fetch-requests) for more information.
-Add `cache: "force-cache"` to `createGraphQLFetch()`:
+Add `cache: "force-cache"` to `createGraphQLFetch()`.
+The file might be named differently in some Comet projects (e.g. `createGraphQLFetch.ts`):
 
 ```diff title="site/src/util/graphQLClient.ts"
 export function createGraphQLFetch() {
