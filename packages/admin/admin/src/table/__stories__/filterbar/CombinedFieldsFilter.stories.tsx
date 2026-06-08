@@ -1,15 +1,14 @@
-import {
-    Field,
-    FilterBar,
-    FilterBarPopoverFilter,
-    FinalFormRangeInput,
-    SwitchField,
-    Table,
-    TableFilterFinalForm,
-    useTableQueryFilter,
-} from "@comet/admin";
 import { faker } from "@faker-js/faker";
 import { Box, Divider, Typography } from "@mui/material";
+
+import { Field } from "../../../form/Field";
+import { SwitchField } from "../../../form/fields/SwitchField";
+import { FinalFormRangeInput } from "../../../form/FinalFormRangeInput";
+import { FilterBar } from "../../filterbar/FilterBar";
+import { FilterBarPopoverFilter } from "../../filterbar/filterBarPopoverFilter/FilterBarPopoverFilter";
+import { Table } from "../../Table";
+import { TableFilterFinalForm } from "../../TableFilterFinalForm";
+import { useTableQueryFilter } from "../../useTableQueryFilter";
 
 interface IFilterValues {
     expressDelivery: boolean;

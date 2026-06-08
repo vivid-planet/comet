@@ -1,18 +1,17 @@
-import {
-    AutocompleteField,
-    Field,
-    FilterBar,
-    FilterBarMoreFilters,
-    FilterBarPopoverFilter,
-    FinalFormInput,
-    FinalFormRangeInput,
-    SwitchField,
-    Table,
-    TableFilterFinalForm,
-    useTableQueryFilter,
-} from "@comet/admin";
 import { faker } from "@faker-js/faker";
 import { Box, Divider, Typography } from "@mui/material";
+
+import { Field } from "../../../form/Field";
+import { AutocompleteField } from "../../../form/fields/AutocompleteField";
+import { SwitchField } from "../../../form/fields/SwitchField";
+import { FinalFormInput } from "../../../form/FinalFormInput";
+import { FinalFormRangeInput } from "../../../form/FinalFormRangeInput";
+import { FilterBar } from "../../filterbar/FilterBar";
+import { FilterBarMoreFilters } from "../../filterbar/filterBarMoreFilters/FilterBarMoreFilters";
+import { FilterBarPopoverFilter } from "../../filterbar/filterBarPopoverFilter/FilterBarPopoverFilter";
+import { Table } from "../../Table";
+import { TableFilterFinalForm } from "../../TableFilterFinalForm";
+import { useTableQueryFilter } from "../../useTableQueryFilter";
 
 interface ColorFilterFieldProps {
     colors: string[];
