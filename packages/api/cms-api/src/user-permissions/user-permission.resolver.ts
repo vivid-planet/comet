@@ -10,7 +10,7 @@ import { UserPermission, UserPermissionSource } from "./entities/user-permission
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ArgsType()
-export class UserPermissionListArgs {
+class UserPermissionListArgs {
     @Field()
     @IsString()
     userId: string;

@@ -13,6 +13,7 @@ import {
     ValidatorConstraintInterface,
 } from "class-validator";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { generateCrud } from "../../generateCrud/generate-crud";
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";

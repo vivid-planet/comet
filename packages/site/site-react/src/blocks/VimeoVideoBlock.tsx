@@ -92,7 +92,7 @@ export const VimeoVideoBlock = withPreview(
         const identifier = parseVimeoIdentifier(vimeoIdentifier);
 
         const searchParams = new URLSearchParams();
-        if (hasPreviewImage && !showPreviewImage) {
+        if (autoplay || (hasPreviewImage && !showPreviewImage)) {
             searchParams.append("autoplay", "1");
         }
         if (autoplay) {
@@ -113,6 +113,12 @@ export const VimeoVideoBlock = withPreview(
         const vimeoUrl = new URL(`${vimeoBaseUrl}${identifier ?? ""}`);
         vimeoUrl.search = searchParams.toString();
 
+        const handlePreviewPlay = () => {
+            setShowPreviewImage(false);
+            setIsPlaying(true);
+            setIsHandledManually(true);
+        };
+
         const handlePlayPauseClick = () => {
             if (isPlaying) {
                 setIsPlaying(false);
@@ -128,7 +134,7 @@ export const VimeoVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage({
-                        onPlay: () => setShowPreviewImage(false),
+                        onPlay: handlePreviewPlay,
                         image: previewImage,
                         aspectRatio,
                         sizes: previewImageSizes,
@@ -142,7 +148,14 @@ export const VimeoVideoBlock = withPreview(
                         className={clsx(styles.videoContainer, fill && styles.fill)}
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
-                        <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
+                        <iframe
+                            ref={iframeRef}
+                            className={styles.vimeoContainer}
+                            src={vimeoUrl.toString()}
+                            allow="autoplay"
+                            allowFullScreen
+                            loading="lazy"
+                        />
                         {!showControls &&
                             (PlayPauseButtonComponent ? (
                                 <PlayPauseButtonComponent isPlaying={isPlaying} onClick={handlePlayPauseClick} />

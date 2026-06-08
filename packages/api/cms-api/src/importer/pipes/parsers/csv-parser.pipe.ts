@@ -56,7 +56,7 @@ export class CsvParsePipe implements ImporterPipe {
     }
 }
 
-export class CsvParser extends Transform {
+class CsvParser extends Transform {
     private parser: csv.CsvParserStream<csv.Row<unknown>, csv.Row<unknown>>;
 
     constructor(private readonly options: CsvParserOptions) {

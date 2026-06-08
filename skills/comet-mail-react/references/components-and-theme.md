@@ -11,8 +11,10 @@ Detailed reference for all `@comet/mail-react` components, the theme system, mod
 5. [MjmlWrapper](#mjmlwrapper)
 6. [Text Components](#text-components)
 7. [HtmlInlineLink](#htmlinlinelink)
-8. [Scoped Theming](#scoped-theming)
-9. [MJML Component Re-exports](#mjml-component-re-exports)
+8. [Image](#image)
+9. [Divider](#divider)
+10. [Scoped Theming](#scoped-theming)
+11. [MJML Component Re-exports](#mjml-component-re-exports)
 
 ---
 
@@ -101,6 +103,31 @@ heading: {
     fontWeight: 700,
 },
 ```
+
+### DividerVariants
+
+Controls the `variant` prop on `MjmlDivider` and `HtmlDivider`:
+
+```ts
+const theme = createTheme({
+    divider: {
+        defaultVariant: "thin",
+        variants: {
+            thin: { height: 1, backgroundColor: "#999999" },
+            thick: { height: { default: 12, mobile: 8 }, backgroundColor: "#222222" },
+        },
+    },
+});
+
+declare module "@comet/mail-react" {
+    interface DividerVariants {
+        thin: true;
+        thick: true;
+    }
+}
+```
+
+Variant properties (`height`, `backgroundColor`, `backgroundImage`) accept responsive values.
 
 ### ThemeBreakpoints
 
@@ -334,6 +361,25 @@ Use `!important` when setting a custom link color — the responsive reset uses 
 
 ---
 
+## Image
+
+`MjmlImage` and `HtmlImage` are responsive — the image scales down to fit narrow viewports.
+
+**CSS classes:** `.mjmlImage`, `.htmlImage`.
+
+## Divider
+
+Themed horizontal line, styled from `theme.divider` (base styles plus variants). Falls back to a built-in default when no theme is in scope; only `variant` requires a theme.
+
+- **`MjmlDivider`** — inside `MjmlColumn`. Classes `.mjmlDivider`, `.mjmlDivider--{variant}`.
+- **`HtmlDivider`** — inside ending tags (`MjmlRaw`) or raw HTML. Classes `.htmlDivider`, `.htmlDivider--{variant}`.
+
+```tsx
+<MjmlDivider variant="thick" />
+```
+
+---
+
 ## Scoped Theming
 
 `ThemeProvider` applies a different theme to a subtree. Common use: dark-background sections.
@@ -390,6 +436,6 @@ Theme-aware `registerStyles` entries always resolve against the **root theme** f
 
 `@comet/mail-react` re-exports all MJML components from `@faire/mjml-react`. Consumers import everything from `@comet/mail-react` — never from `@faire/mjml-react` directly.
 
-Common re-exports: `MjmlColumn`, `MjmlImage`, `MjmlButton`, `MjmlDivider`, `MjmlSpacer`, `MjmlTable`, `MjmlRaw`, `MjmlGroup`, `MjmlAttributes`, `MjmlAll`, `MjmlClass`, `MjmlStyle`, `MjmlComment`, `MjmlConditionalComment`.
+Common re-exports: `MjmlColumn`, `MjmlButton`, `MjmlSpacer`, `MjmlTable`, `MjmlRaw`, `MjmlGroup`, `MjmlAttributes`, `MjmlAll`, `MjmlClass`, `MjmlStyle`, `MjmlComment`, `MjmlConditionalComment`.
 
 For the full MJML tag reference: https://documentation.mjml.io/

@@ -2,6 +2,7 @@ import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from
 import { Field, Float, Int } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { generateCrud } from "../../generateCrud/generate-crud";
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";

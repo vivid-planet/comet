@@ -26,14 +26,6 @@ export type ColumnInsertData = {
     cellValues: RichTextBlockState[];
 };
 
-export const getNewColumnInsertData = (numberOfRows: number, RichTextBlock: RichTextBlock): ColumnInsertData => {
-    return {
-        size: "standard",
-        highlighted: false,
-        cellValues: Array.from({ length: numberOfRows }).map(() => RichTextBlock.defaultValues()),
-    };
-};
-
 export const getDuplicatedColumnInsertData = (state: TableBlockState, columnIndex: number, RichTextBlock: RichTextBlock): ColumnInsertData | null => {
     const sourceColumn = state.columns[columnIndex];
 

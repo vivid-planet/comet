@@ -25,7 +25,7 @@ export const generateImageBlock = (
     };
 };
 
-export const calculateDefaultCropInput = ({ image }: FileInterface): ImageCropAreaInput => {
+const calculateDefaultCropInput = ({ image }: FileInterface): ImageCropAreaInput => {
     const focalPoint = faker.helpers.arrayElement([
         FocalPoint.SMART,
         FocalPoint.CENTER,

@@ -2,6 +2,7 @@ import coreConfig, { restrictedImportPatterns } from "./core.js";
 import reactIntlFormatPlugin from "@calm/eslint-plugin-react-intl";
 import globals from "globals";
 import formatJs from "eslint-plugin-formatjs";
+import graphqlPlugin from "@graphql-eslint/eslint-plugin";
 import react from "eslint-plugin-react";
 import cometPlugin from "@comet/eslint-plugin";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -155,6 +156,35 @@ const config = [
         },
         rules: {
             "@comet/no-private-sibling-import": "error",
+        },
+    },
+    {
+        files: ["**/*.{ts,tsx,js,jsx}"],
+        processor: graphqlPlugin.processor,
+    },
+    {
+        files: ["**/*.graphql"],
+        languageOptions: {
+            parser: graphqlPlugin.parser,
+        },
+        plugins: {
+            "@graphql-eslint": graphqlPlugin,
+        },
+        rules: {
+            // Type-info rules from typescript-eslint cannot run on virtual GraphQL blocks extracted by the processor.
+            "@typescript-eslint/consistent-type-imports": "off",
+            "@typescript-eslint/consistent-type-exports": "off",
+            "@graphql-eslint/naming-convention": [
+                "error",
+                {
+                    OperationDefinition: {
+                        forbiddenSuffixes: ["Query", "Mutation", "Subscription"],
+                    },
+                    FragmentDefinition: {
+                        forbiddenSuffixes: ["Fragment"],
+                    },
+                },
+            ],
         },
     },
 ];

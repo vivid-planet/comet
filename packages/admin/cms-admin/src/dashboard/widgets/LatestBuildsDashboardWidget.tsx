@@ -1,11 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
 import type { GridColDef } from "@comet/admin";
-import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { JobRuntime } from "../../cronJobs/JobRuntime";
 import { JobStatus } from "../../cronJobs/JobStatus";
+import { DataGrid } from "../../dataGrid/DataGrid";
 import { DashboardWidgetRoot } from "./DashboardWidgetRoot";
 import type { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "./LatestBuildsDashboardWidget.generated";
 

@@ -14,6 +14,7 @@ import {
     RteStrikethrough,
     RteSub,
     RteSup,
+    RteTextPlaceholder,
     RteUl,
     RteUndo,
 } from "@comet/admin-icons";
@@ -32,10 +33,10 @@ import {
 import { grey as muiGreyPalette } from "@mui/material/colors";
 import { type Editor, useEditorState } from "@tiptap/react";
 import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type RefAttributes, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import type { BlockInterface, LinkBlockInterface } from "../types";
-import type { TipTapBlockStyle, TipTapBlockType, TipTapInlineStyle, TipTapSupports } from "./createTipTapRichTextBlock";
+import type { TipTapBlockStyle, TipTapBlockType, TipTapInlineStyle, TipTapPlaceholder, TipTapSupports } from "./createTipTapRichTextBlock";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {
@@ -150,21 +151,28 @@ export const TipTapToolbar = ({
     supports,
     blockStyles,
     inlineStyles,
+    placeholders,
     linkBlock,
+    listLevelMax,
 }: {
     editor: Editor;
     supports: TipTapSupports[];
     blockStyles: TipTapBlockStyle[];
     inlineStyles: TipTapInlineStyle[];
+    placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    listLevelMax?: number;
 }) => {
+    const intl = useIntl();
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
+    const [placeholderAnchorEl, setPlaceholderAnchorEl] = useState<null | HTMLElement>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
     const hasInlineFormatButtons = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
     const lists = (["ordered-list", "unordered-list"] as const).some((s) => supports.includes(s));
     const specialChars = (["non-breaking-space", "soft-hyphen"] as const).some((s) => supports.includes(s));
     const hasLink = supports.includes("link") && !!linkBlock;
+    const hasPlaceholders = placeholders.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
 
     const editorState = useEditorState({
@@ -200,6 +208,23 @@ export const TipTapToolbar = ({
                 const inlineStyleAttrs = e.getAttributes("inlineStyle");
                 return (inlineStyleAttrs.type as string) ?? "";
             })();
+
+            // Calculate current list nesting depth for listLevelMax enforcement
+            let canIndent = e.can().sinkListItem("listItem");
+            if (canIndent && listLevelMax !== undefined) {
+                const { $from } = e.state.selection;
+                let listDepth = 0;
+                for (let d = 0; d <= $from.depth; d++) {
+                    const node = $from.node(d);
+                    if (node.type.name === "bulletList" || node.type.name === "orderedList") {
+                        listDepth++;
+                    }
+                }
+                if (listDepth >= listLevelMax) {
+                    canIndent = false;
+                }
+            }
+
             return {
                 activeBlockType,
                 activeTipTapBlockType,
@@ -207,7 +232,7 @@ export const TipTapToolbar = ({
                 activeInlineStyle,
                 canUndo: e.can().undo(),
                 canRedo: e.can().redo(),
-                canIndent: e.can().sinkListItem("listItem"),
+                canIndent,
                 canDedent: e.can().liftListItem("listItem"),
                 isBoldActive: e.isActive("bold"),
                 isItalicActive: e.isActive("italic"),
@@ -224,6 +249,11 @@ export const TipTapToolbar = ({
 
     const handleMoreClose = () => {
         setMoreAnchorEl(null);
+        setTimeout(() => editor.commands.focus(), 0);
+    };
+
+    const handlePlaceholderClose = () => {
+        setPlaceholderAnchorEl(null);
         setTimeout(() => editor.commands.focus(), 0);
     };
 
@@ -512,6 +542,41 @@ export const TipTapToolbar = ({
                             onToggle={() => editor.chain().focus().insertContent({ type: "softHyphen" }).run()}
                         />
                     )}
+                </ToolbarGroup>
+            )}
+            {hasPlaceholders && (
+                <ToolbarGroup>
+                    <Tooltip title={<FormattedMessage id="comet.blocks.tipTapRichText.placeholder.tooltip" defaultMessage="Insert placeholder" />}>
+                        <Box
+                            component="button"
+                            type="button"
+                            aria-label={intl.formatMessage({
+                                id: "comet.blocks.tipTapRichText.placeholder.tooltip",
+                                defaultMessage: "Insert placeholder",
+                            })}
+                            onMouseDown={(e: MouseEvent) => {
+                                e.preventDefault();
+                                setPlaceholderAnchorEl(e.currentTarget as HTMLElement);
+                            }}
+                            sx={toolbarButtonSx}
+                        >
+                            <RteTextPlaceholder sx={{ fontSize: 15 }} color="inherit" />
+                        </Box>
+                    </Tooltip>
+                    <Menu open={Boolean(placeholderAnchorEl)} anchorEl={placeholderAnchorEl} onClose={handlePlaceholderClose}>
+                        {placeholders.map((placeholder) => (
+                            <MenuItem
+                                key={placeholder.name}
+                                onMouseDown={(e) => {
+                                    handlePlaceholderClose();
+                                    e.persist();
+                                    setTimeout(() => editor.chain().focus().insertPlaceholder(placeholder.name).run(), 0);
+                                }}
+                            >
+                                {placeholder.label}
+                            </MenuItem>
+                        ))}
+                    </Menu>
                 </ToolbarGroup>
             )}
             {hasLink && linkBlock && (

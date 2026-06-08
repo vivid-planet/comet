@@ -41,7 +41,7 @@
         ]
     },
     "dependencies": {
-        "@algolia/client-search": "^5.47.0",
+        "@algolia/client-search": "^5.52.1",
         "@docusaurus/core": "^3.10.1",
         "@docusaurus/preset-classic": "^3.10.1",
         "@docusaurus/theme-mermaid": "^3.10.1",
@@ -57,11 +57,11 @@
         "@docusaurus/plugin-content-docs": "^3.10.1",
         "@docusaurus/tsconfig": "^3.10.1",
         "@docusaurus/types": "^3.10.1",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "change-case": "^5.4.4",
         "chokidar-cli": "^3.0.0",
-        "eslint": "^9.39.2",
+        "eslint": "^9.39.4",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "ts-node": "^10.9.2",
