@@ -129,9 +129,6 @@ export class UserPermissionsService {
         if (this.userService?.findUserForLoginOrThrow) {
             return this.userService.findUserForLoginOrThrow(id);
         }
-        if (this.userService?.getUserForLogin) {
-            return this.userService.getUserForLogin(id);
-        }
         if (this.userService?.findUserForLogin) {
             const user = await this.userService.findUserForLogin(id);
             if (!user) {
