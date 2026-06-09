@@ -1,6 +1,7 @@
-import { FilterBarButton } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
 import { List, ListItem } from "@mui/material";
+
+import { FilterBarButton } from "../../filterbar/filterBarButton/FilterBarButton";
 
 function Story() {
     return (
@@ -50,7 +51,7 @@ function Story() {
 }
 
 export default {
-    title: "@comet/admin/table/filterbar",
+    title: "admin/table/filterbar",
 };
 
 export const _FilterBarButton = () => {

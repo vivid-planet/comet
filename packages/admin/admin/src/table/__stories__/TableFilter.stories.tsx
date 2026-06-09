@@ -1,54 +1,27 @@
 import { gql } from "@apollo/client";
-import {
-    Field,
-    FinalFormInput,
-    MainContent,
-    Table,
-    TableFilterFinalForm,
-    TableQuery,
-    Toolbar,
-    ToolbarItem,
-    useTableQuery,
-    useTableQueryFilter,
-} from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as qs from "qs";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
+import { MainContent } from "../../common/MainContent";
+import { ToolbarItem } from "../../common/toolbar/item/ToolbarItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { Table } from "../Table";
+import { TableFilterFinalForm } from "../TableFilterFinalForm";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
+import { useTableQueryFilter } from "../useTableQueryFilter";
 
-const gqlRest = gql;
-
-const query = gqlRest`
-query users(
-    $pathFunction: any
-    $query: String
-) {
-    users(
-        query: $query
-    ) @rest(type: "User", pathBuilder: $pathFunction) {
-        id
-        name
-        username
-        email
-    }
-}
-`;
-function pathFunction({ args }: { args: { [key: string]: any } }) {
-    interface IPathMapping {
-        [arg: string]: string;
-    }
-    const paramMapping: IPathMapping = {
-        query: "q",
-    };
-
-    const q = Object.keys(args).reduce((acc: { [key: string]: any }, key: string): { [key: string]: any } => {
-        if (paramMapping[key] && args[key]) {
-            acc[paramMapping[key]] = args[key];
+const query = gql`
+    query users($query: String) {
+        users(query: $query) {
+            id
+            name
+            username
+            email
         }
-        return acc;
-    }, {});
-    return `users?${qs.stringify(q, { arrayFormat: "brackets" })}`;
-}
+    }
+`;
 
 interface IQueryData {
     users: Array<{
@@ -62,21 +35,16 @@ interface IQueryData {
 interface IFilterValues {
     query?: string;
 }
-interface IVariables extends IFilterValues {
-    pathFunction: any;
-}
 
 export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
+    title: "admin/table",
 };
 
 export const Filter = () => {
     const filterApi = useTableQueryFilter<IFilterValues>({});
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
+    const { tableData, api, loading, error } = useTableQuery<IQueryData, IFilterValues>()(query, {
         variables: {
             ...filterApi.current,
-            pathFunction,
         },
         resolveTableData: (data) => ({
             data: data.users,

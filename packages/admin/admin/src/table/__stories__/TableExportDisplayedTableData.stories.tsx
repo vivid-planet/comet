@@ -1,15 +1,13 @@
-import {
-    ExcelExportButton,
-    FillSpace,
-    type IRow,
-    MainContent,
-    Table,
-    Toolbar,
-    ToolbarActions,
-    ToolbarItem,
-    useExportDisplayedTableData,
-} from "@comet/admin";
 import { Typography } from "@mui/material";
+
+import { FillSpace } from "../../common/FillSpace";
+import { MainContent } from "../../common/MainContent";
+import { ToolbarActions } from "../../common/toolbar/actions/ToolbarActions";
+import { ToolbarItem } from "../../common/toolbar/item/ToolbarItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { useExportDisplayedTableData } from "../excelexport/useExportDisplayedTableData";
+import { ExcelExportButton } from "../ExcelExportButton";
+import { type IRow, Table } from "../Table";
 
 interface IExampleRow extends IRow {
     id: number;
@@ -26,7 +24,7 @@ const CustomHeader = () => {
 };
 
 export default {
-    title: "@comet/admin/table",
+    title: "admin/table",
 };
 
 export const ExportDisplayedTableData = () => {
@@ -59,17 +57,17 @@ export const ExportDisplayedTableData = () => {
                     columns={[
                         {
                             name: "foo1",
-                            header: "Foo1", // if header is a string -> excel export can export header
+                            header: "Foo1",
                         },
                         {
                             name: "foo2",
                             header: "Expo",
                             render: (row) => <strong>{row.id}</strong>,
-                            renderExcel: (row) => row.id.toString(), // HTML Nodes / React Nodes (from above render) can not be exported to excel -> use renderExcel to generate an exportable string
+                            renderExcel: (row) => row.id.toString(),
                         },
                         {
                             name: "bar",
-                            visible: false, // hidden columns will be exported hidden
+                            visible: false,
                         },
                         {
                             name: "currency",
@@ -83,8 +81,8 @@ export const ExportDisplayedTableData = () => {
                         {
                             name: "customheader",
                             header: <CustomHeader />,
-                            headerExcel: "Overrided Excel Export Header", // HTML Nodes / React Nodes (from above header) can not be exported to excel -> use headerExcel to set an exportable column header
-                            render: (row) => "Custom Row Content", // if render returns a string -> excel export can export this string
+                            headerExcel: "Overrided Excel Export Header",
+                            render: (row) => "Custom Row Content",
                         },
                     ]}
                 />

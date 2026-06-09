@@ -1,18 +1,31 @@
-import { Button, Stack, StackLink, StackPage, StackSwitch, TableDndOrder, TableLocalChanges } from "@comet/admin";
 import { Stack as MuiStack } from "@mui/material";
+import type { Decorator } from "@storybook/react-vite";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { dndProviderDecorator } from "../../dnd.decorator";
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { Button } from "../../common/buttons/Button";
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackLink } from "../../stack/StackLink";
+import { StackSwitch } from "../../stack/Switch";
+import { TableDndOrder } from "../TableDndOrder";
+import { TableLocalChanges } from "../TableLocalChanges";
+
+const dndProviderDecorator: Decorator = (Story) => (
+    <DndProvider backend={HTML5Backend}>
+        <Story />
+    </DndProvider>
+);
 
 interface IRow {
-    id: string; // TODO add support for number in TableLocalChanges
+    id: string;
     order: number;
     task: string;
 }
 
 export default {
-    title: "@comet/admin/table",
-    decorators: [storyRouterDecorator(), dndProviderDecorator()],
+    title: "admin/table",
+    decorators: [dndProviderDecorator],
 };
 
 export const DnDOrder = {
@@ -34,7 +47,7 @@ export const DnDOrder = {
                             onSubmit={async (changes) => {
                                 alert(JSON.stringify(changes));
                             }}
-                            orderColumn="order" // if anything but 'pos' is used
+                            orderColumn="order"
                         >
                             {({ tableLocalChangesApi, data: changedData }) => (
                                 <>
@@ -61,7 +74,6 @@ export const DnDOrder = {
                                         >
                                             Submit
                                         </Button>
-                                        {/* Link to test router prompt */}
                                         <StackLink pageName="page-2" payload="any">
                                             To page 2
                                         </StackLink>

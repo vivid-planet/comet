@@ -1,25 +1,19 @@
 import { gql } from "@apollo/client";
-import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } from "@comet/admin";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
+import { Table } from "../Table";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
+import { SortDirection, useTableQuerySort } from "../useTableQuerySort";
 
-const gqlRest = gql;
-
-const query = gqlRest`
-query users(
-    $sort: String
-    $order: String
-) {
-    users(
-        sort: $sort
-        order: $order
-    ) @rest(type: "User", path: "users?_sort={args.sort}&_order={args.order}") {
-        id
-        name
-        username
-        email
+const query = gql`
+    query users($sort: String, $order: String) {
+        users(sort: $sort, order: $order) {
+            id
+            name
+            username
+            email
+        }
     }
-}
 `;
 
 interface IQueryData {
@@ -32,14 +26,12 @@ interface IQueryData {
 }
 
 interface IVariables {
-    blubId: number;
     sort: string;
     order: SortDirection;
 }
 
 export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
+    title: "admin/table",
 };
 
 export const Sort = () => {
@@ -49,7 +41,6 @@ export const Sort = () => {
     });
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
         variables: {
-            blubId: 123,
             sort: sortApi.current.columnName,
             order: sortApi.current.direction,
         },
