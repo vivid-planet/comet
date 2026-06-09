@@ -41,6 +41,9 @@
         "packages/admin/admin-color-picker": {
             "project": ["./src/**/*.{ts,tsx}"]
         },
+        "packages/admin/admin-legacy": {
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
         "packages/admin/admin-date-time": {
             "project": ["./src/**/*.{ts,tsx}"]
         },
