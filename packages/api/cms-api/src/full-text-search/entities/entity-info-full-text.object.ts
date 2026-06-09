@@ -15,6 +15,9 @@ export class EntityInfoFullTextObject {
     @Property({ type: FullTextType })
     fullText: string;
 
+    @Property({ type: "boolean" })
+    visible: boolean;
+
     @Property({ type: ArrayType })
     requiredPermission: string[];
 }

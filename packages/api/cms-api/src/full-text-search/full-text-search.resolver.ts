@@ -2,6 +2,7 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, Int, Query, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { RequestContext, type RequestContextInterface } from "../common/decorators/request-context.decorator";
 import { EntityInfoObject } from "../entity-info/entity-info.object";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
@@ -19,6 +20,7 @@ export class FullTextSearchResolver {
         @Args("offset", { type: () => Int, defaultValue: 0 }) offset: number,
         @Args("limit", { type: () => Int, defaultValue: 25 }) limit: number,
         @GetCurrentUser() user: CurrentUser,
+        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
     ): Promise<PaginatedEntityInfo> {
         const allowedPermissions = user.permissions.map((p) => p.permission);
 
@@ -31,6 +33,7 @@ export class FullTextSearchResolver {
             {
                 fullText: { $fulltext: search },
                 requiredPermission: { $overlap: allowedPermissions },
+                ...(includeInvisiblePages?.length ? {} : { visible: true }),
             },
             { offset, limit },
         );
