@@ -213,6 +213,25 @@ function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTa
     return result;
 }
 
+// Block data carries the `$$version` migration metadata once migrations have run on it.
+// Link block data is validated as block input, where `$$version` is not a known field, so it
+// must be stripped recursively before validation to avoid `forbidNonWhitelisted` errors. This
+// is what allows link blocks with migrations to be nested inside a TipTap rich text block.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function stripBlockDataVersion(value: any): any {
+    if (Array.isArray(value)) {
+        return value.map(stripBlockDataVersion);
+    }
+    if (value && typeof value === "object") {
+        return Object.fromEntries(
+            Object.entries(value)
+                .filter(([key]) => key !== "$$version")
+                .map(([key, val]) => [key, stripBlockDataVersion(val)]),
+        );
+    }
+    return value;
+}
+
 function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapContent"]): Array<{ data: unknown; path: string[] }> {
     const results: Array<{ data: unknown; path: string[] }> = [];
 
@@ -365,8 +384,7 @@ function IsTipTapContent(
                         if (linkBlock) {
                             const linkMarks = collectLinkMarks(value as TipTapContent);
                             for (const { data } of linkMarks) {
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
+                                const validationErrors = await validate(linkBlock.blockInputFactory(stripBlockDataVersion(data)), {
                                     forbidNonWhitelisted: true,
                                     whitelist: true,
                                 });

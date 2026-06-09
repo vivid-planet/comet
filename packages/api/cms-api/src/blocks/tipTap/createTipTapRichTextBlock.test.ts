@@ -1,8 +1,13 @@
-import { validate } from "class-validator";
+import { IsBoolean, IsOptional, validate } from "class-validator";
 import { describe, expect, it } from "vitest";
 
+import { BlockData, BlockInput, blockInputToData, createBlock, transformToBlockSave } from "../block";
+import { BlockField } from "../decorators/field";
 import { ExternalLinkBlock } from "../ExternalLinkBlock";
 import { createLinkBlock } from "../factories/createLinkBlock";
+import { BlockMigration } from "../migrations/BlockMigration";
+import { typeSafeBlockMigrationPipe } from "../migrations/typeSafeBlockMigrationPipe";
+import { IsLinkTarget } from "../validator/is-link-target.validator";
 import { createTipTapRichTextBlock } from "./createTipTapRichTextBlock";
 
 describe("createTipTapRichTextBlock validation", () => {
@@ -836,6 +841,112 @@ describe("createTipTapRichTextBlock validation", () => {
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
+        });
+    });
+
+    describe("schema with link block that has migrations", () => {
+        // A versioned external link block whose migration adds a `noFollow` field. Once the
+        // migration runs, the block data carries `$$version`, which is stamped into the
+        // tipTapContent JSON on save. The TipTap block must still validate such link data.
+        class VersionedExternalLinkBlockData extends BlockData {
+            @BlockField({ nullable: true })
+            targetUrl?: string;
+
+            @BlockField()
+            openInNewWindow: boolean;
+
+            @BlockField()
+            noFollow: boolean;
+        }
+
+        class VersionedExternalLinkBlockInput extends BlockInput {
+            @IsOptional()
+            @IsLinkTarget()
+            @BlockField({ nullable: true })
+            targetUrl?: string;
+
+            @IsBoolean()
+            @BlockField()
+            openInNewWindow: boolean;
+
+            @IsBoolean()
+            @BlockField()
+            noFollow: boolean;
+
+            transformToBlockData(): VersionedExternalLinkBlockData {
+                return blockInputToData(VersionedExternalLinkBlockData, this);
+            }
+        }
+
+        class AddNoFollowMigration extends BlockMigration<(from: { openInNewWindow: boolean; targetUrl?: string }) => { noFollow: boolean }> {
+            public readonly toVersion = 1;
+
+            protected migrate(from: { openInNewWindow: boolean; targetUrl?: string }) {
+                return { ...from, noFollow: false };
+            }
+        }
+
+        const VersionedExternalLinkBlock = createBlock(VersionedExternalLinkBlockData, VersionedExternalLinkBlockInput, {
+            name: "VersionedExternalLink",
+            migrate: { version: 1, migrations: typeSafeBlockMigrationPipe([AddNoFollowMigration]) },
+        });
+
+        const LinkBlock = createLinkBlock({ supportedBlocks: { external: VersionedExternalLinkBlock } }, "TestVersionedLink");
+        const block = createTipTapRichTextBlock({ link: LinkBlock }, "TestWithVersionedLink");
+
+        const contentWithLink = {
+            type: "doc",
+            content: [
+                {
+                    type: "paragraph",
+                    content: [
+                        {
+                            type: "text",
+                            marks: [
+                                {
+                                    type: "link",
+                                    attrs: {
+                                        data: {
+                                            attachedBlocks: [
+                                                {
+                                                    type: "external",
+                                                    props: { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false },
+                                                },
+                                            ],
+                                            activeType: "external",
+                                        },
+                                    },
+                                },
+                            ],
+                            text: "click here",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        it("validates link block data after migrations have run", async () => {
+            // blockDataFactory runs the nested block's migration, stamping `$$version` onto the data.
+            const blockData = block.blockDataFactory({ tipTapContent: contentWithLink });
+            const input = block.blockInputFactory(blockData);
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
+        it("validates link block data after a save round-trip stamps the nested version", async () => {
+            const blockData = block.blockDataFactory({ tipTapContent: contentWithLink });
+            const saved = transformToBlockSave(blockData);
+
+            // The saved JSON carries `$$version` inside the nested link block props.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const savedProps = (saved as any).tipTapContent.content[0].content[0].marks[0].attrs.data.attachedBlocks[0].props;
+            expect(savedProps.$$version).toBe(1);
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const reloaded = block.blockDataFactory(saved as any);
+            const input = block.blockInputFactory(reloaded);
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
         });
     });
 
