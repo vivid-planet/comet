@@ -67,7 +67,8 @@ export class PageContentBlockFixtureService {
         type SupportedBlocks = (typeof blocks)[number]["type"];
 
         // TODO add fixtures for newsDetail and newsList
-        const fixtures: Record<Exclude<SupportedBlocks, "newsDetail" | "newsList">, [BlockCategory, BlockFixture]> = {
+        // fullTextSearch is excluded because its query requires an authenticated user and cannot be used from the public site
+        const fixtures: Record<Exclude<SupportedBlocks, "newsDetail" | "newsList" | "fullTextSearch">, [BlockCategory, BlockFixture]> = {
             accordion: ["layout", this.accordionBlockFixtureService],
             columns: ["layout", this.columnsBlockFixtureService],
             contentGroup: ["layout", this.contentGroupBlockFixtureService],
