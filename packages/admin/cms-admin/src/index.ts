@@ -83,6 +83,7 @@ export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export type { TipTapBlockStyle, TipTapBlockType, TipTapInlineStyle, TipTapPlaceholder } from "./blocks/tipTap/createTipTapRichTextBlock";
 export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
 export type {
+    AnonymousBlockInterface,
     BlockAdminComponent,
     BlockAdminComponentPart,
     BlockDependency,
