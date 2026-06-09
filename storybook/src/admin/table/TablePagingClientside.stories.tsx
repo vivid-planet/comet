@@ -1,4 +1,4 @@
-import { type IPagingInfo, Table, useTableQueryPaging } from "@comet/admin";
+import { type IPagingInfo, Table, useTableQueryPaging } from "@comet/admin-legacy";
 
 interface IExampleRow {
     id: number;

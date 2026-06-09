@@ -1,8 +1,7 @@
 import type { ApolloClient } from "@apollo/client";
+import { RouterPrompt } from "@comet/admin";
 import type { DocumentNode } from "graphql";
 import { Component, type ReactNode } from "react";
-
-import { RouterPrompt } from "../router/Prompt";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

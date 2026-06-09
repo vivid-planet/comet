@@ -15,12 +15,12 @@ import {
     muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
-    TableDeleteButton,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
+import { TableDeleteButton } from "@comet/admin-legacy";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {

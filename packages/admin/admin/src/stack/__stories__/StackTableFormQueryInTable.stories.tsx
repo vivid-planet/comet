@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Edit } from "@comet/admin-icons";
+import { Table, TableFilterFinalForm, TableQuery, usePersistedStateId, useTableQuery, useTableQueryFilter } from "@comet/admin-legacy";
 import { Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
 import { useContext } from "react";
 
@@ -11,12 +12,6 @@ import { Toolbar } from "../../common/toolbar/Toolbar";
 import { FinalForm } from "../../FinalForm";
 import { Field } from "../../form/Field";
 import { FinalFormInput } from "../../form/FinalFormInput";
-import { Table } from "../../table/Table";
-import { TableFilterFinalForm } from "../../table/TableFilterFinalForm";
-import { TableQuery } from "../../table/TableQuery";
-import { usePersistedStateId } from "../../table/usePersistedStateId";
-import { useTableQuery } from "../../table/useTableQuery";
-import { useTableQueryFilter } from "../../table/useTableQueryFilter";
 import { StackPage } from "../Page";
 import { Stack } from "../Stack";
 import { StackSwitch, StackSwitchApiContext } from "../Switch";

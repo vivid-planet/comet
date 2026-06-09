@@ -91,14 +91,15 @@ Demo frontend site (Next.js)
 - Start using `pnpm exec dev-pm start @demo-site`
 - access at: http://localhost:3000/
 
-
 ### dev-pm
 
 Use dev-pm for managing demo processes:
+
 - command: `pnpm exec -- dev-pm`
 - config: `dev-pm.config.ts`
 
 Common commands:
+
 - start script/service: `pnpm exec -- dev-pm start scriptName`
 - start group `pnpm exec -- dev-pm start @group`
 - view status `pnpm exec -- dev-pm status`
@@ -115,6 +116,7 @@ Common commands:
 | `@comet/admin-color-picker` | Color picker form field component                                                         |
 | `@comet/admin-date-time`    | Date/time picker form field components                                                    |
 | `@comet/admin-icons`        | SVG icon library as React components                                                      |
+| `@comet/admin-legacy`       | Legacy/deprecated admin components (e.g. the Comet table components)                      |
 | `@comet/admin-rte`          | Rich text editor component (Draft.js-based)                                               |
 | `@comet/admin-generator`    | CLI tool that generates admin CRUD UIs from GraphQL schemas (`comet-admin-generator` bin) |
 | `@comet/cms-admin`          | Admin UI for CMS features (pages, blocks, content management)                             |

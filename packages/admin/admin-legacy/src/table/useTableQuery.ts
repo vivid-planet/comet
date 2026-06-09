@@ -1,9 +1,8 @@
 import { type OperationVariables, type QueryHookOptions, type QueryResult, useQuery } from "@apollo/client";
+import { type ISelectionApi, LocalErrorScopeApolloContext } from "@comet/admin";
 import type { DocumentNode } from "graphql";
 import { useEffect } from "react";
 
-import { LocalErrorScopeApolloContext } from "../error/errordialog/ErrorScope";
-import type { ISelectionApi } from "../SelectionApi";
 import type { IPagingInfo } from "./paging/IPagingInfo";
 import type { ITableQueryApi } from "./TableQueryContext";
 

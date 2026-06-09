@@ -1,24 +1,18 @@
 import { gql } from "@apollo/client";
+import { Field, FillSpace, FinalFormInput, MainContent, Toolbar, ToolbarActions, ToolbarItem } from "@comet/admin";
 import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
-    Field,
-    FillSpace,
-    FinalFormInput,
-    MainContent,
     Table,
     TableFilterFinalForm,
     TableQuery,
-    Toolbar,
-    ToolbarActions,
-    ToolbarItem,
     useExportDisplayedTableData,
     useExportTableQuery,
     useTableQuery,
     useTableQueryFilter,
     useTableQueryPaging,
     VisibleType,
-} from "@comet/admin";
+} from "@comet/admin-legacy";
 import { Typography } from "@mui/material";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";

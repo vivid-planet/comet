@@ -1,4 +1,5 @@
 import { Edit } from "@comet/admin-icons";
+import { Table } from "@comet/admin-legacy";
 import { Box, Card, CardContent, IconButton, Paper, Typography } from "@mui/material";
 import { useContext } from "react";
 import { Switch } from "react-router";
@@ -13,7 +14,6 @@ import { FinalFormInput } from "../../form/FinalFormInput";
 import { StackPage } from "../../stack/Page";
 import { Stack } from "../../stack/Stack";
 import { StackSwitch, StackSwitchApiContext } from "../../stack/Switch";
-import { Table } from "../../table/Table";
 
 const SampleTable = () => {
     const stackApi = useContext(StackSwitchApiContext);

@@ -1,4 +1,5 @@
-import { FormSection, PrettyBytes, Table } from "@comet/admin";
+import { FormSection, PrettyBytes } from "@comet/admin";
+import { Table } from "@comet/admin-legacy";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { isDateString } from "class-validator";

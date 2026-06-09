@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, type ISelectionApi, Selected, SelectionRoute, Table, TableQuery, useTableQuery } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, type ISelectionApi, Selected, SelectionRoute } from "@comet/admin";
+import { Table, TableQuery, useTableQuery } from "@comet/admin-legacy";
 import { Grid } from "@mui/material";
 import { Redirect, Route, Switch } from "react-router";
 

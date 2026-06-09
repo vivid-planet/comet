@@ -1,13 +1,11 @@
 import type { PureQueryOptions } from "@apollo/client";
+import { DeleteMutation, messages } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Button, type ButtonProps, IconButton } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Component, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
-
-import { DeleteMutation } from "../DeleteMutation";
-import { messages } from "../messages";
 
 interface IProps {
     selectedId?: string;

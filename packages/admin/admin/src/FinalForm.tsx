@@ -1,4 +1,3 @@
-import { getApolloContext } from "@apollo/client";
 import {
     type Config,
     type Decorator,
@@ -11,7 +10,7 @@ import {
     type ValidationErrors,
 } from "final-form";
 import setFieldData from "final-form-set-field-data";
-import { type PropsWithChildren, type RefObject, useCallback, useContext, useEffect, useRef } from "react";
+import { type PropsWithChildren, type RefObject, useCallback, useEffect, useRef } from "react";
 import { type AnyObject, Form, type FormRenderProps, FormSpy, type RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
@@ -21,7 +20,6 @@ import { renderFinalFormChildren } from "./renderFinalFormChildren";
 import { RouterPrompt } from "./router/Prompt";
 import { useSubRoutePrefix } from "./router/SubRoute";
 import { Savable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
-import { TableQueryContext } from "./table/TableQueryContext";
 
 export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
     useRef<FormApi<FormValues, InitialFormValues>>(undefined);
@@ -109,9 +107,6 @@ export class FinalFormSubmitEvent extends Event {
 }
 
 export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<FormValues>>(props: IProps<FormValues, InitialFormValues>) {
-    const { client } = useContext(getApolloContext());
-    const tableQuery = useContext(TableQueryContext);
-
     const { onAfterSubmit, validateWarning } = props;
 
     return (
@@ -276,17 +271,6 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
             .then((data) => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
                 setTimeout(() => {
-                    if (props.mode === "add") {
-                        if (tableQuery) {
-                            // refetch TableQuery after adding
-                            client?.query({
-                                query: tableQuery.api.getQuery(),
-                                variables: tableQuery.api.getVariables(),
-                                fetchPolicy: "network-only",
-                            });
-                        }
-                    }
-
                     onAfterSubmit?.(values, form);
                 });
                 return data;

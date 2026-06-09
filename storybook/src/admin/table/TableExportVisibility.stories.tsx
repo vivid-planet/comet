@@ -1,15 +1,5 @@
-import {
-    ExcelExportButton,
-    FillSpace,
-    type IRow,
-    MainContent,
-    Table,
-    Toolbar,
-    ToolbarActions,
-    ToolbarItem,
-    useExportDisplayedTableData,
-    VisibleType,
-} from "@comet/admin";
+import { FillSpace, MainContent, Toolbar, ToolbarActions, ToolbarItem } from "@comet/admin";
+import { ExcelExportButton, type IRow, Table, useExportDisplayedTableData, VisibleType } from "@comet/admin-legacy";
 import { Typography } from "@mui/material";
 
 interface IExampleRow extends IRow {
