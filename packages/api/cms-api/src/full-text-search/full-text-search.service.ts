@@ -3,7 +3,7 @@ import { Injectable, Optional } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../entity-info/entity-info.decorator";
-import { isEntityInfoSql, requiredPermissionToSql, visibleConditionToSql } from "../entity-info/entity-info.utils";
+import { isEntityInfoSql, requiredPermissionToSql } from "../entity-info/entity-info.utils";
 import { resolveFieldToSql } from "../entity-info/resolve-field-to-sql";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
 import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../user-permissions/decorators/required-permission.decorator";
@@ -35,7 +35,6 @@ export class FullTextSearchService {
                     const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
 
                     indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText",
-                        "PageTreeNodeEntityInfo"."visible",
                         ${requiredPermissionSql} AS "requiredPermission"
                         FROM "PageTreeNodeEntityInfo"
                         INNER JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeEntityInfo"."id"::uuid`);
@@ -55,13 +54,11 @@ export class FullTextSearchService {
                 | RequiredPermissionMetadata
                 | undefined;
             const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
-            const visibleSql = visibleConditionToSql(this.entityManager, metadata, entityInfo.visible);
 
             indexSelects.push(`SELECT
                             "${metadata.tableName}"."${primary}"::text "id",
                             '${entityName}' "entityName",
                             ${fullTextSql} AS "fullText",
-                            ${visibleSql} AS "visible",
                             ${requiredPermissionSql} AS "requiredPermission"
                         FROM "${metadata.tableName}"`);
         }
@@ -69,11 +66,14 @@ export class FullTextSearchService {
         if (indexSelects.length === 0) {
             // Empty placeholder so the view always exists with the expected columns
             indexSelects.push(
-                `SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", NULL::boolean AS "visible", ARRAY[]::text[] AS "requiredPermission" WHERE false`,
+                `SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", ARRAY[]::text[] AS "requiredPermission" WHERE false`,
             );
         }
 
-        const viewSql = indexSelects.join("\n UNION ALL \n");
+        // Join the "EntityInfo" view (created beforehand) to reuse its computed "visible" column instead of recomputing it here.
+        const viewSql = `SELECT "fullTextResult".*, COALESCE("EntityInfo"."visible", true) AS "visible"
+            FROM (${indexSelects.join("\n UNION ALL \n")}) "fullTextResult"
+            LEFT JOIN "EntityInfo" ON "EntityInfo"."id" = "fullTextResult"."id" AND "EntityInfo"."entityName" = "fullTextResult"."entityName"`;
 
         console.time("creating EntityInfoFullText view");
         await this.entityManager.getConnection().execute(`DROP VIEW IF EXISTS "EntityInfoFullText"`);

@@ -5,7 +5,7 @@ import { DiscoverService } from "../dependencies/discover.service";
 import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../user-permissions/decorators/required-permission.decorator";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
-import { isEntityInfoSql, requiredPermissionToSql, visibleConditionToSql } from "./entity-info.utils";
+import { isEntityInfoSql, requiredPermissionToSql } from "./entity-info.utils";
 import { resolveFieldToSql } from "./resolve-field-to-sql";
 
 @Injectable()
@@ -49,7 +49,17 @@ export class EntityInfoService {
                     secondaryInformationSql = resolveFieldToSql(entityInfo.secondaryInformation, metadata, metadata.tableName);
                 }
 
-                const visibleSql = visibleConditionToSql(this.entityManager, metadata, entityInfo.visible);
+                let visibleSql = "true";
+                if (entityInfo.visible) {
+                    const qb = this.entityManager.createQueryBuilder(targetEntity.entity.name, metadata.tableName);
+                    const query = qb.select("*").where(entityInfo.visible);
+                    const sql = query.getFormattedQuery();
+                    const sqlWhereMatch = sql.match(/^select .*? from .*? where (.*)/);
+                    if (!sqlWhereMatch) {
+                        throw new Error(`Could not extract where clause from query: ${sql}`);
+                    }
+                    visibleSql = sqlWhereMatch[1];
+                }
 
                 const permissionMetadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, targetEntity.entity) as
                     | RequiredPermissionMetadata
