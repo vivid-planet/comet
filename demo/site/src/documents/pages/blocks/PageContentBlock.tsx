@@ -4,6 +4,7 @@ import type { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
+import { FullTextSearchBlock } from "@src/common/blocks/FullTextSearchBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { PageContentMediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
 import { PageTreeIndexBlock } from "@src/common/blocks/PageTreeIndexBlock";
@@ -52,6 +53,7 @@ const supportedBlocks: SupportedBlocks = {
     tipTapRichText: (props) => <PageContentTipTapRichTextBlock data={props} />,
     productList: (props) => <ProductListBlock data={props} />,
     pageTreeIndex: (props) => <PageTreeIndexBlock data={props} />,
+    fullTextSearch: (props) => <FullTextSearchBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

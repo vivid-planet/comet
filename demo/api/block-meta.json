@@ -1221,6 +1221,11 @@
         ]
     },
     {
+        "name": "FullTextSearch",
+        "fields": [],
+        "inputFields": []
+    },
+    {
         "name": "FullWidthImage",
         "fields": [
             {
@@ -2216,7 +2221,8 @@
                                 "table": "Table",
                                 "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "fullTextSearch": "FullTextSearch"
                             },
                             "nullable": false
                         },
@@ -2283,7 +2289,8 @@
                                 "table": "Table",
                                 "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "fullTextSearch": "FullTextSearch"
                             },
                             "nullable": false
                         },
