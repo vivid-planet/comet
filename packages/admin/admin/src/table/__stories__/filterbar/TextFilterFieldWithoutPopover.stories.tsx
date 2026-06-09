@@ -1,15 +1,14 @@
-import {
-    Field,
-    FilterBar,
-    FilterBarPopoverFilter,
-    FinalFormInput,
-    FinalFormSearchTextField,
-    Table,
-    TableFilterFinalForm,
-    useTableQueryFilter,
-} from "@comet/admin";
 import { faker } from "@faker-js/faker";
 import { Box, Typography } from "@mui/material";
+
+import { Field } from "../../../form/Field";
+import { FinalFormInput } from "../../../form/FinalFormInput";
+import { FinalFormSearchTextField } from "../../../form/FinalFormSearchTextField";
+import { FilterBar } from "../../filterbar/FilterBar";
+import { FilterBarPopoverFilter } from "../../filterbar/filterBarPopoverFilter/FilterBarPopoverFilter";
+import { Table } from "../../Table";
+import { TableFilterFinalForm } from "../../TableFilterFinalForm";
+import { useTableQueryFilter } from "../../useTableQueryFilter";
 
 interface IFilterValues {
     query: string;
@@ -118,7 +117,7 @@ function Story({ tableData }: StoryProps) {
 }
 
 export default {
-    title: "@comet/admin/table/filterbar",
+    title: "admin/table/filterbar",
 };
 
 export const FilterbarWithTextFieldSearch = {

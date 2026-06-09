@@ -1,43 +1,23 @@
 import { gql } from "@apollo/client";
-import { AutocompleteField, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
 import { Grid } from "@mui/material";
-import * as qs from "qs";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
+import { AutocompleteField } from "../../form/fields/AutocompleteField";
+import { Table } from "../Table";
+import { TableFilterFinalForm } from "../TableFilterFinalForm";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
+import { useTableQueryFilter } from "../useTableQueryFilter";
 
-const gqlRest = gql;
-
-const query = gqlRest`
-query users(
-    $pathFunction: any
-    $selectQuery: String
-) {
-    users(
-        selectQuery: $selectQuery
-    ) @rest(type: "User", pathBuilder: $pathFunction) {
-        id
-        name
-        username
-        email
-    }
-}
-`;
-function pathFunction({ args }: { args: { [key: string]: any } }) {
-    interface IPathMapping {
-        [arg: string]: string;
-    }
-    const paramMapping: IPathMapping = {
-        selectQuery: "q",
-    };
-
-    const q = Object.keys(args).reduce((acc: { [key: string]: any }, key: string): { [key: string]: any } => {
-        if (paramMapping[key] && args[key]) {
-            acc[paramMapping[key]] = args[key];
+const query = gql`
+    query users($query: String) {
+        users(query: $query) {
+            id
+            name
+            username
+            email
         }
-        return acc;
-    }, {});
-    return `users?${qs.stringify(q, { arrayFormat: "brackets" })}`;
-}
+    }
+`;
 
 interface IQueryData {
     users: Array<{
@@ -49,24 +29,18 @@ interface IQueryData {
 }
 
 interface IFilterValues {
-    selectQuery?: { label: string; value: string };
-}
-interface IVariables {
-    selectQuery?: string;
-    pathFunction: any;
+    query?: string;
 }
 
 export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
+    title: "admin/table",
 };
 
 export const ResetFilter = () => {
     const filterApi = useTableQueryFilter<IFilterValues>({});
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
+    const { tableData, api, loading, error } = useTableQuery<IQueryData, IFilterValues>()(query, {
         variables: {
-            selectQuery: filterApi.current.selectQuery?.value,
-            pathFunction,
+            ...filterApi.current,
         },
         resolveTableData: (data) => ({
             data: data.users,
@@ -82,7 +56,7 @@ export const ResetFilter = () => {
                         <Grid container>
                             <Grid size={2}>
                                 <AutocompleteField
-                                    name="selectQuery"
+                                    name="query"
                                     options={[
                                         { label: "Leanne Graham", value: "Leanne Graham" },
                                         { label: "Ervin Howell", value: "Ervin Howell" },

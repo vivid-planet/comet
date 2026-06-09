@@ -1,8 +1,10 @@
 import { gql } from "@apollo/client";
-import { Table, TableQuery, useTableQuery } from "@comet/admin";
+import type { Decorator } from "@storybook/react-vite";
 
-import { apolloSwapiStoryDecorator } from "../../apollo-story.decorator";
-import { errorDialogStoryProviderDecorator } from "../../docs/components/ErrorHandling/ErrorDialog/error-dialog-provider.decorator";
+import { ErrorDialogHandler } from "../../error/errordialog/ErrorDialogHandler";
+import { Table } from "../Table";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
 
 interface People {
     id: string;
@@ -19,9 +21,16 @@ interface QueryData {
     };
 }
 
+const errorDialogDecorator: Decorator = (Story) => (
+    <>
+        <ErrorDialogHandler />
+        <Story />
+    </>
+);
+
 export default {
-    title: "@comet/admin/table/globalErrorHandling",
-    decorators: [apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()],
+    title: "admin/table",
+    decorators: [errorDialogDecorator],
     args: {
         query: "query StarWarsPeople {allPeople { people { id name birthYear gender homeworld{ name } } }}",
     },

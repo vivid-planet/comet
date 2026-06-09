@@ -1,57 +1,38 @@
 import { gql } from "@apollo/client";
-import {
-    createRestStartLimitPagingActions,
-    ExcelExportButton,
-    Field,
-    FillSpace,
-    FinalFormInput,
-    MainContent,
-    Table,
-    TableFilterFinalForm,
-    TableQuery,
-    Toolbar,
-    ToolbarActions,
-    ToolbarItem,
-    useExportDisplayedTableData,
-    useExportTableQuery,
-    useTableQuery,
-    useTableQueryFilter,
-    useTableQueryPaging,
-    VisibleType,
-} from "@comet/admin";
 import { Typography } from "@mui/material";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
+import type { Photo } from "../../../.storybook/mocks/handlers";
+import { FillSpace } from "../../common/FillSpace";
+import { MainContent } from "../../common/MainContent";
+import { ToolbarActions } from "../../common/toolbar/actions/ToolbarActions";
+import { ToolbarItem } from "../../common/toolbar/item/ToolbarItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { useExportDisplayedTableData } from "../excelexport/useExportDisplayedTableData";
+import { useExportTableQuery } from "../excelexport/useExportTableQuery";
+import { ExcelExportButton } from "../ExcelExportButton";
+import { createRestStartLimitPagingActions } from "../paging/createRestStartLimitPagingActions";
+import { Table, VisibleType } from "../Table";
+import { TableFilterFinalForm } from "../TableFilterFinalForm";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
+import { useTableQueryFilter } from "../useTableQueryFilter";
+import { useTableQueryPaging } from "../useTableQueryPaging";
 
-const gqlRest = gql;
-
-const query = gqlRest`
-query users(
-    $query: String
-    $start : Int
-    $limit : Int
-) {
-    photos(
-        query: $query
-        start: $start
-        limit: $limit
-    ) @rest(type: "Photos", path: "photos?q={args.query}&_start={args.start}&_limit={args.limit}") {
-        id
-        albumId
-        title
-        thumbnailUrl
+const query = gql`
+    query photos($query: String, $start: Int, $limit: Int) {
+        photos(query: $query, start: $start, limit: $limit) {
+            id
+            albumId
+            title
+            thumbnailUrl
+        }
     }
-}
 `;
-interface IPhoto {
-    id: number;
-    albumId: number;
-    title: string;
-    thumbnailUrl: string;
-}
 
 interface IQueryData {
-    photos: IPhoto[];
+    photos: Photo[];
 }
 
 interface IFilterValues {
@@ -63,8 +44,7 @@ interface IVariables extends IFilterValues {
 }
 
 export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
+    title: "admin/table",
 };
 
 export const ExportWithLimitFilter = () => {
@@ -84,7 +64,7 @@ export const ExportWithLimitFilter = () => {
             data: data.photos,
             totalCount,
             pagingInfo: createRestStartLimitPagingActions(pagingApi, {
-                totalPages: Math.ceil(totalCount / loadLimit), // Don't calculate this in a real application
+                totalPages: Math.ceil(totalCount / loadLimit),
                 loadLimit,
             }),
         }),
@@ -122,11 +102,11 @@ export const ExportWithLimitFilter = () => {
                                     header: "Thumbnail",
                                     sortable: true,
                                     visible: { [VisibleType.Browser]: false, [VisibleType.Export]: false },
-                                    render: (row: IPhoto) => {
+                                    render: (row: Photo) => {
                                         return <img src={row.thumbnailUrl} />;
                                     },
                                     headerExcel: "Thumbnail Url",
-                                    renderExcel: (row: IPhoto) => {
+                                    renderExcel: (row: Photo) => {
                                         return row.thumbnailUrl;
                                     },
                                 },

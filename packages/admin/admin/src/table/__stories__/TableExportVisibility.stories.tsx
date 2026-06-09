@@ -1,16 +1,13 @@
-import {
-    ExcelExportButton,
-    FillSpace,
-    type IRow,
-    MainContent,
-    Table,
-    Toolbar,
-    ToolbarActions,
-    ToolbarItem,
-    useExportDisplayedTableData,
-    VisibleType,
-} from "@comet/admin";
 import { Typography } from "@mui/material";
+
+import { FillSpace } from "../../common/FillSpace";
+import { MainContent } from "../../common/MainContent";
+import { ToolbarActions } from "../../common/toolbar/actions/ToolbarActions";
+import { ToolbarItem } from "../../common/toolbar/item/ToolbarItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { useExportDisplayedTableData } from "../excelexport/useExportDisplayedTableData";
+import { ExcelExportButton } from "../ExcelExportButton";
+import { type IRow, Table, VisibleType } from "../Table";
 
 interface IExampleRow extends IRow {
     id: number;
@@ -22,7 +19,7 @@ interface IExampleRow extends IRow {
 }
 
 export default {
-    title: "@comet/admin/table",
+    title: "admin/table",
 };
 
 export const ExportVisibility = () => {
@@ -58,28 +55,28 @@ export const ExportVisibility = () => {
                     columns={[
                         {
                             name: "column1",
-                            header: "Column 1", // Default visibility: is true for browser and export
+                            header: "Column 1",
                         },
                         {
                             name: "column2",
                             header: "Column 2",
-                            visible: false, // explicitly set visibility to false (for browser and export)
+                            visible: false,
                         },
                         {
                             name: "column3",
                             header: "Column 3",
-                            visible: { [VisibleType.Browser]: false }, // column will not be shown in Browser, but will be exported
+                            visible: { [VisibleType.Browser]: false },
                         },
 
                         {
                             name: "column4",
                             header: "Column 4",
-                            visible: { [VisibleType.Browser]: false, [VisibleType.Export]: true }, // column will not be shown in Browser, but will be exported
+                            visible: { [VisibleType.Browser]: false, [VisibleType.Export]: true },
                         },
                         {
                             name: "column5",
                             header: "Column 5",
-                            visible: { [VisibleType.Browser]: true, [VisibleType.Export]: false }, // column will be shown in Browser, but will not be exported
+                            visible: { [VisibleType.Browser]: true, [VisibleType.Export]: false },
                         },
                     ]}
                 />

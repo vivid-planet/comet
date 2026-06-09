@@ -1,51 +1,33 @@
 import { gql } from "@apollo/client";
-import {
-    createRestStartLimitPagingActions,
-    ExcelExportButton,
-    FillSpace,
-    MainContent,
-    Table,
-    TableQuery,
-    Toolbar,
-    ToolbarActions,
-    ToolbarItem,
-    useExportPagedTableQuery,
-    useTableQuery,
-    useTableQueryPaging,
-} from "@comet/admin";
 import { Typography } from "@mui/material";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
+import type { Photo } from "../../../.storybook/mocks/handlers";
+import { FillSpace } from "../../common/FillSpace";
+import { MainContent } from "../../common/MainContent";
+import { ToolbarActions } from "../../common/toolbar/actions/ToolbarActions";
+import { ToolbarItem } from "../../common/toolbar/item/ToolbarItem";
+import { Toolbar } from "../../common/toolbar/Toolbar";
+import { useExportPagedTableQuery } from "../excelexport/useExportPagedTableQuery";
+import { ExcelExportButton } from "../ExcelExportButton";
+import { createRestStartLimitPagingActions } from "../paging/createRestStartLimitPagingActions";
+import { Table } from "../Table";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
+import { useTableQueryPaging } from "../useTableQueryPaging";
 
-const gqlRest = gql;
-
-const query = gqlRest`
-query users(
-    $query: String
-    $start : Int
-    $limit : Int
-) {
-    photos(
-        query: $query
-        start: $start
-        limit: $limit
-    ) @rest(type: "Photos", path: "photos?_start={args.start}&_limit={args.limit}") {
-        id
-        albumId
-        title
-        thumbnailUrl
+const query = gql`
+    query photos($start: Int, $limit: Int) {
+        photos(start: $start, limit: $limit) {
+            id
+            albumId
+            title
+            thumbnailUrl
+        }
     }
-}
 `;
-interface IPhoto {
-    id: number;
-    albumId: number;
-    title: string;
-    thumbnailUrl: string;
-}
 
 interface IQueryData {
-    photos: IPhoto[];
+    photos: Photo[];
 }
 
 interface IVariables {
@@ -54,8 +36,7 @@ interface IVariables {
 }
 
 export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
+    title: "admin/table",
 };
 
 export const ExportAllPages = () => {
@@ -72,7 +53,7 @@ export const ExportAllPages = () => {
             data: data.photos,
             totalCount,
             pagingInfo: createRestStartLimitPagingActions(pagingApi, {
-                totalPages: Math.ceil(totalCount / loadLimit), // Don't calculate this in a real application
+                totalPages: Math.ceil(totalCount / loadLimit),
                 loadLimit,
             }),
         }),
@@ -111,11 +92,11 @@ export const ExportAllPages = () => {
                                     name: "thumbnailUrl",
                                     header: "Thumbnail",
                                     sortable: true,
-                                    render: (row: IPhoto) => {
+                                    render: (row: Photo) => {
                                         return <img src={row.thumbnailUrl} />;
                                     },
                                     headerExcel: "Thumbnail Url",
-                                    renderExcel: (row: IPhoto) => {
+                                    renderExcel: (row: Photo) => {
                                         return row.thumbnailUrl;
                                     },
                                 },

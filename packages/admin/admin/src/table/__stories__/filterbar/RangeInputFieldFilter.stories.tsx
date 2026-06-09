@@ -1,6 +1,13 @@
-import { Field, FilterBar, FilterBarPopoverFilter, FinalFormRangeInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
 import { faker } from "@faker-js/faker";
 import { Typography } from "@mui/material";
+
+import { Field } from "../../../form/Field";
+import { FinalFormRangeInput } from "../../../form/FinalFormRangeInput";
+import { FilterBar } from "../../filterbar/FilterBar";
+import { FilterBarPopoverFilter } from "../../filterbar/filterBarPopoverFilter/FilterBarPopoverFilter";
+import { Table } from "../../Table";
+import { TableFilterFinalForm } from "../../TableFilterFinalForm";
+import { useTableQueryFilter } from "../../useTableQueryFilter";
 
 interface IFilterValues {
     horsepower: {
@@ -58,7 +65,7 @@ function Story({ tableData }: StoryProps) {
 }
 
 export default {
-    title: "@comet/admin/table/filterbar",
+    title: "admin/table/filterbar",
 };
 
 export const FilterbarWithRangeInputFieldFilter = {

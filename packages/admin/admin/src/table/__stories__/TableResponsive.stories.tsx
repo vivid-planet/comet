@@ -1,5 +1,8 @@
-import { type ITableRowProps, Table, TableBodyRow, TableColumns, useWindowSize } from "@comet/admin";
 import { TableCell } from "@mui/material";
+
+import { useWindowSize } from "../../helpers/useWindowSize";
+import { type ITableRowProps, Table, TableColumns } from "../Table";
+import { TableBodyRow } from "../TableBodyRow";
 
 function ExampleTableRow({ columns, row, showSecondRow, rowProps }: ITableRowProps<IExampleRow> & { showSecondRow: boolean }) {
     return (
@@ -24,7 +27,7 @@ interface IExampleRow {
 }
 
 export default {
-    title: "@comet/admin/table",
+    title: "admin/table",
 };
 
 export const Responsive = () => {

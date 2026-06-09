@@ -1,22 +1,26 @@
 import { gql } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, type ISelectionApi, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@comet/admin";
 import { Grid } from "@mui/material";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { FinalForm } from "../../FinalForm";
+import { Field } from "../../form/Field";
+import { FinalFormInput } from "../../form/FinalFormInput";
+import { Selected } from "../../Selected";
+import type { ISelectionApi } from "../../SelectionApi";
+import { useSelectionRoute } from "../../SelectionRoute";
+import { Table } from "../Table";
+import { TableQuery } from "../TableQuery";
+import { useTableQuery } from "../useTableQuery";
 
-const gqlRest = gql;
-
-const query = gqlRest`
-query users {
-    users @rest(type: "User", path: "users") {
-        id
-        name
-        username
-        email
+const query = gql`
+    query users {
+        users {
+            id
+            name
+            username
+            email
+        }
     }
-}
 `;
 
 interface IUser {
@@ -74,7 +78,7 @@ function ExampleForm(props: IExampleFormProps) {
 
 function Story() {
     const [Selection, selection, selectionApi] = useSelectionRoute();
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, Record<string, any>>()(query, {
+    const { tableData, api, loading, error } = useTableQuery<IQueryData, Record<string, never>>()(query, {
         resolveTableData: (data) => ({
             data: data.users,
             totalCount: data.users.length,
@@ -97,7 +101,7 @@ function Story() {
                     </Grid>
                     <Grid size={2}>
                         <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
-                            {(user, { selectionMode: selectedSelectionMode }) => {
+                            {(user: IUser | undefined, { selectionMode: selectedSelectionMode }: { selectionMode: "edit" | "add" }) => {
                                 if (user === undefined) {
                                     return null;
                                 }
@@ -113,8 +117,7 @@ function Story() {
 }
 
 export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+    title: "admin/table",
 };
 
 export const BesidesFormSelectionHooks = () => {
