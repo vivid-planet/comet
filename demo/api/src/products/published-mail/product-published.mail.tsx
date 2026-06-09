@@ -1,10 +1,11 @@
 import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
-import { MailRoot } from "@src/mail/components/MailRoot";
-import { renderMailHtml } from "@src/mail/utils/renderMailHtml";
+import { MjmlMailRoot } from "@comet/mail-react";
+import { renderMailHtml } from "@comet/mail-react/server";
 import { TranslationService } from "@src/translation/translation.service";
 import { IntlProvider } from "react-intl";
 
 import { Mail, type MailProps } from "./Mail";
+import { theme } from "./theme";
 
 @MailTemplate()
 export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
@@ -12,19 +13,23 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
 
     async generateMail(props: MailProps) {
         const intl = await this.translationService.getIntl(props.recipient.language);
-        const mailHtml = renderMailHtml(
+        const { html, mjmlWarnings } = renderMailHtml(
             <IntlProvider {...intl}>
-                <MailRoot>
+                <MjmlMailRoot theme={theme}>
                     <Mail {...props} />
-                </MailRoot>
+                </MjmlMailRoot>
             </IntlProvider>,
         );
+
+        if (process.env.NODE_ENV === "development" && mjmlWarnings.length > 0) {
+            console.warn(`${mjmlWarnings.length} MJML warnings`, mjmlWarnings);
+        }
 
         return {
             mailTypeForLogging: "ProductPublishedMail",
             subject: intl.formatMessage({ id: "product-published-mail.subject", defaultMessage: "Products published" }),
             to: props.recipient.email,
-            html: mailHtml,
+            html,
         };
     }
 
