@@ -1,26 +1,24 @@
-import {
-    Button,
-    FieldSet,
-    SaveBoundary,
-    StackBackButton,
-    StackLink,
-    StackMainContent,
-    StackPage,
-    StackSwitch,
-    Tooltip,
-    useEditDialog,
-} from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { DialogContent, Typography } from "@mui/material";
 import type { StoryObj } from "@storybook/react-vite";
 import { expect, waitFor, within } from "storybook/test";
 
-import { stackRouteDecorator } from "../../helpers/storyDecorators";
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { Button } from "../../common/buttons/Button";
+import { FieldSet } from "../../common/FieldSet";
+import { StackMainContent } from "../../common/MainContent";
+import { Tooltip } from "../../common/Tooltip";
+import { SaveBoundary } from "../../saveBoundary/SaveBoundary";
+import { StackBackButton } from "../../stack/backbutton/StackBackButton";
+import { StackPage } from "../../stack/Page";
+import { StackLink } from "../../stack/StackLink";
+import { StackSwitch } from "../../stack/Switch";
+import { useEditDialog } from "../EditDialog";
 
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [stackRouteDecorator(), storyRouterDecorator()],
+    title: "components/edit-dialog",
+    parameters: {
+        stack: { topLevelTitle: "Example Page" },
+    },
 };
 
 const Form = ({ id }: { id?: string }) => {
@@ -63,7 +61,7 @@ const Page = () => {
                 </EditDialog>
             </StackPage>
             <StackPage name="edit">
-                {(id) => (
+                {(id: string) => (
                     <SaveBoundary>
                         <StackMainContent>
                             <FieldSet title="Edit form" endAdornment={<StackBackButton />}>

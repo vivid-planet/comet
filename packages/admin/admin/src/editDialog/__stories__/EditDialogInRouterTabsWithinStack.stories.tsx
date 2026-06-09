@@ -1,37 +1,32 @@
-import {
-    Button,
-    DataGridToolbar,
-    EditDialog,
-    FillSpace,
-    FinalForm,
-    type IEditDialogApi,
-    MainContent,
-    messages,
-    RouterTab,
-    RouterTabs,
-    SaveBoundary,
-    SaveBoundarySaveButton,
-    Stack,
-    StackLink,
-    StackPage,
-    StackSwitch,
-    StackToolbar,
-    TextField,
-    ToolbarActions,
-    ToolbarAutomaticTitleItem,
-    ToolbarBackButton,
-} from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { Button } from "../../common/buttons/Button";
+import { FillSpace } from "../../common/FillSpace";
+import { MainContent } from "../../common/MainContent";
+import { ToolbarActions } from "../../common/toolbar/actions/ToolbarActions";
+import { ToolbarAutomaticTitleItem } from "../../common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
+import { ToolbarBackButton } from "../../common/toolbar/backbutton/ToolbarBackButton";
+import { DataGridToolbar } from "../../common/toolbar/DataGridToolbar";
+import { StackToolbar } from "../../common/toolbar/StackToolbar";
+import { FinalForm } from "../../FinalForm";
+import { TextField } from "../../form/fields/TextField";
+import { messages } from "../../messages";
+import { SaveBoundary } from "../../saveBoundary/SaveBoundary";
+import { SaveBoundarySaveButton } from "../../saveBoundary/SaveBoundarySaveButton";
+import { StackPage } from "../../stack/Page";
+import { Stack } from "../../stack/Stack";
+import { StackLink } from "../../stack/StackLink";
+import { StackSwitch } from "../../stack/Switch";
+import { RouterTab, RouterTabs } from "../../tabs/RouterTabs";
+import { EditDialog } from "../EditDialog";
+import type { IEditDialogApi } from "../EditDialogApiContext";
 
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [storyRouterDecorator()],
+    title: "components/edit-dialog",
 };
 
 const products = [
@@ -223,7 +218,7 @@ const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
                         </MainContent>
                     </StackPage>
                     <StackPage name="stocksEdit" title={intl.formatMessage({ id: "products.editStocks", defaultMessage: "Edit Stocks" })}>
-                        {(selectedStockId) => (
+                        {(selectedStockId: string) => (
                             <SaveBoundary>
                                 <MainContent fullHeight disablePadding>
                                     <StackToolbar>
@@ -253,77 +248,73 @@ const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
     );
 };
 
-export const EditDialogInRouterTabsWithinStack = {
-    render: () => {
-        const intl = useIntl();
-        const editDialogApi = useRef<IEditDialogApi>(null);
+export function EditDialogInRouterTabsWithinStack() {
+    const editDialogApi = useRef<IEditDialogApi>(null);
 
-        return (
-            <>
-                <Stack topLevelTitle={intl.formatMessage({ id: "products.title", defaultMessage: "Products Page" })}>
-                    <StackSwitch initialPage="productsGrid">
-                        <StackPage name="productsGrid">
-                            <MainContent fullHeight disablePadding>
-                                <DataGrid
-                                    columns={[
-                                        { field: "id", headerName: "ID", width: 90 },
-                                        { field: "name", headerName: "Name", flex: 1 },
-                                        {
-                                            field: "actions",
-                                            headerName: "",
-                                            sortable: false,
-                                            filterable: false,
-                                            type: "actions",
-                                            align: "right",
-                                            width: 86,
-                                            renderCell: (params) => {
-                                                return (
-                                                    <IconButton color="primary" component={StackLink} pageName="productEdit" payload={params.row.id}>
-                                                        <Edit />
-                                                    </IconButton>
-                                                );
-                                            },
+    return (
+        <>
+            <Stack topLevelTitle="Products Page">
+                <StackSwitch initialPage="productsGrid">
+                    <StackPage name="productsGrid">
+                        <MainContent fullHeight disablePadding>
+                            <DataGrid
+                                columns={[
+                                    { field: "id", headerName: "ID", width: 90 },
+                                    { field: "name", headerName: "Name", flex: 1 },
+                                    {
+                                        field: "actions",
+                                        headerName: "",
+                                        sortable: false,
+                                        filterable: false,
+                                        type: "actions",
+                                        align: "right",
+                                        width: 86,
+                                        renderCell: (params) => {
+                                            return (
+                                                <IconButton color="primary" component={StackLink} pageName="productEdit" payload={params.row.id}>
+                                                    <Edit />
+                                                </IconButton>
+                                            );
                                         },
-                                    ]}
-                                    rows={products}
-                                    slots={{
-                                        toolbar: Toolbar,
-                                    }}
-                                    slotProps={{
-                                        toolbar: {
-                                            toolbarAction: (
-                                                <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
-                                                    <FormattedMessage {...messages.add} />
-                                                </Button>
-                                            ),
-                                        } as ToolbarProps,
-                                    }}
-                                    showToolbar
-                                />
+                                    },
+                                ]}
+                                rows={products}
+                                slots={{
+                                    toolbar: Toolbar,
+                                }}
+                                slotProps={{
+                                    toolbar: {
+                                        toolbarAction: (
+                                            <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
+                                                <FormattedMessage {...messages.add} />
+                                            </Button>
+                                        ),
+                                    } as ToolbarProps,
+                                }}
+                                showToolbar
+                            />
+                        </MainContent>
+                    </StackPage>
+                    <StackPage name="productEdit" title="Product">
+                        {(productId: string) => (
+                            <MainContent fullHeight disablePadding>
+                                <SaveBoundary>
+                                    <StackToolbar>
+                                        <ToolbarBackButton />
+                                        <ToolbarAutomaticTitleItem />
+                                        <FillSpace />
+                                        <ToolbarActions>
+                                            <SaveBoundarySaveButton />
+                                        </ToolbarActions>
+                                    </StackToolbar>
+                                    <ProductDetailsPage productId={productId} />
+                                </SaveBoundary>
                             </MainContent>
-                        </StackPage>
-                        <StackPage name="productEdit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product" })}>
-                            {(productId) => (
-                                <MainContent fullHeight disablePadding>
-                                    <SaveBoundary>
-                                        <StackToolbar>
-                                            <ToolbarBackButton />
-                                            <ToolbarAutomaticTitleItem />
-                                            <FillSpace />
-                                            <ToolbarActions>
-                                                <SaveBoundarySaveButton />
-                                            </ToolbarActions>
-                                        </StackToolbar>
-                                        <ProductDetailsPage productId={productId} />
-                                    </SaveBoundary>
-                                </MainContent>
-                            )}
-                        </StackPage>
-                    </StackSwitch>
-                </Stack>
-                <AddProductDialog dialogApiRef={editDialogApi} />
-            </>
-        );
-    },
-    name: "EditDialog in RouterTabs within Stack",
-};
+                        )}
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
+            <AddProductDialog dialogApiRef={editDialogApi} />
+        </>
+    );
+}
