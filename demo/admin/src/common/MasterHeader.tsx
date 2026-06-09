@@ -1,8 +1,9 @@
-import { BuildEntry, ContentScopeControls, Header, UserHeaderItem } from "@comet/cms-admin";
+import { BuildEntry, ContentScopeControls, Header, SearchHeaderItem, UserHeaderItem } from "@comet/cms-admin";
 
 const MasterHeader = () => {
     return (
         <Header>
+            <SearchHeaderItem />
             <ContentScopeControls />
             <BuildEntry />
             <UserHeaderItem />

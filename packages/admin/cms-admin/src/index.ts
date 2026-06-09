@@ -174,6 +174,7 @@ export {
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionProps } from "./documents/types";
 export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+export { SearchHeaderItem } from "./fullTextSearch/SearchHeaderItem";
 /** @deprecated Use `ChooseDamFileDialog` instead. */
 export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
 export { ChooseDamFilesDialog } from "./form/file/chooseFile/ChooseDamFilesDialog";
