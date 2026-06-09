@@ -55,6 +55,7 @@
         "@babel/core": "^7.29.7",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
+        "@comet/eslint-plugin": "workspace:*",
         "@mui/material": "^7.3.11",
         "@mui/system": "^7.3.11",
         "@types/lodash.debounce": "^4.0.9",
