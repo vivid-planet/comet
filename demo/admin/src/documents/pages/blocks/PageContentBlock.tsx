@@ -1,6 +1,7 @@
 import { AnchorBlock, createBlocksBlock, DamImageBlock } from "@comet/cms-admin";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { ContactFormBlock } from "@src/common/blocks/ContactFormBlock";
+import { FullTextSearchBlock } from "@src/common/blocks/FullTextSearchBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
 import { PageTreeIndexBlock } from "@src/common/blocks/PageTreeIndexBlock";
@@ -56,6 +57,7 @@ export const PageContentBlock = createBlocksBlock({
         productList: ProductListBlock,
         pageTreeIndex: PageTreeIndexBlock,
         contactForm: ContactFormBlock,
+        fullTextSearch: FullTextSearchBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

@@ -5,6 +5,7 @@ import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { ContactFormBlock } from "@src/common/blocks/ContactFormBlock";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
+import { FullTextSearchBlock } from "@src/common/blocks/FullTextSearchBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { PageContentMediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
 import { PageTreeIndexBlock } from "@src/common/blocks/PageTreeIndexBlock";
@@ -54,6 +55,7 @@ const supportedBlocks: SupportedBlocks = {
     productList: (props) => <ProductListBlock data={props} />,
     pageTreeIndex: (props) => <PageTreeIndexBlock data={props} />,
     contactForm: (props) => <ContactFormBlock data={props} />,
+    fullTextSearch: (props) => <FullTextSearchBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {
