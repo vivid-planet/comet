@@ -1,5 +1,7 @@
-import { MjmlColumn, MjmlSection, MjmlSpacer, MjmlText } from "@comet/mail-react";
+import { MjmlColumn, MjmlMailRoot, MjmlSection, MjmlSpacer, MjmlText } from "@comet/mail-react";
 import { FormattedMessage } from "react-intl";
+
+import { theme } from "./theme";
 
 export type MailProps = {
     recipient: { name: string; email: string; language: string };
@@ -8,7 +10,7 @@ export type MailProps = {
 
 export const Mail = ({ recipient, countProductPublished }: MailProps) => {
     return (
-        <>
+        <MjmlMailRoot theme={theme}>
             <MjmlSection>
                 <MjmlColumn>
                     <MjmlSpacer height="20px" />
@@ -41,6 +43,6 @@ export const Mail = ({ recipient, countProductPublished }: MailProps) => {
                     <MjmlSpacer height="20px" />
                 </MjmlColumn>
             </MjmlSection>
-        </>
+        </MjmlMailRoot>
     );
 };

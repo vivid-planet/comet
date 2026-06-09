@@ -1,11 +1,9 @@
 import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
-import { MjmlMailRoot } from "@comet/mail-react";
 import { renderMailHtml } from "@comet/mail-react/server";
 import { TranslationService } from "@src/translation/translation.service";
 import { IntlProvider } from "react-intl";
 
 import { Mail, type MailProps } from "./Mail";
-import { theme } from "./theme";
 
 @MailTemplate()
 export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
@@ -15,9 +13,7 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
         const intl = await this.translationService.getIntl(props.recipient.language);
         const { html, mjmlWarnings } = renderMailHtml(
             <IntlProvider {...intl}>
-                <MjmlMailRoot theme={theme}>
-                    <Mail {...props} />
-                </MjmlMailRoot>
+                <Mail {...props} />
             </IntlProvider>,
         );
 

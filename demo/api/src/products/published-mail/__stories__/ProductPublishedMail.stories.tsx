@@ -1,14 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Mail } from "../Mail";
-import { theme } from "../theme";
 
 type Story = StoryObj<typeof Mail>;
 
 const config: Meta = {
     title: "products/ProductPublishedMail",
     component: Mail,
-    parameters: { theme },
+    parameters: { mailRoot: false },
     argTypes: {
         countProductPublished: {
             control: "select",
