@@ -4,10 +4,17 @@ import type { ReactNode } from "react";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
 import { InsideMjmlWrapperContext } from "./InsideMjmlWrapperContext.js";
 
-export type MjmlWrapperProps = IMjmlWrapperProps;
+export type MjmlWrapperProps = Omit<IMjmlWrapperProps, "backgroundColor"> & {
+    /**
+     * Background color of the wrapper.
+     *
+     * @defaultValue The theme's `colors.background.content`
+     */
+    backgroundColor?: IMjmlWrapperProps["backgroundColor"];
+};
 
 /**
- * A wrapper that groups multiple sections sharing a background. Must be a direct child of MjmlBody.
+ * A wrapper that groups multiple sections sharing a background. Must be a direct child of `MjmlBody`.
  */
 export function MjmlWrapper({ children, ...restProps }: MjmlWrapperProps): ReactNode {
     const theme = useOptionalTheme();

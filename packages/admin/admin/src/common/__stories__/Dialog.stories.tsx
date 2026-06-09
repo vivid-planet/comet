@@ -1,13 +1,15 @@
-import { Button, Dialog } from "@comet/admin";
 import { Box } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+
+import { Button } from "../buttons/Button";
+import { Dialog } from "../Dialog";
 
 type Story = StoryObj<typeof Dialog>;
 
 const config: Meta<typeof Dialog> = {
     component: Dialog,
-    title: "@comet/admin/common/Dialog",
+    title: "components/common/Dialog",
 };
 
 export default config;

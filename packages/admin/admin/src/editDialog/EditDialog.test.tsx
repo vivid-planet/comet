@@ -2,11 +2,11 @@ import userEvent from "@testing-library/user-event";
 import { cleanup, render, screen, waitFor } from "test-utils";
 import { afterEach, describe, expect, test, vi } from "vitest";
 
-import { Button } from "./common/buttons/Button";
+import { Button } from "../common/buttons/Button";
+import { FinalForm } from "../FinalForm";
+import { Field } from "../form/Field";
+import { FinalFormInput } from "../form/FinalFormInput";
 import { useEditDialog } from "./EditDialog";
-import { FinalForm } from "./FinalForm";
-import { Field } from "./form/Field";
-import { FinalFormInput } from "./form/FinalFormInput";
 
 describe("EditDialog", () => {
     describe("onAfterSave", () => {

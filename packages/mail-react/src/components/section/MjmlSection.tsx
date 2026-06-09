@@ -9,7 +9,13 @@ import type { Theme } from "../../theme/themeTypes.js";
 import { css } from "../../utils/css.js";
 import { useIsInsideMjmlWrapper } from "../wrapper/InsideMjmlWrapperContext.js";
 
-export type MjmlSectionProps = IMjmlSectionProps & {
+export type MjmlSectionProps = Omit<IMjmlSectionProps, "backgroundColor"> & {
+    /**
+     * Background color of the section.
+     *
+     * @defaultValue The theme's `colors.background.content`, unless inside an `MjmlWrapper`
+     */
+    backgroundColor?: IMjmlSectionProps["backgroundColor"];
     /** Applies theme-based content indentation with responsive overrides. */
     indent?: boolean;
     /** When true, child columns remain side-by-side on mobile instead of stacking vertically. */

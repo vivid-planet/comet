@@ -1,4 +1,4 @@
-import { graphql, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 
 const users = [
     { id: 1, name: "Leanne Graham", username: "Bret", email: "Sincere@april.biz" },
@@ -20,6 +20,10 @@ const usersQueryHandler = graphql.query<{ users: typeof users }, { query?: strin
             users: query ? users.filter((user) => user.name.toLowerCase().includes(query)) : users,
         },
     });
+});
+
+const usersRestHandler = http.get("/users", () => {
+    return HttpResponse.json(users);
 });
 
 const userQueryHandler = graphql.query<{ user: (typeof users)[number] | null }, { id: number }>("user", ({ variables }) => {
@@ -72,4 +76,4 @@ const productsQueryHandler = graphql.query<{ products: Product[] }, { manufactur
     });
 });
 
-export const handlers = [usersQueryHandler, userQueryHandler, manufacturersQueryHandler, productsQueryHandler];
+export const handlers = [usersQueryHandler, usersRestHandler, userQueryHandler, manufacturersQueryHandler, productsQueryHandler];

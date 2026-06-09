@@ -5,6 +5,7 @@ import {
     DamImageBlock,
     EntityInfo,
     entityToMikroOrmFullText,
+    RequiredPermission,
     RootBlock,
     RootBlockDataScalar,
     RootBlockEntity,
@@ -61,7 +62,13 @@ export class NewsContentScope {
     language: string;
 }
 
-@EntityInfo<News>({ name: "title", secondaryInformation: "slug", visible: { status: { $eq: NewsStatus.active } }, fullText: "fullText" })
+@EntityInfo<News>({
+    name: "title",
+    secondaryInformation: "slug",
+    visible: { status: { $eq: NewsStatus.active } },
+    fullText: "fullText",
+})
+@RequiredPermission("news")
 @RootBlockEntity()
 @ObjectType()
 @Entity()
