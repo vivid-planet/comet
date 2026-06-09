@@ -17,5 +17,3 @@ The scope is derived from either a `scope` property on the entity (simple case) 
 ```
 
 The existing callback and service variants keep working everywhere `@ScopedEntity` is used (e.g. the auth guard). They cannot be converted to SQL, so an entity that is part of the full-text index must use the declarative variant (or have a `scope` property) — otherwise creating the `EntityInfoFullText` view throws.
-
-`FullTextSearchModule` is now global so the `EntityInfoFullText` view is created during `createBlockIndexViews`.
