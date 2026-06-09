@@ -809,9 +809,6 @@ importers:
       '@comet/admin-babel-preset':
         specifier: workspace:*
         version: link:../admin-babel-preset
-      '@comet/admin-legacy':
-        specifier: workspace:*
-        version: link:../admin-legacy
       '@comet/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
