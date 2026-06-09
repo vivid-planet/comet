@@ -120,7 +120,7 @@
         "tsconfig-paths": "^3.15.0",
         "typescript": "^5.9.3",
         "vite-tsconfig-paths": "^6.0.4",
-        "vitest": "^4.0.16"
+        "vitest": "^4.1.8"
     },
     "mikro-orm": {
         "configPaths": [
