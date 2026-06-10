@@ -1,6 +1,6 @@
 {
     "name": "@comet/cli",
-    "version": "9.0.0-beta.3",
+    "version": "9.0.0-beta.5",
     "description": "A collection of CLI tools for Comet projects",
     "repository": {
         "directory": "packages/cli",
@@ -31,7 +31,8 @@
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
-        "test": "vitest --run",
+        "test": "pnpm run test:unit",
+        "test:unit": "vitest --run",
         "test:watch": "vitest --watch"
     },
     "dependencies": {
@@ -48,7 +49,7 @@
         "npm-run-all2": "^8.0.4",
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3",
-        "vitest": "^4.0.16"
+        "vitest": "^4.1.8"
     },
     "engines": {
         "node": ">=22.0.0"

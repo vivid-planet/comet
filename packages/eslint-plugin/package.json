@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-plugin",
-    "version": "9.0.0-beta.3",
+    "version": "9.0.0-beta.5",
     "description": "A set of ESLint rules and configurations for Comet projects",
     "type": "commonjs",
     "main": "lib/index.js",
@@ -21,7 +21,8 @@
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
-        "test": "vitest --run",
+        "test": "pnpm run test:unit",
+        "test:unit": "vitest --run",
         "test:watch": "vitest --watch"
     },
     "devDependencies": {
@@ -31,7 +32,7 @@
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-jsonc": "^2.21.1",
         "eslint-plugin-package-json": "^0.91.2",
-        "eslint-plugin-prettier": "^5.5.5",
+        "eslint-plugin-prettier": "^5.5.6",
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unused-imports": "^4.4.1",
         "globals": "^15.15.0",
@@ -39,7 +40,7 @@
         "prettier": "^3.6.2",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.59.3",
-        "vitest": "^4.0.16"
+        "vitest": "^4.1.8"
     },
     "peerDependencies": {
         "eslint": ">=9",

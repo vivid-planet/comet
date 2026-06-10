@@ -1,5 +1,171 @@
 # @comet/mail-react
 
+## 9.0.0-beta.5
+
+### Major Changes
+
+- 568ee9a: `MjmlImage` is now responsive by default
+
+    The inner `<img>` height scales to `auto` below the default breakpoint instead of staying at its declared pixel value, so the image keeps its aspect ratio as its width shrinks on narrow viewports.
+
+- f503e9e: `MjmlDivider` now supports `variant`, `height`, `backgroundColor`, and `backgroundImage` props, configured through `theme.divider`
+    - `theme.divider` defines the default `height` and `backgroundColor`
+    - `theme.divider.variants` overrides those values for named variants, optionally with per-breakpoint responsive values
+    - `theme.divider.backgroundImage` (typically a gradient) overlays the bar while `backgroundColor` stays as the solid fallback for clients that don't render gradients
+    - Per-instance `height`, `backgroundColor`, and `backgroundImage` props override the resolved theme/variant values
+
+    **Example theme**
+
+    ```ts
+    import { createTheme } from "@comet/mail-react";
+
+    const theme = createTheme({
+        divider: {
+            defaultVariant: "thin",
+            variants: {
+                thin: { height: "1px", backgroundColor: "#999999" },
+                thick: { height: { default: "12px", mobile: "8px" }, backgroundColor: "#222222" },
+                gradient: {
+                    backgroundColor: "#5B4FC7",
+                    backgroundImage: "linear-gradient(to right, #5B4FC7, #FF6B6B, #FFD166)",
+                },
+            },
+        },
+    });
+
+    declare module "@comet/mail-react" {
+        interface DividerVariants {
+            thin: true;
+            thick: true;
+            gradient: true;
+        }
+    }
+    ```
+
+    Usage:
+
+    ```tsx
+    import { MjmlDivider, MjmlMailRoot } from "@comet/mail-react";
+
+    <MjmlMailRoot theme={theme}>
+        <MjmlSection>
+            <MjmlColumn>
+                <MjmlDivider />
+                <MjmlDivider variant="thick" />
+                <MjmlDivider variant="gradient" />
+                <MjmlDivider height="2px" backgroundColor="#FF0000" />
+            </MjmlColumn>
+        </MjmlSection>
+    </MjmlMailRoot>;
+    ```
+
+    **Breaking changes**
+    - The `MjmlDivider` prop surface no longer accepts `borderWidth`, `borderColor`, `borderStyle`, `padding` and its variants, `width`, `containerBackgroundColor`, `align`, or `cssClass`. Migrate `borderWidth` to `height` and `borderColor` to `backgroundColor`, either per-call or on `theme.divider`.
+    - `MjmlDivider` no longer applies any default padding around the divider. Add spacing through the surrounding section or column (for example with `MjmlSpacer`).
+    - `<MjmlAttributes><MjmlDivider … /></MjmlAttributes>` no longer sets defaults for `MjmlDivider`. Configure defaults through `theme.divider` instead.
+
+### Minor Changes
+
+- f503e9e: Add `HtmlDivider` component for rendering a themed divider inside MJML ending tags or outside the MJML context
+
+    `HtmlDivider` reads `height`, `backgroundColor`, and `backgroundImage` from `theme.divider`, and supports named variants with per-breakpoint responsive overrides — the same shape as `theme.text`. Per-instance `height`, `backgroundColor`, and `backgroundImage` props override the resolved theme/variant values. A `backgroundImage` (typically a gradient) overlays the bar while `backgroundColor` stays as the solid fallback for clients that don't render gradients.
+
+    ```tsx
+    import { HtmlDivider } from "@comet/mail-react";
+
+    <MjmlRaw>
+        <HtmlDivider />
+        <HtmlDivider variant="thick" />
+        <HtmlDivider height="2px" backgroundColor="#FF0000" />
+        <HtmlDivider backgroundImage="linear-gradient(to right, red, blue)" />
+    </MjmlRaw>;
+    ```
+
+    **Example theme**
+
+    ```ts
+    import { createTheme } from "@comet/mail-react";
+
+    const theme = createTheme({
+        divider: {
+            defaultVariant: "thin",
+            variants: {
+                thin: { height: "1px", backgroundColor: "#999999" },
+                thick: { height: { default: "12px", mobile: "8px" }, backgroundColor: "#222222" },
+                gradient: {
+                    backgroundColor: "#5B4FC7",
+                    backgroundImage: "linear-gradient(to right, #5B4FC7, #FF6B6B, #FFD166)",
+                },
+            },
+        },
+    });
+
+    declare module "@comet/mail-react" {
+        interface DividerVariants {
+            thin: true;
+            thick: true;
+            gradient: true;
+        }
+    }
+    ```
+
+- 568ee9a: Add `HtmlImage` component
+
+    Renders an `<img>` tag that adapts to its container width below the default breakpoint. Use within raw HTML context — HTML-only emails or MJML ending tags like `MjmlRaw`.
+
+    ```tsx
+    import { HtmlImage } from "@comet/mail-react";
+
+    <HtmlImage src="https://example.com/banner.png" width="600" height="300" alt="Banner" />;
+    ```
+
+## 9.0.0-beta.4
+
+### Minor Changes
+
+- 0cc1b06: Add config context with `Config`, `ConfigProvider`, and `useConfig`
+
+    `Config` is an augmentable interface for runtime configuration — intended for environment-specific data. Add custom keys via TypeScript interface declaration merging:
+
+    ```ts
+    declare module "@comet/mail-react" {
+        interface Config {
+            myKey?: { foo: string };
+        }
+    }
+    ```
+
+    Define the config using the `config` prop on `MjmlMailRoot` or by mounting `ConfigProvider` directly. Use the `useConfig` hook to read the value.
+
+- ba777cf: Add `HtmlPixelImageBlock` and `MjmlPixelImageBlock` for rendering Comet CMS `PixelImageBlockData` in emails
+
+    Configure `MjmlMailRoot.config.pixelImageBlock` once with the API's allowed image sizes and base URL; the blocks resolve the render width and build the image URL.
+
+    Pass `aspectRatio` (e.g. `"16x9"`) to override the DAM crop ratio.
+
+    ```tsx
+    <MjmlMailRoot
+        config={{
+            pixelImageBlock: {
+                validSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
+                baseUrl: process.env.API_URL,
+            },
+        }}
+    >
+        <MjmlPixelImageBlock data={pixelImageData} width={536} />
+    </MjmlMailRoot>
+    ```
+
+- a7bb900: Add `head` and `attributes` props to `MjmlMailRoot`
+    - `head` — `ReactNode` appended inside `<MjmlHead>` after the registered styles block.
+    - `attributes` — `ReactNode` appended inside `<MjmlAttributes>` after the default `<MjmlAll>`.
+
+    ```tsx
+    <MjmlMailRoot attributes={<MjmlClass name="link" color="blue" />} head={<MjmlFont name="Foo" href="https://example.com/foo.css" />}>
+        {/* email body */}
+    </MjmlMailRoot>
+    ```
+
 ## 9.0.0-beta.3
 
 ### Minor Changes

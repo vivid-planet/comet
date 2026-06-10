@@ -231,12 +231,6 @@ export default defineConfig({
             waitOn: [...waitOnPackages("@comet/cms-api", "@comet/brevo-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
         {
-            name: "demo-api-mitmproxy",
-            script: "pnpm run dev:demo-api-mitmproxy",
-            group: ["demo-api", "demo"],
-            waitOn: ["tcp:$API_PORT"],
-        },
-        {
             name: "demo-api-storybook",
             script: "pnpm --filter comet-demo-api run storybook",
         },

@@ -32,7 +32,7 @@ const branchOptions: Array<{ label: ReactNode; value: GQLBrevoContactBranch }> =
     },
 ];
 
-export const additionalPageTreeNodeFieldsFragment = {
+const additionalPageTreeNodeFieldsFragment = {
     fragment: gql`
         fragment TargetGroupFilters on BrevoTargetGroup {
             filters {

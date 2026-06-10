@@ -1,4 +1,4 @@
-import { CrudGenerator, EntityInfo, IsNullable, IsUndefinable } from "@comet/cms-api";
+import { CrudGenerator, EntityInfo, IsNullable, IsUndefinable, RequiredPermission } from "@comet/cms-api";
 import {
     BaseEntity,
     Embeddable,
@@ -21,7 +21,7 @@ import { ProductType } from "./product-type.enum";
 
 @ObjectType()
 @InputType("AlternativeAddressInput")
-export class AlternativeAddress {
+class AlternativeAddress {
     @Field()
     @Property()
     @IsString()
@@ -58,7 +58,7 @@ export class Address extends AlternativeAddress {
 @Embeddable()
 @ObjectType()
 @InputType("AlternativeAddressAsEmbeddableInput")
-export class AlternativeAddressAsEmbeddable {
+class AlternativeAddressAsEmbeddable {
     @Field()
     @Property()
     @IsString()
@@ -95,6 +95,7 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
     name: "name",
     fullText: "fullText",
 })
+@RequiredPermission("manufacturers", { skipScopeCheck: true })
 @Entity()
 @ObjectType()
 @CrudGenerator({ requiredPermission: ["manufacturers"] })

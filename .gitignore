@@ -8,6 +8,8 @@ lang/
 /.npm
 .pnp.*
 junit.xml
+junit-unit.xml
+junit-storybook.xml
 .env.local
 .env.site-configs
 **/.idea
@@ -25,4 +27,5 @@ junit.xml
 .cursor/rules/
 .claude/skills/
 .claude/rules/
+.claude/worktrees/
 .github/instructions/

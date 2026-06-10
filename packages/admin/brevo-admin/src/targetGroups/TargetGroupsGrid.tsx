@@ -21,11 +21,11 @@ import {
 import { Add as AddIcon, Download, Edit } from "@comet/admin-icons";
 import type { ContentScope } from "@comet/cms-admin";
 import { DialogContent, IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import type { DocumentNode } from "graphql";
 import type { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { DataGrid } from "../dataGrid/DataGrid";
 import { TargetGroupDialog } from "./TargetGroupDialog";
 import type {
     GQLCreateTargetGroupMutation,

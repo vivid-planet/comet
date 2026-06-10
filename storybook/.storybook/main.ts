@@ -15,6 +15,7 @@ const config: StorybookConfig = {
                 },
             },
         },
+        "@storybook/addon-vitest",
     ],
 
     env: (config) => ({

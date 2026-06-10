@@ -1,4 +1,4 @@
-import { type Extensions, getSchema } from "@tiptap/core";
+import { type Extensions, getSchema, type JSONContent } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { Node as ProseMirrorNode, type Schema } from "@tiptap/pm/model";
@@ -28,12 +28,11 @@ import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
+import { Placeholder } from "./extensions/Placeholder";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TipTapContent = Record<string, any>;
-
-type TipTapSupports =
+export type TipTapSupports =
     | "bold"
     | "italic"
     | "strike"
@@ -45,6 +44,8 @@ type TipTapSupports =
     | "non-breaking-space"
     | "soft-hyphen"
     | "link";
+
+export type { JSONContent as TipTapRichTextBlockContent } from "@tiptap/core";
 
 type TipTapBlockType =
     | "paragraph"
@@ -88,10 +89,15 @@ const defaultSupports: TipTapSupports[] = [
     "soft-hyphen",
 ];
 
+interface TipTapPlaceholder {
+    name: string;
+}
+
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     blockStyles?: TipTapBlockStyle[];
     inlineStyles?: TipTapInlineStyle[];
+    placeholders?: TipTapPlaceholder[];
     indexSearchText?: boolean;
     link?: Block;
     /**
@@ -105,16 +111,34 @@ export interface CreateTipTapRichTextBlockOptions {
      * Content exceeding this limit will be rejected during validation.
      */
     listLevelMax?: number;
+    /**
+     * Enables best-effort block migration of DraftJS-based RichTextBlock data
+     * (`{ draftContent: { blocks, entityMap } }`) into TipTap data.
+     *
+     * The migration uses the `supports`, `blockStyles`, `link`, and `maxBlocks` options
+     * to build the target schema, validates the converted document, and falls back to a
+     * stripped-down plain-text-paragraph document if validation fails.
+     *
+     * Pass an object with `blockStyleMap` to map DraftJS custom block types (e.g.
+     * `paragraph-small` from a DraftJS `blocktypeMap`) to TipTap paragraph `blockStyle`
+     * attribute values.
+     *
+     * Pass an object with `inlineStyleMap` to map DraftJS custom inline style names (e.g.
+     * `highlight` from a DraftJS `customInlineStyles`) to TipTap `inlineStyle` mark type values.
+     */
+    migrateFromDraftJs?: boolean | { blockStyleMap?: Record<string, string>; inlineStyleMap?: Record<string, string> };
 }
 
 function buildExtensions(
     supports: TipTapSupports[],
     blockStyles: TipTapBlockStyle[],
     inlineStyles: TipTapInlineStyle[],
+    placeholders: TipTapPlaceholder[],
     hasLink: boolean,
 ): Extensions {
     const hasBlockStyles = blockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
+    const hasPlaceholders = placeholders.length > 0;
     return [
         StarterKit.configure({
             bold: supports.includes("bold") ? {} : false,
@@ -136,11 +160,11 @@ function buildExtensions(
         ...(supports.includes("sub") ? [Subscript] : []),
         ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
         ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
+        ...(hasPlaceholders ? [Placeholder] : []),
         ...(hasLink ? [CmsLink] : []),
     ];
 }
 
-// ProseMirror's Node.fromJSON silently drops unknown marks. This function
 // checks the raw JSON for mark types that don't exist in the schema.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function containsUnknownMarks(json: any, schema: Schema): boolean {
@@ -166,14 +190,14 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTapContent {
+function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
     if (!content || typeof content !== "object") {
         return content;
     }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
-        result.marks = result.marks.map((mark: TipTapContent) => {
+        result.marks = result.marks.map((mark) => {
             if (mark.type === "link" && mark.attrs?.data) {
                 return { ...mark, attrs: { ...mark.attrs, data: fn(mark.attrs.data) } };
             }
@@ -182,17 +206,17 @@ function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTa
     }
 
     if (Array.isArray(result.content)) {
-        result.content = result.content.map((child: TipTapContent) => mapLinkMarksData(child, fn));
+        result.content = result.content.map((child: JSONContent) => mapLinkMarksData(child, fn));
     }
 
     return result;
 }
 
-function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapContent"]): Array<{ data: unknown; path: string[] }> {
+function collectLinkMarks(content: JSONContent, basePath: string[] = ["tipTapContent"]): Array<{ data: unknown; path: string[] }> {
     const results: Array<{ data: unknown; path: string[] }> = [];
 
     if (Array.isArray(content.marks)) {
-        content.marks.forEach((mark: TipTapContent, markIdx: number) => {
+        content.marks.forEach((mark, markIdx) => {
             if (mark.type === "link" && mark.attrs?.data) {
                 results.push({
                     data: mark.attrs.data,
@@ -203,7 +227,7 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     }
 
     if (Array.isArray(content.content)) {
-        content.content.forEach((child: TipTapContent, childIdx: number) => {
+        content.content.forEach((child: JSONContent, childIdx: number) => {
             results.push(...collectLinkMarks(child, [...basePath, "content", String(childIdx)]));
         });
     }
@@ -211,7 +235,23 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
+function collectPlaceholderNames(content: JSONContent): string[] {
+    const names: string[] = [];
+
+    if (content.type === "placeholder" && content.attrs?.name) {
+        names.push(content.attrs.name as string);
+    }
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            names.push(...collectPlaceholderNames(child));
+        }
+    }
+
+    return names;
+}
+
+function getListNestingDepth(content: JSONContent, currentDepth = 0): number {
     if (!content || typeof content !== "object") {
         return 0;
     }
@@ -233,7 +273,7 @@ function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
     return maxDepth;
 }
 
-function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined {
+function getBlockTypeFromNode(node: JSONContent): TipTapBlockType | undefined {
     if (node.type === "paragraph") {
         return "paragraph";
     }
@@ -243,7 +283,7 @@ function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined 
     return undefined;
 }
 
-function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: TipTapInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
+function containsInvalidInlineStyleMarks(content: JSONContent, inlineStyles: TipTapInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
     const currentBlockType = getBlockTypeFromNode(content) ?? parentBlockType;
 
     if (Array.isArray(content.content)) {
@@ -252,7 +292,8 @@ function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: T
             if (child.type === "text" && Array.isArray(child.marks)) {
                 for (const mark of child.marks) {
                     if (mark.type === "inlineStyle" && mark.attrs?.type) {
-                        const styleConfig = inlineStyles.find((s) => s.name === mark.attrs.type);
+                        const markAttrs = mark.attrs;
+                        const styleConfig = inlineStyles.find((s) => s.name === markAttrs.type);
                         if (styleConfig?.appliesTo && currentBlockType && !styleConfig.appliesTo.includes(currentBlockType)) {
                             return true;
                         }
@@ -274,8 +315,9 @@ function IsTipTapContent(
         inlineStyles,
         linkBlock,
         maxBlocks,
+        allowedPlaceholderNames,
         listLevelMax,
-    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; listLevelMax?: number },
+    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; allowedPlaceholderNames?: string[]; listLevelMax?: number },
     validationOptions?: ValidationOptions,
 ) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
@@ -299,13 +341,13 @@ function IsTipTapContent(
                         node.check();
 
                         // Validate inline style appliesTo constraints
-                        if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
+                        if (containsInvalidInlineStyleMarks(value as JSONContent, inlineStyles)) {
                             return false;
                         }
 
                         // Enforce maxBlocks limit on top-level content nodes
                         if (maxBlocks !== undefined) {
-                            const content = (value as TipTapContent).content;
+                            const content = (value as JSONContent).content;
                             if (Array.isArray(content) && content.length > maxBlocks) {
                                 return false;
                             }
@@ -313,7 +355,7 @@ function IsTipTapContent(
 
                         // Enforce listLevelMax limit on list nesting depth
                         if (listLevelMax !== undefined) {
-                            const depth = getListNestingDepth(value as TipTapContent);
+                            const depth = getListNestingDepth(value as JSONContent);
                             if (depth > listLevelMax) {
                                 return false;
                             }
@@ -321,7 +363,7 @@ function IsTipTapContent(
 
                         // Validate link mark data
                         if (linkBlock) {
-                            const linkMarks = collectLinkMarks(value as TipTapContent);
+                            const linkMarks = collectLinkMarks(value as JSONContent);
                             for (const { data } of linkMarks) {
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
@@ -329,6 +371,16 @@ function IsTipTapContent(
                                     whitelist: true,
                                 });
                                 if (validationErrors.length > 0) {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        // Validate placeholder names
+                        if (allowedPlaceholderNames) {
+                            const usedNames = collectPlaceholderNames(value as JSONContent);
+                            for (const name of usedNames) {
+                                if (!allowedPlaceholderNames.includes(name)) {
                                     return false;
                                 }
                             }
@@ -349,7 +401,7 @@ interface TextEntry {
     headingLevel?: number;
 }
 
-function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEntry[] {
+function extractTextEntries(node: JSONContent, headingLevel?: number): TextEntry[] {
     const results: TextEntry[] = [];
     const currentHeadingLevel = node.type === "heading" ? (node.attrs?.level as number) : headingLevel;
 
@@ -373,24 +425,57 @@ export function createTipTapRichTextBlock(
         supports = defaultSupports,
         blockStyles = [],
         inlineStyles = [],
+        placeholders = [],
         indexSearchText = true,
         link: LinkBlock,
         maxBlocks,
         listLevelMax,
+        migrateFromDraftJs = false,
     }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
 ): Block {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
-    const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
+    const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, blockStyles, inlineStyles, hasLink);
+    const extensions = buildExtensions(supports, blockStyles, inlineStyles, placeholders, hasLink);
     const schema = getSchema(extensions);
+
+    const draftJsBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.blockStyleMap : undefined;
+    const draftJsInlineStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.inlineStyleMap : undefined;
+
+    if (migrateFromDraftJs && baseMigrate) {
+        if (baseMigrate.version == 1) {
+            throw new Error("version=1 is reserved for migrateFromDraftJs, start own migrations with 2");
+        }
+        for (const migration of baseMigrate.migrations) {
+            const migrationObj = new migration();
+            if (migrationObj.toVersion == 1) {
+                throw new Error("toVersion=1 is reserved for migrateFromDraftJs, start own migrations with 2");
+            }
+        }
+    }
+    const migrate = migrateFromDraftJs
+        ? {
+              version: baseMigrate.version == 0 ? 1 : baseMigrate.version,
+              migrations: [
+                  buildDraftJsToTipTapMigration({
+                      schema,
+                      supports,
+                      link: LinkBlock,
+                      maxBlocks,
+                      blockStyleMap: draftJsBlockStyleMap,
+                      inlineStyleMap: draftJsInlineStyleMap,
+                  }),
+                  ...baseMigrate.migrations,
+              ],
+          }
+        : baseMigrate;
 
     @BlockDataMigrationVersion(migrate.version)
     class TipTapRichTextBlockData extends BlockData {
         @BlockField({ type: "json" })
-        tipTapContent: TipTapContent;
+        tipTapContent: JSONContent;
 
         searchText(): SearchText[] {
             if (!indexSearchText) {
@@ -419,10 +504,12 @@ export function createTipTapRichTextBlock(
         }
     }
 
+    const allowedPlaceholderNames = placeholders.length > 0 ? placeholders.map((p) => p.name) : undefined;
+
     class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, listLevelMax })
+        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, allowedPlaceholderNames, listLevelMax })
         @BlockField({ type: "json" })
-        tipTapContent: TipTapContent;
+        tipTapContent: JSONContent;
 
         transformToBlockData(): TipTapRichTextBlockData {
             let tipTapContent = this.tipTapContent;

@@ -134,6 +134,7 @@ type DamFileImage {
   exif: JSONObject
   dominantColor: String
   cropArea: ImageCropArea!
+  urlTemplate: String
   url(width: Int!, height: Int!): String
 }
 
@@ -256,6 +257,11 @@ type FileUpload {
   downloadUrl: String!
   previewUrl: String!
   imageUrl(resizeWidth: Int!): String
+}
+
+type PaginatedEntityInfo {
+  nodes: [EntityInfo!]!
+  totalCount: Int!
 }
 
 type UserPermissionPaginatedUserList {
@@ -510,7 +516,20 @@ type Query {
   redirectSourceAvailable(scope: RedirectScopeInput! = {}, source: String!): Boolean!
   damItemsList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
   damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
-  damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
+  damFilesList(
+    offset: Int! = 0
+    limit: Int! = 25
+    sortColumnName: String
+    sortDirection: SortDirection! = ASC
+    scope: DamScopeInput! = {}
+
+    """
+    Folder to list files from. When omitted, files at the scope root are returned. Ignored when filter.searchText or filter.ids is set.
+    """
+    folderId: ID
+    includeArchived: Boolean = false
+    filter: FileFilterInput
+  ): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   findCopiesOfFileInScope(id: ID!, scope: DamScopeInput! = {}, imageCropArea: ImageCropAreaInput): [DamFile!]!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput! = {}, folderId: String): Boolean!
@@ -546,6 +565,7 @@ type Query {
   warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
   damMediaAlternative(id: ID!): DamMediaAlternative!
   damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
+  fullTextSearch(search: String!, offset: Int! = 0, limit: Int! = 25): PaginatedEntityInfo!
 }
 
 input RedirectScopeInput {
@@ -608,8 +628,15 @@ enum DamItemType {
 }
 
 input FileFilterInput {
+  """
+  Full-text search across file names. When set, the folder constraint is bypassed and results span the whole scope.
+  """
   searchText: String
   mimetypes: [String!]
+
+  """
+  Restrict the result to files with these IDs. When a non-empty list is provided, the folder constraint is bypassed and matches are returned regardless of which folder they live in.
+  """
   ids: [ID!]
 }
 
@@ -749,6 +776,7 @@ type Mutation {
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   deleteRedirect(id: ID!): Boolean!
+  deleteRedirects(ids: [ID!]!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!

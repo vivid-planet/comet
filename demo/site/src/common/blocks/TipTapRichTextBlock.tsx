@@ -1,138 +1,78 @@
 "use client";
-import { PreviewSkeleton, type PropsWithData, withPreview } from "@comet/site-nextjs";
-import type { TipTapRichTextBlockData } from "@src/blocks.generated";
+import {
+    hasTipTapRichTextContent,
+    PreviewSkeleton,
+    type PropsWithData,
+    renderTipTapRichText,
+    type TipTapMarkHandler,
+    type TipTapNode,
+    type TipTapNodeHandler,
+    withPreview,
+} from "@comet/site-nextjs";
+import type { LinkBlockData, TipTapRichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
-import type { ReactNode } from "react";
 
-import { Typography } from "../components/Typography";
+import { Typography, type TypographyProps } from "../components/Typography";
 import { isValidLink } from "../helpers/HiddenIfInvalidLink";
 import { LinkBlock } from "./LinkBlock";
 import styles from "./RichTextBlock.module.scss";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TipTapNode = Record<string, any>;
+type TypographyVariant = TypographyProps<"p">["variant"];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function renderMark(mark: { type: string; attrs?: Record<string, any> }, children: ReactNode): ReactNode {
-    switch (mark.type) {
-        case "bold":
-            return <strong>{children}</strong>;
-        case "italic":
-            return <em>{children}</em>;
-        case "strike":
-            return <s>{children}</s>;
-        case "superscript":
-            return <sup>{children}</sup>;
-        case "subscript":
-            return <sub>{children}</sub>;
-        case "inlineStyle": {
-            const inlineStyleType = mark.attrs?.type as string | undefined;
-            const className = inlineStyleType ? (styles as Record<string, string>)[`inlineStyle-${inlineStyleType}`] : undefined;
-            return <span className={className}>{children}</span>;
-        }
-        case "link":
-            return mark.attrs?.data && isValidLink(mark.attrs.data) ? (
-                <LinkBlock data={mark.attrs.data} className={styles.inlineLink}>
-                    {children}
-                </LinkBlock>
-            ) : (
-                <>{children}</>
-            );
-        default:
-            return children;
-    }
-}
+const headingLevelToVariant: Record<1 | 2 | 3 | 4 | 5 | 6, TypographyVariant> = {
+    1: "headline600",
+    2: "headline550",
+    3: "headline500",
+    4: "headline450",
+    5: "headline400",
+    6: "headline350",
+};
 
-function renderInlineContent(node: TipTapNode, index: number): ReactNode {
-    if (node.type === "text") {
-        let content: ReactNode = node.text;
-        if (node.marks) {
-            for (const mark of node.marks) {
-                content = renderMark(mark, content);
-            }
-        }
-        return <span key={index}>{content}</span>;
-    }
-    if (node.type === "hardBreak") {
-        return <br key={index} />;
-    }
-    if (node.type === "nonBreakingSpace") {
-        return <span key={index}>{"\u00A0"}</span>;
-    }
-    if (node.type === "softHyphen") {
-        return <span key={index}>{"\u00AD"}</span>;
-    }
-    return null;
-}
+const nodeMapping: Record<string, TipTapNodeHandler> = {
+    paragraph: ({ node, children }) => (
+        <Typography variant={(node.attrs?.blockStyle as TypographyVariant | null) ?? undefined} bottomSpacing className={styles.text}>
+            {children}
+        </Typography>
+    ),
+    heading: ({ node, children }) => {
+        const level = (node.attrs?.level as 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
+        return (
+            <Typography variant={headingLevelToVariant[level]} bottomSpacing className={styles.text}>
+                {children}
+            </Typography>
+        );
+    },
+    listItem: ({ node, children }) => {
+        const firstParagraph = node.content?.find((child) => child.type === "paragraph");
+        const blockStyle = (firstParagraph?.attrs?.blockStyle as TypographyVariant | null) ?? undefined;
+        return (
+            <Typography as="li" variant={blockStyle} className={styles.text}>
+                {children}
+            </Typography>
+        );
+    },
+};
 
-function renderNode(node: TipTapNode, index: number): ReactNode {
-    const children = node.content?.map((child: TipTapNode, i: number) => renderNode(child, i));
-
-    switch (node.type) {
-        case "doc":
+const markMapping: Record<string, TipTapMarkHandler> = {
+    link: ({ mark, children }) => {
+        const linkData = mark.attrs?.data as LinkBlockData | undefined;
+        if (!linkData || !isValidLink(linkData)) {
             return <>{children}</>;
-        case "paragraph": {
-            const blockStyle = node.attrs?.blockStyle as Parameters<typeof Typography>[0]["variant"];
-            return (
-                <Typography key={index} variant={blockStyle ?? undefined} bottomSpacing className={styles.text}>
-                    {children}
-                </Typography>
-            );
         }
-        case "heading": {
-            const level = node.attrs?.level ?? 1;
-            const variantMap = {
-                1: "headline600",
-                2: "headline550",
-                3: "headline500",
-                4: "headline450",
-                5: "headline400",
-                6: "headline350",
-            } as const;
-            return (
-                <Typography key={index} variant={variantMap[level as keyof typeof variantMap]} bottomSpacing className={styles.text}>
-                    {children}
-                </Typography>
-            );
-        }
-        case "bulletList":
-            return <ul key={index}>{children}</ul>;
-        case "orderedList":
-            return <ol key={index}>{children}</ol>;
-        case "listItem": {
-            const firstParagraph = node.content?.find((child: TipTapNode) => child.type === "paragraph");
-            const blockStyle = firstParagraph?.attrs?.blockStyle as Parameters<typeof Typography>[0]["variant"];
-            return (
-                <Typography as="li" key={index} variant={blockStyle ?? undefined} className={styles.text}>
-                    {children}
-                </Typography>
-            );
-        }
-        case "text":
-        case "hardBreak":
-        case "nonBreakingSpace":
-        case "softHyphen":
-            return renderInlineContent(node, index);
-        default:
-            return null;
-    }
-}
+        return (
+            <LinkBlock data={linkData} className={styles.inlineLink}>
+                {children}
+            </LinkBlock>
+        );
+    },
+};
 
-function hasTipTapContent(data: TipTapRichTextBlockData): boolean {
-    const content = data.tipTapContent as TipTapNode;
-    if (!content?.content || !Array.isArray(content.content)) {
-        return false;
-    }
-    return content.content.some((node: TipTapNode) => node.type !== "paragraph" || (node.content && node.content.length > 0));
-}
-
-export const TipTapRichTextBlock = withPreview(
+const TipTapRichTextBlock = withPreview(
     ({ data }: PropsWithData<TipTapRichTextBlockData>) => {
         const content = data.tipTapContent as TipTapNode;
-
         return (
-            <PreviewSkeleton title="RichText" type="rows" hasContent={hasTipTapContent(data)}>
-                {renderNode(content, 0)}
+            <PreviewSkeleton title="RichText" type="rows" hasContent={hasTipTapRichTextContent(content)}>
+                {renderTipTapRichText({ content, nodeMapping, markMapping })}
             </PreviewSkeleton>
         );
     },

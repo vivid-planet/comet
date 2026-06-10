@@ -224,7 +224,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
                 .resize(ResizingType.AUTO, resizeWidth)
                 .format(
                     (mime.getExtension(
-                        getSupportedMimeType(MODERN_TYPES, accept) || getSupportedMimeType(BASIC_TYPES, file.mimetype),
+                        getSupportedMimeType(MODERN_TYPES, accept) ?? getSupportedMimeType(BASIC_TYPES, file.mimetype) ?? "",
                     ) as Extension) || Extension.JPG,
                 )
                 .generateUrl(
