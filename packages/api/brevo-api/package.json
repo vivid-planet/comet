@@ -68,7 +68,7 @@
         "chokidar-cli": "^2.1.0",
         "eslint": "^9.39.4",
         "express": "^5.2.1",
-        "graphql": "^16.14.0",
+        "graphql": "^16.14.1",
         "prettier": "^3.4.2",
         "reflect-metadata": "^0.2.2",
         "rimraf": "^3.0.2",
