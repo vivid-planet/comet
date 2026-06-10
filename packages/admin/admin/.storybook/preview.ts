@@ -52,7 +52,7 @@ export const globalTypes: GlobalTypes = {
 
 const preview: Preview = {
     tags: ["autodocs"],
-    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, RouterDecorator, ApolloDecorator],
+    decorators: [ThemeProviderDecorator, LayoutDecorator, RouterDecorator, IntlDecorator, ApolloDecorator],
     loaders: [
         async () => {
             await mswReady;

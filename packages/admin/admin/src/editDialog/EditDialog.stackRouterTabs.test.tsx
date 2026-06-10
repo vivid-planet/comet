@@ -8,26 +8,26 @@ import { Router } from "react-router";
 import { render, screen, waitFor, within } from "test-utils";
 import { describe, expect, it } from "vitest";
 
-import { Button } from "./common/buttons/Button";
-import { FillSpace } from "./common/FillSpace";
-import { MainContent } from "./common/MainContent";
-import { ToolbarActions } from "./common/toolbar/actions/ToolbarActions";
-import { ToolbarAutomaticTitleItem } from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
-import { ToolbarBackButton } from "./common/toolbar/backbutton/ToolbarBackButton";
-import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
-import { ToolbarFillSpace } from "./common/toolbar/fillspace/ToolbarFillSpace";
-import { StackToolbar } from "./common/toolbar/StackToolbar";
+import { Button } from "../common/buttons/Button";
+import { FillSpace } from "../common/FillSpace";
+import { MainContent } from "../common/MainContent";
+import { ToolbarActions } from "../common/toolbar/actions/ToolbarActions";
+import { ToolbarAutomaticTitleItem } from "../common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
+import { ToolbarBackButton } from "../common/toolbar/backbutton/ToolbarBackButton";
+import { DataGridToolbar } from "../common/toolbar/DataGridToolbar";
+import { ToolbarFillSpace } from "../common/toolbar/fillspace/ToolbarFillSpace";
+import { StackToolbar } from "../common/toolbar/StackToolbar";
+import { FinalForm } from "../FinalForm";
+import { TextField } from "../form/fields/TextField";
+import { SaveBoundary } from "../saveBoundary/SaveBoundary";
+import { SaveBoundarySaveButton } from "../saveBoundary/SaveBoundarySaveButton";
+import { StackPage } from "../stack/Page";
+import { Stack } from "../stack/Stack";
+import { StackLink } from "../stack/StackLink";
+import { StackSwitch } from "../stack/Switch";
+import { RouterTab, RouterTabs } from "../tabs/RouterTabs";
 import { EditDialog } from "./EditDialog";
 import type { IEditDialogApi } from "./EditDialogApiContext";
-import { FinalForm } from "./FinalForm";
-import { TextField } from "./form/fields/TextField";
-import { SaveBoundary } from "./saveBoundary/SaveBoundary";
-import { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";
-import { StackPage } from "./stack/Page";
-import { Stack } from "./stack/Stack";
-import { StackLink } from "./stack/StackLink";
-import { StackSwitch } from "./stack/Switch";
-import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 
 describe("EditDialog with Stack, Router Tabs and Grid", () => {
     type DialogProps = {

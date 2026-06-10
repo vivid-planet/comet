@@ -1,27 +1,22 @@
-import {
-    Button,
-    DataGridToolbar,
-    EditDialog,
-    FillSpace,
-    FinalForm,
-    type IEditDialogApi,
-    MainContent,
-    messages,
-    RouterTab,
-    RouterTabs,
-    TextField,
-} from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { DialogContent, Typography } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { Button } from "../../common/buttons/Button";
+import { FillSpace } from "../../common/FillSpace";
+import { MainContent } from "../../common/MainContent";
+import { DataGridToolbar } from "../../common/toolbar/DataGridToolbar";
+import { FinalForm } from "../../FinalForm";
+import { TextField } from "../../form/fields/TextField";
+import { messages } from "../../messages";
+import { RouterTab, RouterTabs } from "../../tabs/RouterTabs";
+import { EditDialog } from "../EditDialog";
+import type { IEditDialogApi } from "../EditDialogApiContext";
 
 export default {
-    title: "@comet/admin/edit-dialog",
-    decorators: [storyRouterDecorator()],
+    title: "components/edit-dialog",
 };
 
 const products = [
