@@ -8,7 +8,7 @@ Follow the coding guidelines at https://docs.comet-dxp.com/docs/coding-guideline
 
 ### General
 
-- Use descriptive naming. Avoid abbreviations (exceptions: well-known abbreviations such as HTML, CSS, API, …, or abbreviations from a 3rd party).
+- Use descriptive naming. Avoid non-obvious abbreviations (exceptions: obvious, conventional abbreviations whose meaning is unambiguous in context such as `i` for an index, well-known abbreviations such as HTML, CSS, API, …, or abbreviations from a 3rd party).
 - Name booleans with a prefix (is/has/should, e.g., `isLoading`, `hasError`).
 - Name variables in affirmative form (avoid negative naming, e.g., use `isComplete` instead of `isNotComplete`).
 - Don't use exceptions as flow control.
