@@ -151,7 +151,7 @@ export interface SiteConfig extends BaseSiteConfig {
 }
 ```
 
-Set the value from the environment variable in each site config:
+Set the value in each site config. The source depends on your project setup — read it from an environment variable, fetch it from 1Password, or hardcode it:
 
 ```ts title="site-configs/main.ts"
 recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY ?? "",
