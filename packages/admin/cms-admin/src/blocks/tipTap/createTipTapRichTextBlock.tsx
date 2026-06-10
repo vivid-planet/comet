@@ -50,6 +50,8 @@ const defaultSupports: TipTapSupports[] = [
     "soft-hyphen",
 ];
 
+export type { JSONContent as TipTapRichTextBlockContent } from "@tiptap/core";
+
 export type TipTapTextBlockType =
     | "paragraph"
     | "heading-1"
