@@ -70,10 +70,7 @@ export class FullTextSearchService {
             );
         }
 
-        // Join the "EntityInfo" view (created beforehand) to reuse its computed "visible" column instead of recomputing it here.
-        const viewSql = `SELECT "fullTextResult".*, COALESCE("EntityInfo"."visible", true) AS "visible"
-            FROM (${indexSelects.join("\n UNION ALL \n")}) "fullTextResult"
-            LEFT JOIN "EntityInfo" ON "EntityInfo"."id" = "fullTextResult"."id" AND "EntityInfo"."entityName" = "fullTextResult"."entityName"`;
+        const viewSql = indexSelects.join("\n UNION ALL \n");
 
         console.time("creating EntityInfoFullText view");
         await this.entityManager.getConnection().execute(`DROP VIEW IF EXISTS "EntityInfoFullText"`);

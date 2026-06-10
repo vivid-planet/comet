@@ -33,29 +33,18 @@ export class FullTextSearchResolver {
             {
                 fullText: { $fulltext: search },
                 requiredPermission: { $overlap: allowedPermissions },
-                ...(includeInvisiblePages?.length ? {} : { visible: true }),
+                ...(includeInvisiblePages?.length ? {} : { entityInfo: { visible: true } }),
             },
-            { offset, limit },
+            { offset, limit, populate: ["entityInfo"] },
         );
 
-        if (matches.length === 0) {
-            return new PaginatedEntityInfo([], totalCount);
-        }
-
-        // Join with EntityInfo view to fetch name, secondaryInformation, visible for the matched rows
-        const infos = await this.entityManager.find(EntityInfoObject, {
-            $or: matches.map((match) => ({ id: match.id, entityName: match.entityName })),
-        });
-
-        const infoByKey = new Map(infos.map((info) => [`${info.entityName}:${info.id}`, info]));
         const results = matches.map((match) => {
-            const info = infoByKey.get(`${match.entityName}:${match.id}`);
-            if (!info) {
+            if (!match.entityInfo) {
                 throw new Error(
                     `EntityInfo not found for ${match.entityName}:${match.id}. This may indicate a data inconsistency where the full-text search index contains an entry without corresponding entity information.`,
                 );
             }
-            return info;
+            return match.entityInfo;
         });
 
         return new PaginatedEntityInfo(results, totalCount);
