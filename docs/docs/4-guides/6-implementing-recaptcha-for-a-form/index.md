@@ -13,8 +13,8 @@ reCAPTCHA protects your forms from spam and abuse by assessing risk on the serve
 ## Install dependencies
 
 ```bash
-pnpm add @google-cloud/recaptcha-enterprise
-pnpm add -D @types/grecaptcha
+npm install @google-cloud/recaptcha-enterprise
+npm install --save-dev @types/grecaptcha
 ```
 
 Add `@types/grecaptcha` to `knip.json` under `ignoreDependencies` for `demo/site` since it is a type-only package:
