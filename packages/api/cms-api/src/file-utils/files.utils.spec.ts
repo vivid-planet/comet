@@ -40,5 +40,23 @@ describe("Files Utils", () => {
 
             expect(isValidSvg(svgWithOnloadHandler)).toBe(false);
         });
+
+        it("should return false if the svg contains a script tag with a namespace prefix", async () => {
+            const svgWithNamespacedScriptTag = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="http://www.w3.org/1999/xhtml" width="16" height="16" viewBox="0 0 16 16">
+                <x:script>alert("XSS");</x:script>
+            </svg>`;
+
+            expect(isValidSvg(svgWithNamespacedScriptTag)).toBe(false);
+        });
+
+        it("should return false if the svg contains an uppercase href attribute containing javascript", async () => {
+            const svgWithUppercaseHref = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                <a XLINK:HREF="javascript:alert(1)">
+                <path fill="#242424" fill-rule="evenodd" d=""/>
+                </a>
+            </svg>`;
+
+            expect(isValidSvg(svgWithUppercaseHref)).toBe(false);
+        });
     });
 });
