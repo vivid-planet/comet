@@ -328,7 +328,7 @@
             {
                 "name": "noFollow",
                 "kind": "Boolean",
-                "nullable": true
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -345,7 +345,7 @@
             {
                 "name": "noFollow",
                 "kind": "Boolean",
-                "nullable": true
+                "nullable": false
             }
         ]
     },

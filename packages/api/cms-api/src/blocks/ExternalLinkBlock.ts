@@ -1,8 +1,10 @@
 import { IsBoolean, IsOptional } from "class-validator";
 
-import { IsUndefinable } from "../common/validators/is-undefinable";
 import { BlockData, BlockInput, blockInputToData, createBlock } from "./block";
 import { BlockField } from "./decorators/field";
+import { BlockMigration } from "./migrations/BlockMigration";
+import type { BlockMigrationInterface } from "./migrations/types";
+import { typeSafeBlockMigrationPipe } from "./migrations/typeSafeBlockMigrationPipe";
 import { IsLinkTarget } from "./validator/is-link-target.validator";
 
 class ExternalLinkBlockData extends BlockData {
@@ -12,8 +14,8 @@ class ExternalLinkBlockData extends BlockData {
     @BlockField()
     openInNewWindow: boolean;
 
-    @BlockField({ nullable: true })
-    noFollow?: boolean;
+    @BlockField()
+    noFollow: boolean;
 }
 
 class ExternalLinkBlockInput extends BlockInput {
@@ -26,14 +28,36 @@ class ExternalLinkBlockInput extends BlockInput {
     @BlockField()
     openInNewWindow: boolean;
 
-    @IsUndefinable()
     @IsBoolean()
-    @BlockField({ nullable: true })
-    noFollow?: boolean;
+    @BlockField()
+    noFollow: boolean;
 
     transformToBlockData(): ExternalLinkBlockData {
         return blockInputToData(ExternalLinkBlockData, this);
     }
 }
 
-export const ExternalLinkBlock = createBlock(ExternalLinkBlockData, ExternalLinkBlockInput, "ExternalLink");
+interface AddNoFollowMigrationFrom {
+    targetUrl?: string;
+    openInNewWindow: boolean;
+}
+
+interface AddNoFollowMigrationTo extends AddNoFollowMigrationFrom {
+    noFollow: boolean;
+}
+
+class AddNoFollowMigration extends BlockMigration<(from: AddNoFollowMigrationFrom) => AddNoFollowMigrationTo> implements BlockMigrationInterface {
+    public readonly toVersion = 1;
+
+    protected migrate(props: AddNoFollowMigrationFrom): AddNoFollowMigrationTo {
+        return { ...props, noFollow: false };
+    }
+}
+
+export const ExternalLinkBlock = createBlock(ExternalLinkBlockData, ExternalLinkBlockInput, {
+    name: "ExternalLink",
+    migrate: {
+        version: 1,
+        migrations: typeSafeBlockMigrationPipe([AddNoFollowMigration]),
+    },
+});
