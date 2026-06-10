@@ -172,6 +172,26 @@ const { recaptchaSiteKey } = useSiteConfig();
 <Script src={`https://www.google.com/recaptcha/enterprise.js?render=${recaptchaSiteKey}`} />;
 ```
 
+### Hide the reCAPTCHA badge and add a disclaimer
+
+To hide the reCAPTCHA badge, add the following CSS to your form component's stylesheet:
+
+```css title="YourFormBlock.module.scss"
+:global(.grecaptcha-badge) {
+    visibility: hidden;
+}
+```
+
+When hiding the badge, Google [requires you to add a disclaimer](https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed) near the submit button instead:
+
+```tsx
+<p>
+    This site is protected by reCAPTCHA and the Google{" "}
+    <a href="https://policies.google.com/privacy">Privacy Policy</a> and{" "}
+    <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+</p>
+```
+
 ## Update the Content Security Policy
 
 If your site defines a Content Security Policy, add the required Google domains:
@@ -279,24 +299,4 @@ export async function POST(
 
     // Process the form submission...
 }
-```
-
-## Hide the reCAPTCHA badge and add a disclaimer (optional)
-
-To hide the reCAPTCHA badge, add the following CSS to your form component's stylesheet:
-
-```css title="YourFormBlock.module.scss"
-:global(.grecaptcha-badge) {
-    visibility: hidden;
-}
-```
-
-When hiding the badge, Google [requires you to add a disclaimer](https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed) near the submit button instead:
-
-```tsx
-<p>
-    This site is protected by reCAPTCHA and the Google{" "}
-    <a href="https://policies.google.com/privacy">Privacy Policy</a> and{" "}
-    <a href="https://policies.google.com/terms">Terms of Service</a> apply.
-</p>
 ```
