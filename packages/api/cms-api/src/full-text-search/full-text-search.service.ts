@@ -3,8 +3,10 @@ import { Injectable, Optional } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../entity-info/entity-info.decorator";
+import { isEntityInfoSql, requiredPermissionToSql } from "../entity-info/entity-info.utils";
 import { resolveFieldToSql } from "../entity-info/resolve-field-to-sql";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
+import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../user-permissions/decorators/required-permission.decorator";
 
 @Injectable()
 export class FullTextSearchService {
@@ -25,9 +27,15 @@ export class FullTextSearchService {
                 continue;
             }
 
-            if (typeof entityInfo === "string") {
+            if (typeof entityInfo === "string" || isEntityInfoSql(entityInfo)) {
                 if (pageTreeFullText && targetEntity.metadata.tableName === "PageTreeNode") {
-                    indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText"
+                    const permissionMetadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, targetEntity.entity) as
+                        | RequiredPermissionMetadata
+                        | undefined;
+                    const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
+
+                    indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText",
+                        ${requiredPermissionSql} AS "requiredPermission"
                         FROM "PageTreeNodeEntityInfo"
                         INNER JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeEntityInfo"."id"::uuid`);
                 }
@@ -42,17 +50,24 @@ export class FullTextSearchService {
             const primary = metadata.primaryKeys[0];
 
             const fullTextSql = resolveFieldToSql(entityInfo.fullText, metadata, metadata.tableName);
+            const permissionMetadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, targetEntity.entity) as
+                | RequiredPermissionMetadata
+                | undefined;
+            const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
 
             indexSelects.push(`SELECT
                             "${metadata.tableName}"."${primary}"::text "id",
                             '${entityName}' "entityName",
-                            ${fullTextSql} AS "fullText"
+                            ${fullTextSql} AS "fullText",
+                            ${requiredPermissionSql} AS "requiredPermission"
                         FROM "${metadata.tableName}"`);
         }
 
         if (indexSelects.length === 0) {
             // Empty placeholder so the view always exists with the expected columns
-            indexSelects.push(`SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText" WHERE false`);
+            indexSelects.push(
+                `SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", ARRAY[]::text[] AS "requiredPermission" WHERE false`,
+            );
         }
 
         const viewSql = indexSelects.join("\n UNION ALL \n");

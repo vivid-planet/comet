@@ -49,6 +49,49 @@ export interface ThemeText extends TextStyles {
 }
 
 /**
+ * Single source of truth for divider style property names and their value types.
+ * Both `DividerStyles` and `DividerVariantStyles` are derived from this interface.
+ */
+interface DividerStyleMap {
+    height: number;
+    backgroundColor: string;
+    backgroundImage: string;
+}
+
+/** Base divider styles where each property holds a plain value. */
+export type DividerStyles = { [K in keyof DividerStyleMap]?: DividerStyleMap[K] };
+
+/** Variant divider styles where each property supports responsive values. */
+export type DividerVariantStyles = { [K in keyof DividerStyleMap]?: ResponsiveValue<DividerStyleMap[K]> };
+
+/**
+ * Defines the variants available on the `MjmlDivider` and `HtmlDivider` components.
+ *
+ * ```ts
+ * declare module "@comet/mail-react" {
+ *     interface DividerVariants {
+ *         thin: true;
+ *         thick: true;
+ *     }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface DividerVariants {}
+
+type DividerVariantsRecord = keyof DividerVariants extends never
+    ? Record<string, DividerVariantStyles>
+    : { [K in keyof DividerVariants]?: DividerVariantStyles };
+
+export type DividerVariantName = keyof DividerVariants extends never ? string : keyof DividerVariants;
+
+/** Theme configuration for divider styles, variants, and default variant. */
+export interface ThemeDivider extends DividerStyles {
+    defaultVariant?: DividerVariantName;
+    variants?: DividerVariantsRecord;
+}
+
+/**
  * A resolved breakpoint with its numeric value and a ready-to-use media query
  * string that targets viewports narrower than this breakpoint.
  */
@@ -108,5 +151,6 @@ export interface Theme {
     sizes: ThemeSizes;
     breakpoints: ThemeBreakpoints;
     text: ThemeText;
+    divider: ThemeDivider;
     colors: ThemeColors;
 }

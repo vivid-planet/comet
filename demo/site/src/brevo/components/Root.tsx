@@ -4,7 +4,6 @@ import {
     MjmlAttributes,
     MjmlBody,
     MjmlConditionalComment,
-    MjmlDivider,
     MjmlHead,
     MjmlSection,
     MjmlStyle,
@@ -45,7 +44,6 @@ export const Root: FC<Props> = ({ children, title }) => {
             <MjmlHead>
                 <MjmlAttributes>
                     <MjmlText padding={0} />
-                    <MjmlDivider padding={0} />
                     <MjmlSection padding={0} />
                 </MjmlAttributes>
                 {!!title && <MjmlTitle>{title}</MjmlTitle>}

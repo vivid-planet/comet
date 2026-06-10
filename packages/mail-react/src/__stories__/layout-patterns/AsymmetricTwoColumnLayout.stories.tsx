@@ -1,6 +1,7 @@
-import { MjmlColumn, MjmlImage, MjmlSpacer, MjmlWrapper } from "@faire/mjml-react";
+import { MjmlColumn, MjmlSpacer, MjmlWrapper } from "@faire/mjml-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import { MjmlImage } from "../../components/image/MjmlImage.js";
 import { MjmlSection } from "../../components/section/MjmlSection.js";
 import { MjmlText } from "../../components/text/MjmlText.js";
 import { registerStyles } from "../../styles/registerStyles.js";

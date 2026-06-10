@@ -89,6 +89,7 @@ export type {
 } from "./blocks/tipTap/createTipTapRichTextBlock";
 export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
 export type {
+    AnonymousBlockInterface,
     BlockAdminComponent,
     BlockAdminComponentPart,
     BlockDependency,
@@ -229,6 +230,8 @@ export { UserPermissionsUserPagePermissionsPanel } from "./userPermissions/user/
 export { UserPermissionsUserPageToolbar } from "./userPermissions/user/UserPageToolbar";
 export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
+export { isLinkTarget } from "./validation/isLinkTarget";
+export { validateLinkTarget } from "./validation/validateLinkTarget";
 export { LatestWarningsDashboardWidget } from "./warnings/LatestWarningsDashboardWidget";
 export { WarningsPage } from "./warnings/WarningsPage";
 import packageJson from "../package.json";

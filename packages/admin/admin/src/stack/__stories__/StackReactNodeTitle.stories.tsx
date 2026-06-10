@@ -1,5 +1,11 @@
-import { Button, Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
 import { Typography } from "@mui/material";
+
+import { Button } from "../../common/buttons/Button";
+import { StackBreadcrumbs } from "../breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../Page";
+import { Stack } from "../Stack";
+import { StackPageTitle } from "../StackPageTitle";
+import { useStackSwitch } from "../Switch";
 
 export default {
     title: "components/stack/StackReactNodeTitle",

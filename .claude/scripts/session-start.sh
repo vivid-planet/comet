@@ -29,10 +29,8 @@ if [ "$CLAUDE_CODE_REMOTE" = "true" ]; then
         set +e
         . "$NVM_DIR/nvm.sh"
         set -e
-        echo ">>> nvm install (.nvmrc: $(cat .nvmrc 2>/dev/null || echo 'not found'))"
-        nvm install
-        echo ">>> nvm use"
-        nvm use
+        echo ">>> nvm use || nvm install (.nvmrc: $(cat .nvmrc 2>/dev/null || echo 'not found'))"
+        nvm use || nvm install
         node_bin=$(dirname "$(nvm which current)")
         echo ">>> node_bin=$node_bin"
         mkdir -p "$HOME/.local/bin"
@@ -45,9 +43,11 @@ if [ "$CLAUDE_CODE_REMOTE" = "true" ]; then
         echo ">>> nvm.sh not found at $NVM_DIR/nvm.sh, skipping node setup"
     fi
 
-    # playwright-cli
-    npm install -g @playwright/cli@latest
-    playwright-cli install --skills
+    if command -v playwright-cli >/dev/null 2>&1; then
+        playwright-cli install --skills
+    else
+        echo "playwright-cli not found, skipping (install in environment setup script)"
+    fi
 fi
 
 
@@ -94,7 +94,6 @@ pnpm run create-site-configs-env
 
 # --- download dev proxies ---
 pnpm run setup:download-oauth2-proxy
-pnpm run setup:download-mitmproxy
 
 
 exit 0

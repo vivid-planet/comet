@@ -188,8 +188,6 @@ jobs:
 
             - run: pnpm run setup:download-oauth2-proxy
 
-            - run: pnpm run setup:download-mitmproxy
-
             - name: Build packages (only uncached)
               run: |
                   FILTERS=""

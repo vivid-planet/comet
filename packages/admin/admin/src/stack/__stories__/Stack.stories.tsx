@@ -1,5 +1,7 @@
-import { Stack, StackBreadcrumbs } from "@comet/admin";
 import { Typography } from "@mui/material";
+
+import { StackBreadcrumbs } from "../breadcrumbs/StackBreadcrumbs";
+import { Stack } from "../Stack";
 
 export default {
     title: "components/stack/Stack",

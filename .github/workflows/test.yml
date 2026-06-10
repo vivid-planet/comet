@@ -12,8 +12,8 @@ on:
             - next
 
 jobs:
-    test:
-        name: Test
+    test-unit:
+        name: Test (unit)
         runs-on: ubuntu-latest
         steps:
             - run: echo "${{ github.actor }}"
@@ -27,15 +27,50 @@ jobs:
               with:
                   build-packages: "true"
 
-            - name: Test
-              run: pnpm run test
+            - name: Test (unit)
+              run: pnpm run test:unit
 
             - name: Upload test results
               uses: actions/upload-artifact@v7
               if: success() || failure()
               with:
-                  name: test-results
+                  name: test-results-unit
                   path: |
-                      packages/*/junit.xml
-                      packages/*/*/junit.xml
+                      packages/*/junit-unit.xml
+                      packages/*/*/junit-unit.xml
+                  overwrite: true
+
+    test-storybook:
+        name: Test (storybook)
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "${{ github.actor }}"
+
+            - uses: actions/checkout@v6
+              with:
+                  ref: ${{ github.event.pull_request.head.ref || github.ref }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+            - run: |
+                  git config user.name github-actions
+                  git config user.email github-actions@github.com
+
+            - uses: ./.github/actions/setup
+              with:
+                  build-packages: "true"
+
+            - name: Install Playwright Browsers
+              run: pnpm --filter comet-storybook exec playwright install chromium-headless-shell
+
+            - name: Test (storybook)
+              run: pnpm run test:storybook
+
+            - name: Upload test results
+              uses: actions/upload-artifact@v7
+              if: success() || failure()
+              with:
+                  name: test-results-storybook
+                  path: |
+                      packages/*/junit-storybook.xml
+                      packages/*/*/junit-storybook.xml
+                      storybook/junit.xml
                   overwrite: true

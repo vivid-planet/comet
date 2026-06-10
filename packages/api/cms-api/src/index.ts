@@ -109,6 +109,7 @@ export {
     type TipTapRichTextBlockContent,
 } from "./blocks/tipTap/createTipTapRichTextBlock";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
+export { IsLinkTarget } from "./blocks/validator/is-link-target.validator";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";
@@ -208,7 +209,7 @@ export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
-export { EntityInfo } from "./entity-info/entity-info.decorator";
+export { EntityInfo, EntityInfoSql } from "./entity-info/entity-info.decorator";
 export { FileUpload } from "./file-uploads/entities/file-upload.entity";
 export { FileUploadsModule } from "./file-uploads/file-uploads.module";
 export { FileUploadsService } from "./file-uploads/file-uploads.service";
