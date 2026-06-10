@@ -17,10 +17,10 @@ npm install @google-cloud/recaptcha-enterprise
 npm install --save-dev @types/grecaptcha
 ```
 
-Add `@types/grecaptcha` to `knip.json` under `ignoreDependencies` for `demo/site` since it is a type-only package:
+Add `@types/grecaptcha` to `knip.json` under `ignoreDependencies` for your site workspace since it is a type-only package. The site usually lives in `site/`, but may be located in another folder (e.g., `frontend/`); use whichever path matches your project:
 
 ```json title="knip.json"
-"demo/site": {
+"site": {
     "ignoreDependencies": ["@babel/core", "@types/grecaptcha"]
 }
 ```
