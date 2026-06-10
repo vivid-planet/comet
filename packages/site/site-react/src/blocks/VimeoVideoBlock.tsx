@@ -113,6 +113,12 @@ export const VimeoVideoBlock = withPreview(
         const vimeoUrl = new URL(`${vimeoBaseUrl}${identifier ?? ""}`);
         vimeoUrl.search = searchParams.toString();
 
+        const handlePreviewPlay = () => {
+            setShowPreviewImage(false);
+            setIsPlaying(true);
+            setIsHandledManually(true);
+        };
+
         const handlePlayPauseClick = () => {
             if (isPlaying) {
                 setIsPlaying(false);
@@ -128,7 +134,7 @@ export const VimeoVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage({
-                        onPlay: () => setShowPreviewImage(false),
+                        onPlay: handlePreviewPlay,
                         image: previewImage,
                         aspectRatio,
                         sizes: previewImageSizes,

@@ -406,6 +406,7 @@ type DamFileImage {
   height: Int!
   id: ID!
   url(height: Int!, width: Int!): String
+  urlTemplate: String
   width: Int!
 }
 

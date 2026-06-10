@@ -1,6 +1,11 @@
-import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
 import { useState } from "react";
 import { Redirect, Route, Switch } from "react-router";
+
+import { StackBreadcrumbs } from "../breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../Page";
+import { Stack } from "../Stack";
+import { StackPageTitle } from "../StackPageTitle";
+import { useStackSwitch } from "../Switch";
 
 function Page2() {
     const [counter, setCounter] = useState(0);

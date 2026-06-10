@@ -21,11 +21,11 @@ import {
 import { Add as AddIcon, Edit, Statistics, Visible } from "@comet/admin-icons";
 import type { BlockInterface, ContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { isBefore } from "date-fns";
 import type { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { DataGrid } from "../dataGrid/DataGrid";
 import type {
     GQLCreateEmailCampaignMutation,
     GQLCreateEmailCampaignMutationVariables,

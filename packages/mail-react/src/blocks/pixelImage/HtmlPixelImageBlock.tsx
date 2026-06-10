@@ -1,8 +1,7 @@
 import clsx from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 
-import { registerStyles } from "../../styles/registerStyles.js";
-import { css } from "../../utils/css.js";
+import { HtmlImage } from "../../components/image/HtmlImage.js";
 import type { PixelImageBlockBaseProps } from "./common.js";
 import { usePixelImageBlockData } from "./usePixelImageBlockData.js";
 
@@ -30,7 +29,7 @@ export function HtmlPixelImageBlock({
     }
 
     return (
-        <img
+        <HtmlImage
             src={imageData.imageUrl}
             width={imageData.defaultRenderWidth}
             height={imageData.desktopImageHeight}
@@ -41,14 +40,3 @@ export function HtmlPixelImageBlock({
         />
     );
 }
-
-registerStyles(
-    (theme) => css`
-        ${theme.breakpoints.default.belowMediaQuery} {
-            .htmlPixelImageBlock {
-                width: 100%;
-                height: auto;
-            }
-        }
-    `,
-);

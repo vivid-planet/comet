@@ -1,4 +1,6 @@
-import { type BreadcrumbItem, Stack, StackBreadcrumbs, useStackApi } from "@comet/admin";
+import { useStackApi } from "../Api";
+import { StackBreadcrumbs } from "../breadcrumbs/StackBreadcrumbs";
+import { type BreadcrumbItem, Stack } from "../Stack";
 
 const singleItem: BreadcrumbItem[] = [{ id: "one", parentId: "", url: "/one", title: "Breadcrumb One" }];
 const twoItems: BreadcrumbItem[] = [...singleItem, { id: "two", parentId: "one", url: "/two", title: "BC 2" }];

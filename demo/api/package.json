@@ -37,7 +37,8 @@
         "start:dev": "pnpm check-node-version && run-p dev:*",
         "start:prod": "node dist/main",
         "storybook": "storybook dev -p 4004 --no-open --disable-telemetry",
-        "test": "pnpm api-generator && vitest --run",
+        "test": "pnpm run test:unit",
+        "test:unit": "pnpm api-generator && vitest --run",
         "test:watch": "vitest --watch"
     },
     "dependencies": {
@@ -71,12 +72,11 @@
         "cli-progress": "^3.12.0",
         "compression": "^1.8.1",
         "cookie-parser": "^1.4.7",
-        "date-fns": "^4.2.1",
+        "date-fns": "^4.4.0",
         "express": "^5.2.1",
         "graphql": "^16.14.0",
         "graphql-scalars": "^1.25.0",
         "helmet": "^8.1.0",
-        "mjml": "^4.18.0",
         "nest-commander": "^3.20.1",
         "react": "^19.2.6",
         "react-dom": "^19.2.6",
@@ -101,9 +101,8 @@
         "@types/cookie-parser": "^1.4.10",
         "@types/express": "^5.0.6",
         "@types/inquirer": "^8.2.12",
-        "@types/mjml": "^4.7.4",
         "@types/node": "^24.12.4",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "@types/response-time": "^2.3.9",
         "check-node-version": "^4.2.1",
@@ -119,7 +118,7 @@
         "tsconfig-paths": "^3.15.0",
         "typescript": "^5.9.3",
         "vite-tsconfig-paths": "^6.0.4",
-        "vitest": "^4.0.16"
+        "vitest": "^4.1.8"
     },
     "mikro-orm": {
         "configPaths": [

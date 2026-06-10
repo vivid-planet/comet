@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-generator",
-    "version": "9.0.0-beta.4",
+    "version": "9.0.0-beta.5",
     "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
@@ -34,7 +34,8 @@
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
-        "test": "vitest --run",
+        "test": "pnpm run test:unit",
+        "test:unit": "vitest --run",
         "test:updateSnapshot": "vitest --run --update",
         "test:watch": "vitest --watch"
     },
@@ -45,7 +46,7 @@
         "@graphql-tools/graphql-file-loader": "^7.5.17",
         "@graphql-tools/load": "^7.8.14",
         "@mui/material": "^7.3.11",
-        "@mui/x-data-grid": "^8.28.6",
+        "@mui/x-data-grid": "^8.28.7",
         "change-case": "^4.1.2",
         "commander": "^9.5.0",
         "glob": "^11.1.0",
@@ -61,7 +62,7 @@
         "@types/node": "^24.12.4",
         "@types/object-path": "^0.11.4",
         "@types/pluralize": "^0.0.33",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "eslint": "^9.39.4",
         "final-form": "^4.20.10",
@@ -71,7 +72,7 @@
         "react-dom": "^19.2.6",
         "react-intl": "^7.1.11",
         "tsdown": "0.20.0-beta.4",
-        "vitest": "^4.0.16"
+        "vitest": "^4.1.8"
     },
     "peerDependencies": {
         "@apollo/client": "^3.7.0",

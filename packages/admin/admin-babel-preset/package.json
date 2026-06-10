@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-babel-preset",
-    "version": "9.0.0-beta.4",
+    "version": "9.0.0-beta.5",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -11,15 +11,15 @@
     "license": "BSD-2-Clause",
     "main": "index.js",
     "dependencies": {
-        "@babel/cli": "^7.28.6",
-        "@babel/core": "^7.29.0",
-        "@babel/preset-env": "^7.29.5",
-        "@babel/preset-react": "^7.28.5",
+        "@babel/cli": "^7.29.7",
+        "@babel/core": "^7.29.7",
+        "@babel/preset-env": "^7.29.7",
+        "@babel/preset-react": "^7.29.7",
         "@babel/preset-typescript": "^7.28.5",
         "@emotion/babel-plugin": "^11.13.5"
     },
     "devDependencies": {
-        "@babel/cli": "^7.28.6"
+        "@babel/cli": "^7.29.7"
     },
     "peerDependencies": {
         "@babel/cli": ">= 7"

@@ -1,6 +1,11 @@
-import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
+
+import { StackBreadcrumbs } from "../breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../Page";
+import { Stack } from "../Stack";
+import { StackLink } from "../StackLink";
+import { StackSwitch } from "../Switch";
 
 function Path() {
     const location = useLocation();

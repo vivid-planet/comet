@@ -1,6 +1,11 @@
-import { Stack, StackBackButton, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { useContext } from "react";
 import { Redirect, Route, Switch } from "react-router";
+
+import { StackBackButton } from "../backbutton/StackBackButton";
+import { StackBreadcrumbs } from "../breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../Page";
+import { Stack } from "../Stack";
+import { StackSwitch, StackSwitchApiContext } from "../Switch";
 
 function Page1() {
     const switchApi = useContext(StackSwitchApiContext);

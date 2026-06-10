@@ -103,8 +103,13 @@ export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar"
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
 export { blockToMikroOrmFullText, getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
-export { createTipTapRichTextBlock, type CreateTipTapRichTextBlockOptions } from "./blocks/tipTap/createTipTapRichTextBlock";
+export {
+    createTipTapRichTextBlock,
+    type CreateTipTapRichTextBlockOptions,
+    type TipTapRichTextBlockContent,
+} from "./blocks/tipTap/createTipTapRichTextBlock";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
+export { IsLinkTarget } from "./blocks/validator/is-link-target.validator";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";
@@ -204,7 +209,7 @@ export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
-export { EntityInfo } from "./entity-info/entity-info.decorator";
+export { EntityInfo, EntityInfoSql } from "./entity-info/entity-info.decorator";
 export { FileUpload } from "./file-uploads/entities/file-upload.entity";
 export { FileUploadsModule } from "./file-uploads/file-uploads.module";
 export { FileUploadsService } from "./file-uploads/file-uploads.service";

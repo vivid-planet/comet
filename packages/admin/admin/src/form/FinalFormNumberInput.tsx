@@ -48,13 +48,12 @@ export function FinalFormNumberInput({
     const updateFormattedNumberValue = useCallback(
         (inputValue?: number) => {
             if (!inputValue && inputValue !== 0) {
-                input.onChange(undefined);
                 setFormattedNumberValue("");
             } else {
                 setFormattedNumberValue(getFormattedValue(inputValue));
             }
         },
-        [getFormattedValue, input],
+        [getFormattedValue],
     );
 
     const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
@@ -87,7 +86,7 @@ export function FinalFormNumberInput({
 
     useEffect(() => {
         updateFormattedNumberValue(input.value);
-    }, [updateFormattedNumberValue, input]);
+    }, [updateFormattedNumberValue, input.value]);
 
     const clearable = !required && !disabled && !readOnly;
 

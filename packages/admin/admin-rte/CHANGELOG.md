@@ -1,5 +1,13 @@
 # @comet/admin-rte
 
+## 9.0.0-beta.5
+
+### Patch Changes
+
+- Updated dependencies [fdabaf1]
+    - @comet/admin@9.0.0-beta.5
+    - @comet/admin-icons@9.0.0-beta.5
+
 ## 9.0.0-beta.4
 
 ### Minor Changes
