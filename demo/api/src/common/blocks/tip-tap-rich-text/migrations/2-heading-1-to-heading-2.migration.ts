@@ -1,15 +1,14 @@
-import { BlockMigration, type BlockMigrationInterface } from "@comet/cms-api";
-import type { JSONContent } from "@tiptap/core";
+import { BlockMigration, type BlockMigrationInterface, type TipTapRichTextBlockContent } from "@comet/cms-api";
 
 interface From {
-    tipTapContent: JSONContent;
+    tipTapContent: TipTapRichTextBlockContent;
 }
 
 type To = From;
 
 // TipTap heading nodes are shaped like `{ type: "heading", attrs: { level: 1 }, content: [...] }`.
 // Walk the document tree and bump every level-1 heading to level 2.
-function changeHeading1ToHeading2(node: JSONContent): JSONContent {
+function changeHeading1ToHeading2(node: TipTapRichTextBlockContent): TipTapRichTextBlockContent {
     let result = node;
     if (node.type === "heading" && node.attrs?.level === 1) {
         result = { ...node, attrs: { ...node.attrs, level: 2 } };
