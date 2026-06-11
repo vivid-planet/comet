@@ -6,6 +6,7 @@
 
 ![main](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=main)
 ![next](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=next)
+[![codecov](https://codecov.io/gh/vivid-planet/comet/branch/main/graph/badge.svg)](https://codecov.io/gh/vivid-planet/comet)
 
 ## Docs
 

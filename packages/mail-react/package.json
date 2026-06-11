@@ -36,6 +36,8 @@
         "lint:tsc": "tsc",
         "storybook": "storybook dev -p 6066 --no-open",
         "test": "pnpm run test:unit && pnpm run test:storybook",
+        "test:coverage": "vitest --run --project unit --coverage",
+        "test:coverage:storybook": "vitest --run --project storybook --coverage --coverage.reportsDirectory=./coverage-storybook --outputFile.junit=./junit-storybook.xml",
         "test:storybook": "vitest --run --project storybook --outputFile.junit=./junit-storybook.xml",
         "test:unit": "vitest --run --project unit --outputFile.junit=./junit-unit.xml",
         "test:watch": "vitest --watch"
@@ -58,6 +60,7 @@
         "@types/react-dom": "^19.2.3",
         "@vitest/browser": "4.1.8",
         "@vitest/browser-playwright": "4.1.8",
+        "@vitest/coverage-v8": "4.1.8",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.4",
         "npm-run-all2": "^8.0.4",

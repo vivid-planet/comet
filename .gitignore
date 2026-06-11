@@ -10,6 +10,7 @@ lang/
 junit.xml
 junit-unit.xml
 junit-storybook.xml
+**/coverage
 .env.local
 .env.site-configs
 **/.idea

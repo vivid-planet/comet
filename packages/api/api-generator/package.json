@@ -32,6 +32,7 @@
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "vitest --run",
+        "test:coverage": "vitest --run --coverage",
         "test:updateSnapshot": "vitest --run --update",
         "test:watch": "vitest --watch"
     },
@@ -52,6 +53,7 @@
         "@nestjs/graphql": "^13.4.0",
         "@types/node": "^24.12.4",
         "@types/pluralize": "^0.0.33",
+        "@vitest/coverage-v8": "4.1.8",
         "class-validator": "^0.14.3",
         "eslint": "^9.39.4",
         "npm-run-all2": "^8.0.4",

@@ -28,7 +28,7 @@ jobs:
                   build-packages: "true"
 
             - name: Test (unit)
-              run: pnpm run test:unit
+              run: pnpm run test:coverage
 
             - name: Upload test results
               uses: actions/upload-artifact@v7
@@ -39,6 +39,15 @@ jobs:
                       packages/*/junit-unit.xml
                       packages/*/*/junit-unit.xml
                   overwrite: true
+
+            - name: Upload coverage to Codecov
+              if: success() || failure()
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: unit
+                  files: packages/*/coverage/lcov.info,packages/*/*/coverage/lcov.info
+                  fail_ci_if_error: false
 
     test-storybook:
         name: Test (storybook)
@@ -62,7 +71,7 @@ jobs:
               run: pnpm --filter comet-storybook exec playwright install chromium-headless-shell
 
             - name: Test (storybook)
-              run: pnpm run test:storybook
+              run: pnpm run test:coverage:storybook
 
             - name: Upload test results
               uses: actions/upload-artifact@v7
@@ -74,3 +83,12 @@ jobs:
                       packages/*/*/junit-storybook.xml
                       storybook/junit.xml
                   overwrite: true
+
+            - name: Upload coverage to Codecov
+              if: success() || failure()
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  flags: storybook
+                  files: packages/*/coverage-storybook/lcov.info,packages/*/*/coverage-storybook/lcov.info
+                  fail_ci_if_error: false

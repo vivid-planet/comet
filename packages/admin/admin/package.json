@@ -38,6 +38,8 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "storybook": "storybook dev -p 26646 --no-open --disable-telemetry",
         "test": "pnpm run test:unit && pnpm run test:storybook",
+        "test:coverage": "vitest --run --project unit --coverage",
+        "test:coverage:storybook": "vitest --run --project storybook --coverage --coverage.reportsDirectory=./coverage-storybook --outputFile.junit=./junit-storybook.xml",
         "test:storybook": "vitest --run --project storybook --outputFile.junit=./junit-storybook.xml",
         "test:unit": "vitest --run --project unit --outputFile.junit=./junit-unit.xml",
         "test:watch": "vitest --watch"
@@ -91,6 +93,7 @@
         "@types/react-router-dom": "^5.3.3",
         "@vitest/browser": "4.1.8",
         "@vitest/browser-playwright": "4.1.8",
+        "@vitest/coverage-v8": "4.1.8",
         "eslint": "^9.39.4",
         "eslint-plugin-storybook": "^10.3.5",
         "final-form": "^4.20.10",
