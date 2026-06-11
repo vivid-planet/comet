@@ -17,7 +17,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { type FileUploadValidationError } from "./useDamFileUpload";
+import type { FileUploadValidationError } from "./useDamFileUpload";
 
 const Path = styled(Typography)`
     color: ${({ theme }) => theme.palette.grey[300]};

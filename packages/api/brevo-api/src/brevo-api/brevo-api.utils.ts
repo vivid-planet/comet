@@ -1,4 +1,4 @@
-import { type ErrorModel } from "@getbrevo/brevo";
+import type { ErrorModel } from "@getbrevo/brevo";
 import axios, { type AxiosError } from "axios";
 
 type AxiosErrorWithResponse<T = unknown> = AxiosError<T> & { response: NonNullable<AxiosError<T>["response"]> };

@@ -1,12 +1,12 @@
 import { Chip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type MouseEvent } from "react";
+import type { MouseEvent } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { MarkedMatches } from "../../common/MarkedMatches";
 import { usePageTreeConfig } from "../pageTreeConfig";
 import { PageTypeIcon } from "./PageTypeIcon";
-import { type PageTreePage } from "./usePageTree";
+import type { PageTreePage } from "./usePageTree";
 
 interface PageLabelProps {
     page: PageTreePage;

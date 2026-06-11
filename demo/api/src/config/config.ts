@@ -115,7 +115,6 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         siteConfigs: envVars.PRIVATE_SITE_CONFIGS,
         brevo: {
             apiKey: envVars.BREVO_API_KEY,
-            redirectUrlForImport: envVars.BREVO_REDIRECT_URL_FOR_IMPORT,
             campaign: {
                 basicAuth: {
                     username: envVars.BREVO_CAMPAIGN_BASIC_AUTH_USERNAME,

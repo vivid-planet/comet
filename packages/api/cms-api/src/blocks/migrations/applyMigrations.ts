@@ -1,6 +1,6 @@
 import type { ClassConstructor } from "class-transformer";
 
-import { type BlockMigrationInterface } from "./types";
+import type { BlockMigrationInterface } from "./types";
 
 // Applies all Migration to a raw json-data from the database
 // the argument `blockName` is useful as debug output

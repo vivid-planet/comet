@@ -5,10 +5,10 @@ import { green } from "@mui/material/colors";
 import { type JSX, type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    type GQLRedirectActivenessFragment,
-    type GQLUpdateRedirectActivenessMutation,
-    type GQLUpdateRedirectActivenessMutationVariables,
+import type {
+    GQLRedirectActivenessFragment,
+    GQLUpdateRedirectActivenessMutation,
+    GQLUpdateRedirectActivenessMutationVariables,
 } from "./RedirectActiveness.generated";
 
 const updateRedirectActivenessMutation = gql`

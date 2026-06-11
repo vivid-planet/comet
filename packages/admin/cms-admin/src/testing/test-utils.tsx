@@ -2,7 +2,7 @@
 import { MuiThemeProvider, SnackbarProvider } from "@comet/admin";
 import { createTheme } from "@mui/material";
 import { render as testingLibraryRender, type RenderOptions, type RenderResult } from "@testing-library/react";
-import { type ReactElement, type ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { IntlProvider } from "react-intl";
 
 const messages = {};

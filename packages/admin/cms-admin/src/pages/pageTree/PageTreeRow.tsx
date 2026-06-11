@@ -3,7 +3,7 @@ import { Checkbox } from "@mui/material";
 import { type CSSProperties, type Dispatch, type SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { type DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import { type DebouncedState } from "use-debounce";
+import type { DebouncedState } from "use-debounce";
 
 import { InsertInBetweenAction } from "../../common/InsertInBetweenAction";
 import { InsertInBetweenActionButton } from "../../common/InsertInBetweenActionButton";
@@ -15,10 +15,10 @@ import PageInfo from "./PageInfo";
 import PageLabel from "./PageLabel";
 import * as sc from "./PageTreeRow.sc";
 import { PageTreeRowDivider } from "./PageTreeRowDivider";
-import { type DropInfo, type PageTreeService } from "./PageTreeService";
+import type { DropInfo, PageTreeService } from "./PageTreeService";
 import PageVisibility from "./PageVisibility";
 import { useButtonHoverStates } from "./useButtonHoverStates";
-import { type PageTreePage } from "./usePageTree";
+import type { PageTreePage } from "./usePageTree";
 
 export type DropTarget = "ADD_BEFORE" | "ADD_AFTER" | "ADD_AS_CHILD";
 export type DropTargetBeforeAfter = Extract<DropTarget, "ADD_BEFORE" | "ADD_AFTER">;

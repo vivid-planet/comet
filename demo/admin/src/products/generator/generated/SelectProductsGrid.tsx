@@ -18,7 +18,7 @@ import { usePersistentColumnState } from "@comet/admin";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { DataGridProProps } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
-import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { GridToolbarQuickFilter } from "@comet/admin";
 import { useMemo } from "react";
 import { useDataGridRemote } from "@comet/admin";
 import { muiGridSortToGql } from "@comet/admin";
@@ -66,6 +66,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
         onRowSelectionModelChange,
         checkboxSelection: true,
         keepNonExistentRowsSelected: true,
+        disableRowSelectionExcludeModel: true,
     };
     const columns: GridColDef<GQLSelectProductsGridFutureFragment>[] = useMemo(
         () => [
@@ -155,6 +156,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
             slots={{
                 toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
+            showToolbar
         />
     );
 }

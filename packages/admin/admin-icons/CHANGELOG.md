@@ -1,5 +1,19 @@
 # @comet/admin-icons
 
+## 9.0.0-beta.5
+
+## 9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+
+## 9.0.0-beta.1
+
 ## 9.0.0-beta.0
 
 ### Major Changes

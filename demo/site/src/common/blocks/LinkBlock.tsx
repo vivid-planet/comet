@@ -9,9 +9,9 @@ import {
     type SupportedBlocks,
     withPreview,
 } from "@comet/site-nextjs";
-import { type LinkBlockData } from "@src/blocks.generated";
+import type { LinkBlockData } from "@src/blocks.generated";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
-import { type AnchorHTMLAttributes, type PropsWithChildren } from "react";
+import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
 
 import { InternalLinkBlock } from "./InternalLinkBlock";
 

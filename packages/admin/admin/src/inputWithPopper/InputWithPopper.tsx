@@ -7,10 +7,10 @@ import {
     type Popper as MuiPopper,
 } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import { type TransitionProps } from "@mui/material/transitions";
+import type { TransitionProps } from "@mui/material/transitions";
 import { type ElementType, type ReactNode, type RefObject, useCallback, useEffect, useRef, useState } from "react";
 
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { InputBase, Paper, Popper, Root } from "./InputWithPopper.slots";
 
 export type InputWithPopperComponents = InputBaseProps["components"] & {

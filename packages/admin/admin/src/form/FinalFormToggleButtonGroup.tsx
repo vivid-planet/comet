@@ -1,7 +1,7 @@
 import { ButtonBase, Typography, type TypographyProps } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
-import { type ReactNode } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { ReactNode } from "react";
+import type { FieldRenderProps } from "react-final-form";
 
 export type FinalFormToggleButtonGroupProps<FieldValue> = {
     options: Array<{ value: FieldValue; label: ReactNode }>;

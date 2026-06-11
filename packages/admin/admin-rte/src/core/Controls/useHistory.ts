@@ -3,8 +3,8 @@ import { EditorState } from "draft-js";
 import { type MouseEvent, useCallback, useMemo } from "react";
 import { useIntl } from "react-intl";
 
-import { type SupportedThings } from "../Rte";
-import { type IFeatureConfig } from "../types";
+import type { SupportedThings } from "../Rte";
+import type { IFeatureConfig } from "../types";
 
 interface IProps {
     editorState: EditorState;

@@ -1,4 +1,4 @@
-import { type MigrationObject } from "@mikro-orm/postgresql";
+import type { MigrationObject } from "@mikro-orm/postgresql";
 
 import { Migration20240115095733 } from "./Migration20240115095733";
 import { Migration20240118144808 } from "./Migration20240118144808";

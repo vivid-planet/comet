@@ -1,6 +1,7 @@
-import { MjmlColumn, MjmlSection, MjmlSpacer, MjmlText } from "@comet/mail-react";
-import { MailRoot } from "@src/mail/components/MailRoot";
+import { MjmlColumn, MjmlMailRoot, MjmlSection, MjmlSpacer, MjmlText } from "@comet/mail-react";
 import { FormattedMessage } from "react-intl";
+
+import { theme } from "./theme";
 
 export type MailProps = {
     recipient: { name: string; email: string; language: string };
@@ -9,15 +10,15 @@ export type MailProps = {
 
 export const Mail = ({ recipient, countProductPublished }: MailProps) => {
     return (
-        <MailRoot>
-            <MjmlSection backgroundColor="#FFFFFF">
+        <MjmlMailRoot theme={theme}>
+            <MjmlSection>
                 <MjmlColumn>
                     <MjmlSpacer height="20px" />
                 </MjmlColumn>
             </MjmlSection>
-            <MjmlSection backgroundColor="#FFFFFF" paddingLeft="20px" paddingRight="20px">
+            <MjmlSection indent>
                 <MjmlColumn>
-                    <MjmlText fontSize="33px" lineHeight="39px">
+                    <MjmlText variant="heading" bottomSpacing>
                         <FormattedMessage
                             id="productPublishedMail.salutation"
                             defaultMessage="Hello {recipientName}"
@@ -26,14 +27,9 @@ export const Mail = ({ recipient, countProductPublished }: MailProps) => {
                     </MjmlText>
                 </MjmlColumn>
             </MjmlSection>
-            <MjmlSection backgroundColor="#FFFFFF">
+            <MjmlSection indent>
                 <MjmlColumn>
-                    <MjmlSpacer height="40px" />
-                </MjmlColumn>
-            </MjmlSection>
-            <MjmlSection backgroundColor="#FFFFFF" paddingLeft="20px" paddingRight="20px">
-                <MjmlColumn>
-                    <MjmlText fontSize="16px" lineHeight="20px">
+                    <MjmlText>
                         <FormattedMessage
                             id="productPublishedMail.text"
                             defaultMessage="{numberOfProductsPublished, select, all {All products} 1 {A product has} other {{numberOfProductsPublished} products have}} been published."
@@ -42,11 +38,11 @@ export const Mail = ({ recipient, countProductPublished }: MailProps) => {
                     </MjmlText>
                 </MjmlColumn>
             </MjmlSection>
-            <MjmlSection backgroundColor="#FFFFFF">
+            <MjmlSection>
                 <MjmlColumn>
                     <MjmlSpacer height="20px" />
                 </MjmlColumn>
             </MjmlSection>
-        </MailRoot>
+        </MjmlMailRoot>
     );
 };

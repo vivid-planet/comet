@@ -1,7 +1,7 @@
 import { css, Typography } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type DataGridPaginationClassKey } from "./DataGridPagination";
+import type { DataGridPaginationClassKey } from "./DataGridPagination";
 
 export const Root = createComponentSlot("div")<DataGridPaginationClassKey>({
     componentName: "DataGridPagination",

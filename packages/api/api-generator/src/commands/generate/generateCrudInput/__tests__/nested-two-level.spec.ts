@@ -1,6 +1,7 @@
 import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { generateInputHandling } from "../../generateCrud/generate-crud";
 import { testPermission } from "../../utils/test-helper";
@@ -67,7 +68,9 @@ describe("nested two level", () => {
     it("input dto should reference the correct import", async () => {
         const out = await generateCrudInput({ requiredPermission: testPermission }, orm.em.getMetadata().get("Foo"));
         const fooInputDto = out.find((f) => f.name == "dto/foo.input.ts");
-        if (!fooInputDto) throw new Error();
+        if (!fooInputDto) {
+            throw new Error();
+        }
 
         expect(fooInputDto.content).toContain(`bars: FooNestedBarInput[];`);
         expect(fooInputDto.content).toContain(`import { FooNestedBarInput } from "./foo-nested-bar.input";`);

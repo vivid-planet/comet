@@ -19,7 +19,7 @@ import {
 import { ArrowLeft } from "@comet/admin-icons";
 import { type ContentScope, ContentScopeIndicator, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { type FormApi } from "final-form";
+import type { FormApi } from "final-form";
 import { FormattedMessage } from "react-intl";
 
 export { namedOperations as targetGroupFormNamedOperations } from "./TargetGroupForm.gql.generated";
@@ -28,11 +28,11 @@ import { type ReactElement, type ReactNode, useMemo } from "react";
 import { AddContactsGridSelect } from "./addContacts/AddContactsGridSelect";
 import { AllAssignedContactsGrid } from "./allAssignedContacts/AllAssignedContactsGrid";
 import { targetGroupFormQuery, updateTargetGroupMutation } from "./TargetGroupForm.gql";
-import {
-    type GQLTargetGroupFormQuery,
-    type GQLTargetGroupFormQueryVariables,
-    type GQLUpdateTargetGroupMutation,
-    type GQLUpdateTargetGroupMutationVariables,
+import type {
+    GQLTargetGroupFormQuery,
+    GQLTargetGroupFormQueryVariables,
+    GQLUpdateTargetGroupMutation,
+    GQLUpdateTargetGroupMutationVariables,
 } from "./TargetGroupForm.gql.generated";
 
 export interface EditTargetGroupFinalFormValues {
@@ -109,7 +109,9 @@ export function TargetGroupForm({ id, scope, additionalFormFields, input2State, 
         });
     };
 
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

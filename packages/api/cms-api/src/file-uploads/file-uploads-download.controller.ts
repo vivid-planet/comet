@@ -180,7 +180,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                 .resize(ResizingType.AUTO, params.resizeWidth)
                 .format(
                     (mime.getExtension(
-                        getSupportedMimeType(MODERN_TYPES, accept) || getSupportedMimeType(BASIC_TYPES, file.mimetype),
+                        getSupportedMimeType(MODERN_TYPES, accept) ?? getSupportedMimeType(BASIC_TYPES, file.mimetype) ?? "",
                     ) as Extension) || Extension.JPG,
                 )
                 .generateUrl(`${this.blobStorageBackendService.getBackendFilePathPrefix()}${this.config.directory}/${filePath}`);

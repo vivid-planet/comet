@@ -1,0 +1,46 @@
+import { EntityManager } from "@mikro-orm/postgresql";
+import { Args, Int, Query, Resolver } from "@nestjs/graphql";
+
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { RequestContext, type RequestContextInterface } from "../common/decorators/request-context.decorator";
+import { EntityInfoObject } from "../entity-info/entity-info.object";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../user-permissions/dto/current-user";
+import { PaginatedEntityInfo } from "./dto/paginated-entity-info";
+import { EntityInfoFullTextObject } from "./entities/entity-info-full-text.object";
+
+@Resolver(() => EntityInfoObject)
+@RequiredPermission("fullTextSearch", { skipScopeCheck: true })
+export class FullTextSearchResolver {
+    constructor(private readonly entityManager: EntityManager) {}
+
+    @Query(() => PaginatedEntityInfo)
+    async fullTextSearch(
+        @Args("search") search: string,
+        @Args("offset", { type: () => Int, defaultValue: 0 }) offset: number,
+        @Args("limit", { type: () => Int, defaultValue: 25 }) limit: number,
+        @GetCurrentUser() user: CurrentUser,
+        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
+    ): Promise<PaginatedEntityInfo> {
+        const allowedPermissions = user.permissions.map((p) => p.permission);
+
+        if (allowedPermissions.length === 0) {
+            return new PaginatedEntityInfo([], 0);
+        }
+
+        const [matches, totalCount] = await this.entityManager.findAndCount(
+            EntityInfoFullTextObject,
+            {
+                fullText: { $fulltext: search },
+                requiredPermission: { $overlap: allowedPermissions },
+                ...(includeInvisiblePages?.length ? {} : { entityInfo: { visible: true } }),
+            },
+            { offset, limit, populate: ["entityInfo"] },
+        );
+
+        return new PaginatedEntityInfo(
+            matches.map((match) => match.entityInfo),
+            totalCount,
+        );
+    }
+}

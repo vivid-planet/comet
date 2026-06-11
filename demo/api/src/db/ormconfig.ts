@@ -18,6 +18,7 @@ export const ormConfig = createOrmConfig(
         },
         namingStrategy: EntityCaseNamingStrategy,
         debug: false,
+        connect: process.env.MIKRO_ORM_NO_CONNECT !== "true",
         dataloader: DataloaderType.ALL,
         discovery: {
             getMappedType(type: string, platform) {

@@ -1,6 +1,6 @@
-import { type Request } from "express";
+import type { Request } from "express";
 
-import { type User } from "../../user-permissions/interfaces/user";
+import type { User } from "../../user-permissions/interfaces/user";
 
 export const SKIP_AUTH_SERVICE = "skip-auth-service" as const;
 

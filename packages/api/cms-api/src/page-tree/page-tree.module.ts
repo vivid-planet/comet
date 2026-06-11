@@ -12,9 +12,20 @@ import { InternalLinkBlockWarningsService } from "./blocks/internal-link-block-w
 import { createPageTreeResolver } from "./createPageTreeResolver";
 import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
+import { PaginatedPageTreeNodesFactory } from "./dto/paginated-page-tree-nodes.factory";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
-import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY, SITE_PREVIEW_CONFIG } from "./page-tree.constants";
+import { createFullTextResolver } from "./fullText/createFullTextResolver";
+import { PageTreeNodeFullText } from "./fullText/entities/page-tree-node-full-text.object";
+import { PageTreeFullTextService } from "./fullText/page-tree-full-text.service";
+import {
+    defaultReservedPaths,
+    PAGE_TREE_CONFIG,
+    PAGE_TREE_DOCUMENTS,
+    PAGE_TREE_ENTITY,
+    PAGE_TREE_REPOSITORY,
+    SITE_PREVIEW_CONFIG,
+} from "./page-tree.constants";
 import { PageTreeService } from "./page-tree.service";
 import { PageTreeNodeDocumentEntityScopeService } from "./page-tree-node-document-entity-scope.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
@@ -34,6 +45,7 @@ interface PageTreeModuleOptions {
     Scope?: Type<ScopeInterface>;
     reservedPaths?: string[];
     sitePreviewSecret: string | ((scope: ContentScope) => string);
+    fullText?: boolean;
 }
 
 @Global()
@@ -46,15 +58,25 @@ export class PageTreeModule {
             throw new Error(`PageTreeModule: Your PageTreeNode entity must be named ${PAGE_TREE_ENTITY}`);
         }
 
+        const PaginatedPageTreeNodes = PaginatedPageTreeNodesFactory.create({ PageTreeNode });
         const PageTreeResolver = createPageTreeResolver({
             PageTreeNode,
             Documents,
             Scope,
             PageTreeNodeCreateInput,
             PageTreeNodeUpdateInput,
+            PaginatedPageTreeNodes,
         });
         const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
         const PageTreeDependenciesResolver = DependenciesResolverFactory.create(PageTreeNode);
+
+        const PageTreeFullTextResolver = options.fullText
+            ? createFullTextResolver({
+                  PageTreeNode,
+                  Scope,
+                  PaginatedPageTreeNodes,
+              })
+            : null;
 
         const repositoryProvider = {
             provide: PAGE_TREE_REPOSITORY,
@@ -75,7 +97,7 @@ export class PageTreeModule {
 
         return {
             module: PageTreeModule,
-            imports: [MikroOrmModule.forFeature([AttachedDocument, PageTreeNode, ...(Scope ? [Scope] : [])])],
+            imports: [MikroOrmModule.forFeature([AttachedDocument, PageTreeNode, PageTreeNodeFullText, ...(Scope ? [Scope] : [])])],
             providers: [
                 PageTreeService,
                 PageTreeReadApiService,
@@ -83,6 +105,7 @@ export class PageTreeModule {
                 PageTreeResolver,
                 PageTreeDependentsResolver,
                 PageTreeDependenciesResolver,
+                ...(PageTreeFullTextResolver ? [PageTreeFullTextResolver, PageTreeFullTextService] : []),
                 repositoryProvider,
                 pageTreeConfigProvider,
                 {
@@ -97,6 +120,10 @@ export class PageTreeModule {
                 InternalLinkBlockTransformerService,
                 InternalLinkBlockWarningsService,
                 {
+                    provide: PAGE_TREE_DOCUMENTS,
+                    useValue: Documents,
+                },
+                {
                     provide: SITE_PREVIEW_CONFIG,
                     useValue: {
                         secret: options.sitePreviewSecret,
@@ -110,6 +137,7 @@ export class PageTreeModule {
                 AttachedDocumentLoaderService,
                 PageTreeNodeDocumentEntityScopeService,
                 InternalLinkBlockTransformerService,
+                ...(PageTreeFullTextResolver ? [PageTreeFullTextService] : []),
             ],
         };
     }

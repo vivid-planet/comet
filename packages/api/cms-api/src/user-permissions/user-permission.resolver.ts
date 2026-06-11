@@ -10,7 +10,7 @@ import { UserPermission, UserPermissionSource } from "./entities/user-permission
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ArgsType()
-export class UserPermissionListArgs {
+class UserPermissionListArgs {
     @Field()
     @IsString()
     userId: string;
@@ -98,7 +98,9 @@ export class UserPermissionResolver {
             throw new Error(`Permission not found: ${id}`);
         }
         for (const p of await this.service.getPermissions(await this.service.getUser(userId))) {
-            if (p.id === id) return p;
+            if (p.id === id) {
+                return p;
+            }
         }
         throw new Error("Permission not found");
     }

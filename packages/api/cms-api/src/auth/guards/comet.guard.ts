@@ -44,7 +44,9 @@ export class CometAuthGuard implements CanActivate {
             this.logger.debug(`No AuthService could authenticate the user for ${context.getClass().name}::${context.getHandler().name}().`);
             throw new UnauthorizedException("No AuthService could authenticate the user");
         }
-        if ("authenticationError" in result) throw new UnauthorizedException(result.authenticationError);
+        if ("authenticationError" in result) {
+            throw new UnauthorizedException(result.authenticationError);
+        }
 
         if ("systemUser" in result) {
             request["user"] = result.systemUser;
@@ -53,7 +55,9 @@ export class CometAuthGuard implements CanActivate {
             if ("userId" in result) {
                 const userId = result.userId;
                 const userService = this.service.getUserService();
-                if (!userService) throw new UnauthorizedException(`User authenticated by ID but no user service given: ${userId}`);
+                if (!userService) {
+                    throw new UnauthorizedException(`User authenticated by ID but no user service given: ${userId}`);
+                }
                 try {
                     if (userService.getUserForLogin) {
                         user = await userService.getUserForLogin(userId);
@@ -75,7 +79,9 @@ export class CometAuthGuard implements CanActivate {
     private async getAuthenticatedUserResult(request: Request) {
         for (const authService of this.authServices) {
             const result = await authService.authenticateUser(request);
-            if (result && result !== SKIP_AUTH_SERVICE) return result;
+            if (result && result !== SKIP_AUTH_SERVICE) {
+                return result;
+            }
         }
     }
 

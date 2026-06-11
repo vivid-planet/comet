@@ -26,11 +26,10 @@ sh ./demo/site/intl-update.sh
 # Build the packages CLI and eslint-plugin to be used for dev startup
 pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
 
-# Install agent skills
-pnpm run install-agent-skills
+# Install agent features
+pnpm run install-agent-features
 
 # create site-config-envs
 pnpm run create-site-configs-env
 
 pnpm run setup:download-oauth2-proxy
-pnpm run setup:download-mitmproxy
