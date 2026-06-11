@@ -43,7 +43,12 @@ export class ContentScopeService {
         // AffectedScope
         const affectedScope = this.reflector.getAllAndOverride<AffectedScopeMeta>(AFFECTED_SCOPE_METADATA_KEY, [context.getHandler()]) || undefined;
         if (affectedScope) {
-            contentScopes.push([affectedScope.argsToScope(args) as ContentScope]);
+            const scope = affectedScope.argsToScope(args);
+            if (Array.isArray(scope)) {
+                contentScopes.push(...scope.map((s) => [s as ContentScope]));
+            } else {
+                contentScopes.push([scope as ContentScope]);
+            }
         }
 
         // Scope arg
