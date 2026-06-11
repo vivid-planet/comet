@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, waitFor } from "storybook/test";
 
 import { DateTime } from "../DateTime";
 
@@ -11,4 +12,8 @@ export default config;
 
 type Story = StoryObj<typeof config>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    play: async ({ canvasElement }) => {
+        await waitFor(() => expect(canvasElement.textContent).toMatch(/\d/));
+    },
+};

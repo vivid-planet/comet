@@ -115,8 +115,8 @@ export { DateTimeRangePickerField, type DateTimeRangePickerFieldProps } from "./
 export { TimePicker, type TimePickerClassKey, type TimePickerProps } from "./dateTime/timePicker/TimePicker";
 export { TimePickerField, type TimePickerFieldProps } from "./dateTime/timePickerField/TimePickerField";
 export { DeleteMutation } from "./DeleteMutation";
-export { EditDialog, useEditDialog } from "./EditDialog";
-export { EditDialogApiContext, type IEditDialogApi, useEditDialogApi } from "./EditDialogApiContext";
+export { EditDialog, useEditDialog } from "./editDialog/EditDialog";
+export { EditDialogApiContext, type IEditDialogApi, useEditDialogApi } from "./editDialog/EditDialogApiContext";
 export { ErrorBoundary, type ErrorBoundaryClassKey, type ErrorBoundaryProps } from "./error/errorboundary/ErrorBoundary";
 export { RouteWithErrorBoundary } from "./error/errorboundary/RouteWithErrorBoundary";
 export { createErrorDialogApolloLink } from "./error/errordialog/createErrorDialogApolloLink";
@@ -124,6 +124,7 @@ export { ErrorDialog, type ErrorDialogOptions, type ErrorDialogProps } from "./e
 export { ErrorDialogHandler } from "./error/errordialog/ErrorDialogHandler";
 export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext } from "./error/errordialog/ErrorScope";
 export { useErrorDialog, type UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
+export { ErrorHandlerProvider, useErrorHandler } from "./error/errorHandler/ErrorHandlerProvider";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";

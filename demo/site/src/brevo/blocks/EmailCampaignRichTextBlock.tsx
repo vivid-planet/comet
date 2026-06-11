@@ -15,7 +15,7 @@ function createTextBlockRenderFn(props: TypographyProps): TextBlockRenderFn {
         ));
 }
 
-export const defaultRichTextRenderers: Renderers = {
+const defaultRichTextRenderers: Renderers = {
     inline: {
         BOLD: (children, { key }) => <b key={key}>{children}</b>,
         ITALIC: (children, { key }) => <i key={key}>{children}</i>,

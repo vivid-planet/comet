@@ -35,6 +35,7 @@ import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { FileUploadsResolver } from "./src/file-uploads/file-uploads.resolver";
+import { FullTextSearchResolver } from "./src/full-text-search/full-text-search.resolver";
 import { SitePreviewResolver } from "./src/page-tree/site-preview.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
@@ -129,6 +130,7 @@ async function generateSchema(): Promise<void> {
         SitePreviewResolver,
         WarningResolver,
         createDamMediaAlternativeResolver({ File }),
+        FullTextSearchResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

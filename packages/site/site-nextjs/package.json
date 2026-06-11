@@ -1,6 +1,6 @@
 {
     "name": "@comet/site-nextjs",
-    "version": "9.0.0-beta.2",
+    "version": "9.0.0-beta.5",
     "description": "Comet Site Next.js package",
     "repository": {
         "type": "git",
@@ -18,7 +18,11 @@
             "import": "./lib/index.js"
         },
         "./css": "./lib/style.css",
-        "./webpackPersistedQueriesLoader": "./lib/site-react/lib/persistedQueries/webpackPersistedQueriesLoader.js"
+        "./server": {
+            "types": "./lib/server.d.ts",
+            "import": "./lib/server.js"
+        },
+        "./webpackPersistedQueriesLoader": "./lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
     "files": [
         "lib/*"
@@ -37,7 +41,8 @@
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml,css,scss}'",
         "lint:tsc": "tsc --noEmit",
-        "test": "vitest --run",
+        "test": "pnpm run test:unit",
+        "test:unit": "vitest --run",
         "test:watch": "vitest --watch"
     },
     "dependencies": {
@@ -48,25 +53,25 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@types/react": "^19.2.10",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^4.7.0",
         "chokidar-cli": "^3.0.0",
-        "eslint": "^9.39.2",
+        "eslint": "^9.39.4",
         "jsdom": "^28.1.0",
-        "next": "^16.0.3",
+        "next": "^16.2.6",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
-        "react": "^19.2.4",
-        "react-dom": "^19.2.4",
+        "react": "^19.2.6",
+        "react-dom": "^19.2.6",
         "rimraf": "^6.1.2",
         "rollup": "^4.44.2",
         "rollup-plugin-preserve-directives": "^0.4.0",
         "sass": "^1.89.2",
         "typescript": "^5.9.3",
-        "vite": "^5.4.21",
+        "vite": "^7.2.4",
         "vite-plugin-dts": "^4.5.4",
-        "vitest": "^4.0.16"
+        "vitest": "^4.1.8"
     },
     "peerDependencies": {
         "next": "^16.0.0",

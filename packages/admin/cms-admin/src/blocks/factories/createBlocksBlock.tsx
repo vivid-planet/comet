@@ -924,6 +924,20 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 return [...content, ...(block.extractTextContents?.(child.props, options) ?? [])];
             }, []);
         },
+        translateContent: async (state, translate) => {
+            const translatedBlocks = await Promise.all(
+                state.blocks.map(async (child) => {
+                    const block = blockForType(child.type);
+                    if (!block) {
+                        throw new Error(`No Block found for type ${child.type}`);
+                    }
+
+                    const translatedProps = block.translateContent ? await block.translateContent(child.props, translate) : child.props;
+                    return { ...child, props: translatedProps };
+                }),
+            );
+            return { ...state, blocks: translatedBlocks };
+        },
     };
 
     if (override) {

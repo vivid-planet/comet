@@ -50,7 +50,9 @@ import { RichTextBlockFixtureService } from "./generators/blocks/text-and-conten
 import { StandaloneHeadingBlockFixtureService } from "./generators/blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TableBlockFixtureService } from "./generators/blocks/text-and-content/table-block-fixture.service";
 import { TextImageBlockFixtureService } from "./generators/blocks/text-and-content/text-image-block-fixture.service";
+import { TipTapRichTextBlockFixtureService } from "./generators/blocks/text-and-content/tip-tap-rich-text-block-fixture.service";
 import { DocumentGeneratorService } from "./generators/document-generator.service";
+import { DraftJsMigrationPageFixtureService } from "./generators/draft-js-migration-page-fixture.service";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ImageFileFixtureService } from "./generators/image-file-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
@@ -86,6 +88,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         DamImageBlockFixtureService,
         DamVideoBlockFixtureService,
         DocumentGeneratorService,
+        DraftJsMigrationPageFixtureService,
         FileUploadsFixtureService,
         FullWidthImageBlockFixtureService,
         HeadingBlockFixtureService,
@@ -124,6 +127,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         NewsFixtureService,
         ProductListBlockFixtureService,
         TableBlockFixtureService,
+        TipTapRichTextBlockFixtureService,
     ],
 })
 export class FixturesModule {}

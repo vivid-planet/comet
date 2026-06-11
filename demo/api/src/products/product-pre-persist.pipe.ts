@@ -20,7 +20,7 @@ export class ProductPrePersistPipe implements ImporterPipe {
     }
 }
 
-export class ProductPrePersist extends Transform {
+class ProductPrePersist extends Transform {
     private persistedEntitiesAmount: number;
 
     constructor(

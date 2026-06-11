@@ -23,6 +23,7 @@ import { Command, CommandRunner } from "nest-commander";
 import slugify from "slugify";
 
 import { DocumentGeneratorService } from "./generators/document-generator.service";
+import { DraftJsMigrationPageFixtureService } from "./generators/draft-js-migration-page-fixture.service";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
@@ -66,6 +67,7 @@ export class FixturesCommand extends CommandRunner {
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly videoFixtureService: VideoFixtureService,
         private readonly newsFixtureService: NewsFixtureService,
+        private readonly draftJsMigrationPageFixtureService: DraftJsMigrationPageFixtureService,
     ) {
         super();
     }
@@ -134,6 +136,10 @@ export class FixturesCommand extends CommandRunner {
         this.logger.log("Generate Many Images Test Page...");
         await this.manyImagesTestPageFixtureService.execute();
         this.logger.log("Many Images Test Page created");
+
+        this.logger.log("Generate DraftJS Migration Demo Page...");
+        await this.draftJsMigrationPageFixtureService.execute();
+        this.logger.log("DraftJS Migration Demo Page created");
 
         this.logger.log("Generate Lorem Ispum Fixtures...");
         const NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT = 0; // Increase number to generate lorum ipsum fixtures

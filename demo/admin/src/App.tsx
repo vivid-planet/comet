@@ -4,6 +4,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import { BrevoConfigProvider } from "@comet/brevo-admin";
 import {
+    AzureAiTranslatorProvider,
     CometConfigProvider,
     type ContentScope,
     ContentScopeProvider,
@@ -12,6 +13,7 @@ import {
     SitePreview,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LicenseInfo } from "@mui/x-license";
@@ -69,6 +71,9 @@ export function App() {
         <CometConfigProvider
             {...config}
             graphQLApiUrl={`${config.apiUrl}/graphql`}
+            onError={(error, errorInfo) => {
+                console.error("Error caught by error boundary", error, errorInfo.componentStack);
+            }}
             pageTree={{
                 categories: pageTreeCategories,
                 documentTypes: pageTreeDocumentTypes,
@@ -77,6 +82,9 @@ export function App() {
             }}
             redirects={{
                 scopeParts: ["domain"],
+            }}
+            dataGrid={{
+                component: DataGridPro,
             }}
             dam={{
                 ...config.dam,
@@ -161,26 +169,28 @@ export function App() {
                                                 <GlobalStyle />
                                                 <ContentScopeProvider>
                                                     {({ match }) => (
-                                                        <Switch>
-                                                            <Route
-                                                                path={`${match.path}/preview`}
-                                                                render={(props) => (
-                                                                    <SitePreview
-                                                                        resolvePath={(path: string, scope) => {
-                                                                            return `/${scope.language}${path}`;
-                                                                        }}
-                                                                        {...props}
-                                                                    />
-                                                                )}
-                                                            />
-                                                            <Route
-                                                                render={() => (
-                                                                    <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                        <AppMasterMenuRoutes />
-                                                                    </MasterLayout>
-                                                                )}
-                                                            />
-                                                        </Switch>
+                                                        <AzureAiTranslatorProvider enabled showApplyTranslationDialog>
+                                                            <Switch>
+                                                                <Route
+                                                                    path={`${match.path}/preview`}
+                                                                    render={(props) => (
+                                                                        <SitePreview
+                                                                            resolvePath={(path: string, scope) => {
+                                                                                return `/${scope.language}${path}`;
+                                                                            }}
+                                                                            {...props}
+                                                                        />
+                                                                    )}
+                                                                />
+                                                                <Route
+                                                                    render={() => (
+                                                                        <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                            <AppMasterMenuRoutes />
+                                                                        </MasterLayout>
+                                                                    )}
+                                                                />
+                                                            </Switch>
+                                                        </AzureAiTranslatorProvider>
                                                     )}
                                                 </ContentScopeProvider>
                                             </RouterBrowserRouter>

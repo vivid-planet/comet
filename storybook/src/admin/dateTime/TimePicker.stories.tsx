@@ -1,6 +1,6 @@
 import { FieldContainer, TimePicker, TimePickerField } from "@comet/admin";
 import { Grid } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Form } from "react-final-form";
 

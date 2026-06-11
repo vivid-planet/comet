@@ -225,6 +225,17 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return Object.values(contentsPerBlock).reduce((contents, blockContents) => [...contents, ...blockContents], []);
             },
+            translateContent: async (state, translate) => {
+                const translatedState = await applyToCompositeBlocksAsync(
+                    compositeBlocks,
+                    async ([block, options], attr) => {
+                        const extractedData = extractData([block, options], attr, state);
+                        return block.translateContent ? block.translateContent(extractedData, translate) : extractedData;
+                    },
+                    { flatten: true },
+                );
+                return { ...state, ...translatedState };
+            },
         },
         api: {
             adminComponentProps,

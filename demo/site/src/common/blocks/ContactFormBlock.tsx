@@ -36,7 +36,7 @@ export const ContactFormBlock = withPreview(
     ({ data }: PropsWithData<ContactFormBlockData>) => {
         const intl = useIntl();
         const params = useParams<{ visibility: string; domain: string; language: string }>();
-        const language = params.language;
+        const language = params?.language;
 
         const { recaptchaSiteKey } = useSiteConfig();
 

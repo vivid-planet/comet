@@ -445,6 +445,31 @@ describe("generateGrid", () => {
         expect(result.code).toMatch(/value: 42/);
         expect(result.code).not.toMatch(/value: "42"/);
     });
+    it("should pass initialPageSize as pageSize to useDataGridRemote", () => {
+        const config: GridConfig<Book> = {
+            type: "grid",
+            gqlType: "Book",
+            initialPageSize: 50,
+            columns: [
+                {
+                    type: "text",
+                    name: "title",
+                },
+            ],
+        };
+
+        const result = generateGrid(
+            {
+                exportName: "BooksGrid",
+                baseOutputFilename: "BooksGrid",
+                targetDirectory: "/test",
+                gqlIntrospection: introspection,
+            },
+            config,
+        );
+
+        expect(result.code).toMatch(/useDataGridRemote\(\{[^}]*pageSize: 50/s);
+    });
     it("should generate onRowClick prop when rowActionProp is true", () => {
         const config: GridConfig<Book> = {
             type: "grid",

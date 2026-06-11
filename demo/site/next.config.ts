@@ -1,9 +1,9 @@
 import nextBundleAnalyzer from "@next/bundle-analyzer";
+import type { NextConfig } from "next";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
 import cometConfig from "./src/comet-config.json" with { type: "json" };
-import { type NextConfig } from "next";
 
 const withBundleAnalyzer = nextBundleAnalyzer({
     // eslint-disable-next-line no-restricted-syntax -- ANALYZE is a build-time-only dev tool flag, not environment-specific
@@ -18,7 +18,6 @@ const nextConfig: NextConfig = {
     },
     experimental: {
         optimizePackageImports: ["@comet/site-nextjs"],
-        serverComponentsExternalPackages: ["mjml", "react-intl", "@faire/mjml-react"],
     },
     poweredByHeader: false,
     // https://nextjs.org/docs/advanced-features/security-headers (Content-Security-Policy and CORS are set in middleware/cspHeaders.ts)

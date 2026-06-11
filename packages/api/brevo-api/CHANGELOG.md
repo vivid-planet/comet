@@ -1,5 +1,57 @@
 # @comet/brevo-api
 
+## 9.0.0-beta.5
+
+### Patch Changes
+
+- Updated dependencies [c0cee12]
+- Updated dependencies [9d5f045]
+- Updated dependencies [b0ceb9c]
+- Updated dependencies [6b7adc7]
+- Updated dependencies [a2c2eb5]
+- Updated dependencies [8ad9dd8]
+    - @comet/cms-api@9.0.0-beta.5
+
+## 9.0.0-beta.4
+
+### Patch Changes
+
+- Updated dependencies [c6703db]
+- Updated dependencies [127a492]
+- Updated dependencies [fa5c7a4]
+- Updated dependencies [31d9296]
+- Updated dependencies [2fe9d4b]
+    - @comet/cms-api@9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+### Major Changes
+
+- 77a371e: Prevent importing dev dependencies in the API
+
+    Add `import/no-extraneous-dependencies` rule with `devDependencies` restriction to the NestJS ESLint config, preventing accidental imports of dev-only packages in production source files. Dev dependencies may only be imported in test files.
+
+    Fix `@comet/brevo-api` to correctly declare `@nestjs/graphql`, `graphql`, `graphql-scalars`, `lodash.isequal`, and `uuid` as dependencies/peerDependencies instead of devDependencies, since they are imported in source code.
+
+### Minor Changes
+
+- dd51208: Update TypeScript compilation target to ES2023 and lib to ES2023 to match the required Node.js v22
+
+### Patch Changes
+
+- Updated dependencies [a50793a]
+- Updated dependencies [cac2b3b]
+- Updated dependencies [f6a2932]
+- Updated dependencies [71dce06]
+- Updated dependencies [0e7d7e9]
+- Updated dependencies [962a320]
+- Updated dependencies [802b0b8]
+- Updated dependencies [8bf0e5b]
+- Updated dependencies [2ea835c]
+- Updated dependencies [dd51208]
+- Updated dependencies [8722deb]
+    - @comet/cms-api@9.0.0-beta.3
+
 ## 9.0.0-beta.2
 
 ### Patch Changes
