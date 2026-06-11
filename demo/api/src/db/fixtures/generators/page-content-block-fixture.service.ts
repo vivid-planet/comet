@@ -27,6 +27,7 @@ import { ProductListBlockFixtureService } from "./blocks/text-and-content/produc
 import { StandaloneHeadingBlockFixtureService } from "./blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TableBlockFixtureService } from "./blocks/text-and-content/table-block-fixture.service";
 import { TextImageBlockFixtureService } from "./blocks/text-and-content/text-image-block-fixture.service";
+import { TipTapRichTextBlockFixtureService } from "./blocks/text-and-content/tip-tap-rich-text-block-fixture.service";
 
 export type BlockCategory = "layout" | "media" | "navigation" | "teaser" | "textAndContent";
 
@@ -55,6 +56,7 @@ export class PageContentBlockFixtureService {
         private readonly productListBlockFixtureService: ProductListBlockFixtureService,
         private readonly pageTreeIndexBlockFixtureService: PageTreeIndexBlockFixtureService,
         private readonly tableBlockFixtureService: TableBlockFixtureService,
+        private readonly tipTapRichTextBlockFixtureService: TipTapRichTextBlockFixtureService,
     ) {}
 
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
@@ -62,8 +64,8 @@ export class PageContentBlockFixtureService {
 
         type SupportedBlocks = (typeof blocks)[number]["type"];
 
-        // TODO add fixtures for newsDetail, newsList and tipTapRichText
-        const fixtures: Record<Exclude<SupportedBlocks, "newsDetail" | "newsList" | "tipTapRichText">, [BlockCategory, BlockFixture]> = {
+        // TODO add fixtures for newsDetail and newsList
+        const fixtures: Record<Exclude<SupportedBlocks, "newsDetail" | "newsList">, [BlockCategory, BlockFixture]> = {
             accordion: ["layout", this.accordionBlockFixtureService],
             columns: ["layout", this.columnsBlockFixtureService],
             contentGroup: ["layout", this.contentGroupBlockFixtureService],
@@ -85,6 +87,7 @@ export class PageContentBlockFixtureService {
             textImage: ["textAndContent", this.textImageBlockFixtureService],
             productList: ["textAndContent", this.productListBlockFixtureService],
             table: ["textAndContent", this.tableBlockFixtureService],
+            tipTapRichText: ["textAndContent", this.tipTapRichTextBlockFixtureService],
         };
 
         const supportedBlocksFixtureGenerators = Object.entries(fixtures)
