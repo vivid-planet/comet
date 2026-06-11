@@ -1,6 +1,6 @@
 ---
 name: comet-mail-react
-description: Guide for building HTML emails with @comet/mail-react and MJML. Use whenever working on email templates, mail markup, MJML components, email theming, email styling, responsive emails, column layouts, multi-column email sections, or anything involving @comet/mail-react or HTML email development — even for seemingly simple tasks like putting content side-by-side in columns, since email client compatibility is a minefield that requires specific patterns and research before implementing.
+description: Guide for building HTML emails with @comet/mail-react and MJML. Use whenever working on email templates, mail markup, MJML components, email theming, email styling, responsive emails, column layouts, multi-column email sections, rendering Comet CMS block data (such as pixel-image blocks) in emails, or anything involving @comet/mail-react or HTML email development — even for seemingly simple tasks like putting content side-by-side in columns, since email client compatibility is a minefield that requires specific patterns and research before implementing.
 ---
 
 # Building HTML Emails with @comet/mail-react
@@ -169,6 +169,23 @@ function MyEmail() {
 }
 ```
 
+### Contributing to `<MjmlHead>` and `<MjmlAttributes>`
+
+`MjmlMailRoot` accepts `head` and `attributes` slot props for content that can't be expressed via `registerStyles`:
+
+- `head` — use for `<MjmlFont>`, `<MjmlConditionalComment>`, `<MjmlPreview>`, or `<MjmlStyle>` content that depends on React context at render time.
+- `attributes` — use for `<MjmlClass>` or per-element defaults (e.g. `<MjmlText fontSize="14px" />`).
+
+Pass the children directly — do not wrap them in another `<MjmlHead>` / `<MjmlAttributes>`:
+
+```tsx
+<MjmlMailRoot theme={theme} attributes={<MjmlClass name="link" color="blue" />} head={<MjmlFont name="Foo" href="https://example.com/foo.css" />}>
+    {/* email content */}
+</MjmlMailRoot>
+```
+
+For module-scoped responsive CSS that depends only on the theme, prefer `registerStyles`.
+
 ### Module Augmentation for Type-Safety
 
 `@comet/mail-react` uses TypeScript module augmentation to make custom theme tokens type-safe. Always augment these interfaces when extending the theme — TypeScript will then error on typos or unknown keys.
@@ -210,7 +227,31 @@ declare module "@comet/mail-react" {
 
 Place `declare module` blocks in your theme file below the `createTheme()` call.
 
-→ For the full theme structure, defaults, and all component props, read [`references/components-and-theme.md`](references/components-and-theme.md).
+→ For the full theme structure, responsive values, module augmentation, and scoped theming, read [`references/components-and-theme.md`](references/components-and-theme.md).
+
+---
+
+## Configuration
+
+`Config` exposes environment-specific values — e.g. asset base URLs — to every component in the tree. Add keys via module augmentation:
+
+```ts
+declare module "@comet/mail-react" {
+    interface Config {
+        assetBaseUrl?: string;
+    }
+}
+```
+
+Wire at the root and read from any descendant:
+
+```tsx
+import { MjmlMailRoot, useConfig, type Config } from "@comet/mail-react";
+
+const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
+
+<MjmlMailRoot config={config}>{/* descendants can call useConfig() */}</MjmlMailRoot>;
+```
 
 ---
 
@@ -218,31 +259,88 @@ Place `declare module` blocks in your theme file below the `createTheme()` call.
 
 ### MJML Components (Layout Level)
 
-| Component      | Purpose                                                           | CSS Classes                                                     |
-| -------------- | ----------------------------------------------------------------- | --------------------------------------------------------------- |
-| `MjmlMailRoot` | Root element, provides theme, renders `<mjml>` skeleton           | —                                                               |
-| `MjmlWrapper`  | Groups sections sharing a background; theme-aware default bg      | —                                                               |
-| `MjmlSection`  | Full-width row, supports `indent` and `disableResponsiveBehavior` | `.mjmlSection`, `.mjmlSection--indented`                        |
-| `MjmlColumn`   | Vertical column inside a section                                  | —                                                               |
-| `MjmlText`     | Themed text block with `variant` and `bottomSpacing`              | `.mjmlText`, `.mjmlText--{variant}`, `.mjmlText--bottomSpacing` |
-| `MjmlImage`    | Image                                                             | —                                                               |
-| `MjmlButton`   | Button (ending tag)                                               | —                                                               |
-| `MjmlDivider`  | Horizontal divider                                                | —                                                               |
-| `MjmlSpacer`   | Vertical spacing                                                  | —                                                               |
-| `MjmlRaw`      | Raw HTML escape hatch (ending tag)                                | —                                                               |
+| Component             | Purpose                                                            | CSS Classes                                                     |
+| --------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------- |
+| `MjmlMailRoot`        | Root element, provides theme, renders `<mjml>` skeleton            | —                                                               |
+| `MjmlWrapper`         | Groups sections sharing a background; theme-aware default bg       | —                                                               |
+| `MjmlSection`         | Full-width row; theme indentation, columns stack on mobile         | `.mjmlSection`, `.mjmlSection--indented`                        |
+| `MjmlColumn`          | Vertical column inside a section                                   | —                                                               |
+| `MjmlText`            | Themed text block with typography variants                         | `.mjmlText`, `.mjmlText--{variant}`, `.mjmlText--bottomSpacing` |
+| `MjmlImage`           | Responsive image                                                   | `.mjmlImage`                                                    |
+| `MjmlPixelImageBlock` | Renders a Comet CMS `PixelImageBlockData` via `MjmlImage`          | `.mjmlPixelImageBlock`                                          |
+| `MjmlButton`          | Themed button (ending tag), theme styling and variants             | `.mjmlButton`, `.mjmlButton--{variant}`                         |
+| `MjmlDivider`         | Themed horizontal divider, configurable through theme and variants | `.mjmlDivider`, `.mjmlDivider--{variant}`                       |
+| `MjmlSpacer`          | Vertical spacing                                                   | —                                                               |
+| `MjmlRaw`             | Raw HTML escape hatch (ending tag)                                 | —                                                               |
 
 ### HTML Components (Inside Ending Tags)
 
-| Component        | Purpose                                                  | CSS Classes                                                     |
-| ---------------- | -------------------------------------------------------- | --------------------------------------------------------------- |
-| `HtmlText`       | Themed text as HTML element (default `<td>`)             | `.htmlText`, `.htmlText--{variant}`, `.htmlText--bottomSpacing` |
-| `HtmlInlineLink` | `<a>` that inherits parent text styles, works in Outlook | `.htmlInlineLink`                                               |
+| Component             | Purpose                                                            | CSS Classes                                                     |
+| --------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------- |
+| `HtmlText`            | Themed text rendered as an HTML element                            | `.htmlText`, `.htmlText--{variant}`, `.htmlText--bottomSpacing` |
+| `HtmlInlineLink`      | `<a>` that inherits parent text styles, works in Outlook           | `.htmlInlineLink`                                               |
+| `HtmlImage`           | Responsive image (`<img>`)                                         | `.htmlImage`                                                    |
+| `HtmlPixelImageBlock` | Renders a Comet CMS `PixelImageBlockData` as `<img>`               | `.htmlPixelImageBlock`                                          |
+| `HtmlButton`          | Themed button for ending tags or non-MJML contexts                 | `.htmlButton`, `.htmlButton--{variant}`                         |
+| `HtmlDivider`         | Themed horizontal divider, configurable through theme and variants | `.htmlDivider`, `.htmlDivider--{variant}`                       |
 
-Text components (`MjmlText`, `HtmlText`) support `variant` and `bottomSpacing` props tied to the theme. Variants define typography presets (font size, weight, line height, color). Both support responsive values that change at different breakpoints. Set a `defaultVariant` in the theme to apply a variant automatically when none is specified.
+Variants are named typography presets (font size, weight, line height, color) defined in the theme; their values can change per breakpoint.
 
 All components are imported from `@comet/mail-react` — never from `@faire/mjml-react` directly.
 
-→ For complete component props, responsive values, scoped theming, and MJML re-exports, read [`references/components-and-theme.md`](references/components-and-theme.md).
+→ For theme tokens, responsive values, component behavior, scoped theming, and MJML re-exports, read [`references/components-and-theme.md`](references/components-and-theme.md).
+
+---
+
+## Blocks
+
+`@comet/mail-react` ships components that render Comet CMS block data — currently `PixelImageBlockData`. Reach for these instead of raw `MjmlImage` / `<img>` whenever the source is a CMS block-data record.
+
+### Pixel-image blocks
+
+| Component             | Renders                 | Use within                                     |
+| --------------------- | ----------------------- | ---------------------------------------------- |
+| `MjmlPixelImageBlock` | re-exported `MjmlImage` | an `MjmlColumn` (standard MJML layout)         |
+| `HtmlPixelImageBlock` | raw `<img>`             | raw HTML or MJML ending tags such as `MjmlRaw` |
+
+```tsx
+<MjmlSection indent>
+    <MjmlColumn>
+        <MjmlPixelImageBlock data={pixelImageData} width={536} />
+    </MjmlColumn>
+</MjmlSection>
+```
+
+#### Configuration
+
+Both blocks require `config.pixelImageBlock` and throw without it. Wire it once on `MjmlMailRoot.config`:
+
+```tsx
+const config: Config = {
+    pixelImageBlock: {
+        validSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
+        baseUrl: process.env.API_URL,
+    },
+};
+```
+
+#### Render width
+
+The block picks the source size from the configured `validSizes`, accounting for retina displays. Use `largestPossibleRenderWidth` when the image stretches wider on a narrower breakpoint than its desktop width — e.g. a two-column layout that stacks on mobile.
+
+```tsx
+<MjmlPixelImageBlock data={pixelImageData} width={300} largestPossibleRenderWidth={420} />
+```
+
+#### Aspect ratio
+
+Without `aspectRatio`, the rendered ratio comes from the DAM crop area. Pass `aspectRatio` to override it.
+
+```tsx
+<MjmlPixelImageBlock data={pixelImageData} width={536} aspectRatio="16x9" />
+```
+
+When `data.damFile?.image` is absent, both blocks render nothing — no element, no error. Render a placeholder at the call site if you need one.
 
 ---
 

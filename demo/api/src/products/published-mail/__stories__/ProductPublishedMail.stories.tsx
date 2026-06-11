@@ -7,6 +7,7 @@ type Story = StoryObj<typeof Mail>;
 const config: Meta = {
     title: "products/ProductPublishedMail",
     component: Mail,
+    parameters: { mailRoot: false },
     argTypes: {
         countProductPublished: {
             control: "select",

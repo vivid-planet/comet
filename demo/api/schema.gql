@@ -406,6 +406,7 @@ type DamFileImage {
   height: Int!
   id: ID!
   url(height: Int!, width: Int!): String
+  urlTemplate: String
   width: Int!
 }
 
@@ -637,12 +638,22 @@ input EmailCampaignUpdateInput {
 }
 
 type EntityInfo {
+  entityName: String!
+  id: String!
   name: String!
   secondaryInformation: String
 }
 
 input FileFilterInput {
+  """
+  Restrict the result to files with these IDs. When a non-empty list is provided, the folder constraint is bypassed and matches are returned regardless of which folder they live in.
+  """
+  ids: [ID!]
   mimetypes: [String!]
+
+  """
+  Full-text search across file names. When set, the folder constraint is bypassed and results span the whole scope.
+  """
   searchText: String
 }
 
@@ -979,6 +990,7 @@ type Mutation {
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
   deleteRedirect(id: ID!): Boolean!
+  deleteRedirects(ids: [ID!]!): Boolean!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   moveDamFolders(folderIds: [ID!]!, scope: DamScopeInput!, targetFolderId: ID): [DamFolder!]!
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
@@ -1299,6 +1311,11 @@ type PaginatedEmailCampaigns {
   totalCount: Int!
 }
 
+type PaginatedEntityInfo {
+  nodes: [EntityInfo!]!
+  totalCount: Int!
+}
+
 type PaginatedManufacturerCountries {
   nodes: [ManufacturerCountry!]!
   totalCount: Int!
@@ -1368,6 +1385,7 @@ enum Permission {
   dam
   dependencies
   fileUploads
+  fullTextSearch
   impersonation
   manufacturers
   news
@@ -1420,6 +1438,7 @@ type Product {
   price: Float
   priceList: FileUpload
   priceRange: ProductPriceRange
+  relatedImages: [DamFile!]!
   slug: String!
   soldCount: Int
   statistics: ProductStatistics
@@ -1568,7 +1587,9 @@ input ProductFilter {
   or: [ProductFilter!]
   price: NumberFilter
   priceList: ManyToOneFilter
+  relatedImages: ManyToManyFilter
   slug: StringFilter
+  soldCount: NumberFilter
   status: ProductStatusEnumFilter
   tags: ManyToManyFilter
   tagsWithStatus: OneToManyFilter
@@ -1613,6 +1634,7 @@ input ProductInput {
   price: Float = null
   priceList: ID = null
   priceRange: ProductPriceRangeInput
+  relatedImages: [ID!]! = []
   slug: String!
   statistics: ProductNestedProductStatisticsInput
   status: ProductStatus! = Unpublished
@@ -1699,6 +1721,7 @@ enum ProductSortField {
   priceList_name
   priceList_updatedAt
   slug
+  soldCount
   statistics_createdAt
   statistics_updatedAt
   statistics_views
@@ -1828,6 +1851,7 @@ input ProductUpdateInput {
   price: Float
   priceList: ID
   priceRange: ProductPriceRangeInput
+  relatedImages: [ID!]
   slug: String
   statistics: ProductNestedProductStatisticsInput
   status: ProductStatus
@@ -1894,6 +1918,7 @@ enum ProductVariantSortField {
   product_price
   product_priceList
   product_slug
+  product_soldCount
   product_status
   product_title
   product_type
@@ -1926,7 +1951,20 @@ type Query {
   currentUser: CurrentUser!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput!): [FilenameResponse!]!
   damFile(id: ID!): DamFile!
-  damFilesList(filter: FileFilterInput, folderId: ID, includeArchived: Boolean = false, limit: Int! = 25, offset: Int! = 0, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamFiles!
+  damFilesList(
+    filter: FileFilterInput
+
+    """
+    Folder to list files from. When omitted, files at the scope root are returned. Ignored when filter.searchText or filter.ids is set.
+    """
+    folderId: ID
+    includeArchived: Boolean = false
+    limit: Int! = 25
+    offset: Int! = 0
+    scope: DamScopeInput!
+    sortColumnName: String
+    sortDirection: SortDirection! = ASC
+  ): PaginatedDamFiles!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID, scope: DamScopeInput!): DamFolder
   damFoldersFlat(scope: DamScopeInput!): [DamFolder!]!
@@ -1938,6 +1976,7 @@ type Query {
   damMediaAlternatives(alternative: ID, for: ID, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DamMediaAlternativeSort!], type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   findCopiesOfFileInScope(id: ID!, imageCropArea: ImageCropAreaInput, scope: DamScopeInput!): [DamFile!]!
   footer(scope: FooterScopeInput!): Footer
+  fullTextSearch(limit: Int! = 25, offset: Int! = 0, search: String!): PaginatedEntityInfo!
   isBrevoConfigDefined(scope: EmailCampaignContentScopeInput!): Boolean!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!

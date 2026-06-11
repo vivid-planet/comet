@@ -7,9 +7,10 @@ export const ContentTranslationServiceProvider = ({
     enabled,
     showApplyTranslationDialog,
     translate,
+    batchTranslate,
 }: PropsWithChildren<ContentTranslationServiceContext>) => {
     return (
-        <ContentTranslationServiceContext.Provider value={{ enabled, showApplyTranslationDialog, translate }}>
+        <ContentTranslationServiceContext.Provider value={{ enabled, showApplyTranslationDialog, translate, batchTranslate }}>
             {children}
         </ContentTranslationServiceContext.Provider>
     );

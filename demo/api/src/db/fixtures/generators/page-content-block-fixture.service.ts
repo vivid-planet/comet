@@ -28,6 +28,7 @@ import { ProductListBlockFixtureService } from "./blocks/text-and-content/produc
 import { StandaloneHeadingBlockFixtureService } from "./blocks/text-and-content/standalone-heading-block-fixture.service";
 import { TableBlockFixtureService } from "./blocks/text-and-content/table-block-fixture.service";
 import { TextImageBlockFixtureService } from "./blocks/text-and-content/text-image-block-fixture.service";
+import { TipTapRichTextBlockFixtureService } from "./blocks/text-and-content/tip-tap-rich-text-block-fixture.service";
 
 export type BlockCategory = "layout" | "media" | "navigation" | "teaser" | "textAndContent" | "form";
 
@@ -57,6 +58,7 @@ export class PageContentBlockFixtureService {
         private readonly pageTreeIndexBlockFixtureService: PageTreeIndexBlockFixtureService,
         private readonly contactFormBlockFixtureService: ContactFormBlockFixtureService,
         private readonly tableBlockFixtureService: TableBlockFixtureService,
+        private readonly tipTapRichTextBlockFixtureService: TipTapRichTextBlockFixtureService,
     ) {}
 
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
@@ -88,6 +90,7 @@ export class PageContentBlockFixtureService {
             productList: ["textAndContent", this.productListBlockFixtureService],
             contactForm: ["form", this.contactFormBlockFixtureService],
             table: ["textAndContent", this.tableBlockFixtureService],
+            tipTapRichText: ["textAndContent", this.tipTapRichTextBlockFixtureService],
         };
 
         const supportedBlocksFixtureGenerators = Object.entries(fixtures)

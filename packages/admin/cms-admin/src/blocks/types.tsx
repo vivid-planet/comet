@@ -91,6 +91,13 @@ export interface BlockMethods<
     replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
     resolveDependencyPath: (state: State, jsonPath: string) => string;
     extractTextContents?: (state: State, options: { includeInvisibleContent: boolean }) => string[];
+    /**
+     * Translates all translatable text content within a block's state.
+     * Each block decides what is translatable (e.g., RTE content, plain text fields)
+     * and what should remain unchanged (e.g., URLs, email addresses).
+     * Container blocks recursively delegate to their children.
+     */
+    translateContent?: (state: State, translate: (text: string) => Promise<string>) => Promise<State>;
     icon?: (state: State) => ReactNode;
 }
 

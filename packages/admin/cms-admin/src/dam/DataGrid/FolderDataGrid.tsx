@@ -12,6 +12,7 @@ import {
     ToolbarActions,
     ToolbarItem,
     Tooltip,
+    useBufferedRowCount,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
@@ -20,7 +21,6 @@ import {
 import { Info as InfoIcon } from "@comet/admin-icons";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
 import {
-    DataGrid,
     GridColumnHeaderTitle,
     type GridRowClassNameParams,
     type GridRowSelectionModel,
@@ -32,6 +32,7 @@ import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
+import { DataGrid } from "../../dataGrid/DataGrid";
 import type { GQLDamItemType } from "../../graphql.generated";
 import { useDamConfig } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
@@ -87,10 +88,13 @@ interface FolderDataGridProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
 }
 
+const isSelectableRow = ({ row }: { row: GQLDamFileTableFragment | GQLDamFolderTableFragment }) => isFile(row);
+
 type FolderDataGridToolbarProps = {
     id?: string;
     filterApi: IFilterApi<DamFilter>;
     hideArchiveFilter?: boolean;
+    hideSelectiveActions?: boolean;
     additionalToolbarItems?: ReactNode;
     uploadFilters: {
         allowedMimetypes?: string[];
@@ -101,6 +105,7 @@ function FolderDataGridToolbar({
     id: currentFolderId,
     filterApi,
     hideArchiveFilter,
+    hideSelectiveActions,
     additionalToolbarItems,
     uploadFilters,
 }: FolderDataGridToolbarProps) {
@@ -131,6 +136,7 @@ function FolderDataGridToolbar({
                     }}
                     folderId={data?.damFolder.id}
                     filter={uploadFilters}
+                    hideSelectiveActions={hideSelectiveActions}
                 />
 
                 <UploadFilesButton folderId={data?.damFolder.id} filter={uploadFilters} />
@@ -145,7 +151,10 @@ const FolderDataGrid = ({
     breadcrumbs,
     hideContextMenu = false,
     hideArchiveFilter,
+    toolbarOptions,
     hideMultiselect,
+    disableFolderSelection,
+    keepNonExistentRowsSelected,
     renderDamLabel,
     ...props
 }: FolderDataGridProps) => {
@@ -427,6 +436,8 @@ const FolderDataGrid = ({
         },
     });
 
+    const rowCount = useBufferedRowCount(dataGridData?.damItemsList.totalCount);
+
     const { matches } = useDamSearchHighlighting({
         items: dataGridData?.damItemsList.nodes ?? [],
         query: filterApi.current.searchText ?? "",
@@ -650,18 +661,20 @@ const FolderDataGrid = ({
                     {...dataGridProps}
                     rowHeight={58}
                     rows={dataGridData?.damItemsList.nodes ?? []}
-                    rowCount={dataGridData?.damItemsList.totalCount ?? undefined}
+                    rowCount={rowCount}
                     loading={loading}
                     pageSizeOptions={[10, 20, 50]}
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
+                    keepNonExistentRowsSelected={keepNonExistentRowsSelected}
+                    isRowSelectable={disableFolderSelection ? isSelectableRow : undefined}
                     rowSelectionModel={{ type: "include", ids: new Set(damSelectionActionsApi.selectionMap.keys()) }}
                     onRowSelectionModelChange={handleSelectionModelChange}
                     disableRowSelectionExcludeModel
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
-                        contextMenu: !hideContextMenu,
+                        actions: !hideContextMenu,
                     }}
                     slots={{
                         toolbar: FolderDataGridToolbar as GridSlotsComponent["toolbar"],
@@ -673,6 +686,7 @@ const FolderDataGrid = ({
                             filterApi,
                             uploadFilters,
                             additionalToolbarItems: props.additionalToolbarItems,
+                            hideSelectiveActions: toolbarOptions?.hideSelectiveActions,
                         } as FolderDataGridToolbarProps,
                     }}
                     showToolbar

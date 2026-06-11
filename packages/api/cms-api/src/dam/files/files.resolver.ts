@@ -1,5 +1,5 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, wrap } from "@mikro-orm/postgresql";
 import { NotFoundException, Type } from "@nestjs/common";
 import { Args, Context, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
@@ -21,6 +21,7 @@ import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
 import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
 import { FileInterface } from "./entities/file.entity";
+import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 
@@ -253,6 +254,18 @@ export function createFilesResolver({
         @ResolveField(() => [DamMediaAlternative])
         async thisFileIsAlternativeFor(@Parent() file: FileInterface): Promise<DamMediaAlternative[]> {
             return file.thisFileIsAlternativeFor.loadItems();
+        }
+
+        @ResolveField(() => DamFileImage, { nullable: true })
+        async image(@Parent() file: FileInterface): Promise<DamFileImage | undefined> {
+            // Mikro-ORM's `eager: true` isn't honored when files are loaded via Collection navigation
+            // (e.g. `someEntity.files.loadItems()`), so the `image` Reference can arrive uninitialized.
+            // The `isInitialized` check skips the extra fetch when `image` was already hydrated upstream
+            // (e.g. by `FilesService.selectQueryBuilder`'s `leftJoinAndSelect`).
+            if (file.image && !wrap(file.image).isInitialized()) {
+                await wrap(file.image).init();
+            }
+            return file.image;
         }
     }
 

@@ -1,6 +1,6 @@
 import { IsValidRedirectSource } from "@comet/cms-api";
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import {
     IsEmail,
     IsISO8601,
@@ -13,6 +13,7 @@ import {
     ValidatorConstraintInterface,
 } from "class-validator";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { generateCrud } from "../../generateCrud/generate-crud";
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";

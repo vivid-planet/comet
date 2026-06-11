@@ -2,6 +2,7 @@ import { DragIndicator } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import type { GridColDef, GridColumnHeaderParams, GridValidRowModel } from "@mui/x-data-grid";
 import {
+    // eslint-disable-next-line no-restricted-imports
     DataGridPro,
     GRID_REORDER_COL_DEF,
     type GridEventListener,

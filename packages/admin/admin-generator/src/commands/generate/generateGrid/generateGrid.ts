@@ -722,7 +722,7 @@ export function generateGrid<T extends { __typename?: string }>(
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
     const gridToolbarComponentName = `${gqlTypePlural}GridToolbar`;
     const dataGridRemoteParameters =
-        config.initialSort || config.queryParamsPrefix || config.initialFilter
+        config.initialSort || config.queryParamsPrefix || config.initialFilter || config.initialPageSize
             ? `{${
                   config.initialSort
                       ? ` initialSort: [${config.initialSort
@@ -747,6 +747,7 @@ export function generateGrid<T extends { __typename?: string }>(
                       : ""
               }
               ${config.queryParamsPrefix ? `queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
+              ${config.initialPageSize ? `pageSize: ${config.initialPageSize},` : ""}
               }`
             : "";
 
