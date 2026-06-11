@@ -36,10 +36,14 @@
         "packages/admin/admin": {
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": [".storybook/public/mockServiceWorker.js"],
-            "ignoreDependencies": ["@mui/x-data-grid-premium"]
+            "ignoreDependencies": ["@mui/x-data-grid-premium", "react-dnd"]
         },
         "packages/admin/admin-color-picker": {
             "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/admin-legacy": {
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["@comet/eslint-plugin"]
         },
         "packages/admin/admin-date-time": {
             "project": ["./src/**/*.{ts,tsx}"]

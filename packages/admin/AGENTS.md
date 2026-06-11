@@ -4,17 +4,18 @@ This directory contains all admin-related packages for the Comet framework.
 
 ## Packages
 
-| Package                     | Description                                                              |
-| --------------------------- | ------------------------------------------------------------------------ |
-| `@comet/admin`              | Core admin components and framework (React, MUI, Apollo, Final Form)     |
-| `@comet/admin-babel-preset` | Shared Babel preset for transpiling admin packages                       |
-| `@comet/admin-color-picker` | Color picker form field component                                        |
-| `@comet/admin-date-time`    | Date/time picker form field components                                   |
-| `@comet/admin-icons`        | SVG icon library as React components                                     |
-| `@comet/admin-rte`          | Rich text editor component (Draft.js-based)                              |
-| `@comet/admin-generator`    | CLI tool that generates admin CRUD UIs from GraphQL schemas              |
-| `@comet/cms-admin`          | Admin UI for CMS features (pages, blocks, content management)            |
-| `@comet/brevo-admin`        | Admin UI for Brevo email/marketing integration                           |
+| Package                     | Description                                                          |
+| --------------------------- | -------------------------------------------------------------------- |
+| `@comet/admin`              | Core admin components and framework (React, MUI, Apollo, Final Form) |
+| `@comet/admin-babel-preset` | Shared Babel preset for transpiling admin packages                   |
+| `@comet/admin-color-picker` | Color picker form field component                                    |
+| `@comet/admin-date-time`    | Date/time picker form field components                               |
+| `@comet/admin-icons`        | SVG icon library as React components                                 |
+| `@comet/admin-legacy`       | Legacy/deprecated admin components (e.g. the Comet table components) |
+| `@comet/admin-rte`          | Rich text editor component (Draft.js-based)                          |
+| `@comet/admin-generator`    | CLI tool that generates admin CRUD UIs from GraphQL schemas          |
+| `@comet/cms-admin`          | Admin UI for CMS features (pages, blocks, content management)        |
+| `@comet/brevo-admin`        | Admin UI for Brevo email/marketing integration                       |
 
 ## Storybook
 
@@ -52,12 +53,13 @@ All packages use **Vitest** as the test framework.
 
 ### Which packages have tests
 
-| Package              | Test Environment | Setup File       |
-| -------------------- | ---------------- | ---------------- |
-| `@comet/admin`       | jsdom            | vitest.setup.ts  |
-| `@comet/admin-rte`   | jsdom            | —                |
-| `@comet/admin-generator` | node (default) | —            |
-| `@comet/cms-admin`   | jsdom            | vitest.setup.ts  |
+| Package                  | Test Environment | Setup File      |
+| ------------------------ | ---------------- | --------------- |
+| `@comet/admin`           | jsdom            | vitest.setup.ts |
+| `@comet/admin-legacy`    | jsdom            | —               |
+| `@comet/admin-rte`       | jsdom            | —               |
+| `@comet/admin-generator` | node (default)   | —               |
+| `@comet/cms-admin`       | jsdom            | vitest.setup.ts |
 
 The remaining packages (`admin-babel-preset`, `admin-color-picker`, `admin-date-time`, `admin-icons`, `brevo-admin`) do not have tests.
 

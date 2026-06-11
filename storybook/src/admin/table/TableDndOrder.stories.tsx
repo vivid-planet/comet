@@ -1,4 +1,5 @@
-import { Button, Stack, StackLink, StackPage, StackSwitch, TableDndOrder, TableLocalChanges } from "@comet/admin";
+import { Button, Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
+import { TableDndOrder, TableLocalChanges } from "@comet/admin-legacy";
 import { Stack as MuiStack } from "@mui/material";
 
 import { dndProviderDecorator } from "../../dnd.decorator";

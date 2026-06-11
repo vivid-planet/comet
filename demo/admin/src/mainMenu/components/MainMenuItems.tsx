@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
-import { MainContent, StackLink, Table, TableQuery, Toolbar, ToolbarAutomaticTitleItem, useTableQuery } from "@comet/admin";
+import { MainContent, StackLink, Toolbar, ToolbarAutomaticTitleItem } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
+import { Table, TableQuery, useTableQuery } from "@comet/admin-legacy";
 import { ContentScopeIndicator, useContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";

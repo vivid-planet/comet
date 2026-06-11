@@ -1,10 +1,10 @@
+import { downloadFile } from "@comet/admin";
 // TODO: Normal import: import * as Excel from "exceljs"; is currently not working due to https://github.com/exceljs/exceljs/pull/1038 as soon pull request is merged into exceljs change import and update package version
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as Excel from "exceljs/dist/exceljs.js";
 import type { ReactNode } from "react";
 
-import { downloadFile } from "../../helpers/downloadFile";
 import { isVisible } from "../isVisible";
 import { safeColumnGet } from "../safeColumnGet";
 import { type IRow, type ITableColumn, VisibleType } from "../Table";

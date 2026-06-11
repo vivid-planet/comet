@@ -110,6 +110,13 @@ jobs:
                   path: packages/admin/admin-rte/lib
                   key: ${{ runner.os }}-build-admin-rte-${{ hashFiles('packages/admin/admin-rte/src/**', 'packages/admin/admin-rte/package.json', 'packages/admin/admin-rte/tsconfig*.json', 'pnpm-lock.yaml') }}
 
+            - name: Cache @comet/admin-legacy build
+              id: cache-admin-legacy
+              uses: actions/cache@v4
+              with:
+                  path: packages/admin/admin-legacy/lib
+                  key: ${{ runner.os }}-build-admin-legacy-${{ hashFiles('packages/admin/admin-legacy/src/**', 'packages/admin/admin-legacy/package.json', 'packages/admin/admin-legacy/tsconfig*.json', 'pnpm-lock.yaml') }}
+
             - name: Cache @comet/brevo-admin build
               id: cache-brevo-admin
               uses: actions/cache@v4
@@ -197,6 +204,7 @@ jobs:
                   [ "${{ steps.cache-admin-generator.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin-generator"
                   [ "${{ steps.cache-admin-icons.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin-icons"
                   [ "${{ steps.cache-admin-rte.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin-rte"
+                  [ "${{ steps.cache-admin-legacy.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/admin-legacy"
                   [ "${{ steps.cache-brevo-admin.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/brevo-admin"
                   [ "${{ steps.cache-cms-admin.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/cms-admin"
                   [ "${{ steps.cache-api-generator.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @comet/api-generator"

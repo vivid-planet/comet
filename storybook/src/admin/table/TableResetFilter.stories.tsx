@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
-import { AutocompleteField, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
+import { AutocompleteField } from "@comet/admin";
+import { Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin-legacy";
 import { Grid } from "@mui/material";
 import * as qs from "qs";
 

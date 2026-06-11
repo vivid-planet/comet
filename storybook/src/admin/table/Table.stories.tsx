@@ -1,4 +1,4 @@
-import { Table } from "@comet/admin";
+import { Table } from "@comet/admin-legacy";
 
 interface IExampleRow {
     id: number;

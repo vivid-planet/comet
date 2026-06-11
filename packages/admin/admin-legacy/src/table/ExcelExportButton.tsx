@@ -1,9 +1,8 @@
+import { Button, FileIcon } from "@comet/admin";
 import { CircularProgress } from "@mui/material";
 import type { PropsWithChildren, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { Button } from "../common/buttons/Button";
-import { FileIcon } from "../fileIcons/FileIcon";
 import type { IExportApi } from "./excelexport/IExportApi";
 
 interface IProps {

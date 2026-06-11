@@ -1,20 +1,16 @@
 import { gql } from "@apollo/client";
+import { Field, FinalFormInput, MainContent, Toolbar, ToolbarItem } from "@comet/admin";
 import {
     createRestPagingActions,
-    Field,
-    FinalFormInput,
-    MainContent,
     SortDirection,
     Table,
     TableFilterFinalForm,
     TableQuery,
-    Toolbar,
-    ToolbarItem,
     useTableQuery,
     useTableQueryFilter,
     useTableQueryPaging,
     useTableQuerySort,
-} from "@comet/admin";
+} from "@comet/admin-legacy";
 import { Typography } from "@mui/material";
 import * as qs from "qs";
 

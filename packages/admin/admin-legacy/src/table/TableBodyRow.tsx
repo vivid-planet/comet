@@ -1,9 +1,7 @@
+import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
 import { type ComponentsOverrides, TableRow } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
 import type { TableRowProps } from "@mui/material/TableRow";
-
-import { createComponentSlot } from "../helpers/createComponentSlot";
-import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
