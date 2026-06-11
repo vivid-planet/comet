@@ -16,8 +16,8 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
-import { GQLProductCategoryTypesSelectQuery } from "./ProductCategoryForm.generated";
-import { GQLProductCategoryTypesSelectQueryVariables } from "./ProductCategoryForm.generated";
+import { GQLTypeSelectQuery } from "./ProductCategoryForm.generated";
+import { GQLTypeSelectQueryVariables } from "./ProductCategoryForm.generated";
 import { AsyncAutocompleteField } from "@comet/admin";
 import { productCategoryFormFragment } from "./ProductCategoryForm.gql";
 import { GQLProductCategoryFormFragment } from "./ProductCategoryForm.gql.generated";
@@ -130,9 +130,9 @@ export function ProductCategoryForm({ onCreate, id }: FormProps) {
                             name="type"
                             label={<FormattedMessage id="productCategory.type" defaultMessage="Type" />}
                             loadOptions={async (search?: string) => {
-                                const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
+                                const { data } = await client.query<GQLTypeSelectQuery, GQLTypeSelectQueryVariables>({
                                     query: gql`
-                                        query ProductCategoryTypesSelect($search: String) {
+                                        query TypeSelect($search: String) {
                                             productCategoryTypes(search: $search) {
                                                 nodes {
                                                     id

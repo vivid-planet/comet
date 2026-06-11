@@ -112,6 +112,12 @@ export type FormFieldConfig<T> = (
           type: "asyncSelect";
           name: UsableFormFields<T>;
           rootQuery: string;
+          /**
+           * Override the generated GraphQL query name.
+           * Defaults to the field name with an uppercased first letter and "Select" appended (e.g. field "host" → "HostSelect").
+           * Useful when the auto-generated name (based on the field name) is not descriptive enough.
+           */
+          queryName?: string;
           labelField?: string;
           /** Whether Autocomplete or Select should be used.
            *
@@ -128,6 +134,12 @@ export type FormFieldConfig<T> = (
           name: string;
           loadValueQueryField: string; //TODO improve typing, use something similar to UsableFormFields<T>;
           rootQuery: string;
+          /**
+           * Override the generated GraphQL query name.
+           * Defaults to the field name with an uppercased first letter and "Select" appended (e.g. field "productCategory" → "ProductCategorySelect").
+           * Useful when the auto-generated name (based on the field name) is not descriptive enough.
+           */
+          queryName?: string;
           labelField?: string;
           /** Whether Autocomplete or Select should be used.
            *

@@ -20,8 +20,8 @@ import { FORM_ERROR } from "final-form";
 import { GQLProductType } from "@src/graphql.generated";
 import { DamImageBlock } from "@comet/cms-admin";
 import { validateTitle } from "../validateTitle";
-import { GQLProductCategoriesSelectQuery } from "./CreateCapProductForm.generated";
-import { GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
+import { GQLCategorySelectQuery } from "./CreateCapProductForm.generated";
+import { GQLCategorySelectQueryVariables } from "./CreateCapProductForm.generated";
 import { AsyncAutocompleteField } from "@comet/admin";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { DatePickerField } from "@comet/admin";
@@ -135,9 +135,9 @@ export function CreateCapProductForm({ onCreate, type }: FormProps) {
                         name="category"
                         label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                         loadOptions={async (search?: string) => {
-                            const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                            const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                                 query: gql`
-                                    query ProductCategoriesSelect($search: String) {
+                                    query CategorySelect($search: String) {
                                         productCategories(search: $search) {
                                             nodes {
                                                 id

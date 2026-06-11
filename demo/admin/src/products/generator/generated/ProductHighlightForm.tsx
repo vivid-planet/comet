@@ -16,14 +16,14 @@ import { resolveHasSaveConflict } from "@comet/cms-admin";
 import { useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
-import { GQLProductCategoryTypesSelectQuery } from "./ProductHighlightForm.generated";
-import { GQLProductCategoryTypesSelectQueryVariables } from "./ProductHighlightForm.generated";
+import { GQLProductCategoryTypeSelectQuery } from "./ProductHighlightForm.generated";
+import { GQLProductCategoryTypeSelectQueryVariables } from "./ProductHighlightForm.generated";
 import { AsyncAutocompleteField } from "@comet/admin";
 import { OnChangeField } from "@comet/admin";
-import { GQLProductCategoriesSelectQuery } from "./ProductHighlightForm.generated";
-import { GQLProductCategoriesSelectQueryVariables } from "./ProductHighlightForm.generated";
-import { GQLProductsSelectQuery } from "./ProductHighlightForm.generated";
-import { GQLProductsSelectQueryVariables } from "./ProductHighlightForm.generated";
+import { GQLProductCategorySelectQuery } from "./ProductHighlightForm.generated";
+import { GQLProductCategorySelectQueryVariables } from "./ProductHighlightForm.generated";
+import { GQLProductSelectQuery } from "./ProductHighlightForm.generated";
+import { GQLProductSelectQueryVariables } from "./ProductHighlightForm.generated";
 import { productHighlightFormFragment } from "./ProductHighlightForm.gql";
 import { GQLProductHighlightFormDetailsFragment } from "./ProductHighlightForm.gql.generated";
 import { productHighlightQuery } from "./ProductHighlightForm.gql";
@@ -143,9 +143,9 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
                             name="productCategoryType"
                             label={<FormattedMessage id="productHighlight.productCategoryType" defaultMessage="Product Category Type" />}
                             loadOptions={async (search?: string) => {
-                                const { data } = await client.query<GQLProductCategoryTypesSelectQuery, GQLProductCategoryTypesSelectQueryVariables>({
+                                const { data } = await client.query<GQLProductCategoryTypeSelectQuery, GQLProductCategoryTypeSelectQueryVariables>({
                                     query: gql`
-                                        query ProductCategoryTypesSelect($search: String) {
+                                        query ProductCategoryTypeSelect($search: String) {
                                             productCategoryTypes(search: $search) {
                                                 nodes {
                                                     id
@@ -169,9 +169,9 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
                             name="productCategory"
                             label={<FormattedMessage id="productHighlight.productCategory" defaultMessage="Product Category" />}
                             loadOptions={async (search?: string) => {
-                                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                                const { data } = await client.query<GQLProductCategorySelectQuery, GQLProductCategorySelectQueryVariables>({
                                     query: gql`
-                                        query ProductCategoriesSelect($search: String, $filter: ProductCategoryFilter) {
+                                        query ProductCategorySelect($search: String, $filter: ProductCategoryFilter) {
                                             productCategories(search: $search, filter: $filter) {
                                                 nodes {
                                                     id
@@ -204,9 +204,9 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
                             name="product"
                             label={<FormattedMessage id="productHighlight.product" defaultMessage="Product" />}
                             loadOptions={async (search?: string) => {
-                                const { data } = await client.query<GQLProductsSelectQuery, GQLProductsSelectQueryVariables>({
+                                const { data } = await client.query<GQLProductSelectQuery, GQLProductSelectQueryVariables>({
                                     query: gql`
-                                        query ProductsSelect($search: String, $filter: ProductFilter) {
+                                        query ProductSelect($search: String, $filter: ProductFilter) {
                                             products(search: $search, filter: $filter) {
                                                 nodes {
                                                     id
