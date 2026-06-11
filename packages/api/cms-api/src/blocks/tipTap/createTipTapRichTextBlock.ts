@@ -520,7 +520,6 @@ export function createTipTapRichTextBlock(
 
     class TipTapRichTextBlockInput implements TipTapRichTextBlockInputInterface {
         @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxTextBlocks, allowedPlaceholderNames, listLevelMax })
-
         @BlockField({ type: "json" })
         tipTapContent: JSONContent;
 
