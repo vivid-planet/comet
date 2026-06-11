@@ -19,11 +19,6 @@ function draftBlock(overrides: Partial<DraftBlock> = {}): DraftBlock {
     };
 }
 
-// The migration only emits the converted document when it passes its own internal
-// `isValidTipTapContentSync` check; otherwise it falls back to a stripped or empty doc.
-// Asserting the exact migrated `tipTapContent` therefore verifies both the conversion
-// result and that it is valid TipTap content — without round-tripping block data through
-// `blockInputFactory` (which expects input-shaped data, not block data).
 describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
     describe("end-to-end via blockDataFactory", () => {
         const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichText");
@@ -181,10 +176,10 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
         });
     });
 
-    describe("maxBlocks fallback", () => {
-        const block = createTipTapRichTextBlock({ maxBlocks: 2, migrateFromDraftJs: true }, "MigratedRichTextMaxBlocks");
+    describe("maxTextBlocks fallback", () => {
+        const block = createTipTapRichTextBlock({ maxTextBlocks: 2, migrateFromDraftJs: true }, "MigratedRichTextMaxBlocks");
 
-        it("falls back to an empty doc when conversion exceeds maxBlocks", () => {
+        it("falls back to an empty doc when conversion exceeds maxTextBlocks", () => {
             const data = block.blockDataFactory({
                 draftContent: {
                     blocks: [
@@ -197,7 +192,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
             });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
-            // Both the converted doc (3 blocks) and the stripped doc (3 blocks) exceed maxBlocks,
+            // Both the converted doc (3 blocks) and the stripped doc (3 blocks) exceed maxTextBlocks,
             // so the migration falls back to the empty doc.
             expect(tipTapContent).toEqual({ type: "doc", content: [{ type: "paragraph" }] });
         });

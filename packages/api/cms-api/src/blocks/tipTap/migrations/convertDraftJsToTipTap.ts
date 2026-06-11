@@ -43,9 +43,9 @@ interface ConvertOptions {
     link?: Block;
     /**
      * Maps DraftJS block types (e.g. custom `paragraph-small`) to a TipTap paragraph
-     * `blockStyle` attribute value. Matched blocks become `{ type: "paragraph", attrs: { blockStyle: ... } }`.
+     * `textBlockStyle` attribute value. Matched blocks become `{ type: "paragraph", attrs: { textBlockStyle: ... } }`.
      */
-    blockStyleMap?: Record<string, string>;
+    textBlockStyleMap?: Record<string, string>;
     /**
      * Maps DraftJS custom inline style names (e.g. `highlight` from a DraftJS `customInlineStyles`
      * configuration) to TipTap `inlineStyle` mark type values.
@@ -228,8 +228,8 @@ function makeLeafBlockNode(type: "paragraph" | "heading", inlineContent: JSONCon
     return node;
 }
 
-function makeParagraphWithBlockStyle(inlineContent: JSONContent[], blockStyle: string): JSONContent {
-    const node: JSONContent = { type: "paragraph", attrs: { blockStyle } };
+function makeParagraphWithTextBlockStyle(inlineContent: JSONContent[], textBlockStyle: string): JSONContent {
+    const node: JSONContent = { type: "paragraph", attrs: { textBlockStyle } };
     if (inlineContent.length > 0) {
         node.content = inlineContent;
     }
@@ -250,7 +250,7 @@ export function convertDraftJsToTipTap(draftContent: DraftJsContent | undefined 
 
     const supports = new Set<TipTapSupports>(options.supports ?? []);
     const hasLink = !!options.link;
-    const blockStyleMap = options.blockStyleMap ?? {};
+    const textBlockStyleMap = options.textBlockStyleMap ?? {};
     const inlineStyleMap = options.inlineStyleMap ?? {};
     const entityMap = draftContent.entityMap ?? {};
 
@@ -290,9 +290,9 @@ export function convertDraftJsToTipTap(draftContent: DraftJsContent | undefined 
 
         flushList();
 
-        const mappedBlockStyle = blockStyleMap[block.type];
-        if (mappedBlockStyle !== undefined) {
-            topLevel.push(makeParagraphWithBlockStyle(inlineContent, mappedBlockStyle));
+        const mappedTextBlockStyle = textBlockStyleMap[block.type];
+        if (mappedTextBlockStyle !== undefined) {
+            topLevel.push(makeParagraphWithTextBlockStyle(inlineContent, mappedTextBlockStyle));
             continue;
         }
 

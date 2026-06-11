@@ -36,7 +36,7 @@ import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type R
 import { FormattedMessage, useIntl } from "react-intl";
 
 import type { BlockInterface, LinkBlockInterface } from "../types";
-import type { TipTapBlockStyle, TipTapBlockType, TipTapInlineStyle, TipTapPlaceholder, TipTapSupports } from "./createTipTapRichTextBlock";
+import type { TipTapInlineStyle, TipTapPlaceholder, TipTapSupports, TipTapTextBlockStyle, TipTapTextBlockType } from "./createTipTapRichTextBlock";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
 const toolbarButtonSx = {
@@ -149,7 +149,7 @@ const selectSx = {
 export const TipTapToolbar = ({
     editor,
     supports,
-    blockStyles,
+    textBlockStyles,
     inlineStyles,
     placeholders,
     linkBlock,
@@ -157,7 +157,7 @@ export const TipTapToolbar = ({
 }: {
     editor: Editor;
     supports: TipTapSupports[];
-    blockStyles: TipTapBlockStyle[];
+    textBlockStyles: TipTapTextBlockStyle[];
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
@@ -178,7 +178,7 @@ export const TipTapToolbar = ({
     const editorState = useEditorState({
         editor,
         selector: ({ editor: e }: { editor: Editor }) => {
-            const activeBlockType = (() => {
+            const activeTextBlockType = (() => {
                 for (let level = 1; level <= 6; level++) {
                     if (e.isActive("heading", { level })) {
                         return String(level);
@@ -186,7 +186,7 @@ export const TipTapToolbar = ({
                 }
                 return "paragraph";
             })();
-            const activeTipTapBlockType: TipTapBlockType = (() => {
+            const activeTipTapTextBlockType: TipTapTextBlockType = (() => {
                 if (e.isActive("orderedList")) {
                     return "ordered-list";
                 }
@@ -195,7 +195,7 @@ export const TipTapToolbar = ({
                 }
                 for (let level = 1; level <= 6; level++) {
                     if (e.isActive("heading", { level })) {
-                        return `heading-${level}` as TipTapBlockType;
+                        return `heading-${level}` as TipTapTextBlockType;
                     }
                 }
                 return "paragraph";
@@ -226,9 +226,9 @@ export const TipTapToolbar = ({
             }
 
             return {
-                activeBlockType,
-                activeTipTapBlockType,
-                activeBlockStyle: (attrs.blockStyle as string) ?? "",
+                activeTextBlockType,
+                activeTipTapTextBlockType,
+                activeTextBlockStyle: (attrs.textBlockStyle as string) ?? "",
                 activeInlineStyle,
                 canUndo: e.can().undo(),
                 canRedo: e.can().redo(),
@@ -257,10 +257,14 @@ export const TipTapToolbar = ({
         setTimeout(() => editor.commands.focus(), 0);
     };
 
-    const applicableBlockStyles = blockStyles.filter((style) => !style.appliesTo || style.appliesTo.includes(editorState.activeTipTapBlockType));
-    const applicableInlineStyles = inlineStyles.filter((style) => !style.appliesTo || style.appliesTo.includes(editorState.activeTipTapBlockType));
+    const applicableTextBlockStyles = textBlockStyles.filter(
+        (style) => !style.appliesTo || style.appliesTo.includes(editorState.activeTipTapTextBlockType),
+    );
+    const applicableInlineStyles = inlineStyles.filter(
+        (style) => !style.appliesTo || style.appliesTo.includes(editorState.activeTipTapTextBlockType),
+    );
 
-    const handleBlockTypeChange = (e: SelectChangeEvent) => {
+    const handleTextBlockTypeChange = (e: SelectChangeEvent) => {
         const value = e.target.value;
         if (value === "paragraph") {
             editor.chain().focus().setParagraph().run();
@@ -272,24 +276,24 @@ export const TipTapToolbar = ({
                 .run();
         }
 
-        // Clear blockStyle if it's not applicable to the new block type
-        if (blockStyles.length > 0) {
-            const { activeBlockStyle } = editorState;
-            if (activeBlockStyle) {
-                const newType: TipTapBlockType = value === "paragraph" ? "paragraph" : (`heading-${value}` as TipTapBlockType);
-                const styleConfig = blockStyles.find((s) => s.name === activeBlockStyle);
+        // Clear textBlockStyle if it's not applicable to the new text block type
+        if (textBlockStyles.length > 0) {
+            const { activeTextBlockStyle } = editorState;
+            if (activeTextBlockStyle) {
+                const newType: TipTapTextBlockType = value === "paragraph" ? "paragraph" : (`heading-${value}` as TipTapTextBlockType);
+                const styleConfig = textBlockStyles.find((s) => s.name === activeTextBlockStyle);
                 if (styleConfig?.appliesTo && !styleConfig.appliesTo.includes(newType)) {
                     const nodeType = value === "paragraph" ? "paragraph" : "heading";
-                    editor.chain().updateAttributes(nodeType, { blockStyle: null }).run();
+                    editor.chain().updateAttributes(nodeType, { textBlockStyle: null }).run();
                 }
             }
         }
     };
 
-    const handleBlockStyleChange = (e: SelectChangeEvent) => {
+    const handleTextBlockStyleChange = (e: SelectChangeEvent) => {
         const value = e.target.value || null;
         const nodeType = editor.isActive("heading") ? "heading" : "paragraph";
-        editor.chain().focus().updateAttributes(nodeType, { blockStyle: value }).run();
+        editor.chain().focus().updateAttributes(nodeType, { textBlockStyle: value }).run();
     };
 
     const handleInlineStyleChange = (e: SelectChangeEvent) => {
@@ -333,20 +337,20 @@ export const TipTapToolbar = ({
                 <ToolbarGroup>
                     <FormControl sx={selectFormControlSx}>
                         <Select
-                            value={editorState.activeBlockType}
-                            onChange={handleBlockTypeChange}
+                            value={editorState.activeTextBlockType}
+                            onChange={handleTextBlockTypeChange}
                             displayEmpty
                             variant="filled"
                             MenuProps={{ elevation: 1 }}
                             sx={selectSx}
                         >
                             <MenuItem value="paragraph" dense>
-                                <FormattedMessage id="comet.blocks.tipTapRichText.blockType.default" defaultMessage="Default" />
+                                <FormattedMessage id="comet.blocks.tipTapRichText.textBlockType.default" defaultMessage="Default" />
                             </MenuItem>
                             {([1, 2, 3, 4, 5, 6] as const).map((level) => (
                                 <MenuItem key={level} value={String(level)} dense>
                                     <FormattedMessage
-                                        id="comet.blocks.tipTapRichText.blockType.heading"
+                                        id="comet.blocks.tipTapRichText.textBlockType.heading"
                                         defaultMessage="Heading {level}"
                                         values={{ level }}
                                     />
@@ -356,21 +360,21 @@ export const TipTapToolbar = ({
                     </FormControl>
                 </ToolbarGroup>
             )}
-            {applicableBlockStyles.length > 0 && (
+            {applicableTextBlockStyles.length > 0 && (
                 <ToolbarGroup>
                     <FormControl sx={selectFormControlSx}>
                         <Select
-                            value={editorState.activeBlockStyle}
-                            onChange={handleBlockStyleChange}
+                            value={editorState.activeTextBlockStyle}
+                            onChange={handleTextBlockStyleChange}
                             displayEmpty
                             variant="filled"
                             MenuProps={{ elevation: 1 }}
                             sx={selectSx}
                         >
                             <MenuItem value="" dense>
-                                <FormattedMessage id="comet.blocks.tipTapRichText.blockStyle.default" defaultMessage="Default" />
+                                <FormattedMessage id="comet.blocks.tipTapRichText.textBlockStyle.default" defaultMessage="Default" />
                             </MenuItem>
-                            {applicableBlockStyles.map((style) => (
+                            {applicableTextBlockStyles.map((style) => (
                                 <MenuItem key={style.name} value={style.name} dense>
                                     {style.label}
                                 </MenuItem>
