@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CRUD_GENERATOR_METADATA_KEY, type CrudGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
+import { CRUD_GENERATOR_METADATA_KEY, type CrudGeneratorOptions, hasCrudFieldFeature, REQUIRED_PERMISSION_METADATA_KEY } from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
@@ -665,6 +665,8 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     const { classNameSingular } = buildNameVariants(metadata);
     const { skipScopeCheck, targetDirectory } = buildOptions(metadata, generatorOptions);
 
+    const entityHasRequiredPermission = !!Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, metadata.class);
+
     const imports: Imports = [];
 
     const {
@@ -681,12 +683,12 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     imports.push(generateEntityImport(metadata, targetDirectory));
 
     return `
-    import { RequiredPermission, RootBlockDataScalar, BlocksTransformerService } from "@comet/cms-api";
+    import { ${entityHasRequiredPermission ? "" : "RequiredPermission, "}RootBlockDataScalar, BlocksTransformerService } from "@comet/cms-api";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
+    ${entityHasRequiredPermission ? "" : `@RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})`}
     export class ${classNameSingular}Resolver {
         ${needsBlocksTransformer ? `constructor(protected readonly blocksTransformer: BlocksTransformerService) {}` : ""}
         ${code}
@@ -892,8 +894,12 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const payloadObjectTypes = generatePayloadObjectTypes({ hooksService, instanceNameSingular, entityName: metadata.className });
     imports.push(...payloadObjectTypes.imports);
 
+    const entityHasRequiredPermission = !!Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, metadata.class);
+
     imports.push({ name: "SortDirection", importPath: "@comet/cms-api" });
-    imports.push({ name: "RequiredPermission", importPath: "@comet/cms-api" });
+    if (!entityHasRequiredPermission) {
+        imports.push({ name: "RequiredPermission", importPath: "@comet/cms-api" });
+    }
     imports.push({ name: "AffectedEntity", importPath: "@comet/cms-api" });
     imports.push({ name: "validateNotModified", importPath: "@comet/cms-api" });
     imports.push({ name: "RootBlockDataScalar", importPath: "@comet/cms-api" });
@@ -913,7 +919,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${payloadObjectTypes.code}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
+    ${entityHasRequiredPermission ? "" : `@RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})`}
     export class ${classNameSingular}Resolver {
         constructor(
             protected readonly entityManager: EntityManager,${
