@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ExternalLinkBlock } from "../../ExternalLinkBlock";
+import { ExternalLinkBlock } from "../../externalLink/external-link.block";
 import { createLinkBlock } from "../../factories/createLinkBlock";
 import { createTipTapRichTextBlock } from "../createTipTapRichTextBlock";
 import type { DraftJsContent } from "./convertDraftJsToTipTap";
@@ -123,7 +123,9 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                             type: "LINK",
                             mutability: "MUTABLE",
                             data: {
-                                attachedBlocks: [{ type: "external", props: { targetUrl: "https://example.com", openInNewWindow: false } }],
+                                attachedBlocks: [
+                                    { type: "external", props: { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false } },
+                                ],
                                 activeType: "external",
                             },
                         },

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { InternalLinkBlock } from "../../page-tree/blocks/internal-link.block";
-import { ExternalLinkBlock } from "../ExternalLinkBlock";
+import { ExternalLinkBlock } from "../externalLink/external-link.block";
 import { createLinkBlock } from "./createLinkBlock";
 
 describe("createLinkBlock", () => {
