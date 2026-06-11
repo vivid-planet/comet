@@ -8,10 +8,10 @@ import { EntityInfoObject } from "../../entity-info/entity-info.object";
 
 @Entity({ tableName: "EntityInfoFullText" })
 export class EntityInfoFullTextObject {
-    @PrimaryKey({ type: "text", persist: false })
+    @PrimaryKey({ type: "text" })
     id: string;
 
-    @PrimaryKey({ type: "text", persist: false })
+    @PrimaryKey({ type: "text" })
     entityName: string;
 
     @Property({ type: FullTextType })
