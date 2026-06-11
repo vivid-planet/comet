@@ -1,5 +1,7 @@
 # @comet/cli
 
+## 9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ### Minor Changes

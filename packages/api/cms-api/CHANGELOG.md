@@ -1,5 +1,36 @@
 # @comet/cms-api
 
+## 9.0.0-beta.6
+
+### Minor Changes
+
+- 4c1aeb2: Add `noFollow` option to `ExternalLinkBlock`
+
+    Editors can now mark an external link as `nofollow` via a new checkbox in the admin form. When enabled, the rendered `<a>` tag receives `rel="nofollow"`. Existing links are unaffected by an automatic block-data migration that sets `noFollow` to `false`.
+
+- 67938b2: Filter `fullTextSearch` results by the entity's required permission
+
+    The `requiredPermission` of an entity (declared via the `@RequiredPermission` decorator) is now included in both the `EntityInfo` and `EntityInfoFullText` SQL views.
+
+    The `fullTextSearch` query now filters results based on the current user's permissions, only returning entities where the user has the required permission. Entries without a required permission are excluded from results, as the permission cannot be determined.
+
+    **Example usage:**
+
+    ```ts
+    @EntityInfo<Product>({
+        name: "title",
+        secondaryInformation: "category.name",
+        visible: { status: { $eq: ProductStatus.Published } },
+        fullText: "fullText",
+    })
+    @RequiredPermission("products")
+    @ObjectType()
+    @Entity()
+    export class Product {
+        // ...
+    }
+    ```
+
 ## 9.0.0-beta.5
 
 ### Minor Changes
