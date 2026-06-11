@@ -912,7 +912,7 @@ importers:
         specifier: ^8.0.4
         version: 8.0.4
       playwright:
-        specifier: ^1.49.1
+        specifier: ^1.60.0
         version: 1.60.0
       prettier:
         specifier: ^3.6.2
@@ -1768,7 +1768,7 @@ importers:
         specifier: ^8.0.4
         version: 8.0.4
       playwright:
-        specifier: ^1.49.1
+        specifier: ^1.60.0
         version: 1.60.0
       prettier:
         specifier: ^3.6.2
@@ -2499,7 +2499,7 @@ importers:
         specifier: ^8.0.4
         version: 8.0.4
       playwright:
-        specifier: ^1.49.1
+        specifier: ^1.60.0
         version: 1.60.0
       prettier:
         specifier: ^3.6.2
@@ -2871,7 +2871,7 @@ importers:
         specifier: ^8.0.4
         version: 8.0.4
       playwright:
-        specifier: ^1.49.1
+        specifier: ^1.60.0
         version: 1.60.0
       prettier:
         specifier: ^3.6.2
@@ -7946,9 +7946,6 @@ packages:
   '@smithy/util-utf8@2.3.0':
     resolution: {integrity: sha512-R8Rdn8Hy72KKcebgLiv8jQcQkXoLMOGGv5uI1/k0l+snqkOzQ1R0ChUBCxWMlBsFMekWjq0wRudIweFs7sKT5A==}
     engines: {node: '>=14.0.0'}
-
-  '@standard-schema/spec@1.0.0':
-    resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -24441,8 +24438,6 @@ snapshots:
       '@smithy/util-buffer-from': 2.2.0
       tslib: 2.8.1
 
-  '@standard-schema/spec@1.0.0': {}
-
   '@standard-schema/spec@1.1.0': {}
 
   '@storybook/addon-docs@10.3.5(@types/react@19.2.15)(esbuild@0.27.4)(rollup@4.59.0)(storybook@10.3.5(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(vite@7.3.1(@types/node@24.12.4)(jiti@2.7.0)(sass@1.93.0)(terser@5.46.1)(yaml@2.8.3))(webpack@5.106.2(@swc/core@1.15.40)(esbuild@0.27.4))':
@@ -30275,7 +30270,7 @@ snapshots:
       '@hapi/pinpoint': 2.0.1
       '@hapi/tlds': 1.1.4
       '@hapi/topo': 6.0.2
-      '@standard-schema/spec': 1.0.0
+      '@standard-schema/spec': 1.1.0
 
   jose@4.15.9: {}
 
