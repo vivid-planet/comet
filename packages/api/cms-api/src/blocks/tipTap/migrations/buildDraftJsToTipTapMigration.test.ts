@@ -1,15 +1,11 @@
-import type { JSONContent } from "@tiptap/core";
 import { describe, expect, it } from "vitest";
 
-import type { BlockDataInterface } from "../../block";
 import { ExternalLinkBlock } from "../../ExternalLinkBlock";
 import { createLinkBlock } from "../../factories/createLinkBlock";
 import { createTipTapRichTextBlock } from "../createTipTapRichTextBlock";
 import type { DraftJsContent } from "./convertDraftJsToTipTap";
 
 type DraftBlock = DraftJsContent["blocks"][number];
-
-type TipTapBlockData = BlockDataInterface & { tipTapContent: JSONContent };
 
 function draftBlock(overrides: Partial<DraftBlock> = {}): DraftBlock {
     return {
@@ -33,7 +29,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     blocks: [draftBlock({ type: "unstyled", text: "Hello" })],
                     entityMap: {},
                 },
-            }) as TipTapBlockData;
+            });
             expect(data.tipTapContent).toEqual({
                 type: "doc",
                 content: [{ type: "paragraph", content: [{ type: "text", text: "Hello" }] }],
@@ -59,7 +55,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                 },
                 $$version: 1,
             };
-            const data = block.blockDataFactory(input) as TipTapBlockData;
+            const data = block.blockDataFactory(input);
             expect(data.tipTapContent).toEqual(input.tipTapContent);
         });
 
@@ -68,7 +64,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                 type: "doc",
                 content: [{ type: "paragraph", content: [{ type: "text", text: "pre-existing" }] }],
             };
-            const data = block.blockDataFactory({ tipTapContent }) as TipTapBlockData;
+            const data = block.blockDataFactory({ tipTapContent });
             expect(data.tipTapContent).toEqual(tipTapContent);
         });
     });
@@ -91,7 +87,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     ],
                     entityMap: {},
                 },
-            }) as TipTapBlockData;
+            });
             expect(data.tipTapContent).toEqual({
                 type: "doc",
                 content: [
@@ -133,7 +129,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                         },
                     },
                 },
-            }) as TipTapBlockData;
+            });
             expect(data.tipTapContent).toMatchObject({
                 type: "doc",
                 content: [
@@ -166,7 +162,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                         "0": { type: "LINK", mutability: "MUTABLE", data: { href: "https://example.com" } },
                     },
                 },
-            }) as TipTapBlockData;
+            });
             expect(data.tipTapContent).toEqual({
                 type: "doc",
                 content: [{ type: "paragraph", content: [{ type: "text", text: "click here" }] }],
@@ -188,7 +184,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     ],
                     entityMap: {},
                 },
-            }) as TipTapBlockData;
+            });
             // Both the converted doc (3 blocks) and the stripped doc (3 blocks) exceed maxTextBlocks,
             // so the migration falls back to the empty doc.
             expect(data.tipTapContent).toEqual({ type: "doc", content: [{ type: "paragraph" }] });
