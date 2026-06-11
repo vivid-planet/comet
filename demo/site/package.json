@@ -35,12 +35,8 @@
         "@comet/mail-react": "workspace:*",
         "@comet/site-nextjs": "workspace:*",
         "@formatjs/cli": "^6.7.2",
-<<<<<<< HEAD
         "@google-cloud/recaptcha-enterprise": "^5.2.0",
-        "@next/bundle-analyzer": "^16.0.3",
-=======
         "@next/bundle-analyzer": "^16.2.6",
->>>>>>> origin/main
         "@opentelemetry/api": "^1.9.1",
         "@opentelemetry/auto-instrumentations-node": "^0.75.0",
         "@opentelemetry/exporter-prometheus": "^0.217.0",
