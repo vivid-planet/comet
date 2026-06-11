@@ -38,15 +38,9 @@ export class FullTextSearchResolver {
             { offset, limit, populate: ["entityInfo"] },
         );
 
-        const results = matches.map((match) => {
-            if (!match.entityInfo) {
-                throw new Error(
-                    `EntityInfo not found for ${match.entityName}:${match.id}. This may indicate a data inconsistency where the full-text search index contains an entry without corresponding entity information.`,
-                );
-            }
-            return match.entityInfo;
-        });
-
-        return new PaginatedEntityInfo(results, totalCount);
+        return new PaginatedEntityInfo(
+            matches.map((match) => match.entityInfo),
+            totalCount,
+        );
     }
 }
