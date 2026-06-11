@@ -1,3 +1,5 @@
 import { createCometTheme } from "@comet/admin";
 
-export const theme = createCometTheme();
+import { getLanguageConfig } from "./lang";
+
+export const theme = createCometTheme({}, ...getLanguageConfig().muiLocale);

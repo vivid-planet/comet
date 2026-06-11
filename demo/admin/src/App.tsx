@@ -35,7 +35,7 @@ import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
 import type { GQLPermission } from "./graphql.generated";
-import { dateFnsLocales, getClosestSupportedLanguage, getMessages } from "./lang";
+import { getLanguageConfig } from "./lang";
 import { NewsDetailBlock } from "./news/blocks/NewsDetailBlock";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import { NewsListBlock } from "./news/blocks/NewsListBlock";
@@ -67,8 +67,7 @@ declare module "@comet/cms-admin" {
 LicenseInfo.setLicenseKey(config.muiLicenseKey);
 
 export function App() {
-    const language = getClosestSupportedLanguage();
-    const dateFnsLocale = dateFnsLocales[language];
+    const { language, messages, dateFnsLocale } = getLanguageConfig();
 
     return (
         <CometConfigProvider
@@ -161,10 +160,10 @@ export function App() {
                 }}
             >
                 <ApolloProvider client={apolloClient}>
-                    <IntlProvider locale={language} messages={getMessages(language)}>
-                        <LocalizationProvider adapterLocale={dateFnsLocale} dateAdapter={AdapterDateFns}>
-                            <DateFnsLocaleProvider value={dateFnsLocale}>
-                                <MuiThemeProvider theme={theme}>
+                    <IntlProvider locale={language} messages={messages}>
+                        <MuiThemeProvider theme={theme}>
+                            <LocalizationProvider adapterLocale={dateFnsLocale} dateAdapter={AdapterDateFns}>
+                                <DateFnsLocaleProvider value={dateFnsLocale}>
                                     <DndProvider options={HTML5toTouch}>
                                         <SnackbarProvider>
                                             <ErrorDialogHandler />
@@ -204,9 +203,9 @@ export function App() {
                                             </CurrentUserProvider>
                                         </SnackbarProvider>
                                     </DndProvider>
-                                </MuiThemeProvider>
-                            </DateFnsLocaleProvider>
-                        </LocalizationProvider>
+                                </DateFnsLocaleProvider>
+                            </LocalizationProvider>
+                        </MuiThemeProvider>
                     </IntlProvider>
                 </ApolloProvider>
             </BrevoConfigProvider>
