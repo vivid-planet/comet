@@ -2,8 +2,7 @@ import { IsBoolean, IsOptional } from "class-validator";
 
 import { BlockData, BlockInput, blockInputToData, createBlock } from "./block";
 import { BlockField } from "./decorators/field";
-import { BlockMigration } from "./migrations/BlockMigration";
-import type { BlockMigrationInterface } from "./migrations/types";
+import { AddNoFollowMigration } from "./externalLink/migrations/1-add-no-follow.migration";
 import { typeSafeBlockMigrationPipe } from "./migrations/typeSafeBlockMigrationPipe";
 import { IsLinkTarget } from "./validator/is-link-target.validator";
 
@@ -34,23 +33,6 @@ class ExternalLinkBlockInput extends BlockInput {
 
     transformToBlockData(): ExternalLinkBlockData {
         return blockInputToData(ExternalLinkBlockData, this);
-    }
-}
-
-interface AddNoFollowMigrationFrom {
-    targetUrl?: string;
-    openInNewWindow: boolean;
-}
-
-interface AddNoFollowMigrationTo extends AddNoFollowMigrationFrom {
-    noFollow: boolean;
-}
-
-class AddNoFollowMigration extends BlockMigration<(from: AddNoFollowMigrationFrom) => AddNoFollowMigrationTo> implements BlockMigrationInterface {
-    public readonly toVersion = 1;
-
-    protected migrate(props: AddNoFollowMigrationFrom): AddNoFollowMigrationTo {
-        return { ...props, noFollow: false };
     }
 }
 
