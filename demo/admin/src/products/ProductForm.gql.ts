@@ -1,53 +1,10 @@
 import { gql } from "@apollo/client";
-import { damFileFieldFragment, finalFormFileUploadFragment } from "@comet/cms-admin";
 
 export const productFormFragment = gql`
     fragment ProductFormManual on Product {
         title
         slug
-        description
-        type
-        additionalTypes
-        inStock
-        image
-        priceList {
-            ...FinalFormFileUpload
-        }
-        datasheets {
-            ...FinalFormFileUpload
-        }
-        relatedImages {
-            ...DamFileFieldFile
-        }
-        manufacturer {
-            id
-            name
-            addressAsEmbeddable {
-                country
-            }
-        }
-        category {
-            id
-            title
-        }
-        tags {
-            id
-            title
-        }
-        priceRange {
-            min
-            max
-        }
-        lastCheckedAt
-        dimensions {
-            width
-            height
-            depth
-        }
-        availableSince
     }
-    ${finalFormFileUploadFragment}
-    ${damFileFieldFragment}
 `;
 
 export const productQuery = gql`
