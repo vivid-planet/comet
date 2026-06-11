@@ -616,6 +616,11 @@
         ]
     },
     {
+        "name": "ContactForm",
+        "fields": [],
+        "inputFields": []
+    },
+    {
         "name": "ContentGroup",
         "fields": [
             {
@@ -2216,7 +2221,8 @@
                                 "table": "Table",
                                 "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },
@@ -2283,7 +2289,8 @@
                                 "table": "Table",
                                 "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },
