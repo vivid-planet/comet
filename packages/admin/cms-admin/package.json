@@ -130,7 +130,7 @@
         "eslint": "^9.39.4",
         "eslint-plugin-storybook": "^10.3.5",
         "final-form": "^4.20.10",
-        "graphql": "^16.14.0",
+        "graphql": "^16.14.1",
         "history": "^4.10.1",
         "jsdom": "^28.1.0",
         "msw": "^2.14.6",
