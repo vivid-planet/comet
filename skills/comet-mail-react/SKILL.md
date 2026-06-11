@@ -268,7 +268,7 @@ const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
 | `MjmlText`            | Themed text block with typography variants                         | `.mjmlText`, `.mjmlText--{variant}`, `.mjmlText--bottomSpacing` |
 | `MjmlImage`           | Responsive image                                                   | `.mjmlImage`                                                    |
 | `MjmlPixelImageBlock` | Renders a Comet CMS `PixelImageBlockData` via `MjmlImage`          | `.mjmlPixelImageBlock`                                          |
-| `MjmlButton`          | Button (ending tag)                                                | —                                                               |
+| `MjmlButton`          | Themed button (ending tag), theme styling and variants             | `.mjmlButton`, `.mjmlButton--{variant}`                         |
 | `MjmlDivider`         | Themed horizontal divider, configurable through theme and variants | `.mjmlDivider`, `.mjmlDivider--{variant}`                       |
 | `MjmlSpacer`          | Vertical spacing                                                   | —                                                               |
 | `MjmlRaw`             | Raw HTML escape hatch (ending tag)                                 | —                                                               |
@@ -281,6 +281,7 @@ const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
 | `HtmlInlineLink`      | `<a>` that inherits parent text styles, works in Outlook           | `.htmlInlineLink`                                               |
 | `HtmlImage`           | Responsive image (`<img>`)                                         | `.htmlImage`                                                    |
 | `HtmlPixelImageBlock` | Renders a Comet CMS `PixelImageBlockData` as `<img>`               | `.htmlPixelImageBlock`                                          |
+| `HtmlButton`          | Themed button for ending tags or non-MJML contexts                 | `.htmlButton`, `.htmlButton--{variant}`                         |
 | `HtmlDivider`         | Themed horizontal divider, configurable through theme and variants | `.htmlDivider`, `.htmlDivider--{variant}`                       |
 
 Variants are named typography presets (font size, weight, line height, color) defined in the theme; their values can change per breakpoint.
