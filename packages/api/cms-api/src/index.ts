@@ -107,6 +107,8 @@ export {
     createTipTapRichTextBlock,
     type CreateTipTapRichTextBlockOptions,
     type TipTapRichTextBlockContent,
+    type TipTapRichTextBlockDataInterface,
+    type TipTapRichTextBlockInputInterface,
 } from "./blocks/tipTap/createTipTapRichTextBlock";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { IsLinkTarget } from "./blocks/validator/is-link-target.validator";

@@ -3,7 +3,12 @@ import { describe, expect, it } from "vitest";
 
 import { ExternalLinkBlock } from "../ExternalLinkBlock";
 import { createLinkBlock } from "../factories/createLinkBlock";
-import { createTipTapRichTextBlock } from "./createTipTapRichTextBlock";
+import {
+    createTipTapRichTextBlock,
+    type TipTapRichTextBlockContent,
+    type TipTapRichTextBlockDataInterface,
+    type TipTapRichTextBlockInputInterface,
+} from "./createTipTapRichTextBlock";
 
 describe("createTipTapRichTextBlock validation", () => {
     describe("default schema (all supports)", () => {
@@ -190,13 +195,15 @@ describe("createTipTapRichTextBlock validation", () => {
         });
 
         it("should reject null content", async () => {
-            const input = block.blockInputFactory({ tipTapContent: null });
+            // Cast required because the typed input rejects invalid content at compile time; here we test the runtime guard.
+            const input = block.blockInputFactory({ tipTapContent: null as unknown as TipTapRichTextBlockContent });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
         });
 
         it("should reject a string instead of object", async () => {
-            const input = block.blockInputFactory({ tipTapContent: "not an object" });
+            // Cast required because the typed input rejects invalid content at compile time; here we test the runtime guard.
+            const input = block.blockInputFactory({ tipTapContent: "not an object" as unknown as TipTapRichTextBlockContent });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
         });
@@ -1180,5 +1187,73 @@ describe("createTipTapRichTextBlock validation", () => {
             const invalidErrors = await validate(invalidInput);
             expect(invalidErrors).toHaveLength(1);
         });
+    });
+});
+
+describe("createTipTapRichTextBlock block typing", () => {
+    const block = createTipTapRichTextBlock({ supports: ["bold"] }, "TestTyping");
+
+    // The typed return value is what makes the block usable in fixtures: a fixture builds
+    // block data via `blockInputFactory(...).transformToBlockData()` and needs typed access
+    // to `tipTapContent` (rather than the untyped `BlockDataInterface`/`BlockInputInterface`).
+    it("should expose typed tipTapContent on the block input", () => {
+        const content: TipTapRichTextBlockContent = {
+            type: "doc",
+            content: [{ type: "paragraph", content: [{ type: "text", text: "Typed" }] }],
+        };
+
+        const input = block.blockInputFactory({ tipTapContent: content });
+
+        // tipTapContent is typed (not `any`/`unknown`) on the input
+        const inputContent: TipTapRichTextBlockContent = input.tipTapContent;
+        expect(inputContent.type).toBe("doc");
+    });
+
+    it("should expose typed tipTapContent on the transformed block data", () => {
+        const content: TipTapRichTextBlockContent = {
+            type: "doc",
+            content: [{ type: "paragraph", content: [{ type: "text", text: "Typed data" }] }],
+        };
+
+        const blockData = block.blockInputFactory({ tipTapContent: content }).transformToBlockData();
+
+        // tipTapContent is typed on the resulting block data
+        const dataContent: TipTapRichTextBlockContent = blockData.tipTapContent;
+        expect(dataContent.content?.[0].content?.[0].text).toBe("Typed data");
+    });
+
+    it("should expose typed tipTapContent via blockDataFactory", () => {
+        const content: TipTapRichTextBlockContent = {
+            type: "doc",
+            content: [{ type: "paragraph", content: [{ type: "text", text: "Factory data" }] }],
+        };
+
+        const blockData = block.blockDataFactory({ tipTapContent: content });
+
+        const dataContent: TipTapRichTextBlockContent = blockData.tipTapContent;
+        expect(dataContent.content?.[0].content?.[0].text).toBe("Factory data");
+    });
+
+    it("should round-trip content through toPlain with a typed shape", () => {
+        const content: TipTapRichTextBlockContent = {
+            type: "doc",
+            content: [{ type: "paragraph", content: [{ type: "text", text: "Round trip" }] }],
+        };
+
+        const plain: { tipTapContent: TipTapRichTextBlockContent } = block.blockInputFactory({ tipTapContent: content }).toPlain();
+        expect(plain.tipTapContent).toEqual(content);
+    });
+
+    it("should be assignable to the exported interfaces", () => {
+        const content: TipTapRichTextBlockContent = {
+            type: "doc",
+            content: [{ type: "paragraph", content: [{ type: "text", text: "Interfaces" }] }],
+        };
+
+        const input: TipTapRichTextBlockInputInterface = block.blockInputFactory({ tipTapContent: content });
+        const blockData: TipTapRichTextBlockDataInterface = input.transformToBlockData();
+
+        expect(input.tipTapContent).toEqual(content);
+        expect((blockData.tipTapContent as TipTapRichTextBlockContent).type).toBe("doc");
     });
 });
