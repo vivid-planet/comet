@@ -1,10 +1,10 @@
 import { IsBoolean, IsOptional } from "class-validator";
 
-import { BlockData, BlockInput, blockInputToData, createBlock } from "./block";
-import { BlockField } from "./decorators/field";
-import { AddNoFollowMigration } from "./externalLink/migrations/1-add-no-follow.migration";
-import { typeSafeBlockMigrationPipe } from "./migrations/typeSafeBlockMigrationPipe";
-import { IsLinkTarget } from "./validator/is-link-target.validator";
+import { BlockData, BlockInput, blockInputToData, createBlock } from "../block";
+import { BlockField } from "../decorators/field";
+import { typeSafeBlockMigrationPipe } from "../migrations/typeSafeBlockMigrationPipe";
+import { IsLinkTarget } from "../validator/is-link-target.validator";
+import { AddNoFollowMigration } from "./migrations/1-add-no-follow.migration";
 
 class ExternalLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
