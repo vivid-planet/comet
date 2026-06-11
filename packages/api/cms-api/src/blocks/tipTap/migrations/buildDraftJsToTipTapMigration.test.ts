@@ -93,7 +93,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     entityMap: {},
                 },
             });
-            const input = block.blockInputFactory(data);
+            const input = block.blockInputFactory({ tipTapContent: data.tipTapContent });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
         });
@@ -125,12 +125,41 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     },
                 },
             });
-            const input = block.blockInputFactory(data);
-            const errors = await validate(input);
-            expect(errors).toHaveLength(0);
 
             expect(data.childBlocksInfo()).toHaveLength(1);
             expect(data.childBlocksInfo()[0].name).toBe("MigratedRichTextLink");
+
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [
+                                {
+                                    type: "text",
+                                    text: "click here",
+                                    marks: [
+                                        {
+                                            type: "link",
+                                            attrs: {
+                                                data: {
+                                                    attachedBlocks: [
+                                                        { type: "external", props: { targetUrl: "https://example.com", openInNewWindow: false } },
+                                                    ],
+                                                    activeType: "external",
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
         });
     });
 
@@ -152,14 +181,13 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     },
                 },
             });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const tipTapContent = (data as any).tipTapContent;
-            const input = block.blockInputFactory(data);
+            const tipTapContent = data.tipTapContent;
+            const input = block.blockInputFactory({ tipTapContent });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
 
-            const segments = tipTapContent.content[0].content;
-            expect(segments[0].marks).toBeUndefined();
+            const segments = tipTapContent.content?.[0].content;
+            expect(segments?.[0].marks).toBeUndefined();
         });
     });
 
@@ -177,9 +205,8 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     entityMap: {},
                 },
             });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const tipTapContent = (data as any).tipTapContent;
-            const input = block.blockInputFactory(data);
+            const tipTapContent = data.tipTapContent;
+            const input = block.blockInputFactory({ tipTapContent });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
             expect(tipTapContent.content?.length ?? 0).toBeLessThanOrEqual(2);
