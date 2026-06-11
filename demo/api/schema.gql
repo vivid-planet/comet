@@ -1976,7 +1976,7 @@ type Query {
   damMediaAlternatives(alternative: ID, for: ID, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DamMediaAlternativeSort!], type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   findCopiesOfFileInScope(id: ID!, imageCropArea: ImageCropAreaInput, scope: DamScopeInput!): [DamFile!]!
   footer(scope: FooterScopeInput!): Footer
-  fullTextSearch(limit: Int! = 25, offset: Int! = 0, search: String!): PaginatedEntityInfo!
+  fullTextSearch(limit: Int! = 25, offset: Int! = 0, requiredPermissions: [Permission!]!, search: String!): PaginatedEntityInfo!
   isBrevoConfigDefined(scope: EmailCampaignContentScopeInput!): Boolean!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!
