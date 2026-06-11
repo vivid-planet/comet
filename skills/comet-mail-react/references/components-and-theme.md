@@ -13,8 +13,9 @@ Theme system, module augmentation, scoped theming, and the component behavior fo
 7. [HtmlInlineLink](#htmlinlinelink)
 8. [Image](#image)
 9. [Divider](#divider)
-10. [Scoped Theming](#scoped-theming)
-11. [MJML Component Re-exports](#mjml-component-re-exports)
+10. [Button](#button)
+11. [Scoped Theming](#scoped-theming)
+12. [MJML Component Re-exports](#mjml-component-re-exports)
 
 ---
 
@@ -113,6 +114,34 @@ declare module "@comet/mail-react" {
 ```
 
 Variant properties (`height`, `backgroundColor`, `backgroundImage`) accept responsive values.
+
+### ButtonVariants
+
+Controls the `variant` prop on `MjmlButton` and `HtmlButton`:
+
+```ts
+const theme = createTheme({
+    button: {
+        defaultVariant: "primary",
+        variants: {
+            primary: { backgroundColor: "#5B4FC7", color: "#FFFFFF" },
+            gradient: {
+                backgroundColor: "#5B4FC7",
+                backgroundImage: "linear-gradient(90deg, #5B4FC7, #9C5BC7)",
+            },
+        },
+    },
+});
+
+declare module "@comet/mail-react" {
+    interface ButtonVariants {
+        primary: true;
+        gradient: true;
+    }
+}
+```
+
+Variant properties (`color`, `backgroundColor`, `backgroundImage`, `border`, `borderRadius`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `padding`) accept responsive values.
 
 ### ThemeBreakpoints
 
@@ -324,6 +353,23 @@ Themed horizontal line, styled from `theme.divider` (base styles plus variants).
 
 ---
 
+## Button
+
+Themed button, styled from `theme.button` (base styles plus variants). Falls back to a built-in default when no theme is in scope; only `variant` requires a theme.
+
+- **`MjmlButton`** — inside `MjmlColumn`. Classes `.mjmlButton`, `.mjmlButton--{variant}`, `.mjmlButton--fullWidth`.
+- **`HtmlButton`** — inside ending tags (`MjmlRaw`) or any non-MJML context. Classes `.htmlButton`, `.htmlButton--{variant}`, `.htmlButton--fullWidth`.
+
+`theme.button.padding` is the inner spacing around the label; `MjmlButton`'s `padding` prop is the outer spacing. `fullWidth` makes the button span its container. A gradient `backgroundImage` overlays the solid `backgroundColor`, which stays the fallback for clients that drop `background-image` (Outlook). Outlook ignores `border-radius`, so rounded buttons render with square corners there.
+
+```tsx
+<MjmlButton variant="primary" fullWidth href="https://example.com">
+    Click me
+</MjmlButton>
+```
+
+---
+
 ## Scoped Theming
 
 `ThemeProvider` applies a different theme to a subtree. Common use: dark-background sections.
@@ -380,6 +426,6 @@ Theme-aware `registerStyles` entries always resolve against the **root theme** f
 
 `@comet/mail-react` re-exports all MJML components from `@faire/mjml-react`. Consumers import everything from `@comet/mail-react` — never from `@faire/mjml-react` directly.
 
-Common re-exports: `MjmlColumn`, `MjmlButton`, `MjmlSpacer`, `MjmlTable`, `MjmlRaw`, `MjmlGroup`, `MjmlAttributes`, `MjmlAll`, `MjmlClass`, `MjmlStyle`, `MjmlComment`, `MjmlConditionalComment`.
+Common re-exports: `MjmlColumn`, `MjmlSpacer`, `MjmlTable`, `MjmlRaw`, `MjmlGroup`, `MjmlAttributes`, `MjmlAll`, `MjmlClass`, `MjmlStyle`, `MjmlComment`, `MjmlConditionalComment`.
 
 For the full MJML tag reference: https://documentation.mjml.io/
