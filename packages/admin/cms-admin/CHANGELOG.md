@@ -1,5 +1,22 @@
 # @comet/cms-admin
 
+## 9.0.0-beta.6
+
+### Minor Changes
+
+- 4c1aeb2: Add `noFollow` option to `ExternalLinkBlock`
+
+    Editors can now mark an external link as `nofollow` via a new checkbox in the admin form. When enabled, the rendered `<a>` tag receives `rel="nofollow"`. Existing links are unaffected by an automatic block-data migration that sets `noFollow` to `false`.
+
+### Patch Changes
+
+- 0e9189b: Export `AnonymousBlockInterface` type
+- Updated dependencies [57678d0]
+    - @comet/admin@9.0.0-beta.6
+    - @comet/admin-date-time@9.0.0-beta.6
+    - @comet/admin-rte@9.0.0-beta.6
+    - @comet/admin-icons@9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ### Minor Changes
