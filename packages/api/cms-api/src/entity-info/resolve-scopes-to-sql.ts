@@ -1,21 +1,21 @@
 import type { EntityMetadata, EntityProperty } from "@mikro-orm/postgresql";
 
-import { type EntityScopeMapping, isEntityScopeMapping, type ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { isEntityScopeMapping, type ScopedEntityMeta, type SingleEntityScopeMapping } from "../user-permissions/decorators/scoped-entity.decorator";
 import { resolveFieldToSql } from "./resolve-field-to-sql";
 
 /**
- * Resolves the scope of an entity to a SQL expression returning a `jsonb` value (or `NULL::jsonb`).
+ * Resolves the scope(s) of an entity to a SQL expression returning a `jsonb` array of scopes (or `NULL::jsonb`).
  *
- * The scope is taken from (in order of precedence):
+ * The scopes are taken from (in order of precedence):
  * 1. a `scope` property on the entity (simple case)
- * 2. a SQL-convertible `@ScopedEntity` mapping (string field path or object mapping)
+ * 2. a SQL-convertible `@ScopedEntity` mapping (string field path, object mapping, or an array of these for multiple scopes)
  *
  * A callback or service `@ScopedEntity` cannot be converted to SQL and therefore throws.
  */
-export function resolveScopeToSql({ metadata, scopedEntity }: { metadata: EntityMetadata; scopedEntity: ScopedEntityMeta | undefined }): string {
+export function resolveScopesToSql({ metadata, scopedEntity }: { metadata: EntityMetadata; scopedEntity: ScopedEntityMeta | undefined }): string {
     const scopeProp = metadata.props.find((prop) => prop.name === "scope");
     if (scopeProp) {
-        return scopePropertyToJsonbSql(scopeProp, metadata.tableName);
+        return `jsonb_build_array(${scopePropertyToJsonbSql(scopeProp, metadata.tableName)})`;
     }
 
     if (scopedEntity) {
@@ -25,13 +25,15 @@ export function resolveScopeToSql({ metadata, scopedEntity }: { metadata: Entity
                     `Use the field-path string (e.g. @ScopedEntity("company.scope")) or the object mapping (e.g. @ScopedEntity({ companyId: "company.id" })) variant instead.`,
             );
         }
-        return resolveScopeMappingToSql(scopedEntity, metadata, metadata.tableName);
+        const mappings = Array.isArray(scopedEntity) ? scopedEntity : [scopedEntity];
+        const scopeSqls = mappings.map((mapping) => resolveScopeMappingToSql(mapping, metadata, metadata.tableName));
+        return `jsonb_build_array(${scopeSqls.join(", ")})`;
     }
 
     return "NULL::jsonb";
 }
 
-function resolveScopeMappingToSql(mapping: EntityScopeMapping, metadata: EntityMetadata, tableName: string): string {
+function resolveScopeMappingToSql(mapping: SingleEntityScopeMapping, metadata: EntityMetadata, tableName: string): string {
     if (typeof mapping === "string") {
         return resolveScopePathToSql(mapping, metadata, tableName);
     }

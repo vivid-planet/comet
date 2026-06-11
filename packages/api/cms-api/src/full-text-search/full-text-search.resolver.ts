@@ -35,9 +35,10 @@ export class FullTextSearchResolver {
         };
 
         if (scope) {
+            // The view exposes a `scopes` array, so match rows whose scopes contain the requested scope.
             // GraphQL sends the scope object with a null prototype, which breaks MikroORM's internal hasOwnProperty calls.
             // Spreading into a plain object fixes this. See https://github.com/mikro-orm/mikro-orm/issues/2846.
-            where.scope = { ...scope };
+            where.scopes = { $contains: [{ ...scope }] };
         }
 
         const [matches, totalCount] = await this.entityManager.findAndCount(EntityInfoFullTextObject, where, { offset, limit });

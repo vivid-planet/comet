@@ -172,6 +172,22 @@ describe("getScopeForScopedEntity", () => {
         });
     });
 
+    describe("multiple mappings variant", () => {
+        it("resolves an array of mappings into an array of scopes", async () => {
+            const row = orm.em.create(NewsComment, { id: "8", news: { id: "n8", scope: { domain: "main", language: "de" } } });
+
+            const scope = await getScopeForScopedEntity({
+                scoped: ["news.scope", { newsId: "news.id" }],
+                entity: NewsComment,
+                row,
+                entityManager: orm.em,
+                moduleRef: unusedModuleRef,
+            });
+
+            expect(scope).toEqual([{ domain: "main", language: "de" }, { newsId: "n8" }]);
+        });
+    });
+
     describe("object mapping variant", () => {
         it("resolves each field path into a scope object", async () => {
             const row = orm.em.create(Product, { id: "6", company: { id: "c1", scope: { domain: "main", language: "en" } } });

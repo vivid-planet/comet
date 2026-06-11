@@ -11,15 +11,22 @@ export interface EntityScopeServiceInterface<Entity extends AnyEntity = AnyEntit
 }
 
 /**
- * Declarative, SQL-convertible description of an entity's scope.
+ * A single declarative scope mapping:
+ * - A string is a field path pointing to the scope object, e.g. `"company.scope"`.
+ * - An object maps scope properties to field paths, e.g. `{ companyId: "company.id" }`.
+ */
+export type SingleEntityScopeMapping = string | Record<string, string>;
+
+/**
+ * Declarative, SQL-convertible description of an entity's scope(s).
  *
  * In contrast to the callback and service variants, this can be both resolved to a SQL expression (required by the
  * `FullTextSearchModule`, which builds the scope from the database) and evaluated at runtime (e.g. in the auth guard).
  *
- * - A string is a field path pointing to the scope object, e.g. `"company.scope"`.
- * - An object maps scope properties to field paths, e.g. `{ companyId: "company.id" }`.
+ * A single mapping (the common case) describes one scope. An array of mappings describes multiple scopes, e.g.
+ * `["company.scope", "otherCompany.scope"]`.
  */
-export type EntityScopeMapping = string | Record<string, string>;
+export type EntityScopeMapping = SingleEntityScopeMapping | SingleEntityScopeMapping[];
 
 export type ScopedEntityMeta<Entity extends AnyEntity = AnyEntity> =
     | EntityScopeFunction<Entity>
