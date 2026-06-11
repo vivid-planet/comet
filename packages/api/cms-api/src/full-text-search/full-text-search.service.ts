@@ -5,7 +5,7 @@ import { DiscoverService } from "../dependencies/discover.service";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "../entity-info/entity-info.decorator";
 import { isEntityInfoSql, requiredPermissionToSql } from "../entity-info/entity-info.utils";
 import { resolveFieldToSql } from "../entity-info/resolve-field-to-sql";
-import { resolveScopeToSql } from "../entity-info/resolve-scope-to-sql";
+import { resolveScopesToSql } from "../entity-info/resolve-scopes-to-sql";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
 import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../user-permissions/decorators/required-permission.decorator";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
@@ -35,11 +35,11 @@ export class FullTextSearchService {
                         | RequiredPermissionMetadata
                         | undefined;
                     const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
-                    const scopeSql = resolveScopeToSql({ metadata: targetEntity.metadata, scopedEntity: undefined });
+                    const scopesSql = resolveScopesToSql({ metadata: targetEntity.metadata, scopedEntity: undefined });
 
                     indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."id", 'PageTreeNode' AS "entityName", "PageTreeNodeFullText"."fullText",
                         ${requiredPermissionSql} AS "requiredPermission",
-                        ${scopeSql} AS "scope"
+                        ${scopesSql} AS "scopes"
                         FROM "PageTreeNodeEntityInfo"
                         INNER JOIN "PageTreeNodeFullText" ON "PageTreeNodeFullText"."pageTreeNodeId" = "PageTreeNodeEntityInfo"."id"::uuid
                         INNER JOIN "PageTreeNode" ON "PageTreeNode"."id" = "PageTreeNodeEntityInfo"."id"::uuid`);
@@ -61,21 +61,21 @@ export class FullTextSearchService {
             const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
 
             const scopedEntity = Reflect.getMetadata(SCOPED_ENTITY_METADATA_KEY, targetEntity.entity) as ScopedEntityMeta | undefined;
-            const scopeSql = resolveScopeToSql({ metadata, scopedEntity });
+            const scopesSql = resolveScopesToSql({ metadata, scopedEntity });
 
             indexSelects.push(`SELECT
                             "${metadata.tableName}"."${primary}"::text "id",
                             '${entityName}' "entityName",
                             ${fullTextSql} AS "fullText",
                             ${requiredPermissionSql} AS "requiredPermission",
-                            ${scopeSql} AS "scope"
+                            ${scopesSql} AS "scopes"
                         FROM "${metadata.tableName}"`);
         }
 
         if (indexSelects.length === 0) {
             // Empty placeholder so the view always exists with the expected columns
             indexSelects.push(
-                `SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", ARRAY[]::text[] AS "requiredPermission", NULL::jsonb AS "scope" WHERE false`,
+                `SELECT NULL::text AS "id", NULL::text AS "entityName", NULL::tsvector AS "fullText", ARRAY[]::text[] AS "requiredPermission", NULL::jsonb AS "scopes" WHERE false`,
             );
         }
 

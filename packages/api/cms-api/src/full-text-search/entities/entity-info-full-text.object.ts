@@ -21,5 +21,5 @@ export class EntityInfoFullTextObject {
     requiredPermission: string[];
 
     @Property({ type: "json", nullable: true })
-    scope?: ContentScope;
+    scopes?: ContentScope[];
 }

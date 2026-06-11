@@ -2,7 +2,12 @@ import { type AnyEntity, type EntityManager, type EntityName, Reference, wrap } 
 import type { ModuleRef } from "@nestjs/core";
 
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
-import { type EntityScopeMapping, isEntityScopeMapping, type ScopedEntityMeta } from "./decorators/scoped-entity.decorator";
+import {
+    type EntityScopeMapping,
+    isEntityScopeMapping,
+    type ScopedEntityMeta,
+    type SingleEntityScopeMapping,
+} from "./decorators/scoped-entity.decorator";
 import type { ContentScope } from "./interfaces/content-scope.interface";
 
 /**
@@ -39,6 +44,23 @@ async function resolveScopeMapping({
     entityManager,
 }: {
     mapping: EntityScopeMapping;
+    entity: EntityName<AnyEntity>;
+    row: AnyEntity;
+    entityManager: EntityManager;
+}): Promise<ContentScope | ContentScope[]> {
+    if (Array.isArray(mapping)) {
+        return Promise.all(mapping.map((singleMapping) => resolveSingleScopeMapping({ mapping: singleMapping, entity, row, entityManager })));
+    }
+    return resolveSingleScopeMapping({ mapping, entity, row, entityManager });
+}
+
+async function resolveSingleScopeMapping({
+    mapping,
+    entity,
+    row,
+    entityManager,
+}: {
+    mapping: SingleEntityScopeMapping;
     entity: EntityName<AnyEntity>;
     row: AnyEntity;
     entityManager: EntityManager;
