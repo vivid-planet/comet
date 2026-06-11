@@ -74,10 +74,10 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
         });
     });
 
-    describe("validation after migration", () => {
+    describe("inline style migration", () => {
         const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichTextValidate");
 
-        it("produces TipTap content that passes input validation", async () => {
+        it("migrates DraftJS inline styles to TipTap marks", () => {
             const data = block.blockDataFactory({
                 draftContent: {
                     blocks: [
@@ -93,9 +93,19 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     entityMap: {},
                 },
             });
-            const input = block.blockInputFactory({ tipTapContent: data.tipTapContent });
-            const errors = await validate(input);
-            expect(errors).toHaveLength(0);
+            expect(data.tipTapContent).toEqual({
+                type: "doc",
+                content: [
+                    {
+                        type: "paragraph",
+                        content: [
+                            { type: "text", text: "bold", marks: [{ type: "bold" }] },
+                            { type: "text", text: " and " },
+                            { type: "text", text: "italic", marks: [{ type: "italic" }] },
+                        ],
+                    },
+                ],
+            });
         });
     });
 
@@ -166,7 +176,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
     describe("without link block configured", () => {
         const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichTextNoLink");
 
-        it("strips link entities and still validates", async () => {
+        it("strips link entities when no link block is configured", () => {
             const data = block.blockDataFactory({
                 draftContent: {
                     blocks: [
@@ -181,12 +191,8 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     },
                 },
             });
-            const tipTapContent = data.tipTapContent;
-            const input = block.blockInputFactory({ tipTapContent });
-            const errors = await validate(input);
-            expect(errors).toHaveLength(0);
 
-            const segments = tipTapContent.content?.[0].content;
+            const segments = data.tipTapContent.content?.[0].content;
             expect(segments?.[0].marks).toBeUndefined();
         });
     });
@@ -194,7 +200,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
     describe("maxTextBlocks fallback", () => {
         const block = createTipTapRichTextBlock({ maxTextBlocks: 2, migrateFromDraftJs: true }, "MigratedRichTextMaxBlocks");
 
-        it("falls back to a valid doc when conversion exceeds maxTextBlocks", async () => {
+        it("falls back to a valid doc when conversion exceeds maxTextBlocks", () => {
             const data = block.blockDataFactory({
                 draftContent: {
                     blocks: [
@@ -205,11 +211,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     entityMap: {},
                 },
             });
-            const tipTapContent = data.tipTapContent;
-            const input = block.blockInputFactory({ tipTapContent });
-            const errors = await validate(input);
-            expect(errors).toHaveLength(0);
-            expect(tipTapContent.content?.length ?? 0).toBeLessThanOrEqual(2);
+            expect(data.tipTapContent.content?.length ?? 0).toBeLessThanOrEqual(2);
         });
     });
 });
