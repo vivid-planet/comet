@@ -565,7 +565,7 @@ type Query {
   warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
   damMediaAlternative(id: ID!): DamMediaAlternative!
   damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
-  fullTextSearch(search: String!, offset: Int! = 0, limit: Int! = 25): PaginatedEntityInfo!
+  myFullTextSearch(search: String!, offset: Int! = 0, limit: Int! = 25): PaginatedEntityInfo!
 }
 
 input RedirectScopeInput {
