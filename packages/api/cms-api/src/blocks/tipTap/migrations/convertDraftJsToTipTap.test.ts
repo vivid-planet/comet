@@ -103,20 +103,20 @@ describe("convertDraftJsToTipTap", () => {
             expect(result.content).toEqual([{ type: "paragraph" }]);
         });
 
-        it("maps a block type from blockStyleMap to a paragraph with blockStyle attr", () => {
+        it("maps a block type from textBlockStyleMap to a paragraph with textBlockStyle attr", () => {
             const result = convertDraftJsToTipTap(
                 { blocks: [makeBlock({ type: "paragraph-small", text: "tiny" })], entityMap: {} },
-                { supports: [...defaultSupports], blockStyleMap: { "paragraph-small": "small" } },
+                { supports: [...defaultSupports], textBlockStyleMap: { "paragraph-small": "small" } },
             );
-            expect(result.content).toEqual([{ type: "paragraph", attrs: { blockStyle: "small" }, content: [{ type: "text", text: "tiny" }] }]);
+            expect(result.content).toEqual([{ type: "paragraph", attrs: { textBlockStyle: "small" }, content: [{ type: "text", text: "tiny" }] }]);
         });
 
-        it("blockStyleMap takes precedence over header mapping", () => {
+        it("textBlockStyleMap takes precedence over header mapping", () => {
             const result = convertDraftJsToTipTap(
                 { blocks: [makeBlock({ type: "header-one", text: "Title" })], entityMap: {} },
-                { supports: [...defaultSupports], blockStyleMap: { "header-one": "huge" } },
+                { supports: [...defaultSupports], textBlockStyleMap: { "header-one": "huge" } },
             );
-            expect(result.content).toEqual([{ type: "paragraph", attrs: { blockStyle: "huge" }, content: [{ type: "text", text: "Title" }] }]);
+            expect(result.content).toEqual([{ type: "paragraph", attrs: { textBlockStyle: "huge" }, content: [{ type: "text", text: "Title" }] }]);
         });
     });
 

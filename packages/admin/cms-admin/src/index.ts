@@ -81,11 +81,11 @@ export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export type {
-    TipTapBlockStyle,
-    TipTapBlockType,
     TipTapInlineStyle,
     TipTapPlaceholder,
     TipTapRichTextBlockContent,
+    TipTapTextBlockStyle,
+    TipTapTextBlockType,
 } from "./blocks/tipTap/createTipTapRichTextBlock";
 export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
 export type {

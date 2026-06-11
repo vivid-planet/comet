@@ -1,10 +1,10 @@
 import Heading from "@tiptap/extension-heading";
 
-export const BlockStyleHeading = Heading.extend({
+export const TextBlockStyleHeading = Heading.extend({
     addAttributes() {
         return {
             ...this.parent?.(),
-            blockStyle: {
+            textBlockStyle: {
                 default: null,
             },
         };
