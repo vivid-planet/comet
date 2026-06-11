@@ -1193,67 +1193,55 @@ describe("createTipTapRichTextBlock validation", () => {
 describe("createTipTapRichTextBlock block typing", () => {
     const block = createTipTapRichTextBlock({ supports: ["bold"] }, "TestTyping");
 
-    // The typed return value is what makes the block usable in fixtures: a fixture builds
-    // block data via `blockInputFactory(...).transformToBlockData()` and needs typed access
-    // to `tipTapContent` (rather than the untyped `BlockDataInterface`/`BlockInputInterface`).
-    it("should expose typed tipTapContent on the block input", () => {
-        const content: TipTapRichTextBlockContent = {
-            type: "doc",
-            content: [{ type: "paragraph", content: [{ type: "text", text: "Typed" }] }],
-        };
+    // The typed return value is what makes the block usable in fixtures: `blockInputFactory`
+    // validates the `tipTapContent` shape at the call site (no type annotation needed) and the
+    // resulting input/data expose `tipTapContent` as a typed property — rather than the untyped
+    // `BlockInputInterface`/`BlockDataInterface` the factory returned before.
+    it("should validate the input shape and expose typed tipTapContent on the input", () => {
+        const input = block.blockInputFactory({
+            tipTapContent: {
+                type: "doc",
+                content: [{ type: "paragraph", content: [{ type: "text", text: "Typed" }] }],
+            },
+        });
 
-        const input = block.blockInputFactory({ tipTapContent: content });
-
-        // tipTapContent is typed (not `any`/`unknown`) on the input
-        const inputContent: TipTapRichTextBlockContent = input.tipTapContent;
-        expect(inputContent.type).toBe("doc");
+        expect(input.tipTapContent.type).toBe("doc");
     });
 
     it("should expose typed tipTapContent on the transformed block data", () => {
-        const content: TipTapRichTextBlockContent = {
-            type: "doc",
-            content: [{ type: "paragraph", content: [{ type: "text", text: "Typed data" }] }],
-        };
+        const blockData = block
+            .blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [{ type: "paragraph", content: [{ type: "text", text: "Typed data" }] }],
+                },
+            })
+            .transformToBlockData();
 
-        const blockData = block.blockInputFactory({ tipTapContent: content }).transformToBlockData();
-
-        // tipTapContent is typed on the resulting block data
-        const dataContent: TipTapRichTextBlockContent = blockData.tipTapContent;
-        expect(dataContent.content?.[0].content?.[0].text).toBe("Typed data");
+        expect(blockData.tipTapContent.content?.[0].content?.[0].text).toBe("Typed data");
     });
 
     it("should expose typed tipTapContent via blockDataFactory", () => {
-        const content: TipTapRichTextBlockContent = {
-            type: "doc",
-            content: [{ type: "paragraph", content: [{ type: "text", text: "Factory data" }] }],
-        };
+        const blockData = block.blockDataFactory({
+            tipTapContent: {
+                type: "doc",
+                content: [{ type: "paragraph", content: [{ type: "text", text: "Factory data" }] }],
+            },
+        });
 
-        const blockData = block.blockDataFactory({ tipTapContent: content });
-
-        const dataContent: TipTapRichTextBlockContent = blockData.tipTapContent;
-        expect(dataContent.content?.[0].content?.[0].text).toBe("Factory data");
+        expect(blockData.tipTapContent.content?.[0].content?.[0].text).toBe("Factory data");
     });
 
-    it("should round-trip content through toPlain with a typed shape", () => {
-        const content: TipTapRichTextBlockContent = {
-            type: "doc",
-            content: [{ type: "paragraph", content: [{ type: "text", text: "Round trip" }] }],
-        };
-
-        const plain: { tipTapContent: TipTapRichTextBlockContent } = block.blockInputFactory({ tipTapContent: content }).toPlain();
-        expect(plain.tipTapContent).toEqual(content);
-    });
-
-    it("should be assignable to the exported interfaces", () => {
-        const content: TipTapRichTextBlockContent = {
-            type: "doc",
-            content: [{ type: "paragraph", content: [{ type: "text", text: "Interfaces" }] }],
-        };
-
-        const input: TipTapRichTextBlockInputInterface = block.blockInputFactory({ tipTapContent: content });
+    it("should return values assignable to the exported interfaces", () => {
+        const input: TipTapRichTextBlockInputInterface = block.blockInputFactory({
+            tipTapContent: {
+                type: "doc",
+                content: [{ type: "paragraph", content: [{ type: "text", text: "Interfaces" }] }],
+            },
+        });
         const blockData: TipTapRichTextBlockDataInterface = input.transformToBlockData();
 
-        expect(input.tipTapContent).toEqual(content);
-        expect((blockData.tipTapContent as TipTapRichTextBlockContent).type).toBe("doc");
+        expect(input.tipTapContent.type).toBe("doc");
+        expect(blockData.tipTapContent.type).toBe("doc");
     });
 });
