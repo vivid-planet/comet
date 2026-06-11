@@ -1,4 +1,3 @@
-import { validate } from "class-validator";
 import { describe, expect, it } from "vitest";
 
 import { ExternalLinkBlock } from "../../ExternalLinkBlock";
@@ -20,6 +19,11 @@ function draftBlock(overrides: Partial<DraftBlock> = {}): DraftBlock {
     };
 }
 
+// The migration only emits the converted document when it passes its own internal
+// `isValidTipTapContentSync` check; otherwise it falls back to a stripped or empty doc.
+// Asserting the exact migrated `tipTapContent` therefore verifies both the conversion
+// result and that it is valid TipTap content — without round-tripping block data through
+// `blockInputFactory` (which expects input-shaped data, not block data).
 describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
     describe("end-to-end via blockDataFactory", () => {
         const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichText");
@@ -74,10 +78,10 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
         });
     });
 
-    describe("validation after migration", () => {
-        const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichTextValidate");
+    describe("inline style marks", () => {
+        const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichTextInlineStyles");
 
-        it("produces TipTap content that passes input validation", async () => {
+        it("converts DraftJS inline styles to the matching TipTap marks", () => {
             const data = block.blockDataFactory({
                 draftContent: {
                     blocks: [
@@ -93,9 +97,21 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     entityMap: {},
                 },
             });
-            const input = block.blockInputFactory(data);
-            const errors = await validate(input);
-            expect(errors).toHaveLength(0);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const tipTapContent = (data as any).tipTapContent;
+            expect(tipTapContent).toEqual({
+                type: "doc",
+                content: [
+                    {
+                        type: "paragraph",
+                        content: [
+                            { type: "text", text: "bold", marks: [{ type: "bold" }] },
+                            { type: "text", text: " and " },
+                            { type: "text", text: "italic", marks: [{ type: "italic" }] },
+                        ],
+                    },
+                ],
+            });
         });
     });
 
@@ -103,7 +119,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
         const LinkBlock = createLinkBlock({ supportedBlocks: { external: ExternalLinkBlock } }, "MigratedRichTextLink");
         const block = createTipTapRichTextBlock({ link: LinkBlock, migrateFromDraftJs: true }, "MigratedRichTextWithLink");
 
-        it("converts DraftJS LINK entity to a link mark and validates", async () => {
+        it("converts DraftJS LINK entity to a link mark and a child block", () => {
             const data = block.blockDataFactory({
                 draftContent: {
                     blocks: [
@@ -125,9 +141,12 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     },
                 },
             });
-            const input = block.blockInputFactory(data);
-            const errors = await validate(input);
-            expect(errors).toHaveLength(0);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const tipTapContent = (data as any).tipTapContent;
+            const textNode = tipTapContent.content[0].content[0];
+            expect(textNode.text).toBe("click here");
+            expect(textNode.marks).toHaveLength(1);
+            expect(textNode.marks[0].type).toBe("link");
 
             expect(data.childBlocksInfo()).toHaveLength(1);
             expect(data.childBlocksInfo()[0].name).toBe("MigratedRichTextLink");
@@ -137,7 +156,7 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
     describe("without link block configured", () => {
         const block = createTipTapRichTextBlock({ migrateFromDraftJs: true }, "MigratedRichTextNoLink");
 
-        it("strips link entities and still validates", async () => {
+        it("strips link entities and keeps the plain text", () => {
             const data = block.blockDataFactory({
                 draftContent: {
                     blocks: [
@@ -154,19 +173,18 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
             });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
-            const input = block.blockInputFactory(data);
-            const errors = await validate(input);
-            expect(errors).toHaveLength(0);
-
-            const segments = tipTapContent.content[0].content;
-            expect(segments[0].marks).toBeUndefined();
+            expect(tipTapContent).toEqual({
+                type: "doc",
+                content: [{ type: "paragraph", content: [{ type: "text", text: "click here" }] }],
+            });
+            expect(data.childBlocksInfo()).toHaveLength(0);
         });
     });
 
     describe("maxBlocks fallback", () => {
         const block = createTipTapRichTextBlock({ maxBlocks: 2, migrateFromDraftJs: true }, "MigratedRichTextMaxBlocks");
 
-        it("falls back to a valid doc when conversion exceeds maxBlocks", async () => {
+        it("falls back to an empty doc when conversion exceeds maxBlocks", () => {
             const data = block.blockDataFactory({
                 draftContent: {
                     blocks: [
@@ -179,10 +197,9 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
             });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const tipTapContent = (data as any).tipTapContent;
-            const input = block.blockInputFactory(data);
-            const errors = await validate(input);
-            expect(errors).toHaveLength(0);
-            expect(tipTapContent.content?.length ?? 0).toBeLessThanOrEqual(2);
+            // Both the converted doc (3 blocks) and the stripped doc (3 blocks) exceed maxBlocks,
+            // so the migration falls back to the empty doc.
+            expect(tipTapContent).toEqual({ type: "doc", content: [{ type: "paragraph" }] });
         });
     });
 });
