@@ -1,11 +1,15 @@
+import type { JSONContent } from "@tiptap/core";
 import { describe, expect, it } from "vitest";
 
+import type { BlockDataInterface } from "../../block";
 import { ExternalLinkBlock } from "../../ExternalLinkBlock";
 import { createLinkBlock } from "../../factories/createLinkBlock";
 import { createTipTapRichTextBlock } from "../createTipTapRichTextBlock";
 import type { DraftJsContent } from "./convertDraftJsToTipTap";
 
 type DraftBlock = DraftJsContent["blocks"][number];
+
+type TipTapBlockData = BlockDataInterface & { tipTapContent: JSONContent };
 
 function draftBlock(overrides: Partial<DraftBlock> = {}): DraftBlock {
     return {
@@ -29,10 +33,8 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     blocks: [draftBlock({ type: "unstyled", text: "Hello" })],
                     entityMap: {},
                 },
-            });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const tipTapContent = (data as any).tipTapContent;
-            expect(tipTapContent).toEqual({
+            }) as TipTapBlockData;
+            expect(data.tipTapContent).toEqual({
                 type: "doc",
                 content: [{ type: "paragraph", content: [{ type: "text", text: "Hello" }] }],
             });
@@ -57,9 +59,8 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                 },
                 $$version: 1,
             };
-            const data = block.blockDataFactory(input);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            expect((data as any).tipTapContent).toEqual(input.tipTapContent);
+            const data = block.blockDataFactory(input) as TipTapBlockData;
+            expect(data.tipTapContent).toEqual(input.tipTapContent);
         });
 
         it("preserves TipTap-shaped data when no $$version is present", () => {
@@ -67,9 +68,8 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                 type: "doc",
                 content: [{ type: "paragraph", content: [{ type: "text", text: "pre-existing" }] }],
             };
-            const data = block.blockDataFactory({ tipTapContent });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            expect((data as any).tipTapContent).toEqual(tipTapContent);
+            const data = block.blockDataFactory({ tipTapContent }) as TipTapBlockData;
+            expect(data.tipTapContent).toEqual(tipTapContent);
         });
     });
 
@@ -91,10 +91,8 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     ],
                     entityMap: {},
                 },
-            });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const tipTapContent = (data as any).tipTapContent;
-            expect(tipTapContent).toEqual({
+            }) as TipTapBlockData;
+            expect(data.tipTapContent).toEqual({
                 type: "doc",
                 content: [
                     {
@@ -135,13 +133,16 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                         },
                     },
                 },
+            }) as TipTapBlockData;
+            expect(data.tipTapContent).toMatchObject({
+                type: "doc",
+                content: [
+                    {
+                        type: "paragraph",
+                        content: [{ type: "text", text: "click here", marks: [{ type: "link" }] }],
+                    },
+                ],
             });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const tipTapContent = (data as any).tipTapContent;
-            const textNode = tipTapContent.content[0].content[0];
-            expect(textNode.text).toBe("click here");
-            expect(textNode.marks).toHaveLength(1);
-            expect(textNode.marks[0].type).toBe("link");
 
             expect(data.childBlocksInfo()).toHaveLength(1);
             expect(data.childBlocksInfo()[0].name).toBe("MigratedRichTextLink");
@@ -165,10 +166,8 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                         "0": { type: "LINK", mutability: "MUTABLE", data: { href: "https://example.com" } },
                     },
                 },
-            });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const tipTapContent = (data as any).tipTapContent;
-            expect(tipTapContent).toEqual({
+            }) as TipTapBlockData;
+            expect(data.tipTapContent).toEqual({
                 type: "doc",
                 content: [{ type: "paragraph", content: [{ type: "text", text: "click here" }] }],
             });
@@ -189,12 +188,10 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
                     ],
                     entityMap: {},
                 },
-            });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const tipTapContent = (data as any).tipTapContent;
+            }) as TipTapBlockData;
             // Both the converted doc (3 blocks) and the stripped doc (3 blocks) exceed maxTextBlocks,
             // so the migration falls back to the empty doc.
-            expect(tipTapContent).toEqual({ type: "doc", content: [{ type: "paragraph" }] });
+            expect(data.tipTapContent).toEqual({ type: "doc", content: [{ type: "paragraph" }] });
         });
     });
 });
