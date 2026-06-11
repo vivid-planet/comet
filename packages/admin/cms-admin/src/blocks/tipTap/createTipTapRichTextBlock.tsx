@@ -10,6 +10,8 @@ import { FormattedMessage } from "react-intl";
 
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
+import { ChildBlocksContext } from "./ChildBlocksContext";
+import { CmsBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
@@ -109,6 +111,11 @@ interface TipTapRichTextBlockFactoryOptions {
     placeholders?: TipTapPlaceholder[];
     link?: BlockInterface & LinkBlockInterface;
     /**
+     * Child blocks that can be inserted into the editor via the toolbar's "+" menu.
+     * Each block is rendered as a non-editable preview that can be edited (dialog) or removed.
+     */
+    childBlocks?: BlockInterface[];
+    /**
      * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be created in the editor.
      */
@@ -205,6 +212,58 @@ async function mapLinkMarksDataAsync(content: JSONContent, fn: (data: any) => Pr
     return result;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapCmsBlockNodesData(content: JSONContent, fn: (blockType: string, data: any) => any): JSONContent {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (result.type === "cmsBlock" && result.attrs?.blockType) {
+        result.attrs = { ...result.attrs, data: fn(result.attrs.blockType, result.attrs.data) };
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = result.content.map((child) => mapCmsBlockNodesData(child, fn));
+    }
+
+    return result;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function mapCmsBlockNodesDataAsync(content: JSONContent, fn: (blockType: string, data: any) => Promise<any>): Promise<JSONContent> {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (result.type === "cmsBlock" && result.attrs?.blockType) {
+        result.attrs = { ...result.attrs, data: await fn(result.attrs.blockType, result.attrs.data) };
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = await Promise.all(result.content.map((child) => mapCmsBlockNodesDataAsync(child, fn)));
+    }
+
+    return result;
+}
+
+function collectCmsBlockNodes(content: JSONContent): Array<{ blockType: string; data: unknown }> {
+    const results: Array<{ blockType: string; data: unknown }> = [];
+
+    if (content.type === "cmsBlock" && content.attrs?.blockType) {
+        results.push({ blockType: content.attrs.blockType, data: content.attrs.data });
+    }
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            results.push(...collectCmsBlockNodes(child));
+        }
+    }
+
+    return results;
+}
+
 const TipTapEditor = ({
     state,
     updateState,
@@ -213,6 +272,7 @@ const TipTapEditor = ({
     inlineStyles,
     placeholders,
     linkBlock,
+    childBlocks,
     maxTextBlocks,
     listLevelMax,
 }: {
@@ -223,6 +283,7 @@ const TipTapEditor = ({
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    childBlocks: BlockInterface[];
     maxTextBlocks?: number;
     listLevelMax?: number;
 }) => {
@@ -230,6 +291,7 @@ const TipTapEditor = ({
     const hasInlineStyles = inlineStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
     const hasPlaceholders = placeholders.length > 0;
+    const hasChildBlocks = childBlocks.length > 0;
 
     const editor = useEditor({
         extensions: [
@@ -255,6 +317,7 @@ const TipTapEditor = ({
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasPlaceholders ? [Placeholder] : []),
             ...(hasLink ? [CmsLink] : []),
+            ...(hasChildBlocks ? [CmsBlock] : []),
             ...(maxTextBlocks !== undefined ? [createMaxTextBlocksExtension(maxTextBlocks)] : []),
             ...(listLevelMax !== undefined ? [createListLevelMaxExtension(listLevelMax)] : []),
         ],
@@ -298,20 +361,23 @@ const TipTapEditor = ({
     return (
         <TextBlockStyleContext.Provider value={textBlockStyles}>
             <InlineStyleContext.Provider value={inlineStyles}>
-                <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                    <TipTapToolbar
-                        editor={editor}
-                        supports={supports}
-                        textBlockStyles={textBlockStyles}
-                        inlineStyles={inlineStyles}
-                        placeholders={placeholders}
-                        linkBlock={linkBlock}
-                        listLevelMax={listLevelMax}
-                    />
-                    <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
-                        <EditorContent editor={editor} />
+                <ChildBlocksContext.Provider value={childBlocks}>
+                    <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
+                        <TipTapToolbar
+                            editor={editor}
+                            supports={supports}
+                            textBlockStyles={textBlockStyles}
+                            inlineStyles={inlineStyles}
+                            placeholders={placeholders}
+                            linkBlock={linkBlock}
+                            childBlocks={childBlocks}
+                            listLevelMax={listLevelMax}
+                        />
+                        <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
+                            <EditorContent editor={editor} />
+                        </Box>
                     </Box>
-                </Box>
+                </ChildBlocksContext.Provider>
             </InlineStyleContext.Provider>
         </TextBlockStyleContext.Provider>
     );
@@ -328,6 +394,9 @@ export const createTipTapRichTextBlock = (
     const inlineStyles = options?.inlineStyles ?? [];
     const placeholders = options?.placeholders ?? [];
     const linkBlock = options?.link;
+    const childBlocks = options?.childBlocks ?? [];
+    const childBlocksByName: Record<string, BlockInterface> = Object.fromEntries(childBlocks.map((block) => [block.name, block]));
+    const hasChildBlocks = childBlocks.length > 0;
     const maxTextBlocks = options?.maxTextBlocks;
     const listLevelMax = options?.listLevelMax;
 
@@ -352,6 +421,9 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.input2State(data));
             }
+            if (hasChildBlocks) {
+                content = mapCmsBlockNodesData(content, (blockType, data) => childBlocksByName[blockType]?.input2State(data) ?? data);
+            }
             return { tipTapContent: content };
         },
 
@@ -359,6 +431,9 @@ export const createTipTapRichTextBlock = (
             let content = tipTapContent;
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.state2Output(data));
+            }
+            if (hasChildBlocks) {
+                content = mapCmsBlockNodesData(content, (blockType, data) => childBlocksByName[blockType]?.state2Output(data) ?? data);
             }
             return { tipTapContent: content };
         },
@@ -368,6 +443,11 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = await mapLinkMarksDataAsync(content, (data) => linkBlock.output2State(data, context));
             }
+            if (hasChildBlocks) {
+                content = await mapCmsBlockNodesDataAsync(content, async (blockType, data) =>
+                    childBlocksByName[blockType] ? childBlocksByName[blockType].output2State(data, context) : data,
+                );
+            }
             return { tipTapContent: content };
         },
 
@@ -375,6 +455,12 @@ export const createTipTapRichTextBlock = (
             let content = tipTapContent;
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.createPreviewState(data, previewCtx));
+            }
+            if (hasChildBlocks) {
+                content = mapCmsBlockNodesData(
+                    content,
+                    (blockType, data) => childBlocksByName[blockType]?.createPreviewState(data, previewCtx) ?? data,
+                );
             }
             return {
                 tipTapContent: content,
@@ -392,6 +478,7 @@ export const createTipTapRichTextBlock = (
                     inlineStyles={inlineStyles}
                     placeholders={placeholders}
                     linkBlock={linkBlock}
+                    childBlocks={childBlocks}
                     maxTextBlocks={maxTextBlocks}
                     listLevelMax={listLevelMax}
                 />
@@ -404,9 +491,21 @@ export const createTipTapRichTextBlock = (
             return text.length > 0 ? [{ type: "text", content: text.slice(0, MAX_CHARS) }] : [];
         },
 
-        extractTextContents: (state) => {
+        extractTextContents: (state, options) => {
+            const texts: string[] = [];
             const text = getPlainTextFromContent(state.tipTapContent);
-            return text.length > 0 ? [text] : [];
+            if (text.length > 0) {
+                texts.push(text);
+            }
+            if (hasChildBlocks) {
+                for (const { blockType, data } of collectCmsBlockNodes(state.tipTapContent)) {
+                    const childBlock = childBlocksByName[blockType];
+                    if (childBlock?.extractTextContents) {
+                        texts.push(...childBlock.extractTextContents(data, options));
+                    }
+                }
+            }
+            return texts;
         },
     };
 
