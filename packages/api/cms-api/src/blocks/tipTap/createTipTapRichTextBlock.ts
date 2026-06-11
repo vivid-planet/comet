@@ -47,6 +47,14 @@ export type TipTapSupports =
 
 export type { JSONContent as TipTapRichTextBlockContent } from "@tiptap/core";
 
+export interface TipTapRichTextBlockDataInterface extends BlockDataInterface {
+    tipTapContent: JSONContent;
+}
+
+export interface TipTapRichTextBlockInputInterface extends BlockInputInterface<TipTapRichTextBlockDataInterface, { tipTapContent: JSONContent }> {
+    tipTapContent: JSONContent;
+}
+
 type TipTapTextBlockType =
     | "paragraph"
     | "heading-1"
@@ -437,7 +445,7 @@ export function createTipTapRichTextBlock(
         migrateFromDraftJs = false,
     }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
-): Block {
+): Block<TipTapRichTextBlockDataInterface, TipTapRichTextBlockInputInterface> {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
@@ -477,7 +485,7 @@ export function createTipTapRichTextBlock(
         : baseMigrate;
 
     @BlockDataMigrationVersion(migrate.version)
-    class TipTapRichTextBlockData extends BlockData {
+    class TipTapRichTextBlockData extends BlockData implements TipTapRichTextBlockDataInterface {
         @BlockField({ type: "json" })
         tipTapContent: JSONContent;
 
@@ -510,7 +518,7 @@ export function createTipTapRichTextBlock(
 
     const allowedPlaceholderNames = placeholders.length > 0 ? placeholders.map((p) => p.name) : undefined;
 
-    class TipTapRichTextBlockInput implements BlockInputInterface {
+    class TipTapRichTextBlockInput implements TipTapRichTextBlockInputInterface {
         @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxTextBlocks, allowedPlaceholderNames, listLevelMax })
         @BlockField({ type: "json" })
         tipTapContent: JSONContent;
@@ -538,7 +546,7 @@ export function createTipTapRichTextBlock(
         }
         return plainToInstance(TipTapRichTextBlockData, { tipTapContent });
     };
-    const blockInputFactory: BlockInputFactory<TipTapRichTextBlockInput> = (o) => plainToInstance(TipTapRichTextBlockInput, o);
+    const blockInputFactory: BlockInputFactory<TipTapRichTextBlockInputInterface> = (o) => plainToInstance(TipTapRichTextBlockInput, o);
 
     // Decorate BlockDataFactory
     let decorateBlockDataFactory = blockDataFactory;
@@ -551,7 +559,7 @@ export function createTipTapRichTextBlock(
     // Decorate BlockInputFactory
     const decorateBlockInputFactory = strictBlockInputFactoryDecorator(blockInputFactory);
 
-    const TipTapRichTextBlock: Block = {
+    const TipTapRichTextBlock: Block<TipTapRichTextBlockDataInterface, TipTapRichTextBlockInputInterface> = {
         name: blockName,
         blockDataFactory: decorateBlockDataFactory,
         blockInputFactory: decorateBlockInputFactory,
