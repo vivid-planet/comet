@@ -103,11 +103,48 @@ export class UserPermissionsService {
         return this.userService;
     }
 
-    async getUser(id: string): Promise<User> {
-        if (!this.userService) {
-            throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+    async findUser(id: string): Promise<User | null> {
+        if (!this.userService?.findUser) {
+            throw new Error("For this functionality you need to define `findUser` in the userService.");
         }
-        return this.userService.getUser(id);
+        return this.userService.findUser(id);
+    }
+
+    async findUserForLogin(id: string): Promise<User | null> {
+        if (!this.userService?.findUserForLogin) {
+            throw new Error("For this functionality you need to define `findUserForLogin` in the userService.");
+        }
+        return this.userService.findUserForLogin(id);
+    }
+
+    async findUserForLoginOrThrow(id: string): Promise<User> {
+        const user = await this.findUserForLogin(id);
+        if (!user) {
+            throw new Error(`User not found: ${id}`);
+        }
+        return user;
+    }
+
+    async findUserOrThrow(id: string): Promise<User> {
+        const user = await this.findUser(id);
+        if (!user) {
+            throw new Error(`User not found: ${id}`);
+        }
+        return user;
+    }
+
+    /**
+     * @deprecated Use `findUserOrThrow` instead.
+     */
+    async getUser(id: string): Promise<User> {
+        return this.findUserOrThrow(id);
+    }
+
+    /**
+     * @deprecated Use `findUserForLoginOrThrow` instead.
+     */
+    async getUserForLogin(id: string): Promise<User> {
+        return this.findUserForLoginOrThrow(id);
     }
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
