@@ -7,6 +7,7 @@ import {
     createTargetGroupsPage,
 } from "@comet/brevo-admin";
 import {
+    ActionLogsPage,
     ContentScopeIndicator,
     CronJobsPage,
     DamPage,
@@ -284,6 +285,15 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                         component: WarningsPage,
                     },
                     requiredPermission: "warnings",
+                },
+                {
+                    type: "route",
+                    primary: <FormattedMessage id="menu.actionLog" defaultMessage="Action Log" />,
+                    route: {
+                        path: "/system/action-log",
+                        component: ActionLogsPage,
+                    },
+                    requiredPermission: "actionLog",
                 },
             ],
         },
