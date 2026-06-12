@@ -1,9 +1,11 @@
-import { Alert, Button } from "@comet/admin";
 import { Snackbar } from "@mui/material";
 import { useState } from "react";
 
+import { Button } from "../../common/buttons/Button";
+import { Alert } from "../Alert";
+
 export default {
-    title: "@comet/admin/alert/Alert",
+    title: "components/alert/AlertInSnackbar",
 };
 
 export const AlertInSnackbar = {
