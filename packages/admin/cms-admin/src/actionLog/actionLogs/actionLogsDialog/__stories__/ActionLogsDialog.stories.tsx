@@ -14,7 +14,7 @@ type Story = StoryObj<StoryArgs>;
 const meta: Meta<StoryArgs> = {
     component: ActionLogsDialog,
     tags: ["!autodocs"],
-    title: "Action log/Action logs/Entity dialog",
+    title: "actionLog/actionLogs/actionLogsDialog/ActionLogsDialog",
     args: {
         entityName: "News",
         entityId: "550e8400-e29b-41d4-a716-446655440003",

@@ -13,7 +13,7 @@ type Story = StoryObj<StoryArgs>;
 const meta: Meta<StoryArgs> = {
     component: ActionLogsShowVersionDialog,
     tags: ["!autodocs"],
-    title: "Action log/Action logs/Show version dialog",
+    title: "actionLog/actionLogs/actionLogsShowVersionDialog/ActionLogsShowVersionDialog",
     args: {
         open: true,
         onClose: () => undefined,

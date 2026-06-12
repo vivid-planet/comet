@@ -13,7 +13,7 @@ type Story = StoryObj<ActionLogButtonStoryArgs>;
 const meta: Meta<ActionLogButtonStoryArgs> = {
     component: ActionLogButton,
     tags: ["!autodocs"],
-    title: "Action log/Action log button",
+    title: "actionLog/actionLogButton/ActionLogButton",
     args: {
         id: "550e8400-e29b-41d4-a716-446655440000",
         rootField: "manufacturer",

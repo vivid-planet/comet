@@ -8,7 +8,7 @@ type Story = StoryObj<typeof ActionLogsGrid>;
 const meta: Meta<typeof ActionLogsGrid> = {
     component: ActionLogsGrid,
     tags: ["!autodocs"],
-    title: "Action log/Action logs/Grid",
+    title: "actionLog/actionLogs/actionLogsGrid/ActionLogsGrid",
     decorators: [
         (Story) => (
             <ContentScopeProvider
