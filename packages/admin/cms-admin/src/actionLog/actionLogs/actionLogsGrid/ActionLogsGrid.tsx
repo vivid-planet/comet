@@ -16,9 +16,9 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Time, View } from "@comet/admin-icons";
-import { Autocomplete, Box, Chip, IconButton, TextField } from "@mui/material";
+import { Autocomplete, Box, Chip, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, type GridFilterInputValueProps, type GridFilterItem, type GridFilterOperator } from "@mui/x-data-grid";
+import { DataGrid, type GridFilterInputValueProps, type GridFilterItem, type GridFilterOperator, useGridRootProps } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
 import { createContext, useContext, useMemo, useState } from "react";
@@ -79,9 +79,9 @@ type ScopeOption = { value: string; label: string };
 
 const ScopeFilterOptionsContext = createContext<ScopeOption[]>([]);
 
-function ScopeFilterSingleInput({ item, applyValue, focusElementRef }: GridFilterInputValueProps) {
-    const intl = useIntl();
+function ScopeFilterSingleInput({ item, applyValue, focusElementRef, apiRef }: GridFilterInputValueProps) {
     const options = useContext(ScopeFilterOptionsContext);
+    const rootProps = useGridRootProps();
     const selectedValue = typeof item.value === "string" ? (options.find((option) => option.value === item.value) ?? null) : null;
     return (
         <Autocomplete<ScopeOption, false, false, false>
@@ -91,20 +91,23 @@ function ScopeFilterSingleInput({ item, applyValue, focusElementRef }: GridFilte
             isOptionEqualToValue={(option, candidate) => option.value === candidate.value}
             onChange={(_, newValue) => applyValue({ ...item, value: newValue?.value ?? null })}
             renderInput={(params) => (
-                <TextField
+                <rootProps.slots.baseTextField
                     {...params}
-                    variant="standard"
-                    placeholder={intl.formatMessage({ id: "comet.actionLogs.filter.scope.placeholder", defaultMessage: "Value" })}
+                    label={apiRef.current.getLocaleText("filterPanelInputLabel")}
                     inputRef={focusElementRef}
+                    slotProps={{
+                        inputLabel: { shrink: true },
+                        input: params.InputProps,
+                    }}
                 />
             )}
         />
     );
 }
 
-function ScopeFilterMultiInput({ item, applyValue, focusElementRef }: GridFilterInputValueProps) {
-    const intl = useIntl();
+function ScopeFilterMultiInput({ item, applyValue, focusElementRef, apiRef }: GridFilterInputValueProps) {
     const options = useContext(ScopeFilterOptionsContext);
+    const rootProps = useGridRootProps();
     const selectedValues = Array.isArray(item.value) ? (item.value as string[]) : [];
     const selectedOptions = options.filter((option) => selectedValues.includes(option.value));
     return (
@@ -116,15 +119,14 @@ function ScopeFilterMultiInput({ item, applyValue, focusElementRef }: GridFilter
             isOptionEqualToValue={(option, candidate) => option.value === candidate.value}
             onChange={(_, newValue) => applyValue({ ...item, value: newValue.map((option) => option.value) })}
             renderInput={(params) => (
-                <TextField
+                <rootProps.slots.baseTextField
                     {...params}
-                    variant="standard"
-                    placeholder={
-                        selectedOptions.length === 0
-                            ? intl.formatMessage({ id: "comet.actionLogs.filter.scope.placeholder", defaultMessage: "Value" })
-                            : undefined
-                    }
+                    label={apiRef.current.getLocaleText("filterPanelInputLabel")}
                     inputRef={focusElementRef}
+                    slotProps={{
+                        inputLabel: { shrink: true },
+                        input: params.InputProps,
+                    }}
                 />
             )}
         />
