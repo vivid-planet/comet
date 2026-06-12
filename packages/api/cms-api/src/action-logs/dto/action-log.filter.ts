@@ -1,16 +1,33 @@
 import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { ValidateNested } from "class-validator";
+import { IsOptional, ValidateNested } from "class-validator";
+import { GraphQLJSONObject } from "graphql-scalars";
 
 import { DateTimeFilter } from "../../common/filter/date-time.filter";
 import { createEnumFilter, type EnumFilterInterface } from "../../common/filter/enum.filter.factory";
 import { IdFilter } from "../../common/filter/id.filter";
 import { StringFilter } from "../../common/filter/string.filter";
 import { IsUndefinable } from "../../common/validators/is-undefinable";
+import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 import { ActionLogAction } from "./action-log-action.enum";
 
 @InputType()
 class ActionLogActionFilter extends createEnumFilter(ActionLogAction) implements EnumFilterInterface<ActionLogAction> {}
+
+@InputType({ isAbstract: true })
+class ActionLogScopeFilter {
+    @Field(() => [GraphQLJSONObject], { nullable: true })
+    @IsOptional()
+    isAnyOf?: ContentScope[];
+
+    @Field(() => GraphQLJSONObject, { nullable: true })
+    @IsOptional()
+    equal?: ContentScope;
+
+    @Field(() => GraphQLJSONObject, { nullable: true })
+    @IsOptional()
+    notEqual?: ContentScope;
+}
 
 @InputType()
 export class ActionLogFilter {
@@ -43,6 +60,10 @@ export class ActionLogFilter {
     @Type(() => DateTimeFilter)
     @IsUndefinable()
     createdAt?: DateTimeFilter;
+
+    @Field(() => ActionLogScopeFilter, { nullable: true })
+    @IsOptional()
+    scope?: ActionLogScopeFilter;
 
     @Field(() => [ActionLogFilter], { nullable: true })
     @ValidateNested({ each: true })

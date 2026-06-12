@@ -41,7 +41,19 @@ function actionLogFilterToWhere(filter: ActionLogFilter): ObjectQuery<ActionLog>
         }
     }
 
-    const { action: _action, and, or, ...rest } = filter;
+    if (filter.scope) {
+        if (filter.scope.equal !== undefined) {
+            andConditions.push({ scope: { $contains: [filter.scope.equal] } });
+        }
+        if (filter.scope.isAnyOf !== undefined && filter.scope.isAnyOf.length > 0) {
+            andConditions.push({ $or: filter.scope.isAnyOf.map((scope) => ({ scope: { $contains: [scope] } })) });
+        }
+        if (filter.scope.notEqual !== undefined) {
+            andConditions.push({ $not: { scope: { $contains: [filter.scope.notEqual] } } });
+        }
+    }
+
+    const { action: _action, scope: _scope, and, or, ...rest } = filter;
     if (Object.keys(rest).length > 0) {
         andConditions.push(filtersToMikroOrmQuery(rest));
     }
