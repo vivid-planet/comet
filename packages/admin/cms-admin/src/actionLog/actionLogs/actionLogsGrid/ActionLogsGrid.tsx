@@ -16,12 +16,12 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Time, View } from "@comet/admin-icons";
-import { Box, Chip, IconButton } from "@mui/material";
+import { Autocomplete, Box, Chip, IconButton, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, type GridFilterItem } from "@mui/x-data-grid";
+import { DataGrid, type GridFilterInputValueProps, type GridFilterItem, type GridFilterOperator } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
-import { useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { type ContentScope, useContentScope } from "../../../contentScope/Provider";
@@ -74,6 +74,70 @@ function scopeColumnToGqlFilter(filterItem: GridFilterItem) {
     const value = typeof filterItem.value === "string" ? JSON.parse(filterItem.value) : filterItem.value;
     return { scope: { [gqlOperator]: value } };
 }
+
+type ScopeOption = { value: string; label: string };
+
+const ScopeFilterOptionsContext = createContext<ScopeOption[]>([]);
+
+function ScopeFilterSingleInput({ item, applyValue, focusElementRef }: GridFilterInputValueProps) {
+    const options = useContext(ScopeFilterOptionsContext);
+    const selectedValue = typeof item.value === "string" ? (options.find((option) => option.value === item.value) ?? null) : null;
+    return (
+        <Autocomplete<ScopeOption, false, false, false>
+            options={options}
+            value={selectedValue}
+            getOptionLabel={(option) => option.label}
+            isOptionEqualToValue={(option, candidate) => option.value === candidate.value}
+            onChange={(_, newValue) => applyValue({ ...item, value: newValue?.value ?? null })}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    variant="standard"
+                    label={<FormattedMessage id="comet.actionLogs.filter.scope.label" defaultMessage="Value" />}
+                    inputRef={focusElementRef}
+                />
+            )}
+            size="small"
+            fullWidth
+        />
+    );
+}
+
+function ScopeFilterMultiInput({ item, applyValue, focusElementRef }: GridFilterInputValueProps) {
+    const options = useContext(ScopeFilterOptionsContext);
+    const selectedValues = Array.isArray(item.value) ? (item.value as string[]) : [];
+    const selectedOptions = options.filter((option) => selectedValues.includes(option.value));
+    return (
+        <Autocomplete<ScopeOption, true, false, false>
+            multiple
+            options={options}
+            value={selectedOptions}
+            getOptionLabel={(option) => option.label}
+            isOptionEqualToValue={(option, candidate) => option.value === candidate.value}
+            onChange={(_, newValue) => applyValue({ ...item, value: newValue.map((option) => option.value) })}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    variant="standard"
+                    label={<FormattedMessage id="comet.actionLogs.filter.scope.label" defaultMessage="Value" />}
+                    inputRef={focusElementRef}
+                />
+            )}
+            size="small"
+            fullWidth
+        />
+    );
+}
+
+const throwOnLocalScopeFilter = () => {
+    throw new Error("Server-side filter; not applied on the client.");
+};
+
+const scopeFilterOperators: GridFilterOperator[] = [
+    { value: "is", getApplyFilterFn: throwOnLocalScopeFilter, InputComponent: ScopeFilterSingleInput },
+    { value: "not", getApplyFilterFn: throwOnLocalScopeFilter, InputComponent: ScopeFilterSingleInput },
+    { value: "isAnyOf", getApplyFilterFn: throwOnLocalScopeFilter, InputComponent: ScopeFilterMultiInput },
+];
 
 function ActionLogsGridToolbar() {
     return (
@@ -130,8 +194,7 @@ export function ActionLogsGrid() {
             {
                 field: "scope",
                 headerName: intl.formatMessage({ id: "comet.actionLogs.columns.scope", defaultMessage: "Scope" }),
-                type: "singleSelect",
-                valueOptions: scopeValueOptions,
+                filterOperators: scopeFilterOperators,
                 toGqlFilter: scopeColumnToGqlFilter,
                 width: 150,
                 renderCell: ({ row }) => {
@@ -220,7 +283,7 @@ export function ActionLogsGrid() {
                 ),
             },
         ],
-        [intl, formatScopeLabel, scopeValueOptions],
+        [intl, formatScopeLabel],
     );
 
     const { filter: gqlFilter } = muiGridFilterToGql(columns, dataGridProps.filterModel);
@@ -244,23 +307,25 @@ export function ActionLogsGrid() {
     }
 
     return (
-        <MainContent fullHeight>
-            <DataGrid
-                {...dataGridProps}
-                columns={columns}
-                rows={data?.actionLogs.nodes ?? []}
-                rowCount={rowCount}
-                loading={loading}
-                disableRowSelectionOnClick
-                onRowClick={({ row }) => setOpenVersionId(row.id)}
-                slots={{ toolbar: ActionLogsGridToolbar }}
-                showToolbar
-            />
-            <ActionLogsShowVersionDialog actionLogId={openVersionId} open={openVersionId !== null} onClose={() => setOpenVersionId(null)} />
-            {openDialog && (
-                <ActionLogsDialog entityName={openDialog.entityName} entityId={openDialog.entityId} open onClose={() => setOpenDialog(null)} />
-            )}
-        </MainContent>
+        <ScopeFilterOptionsContext.Provider value={scopeValueOptions}>
+            <MainContent fullHeight>
+                <DataGrid
+                    {...dataGridProps}
+                    columns={columns}
+                    rows={data?.actionLogs.nodes ?? []}
+                    rowCount={rowCount}
+                    loading={loading}
+                    disableRowSelectionOnClick
+                    onRowClick={({ row }) => setOpenVersionId(row.id)}
+                    slots={{ toolbar: ActionLogsGridToolbar }}
+                    showToolbar
+                />
+                <ActionLogsShowVersionDialog actionLogId={openVersionId} open={openVersionId !== null} onClose={() => setOpenVersionId(null)} />
+                {openDialog && (
+                    <ActionLogsDialog entityName={openDialog.entityName} entityId={openDialog.entityId} open onClose={() => setOpenDialog(null)} />
+                )}
+            </MainContent>
+        </ScopeFilterOptionsContext.Provider>
     );
 }
 
