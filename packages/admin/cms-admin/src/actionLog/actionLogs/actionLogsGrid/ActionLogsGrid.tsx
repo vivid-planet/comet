@@ -80,6 +80,7 @@ type ScopeOption = { value: string; label: string };
 const ScopeFilterOptionsContext = createContext<ScopeOption[]>([]);
 
 function ScopeFilterSingleInput({ item, applyValue, focusElementRef }: GridFilterInputValueProps) {
+    const intl = useIntl();
     const options = useContext(ScopeFilterOptionsContext);
     const selectedValue = typeof item.value === "string" ? (options.find((option) => option.value === item.value) ?? null) : null;
     return (
@@ -93,17 +94,16 @@ function ScopeFilterSingleInput({ item, applyValue, focusElementRef }: GridFilte
                 <TextField
                     {...params}
                     variant="standard"
-                    label={<FormattedMessage id="comet.actionLogs.filter.scope.label" defaultMessage="Value" />}
+                    placeholder={intl.formatMessage({ id: "comet.actionLogs.filter.scope.placeholder", defaultMessage: "Value" })}
                     inputRef={focusElementRef}
                 />
             )}
-            size="small"
-            fullWidth
         />
     );
 }
 
 function ScopeFilterMultiInput({ item, applyValue, focusElementRef }: GridFilterInputValueProps) {
+    const intl = useIntl();
     const options = useContext(ScopeFilterOptionsContext);
     const selectedValues = Array.isArray(item.value) ? (item.value as string[]) : [];
     const selectedOptions = options.filter((option) => selectedValues.includes(option.value));
@@ -119,12 +119,14 @@ function ScopeFilterMultiInput({ item, applyValue, focusElementRef }: GridFilter
                 <TextField
                     {...params}
                     variant="standard"
-                    label={<FormattedMessage id="comet.actionLogs.filter.scope.label" defaultMessage="Value" />}
+                    placeholder={
+                        selectedOptions.length === 0
+                            ? intl.formatMessage({ id: "comet.actionLogs.filter.scope.placeholder", defaultMessage: "Value" })
+                            : undefined
+                    }
                     inputRef={focusElementRef}
                 />
             )}
-            size="small"
-            fullWidth
         />
     );
 }
