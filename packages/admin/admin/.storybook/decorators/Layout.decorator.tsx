@@ -1,8 +1,8 @@
-import { MainContent } from "../../src/common/MainContent";
 import { useTheme } from "@mui/material";
 import { GlobalStyles } from "@mui/system";
-import { type Decorator } from "@storybook/react-vite";
+import type { Decorator } from "@storybook/react-vite";
 
+import { MainContent } from "../../src/common/MainContent";
 import { previewGlobalStyles } from "./Layout.decorator.styles";
 
 export enum LayoutOption {

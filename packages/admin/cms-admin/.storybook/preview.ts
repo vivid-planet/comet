@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react-vite";
-import { type GlobalTypes } from "storybook/internal/csf";
+import type { GlobalTypes } from "storybook/internal/csf";
 
 import { ApolloDecorator } from "./decorators/Apollo.decorator";
 import { CometConfigProviderDecorator } from "./decorators/CometConfigProvider.decorator";
@@ -56,7 +56,17 @@ export const globalTypes: GlobalTypes = {
 
 const preview: Preview = {
     tags: ["autodocs"],
-    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, RouterDecorator, CometConfigProviderDecorator, SnackbarDecorator, DndProviderDecorator, CurrentUserProviderDecorator, ApolloDecorator],
+    decorators: [
+        ThemeProviderDecorator,
+        IntlDecorator,
+        LayoutDecorator,
+        RouterDecorator,
+        CometConfigProviderDecorator,
+        SnackbarDecorator,
+        DndProviderDecorator,
+        CurrentUserProviderDecorator,
+        ApolloDecorator,
+    ],
     loaders: [
         async () => {
             await mswReady;

@@ -24,7 +24,7 @@
         "lint": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc lint:api-can-start",
         "lint:api-can-start": "MIKRO_ORM_NO_CONNECT=true dotenv -e ../../.env.secrets -e ../../.env.local -e ../../.env -e ../.env.site-configs -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts --help",
         "lint:ci": "pnpm run api-generator && pnpm run intl:compile && run-p lint:prettier lint:eslint lint:tsc lint:api-can-start && pnpm run lint:generated-files-not-modified",
-        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
+        "lint:eslint": "eslint --max-warnings 0 src/ .storybook/ '**/*.json' --no-warn-ignored",
         "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
         "lint:fix:eslint": "pnpm run lint:eslint --fix",
         "lint:fix:prettier": "pnpm run lint:prettier --write",

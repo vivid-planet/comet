@@ -8,8 +8,7 @@ import { action } from "storybook/actions";
 function HistoryWatcher({ history, children }: PropsWithChildren<RouteComponentProps>) {
     useEffect(() => {
         const onHistoryChanged: History.LocationListener = (location, historyAction: Action) => {
-            const path = location.pathname;
-            action(historyAction ? historyAction : (location as any).action)(path);
+            action(historyAction)(location.pathname);
         };
         const unlisten: UnregisterCallback = history.listen(onHistoryChanged);
 
