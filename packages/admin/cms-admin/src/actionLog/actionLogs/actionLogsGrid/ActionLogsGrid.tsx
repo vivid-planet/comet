@@ -18,7 +18,7 @@ import {
 import { Time, View } from "@comet/admin-icons";
 import { Box, Chip, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, type GridFilterModel } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
 import { useMemo, useState } from "react";
@@ -51,6 +51,26 @@ const EntityTypeChip = styled(Chip)(({ theme }) => ({
     backgroundColor: theme.palette.grey[100],
     color: theme.palette.text.primary,
 }));
+
+function gridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel) {
+    const customFilterModel = {
+        ...filterModel,
+        items:
+            filterModel?.items.map((item) => {
+                if (item.field === "scope") {
+                    if (typeof item.value === "string") {
+                        return { ...item, value: JSON.parse(item.value) };
+                    }
+                    if (Array.isArray(item.value)) {
+                        return { ...item, value: item.value.map((value) => JSON.parse(value)) };
+                    }
+                }
+                return item;
+            }) ?? [],
+    };
+
+    return muiGridFilterToGql(columns, customFilterModel);
+}
 
 function ActionLogsGridToolbar() {
     return (
@@ -85,6 +105,15 @@ export function ActionLogsGrid() {
         [scopeValues],
     );
 
+    const scopeValueOptions = useMemo(
+        () =>
+            scopeValues.map((item) => ({
+                value: JSON.stringify(item.scope),
+                label: formatScopeLabel(item.scope),
+            })),
+        [scopeValues, formatScopeLabel],
+    );
+
     const columns = useMemo<GridColDef<GQLActionLogsGridFragment>[]>(
         () => [
             {
@@ -96,8 +125,8 @@ export function ActionLogsGrid() {
             {
                 field: "scope",
                 headerName: intl.formatMessage({ id: "comet.actionLogs.columns.scope", defaultMessage: "Scope" }),
-                sortable: false,
-                filterable: false,
+                type: "singleSelect",
+                valueOptions: scopeValueOptions,
                 width: 150,
                 renderCell: ({ row }) => {
                     const scopes = (row.scope as ContentScope[] | null | undefined) ?? [];
@@ -185,10 +214,10 @@ export function ActionLogsGrid() {
                 ),
             },
         ],
-        [intl, formatScopeLabel],
+        [intl, formatScopeLabel, scopeValueOptions],
     );
 
-    const { filter: gqlFilter } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+    const { filter: gqlFilter } = gridFilterToGql(columns, dataGridProps.filterModel);
 
     const scopes = useMemo(() => scopeValues.map((item) => item.scope), [scopeValues]);
 
