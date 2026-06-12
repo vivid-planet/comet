@@ -5,9 +5,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../../../contentScope/Provider";
 import type { GQLActionLogSortField } from "../../../graphql.generated";
-import { ActionLogCompare } from "../../actionLogCompare/ActionLogCompare";
 import { ActionLogGrid } from "../../actionLogGrid/ActionLogGrid";
-import { ActionLogShowVersion } from "../../actionLogShowVersion/ActionLogShowVersion";
+import { ActionLogCompare } from "../../components/actionLogCompare/ActionLogCompare";
+import { ActionLogShowVersion } from "../../components/actionLogShowVersion/ActionLogShowVersion";
 import { actionLogsDialogCompareQuery, actionLogsDialogGridQuery, actionLogsDialogShowVersionQuery } from "./ActionLogsDialog.gql";
 import type {
     GQLActionLogsDialogCompareQuery,

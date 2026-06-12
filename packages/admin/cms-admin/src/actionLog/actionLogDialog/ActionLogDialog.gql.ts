@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client";
 import type { DocumentNode } from "graphql";
 
-import { actionLogCompareFragment } from "../actionLogCompare/ActionLogCompare";
-import type { GQLActionLogCompareFragment } from "../actionLogCompare/ActionLogCompare.gql.generated";
 import { actionLogGridFragment } from "../actionLogGrid/ActionLogGrid";
 import type { GQLActionLogGridFragment } from "../actionLogGrid/ActionLogGrid.gql.generated";
-import { actionLogShowVersionFragment } from "../actionLogShowVersion/ActionLogShowVersion";
-import type { GQLActionLogShowVersionFragment } from "../actionLogShowVersion/ActionLogShowVersion.gql.generated";
+import { actionLogCompareFragment } from "../components/actionLogCompare/ActionLogCompare";
+import type { GQLActionLogCompareFragment } from "../components/actionLogCompare/ActionLogCompare.gql.generated";
+import { actionLogShowVersionFragment } from "../components/actionLogShowVersion/ActionLogShowVersion";
+import type { GQLActionLogShowVersionFragment } from "../components/actionLogShowVersion/ActionLogShowVersion.gql.generated";
 
 export type ActionLogDialogGridQueryResult = {
     entity: { actionLogs: { nodes: GQLActionLogGridFragment[]; totalCount: number } } | null;

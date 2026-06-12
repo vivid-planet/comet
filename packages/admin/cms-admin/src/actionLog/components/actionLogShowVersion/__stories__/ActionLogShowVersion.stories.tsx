@@ -24,7 +24,7 @@ const meta: Meta<typeof ActionLogShowVersion> = {
         ),
     ],
     tags: ["!autodocs"],
-    title: "actionLog/actionLogShowVersion/ActionLogShowVersion",
+    title: "actionLog/components/actionLogShowVersion/ActionLogShowVersion",
     args: {
         onClickShowVersionHistory: () => undefined,
     },

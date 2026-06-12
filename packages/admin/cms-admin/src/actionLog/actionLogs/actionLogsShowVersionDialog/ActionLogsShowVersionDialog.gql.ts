@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-import { actionLogCompareFragment } from "../../actionLogCompare/ActionLogCompare";
+import { actionLogCompareFragment } from "../../components/actionLogCompare/ActionLogCompare";
 
 export const actionLogsShowVersionQuery = gql`
     query ActionLogsShowVersion($id: ID!) {

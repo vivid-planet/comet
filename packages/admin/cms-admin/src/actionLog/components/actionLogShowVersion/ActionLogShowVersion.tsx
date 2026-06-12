@@ -4,10 +4,10 @@ import { Box } from "@mui/material";
 import type { FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { defaultFilterOutKeys, filterOutKeys } from "../actionLog.utils";
-import { DiffHeader } from "../components/diffHeader/DiffHeader";
-import { DiffViewer } from "../components/diffViewer/DiffViewer";
-import { ActionLogHeader } from "../components/header/ActionLogHeader";
+import { defaultFilterOutKeys, filterOutKeys } from "../../actionLog.utils";
+import { DiffHeader } from "../diffHeader/DiffHeader";
+import { DiffViewer } from "../diffViewer/DiffViewer";
+import { ActionLogHeader } from "../header/ActionLogHeader";
 import type { GQLActionLogShowVersionFragment } from "./ActionLogShowVersion.gql.generated";
 import { DiffViewerContainer, LoadingContainer, Root } from "./ActionLogShowVersion.styles";
 

@@ -34,7 +34,7 @@ const meta: Meta<typeof ActionLogCompare> = {
         ),
     ],
     tags: ["!autodocs"],
-    title: "actionLog/actionLogCompare/ActionLogCompare",
+    title: "actionLog/components/actionLogCompare/ActionLogCompare",
     args: {
         onClickShowVersionHistory: () => undefined,
     },

@@ -2,8 +2,8 @@ import { useQuery } from "@apollo/client";
 import { Dialog, InlineAlert } from "@comet/admin";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ActionLogCompare } from "../../actionLogCompare/ActionLogCompare";
-import { ActionLogShowVersion } from "../../actionLogShowVersion/ActionLogShowVersion";
+import { ActionLogCompare } from "../../components/actionLogCompare/ActionLogCompare";
+import { ActionLogShowVersion } from "../../components/actionLogShowVersion/ActionLogShowVersion";
 import { actionLogsShowVersionQuery } from "./ActionLogsShowVersionDialog.gql";
 import type { GQLActionLogsShowVersionQuery, GQLActionLogsShowVersionQueryVariables } from "./ActionLogsShowVersionDialog.gql.generated";
 

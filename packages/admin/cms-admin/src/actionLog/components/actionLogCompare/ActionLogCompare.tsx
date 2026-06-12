@@ -4,10 +4,10 @@ import { Box, FormControlLabel, Switch, useMediaQuery, useTheme } from "@mui/mat
 import type { FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { defaultFilterOutKeys, filterOutKeys } from "../actionLog.utils";
-import { DiffHeader } from "../components/diffHeader/DiffHeader";
-import { DiffViewer } from "../components/diffViewer/DiffViewer";
-import { ActionLogHeader } from "../components/header/ActionLogHeader";
+import { defaultFilterOutKeys, filterOutKeys } from "../../actionLog.utils";
+import { DiffHeader } from "../diffHeader/DiffHeader";
+import { DiffViewer } from "../diffViewer/DiffViewer";
+import { ActionLogHeader } from "../header/ActionLogHeader";
 import type { GQLActionLogCompareFragment } from "./ActionLogCompare.gql.generated";
 import { LoadingContainer, PaperStyled, Root } from "./ActionLogCompare.styles";
 

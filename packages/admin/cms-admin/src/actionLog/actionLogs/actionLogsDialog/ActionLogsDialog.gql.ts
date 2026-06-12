@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
-import { actionLogCompareFragment } from "../../actionLogCompare/ActionLogCompare";
 import { actionLogGridFragment } from "../../actionLogGrid/ActionLogGrid";
+import { actionLogCompareFragment } from "../../components/actionLogCompare/ActionLogCompare";
 
 export const actionLogsDialogGridQuery = gql`
     query ActionLogsDialogGrid($filter: ActionLogFilter!, $offset: Int!, $limit: Int!, $sort: [ActionLogSort!], $scopes: [JSONObject!]!) {
