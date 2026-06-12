@@ -27,6 +27,10 @@ class ActionLogScopeFilter {
     @Field(() => GraphQLJSONObject, { nullable: true })
     @IsOptional()
     notEqual?: ContentScope;
+
+    @Field(() => Boolean, { nullable: true })
+    @IsOptional()
+    isGlobal?: boolean;
 }
 
 @InputType()

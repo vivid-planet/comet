@@ -42,6 +42,9 @@ function actionLogFilterToWhere(filter: ActionLogFilter): ObjectQuery<ActionLog>
     }
 
     if (filter.scope) {
+        if (filter.scope.isGlobal === true) {
+            andConditions.push({ scope: null });
+        }
         if (filter.scope.equal !== undefined) {
             andConditions.push({ scope: { $contains: [filter.scope.equal] } });
         }

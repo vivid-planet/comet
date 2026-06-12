@@ -18,7 +18,7 @@ import {
 import { Time, View } from "@comet/admin-icons";
 import { Box, Chip, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, type GridFilterModel } from "@mui/x-data-grid";
+import { DataGrid, type GridFilterItem } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
 import { useMemo, useState } from "react";
@@ -52,24 +52,27 @@ const EntityTypeChip = styled(Chip)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-function gridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel) {
-    const customFilterModel = {
-        ...filterModel,
-        items:
-            filterModel?.items.map((item) => {
-                if (item.field === "scope") {
-                    if (typeof item.value === "string") {
-                        return { ...item, value: JSON.parse(item.value) };
-                    }
-                    if (Array.isArray(item.value)) {
-                        return { ...item, value: item.value.map((value) => JSON.parse(value)) };
-                    }
-                }
-                return item;
-            }) ?? [],
-    };
+const GLOBAL_SCOPE_VALUE = "__global__";
 
-    return muiGridFilterToGql(columns, customFilterModel);
+function scopeColumnToGqlFilter(filterItem: GridFilterItem) {
+    if (filterItem.operator === "isAnyOf") {
+        const values = (filterItem.value as string[] | undefined) ?? [];
+        const hasGlobal = values.includes(GLOBAL_SCOPE_VALUE);
+        const scopes = values.filter((value) => value !== GLOBAL_SCOPE_VALUE).map((value) => JSON.parse(value));
+        if (hasGlobal && scopes.length > 0) {
+            return { or: [{ scope: { isGlobal: true } }, { scope: { isAnyOf: scopes } }] };
+        }
+        if (hasGlobal) {
+            return { scope: { isGlobal: true } };
+        }
+        return { scope: { isAnyOf: scopes } };
+    }
+    if (filterItem.value === GLOBAL_SCOPE_VALUE) {
+        return { scope: { isGlobal: filterItem.operator !== "not" } };
+    }
+    const gqlOperator = filterItem.operator === "not" ? "notEqual" : "equal";
+    const value = typeof filterItem.value === "string" ? JSON.parse(filterItem.value) : filterItem.value;
+    return { scope: { [gqlOperator]: value } };
 }
 
 function ActionLogsGridToolbar() {
@@ -106,12 +109,14 @@ export function ActionLogsGrid() {
     );
 
     const scopeValueOptions = useMemo(
-        () =>
-            scopeValues.map((item) => ({
+        () => [
+            { value: GLOBAL_SCOPE_VALUE, label: intl.formatMessage(messages.globalContentScope) },
+            ...scopeValues.map((item) => ({
                 value: JSON.stringify(item.scope),
                 label: formatScopeLabel(item.scope),
             })),
-        [scopeValues, formatScopeLabel],
+        ],
+        [intl, scopeValues, formatScopeLabel],
     );
 
     const columns = useMemo<GridColDef<GQLActionLogsGridFragment>[]>(
@@ -127,6 +132,7 @@ export function ActionLogsGrid() {
                 headerName: intl.formatMessage({ id: "comet.actionLogs.columns.scope", defaultMessage: "Scope" }),
                 type: "singleSelect",
                 valueOptions: scopeValueOptions,
+                toGqlFilter: scopeColumnToGqlFilter,
                 width: 150,
                 renderCell: ({ row }) => {
                     const scopes = (row.scope as ContentScope[] | null | undefined) ?? [];
@@ -217,7 +223,7 @@ export function ActionLogsGrid() {
         [intl, formatScopeLabel, scopeValueOptions],
     );
 
-    const { filter: gqlFilter } = gridFilterToGql(columns, dataGridProps.filterModel);
+    const { filter: gqlFilter } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 
     const scopes = useMemo(() => scopeValues.map((item) => item.scope), [scopeValues]);
 

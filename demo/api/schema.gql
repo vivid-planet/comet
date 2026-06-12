@@ -48,6 +48,7 @@ input ActionLogFilter {
 input ActionLogScopeFilter {
   equal: JSONObject
   isAnyOf: [JSONObject!]
+  isGlobal: Boolean
   notEqual: JSONObject
 }
 
