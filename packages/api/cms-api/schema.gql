@@ -614,6 +614,7 @@ input ActionLogFilter {
   entityName: StringFilter
   action: ActionLogActionFilter
   createdAt: DateTimeFilter
+  scope: ActionLogScopeFilter
   and: [ActionLogFilter!]
   or: [ActionLogFilter!]
 }
@@ -641,6 +642,13 @@ input DateTimeFilter {
   isNotEmpty: Boolean
 }
 
+input ActionLogScopeFilter {
+  isAnyOf: [JSONObject!]
+  equal: JSONObject
+  notEqual: JSONObject
+  isGlobal: Boolean
+}
+
 input ActionLogSort {
   field: ActionLogSortField!
   direction: SortDirection! = ASC
@@ -650,6 +658,7 @@ enum ActionLogSortField {
   version
   createdAt
   entityName
+  scope
 }
 
 input RedirectScopeInput {
