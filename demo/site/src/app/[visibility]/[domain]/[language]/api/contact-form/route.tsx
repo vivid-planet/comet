@@ -12,6 +12,7 @@ const queryValidationSchema = z.object({
     message: z.string(),
     privacyConsent: z.boolean(),
     recaptchaToken: z.string(),
+    attachmentIds: z.array(z.string()).default([]),
 });
 
 export async function POST(request: NextRequest, context: RouteContext<"/[visibility]/[domain]/[language]/api/contact-form">) {
