@@ -5,9 +5,9 @@ import type { FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { defaultFilterOutKeys, filterOutKeys } from "../../actionLog.utils";
+import { ActionLogHeader } from "../actionLogHeader/ActionLogHeader";
 import { DiffHeader } from "../diffHeader/DiffHeader";
 import { DiffViewer } from "../diffViewer/DiffViewer";
-import { ActionLogHeader } from "../header/ActionLogHeader";
 import type { GQLActionLogCompareFragment } from "./ActionLogCompare.gql.generated";
 import { LoadingContainer, PaperStyled, Root } from "./ActionLogCompare.styles";
 

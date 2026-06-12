@@ -5,7 +5,7 @@ import { DataGrid, gridClasses, type GridRowSelectionModel, type GridSlotsCompon
 import { type FunctionComponent, useMemo, useState } from "react";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 
-import { ActionLogHeader } from "../components/header/ActionLogHeader";
+import { ActionLogHeader } from "../components/actionLogHeader/ActionLogHeader";
 import { UserCell } from "../components/userCell/UserCell";
 import { ActionGridToolbar, type ActionGridToolbarProps } from "./actionGridToolbar/ActionGridToolbar";
 import type { GQLActionLogGridFragment } from "./ActionLogGrid.gql.generated";

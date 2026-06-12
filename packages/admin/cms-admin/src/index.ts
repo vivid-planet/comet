@@ -4,10 +4,10 @@ export { ActionLogGrid, actionLogGridFragment } from "./actionLog/actionLogGrid/
 export { ActionLogsGrid, actionLogsGridFragment } from "./actionLog/actionLogs/actionLogsGrid/ActionLogsGrid";
 export { ActionLogsPage } from "./actionLog/actionLogs/actionLogsPage/ActionLogsPage";
 export { ActionLogCompare, actionLogCompareFragment } from "./actionLog/components/actionLogCompare/ActionLogCompare";
+export { ActionLogHeader, type ActionLogHeaderProps } from "./actionLog/components/actionLogHeader/ActionLogHeader";
 export { ActionLogShowVersion, actionLogShowVersionFragment } from "./actionLog/components/actionLogShowVersion/ActionLogShowVersion";
 export { DiffHeader, type DiffHeaderProps } from "./actionLog/components/diffHeader/DiffHeader";
 export { DiffViewer, type DiffViewerProps } from "./actionLog/components/diffViewer/DiffViewer";
-export { ActionLogHeader, type ActionLogHeaderProps } from "./actionLog/components/header/ActionLogHeader";
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { BlockAdminComponentButton } from "./blocks/common/BlockAdminComponentButton";
 export { BlockAdminComponentNestedButton } from "./blocks/common/BlockAdminComponentNestedButton";
