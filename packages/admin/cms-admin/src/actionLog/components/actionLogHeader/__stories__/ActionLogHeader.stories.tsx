@@ -8,7 +8,7 @@ import { ActionLogHeader } from "../ActionLogHeader";
 type Story = StoryObj<typeof ActionLogHeader>;
 const meta: Meta<typeof ActionLogHeader> = {
     component: ActionLogHeader,
-    title: "actionLog/components/header/ActionLogHeader",
+    title: "actionLog/components/actionLogHeader/ActionLogHeader",
 };
 export default meta;
 

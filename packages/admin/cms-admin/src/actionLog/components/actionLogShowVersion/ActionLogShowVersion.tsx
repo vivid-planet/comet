@@ -4,10 +4,10 @@ import { Box } from "@mui/material";
 import type { FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { defaultFilterOutKeys, filterOutKeys } from "../actionLog.utils";
-import { DiffHeader } from "../components/DiffHeader";
-import { DiffViewer } from "../components/diffViewer/DiffViewer";
-import { ActionLogHeader } from "../components/header/ActionLogHeader";
+import { defaultFilterOutKeys, filterOutKeys } from "../../actionLog.utils";
+import { ActionLogHeader } from "../actionLogHeader/ActionLogHeader";
+import { DiffHeader } from "../diffHeader/DiffHeader";
+import { DiffViewer } from "../diffViewer/DiffViewer";
 import type { GQLActionLogShowVersionFragment } from "./ActionLogShowVersion.gql.generated";
 import { DiffViewerContainer, LoadingContainer, Root } from "./ActionLogShowVersion.styles";
 
@@ -21,7 +21,7 @@ type ActionLogShowVersionProps = {
      * Latest name of the actual object, displayed in the title
      */
     name?: string;
-    onClickShowVersionHistory: () => void;
+    onClickShowVersionHistory?: () => void;
 };
 
 export const ActionLogShowVersion: FunctionComponent<ActionLogShowVersionProps> = ({
@@ -52,11 +52,13 @@ export const ActionLogShowVersion: FunctionComponent<ActionLogShowVersionProps> 
 
     return (
         <Root>
-            <Box marginBottom={4}>
-                <Button onClick={onClickShowVersionHistory} startIcon={<ArrowLeft />} variant="primary">
-                    <FormattedMessage defaultMessage="Show Version History" id="actionLog.actionLogCompare.showVersionHistory" />
-                </Button>
-            </Box>
+            {onClickShowVersionHistory && (
+                <Box marginBottom={4}>
+                    <Button onClick={onClickShowVersionHistory} startIcon={<ArrowLeft />} variant="primary">
+                        <FormattedMessage defaultMessage="Show Version History" id="actionLog.actionLogCompare.showVersionHistory" />
+                    </Button>
+                </Box>
+            )}
 
             <ActionLogHeader dbTypes={version?.entityName ? [version.entityName] : []} id={id} title={title} />
 

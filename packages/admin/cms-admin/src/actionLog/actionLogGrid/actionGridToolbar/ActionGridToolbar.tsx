@@ -15,7 +15,7 @@ export const ActionGridToolbar: FunctionComponent<ActionGridToolbarProps> = ({ d
             <FillSpace />
 
             <Button disabled={disableCompare} onClick={onClickCompare} startIcon={<ChangeImage />}>
-                <FormattedMessage defaultMessage="Markierte Versionen vergleichen" id="actionLog.actionLogGrid.gridToolbar.compareMarkedVersions" />
+                <FormattedMessage defaultMessage="Compare selected versions" id="actionLog.actionLogGrid.gridToolbar.compareMarkedVersions" />
             </Button>
         </DataGridToolbar>
     );

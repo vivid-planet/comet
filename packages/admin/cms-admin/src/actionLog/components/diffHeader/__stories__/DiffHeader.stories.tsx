@@ -5,7 +5,7 @@ import { DiffHeader } from "../DiffHeader";
 type Story = StoryObj<typeof DiffHeader>;
 const meta: Meta<typeof DiffHeader> = {
     component: DiffHeader,
-    title: "actionLog/components/DiffHeader",
+    title: "actionLog/components/diffHeader/DiffHeader",
 };
 export default meta;
 

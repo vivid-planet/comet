@@ -3,14 +3,53 @@
 # ------------------------------------------------------
 
 type ActionLog {
+  """
+  Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.
+  """
+  action: ActionLogAction!
   createdAt: DateTime!
   entityId: ID!
   entityName: String!
   id: ID!
+
+  """
+  The most recent earlier action log entry for the same entity. Null when this is the first version. Used to render a diff against the prior snapshot.
+  """
+  previousVersion: ActionLog
   scope: [JSONObject!]
   snapshot: JSONObject
   user: ActionLogsUser!
   version: Int!
+}
+
+enum ActionLogAction {
+  Created
+  Deleted
+  Updated
+}
+
+input ActionLogActionFilter {
+  equal: ActionLogAction
+  isAnyOf: [ActionLogAction!]
+  notEqual: ActionLogAction
+}
+
+input ActionLogFilter {
+  action: ActionLogActionFilter
+  and: [ActionLogFilter!]
+  createdAt: DateTimeFilter
+  entityId: IdFilter
+  entityName: StringFilter
+  or: [ActionLogFilter!]
+  scope: ActionLogScopeFilter
+  userId: StringFilter
+}
+
+input ActionLogScopeFilter {
+  equal: JSONObject
+  isAnyOf: [JSONObject!]
+  isGlobal: Boolean
+  notEqual: JSONObject
 }
 
 input ActionLogSort {
@@ -20,6 +59,8 @@ input ActionLogSort {
 
 enum ActionLogSortField {
   createdAt
+  entityName
+  scope
   version
 }
 
@@ -1410,6 +1451,7 @@ type PaginatedWarnings {
 }
 
 enum Permission {
+  actionLog
   blockPreview
   brevoNewsletter
   brevoNewsletterConfig
@@ -1968,6 +2010,15 @@ input ProductVariantUpdateInput {
 }
 
 type Query {
+  """
+  Returns a single action log entry by id. Requires the `actionLog` permission.
+  """
+  actionLog(id: ID!): ActionLog!
+
+  """
+  Returns action log entries across all entities. Requires the `actionLog` permission.
+  """
+  actionLogs(filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, scopes: [JSONObject!]!, search: String, sort: [ActionLogSort!]): PaginatedActionLogs!
   autoBuildStatus: AutoBuildStatus!
   blockPreviewJwt(includeInvisible: Boolean!, scope: JSONObject!, url: String!): String!
   brevoConfig(scope: EmailCampaignContentScopeInput!): BrevoConfig

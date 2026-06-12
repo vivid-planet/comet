@@ -3,9 +3,9 @@ import { Dialog, InlineAlert, useDataGridRemote, usePersistentColumnState } from
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ActionLogCompare } from "../actionLogCompare/ActionLogCompare";
 import { ActionLogGrid } from "../actionLogGrid/ActionLogGrid";
-import { ActionLogShowVersion } from "../actionLogShowVersion/ActionLogShowVersion";
+import { ActionLogCompare } from "../components/actionLogCompare/ActionLogCompare";
+import { ActionLogShowVersion } from "../components/actionLogShowVersion/ActionLogShowVersion";
 import {
     type ActionLogDialogCompareQueryResult,
     type ActionLogDialogCompareQueryVariables,
