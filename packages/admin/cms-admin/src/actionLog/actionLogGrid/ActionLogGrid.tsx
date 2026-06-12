@@ -6,10 +6,10 @@ import { type FunctionComponent, useMemo, useState } from "react";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 
 import { ActionLogHeader } from "../components/header/ActionLogHeader";
+import { UserCell } from "../components/userCell/UserCell";
 import { ActionGridToolbar, type ActionGridToolbarProps } from "./actionGridToolbar/ActionGridToolbar";
 import type { GQLActionLogGridFragment } from "./ActionLogGrid.gql.generated";
 import { Root } from "./ActionLogGrid.sc";
-import { UserCell } from "./userCell/UserCell";
 
 type ActionGridRow = GQLActionLogGridFragment;
 
@@ -46,7 +46,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({
             },
             {
                 field: "createdAt",
-                headerName: intl.formatMessage({ defaultMessage: "Datum", id: "actionLog.actionLogGrid.columns.createdAt" }),
+                headerName: intl.formatMessage({ defaultMessage: "Date", id: "actionLog.actionLogGrid.columns.createdAt" }),
                 minWidth: 200,
                 renderCell: ({ row }) => {
                     return <FormattedDate dateStyle="medium" timeStyle="short" value={row.createdAt} />;
@@ -54,7 +54,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({
             },
             {
                 field: "user",
-                headerName: intl.formatMessage({ defaultMessage: "Geändert von", id: "actionLog.actionLogGrid.columns.user" }),
+                headerName: intl.formatMessage({ defaultMessage: "Changed by", id: "actionLog.actionLogGrid.columns.user" }),
                 minWidth: 400,
                 sortable: false,
                 renderCell: ({ row }) => {
@@ -123,7 +123,7 @@ export const ActionLogGrid: FunctionComponent<ActionLogGridProps> = ({
                 id={id}
                 title={
                     <FormattedMessage
-                        defaultMessage="Versionshistorie{name}"
+                        defaultMessage="Version history{name}"
                         id="actionLog.actionLogGrid.title"
                         values={{
                             name: name != null ? ` - ${name}` : "",

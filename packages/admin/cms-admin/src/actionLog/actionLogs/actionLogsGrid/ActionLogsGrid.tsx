@@ -25,8 +25,8 @@ import { createContext, useContext, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { type ContentScope, useContentScope } from "../../../contentScope/Provider";
-import { UserCell } from "../../actionLogGrid/userCell/UserCell";
-import { ActionChip } from "../actionChip/ActionChip";
+import { ActionChip } from "../../components/actionChip/ActionChip";
+import { UserCell } from "../../components/userCell/UserCell";
 import { ActionLogsDialog } from "../actionLogsDialog/ActionLogsDialog";
 import { ActionLogsShowVersionDialog } from "../actionLogsShowVersionDialog/ActionLogsShowVersionDialog";
 import { actionLogsGridQuery } from "./ActionLogsGrid.gql";

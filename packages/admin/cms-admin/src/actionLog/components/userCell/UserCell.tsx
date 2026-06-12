@@ -53,7 +53,7 @@ export const UserCell: FunctionComponent<UserCellProps> = ({ id, name }) => {
         <Root>
             <AvatarStyled backgroundColor={resolveBackgroundColor(name, theme)}>{name ? initialsForName(name) : "?"}</AvatarStyled>
             <Typography>
-                {name ?? <FormattedMessage defaultMessage="Unknown user ({id})" id="actionLog.actionLogGrid.userCell.unknownUser" values={{ id }} />}
+                {name ?? <FormattedMessage defaultMessage="Unknown user ({id})" id="actionLog.userCell.unknownUser" values={{ id }} />}
             </Typography>
         </Root>
     );

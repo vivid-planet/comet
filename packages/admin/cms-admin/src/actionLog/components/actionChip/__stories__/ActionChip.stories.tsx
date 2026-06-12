@@ -6,7 +6,7 @@ type Story = StoryObj<typeof ActionChip>;
 const meta: Meta<typeof ActionChip> = {
     component: ActionChip,
     tags: ["!autodocs"],
-    title: "Action log/Action logs/Action chip",
+    title: "Action log/Components/Action chip",
 };
 export default meta;
 
