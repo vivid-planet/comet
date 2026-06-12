@@ -5,11 +5,14 @@ import { PageLayout } from "@src/layout/PageLayout";
 import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import Script from "next/script";
+import { useCallback } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { Button } from "../components/Button";
 import { CheckboxField } from "../components/form/CheckboxField";
+import { areAttachmentsSettled, type Attachment, FileUploadField, getAttachmentIds } from "../components/form/FileUploadField";
 import { SelectField } from "../components/form/SelectField";
 import { TextareaField } from "../components/form/TextareaField";
 import { TextField } from "../components/form/TextField";
@@ -22,6 +25,9 @@ const subjectOptions = [
     { value: "Option 3", label: "Option 3" },
 ];
 
+const acceptedFileTypes = ["application/pdf", "image/jpeg", "image/png"];
+const maxFileSize = 5 * 1024 * 1024;
+
 interface ContactFormValues {
     name: string;
     company?: string;
@@ -29,6 +35,7 @@ interface ContactFormValues {
     phoneNumber?: string;
     subject: string;
     message: string;
+    attachments: Attachment[];
     privacyConsent: boolean;
 }
 
@@ -53,9 +60,38 @@ export const ContactFormBlock = withPreview(
                 phoneNumber: "",
                 subject: "",
                 message: "",
+                attachments: [],
                 privacyConsent: false,
             },
         });
+
+        const attachments = useWatch({ control, name: "attachments" });
+        const isUploading = !areAttachmentsSettled(attachments);
+
+        const uploadFile = useCallback(
+            async (file: File) => {
+                if (!recaptchaSiteKey) {
+                    throw new Error("Missing recaptchaSiteKey in siteConfig");
+                }
+                const recaptchaToken = await getRecaptchaToken("file_upload", recaptchaSiteKey);
+
+                const body = new FormData();
+                body.append("file", file, file.name);
+                body.append("recaptchaToken", recaptchaToken);
+
+                const response = await fetch(`/${language}/api/file-upload`, {
+                    method: "POST",
+                    body,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`File upload failed for ${file.name}`);
+                }
+
+                return (await response.json()) as { id: string };
+            },
+            [language, recaptchaSiteKey],
+        );
 
         const onSubmit = async (formValues: ContactFormValues) => {
             let recaptchaToken: string;
@@ -67,6 +103,17 @@ export const ContactFormBlock = withPreview(
                     message: intl.formatMessage({
                         id: "contactFormBlock.missingRecaptchaKey",
                         defaultMessage: "The form is currently unavailable. Please try again later.",
+                    }),
+                });
+                return;
+            }
+
+            if (formValues.attachments.some((attachment) => attachment.status === "error")) {
+                setError("root.serverError", {
+                    type: "manual",
+                    message: intl.formatMessage({
+                        id: "contactForm.attachments.hasErrors",
+                        defaultMessage: "Please remove attachments that failed to upload.",
                     }),
                 });
                 return;
@@ -87,12 +134,15 @@ export const ContactFormBlock = withPreview(
             }
 
             try {
+                const { attachments: formAttachments, ...rest } = formValues;
                 const response = await fetch(`/${language}/api/contact-form`, {
                     method: "POST",
-                    headers: {
-                        "content-type": "application/json",
-                    },
-                    body: JSON.stringify({ ...formValues, recaptchaToken }),
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        ...rest,
+                        attachmentIds: getAttachmentIds(formAttachments),
+                        recaptchaToken,
+                    }),
                 });
 
                 if (!response.ok) {
@@ -112,6 +162,7 @@ export const ContactFormBlock = withPreview(
 
         return (
             <PageLayout grid>
+                <Script src={`https://www.google.com/recaptcha/enterprise.js?render=${recaptchaSiteKey}`} />
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                     <TextField
                         name="name"
@@ -188,6 +239,28 @@ export const ContactFormBlock = withPreview(
                         placeholder={intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" })}
                         label={intl.formatMessage({ id: "contactForm.message.label", defaultMessage: "Message" })}
                     />
+                    <FileUploadField
+                        name="attachments"
+                        control={control}
+                        accept={acceptedFileTypes.join(",")}
+                        label={intl.formatMessage({ id: "contactForm.attachments.label", defaultMessage: "Attachments" })}
+                        uploadFile={uploadFile}
+                        validateFile={(file) => {
+                            if (!acceptedFileTypes.includes(file.type)) {
+                                return intl.formatMessage({
+                                    id: "contactForm.attachments.invalidType",
+                                    defaultMessage: "File type not allowed.",
+                                });
+                            }
+                            if (file.size > maxFileSize) {
+                                return intl.formatMessage({
+                                    id: "contactForm.attachments.tooLarge",
+                                    defaultMessage: "File is too large.",
+                                });
+                            }
+                            return undefined;
+                        }}
+                    />
                     <CheckboxField
                         name="privacyConsent"
                         control={control}
@@ -203,7 +276,7 @@ export const ContactFormBlock = withPreview(
                                 "I agree that my information from the contact form will be collected and processed to answer my inquiry. Note: You can revoke your consent at any time by email to hello@your-domain.com. For more information, please see our privacy policy.",
                         })}
                     />
-                    <Button type="submit" variant="contained" disabled={isSubmitting}>
+                    <Button type="submit" variant="contained" disabled={isSubmitting || isUploading}>
                         <FormattedMessage id="contactForm.submitButton.label" defaultMessage="Submit" />
                     </Button>
                     {errors.root?.serverError && <div>{errors.root.serverError.message}</div>}
