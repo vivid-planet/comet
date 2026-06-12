@@ -10,38 +10,31 @@ import comet_demo_messages_en from "../lang-compiled/comet-demo-lang-admin/en.js
 import comet_messages_de from "../lang-compiled/comet-lang/de.json";
 import comet_messages_en from "../lang-compiled/comet-lang/en.json";
 
-const cometMessages = {
-    en: comet_messages_en,
-    de: comet_messages_de,
-};
-
-const cometDemoMessages = {
-    en: comet_demo_messages_en,
-    de: comet_demo_messages_de,
-};
-
 const supportedLanguages = ["en", "de"] as const;
 
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 const fallbackLanguage: SupportedLanguage = "en";
 
-function isSupportedLanguage(language: string): language is SupportedLanguage {
-    return supportedLanguages.includes(language as SupportedLanguage);
-}
-
-function getClosestSupportedLanguage(): SupportedLanguage {
+function getClosestSupportedLanguageFromBrowserLanguages(): SupportedLanguage {
     const browserLanguages = typeof navigator !== "undefined" ? (navigator.languages ?? [navigator.language]) : [];
 
-    for (const browserLanguage of browserLanguages) {
-        const language = browserLanguage.split("-")[0].toLowerCase();
-        if (isSupportedLanguage(language)) {
-            return language;
-        }
-    }
+    const language = browserLanguages
+        .map((browserLanguage) => browserLanguage.split("-")[0].toLowerCase())
+        .find((language): language is SupportedLanguage => supportedLanguages.includes(language as SupportedLanguage));
 
-    return fallbackLanguage;
+    return language ?? fallbackLanguage;
 }
+
+const cometMessages = {
+    en: comet_messages_en,
+    de: comet_messages_de,
+} satisfies Record<SupportedLanguage, ResolvedIntlConfig["messages"]>;
+
+const cometDemoMessages = {
+    en: comet_demo_messages_en,
+    de: comet_demo_messages_de,
+} satisfies Record<SupportedLanguage, ResolvedIntlConfig["messages"]>;
 
 function getMessages(language: SupportedLanguage): ResolvedIntlConfig["messages"] {
     return {
@@ -55,8 +48,6 @@ const dateFnsLocales: Record<SupportedLanguage, Locale> = {
     de,
 };
 
-// MUI and MUI X ship their own component translations (date picker, data grid, table pagination, …).
-// They are applied through the theme, so the bundles are spread into `createCometTheme` as additional arguments.
 const muiLocales: Record<SupportedLanguage, object[]> = {
     en: [coreEn, dataGridEn, datePickersEn],
     de: [coreDe, dataGridDe, datePickersDe],
@@ -68,7 +59,7 @@ export function getLanguageConfig(): {
     dateFnsLocale: Locale;
     muiLocale: object[];
 } {
-    const language = getClosestSupportedLanguage();
+    const language = getClosestSupportedLanguageFromBrowserLanguages();
 
     return {
         language,
