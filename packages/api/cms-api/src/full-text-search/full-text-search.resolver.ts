@@ -3,6 +3,7 @@ import { Args, Int, Query, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { RequestContext, type RequestContextInterface } from "../common/decorators/request-context.decorator";
 import { EntityInfoObject } from "../entity-info/entity-info.object";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
@@ -21,6 +22,7 @@ export class FullTextSearchResolver {
         @Args("offset", { type: () => Int, defaultValue: 0 }) offset: number,
         @Args("limit", { type: () => Int, defaultValue: 25 }) limit: number,
         @GetCurrentUser() user: CurrentUser,
+        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
         @Args("scope", { type: () => GraphQLJSONObject, nullable: true }) scope?: ContentScope,
     ): Promise<PaginatedEntityInfo> {
         const allowedPermissions = user.permissions.map((p) => p.permission);
@@ -32,6 +34,7 @@ export class FullTextSearchResolver {
         const where: FilterQuery<EntityInfoFullTextObject> = {
             fullText: { $fulltext: search },
             requiredPermission: { $overlap: allowedPermissions },
+            ...(includeInvisiblePages?.length ? {} : { entityInfo: { visible: true } }),
         };
 
         if (scope) {
@@ -41,28 +44,15 @@ export class FullTextSearchResolver {
             where.scopes = { $contains: [{ ...scope }] };
         }
 
-        const [matches, totalCount] = await this.entityManager.findAndCount(EntityInfoFullTextObject, where, { offset, limit });
-
-        if (matches.length === 0) {
-            return new PaginatedEntityInfo([], totalCount);
-        }
-
-        // Join with EntityInfo view to fetch name, secondaryInformation, visible for the matched rows
-        const infos = await this.entityManager.find(EntityInfoObject, {
-            $or: matches.map((match) => ({ id: match.id, entityName: match.entityName })),
+        const [matches, totalCount] = await this.entityManager.findAndCount(EntityInfoFullTextObject, where, {
+            offset,
+            limit,
+            populate: ["entityInfo"],
         });
 
-        const infoByKey = new Map(infos.map((info) => [`${info.entityName}:${info.id}`, info]));
-        const results = matches.map((match) => {
-            const info = infoByKey.get(`${match.entityName}:${match.id}`);
-            if (!info) {
-                throw new Error(
-                    `EntityInfo not found for ${match.entityName}:${match.id}. This may indicate a data inconsistency where the full-text search index contains an entry without corresponding entity information.`,
-                );
-            }
-            return info;
-        });
-
-        return new PaginatedEntityInfo(results, totalCount);
+        return new PaginatedEntityInfo(
+            matches.map((match) => match.entityInfo),
+            totalCount,
+        );
     }
 }
