@@ -40,5 +40,21 @@ export function ScopedEntity<Entity extends AnyEntity = AnyEntity>(value: Scoped
 }
 
 export function isEntityScopeMapping(value: ScopedEntityMeta): value is EntityScopeMapping {
-    return typeof value === "string" || (typeof value === "object" && value !== null);
+    if (Array.isArray(value)) {
+        return value.every(isSingleEntityScopeMapping);
+    }
+    return isSingleEntityScopeMapping(value);
+}
+
+function isSingleEntityScopeMapping(value: unknown): value is SingleEntityScopeMapping {
+    if (typeof value === "string") {
+        return true;
+    }
+    // object mapping scope keys to field paths, e.g. { companyId: "company.id" }
+    return (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value) &&
+        Object.values(value).every((fieldPath) => typeof fieldPath === "string")
+    );
 }

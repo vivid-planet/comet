@@ -34,7 +34,11 @@ export async function getScopesForScopedEntity({
         const service = moduleRef.get(scoped, { strict: false });
         return service.getEntityScope(row);
     }
-    return scoped(row);
+    if (typeof scoped === "function") {
+        return scoped(row);
+    }
+    const entityName = typeof entity === "string" ? entity : entity.name;
+    throw new Error(`Invalid @ScopedEntity value for entity "${entityName}": expected a callback, a service class, or a scope mapping.`);
 }
 
 async function resolveScopeMapping({
