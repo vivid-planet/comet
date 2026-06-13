@@ -9,7 +9,7 @@ import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";
 import { DiscoverService } from "../dependencies/discover.service";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
-import { getScopeForScopedEntity } from "../user-permissions/get-scope-for-scoped-entity";
+import { getScopesForScopedEntity } from "../user-permissions/get-scopes-for-scoped-entity";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CREATE_WARNINGS_METADATA_KEY, CreateWarningsFunction, CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
@@ -79,7 +79,7 @@ export class WarningCheckerCommand extends CommandRunner {
                             const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>(SCOPED_ENTITY_METADATA_KEY, [entity]);
 
                             if (scoped) {
-                                const scopedEntityScope = await getScopeForScopedEntity({
+                                const scopedEntityScope = await getScopesForScopedEntity({
                                     scoped,
                                     entity,
                                     row: rootBlock,

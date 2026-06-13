@@ -16,7 +16,7 @@ import { ModuleRef } from "@nestjs/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { EntityScopeServiceInterface } from "./decorators/scoped-entity.decorator";
-import { getScopeForScopedEntity } from "./get-scope-for-scoped-entity";
+import { getScopesForScopedEntity } from "./get-scopes-for-scoped-entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 
 @Embeddable()
@@ -71,7 +71,7 @@ class NewsCommentScopeService implements EntityScopeServiceInterface<NewsComment
     }
 }
 
-describe("getScopeForScopedEntity", () => {
+describe("getScopesForScopedEntity", () => {
     let orm: MikroORM;
 
     beforeAll(async () => {
@@ -100,7 +100,7 @@ describe("getScopeForScopedEntity", () => {
         it("invokes a synchronous callback with the row", async () => {
             const row = orm.em.create(NewsComment, { id: "1", news: { id: "n1", scope: { domain: "main", language: "en" } } });
 
-            const scope = await getScopeForScopedEntity({
+            const scope = await getScopesForScopedEntity({
                 scoped: (newsComment: AnyEntity) => ({ commentId: newsComment.id }),
                 entity: NewsComment,
                 row,
@@ -114,7 +114,7 @@ describe("getScopeForScopedEntity", () => {
         it("awaits an asynchronous callback", async () => {
             const row = orm.em.create(NewsComment, { id: "2", news: { id: "n2", scope: { domain: "main", language: "en" } } });
 
-            const scope = await getScopeForScopedEntity({
+            const scope = await getScopesForScopedEntity({
                 scoped: async () => ({ domain: "async-domain" }),
                 entity: NewsComment,
                 row,
@@ -128,7 +128,7 @@ describe("getScopeForScopedEntity", () => {
         it("supports a callback returning multiple scopes", async () => {
             const row = orm.em.create(NewsComment, { id: "3", news: { id: "n3", scope: { domain: "main", language: "en" } } });
 
-            const scope = await getScopeForScopedEntity({
+            const scope = await getScopesForScopedEntity({
                 scoped: () => [{ domain: "a" }, { domain: "b" }],
                 entity: NewsComment,
                 row,
@@ -144,7 +144,7 @@ describe("getScopeForScopedEntity", () => {
         it("resolves the service via ModuleRef and calls getEntityScope", async () => {
             const row = orm.em.create(NewsComment, { id: "4", news: { id: "n4", scope: { domain: "main", language: "en" } } });
 
-            const scope = await getScopeForScopedEntity({
+            const scope = await getScopesForScopedEntity({
                 scoped: NewsCommentScopeService,
                 entity: NewsComment,
                 row,
@@ -160,7 +160,7 @@ describe("getScopeForScopedEntity", () => {
         it("resolves a relation followed by an embeddable scope", async () => {
             const row = orm.em.create(NewsComment, { id: "5", news: { id: "n5", scope: { domain: "main", language: "de" } } });
 
-            const scope = await getScopeForScopedEntity({
+            const scope = await getScopesForScopedEntity({
                 scoped: "news.scope",
                 entity: NewsComment,
                 row,
@@ -176,7 +176,7 @@ describe("getScopeForScopedEntity", () => {
         it("resolves an array of mappings into an array of scopes", async () => {
             const row = orm.em.create(NewsComment, { id: "8", news: { id: "n8", scope: { domain: "main", language: "de" } } });
 
-            const scope = await getScopeForScopedEntity({
+            const scope = await getScopesForScopedEntity({
                 scoped: ["news.scope", { newsId: "news.id" }],
                 entity: NewsComment,
                 row,
@@ -192,7 +192,7 @@ describe("getScopeForScopedEntity", () => {
         it("resolves each field path into a scope object", async () => {
             const row = orm.em.create(Product, { id: "6", company: { id: "c1", scope: { domain: "main", language: "en" } } });
 
-            const scope = await getScopeForScopedEntity({
+            const scope = await getScopesForScopedEntity({
                 scoped: { companyId: "company.id" },
                 entity: Product,
                 row,
@@ -209,7 +209,7 @@ describe("getScopeForScopedEntity", () => {
             const row = orm.em.create(NewsComment, { id: "7", news: { id: "n7", scope: { domain: "main", language: "en" } } });
 
             await expect(
-                getScopeForScopedEntity({
+                getScopesForScopedEntity({
                     scoped: "nonExistent.scope",
                     entity: NewsComment,
                     row,

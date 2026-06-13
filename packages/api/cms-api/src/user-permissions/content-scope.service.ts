@@ -9,7 +9,7 @@ import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permission
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 import { AFFECTED_SCOPE_METADATA_KEY, AffectedScopeMeta } from "./decorators/affected-scope.decorator";
-import { getScopeForScopedEntity } from "./get-scope-for-scoped-entity";
+import { getScopesForScopedEntity } from "./get-scopes-for-scoped-entity";
 
 // TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()
@@ -101,7 +101,7 @@ export class ContentScopeService {
                         if (!scoped) {
                             throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
                         }
-                        const scopes = await getScopeForScopedEntity({
+                        const scopes = await getScopesForScopedEntity({
                             scoped,
                             entity: affectedEntity.entity,
                             row,

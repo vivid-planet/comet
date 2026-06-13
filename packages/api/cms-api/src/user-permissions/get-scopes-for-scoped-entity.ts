@@ -14,7 +14,7 @@ import type { ContentScope } from "./interfaces/content-scope.interface";
  * Resolves the scope of an entity from its `@ScopedEntity` metadata, supporting all variants:
  * the SQL-convertible mapping (string/object), an injectable service or a plain callback.
  */
-export async function getScopeForScopedEntity({
+export async function getScopesForScopedEntity({
     scoped,
     entity,
     row,
