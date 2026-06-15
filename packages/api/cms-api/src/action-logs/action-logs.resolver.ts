@@ -4,78 +4,16 @@ import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql
 import isEqual from "lodash.isequal";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
+import { gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { UserPermissionsService } from "../user-permissions/user-permissions.service";
-import type { ActionLogFilter } from "./dto/action-log.filter";
+import { actionLogFilterToWhere } from "./action-logs-filter.utils";
 import { ActionLogAction } from "./dto/action-log-action.enum";
-import { ActionLogsArgs } from "./dto/action-logs.args";
 import { ActionLogsUser } from "./dto/action-logs-user";
+import { GlobalActionLogsArgs } from "./dto/global-action-logs.args";
 import { PaginatedActionLogs } from "./dto/paginated-action-logs";
 import { ActionLog } from "./entities/action-log.entity";
-
-function actionToWhere(action: ActionLogAction): ObjectQuery<ActionLog> {
-    switch (action) {
-        case ActionLogAction.Created:
-            return { version: 1, snapshot: { $ne: null } };
-        case ActionLogAction.Updated:
-            return { version: { $gt: 1 }, snapshot: { $ne: null } };
-        case ActionLogAction.Deleted:
-            return { snapshot: null };
-    }
-}
-
-function actionLogFilterToWhere(filter: ActionLogFilter): ObjectQuery<ActionLog> {
-    const andConditions: ObjectQuery<ActionLog>[] = [];
-
-    if (filter.action) {
-        if (filter.action.equal !== undefined) {
-            andConditions.push(actionToWhere(filter.action.equal));
-        }
-        if (filter.action.isAnyOf !== undefined && filter.action.isAnyOf.length > 0) {
-            andConditions.push({ $or: filter.action.isAnyOf.map(actionToWhere) });
-        }
-        if (filter.action.notEqual !== undefined) {
-            andConditions.push({ $not: actionToWhere(filter.action.notEqual) });
-        }
-    }
-
-    if (filter.scope) {
-        if (filter.scope.isGlobal === true) {
-            andConditions.push({ scope: null });
-        }
-        if (filter.scope.equal !== undefined) {
-            andConditions.push({ scope: { $contains: [filter.scope.equal] } });
-        }
-        if (filter.scope.isAnyOf !== undefined && filter.scope.isAnyOf.length > 0) {
-            andConditions.push({ $or: filter.scope.isAnyOf.map((scope) => ({ scope: { $contains: [scope] } })) });
-        }
-        if (filter.scope.notEqual !== undefined) {
-            andConditions.push({ $not: { scope: { $contains: [filter.scope.notEqual] } } });
-        }
-    }
-
-    const { action: _action, scope: _scope, and, or, ...rest } = filter;
-    if (Object.keys(rest).length > 0) {
-        andConditions.push(filtersToMikroOrmQuery(rest));
-    }
-
-    if (and && and.length > 0) {
-        andConditions.push({ $and: and.map(actionLogFilterToWhere) });
-    }
-    if (or && or.length > 0) {
-        andConditions.push({ $or: or.map(actionLogFilterToWhere) });
-    }
-
-    if (andConditions.length === 0) {
-        return {};
-    }
-    if (andConditions.length === 1) {
-        return andConditions[0];
-    }
-    return { $and: andConditions };
-}
 
 @Resolver(() => ActionLog)
 @RequiredPermission(["actionLog"], { skipScopeCheck: true })
@@ -89,7 +27,7 @@ export class ActionLogsResolver {
         description: "Returns action log entries across all entities. Requires the `actionLog` permission.",
     })
     async actionLogs(
-        @Args() { search, filter, scopes, offset, limit, sort }: ActionLogsArgs,
+        @Args() { search, filter, scopes, offset, limit, sort }: GlobalActionLogsArgs,
         @GetCurrentUser() user: CurrentUser,
     ): Promise<PaginatedActionLogs> {
         const allowedScopesForUser = user.permissions.find(({ permission }) => permission === "actionLog")?.contentScopes;

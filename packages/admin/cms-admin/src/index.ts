@@ -1,5 +1,8 @@
 export { ActionLogButton } from "./actionLog/actionLog/actionLogButton/ActionLogButton";
 export { ActionLogDialog } from "./actionLog/actionLog/actionLogDialog/ActionLogDialog";
+export { ActionLogEntryDialog } from "./actionLog/actionLog/actionLogEntryDialog/ActionLogEntryDialog";
+export { ActionLogGrid, actionLogGridFragment } from "./actionLog/actionLog/actionLogGrid/ActionLogGrid";
+export { ActionLogShowVersionDialog } from "./actionLog/actionLog/actionLogShowVersionDialog/ActionLogShowVersionDialog";
 export { ActionLogVersionGrid, actionLogVersionGridFragment } from "./actionLog/actionLog/actionLogVersionGrid/ActionLogVersionGrid";
 export { ActionLogCompare, actionLogCompareFragment } from "./actionLog/components/actionLogCompare/ActionLogCompare";
 export { ActionLogHeader, type ActionLogHeaderProps } from "./actionLog/components/actionLogHeader/ActionLogHeader";

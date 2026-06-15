@@ -1,11 +1,9 @@
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
-import { GraphQLJSONObject } from "graphql-scalars";
+import { IsString, ValidateNested } from "class-validator";
 
 import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.args";
 import { IsUndefinable } from "../../common/validators/is-undefinable";
-import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 import { ActionLogFilter } from "./action-log.filter";
 import { ActionLogSort } from "./action-log.sort";
 
@@ -15,10 +13,6 @@ export class ActionLogsArgs extends OffsetBasedPaginationArgs {
     @IsString()
     @IsUndefinable()
     search?: string;
-
-    @Field(() => [GraphQLJSONObject])
-    @IsOptional()
-    scopes: ContentScope[];
 
     @Field(() => ActionLogFilter, { nullable: true })
     @ValidateNested()

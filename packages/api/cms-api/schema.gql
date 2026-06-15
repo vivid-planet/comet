@@ -541,7 +541,7 @@ type Query {
   """
   Returns action log entries across all entities. Requires the `actionLog` permission.
   """
-  actionLogs(offset: Int! = 0, limit: Int! = 25, search: String, scopes: [JSONObject!]!, filter: ActionLogFilter, sort: [ActionLogSort!]): PaginatedActionLogs!
+  actionLogs(search: String, filter: ActionLogFilter, sort: [ActionLogSort!], offset: Int! = 0, limit: Int! = 25, scopes: [JSONObject!]!): PaginatedActionLogs!
 
   """
   Returns a single action log entry by id. Requires the `actionLog` permission.
