@@ -48,7 +48,6 @@
     },
     "dependencies": {
         "@comet/admin": "workspace:*",
-        "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/admin-rte": "workspace:*",
         "@tiptap/core": "^3.22.3",
