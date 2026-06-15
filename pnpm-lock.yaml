@@ -760,12 +760,18 @@ importers:
 
   packages/admin/admin:
     dependencies:
+      '@base-ui/react':
+        specifier: ^1.5.0
+        version: 1.5.0(@types/react@19.2.15)(date-fns@4.4.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@comet/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^7.3.11
         version: 7.3.11(@types/react@19.2.15)(react@19.2.6)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
@@ -953,6 +959,9 @@ importers:
       rimraf:
         specifier: ^6.1.2
         version: 6.1.2
+      sass:
+        specifier: ^1.93.0
+        version: 1.93.0
       storybook:
         specifier: ^10.3.5
         version: 10.3.5(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
