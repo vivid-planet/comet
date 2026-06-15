@@ -1421,6 +1421,7 @@ enum Permission {
   dependencies
   fileUploads
   fullTextSearch
+  globalActionLog
   impersonation
   manufacturers
   news
@@ -1970,6 +1971,15 @@ input ProductVariantUpdateInput {
 }
 
 type Query {
+  """
+  Returns a single action log entry by id. Requires the `globalActionLog` permission.
+  """
+  actionLog(id: ID!): ActionLog!
+
+  """
+  Returns action log entries across all entities. Requires the `globalActionLog` permission.
+  """
+  actionLogs(filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, scopes: [JSONObject!]!, search: String, sort: [ActionLogSort!]): PaginatedActionLogs!
   autoBuildStatus: AutoBuildStatus!
   blockPreviewJwt(includeInvisible: Boolean!, scope: JSONObject!, url: String!): String!
   brevoConfig(scope: EmailCampaignContentScopeInput!): BrevoConfig
