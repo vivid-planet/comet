@@ -97,8 +97,6 @@ export function generateForm(
         { name: "useStackSwitchApi", importPath: "@comet/admin" },
         { name: "ArrowLeft", importPath: "@comet/admin-icons" },
         { name: "Lock", importPath: "@comet/admin-icons" },
-        { name: "DateTimeField", importPath: "@comet/admin-date-time" },
-        { name: "FinalFormDatePicker", importPath: "@comet/admin-date-time" },
         { name: "BlockState", importPath: "@comet/cms-admin" },
         { name: "createFinalFormBlock", importPath: "@comet/cms-admin" },
         { name: "queryUpdatedAt", importPath: "@comet/cms-admin" },
