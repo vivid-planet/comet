@@ -15,7 +15,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Time, View } from "@comet/admin-icons";
+import { Time } from "@comet/admin-icons";
 import { Autocomplete, Box, Chip, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, type GridFilterInputValueProps, type GridFilterItem, type GridFilterOperator, useGridRootProps } from "@mui/x-data-grid";
@@ -269,25 +269,18 @@ export function GlobalActionLogGrid() {
                 sortable: false,
                 filterable: false,
                 renderCell: ({ row }) => (
-                    <>
-                        <Tooltip title={<FormattedMessage id="comet.globalActionLog.actions.showVersion" defaultMessage="Show version" />}>
-                            <IconButton color="primary" onClick={() => setOpenVersionId(row.id)}>
-                                <View />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip
-                            title={
-                                <FormattedMessage
-                                    id="comet.globalActionLog.actions.showEntityActionLog"
-                                    defaultMessage="Show action log for this entity"
-                                />
-                            }
-                        >
-                            <IconButton onClick={() => setOpenDialog({ entityName: row.entityName, entityId: row.entityId })}>
-                                <Time />
-                            </IconButton>
-                        </Tooltip>
-                    </>
+                    <Tooltip
+                        title={
+                            <FormattedMessage
+                                id="comet.globalActionLog.actions.showEntityActionLog"
+                                defaultMessage="Show action log for this entity"
+                            />
+                        }
+                    >
+                        <IconButton onClick={() => setOpenDialog({ entityName: row.entityName, entityId: row.entityId })}>
+                            <Time />
+                        </IconButton>
+                    </Tooltip>
                 ),
             },
         ],
