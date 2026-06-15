@@ -52,6 +52,10 @@ Provides a customizable rich-text-editor component to allow advanced formatting 
 
 #### @comet/admin-date-time
 
+:::warning Deprecated
+This package is deprecated. Use the date and time components from `@comet/admin` instead.
+:::
+
 Provides components for selecting date and time or a range or combination of date and time.
 
 #### @comet/admin-color-picker
