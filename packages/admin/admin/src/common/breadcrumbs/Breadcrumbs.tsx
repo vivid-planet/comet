@@ -59,8 +59,26 @@ const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 50px;
+        height: 40px;
         padding: 0 ${theme.spacing(2)};
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: ${theme.spacing(2)};
+            right: ${theme.spacing(2)};
+            bottom: 0;
+            height: 1px;
+            background-color: ${theme.palette.grey[100]};
+        }
+
+        ${theme.breakpoints.up("sm")} {
+            height: 50px;
+
+            &::after {
+                content: none;
+            }
+        }
     `,
 );
 
@@ -92,6 +110,15 @@ const ActiveItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-size: 14px;
+        line-height: 16px;
+        font-weight: 600;
+
+        ${theme.breakpoints.up("sm")} {
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: bold;
+        }
     `,
 ) as typeof Typography;
 
@@ -114,10 +141,19 @@ const EllipsisButton = createComponentSlot(ButtonBase)<BreadcrumbsClassKey>({
 const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "ellipsis",
-})(css`
-    margin-right: 5px;
-    color: inherit;
-`);
+})(
+    ({ theme }) => css`
+        margin-right: 5px;
+        color: inherit;
+        font-size: 14px;
+        line-height: 16px;
+
+        ${theme.breakpoints.up("sm")} {
+            font-size: 16px;
+            line-height: 20px;
+        }
+    `,
+);
 
 const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
@@ -143,8 +179,13 @@ const ToolbarContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 50px;
-        padding: 0 ${theme.spacing(2)};
+        height: 40px;
+        padding: 0;
+
+        ${theme.breakpoints.up("sm")} {
+            height: 50px;
+            padding: 0 ${theme.spacing(2)};
+        }
     `,
 );
 
@@ -157,9 +198,9 @@ const ExpandedMenu = createComponentSlot("div")<BreadcrumbsClassKey>({
         left: 0;
         right: 0;
         top: 100%;
+        display: flex;
+        flex-direction: column;
         background-color: ${theme.palette.background.paper};
-        padding-top: ${theme.spacing(4)};
-        padding-bottom: ${theme.spacing(4)};
         z-index: 1;
     `,
 );
@@ -191,8 +232,7 @@ const ExpandedMenuActiveItemWrapper = createComponentSlot("div")<BreadcrumbsClas
         align-items: center;
         gap: 5px;
         height: 45px;
-        align-self: flex-start;
-        padding-right: ${theme.spacing(4)};
+        padding-right: ${theme.spacing(3)};
         background-color: ${alpha(theme.palette.primary.main, 0.1)};
     `,
 );
@@ -206,7 +246,6 @@ const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKe
         align-items: center;
         gap: 5px;
         height: 45px;
-        align-self: flex-start;
         padding-right: ${theme.spacing(3)};
     `,
 );
@@ -214,7 +253,9 @@ const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKe
 const MobileOpenMenuButton = createComponentSlot(IconButton)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "mobileOpenMenuButton",
-})(css``);
+})(css`
+    padding: 0;
+`);
 
 const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
@@ -263,7 +304,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                                         <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
                                     </>
                                 )}
-                                <ActiveItem key={item.url} {...slotProps?.activeItem} fontWeight="bold">
+                                <ActiveItem key={item.url} {...slotProps?.activeItem}>
                                     {item.title}
                                 </ActiveItem>
                             </Fragment>
@@ -286,15 +327,18 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                             const isActive = index === items.length - 1;
                             const Wrapper = isActive ? ExpandedMenuActiveItemWrapper : ExpandedMenuSubitemWrapper;
                             const wrapperSlotProps = isActive ? slotProps?.expandedMenuActiveItemWrapper : slotProps?.expandedMenuSubitemWrapper;
+                            const paddingLeft = index === 0 ? 15 : 17 * index + 5;
                             return (
-                                <Wrapper key={item.url} style={{ paddingLeft: `calc(${index * 16}px + 32px)` }} {...wrapperSlotProps}>
+                                <Wrapper key={item.url} style={{ paddingLeft }} {...wrapperSlotProps}>
                                     {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
                                     {isActive ? (
                                         <ExpandedMenuActiveItem {...slotProps?.expandedMenuActiveItem} variant="subtitle2">
                                             {item.title}
                                         </ExpandedMenuActiveItem>
                                     ) : (
-                                        <ExpandedMenuItem {...slotProps?.expandedMenuItem}>{item.title}</ExpandedMenuItem>
+                                        <ExpandedMenuItem {...slotProps?.expandedMenuItem} variant="body2">
+                                            {item.title}
+                                        </ExpandedMenuItem>
                                     )}
                                 </Wrapper>
                             );
