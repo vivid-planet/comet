@@ -114,6 +114,8 @@ export {
 export { DateTimeRangePickerField, type DateTimeRangePickerFieldProps } from "./dateTime/dateTimeRangePickerField/DateTimeRangePickerField";
 export { TimePicker, type TimePickerClassKey, type TimePickerProps } from "./dateTime/timePicker/TimePicker";
 export { TimePickerField, type TimePickerFieldProps } from "./dateTime/timePickerField/TimePickerField";
+export { type TimeRange, TimeRangePicker, type TimeRangePickerClassKey, type TimeRangePickerProps } from "./dateTime/timeRangePicker/TimeRangePicker";
+export { TimeRangePickerField, type TimeRangePickerFieldProps } from "./dateTime/timeRangePickerField/TimeRangePickerField";
 export { DeleteMutation } from "./DeleteMutation";
 export { EditDialog, useEditDialog } from "./EditDialog";
 export { EditDialogApiContext, type IEditDialogApi, useEditDialogApi } from "./EditDialogApiContext";
