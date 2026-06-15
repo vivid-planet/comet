@@ -22,8 +22,9 @@ import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
 import { PageTreeNodeDependency } from "@src/pageTree/PageTreeNodeDependency";
 import type { ContentScope as BaseContentScope } from "@src/site-configs";
-import { theme } from "@src/theme";
+import { createTheme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
+import { useMemo } from "react";
 import { DndProvider } from "react-dnd-multi-backend";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router";
@@ -67,7 +68,8 @@ declare module "@comet/cms-admin" {
 LicenseInfo.setLicenseKey(config.muiLicenseKey);
 
 export function App() {
-    const { language, messages, dateFnsLocale } = getLanguageConfig();
+    const { language, messages, dateFnsLocale, muiLocale } = getLanguageConfig();
+    const theme = useMemo(() => createTheme(muiLocale), [muiLocale]);
 
     return (
         <CometConfigProvider
