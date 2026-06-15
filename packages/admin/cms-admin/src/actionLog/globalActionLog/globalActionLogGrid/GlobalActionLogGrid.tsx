@@ -10,21 +10,24 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     ToolbarItem,
+    Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Autocomplete, Box, Chip } from "@mui/material";
+import { Time } from "@comet/admin-icons";
+import { Autocomplete, Box, Chip, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, type GridFilterInputValueProps, type GridFilterItem, type GridFilterOperator, useGridRootProps } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
 import { createContext, useContext, useMemo, useState } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { type ContentScope, useContentScope } from "../../../contentScope/Provider";
 import { ActionChip } from "../../components/actionChip/ActionChip";
 import { UserCell } from "../../components/userCell/UserCell";
+import { GlobalActionLogDialog } from "../globalActionLogDialog/GlobalActionLogDialog";
 import { GlobalActionLogShowVersionDialog } from "../globalActionLogShowVersionDialog/GlobalActionLogShowVersionDialog";
 import { globalActionLogGridQuery } from "./GlobalActionLogGrid.gql";
 import type {
@@ -158,6 +161,7 @@ export function GlobalActionLogGrid() {
     const intl = useIntl();
     const { values: scopeValues } = useContentScope();
     const [openVersionId, setOpenVersionId] = useState<string | null>(null);
+    const [openDialog, setOpenDialog] = useState<{ entityName: string; entityId: string } | null>(null);
 
     const dataGridProps = {
         ...useDataGridRemote({ initialSort: [{ field: "createdAt", sort: "desc" }] }),
@@ -252,6 +256,28 @@ export function GlobalActionLogGrid() {
                 filterable: false,
                 renderCell: ({ row }) => <UserCell id={row.user.id} name={row.user.name ?? undefined} />,
             },
+            {
+                field: "actions",
+                type: "actions",
+                headerName: "",
+                width: 100,
+                sortable: false,
+                filterable: false,
+                renderCell: ({ row }) => (
+                    <Tooltip
+                        title={
+                            <FormattedMessage
+                                id="comet.globalActionLog.actions.showEntityActionLog"
+                                defaultMessage="Show action log for this entity"
+                            />
+                        }
+                    >
+                        <IconButton onClick={() => setOpenDialog({ entityName: row.entityName, entityId: row.entityId })}>
+                            <Time />
+                        </IconButton>
+                    </Tooltip>
+                ),
+            },
         ],
         [intl, formatScopeLabel],
     );
@@ -291,6 +317,9 @@ export function GlobalActionLogGrid() {
                     showToolbar
                 />
                 <GlobalActionLogShowVersionDialog actionLogId={openVersionId} open={openVersionId !== null} onClose={() => setOpenVersionId(null)} />
+                {openDialog && (
+                    <GlobalActionLogDialog entityName={openDialog.entityName} entityId={openDialog.entityId} open onClose={() => setOpenDialog(null)} />
+                )}
             </MainContent>
         </ScopeFilterOptionsContext.Provider>
     );
