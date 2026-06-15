@@ -7,7 +7,7 @@ import DatePickerLocalisation from "./common/DatePickerLocalization.mdx";
 
 # Date-Range Picker
 
-To use the `DateRangePicker` and `FinalFormDateRangePicker` components, install the `@comet/admin-date-time` package.
+Import the `DateRangePicker` and `DateRangePickerField` components from `@comet/admin`.
 
 ## Value type
 
@@ -15,8 +15,8 @@ The `value` prop and the value returned by `onChange` are objects with `start` a
 
 ```ts
 type DateRange = {
-    start: string;
-    end: string;
+    start: string | null;
+    end: string | null;
 };
 ```
 

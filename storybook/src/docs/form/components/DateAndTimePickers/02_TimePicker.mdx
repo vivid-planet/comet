@@ -6,13 +6,13 @@ import * as TimePickerStories from "./02_TimePicker.stories";
 
 # Time Picker
 
-To use the `TimePicker` and `FinalFormTimePicker` components, install the `@comet/admin-date-time` package.
+Import the `TimePicker` and `TimePickerField` components from `@comet/admin`.
 
 By default, there is only one selectable time option every 15 minutes. <br />
 This shortens the list of options to reduce the need for scrolling. <br />
-Use the `minuteStep` prop to change the step size.
+Use the `minutesStep` prop to change the step size.
 
-The range of selectable options can be limited by passing a time string (formatted as `HH:MM`) into the `min` and `max` props.
+The range of selectable options can be limited by passing `Date` objects into the `minTime` and `maxTime` props.
 
 ## Value type
 

@@ -6,7 +6,7 @@ import * as TimeRangePickerStories from "./05_TimeRangePicker.stories";
 
 # Time-Range Picker
 
-To use the `TimeRangePicker` and `FinalFormTimeRangePicker` components, install the `@comet/admin-date-time` package.
+Import the `TimeRangePicker` and `TimeRangePickerField` components from `@comet/admin`.
 
 ## Value type
 
@@ -15,8 +15,8 @@ Each time-value is a 24-hour `string` formatted as `HH:MM`, similar to the [HTML
 
 ```ts
 type TimeRange = {
-    start: string; // "HH:MM"
-    end: string; // "HH:MM"
+    start: string | null; // "HH:MM"
+    end: string | null; // "HH:MM"
 };
 ```
 

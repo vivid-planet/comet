@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 type Story = StoryObj<typeof DateField>;
 const config: Meta<typeof DateField> = {
     component: DateField,
-    title: "@comet/admin/form/DateField",
+    title: "Deprecated/@comet/admin-date-time/DateField",
     tags: ["deprecated"],
 };
 export default config;
