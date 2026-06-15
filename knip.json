@@ -34,6 +34,7 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/admin/admin": {
+            "entry": ["./src/index.ts", "./src/future-ui/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": [".storybook/public/mockServiceWorker.js"],
             "ignoreDependencies": ["@mui/x-data-grid-premium"]
@@ -107,7 +108,7 @@
         "demo/site": {
             "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "tracing.dev.ts", "tracing.production.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@babel/core"],
+            "ignoreDependencies": ["@babel/core", "@types/grecaptcha"],
             "ignore": ["**/*.generated.ts"]
         },
         "storybook": {

@@ -16,7 +16,7 @@ alwaysApply: false
 - Prefer descriptive identifiers over explanatory comments — comments drift out of sync with the code.
 - Boolean variables must read as booleans: prefix with `is` / `has` / `should` (exceptions: well-known flags like `loading`, `disabled`).
 - Name booleans in the **affirmative**: `isComplete`, not `isNotComplete`. Negate at the use site with `!`.
-- Do **not** use abbreviations. Exceptions: widely-known protocols/acronyms (HTML, CSS, TCP, API, SSO…) and names dictated by third parties.
+- Avoid non-obvious abbreviations. Exceptions: obvious, conventional abbreviations whose meaning is unambiguous in context (e.g. `i` for an index, `id`, `ref`, `props`), widely-known protocols/acronyms (HTML, CSS, TCP, API, SSO…), and names dictated by third parties. When in doubt, spell it out.
 - When an acronym appears in PascalCase / camelCase, treat it like a word: `GuiController`, `UiElement` — not `GUIController` / `UIElement`.
 
 ## Control flow
