@@ -223,29 +223,36 @@ const ExpandedMenuActiveItem = createComponentSlot(Typography)<BreadcrumbsClassK
     `,
 ) as typeof Typography;
 
-const ExpandedMenuActiveItemWrapper = createComponentSlot("div")<BreadcrumbsClassKey>({
+type WrapperOwnerState = { indentation: number };
+
+const wrapperPaddingLeft = (theme: Theme, indentation: number) =>
+    indentation === 0 ? theme.spacing(3) : `calc(${theme.spacing(1)} + 17px * ${indentation})`;
+
+const ExpandedMenuActiveItemWrapper = createComponentSlot("div")<BreadcrumbsClassKey, WrapperOwnerState>({
     componentName: "Breadcrumbs",
     slotName: "expandedMenuActiveItemWrapper",
 })(
-    ({ theme }) => css`
+    ({ theme, ownerState }) => css`
         display: flex;
         align-items: center;
         gap: 5px;
         height: 45px;
+        padding-left: ${wrapperPaddingLeft(theme, ownerState.indentation)};
         padding-right: ${theme.spacing(3)};
         background-color: ${alpha(theme.palette.primary.main, 0.1)};
     `,
 );
 
-const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKey>({
+const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKey, WrapperOwnerState>({
     componentName: "Breadcrumbs",
     slotName: "expandedMenuSubitemWrapper",
 })(
-    ({ theme }) => css`
+    ({ theme, ownerState }) => css`
         display: flex;
         align-items: center;
         gap: 5px;
         height: 45px;
+        padding-left: ${wrapperPaddingLeft(theme, ownerState.indentation)};
         padding-right: ${theme.spacing(3)};
     `,
 );
@@ -327,9 +334,8 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                             const isActive = index === items.length - 1;
                             const Wrapper = isActive ? ExpandedMenuActiveItemWrapper : ExpandedMenuSubitemWrapper;
                             const wrapperSlotProps = isActive ? slotProps?.expandedMenuActiveItemWrapper : slotProps?.expandedMenuSubitemWrapper;
-                            const paddingLeft = index === 0 ? 15 : 17 * index + 5;
                             return (
-                                <Wrapper key={item.url} style={{ paddingLeft }} {...wrapperSlotProps}>
+                                <Wrapper key={item.url} ownerState={{ indentation: index }} {...wrapperSlotProps}>
                                     {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
                                     {isActive ? (
                                         <ExpandedMenuActiveItem {...slotProps?.expandedMenuActiveItem} variant="subtitle2">
