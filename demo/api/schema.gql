@@ -3,14 +3,53 @@
 # ------------------------------------------------------
 
 type ActionLog {
+  """
+  Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.
+  """
+  action: ActionLogAction!
   createdAt: DateTime!
   entityId: ID!
   entityName: String!
   id: ID!
+
+  """
+  The most recent earlier action log entry for the same entity. Null when this is the first version. Used to render a diff against the prior snapshot.
+  """
+  previousVersion: ActionLog
   scope: [JSONObject!]
   snapshot: JSONObject
   user: ActionLogsUser!
   version: Int!
+}
+
+enum ActionLogAction {
+  Created
+  Deleted
+  Updated
+}
+
+input ActionLogActionFilter {
+  equal: ActionLogAction
+  isAnyOf: [ActionLogAction!]
+  notEqual: ActionLogAction
+}
+
+input ActionLogFilter {
+  action: ActionLogActionFilter
+  and: [ActionLogFilter!]
+  createdAt: DateTimeFilter
+  entityId: IdFilter
+  entityName: StringFilter
+  or: [ActionLogFilter!]
+  scope: ActionLogScopeFilter
+  userId: StringFilter
+}
+
+input ActionLogScopeFilter {
+  equal: JSONObject
+  isAnyOf: [JSONObject!]
+  isGlobal: Boolean
+  notEqual: JSONObject
 }
 
 input ActionLogSort {
@@ -20,6 +59,8 @@ input ActionLogSort {
 
 enum ActionLogSortField {
   createdAt
+  entityName
+  scope
   version
 }
 
@@ -1410,6 +1451,7 @@ type PaginatedWarnings {
 }
 
 enum Permission {
+  actionLog
   blockPreview
   brevoNewsletter
   brevoNewsletterConfig
@@ -1968,6 +2010,15 @@ input ProductVariantUpdateInput {
 }
 
 type Query {
+  """
+  Returns a single action log entry by id. Requires the `actionLog` permission.
+  """
+  actionLog(id: ID!): ActionLog!
+
+  """
+  Returns action log entries across all entities. Requires the `actionLog` permission.
+  """
+  actionLogs(filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, scopes: [JSONObject!]!, search: String, sort: [ActionLogSort!]): PaginatedActionLogs!
   autoBuildStatus: AutoBuildStatus!
   blockPreviewJwt(includeInvisible: Boolean!, scope: JSONObject!, url: String!): String!
   brevoConfig(scope: EmailCampaignContentScopeInput!): BrevoConfig
@@ -2023,9 +2074,11 @@ type Query {
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   manuallyAssignedBrevoContacts(email: String, limit: Int! = 25, offset: Int! = 0, targetGroupId: ID!): PaginatedBrevoContacts!
   manufacturer(id: ID!): Manufacturer!
+  manufacturerActionLogs(filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, scope: JSONObject!, search: String, sort: [ActionLogSort!]): PaginatedActionLogs!
   manufacturerCountries(filter: ManufacturerCountryFilter, limit: Int! = 25, offset: Int! = 0, search: String): PaginatedManufacturerCountries!
   manufacturers(filter: ManufacturerFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ManufacturerSort!]! = [{direction: ASC, field: id}]): PaginatedManufacturers!
   news(id: ID!): News!
+  newsActionLogs(filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, scope: JSONObject!, search: String, sort: [ActionLogSort!]): PaginatedActionLogs!
   newsBySlug(scope: NewsContentScopeInput!, slug: String!): News
   newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]! = [{direction: ASC, field: createdAt}]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
@@ -2039,6 +2092,7 @@ type Query {
   paginatedRedirects(filter: RedirectFilter, limit: Int! = 25, offset: Int! = 0, scope: RedirectScopeInput!, search: String, sort: [RedirectSort!]): PaginatedRedirects!
   predefinedPage(id: ID!): PredefinedPage!
   product(id: ID!): Product!
+  productActionLogs(filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, scope: JSONObject!, search: String, sort: [ActionLogSort!]): PaginatedActionLogs!
   productBySlug(slug: String!): Product
   productCategories(filter: ProductCategoryFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategorySort!]! = [{direction: ASC, field: position}]): PaginatedProductCategories!
   productCategory(id: ID!): ProductCategory!
