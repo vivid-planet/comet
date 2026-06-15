@@ -24,6 +24,9 @@ In most cases, the new components will be a drop-in replacement for the legacy c
 | `DateTimePicker`                               | `DateTimePicker`                                   |
 | `DateTimeField`                                | `DateTimePickerField`                              |
 | `FinalFormDateTimePicker`                      | `DateTimePickerField` (without using `<Field />`)  |
+| `TimeRangePicker`                              | `TimeRangePicker`                                  |
+| `TimeRangeField`                               | `TimeRangePickerField`                             |
+| `FinalFormTimeRangePicker`                     | `TimeRangePickerField` (without using `<Field />`) |
 
 **To continue using the existing components, the following changes will need to be made:**
 
@@ -33,6 +36,7 @@ Update any use of class-names of the component's slots:
 - `CometAdminDateRangePicker-*` -> `CometAdminLegacyDateRangePicker-*`
 - `CometAdminDateTimePicker-*` -> `CometAdminLegacyDateTimePicker-*`
 - `CometAdminTimePicker-*` -> `CometAdminLegacyTimePicker-*`
+- `CometAdminTimeRangePicker-*` -> `CometAdminLegacyTimeRangePicker-*`
 
 Update the component-keys when using `defaultProps` or `styleOverrides` in the theme:
 
@@ -40,3 +44,4 @@ Update the component-keys when using `defaultProps` or `styleOverrides` in the t
 - `CometAdminDateRangePicker` -> `CometAdminLegacyDateRangePicker`
 - `CometAdminDateTimePicker` -> `CometAdminLegacyDateTimePicker`
 - `CometAdminTimePicker` -> `CometAdminLegacyTimePicker`
+- `CometAdminTimeRangePicker` -> `CometAdminLegacyTimeRangePicker`
