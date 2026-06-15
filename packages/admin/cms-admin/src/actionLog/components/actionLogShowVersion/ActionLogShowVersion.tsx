@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import type { FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { defaultFilterOutKeys, filterOutKeys } from "../../actionLog.utils";
+import { defaultFilterOutKeys, filterOutKeys } from "../actionLogCompare/ActionLogCompare.utils";
 import { ActionLogHeader } from "../actionLogHeader/ActionLogHeader";
 import { DiffHeader } from "../diffHeader/DiffHeader";
 import { DiffViewer } from "../diffViewer/DiffViewer";

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { defaultFilterOutKeys, filterOutKeys } from "./actionLog.utils";
+import { defaultFilterOutKeys, filterOutKeys } from "./ActionLogCompare.utils";
 
 describe("filterOutKeys", () => {
     it("removes a specified key from a flat object", () => {
