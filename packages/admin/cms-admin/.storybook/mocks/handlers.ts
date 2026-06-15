@@ -1,5 +1,5 @@
 import { actionLogDialogHandlers } from "./actionLogDialogHandler";
-import { actionLogsHandlers } from "./actionLogsHandlers";
 import { currentUserHandler } from "./currentUserHandler";
+import { globalActionLogHandlers } from "./globalActionLogHandlers";
 
-export const handlers = [currentUserHandler, ...actionLogDialogHandlers, ...actionLogsHandlers];
+export const handlers = [currentUserHandler, ...actionLogDialogHandlers, ...globalActionLogHandlers];
