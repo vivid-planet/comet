@@ -43,7 +43,11 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        const contentScopes = await this.userService.getContentScopes(await this.userService.getUser(userId), !skipManual);
+        const userService = this.userService.getUserService();
+        if (!userService?.findUserOrThrow) {
+            throw new Error("UserService is not configured.");
+        }
+        const contentScopes = await this.userService.getContentScopes(await userService.findUserOrThrow(userId), !skipManual);
         return (await this.userService.getAvailableContentScopes())
             .filter((availableContentScope) => contentScopes.some((contentScope) => isEqual(contentScope, availableContentScope.scope)))
             .map((availableContentScope) => availableContentScope.scope);

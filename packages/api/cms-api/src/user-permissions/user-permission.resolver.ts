@@ -7,6 +7,7 @@ import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
+import { User } from "./interfaces/user";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ArgsType()
@@ -27,7 +28,7 @@ export class UserPermissionResolver {
 
     @Query(() => [UserPermission])
     async userPermissionsPermissionList(@Args() args: UserPermissionListArgs): Promise<UserPermission[]> {
-        return this.service.getPermissions(await this.service.getUser(args.userId));
+        return this.service.getPermissions(await this.findUserOrThrow(args.userId));
     }
 
     @Query(() => UserPermission)
@@ -45,7 +46,7 @@ export class UserPermissionResolver {
         @Args("input", { type: () => UserPermissionInput }) input: UserPermissionInput,
     ): Promise<UserPermission> {
         const permission = new UserPermission();
-        this.service.getUser(userId); //validate user exists
+        await this.findUserOrThrow(userId); //validate user exists
         permission.userId = userId;
         permission.assign(input);
         await this.entityManager.persistAndFlush(permission);
@@ -97,11 +98,19 @@ export class UserPermissionResolver {
         if (!userId) {
             throw new Error(`Permission not found: ${id}`);
         }
-        for (const p of await this.service.getPermissions(await this.service.getUser(userId))) {
+        for (const p of await this.service.getPermissions(await this.findUserOrThrow(userId))) {
             if (p.id === id) {
                 return p;
             }
         }
         throw new Error("Permission not found");
+    }
+
+    private async findUserOrThrow(id: string): Promise<User> {
+        const userService = this.service.getUserService();
+        if (!userService?.findUserOrThrow) {
+            throw new Error("UserService is not configured.");
+        }
+        return userService.findUserOrThrow(id);
     }
 }
