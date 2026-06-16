@@ -1,5 +1,5 @@
 import { Time } from "@comet/admin-icons";
-import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
+import { type ComponentsOverrides, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import type { TimeRangePickerProps as MuiTimeRangePickerProps } from "@mui/x-date-pickers-pro";
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
 import { useIntl } from "react-intl";
@@ -88,7 +88,6 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
     const [open, setOpen] = useState(false);
 
     const timeRangeValue = getTimeRangeValue(stringTimeRangeValue);
-    const hasTimeRangeValue = timeRangeValue.some((time) => time !== null);
 
     const { openPicker: openPickerIcon = <Time color="inherit" /> } = iconMapping;
 
@@ -123,10 +122,28 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                 {...restProps}
                 slotProps={{
                     ...slotProps?.root?.slotProps,
+                    field: {
+                        dateSeparator: intl.formatMessage({ id: "comet.timeRangePicker.separator", defaultMessage: "to" }),
+                        ...slotProps?.root?.slotProps?.field,
+                    },
                     textField: (ownerState) => {
                         const textFieldProps = {
                             ...slotProps?.root?.slotProps?.textField,
                             ownerState,
+                        };
+
+                        const position = (ownerState as { position?: "start" | "end" }).position;
+                        const fieldHasValue = position === "end" ? Boolean(stringTimeRangeValue?.end) : Boolean(stringTimeRangeValue?.start);
+
+                        const clearField = () => {
+                            const remainingTime = position === "end" ? stringTimeRangeValue?.start : stringTimeRangeValue?.end;
+
+                            if (!remainingTime) {
+                                onChange?.(undefined);
+                                return;
+                            }
+
+                            onChange?.(position === "end" ? { start: remainingTime, end: null } : { start: null, end: remainingTime });
                         };
 
                         return {
@@ -135,6 +152,15 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                             onBlur,
                             onFocus,
                             ...textFieldProps,
+                            sx: {
+                                // Hide the per-field "Start"/"End" labels, which aren't part of the design.
+                                [`& .${inputLabelClasses.root}`]: {
+                                    display: "none",
+                                },
+                                [`& .${inputLabelClasses.root} + *`]: {
+                                    marginTop: 0,
+                                },
+                            },
                             InputProps: {
                                 startAdornment: (
                                     <OpenPickerAdornment
@@ -159,12 +185,8 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                                 endAdornment: (
                                     <>
                                         <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
-                                        {hasTimeRangeValue && !required && !disabled && !readOnly && (
-                                            <ClearInputAdornment
-                                                position="end"
-                                                onClick={() => onChange?.(undefined)}
-                                                {...slotProps?.clearInputAdornment}
-                                            />
+                                        {fieldHasValue && !required && !disabled && !readOnly && (
+                                            <ClearInputAdornment position="end" onClick={clearField} {...slotProps?.clearInputAdornment} />
                                         )}
                                     </>
                                 ),
@@ -183,15 +205,7 @@ const LazyRoot = lazy(async () => {
     const Root = createComponentSlot(module.TimeRangePicker)<TimeRangePickerClassKey>({
         componentName: "TimeRangePicker",
         slotName: "root",
-    })(css`
-        .${inputLabelClasses.root} {
-            display: none;
-
-            & + .${module.pickersInputBaseClasses.root} {
-                margin-top: 0;
-            }
-        }
-    `);
+    })();
 
     return {
         default: (props: MuiTimeRangePickerProps) => <Root {...props} slots={{ field: module.MultiInputTimeRangeField, ...props.slots }} />,
