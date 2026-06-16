@@ -45,8 +45,27 @@ export const calculatePartialRanges = (size: number, range: string): { start: nu
 const { window } = new JSDOM("");
 const DOMPurify = createDOMPurify(window);
 
+// `<use>` is forbidden by DOMPurify's svg profile because it can pull in external or
+// attacker-controlled content (XSS/SSRF). Allow it only for same-document fragment references
+// (e.g. href="#id"); any other reference is dropped, which makes the SVG fail validation below.
+DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
+    if ((node as unknown as { nodeName: string }).nodeName.toLowerCase() !== "use") {
+        return;
+    }
+    if ((data.attrName === "href" || data.attrName === "xlink:href") && !data.attrValue.startsWith("#")) {
+        data.keepAttr = false;
+    }
+});
+
 export const isValidSvg = (svg: string): boolean => {
-    DOMPurify.sanitize(svg, { USE_PROFILES: { svg: true, svgFilters: true }, WHOLE_DOCUMENT: true });
+    // `role` and `<use>` aren't part of DOMPurify's svg profile, so they're allowed explicitly.
+    // `<use>` is additionally constrained to same-document references by the hook above.
+    DOMPurify.sanitize(svg, {
+        USE_PROFILES: { svg: true, svgFilters: true },
+        WHOLE_DOCUMENT: true,
+        ADD_TAGS: ["use"],
+        ADD_ATTR: ["role", "href", "xlink:href"],
+    });
 
     // DOMPurify strips forbidden tags (e.g. <script>) and attributes (e.g. event handlers, javascript: URLs).
     // If it had to remove anything, the SVG contained content we don't consider safe.

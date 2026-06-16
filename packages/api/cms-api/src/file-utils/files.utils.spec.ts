@@ -58,5 +58,30 @@ describe("Files Utils", () => {
 
             expect(isValidSvg(svgWithUppercaseHref)).toBe(false);
         });
+
+        it("should return true if the svg contains a role attribute", async () => {
+            const svgWithRole = `<svg xmlns="http://www.w3.org/2000/svg" role="img" width="16" height="16" viewBox="0 0 16 16">
+                <path role="presentation" fill="#242424" fill-rule="evenodd" d=""/>
+            </svg>`;
+
+            expect(isValidSvg(svgWithRole)).toBe(true);
+        });
+
+        it("should return true if the svg contains a use element with a same-document fragment reference", async () => {
+            const svgWithFragmentUse = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+                <defs><path id="icon" d=""/></defs>
+                <use xlink:href="#icon" mask="url(#mask0)" transform="matrix(1,0,0,1,0,0)"/>
+            </svg>`;
+
+            expect(isValidSvg(svgWithFragmentUse)).toBe(true);
+        });
+
+        it("should return false if the svg contains a use element referencing an external resource", async () => {
+            const svgWithExternalUse = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                <use href="https://evil.example.com/payload.svg#icon"/>
+            </svg>`;
+
+            expect(isValidSvg(svgWithExternalUse)).toBe(false);
+        });
     });
 });
