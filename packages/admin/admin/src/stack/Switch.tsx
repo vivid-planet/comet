@@ -16,6 +16,7 @@ import {
 import { matchPath, Route, type RouteChildrenProps, useHistory, useLocation, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
+import { useNotFound } from "../notFound/NotFoundContext";
 import { ForcePromptRoute } from "../router/ForcePromptRoute";
 import { SubRouteIndexRoute, useSubRoutePrefix } from "../router/SubRoute";
 import { StackBreadcrumb } from "./Breadcrumb";
@@ -105,6 +106,7 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
     const match = useRouteMatch<IRouteParams>();
     const subRoutePrefix = useSubRoutePrefix();
     const location = useLocation();
+    const notFound = useNotFound();
 
     let activePage: string | undefined;
 
@@ -224,7 +226,13 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
                         if (!routeProps.match) {
                             return null;
                         }
-                        // now render initial page (as last route so it's a fallback)
+                        const matchedUrl = removeTrailingSlash(routeProps.match.url);
+                        const currentPath = removeTrailingSlash(location.pathname);
+                        const remainder = currentPath.slice(matchedUrl.length);
+                        const isInitialPageInternalRoute = remainder === "/index" || remainder.startsWith("/index/");
+                        if (notFound && remainder.length > 0 && !isInitialPageInternalRoute) {
+                            return notFound;
+                        }
                         let initialPage: ReactElement<IStackPageProps> | null = null;
                         Children.forEach(props.children, (page: ReactElement<IStackPageProps>) => {
                             if (isInitialPage(page.props.name)) {
