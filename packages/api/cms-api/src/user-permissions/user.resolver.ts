@@ -23,11 +23,7 @@ export class UserResolver {
 
     @Query(() => UserPermissionsUser)
     async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<UserPermissionsUser> {
-        const userService = this.userService.getUserService();
-        if (!userService?.findUserOrThrow) {
-            throw new Error("UserService is not configured.");
-        }
-        return userService.findUserOrThrow(id);
+        return this.userService.findUserOrThrow(id);
     }
 
     @Query(() => UserPermissionPaginatedUserList)

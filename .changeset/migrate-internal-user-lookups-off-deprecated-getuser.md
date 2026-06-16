@@ -2,6 +2,8 @@
 "@comet/cms-api": minor
 ---
 
-Migrate internal user lookups off the deprecated `getUser`
+Rename `UserPermissionsService.getUser` / `getUserForLogin` to `findUserOrThrow` / `findUserForLoginOrThrow`
 
-The user-permissions resolvers and `UserPermissionsService.getImpersonatedUser` now use `getUserService().findUserOrThrow()` / `findUser()` instead of the deprecated `getUser` method. The deprecated `getUser` and `getUserForLogin` methods are removed from `UserPermissionsService` (the internal service is not re-exported, so this does not affect public consumers). The corresponding deprecated methods on `UserPermissionsUserServiceInterface` remain for back-compat and will be removed in v10.
+The proxy methods on `UserPermissionsService` are renamed to align with the new `findUser`/`findUserOrThrow` API on `UserPermissionsUserServiceInterface`. Both proxies fall back to the deprecated `userService.getUser` / `getUserForLogin` to preserve back-compat for consumers that haven't migrated their user service yet.
+
+Internal callers (`user.resolver`, `user-permission.resolver`, `user-content-scopes.resolver`, `getImpersonatedUser`) are updated to use the new method names.

@@ -103,6 +103,28 @@ export class UserPermissionsService {
         return this.userService;
     }
 
+    async findUserForLoginOrThrow(id: string): Promise<User> {
+        if (this.userService?.findUserForLoginOrThrow) {
+            return this.userService.findUserForLoginOrThrow(id);
+        }
+        if (this.userService?.getUserForLogin) {
+            return this.userService.getUserForLogin(id);
+        }
+        throw new Error(
+            "For this functionality you need to define `findUserForLoginOrThrow` (or the deprecated `getUserForLogin`) in the userService.",
+        );
+    }
+
+    async findUserOrThrow(id: string): Promise<User> {
+        if (this.userService?.findUserOrThrow) {
+            return this.userService.findUserOrThrow(id);
+        }
+        if (this.userService?.getUser) {
+            return this.userService.getUser(id);
+        }
+        throw new Error("For this functionality you need to define `findUserOrThrow` (or the deprecated `getUser`) in the userService.");
+    }
+
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
         if (!this.userService) {
             throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
@@ -210,15 +232,18 @@ export class UserPermissionsService {
         if (request?.cookies["comet-impersonate-user-id"]) {
             const permissions = await this.getPermissions(authenticatedUser);
             if (permissions.find((permission) => permission.permission === "impersonation")) {
-                const user = await this.userService?.findUser?.(request.cookies["comet-impersonate-user-id"]);
-                if (
-                    user &&
-                    (await AbstractAccessControlService.isEqualOrMorePermissions(
-                        await this.getPermissionsAndContentScopes(authenticatedUser),
-                        await this.getPermissionsAndContentScopes(user),
-                    ))
-                ) {
-                    return user;
+                try {
+                    const user = await this.findUserOrThrow(request.cookies["comet-impersonate-user-id"]);
+                    if (
+                        await AbstractAccessControlService.isEqualOrMorePermissions(
+                            await this.getPermissionsAndContentScopes(authenticatedUser),
+                            await this.getPermissionsAndContentScopes(user),
+                        )
+                    ) {
+                        return user;
+                    }
+                } catch {
+                    return undefined;
                 }
             }
         }
