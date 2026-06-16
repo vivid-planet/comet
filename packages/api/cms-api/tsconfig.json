@@ -5,5 +5,8 @@
         "baseUrl": "./"
     },
     "include": ["src/**/*"],
-    "exclude": ["node_modules", "lib"]
+    "exclude": ["node_modules", "lib"],
+    "ts-node": {
+        "files": true
+    }
 }
