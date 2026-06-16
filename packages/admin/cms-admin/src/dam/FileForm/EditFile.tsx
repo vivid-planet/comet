@@ -30,6 +30,7 @@ import type { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../.
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
 import { useDamConfig } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
+import { ArchivedTag } from "../DataGrid/tags/ArchivedTag";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import { MediaAlternativesGrid } from "../mediaAlternatives/MediaAlternativesGrid";
 import Duplicates from "./Duplicates";
@@ -192,6 +193,11 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     <Toolbar scopeIndicator={contentScopeIndicator}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
+                        {file.archived && (
+                            <ToolbarItem>
+                                <ArchivedTag />
+                            </ToolbarItem>
+                        )}
                         {damConfig.enableLicenseFeature &&
                             (file.license?.isNotValidYet || file.license?.expiresWithinThirtyDays || file.license?.hasExpired) && (
                                 <ToolbarItem>

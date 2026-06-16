@@ -2,6 +2,10 @@ import type { AnyEntity, AutoPath, ObjectQuery, PopulatePath } from "@mikro-orm/
 
 export const ENTITY_INFO_METADATA_KEY = "data:entity-info";
 
+export type EntityInfoSql = {
+    sql: string;
+};
+
 export type EntityInfo<Entity> =
     | {
           name: AutoPath<Entity, PopulatePath.ALL> | string;
@@ -9,6 +13,7 @@ export type EntityInfo<Entity> =
           visible?: ObjectQuery<Entity>;
           fullText?: keyof Entity & string;
       }
+    | EntityInfoSql
     | string;
 
 export function EntityInfo<Entity extends AnyEntity = AnyEntity>(entityInfo: EntityInfo<Entity>): ClassDecorator {

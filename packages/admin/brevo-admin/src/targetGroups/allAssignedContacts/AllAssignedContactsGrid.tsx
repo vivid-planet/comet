@@ -9,10 +9,10 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import type { ContentScope } from "@comet/cms-admin";
-import { DataGrid } from "@mui/x-data-grid";
 import type { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { DataGrid } from "../../dataGrid/DataGrid";
 import { allAssignedBrevoContactsGridQuery } from "./AllAssignedContactsGrid.gql";
 import type {
     GQLBrevoContactsQuery,

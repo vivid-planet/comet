@@ -49,6 +49,108 @@ export interface ThemeText extends TextStyles {
 }
 
 /**
+ * Single source of truth for divider style property names and their value types.
+ * Both `DividerStyles` and `DividerVariantStyles` are derived from this interface.
+ */
+interface DividerStyleMap {
+    height: number;
+    backgroundColor: string;
+    backgroundImage: string;
+}
+
+/** Base divider styles where each property holds a plain value. */
+export type DividerStyles = { [K in keyof DividerStyleMap]?: DividerStyleMap[K] };
+
+/** Variant divider styles where each property supports responsive values. */
+export type DividerVariantStyles = { [K in keyof DividerStyleMap]?: ResponsiveValue<DividerStyleMap[K]> };
+
+/**
+ * Defines the variants available on the `MjmlDivider` and `HtmlDivider` components.
+ *
+ * ```ts
+ * declare module "@comet/mail-react" {
+ *     interface DividerVariants {
+ *         thin: true;
+ *         thick: true;
+ *     }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface DividerVariants {}
+
+type DividerVariantsRecord = keyof DividerVariants extends never
+    ? Record<string, DividerVariantStyles>
+    : { [K in keyof DividerVariants]?: DividerVariantStyles };
+
+export type DividerVariantName = keyof DividerVariants extends never ? string : keyof DividerVariants;
+
+/** Theme configuration for divider styles, variants, and default variant. */
+export interface ThemeDivider extends DividerStyles {
+    defaultVariant?: DividerVariantName;
+    variants?: DividerVariantsRecord;
+}
+
+/**
+ * Single source of truth for button style property names and their value types.
+ * Both `ButtonStyles` and `ButtonVariantStyles` are derived from this interface.
+ *
+ * `padding` is the button's inner padding (the space around the label). It is
+ * deliberately distinct from `MjmlButton`'s `padding` prop, which is the outer
+ * spacing around the button.
+ */
+interface ButtonStyleMap {
+    color: string;
+    backgroundColor: string;
+    /**
+     * A background image — typically a gradient. Rendered as progressive
+     * enhancement on top of `backgroundColor`; clients that don't render it
+     * (notably Outlook) fall back to the solid color.
+     */
+    backgroundImage: string;
+    border: string;
+    borderRadius: string;
+    fontFamily: string;
+    fontSize: string;
+    fontWeight: string | number;
+    lineHeight: string | number;
+    padding: string;
+}
+
+/** Base button styles where each property holds a plain value. */
+export type ButtonStyles = { [K in keyof ButtonStyleMap]?: ButtonStyleMap[K] };
+
+/** Variant button styles where each property supports responsive values. */
+export type ButtonVariantStyles = { [K in keyof ButtonStyleMap]?: ResponsiveValue<ButtonStyleMap[K]> };
+
+/**
+ * Defines the variants available on the `MjmlButton` and `HtmlButton` components.
+ *
+ * ```ts
+ * declare module "@comet/mail-react" {
+ *     interface ButtonVariants {
+ *         primary: true;
+ *         secondary: true;
+ *     }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ButtonVariants {}
+
+type ButtonVariantsRecord = keyof ButtonVariants extends never
+    ? Record<string, ButtonVariantStyles>
+    : { [K in keyof ButtonVariants]?: ButtonVariantStyles };
+
+export type ButtonVariantName = keyof ButtonVariants extends never ? string : keyof ButtonVariants;
+
+/** Theme configuration for button styles, variants, and default variant. */
+export interface ThemeButton extends ButtonStyles {
+    defaultVariant?: ButtonVariantName;
+    variants?: ButtonVariantsRecord;
+}
+
+/**
  * A resolved breakpoint with its numeric value and a ready-to-use media query
  * string that targets viewports narrower than this breakpoint.
  */
@@ -108,5 +210,7 @@ export interface Theme {
     sizes: ThemeSizes;
     breakpoints: ThemeBreakpoints;
     text: ThemeText;
+    divider: ThemeDivider;
+    button: ThemeButton;
     colors: ThemeColors;
 }

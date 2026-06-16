@@ -1,4 +1,9 @@
-import { Button, RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { Button } from "../../common/buttons/Button";
+import { RouterTab, RouterTabs } from "../../tabs/RouterTabs";
+import { StackBreadcrumbs } from "../breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../Page";
+import { Stack } from "../Stack";
+import { StackSwitch, StackSwitchApiContext } from "../Switch";
 
 export default {
     title: "components/stack/RouterTabsNestedStack",

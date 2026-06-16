@@ -9,11 +9,11 @@ import {
     DialogTitle,
     IconButton,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { DataGrid } from "../dataGrid/DataGrid";
 import type {
     GQLKubernetesCronJobsQuery,
     GQLKubernetesCronJobsQueryVariables,

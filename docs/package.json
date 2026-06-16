@@ -57,7 +57,7 @@
         "@docusaurus/plugin-content-docs": "^3.10.1",
         "@docusaurus/tsconfig": "^3.10.1",
         "@docusaurus/types": "^3.10.1",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "change-case": "^5.4.4",
         "chokidar-cli": "^3.0.0",

@@ -2,6 +2,7 @@ import "@fontsource-variable/roboto-flex/full.css";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
+import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { BrevoConfigProvider } from "@comet/brevo-admin";
 import {
     AzureAiTranslatorProvider,
@@ -13,6 +14,7 @@ import {
     SitePreview,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LicenseInfo } from "@mui/x-license";
@@ -20,9 +22,9 @@ import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
 import { PageTreeNodeDependency } from "@src/pageTree/PageTreeNodeDependency";
 import type { ContentScope as BaseContentScope } from "@src/site-configs";
-import { theme } from "@src/theme";
-import { enUS } from "date-fns/locale";
+import { createTheme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
+import { useMemo } from "react";
 import { DndProvider } from "react-dnd-multi-backend";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router";
@@ -34,7 +36,7 @@ import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
 import type { GQLPermission } from "./graphql.generated";
-import { getMessages } from "./lang";
+import { getLanguageConfig } from "./lang";
 import { NewsDetailBlock } from "./news/blocks/NewsDetailBlock";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import { NewsListBlock } from "./news/blocks/NewsListBlock";
@@ -66,6 +68,9 @@ declare module "@comet/cms-admin" {
 LicenseInfo.setLicenseKey(config.muiLicenseKey);
 
 export function App() {
+    const { language, messages, dateFnsLocale, muiLocale } = getLanguageConfig();
+    const theme = useMemo(() => createTheme(muiLocale), [muiLocale]);
+
     return (
         <CometConfigProvider
             {...config}
@@ -81,6 +86,9 @@ export function App() {
             }}
             redirects={{
                 scopeParts: ["domain"],
+            }}
+            dataGrid={{
+                component: DataGridPro,
             }}
             dam={{
                 ...config.dam,
@@ -154,47 +162,52 @@ export function App() {
                 }}
             >
                 <ApolloProvider client={apolloClient}>
-                    <IntlProvider locale="en" messages={getMessages("en")}>
-                        <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
-                            <MuiThemeProvider theme={theme}>
-                                <DndProvider options={HTML5toTouch}>
-                                    <SnackbarProvider>
-                                        <ErrorDialogHandler />
-                                        <CurrentUserProvider>
-                                            <RouterBrowserRouter>
-                                                <GlobalStyle />
-                                                <ContentScopeProvider>
-                                                    {({ match }) => (
-                                                        <AzureAiTranslatorProvider enabled showApplyTranslationDialog>
-                                                            <Switch>
-                                                                <Route
-                                                                    path={`${match.path}/preview`}
-                                                                    render={(props) => (
-                                                                        <SitePreview
-                                                                            resolvePath={(path: string, scope) => {
-                                                                                return `/${scope.language}${path}`;
-                                                                            }}
-                                                                            {...props}
-                                                                        />
-                                                                    )}
-                                                                />
-                                                                <Route
-                                                                    render={() => (
-                                                                        <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                            <AppMasterMenuRoutes />
-                                                                        </MasterLayout>
-                                                                    )}
-                                                                />
-                                                            </Switch>
-                                                        </AzureAiTranslatorProvider>
-                                                    )}
-                                                </ContentScopeProvider>
-                                            </RouterBrowserRouter>
-                                        </CurrentUserProvider>
-                                    </SnackbarProvider>
-                                </DndProvider>
-                            </MuiThemeProvider>
-                        </LocalizationProvider>
+                    <IntlProvider locale={language} messages={messages}>
+                        <MuiThemeProvider theme={theme}>
+                            <LocalizationProvider adapterLocale={dateFnsLocale} dateAdapter={AdapterDateFns}>
+                                <DateFnsLocaleProvider value={dateFnsLocale}>
+                                    <DndProvider options={HTML5toTouch}>
+                                        <SnackbarProvider>
+                                            <ErrorDialogHandler />
+                                            <CurrentUserProvider>
+                                                <RouterBrowserRouter>
+                                                    <GlobalStyle />
+                                                    <ContentScopeProvider>
+                                                        {({ match }) => (
+                                                            <AzureAiTranslatorProvider enabled showApplyTranslationDialog>
+                                                                <Switch>
+                                                                    <Route
+                                                                        path={`${match.path}/preview`}
+                                                                        render={(props) => (
+                                                                            <SitePreview
+                                                                                resolvePath={(path: string, scope) => {
+                                                                                    return `/${scope.language}${path}`;
+                                                                                }}
+                                                                                {...props}
+                                                                            />
+                                                                        )}
+                                                                    />
+                                                                    <Route
+                                                                        render={() => (
+                                                                            <MasterLayout
+                                                                                headerComponent={MasterHeader}
+                                                                                menuComponent={AppMasterMenu}
+                                                                            >
+                                                                                <AppMasterMenuRoutes />
+                                                                            </MasterLayout>
+                                                                        )}
+                                                                    />
+                                                                </Switch>
+                                                            </AzureAiTranslatorProvider>
+                                                        )}
+                                                    </ContentScopeProvider>
+                                                </RouterBrowserRouter>
+                                            </CurrentUserProvider>
+                                        </SnackbarProvider>
+                                    </DndProvider>
+                                </DateFnsLocaleProvider>
+                            </LocalizationProvider>
+                        </MuiThemeProvider>
                     </IntlProvider>
                 </ApolloProvider>
             </BrevoConfigProvider>

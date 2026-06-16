@@ -9,8 +9,9 @@ import type { Theme } from "../../theme/themeTypes.js";
 
 type MjmlMailRootProps = PropsWithChildren<{
     /**
-     * Theme to use for the email. When omitted, the default theme
-     * (equivalent to `createTheme()`) is used.
+     * Theme to use for the email.
+     *
+     * @defaultValue `createTheme()`
      */
     theme?: Theme;
     /** Extra content appended inside the built-in `<MjmlAttributes>`, after the default `<MjmlAll>`. */

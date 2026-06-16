@@ -4,6 +4,7 @@ import { Field, Int } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { generateCrudInput } from "../../generateCrudInput/generate-crud-input";
 import { formatSource, parseSource, testPermission } from "../../utils/test-helper";

@@ -1,7 +1,11 @@
-import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
 import { useContext } from "react";
 import { Redirect, Route, Switch } from "react-router";
+
+import { StackBreadcrumbs } from "../breadcrumbs/StackBreadcrumbs";
+import { StackPage } from "../Page";
+import { Stack } from "../Stack";
+import { StackSwitch, StackSwitchApiContext } from "../Switch";
 
 function Page1() {
     const switchApi = useContext(StackSwitchApiContext);

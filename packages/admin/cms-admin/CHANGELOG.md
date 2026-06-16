@@ -1,5 +1,29 @@
 # @comet/cms-admin
 
+## 9.0.0-beta.5
+
+### Minor Changes
+
+- c0cee12: Add `placeholders` option to `createTipTapRichTextBlock` that allows inserting pre-defined placeholder tokens into the rich text editor. Placeholders are rendered as non-editable chips and can only be removed as a whole unit.
+- 8cb0844: Export `isLinkTarget` and `validateLinkTarget`
+- 8ad9dd8: Add support for deleting multiple redirects in the grid
+
+### Patch Changes
+
+- 3cbf0ff: Show `ArchivedTag` next to the title on the DAM file detail page
+
+    Previously the archived state was only visible in the DAM file list, which could be confusing when opening an archived file's detail page via link.
+
+- 5d006c1: Fix `1-NaN of NaN` pagination footer and `rowCount` warning in DAM `FolderDataGrid`
+
+    The grid now routes `totalCount` through `useBufferedRowCount`, so `rowCount` stays a number across refetches instead of becoming `undefined` while data is loading.
+
+- Updated dependencies [fdabaf1]
+    - @comet/admin@9.0.0-beta.5
+    - @comet/admin-date-time@9.0.0-beta.5
+    - @comet/admin-rte@9.0.0-beta.5
+    - @comet/admin-icons@9.0.0-beta.5
+
 ## 9.0.0-beta.4
 
 ### Minor Changes
