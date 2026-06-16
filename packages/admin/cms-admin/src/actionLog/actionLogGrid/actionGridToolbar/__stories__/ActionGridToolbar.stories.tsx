@@ -1,6 +1,7 @@
-import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
+import type { GridSlotsComponent } from "@mui/x-data-grid";
 import type { Meta, StoryFn } from "@storybook/react-vite";
 
+import { DataGrid } from "../../../../dataGrid/DataGrid";
 import { ActionGridToolbar } from "../ActionGridToolbar";
 
 type Story = StoryFn<typeof ActionGridToolbar>;
