@@ -1,4 +1,4 @@
-import { RouteWithErrorBoundary } from "@comet/admin";
+import { NotFoundProvider, RouteWithErrorBoundary } from "@comet/admin";
 import type { ReactNode } from "react";
 import { Redirect, type RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
@@ -64,17 +64,19 @@ export const MasterMenuRoutes = ({ menu, fallback = <NotFound /> }: MasterMenuRo
     const routes = useRoutePropsFromMasterMenuData(menu);
     const match = useRouteMatch();
     return (
-        <Switch>
-            <Redirect to={`${match.url}${routes[0].path}`} exact={true} from={match.path} />
-            {routes.map((route, index) => (
-                <RouteWithErrorBoundary key={index} {...route} path={`${match.path}${route.path}`} />
-            ))}
-            <RouteWithErrorBoundary
-                component={() => {
-                    return fallback;
-                }}
-                path="*"
-            />
-        </Switch>
+        <NotFoundProvider notFound={fallback}>
+            <Switch>
+                <Redirect to={`${match.url}${routes[0].path}`} exact={true} from={match.path} />
+                {routes.map((route, index) => (
+                    <RouteWithErrorBoundary key={index} {...route} path={`${match.path}${route.path}`} />
+                ))}
+                <RouteWithErrorBoundary
+                    component={() => {
+                        return fallback;
+                    }}
+                    path="*"
+                />
+            </Switch>
+        </NotFoundProvider>
     );
 };

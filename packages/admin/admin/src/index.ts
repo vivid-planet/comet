@@ -207,6 +207,7 @@ export type { MainNavigationClassKey } from "./mui/mainNavigation/MainNavigation
 export { MasterLayout, type MasterLayoutClassKey, type MasterLayoutProps } from "./mui/MasterLayout";
 export { MasterLayoutContext } from "./mui/MasterLayoutContext";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
+export { NotFoundProvider, useNotFound } from "./notFound/NotFoundContext";
 export { renderFinalFormChildren } from "./renderFinalFormChildren";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog, type RouterConfirmationDialogClassKey, type RouterConfirmationDialogProps } from "./router/ConfirmationDialog";
