@@ -44,6 +44,7 @@ import { ContentGenerationService } from "@src/content-generation/content-genera
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/documents/links/links.module";
 import { PagesModule } from "@src/documents/pages/pages.module";
+import { SiteFullTextSearchModule } from "@src/full-text-search/site-full-text-search.module";
 import { TranslationModule } from "@src/translation/translation.module";
 import { Request } from "express";
 
@@ -233,6 +234,7 @@ export class AppModule {
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
                 WarningsModule,
                 FullTextSearchModule,
+                SiteFullTextSearchModule,
                 BrevoModule.register({
                     brevo: {
                         resolveConfig: (scope: EmailCampaignContentScope) => {

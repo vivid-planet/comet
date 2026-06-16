@@ -12,7 +12,7 @@ import styles from "./FullTextSearchBlock.module.scss";
 
 const fullTextSearchQuery = gql`
     query FullTextSearch($search: String!, $scope: JSONObject!) {
-        fullTextSearch(search: $search, scope: $scope) {
+        siteFullTextSearch(search: $search, scope: $scope) {
             nodes {
                 id
                 entityName
@@ -24,7 +24,7 @@ const fullTextSearchQuery = gql`
     }
 `;
 
-type SearchResult = GQLFullTextSearchQuery["fullTextSearch"]["nodes"][number];
+type SearchResult = GQLFullTextSearchQuery["siteFullTextSearch"]["nodes"][number];
 
 const debounceMilliseconds = 300;
 
@@ -55,14 +55,14 @@ export const FullTextSearchBlock = withPreview(
             const timeout = setTimeout(async () => {
                 const graphQLFetch = createGraphQLFetch();
                 try {
-                    const { fullTextSearch } = await graphQLFetch<GQLFullTextSearchQuery, GQLFullTextSearchQueryVariables>(fullTextSearchQuery, {
+                    const { siteFullTextSearch } = await graphQLFetch<GQLFullTextSearchQuery, GQLFullTextSearchQueryVariables>(fullTextSearchQuery, {
                         search,
                         scope: { domain, language },
                     });
 
                     if (isCurrent) {
-                        setResults(fullTextSearch.nodes);
-                        setTotalCount(fullTextSearch.totalCount);
+                        setResults(siteFullTextSearch.nodes);
+                        setTotalCount(siteFullTextSearch.totalCount);
                         setHasSearched(true);
                     }
                 } finally {
