@@ -52,11 +52,12 @@ Future UI's styling contract is its class names. Components built on `@base-ui/r
 
 **Authoring source.** The SCSS module's local class names match the public part names; the stylesheet's file name is the single source of a component's emitted name. The mapping:
 
-| Source local     | Emitted DOM class        |
-| ---------------- | ------------------------ |
-| `root`           | `cometButton`            |
-| `root--disabled` | `cometButton--disabled`  |
-| `startIcon`      | `cometButton__startIcon` |
+| Source local           | Emitted DOM class             |
+| ---------------------- | ----------------------------- |
+| `root`                 | `cometButton`                 |
+| `root--variantPrimary` | `cometButton--variantPrimary` |
+| `root--disabled`       | `cometButton--disabled`       |
+| `startIcon`            | `cometButton__startIcon`      |
 
 - A component with no single dominant element names no class `root`.
 - Modifiers nest under `.root` with `&` (`&--disabled` → `cometButton--disabled`).
