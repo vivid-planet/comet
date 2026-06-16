@@ -67,7 +67,7 @@ export class PageContentBlockFixtureService {
         type SupportedBlocks = (typeof blocks)[number]["type"];
 
         // TODO add fixtures for newsDetail and newsList
-        // fullTextSearch is excluded because its query requires an authenticated user and cannot be used from the public site
+        // fullTextSearch is excluded here because it gets its own dedicated "Search" page instead of being mixed into the block showcase pages
         const fixtures: Record<Exclude<SupportedBlocks, "newsDetail" | "newsList" | "fullTextSearch">, [BlockCategory, BlockFixture]> = {
             accordion: ["layout", this.accordionBlockFixtureService],
             columns: ["layout", this.columnsBlockFixtureService],

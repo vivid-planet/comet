@@ -1,4 +1,10 @@
-import { PageTreeNodeBaseCreateInput, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import {
+    ExtractBlockInputFactoryProps,
+    PageTreeNodeBaseCreateInput,
+    PageTreeNodeInterface,
+    PageTreeNodeVisibility,
+    PageTreeService,
+} from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
@@ -21,6 +27,7 @@ interface GeneratePageInput {
     parentId?: string;
     category?: PageTreeNodeCategory;
     blockCategory?: BlockCategory;
+    content?: ExtractBlockInputFactoryProps<typeof PageContentBlock>;
 }
 
 @Injectable()
@@ -39,6 +46,7 @@ export class DocumentGeneratorService {
         parentId,
         category = PageTreeNodeCategory.mainNavigation,
         blockCategory,
+        content,
     }: GeneratePageInput): Promise<PageTreeNodeInterface> {
         const id = faker.string.uuid();
         const slug = slugify(name.toLowerCase(), { remove: /[*+~.()/'"!:@]/g });
@@ -63,7 +71,7 @@ export class DocumentGeneratorService {
             this.entityManager.create(Page, {
                 id,
                 content: PageContentBlock.blockInputFactory(
-                    await this.pageContentBlockFixtureService.generateBlockInput(blockCategory),
+                    content ?? (await this.pageContentBlockFixtureService.generateBlockInput(blockCategory)),
                 ).transformToBlockData(),
                 seo: SeoBlock.blockInputFactory(await this.seoBlockFixtureService.generateBlockInput()).transformToBlockData(),
                 stage: StageBlock.blockInputFactory(await this.stageBlockFixtureService.generateBlockInput()).transformToBlockData(),

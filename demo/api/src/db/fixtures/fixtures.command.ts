@@ -133,6 +133,23 @@ export class FixturesCommand extends CommandRunner {
             parentId: blockCategoriesPage.id,
         });
 
+        await this.documentGeneratorService.generatePage({
+            name: "Search",
+            scope,
+            content: {
+                blocks: [
+                    {
+                        key: faker.string.uuid(),
+                        visible: true,
+                        type: "fullTextSearch",
+                        props: {},
+                        // @ts-expect-error custom block attributes aren't reflected in types
+                        userGroup: UserGroup.all,
+                    },
+                ],
+            },
+        });
+
         this.logger.log("Generate Many Images Test Page...");
         await this.manyImagesTestPageFixtureService.execute();
         this.logger.log("Many Images Test Page created");
