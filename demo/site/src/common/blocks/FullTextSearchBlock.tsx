@@ -3,6 +3,7 @@ import { gql, type PropsWithData, withPreview } from "@comet/site-nextjs";
 import type { FullTextSearchBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -10,8 +11,8 @@ import type { GQLFullTextSearchQuery, GQLFullTextSearchQueryVariables } from "./
 import styles from "./FullTextSearchBlock.module.scss";
 
 const fullTextSearchQuery = gql`
-    query FullTextSearch($search: String!) {
-        fullTextSearch(search: $search) {
+    query FullTextSearch($search: String!, $scope: JSONObject!) {
+        fullTextSearch(search: $search, scope: $scope) {
             nodes {
                 id
                 entityName
@@ -30,6 +31,7 @@ const debounceMilliseconds = 300;
 export const FullTextSearchBlock = withPreview(
     (_props: PropsWithData<FullTextSearchBlockData>) => {
         const intl = useIntl();
+        const { domain, language } = useParams<{ domain: string; language: string }>();
         const [query, setQuery] = useState("");
         const [results, setResults] = useState<SearchResult[]>([]);
         const [totalCount, setTotalCount] = useState(0);
@@ -55,6 +57,7 @@ export const FullTextSearchBlock = withPreview(
                 try {
                     const { fullTextSearch } = await graphQLFetch<GQLFullTextSearchQuery, GQLFullTextSearchQueryVariables>(fullTextSearchQuery, {
                         search,
+                        scope: { domain, language },
                     });
 
                     if (isCurrent) {
@@ -73,7 +76,7 @@ export const FullTextSearchBlock = withPreview(
                 isCurrent = false;
                 clearTimeout(timeout);
             };
-        }, [query]);
+        }, [query, domain, language]);
 
         return (
             <PageLayout grid>
