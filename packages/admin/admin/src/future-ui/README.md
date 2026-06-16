@@ -67,9 +67,9 @@ Future UI's styling contract is its class names. Components built on `@base-ui/r
 
 ## Internal documentation
 
-A feature substantial enough to live in its own directory may have a `README.md` describing what it is and how it behaves — and, when a reader would assume otherwise, the boundaries it deliberately doesn't cross. These READMEs are internal: written for the people and agents maintaining the code, not for consumers.
+A feature may have a `README.md` for what its name, types, TSDoc, and commits can't carry — a non-obvious part of what it is, or a boundary it deliberately doesn't cross. These READMEs are internal: for the people and agents maintaining the code, not its consumers.
 
-Information hierarchy: code is the source of truth for what is, commits for why each step was taken, internal documentation for what a feature is and what it isn't.
+Information hierarchy: code is the source of truth for what is, TSDoc for what a feature does for its consumers, commits for why each step was taken, internal documentation for a feature's scope — what it is and isn't — that none of the others record.
 
 ### What is a feature
 
@@ -83,23 +83,23 @@ A feature that warrants a README is a directory, with the README at its root (fo
 
 **Title.** The exact identifier when the feature is a single component or function (`Button`); otherwise a sentence-case name.
 
-Two sections, in order; only the intro is required.
+Most READMEs use one or both of two sections:
 
-1. **Intro.** State, in neutral present tense, what the feature is or does. Include a non-obvious behavior or constraint when it is part of what the feature is; keep out the motivation and the prior state — the why lives in the commit. The test: describe how it behaves, not why it exists.
-2. **Non-goals** (optional). Only what a reader would reasonably assume the feature does but it doesn't; the test is whether they would look here for it and be surprised it is missing. Write each as a noun phrase, with one follow-up sentence only to point to the alternative or give the reason.
+1. **Intro.** The non-obvious part of what the feature is or does, in present tense.
+2. **Non-goals.** What a reader would reasonably assume the feature does but it doesn't. Write each as a noun phrase, with one follow-up sentence only to point to the alternative or give the reason.
 
-The two sections above are all a README normally carries. A custom section is allowed but is the exception — add one only when explicitly required, and only for durable, feature-specific content that genuinely fits neither section above. Not custom sections: Architecture (the code shows it), Design decisions (commits carry them), Usage (consumer docs), Dependencies (imports show them).
+A complex feature may add sections specific to its scope, as this sub-package's own README does. Not sections of their own: Architecture (the code shows it), Design decisions (commits carry them), Usage (consumer docs), Dependencies (imports show them).
 
-**Express the rule, not the code.** Every line says something the code doesn't. The feature's name is on its folder and export too, so the intro adds something beyond it rather than restating it: "A button component with a set of optional variants", never "The Button component".
+**Express the rule, not the code.** Every line says something the name and code don't — "A button component with a set of optional variants", never "The Button component".
 
-**Length.** Keep it as short as the feature allows. Most features need nothing beyond the one-sentence intro; a genuinely complex feature — this sub-package's own README, for one — may run longer when it warrants it, up to about a screen. Past a screen you are duplicating commit history or describing what the code shows.
+**Length.** Keep a README as short as the feature allows — often a line of intro or a few non-goals. A genuinely complex feature may run to about a screen. Past a screen you are duplicating commit history or describing what the code shows.
 
 ### Template
 
 ```md
 # <feature-name>
 
-<One sentence: what the feature is or does.>
+<Intro (optional) — the non-obvious part of what the feature is or does.>
 
 ## Non-goals <!-- only if any -->
 
