@@ -15,7 +15,7 @@ Any export may change or be removed at any time, without deprecation notice. Eve
 
 ## Folder and file names
 
-- **Feature folders** use kebab-case (`button/`, `text-field/`).
+- **Feature folders** use camelCase (`button/`, `textField/`).
 - **Component file**: `<ComponentName>.tsx` (PascalCase), one per component feature.
 - **Non-component code file**: `<featureName>.ts(x)` (camelCase) for utilities and hooks.
 - **Styles**: `<ComponentName>.module.scss` (CSS Modules with SCSS).
