@@ -2,11 +2,11 @@
 "@comet/cms-api": minor
 ---
 
-Filter `fullTextSearch` results by the entity's required permission
+Filter `myFullTextSearch` results by the entity's required permission
 
 The `requiredPermission` of an entity (declared via the `@RequiredPermission` decorator) is now included in both the `EntityInfo` and `EntityInfoFullText` SQL views.
 
-The `fullTextSearch` query now filters results based on the current user's permissions, only returning entities where the user has the required permission. Entries without a required permission are excluded from results, as the permission cannot be determined.
+The `myFullTextSearch` query (formerly `fullTextSearch`) filters results based on the current user's permissions, only returning entities where the user has the required permission. Entries without a required permission are excluded from results, as the permission cannot be determined. The `my` prefix reflects that the query operates on the current user and only returns entities the user is allowed to see.
 
 **Example usage:**
 

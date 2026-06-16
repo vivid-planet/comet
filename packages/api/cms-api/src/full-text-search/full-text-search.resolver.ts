@@ -17,7 +17,7 @@ export class FullTextSearchResolver {
     constructor(private readonly entityManager: EntityManager) {}
 
     @Query(() => PaginatedEntityInfo)
-    async fullTextSearch(
+    async myFullTextSearch(
         @Args("search") search: string,
         @Args("offset", { type: () => Int, defaultValue: 0 }) offset: number,
         @Args("limit", { type: () => Int, defaultValue: 25 }) limit: number,

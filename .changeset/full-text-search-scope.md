@@ -2,9 +2,9 @@
 "@comet/cms-api": minor
 ---
 
-Add scope support to `fullTextSearch`
+Add scope support to `myFullTextSearch`
 
-The `EntityInfoFullText` view now includes a `scopes` column, and the `fullTextSearch` query accepts an optional `scope` argument to restrict results to a single content scope.
+The `EntityInfoFullText` view now includes a `scopes` column, and the `myFullTextSearch` query accepts an optional `scope` argument to restrict results to a single content scope.
 
 The scopes are derived from either a `scope` property on the entity (simple case) or the `@ScopedEntity` decorator. To support building the scopes in SQL, `@ScopedEntity` accepts a new declarative, SQL-convertible variant in addition to the existing callback/service:
 
