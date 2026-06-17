@@ -106,23 +106,14 @@ export interface TipTapPlaceholder {
 
 /**
  * Controls how a child block is displayed in the editor (and rendered output):
- * as a standalone block element on its own line (`"block"`, the default) or
+ * as a standalone block element on its own line (`"block"`) or
  * inline within the surrounding text (`"inline"`, as in CSS `display`).
  */
 export type TipTapChildBlockDisplay = "block" | "inline";
 
-export type TipTapChildBlock = BlockInterface | { block: BlockInterface; display?: TipTapChildBlockDisplay };
-
-interface NormalizedTipTapChildBlock {
+export interface TipTapChildBlock {
     block: BlockInterface;
     display: TipTapChildBlockDisplay;
-}
-
-function normalizeChildBlock(childBlock: TipTapChildBlock): NormalizedTipTapChildBlock {
-    if ("block" in childBlock) {
-        return { block: childBlock.block, display: childBlock.display ?? "block" };
-    }
-    return { block: childBlock, display: "block" };
 }
 
 interface TipTapRichTextBlockFactoryOptions {
@@ -135,8 +126,8 @@ interface TipTapRichTextBlockFactoryOptions {
      * Child blocks that can be inserted into the editor via the toolbar's "+" menu.
      * Each block is rendered as a non-editable preview that can be edited (dialog) or removed.
      *
-     * By default a child block is displayed as a standalone block element. To display it
-     * inline within the surrounding text, pass `{ block, display: "inline" }`.
+     * Pass `{ block, display }` for each child block, where `display` is `"block"` (standalone
+     * block element) or `"inline"` (inline within the surrounding text).
      */
     childBlocks?: TipTapChildBlock[];
     /**
@@ -309,7 +300,7 @@ const TipTapEditor = ({
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
-    childBlocks: NormalizedTipTapChildBlock[];
+    childBlocks: TipTapChildBlock[];
     maxTextBlocks?: number;
     listLevelMax?: number;
 }) => {
@@ -422,7 +413,7 @@ export const createTipTapRichTextBlock = (
     const inlineStyles = options?.inlineStyles ?? [];
     const placeholders = options?.placeholders ?? [];
     const linkBlock = options?.link;
-    const childBlocks = (options?.childBlocks ?? []).map(normalizeChildBlock);
+    const childBlocks = options?.childBlocks ?? [];
     const childBlocksByName: Record<string, BlockInterface> = Object.fromEntries(childBlocks.map(({ block }) => [block.name, block]));
     const hasChildBlocks = childBlocks.length > 0;
     const maxTextBlocks = options?.maxTextBlocks;

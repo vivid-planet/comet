@@ -104,18 +104,14 @@ interface TipTapPlaceholder {
 
 /**
  * Controls how a child block is displayed in the editor (and rendered output):
- * as a standalone block element (`"block"`, the default) or inline within the
+ * as a standalone block element (`"block"`) or inline within the
  * surrounding text (`"inline"`, as in CSS `display`).
  */
 export type TipTapChildBlockDisplay = "block" | "inline";
 
-export type TipTapChildBlock = Block | { block: Block; display?: TipTapChildBlockDisplay };
-
-function normalizeChildBlock(childBlock: TipTapChildBlock): { block: Block; display: TipTapChildBlockDisplay } {
-    if ("block" in childBlock) {
-        return { block: childBlock.block, display: childBlock.display ?? "block" };
-    }
-    return { block: childBlock, display: "block" };
+export interface TipTapChildBlock {
+    block: Block;
+    display: TipTapChildBlockDisplay;
 }
 
 export interface CreateTipTapRichTextBlockOptions {
@@ -130,8 +126,8 @@ export interface CreateTipTapRichTextBlockOptions {
      * Each block is stored as an atomic node with its data kept in the node's `data` attribute:
      * `cmsBlock` for block-level display, `cmsInlineBlock` for inline display.
      *
-     * By default a child block is displayed as a standalone block element. To display it
-     * inline within the surrounding text, pass `{ block, display: "inline" }`.
+     * Pass `{ block, display }` for each child block, where `display` is `"block"` (standalone
+     * block element) or `"inline"` (inline within the surrounding text).
      */
     childBlocks?: TipTapChildBlock[];
     /**
@@ -554,11 +550,10 @@ export function createTipTapRichTextBlock(
     const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const normalizedChildBlocks = childBlocksArray.map(normalizeChildBlock);
-    const childBlocks: Record<string, Block> = Object.fromEntries(normalizedChildBlocks.map(({ block }) => [block.name, block]));
-    const hasChildBlocks = normalizedChildBlocks.length > 0;
-    const hasBlockChildBlocks = normalizedChildBlocks.some(({ display }) => display === "block");
-    const hasInlineChildBlocks = normalizedChildBlocks.some(({ display }) => display === "inline");
+    const childBlocks: Record<string, Block> = Object.fromEntries(childBlocksArray.map(({ block }) => [block.name, block]));
+    const hasChildBlocks = childBlocksArray.length > 0;
+    const hasBlockChildBlocks = childBlocksArray.some(({ display }) => display === "block");
+    const hasInlineChildBlocks = childBlocksArray.some(({ display }) => display === "inline");
     const extensions = buildExtensions(supports, textBlockStyles, inlineStyles, placeholders, hasLink, hasBlockChildBlocks, hasInlineChildBlocks);
     const schema = getSchema(extensions);
 

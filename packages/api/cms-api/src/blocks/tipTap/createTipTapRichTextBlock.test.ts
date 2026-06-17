@@ -1190,7 +1190,10 @@ describe("createTipTapRichTextBlock validation", () => {
     });
 
     describe("childBlocks option", () => {
-        const block = createTipTapRichTextBlock({ supports: ["bold"], childBlocks: [ExternalLinkBlock] }, "TestChildBlocks");
+        const block = createTipTapRichTextBlock(
+            { supports: ["bold"], childBlocks: [{ block: ExternalLinkBlock, display: "block" }] },
+            "TestChildBlocks",
+        );
 
         const cmsBlockNode = (blockType: string, data: unknown) => ({
             type: "doc",

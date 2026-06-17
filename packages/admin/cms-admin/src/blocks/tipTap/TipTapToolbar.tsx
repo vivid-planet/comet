@@ -38,7 +38,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import type { BlockInterface, BlockState, LinkBlockInterface } from "../types";
 import type {
-    TipTapChildBlockDisplay,
+    TipTapChildBlock,
     TipTapInlineStyle,
     TipTapPlaceholder,
     TipTapSupports,
@@ -171,14 +171,14 @@ export const TipTapToolbar = ({
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
-    childBlocks: Array<{ block: BlockInterface; display: TipTapChildBlockDisplay }>;
+    childBlocks: TipTapChildBlock[];
     listLevelMax?: number;
 }) => {
     const intl = useIntl();
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [placeholderAnchorEl, setPlaceholderAnchorEl] = useState<null | HTMLElement>(null);
     const [childBlockAnchorEl, setChildBlockAnchorEl] = useState<null | HTMLElement>(null);
-    const [insertChildBlock, setInsertChildBlock] = useState<{ block: BlockInterface; display: TipTapChildBlockDisplay } | null>(null);
+    const [insertChildBlock, setInsertChildBlock] = useState<TipTapChildBlock | null>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
     const hasInlineFormatButtons = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
