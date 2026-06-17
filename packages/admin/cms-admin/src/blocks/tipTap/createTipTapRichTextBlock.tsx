@@ -11,7 +11,7 @@ import { FormattedMessage } from "react-intl";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
 import { ChildBlocksContext } from "./ChildBlocksContext";
-import { CmsBlock } from "./extensions/CmsBlock";
+import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
@@ -104,6 +104,27 @@ export interface TipTapPlaceholder {
     label: ReactNode;
 }
 
+/**
+ * Controls how a child block is displayed in the editor (and rendered output):
+ * as a standalone block element on its own line (`"block"`, the default) or
+ * inline within the surrounding text (`"inline"`, as in CSS `display`).
+ */
+export type TipTapChildBlockDisplay = "block" | "inline";
+
+export type TipTapChildBlock = BlockInterface | { block: BlockInterface; display?: TipTapChildBlockDisplay };
+
+interface NormalizedTipTapChildBlock {
+    block: BlockInterface;
+    display: TipTapChildBlockDisplay;
+}
+
+function normalizeChildBlock(childBlock: TipTapChildBlock): NormalizedTipTapChildBlock {
+    if ("block" in childBlock) {
+        return { block: childBlock.block, display: childBlock.display ?? "block" };
+    }
+    return { block: childBlock, display: "block" };
+}
+
 interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     textBlockStyles?: TipTapTextBlockStyle[];
@@ -113,8 +134,11 @@ interface TipTapRichTextBlockFactoryOptions {
     /**
      * Child blocks that can be inserted into the editor via the toolbar's "+" menu.
      * Each block is rendered as a non-editable preview that can be edited (dialog) or removed.
+     *
+     * By default a child block is displayed as a standalone block element. To display it
+     * inline within the surrounding text, pass `{ block, display: "inline" }`.
      */
-    childBlocks?: BlockInterface[];
+    childBlocks?: TipTapChildBlock[];
     /**
      * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be created in the editor.
@@ -141,6 +165,8 @@ function getPlainTextFromContent(content: JSONContent): string {
 }
 
 const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
+
+const isCmsBlockNode = (content: JSONContent): boolean => content.type === "cmsBlock" || content.type === "cmsInlineBlock";
 
 const createMaxTextBlocksExtension = (maxTextBlocks: number) =>
     Extension.create({
@@ -219,7 +245,7 @@ function mapCmsBlockNodesData(content: JSONContent, fn: (blockType: string, data
     }
     const result = { ...content };
 
-    if (result.type === "cmsBlock" && result.attrs?.blockType) {
+    if (isCmsBlockNode(result) && result.attrs?.blockType) {
         result.attrs = { ...result.attrs, data: fn(result.attrs.blockType, result.attrs.data) };
     }
 
@@ -237,7 +263,7 @@ async function mapCmsBlockNodesDataAsync(content: JSONContent, fn: (blockType: s
     }
     const result = { ...content };
 
-    if (result.type === "cmsBlock" && result.attrs?.blockType) {
+    if (isCmsBlockNode(result) && result.attrs?.blockType) {
         result.attrs = { ...result.attrs, data: await fn(result.attrs.blockType, result.attrs.data) };
     }
 
@@ -251,7 +277,7 @@ async function mapCmsBlockNodesDataAsync(content: JSONContent, fn: (blockType: s
 function collectCmsBlockNodes(content: JSONContent): Array<{ blockType: string; data: unknown }> {
     const results: Array<{ blockType: string; data: unknown }> = [];
 
-    if (content.type === "cmsBlock" && content.attrs?.blockType) {
+    if (isCmsBlockNode(content) && content.attrs?.blockType) {
         results.push({ blockType: content.attrs.blockType, data: content.attrs.data });
     }
 
@@ -283,7 +309,7 @@ const TipTapEditor = ({
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
-    childBlocks: BlockInterface[];
+    childBlocks: NormalizedTipTapChildBlock[];
     maxTextBlocks?: number;
     listLevelMax?: number;
 }) => {
@@ -291,7 +317,8 @@ const TipTapEditor = ({
     const hasInlineStyles = inlineStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
     const hasPlaceholders = placeholders.length > 0;
-    const hasChildBlocks = childBlocks.length > 0;
+    const hasBlockChildBlocks = childBlocks.some((childBlock) => childBlock.display === "block");
+    const hasInlineChildBlocks = childBlocks.some((childBlock) => childBlock.display === "inline");
 
     const editor = useEditor({
         extensions: [
@@ -317,7 +344,8 @@ const TipTapEditor = ({
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasPlaceholders ? [Placeholder] : []),
             ...(hasLink ? [CmsLink] : []),
-            ...(hasChildBlocks ? [CmsBlock] : []),
+            ...(hasBlockChildBlocks ? [CmsBlock] : []),
+            ...(hasInlineChildBlocks ? [CmsInlineBlock] : []),
             ...(maxTextBlocks !== undefined ? [createMaxTextBlocksExtension(maxTextBlocks)] : []),
             ...(listLevelMax !== undefined ? [createListLevelMaxExtension(listLevelMax)] : []),
         ],
@@ -361,7 +389,7 @@ const TipTapEditor = ({
     return (
         <TextBlockStyleContext.Provider value={textBlockStyles}>
             <InlineStyleContext.Provider value={inlineStyles}>
-                <ChildBlocksContext.Provider value={childBlocks}>
+                <ChildBlocksContext.Provider value={childBlocks.map((childBlock) => childBlock.block)}>
                     <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
                         <TipTapToolbar
                             editor={editor}
@@ -394,8 +422,8 @@ export const createTipTapRichTextBlock = (
     const inlineStyles = options?.inlineStyles ?? [];
     const placeholders = options?.placeholders ?? [];
     const linkBlock = options?.link;
-    const childBlocks = options?.childBlocks ?? [];
-    const childBlocksByName: Record<string, BlockInterface> = Object.fromEntries(childBlocks.map((block) => [block.name, block]));
+    const childBlocks = (options?.childBlocks ?? []).map(normalizeChildBlock);
+    const childBlocksByName: Record<string, BlockInterface> = Object.fromEntries(childBlocks.map(({ block }) => [block.name, block]));
     const hasChildBlocks = childBlocks.length > 0;
     const maxTextBlocks = options?.maxTextBlocks;
     const listLevelMax = options?.listLevelMax;

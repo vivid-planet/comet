@@ -8,12 +8,7 @@ export const ProductPriceBlock = withPreview(
             return null;
         }
 
-        return (
-            <strong>
-                {product.title}
-                {product.price != null && `: ${product.price} €`}
-            </strong>
-        );
+        return <strong>{product.price != null && `${product.price} €`}</strong>;
     },
     { label: "Product Price" },
 );

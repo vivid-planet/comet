@@ -23,7 +23,7 @@ import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFac
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
 import type { SearchText, WeightedSearchText } from "../search/get-search-text";
-import { CmsBlock } from "./extensions/CmsBlock";
+import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
@@ -102,6 +102,22 @@ interface TipTapPlaceholder {
     name: string;
 }
 
+/**
+ * Controls how a child block is displayed in the editor (and rendered output):
+ * as a standalone block element (`"block"`, the default) or inline within the
+ * surrounding text (`"inline"`, as in CSS `display`).
+ */
+export type TipTapChildBlockDisplay = "block" | "inline";
+
+export type TipTapChildBlock = Block | { block: Block; display?: TipTapChildBlockDisplay };
+
+function normalizeChildBlock(childBlock: TipTapChildBlock): { block: Block; display: TipTapChildBlockDisplay } {
+    if ("block" in childBlock) {
+        return { block: childBlock.block, display: childBlock.display ?? "block" };
+    }
+    return { block: childBlock, display: "block" };
+}
+
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     textBlockStyles?: TipTapTextBlockStyle[];
@@ -111,9 +127,13 @@ export interface CreateTipTapRichTextBlockOptions {
     link?: Block;
     /**
      * Child blocks that can be inserted into the editor (e.g. via the toolbar's "+" menu).
-     * Each block is stored as an atomic `cmsBlock` node with its data kept in the node's `data` attribute.
+     * Each block is stored as an atomic node with its data kept in the node's `data` attribute:
+     * `cmsBlock` for block-level display, `cmsInlineBlock` for inline display.
+     *
+     * By default a child block is displayed as a standalone block element. To display it
+     * inline within the surrounding text, pass `{ block, display: "inline" }`.
      */
-    childBlocks?: Block[];
+    childBlocks?: TipTapChildBlock[];
     /**
      * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be stored. Content exceeding this limit will be rejected during validation.
@@ -149,7 +169,8 @@ function buildExtensions(
     inlineStyles: TipTapInlineStyle[],
     placeholders: TipTapPlaceholder[],
     hasLink: boolean,
-    hasChildBlocks: boolean,
+    hasBlockChildBlocks: boolean,
+    hasInlineChildBlocks: boolean,
 ): Extensions {
     const hasTextBlockStyles = textBlockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
@@ -177,7 +198,8 @@ function buildExtensions(
         ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
         ...(hasPlaceholders ? [Placeholder] : []),
         ...(hasLink ? [CmsLink] : []),
-        ...(hasChildBlocks ? [CmsBlock] : []),
+        ...(hasBlockChildBlocks ? [CmsBlock] : []),
+        ...(hasInlineChildBlocks ? [CmsInlineBlock] : []),
     ];
 }
 
@@ -251,13 +273,15 @@ function collectLinkMarks(content: JSONContent, basePath: string[] = ["tipTapCon
     return results;
 }
 
+const isCmsBlockNode = (content: JSONContent): boolean => content.type === "cmsBlock" || content.type === "cmsInlineBlock";
+
 function collectCmsBlockNodes(
     content: JSONContent,
     basePath: string[] = ["tipTapContent"],
 ): Array<{ blockType: string; data: unknown; path: string[] }> {
     const results: Array<{ blockType: string; data: unknown; path: string[] }> = [];
 
-    if (content.type === "cmsBlock" && content.attrs?.blockType) {
+    if (isCmsBlockNode(content) && content.attrs?.blockType) {
         results.push({
             blockType: content.attrs.blockType as string,
             data: content.attrs.data,
@@ -281,7 +305,7 @@ function mapCmsBlockNodesData(content: JSONContent, fn: (blockType: string, data
     }
     const result = { ...content };
 
-    if (result.type === "cmsBlock" && result.attrs?.blockType) {
+    if (isCmsBlockNode(result) && result.attrs?.blockType) {
         result.attrs = { ...result.attrs, data: fn(result.attrs.blockType, result.attrs.data) };
     }
 
@@ -530,9 +554,12 @@ export function createTipTapRichTextBlock(
     const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const childBlocks: Record<string, Block> = Object.fromEntries(childBlocksArray.map((block) => [block.name, block]));
-    const hasChildBlocks = childBlocksArray.length > 0;
-    const extensions = buildExtensions(supports, textBlockStyles, inlineStyles, placeholders, hasLink, hasChildBlocks);
+    const normalizedChildBlocks = childBlocksArray.map(normalizeChildBlock);
+    const childBlocks: Record<string, Block> = Object.fromEntries(normalizedChildBlocks.map(({ block }) => [block.name, block]));
+    const hasChildBlocks = normalizedChildBlocks.length > 0;
+    const hasBlockChildBlocks = normalizedChildBlocks.some(({ display }) => display === "block");
+    const hasInlineChildBlocks = normalizedChildBlocks.some(({ display }) => display === "inline");
+    const extensions = buildExtensions(supports, textBlockStyles, inlineStyles, placeholders, hasLink, hasBlockChildBlocks, hasInlineChildBlocks);
     const schema = getSchema(extensions);
 
     const draftJsTextBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.textBlockStyleMap : undefined;

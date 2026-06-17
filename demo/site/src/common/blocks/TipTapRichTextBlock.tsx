@@ -29,6 +29,13 @@ const headingLevelToVariant: Record<1 | 2 | 3 | 4 | 5 | 6, TypographyVariant> = 
     6: "headline350",
 };
 
+const renderCmsBlock: TipTapNodeHandler = ({ node }) => {
+    if (node.attrs?.blockType === "ProductPrice") {
+        return <ProductPriceBlock data={node.attrs?.data as ProductPriceBlockData} />;
+    }
+    return null;
+};
+
 const nodeMapping: Record<string, TipTapNodeHandler> = {
     paragraph: ({ node, children }) => (
         <Typography variant={(node.attrs?.textBlockStyle as TypographyVariant | null) ?? undefined} bottomSpacing className={styles.text}>
@@ -52,12 +59,8 @@ const nodeMapping: Record<string, TipTapNodeHandler> = {
             </Typography>
         );
     },
-    cmsBlock: ({ node }) => {
-        if (node.attrs?.blockType === "ProductPrice") {
-            return <ProductPriceBlock data={node.attrs?.data as ProductPriceBlockData} />;
-        }
-        return null;
-    },
+    cmsBlock: renderCmsBlock,
+    cmsInlineBlock: renderCmsBlock,
 };
 
 const markMapping: Record<string, TipTapMarkHandler> = {

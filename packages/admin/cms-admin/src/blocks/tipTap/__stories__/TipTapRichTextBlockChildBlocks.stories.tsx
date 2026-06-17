@@ -38,7 +38,15 @@ const ExampleChildBlock: BlockInterface<ExampleChildBlockState, ExampleChildBloc
     previewContent: (state) => (state.label ? [{ type: "text", content: state.label }] : []),
 };
 
-const ChildBlocksBlock = createTipTapRichTextBlock({ childBlocks: [ExampleChildBlock] });
+const ExampleInlineChildBlock: BlockInterface<ExampleChildBlockState, ExampleChildBlockState, ExampleChildBlockState> = {
+    ...ExampleChildBlock,
+    name: "ExampleInlineChild",
+    displayName: "Example Inline Child",
+};
+
+const ChildBlocksBlock = createTipTapRichTextBlock({
+    childBlocks: [ExampleChildBlock, { block: ExampleInlineChildBlock, display: "inline" }],
+});
 
 function ChildBlocksStory() {
     const [state, setState] = useState<TipTapRichTextBlockState>(ChildBlocksBlock.defaultValues());
@@ -69,7 +77,58 @@ export const ChildBlocks: StoryObj<typeof ChildBlocksStory> = {
             );
         });
 
-        await step("Insert-block button opens a menu listing the child blocks", async () => {
+        await step("Insert-block button opens a menu listing the block and inline child blocks", async () => {
+            await userEvent.click(canvas.getByRole("button", { name: "Insert block" }));
+
+            // The menu is rendered in a portal, so it lives in document.body rather than within the canvas
+            await waitFor(
+                () => {
+                    expect(within(document.body).getByRole("menuitem", { name: "Example Child" })).toBeInTheDocument();
+                    expect(within(document.body).getByRole("menuitem", { name: "Example Inline Child" })).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Selecting an inline child block opens its dialog", async () => {
+            await userEvent.click(within(document.body).getByRole("menuitem", { name: "Example Inline Child" }));
+
+            await waitFor(
+                () => {
+                    expect(within(document.body).getByLabelText("Label")).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Inserting an inline child block renders its preview inline within the text", async () => {
+            await userEvent.type(within(document.body).getByLabelText("Label"), "Inline preview");
+            await userEvent.click(within(document.body).getByRole("button", { name: "OK" }));
+
+            await waitFor(
+                () => {
+                    // The inline preview sits inside a paragraph (text flow), unlike a block-level child block
+                    expect(canvas.getByText("Inline preview").closest("p")).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};
+
+export const BlockChildBlock: StoryObj<typeof ChildBlocksStory> = {
+    render: () => <ChildBlocksStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Editor is ready", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Selecting a block-level child block opens its dialog", async () => {
             await userEvent.click(canvas.getByRole("button", { name: "Insert block" }));
 
             // The menu is rendered in a portal, so it lives in document.body rather than within the canvas
@@ -79,14 +138,27 @@ export const ChildBlocks: StoryObj<typeof ChildBlocksStory> = {
                 },
                 { timeout: 3000 },
             );
-        });
 
-        await step("Selecting a child block opens its dialog", async () => {
             await userEvent.click(within(document.body).getByRole("menuitem", { name: "Example Child" }));
 
             await waitFor(
                 () => {
                     expect(within(document.body).getByLabelText("Label")).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Inserting a block-level child block renders its preview as a standalone block", async () => {
+            await userEvent.type(within(document.body).getByLabelText("Label"), "Block preview");
+            await userEvent.click(within(document.body).getByRole("button", { name: "OK" }));
+
+            await waitFor(
+                () => {
+                    // The block-level preview is a boxed row showing the block's display name as a title,
+                    // unlike the inline chip which only renders the preview text in the text flow
+                    expect(canvas.getByText("Example Child")).toBeInTheDocument();
+                    expect(canvas.getByText("Block preview")).toBeInTheDocument();
                 },
                 { timeout: 3000 },
             );

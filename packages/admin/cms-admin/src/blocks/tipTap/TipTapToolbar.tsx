@@ -37,7 +37,14 @@ import { type ForwardRefExoticComponent, type MouseEvent, type ReactNode, type R
 import { FormattedMessage, useIntl } from "react-intl";
 
 import type { BlockInterface, BlockState, LinkBlockInterface } from "../types";
-import type { TipTapInlineStyle, TipTapPlaceholder, TipTapSupports, TipTapTextBlockStyle, TipTapTextBlockType } from "./createTipTapRichTextBlock";
+import type {
+    TipTapChildBlockDisplay,
+    TipTapInlineStyle,
+    TipTapPlaceholder,
+    TipTapSupports,
+    TipTapTextBlockStyle,
+    TipTapTextBlockType,
+} from "./createTipTapRichTextBlock";
 import { TipTapBlockDialog } from "./TipTapBlockDialog";
 import { TipTapLinkDialog } from "./TipTapLinkDialog";
 
@@ -164,14 +171,14 @@ export const TipTapToolbar = ({
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
-    childBlocks: BlockInterface[];
+    childBlocks: Array<{ block: BlockInterface; display: TipTapChildBlockDisplay }>;
     listLevelMax?: number;
 }) => {
     const intl = useIntl();
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [placeholderAnchorEl, setPlaceholderAnchorEl] = useState<null | HTMLElement>(null);
     const [childBlockAnchorEl, setChildBlockAnchorEl] = useState<null | HTMLElement>(null);
-    const [insertBlock, setInsertBlock] = useState<BlockInterface | null>(null);
+    const [insertChildBlock, setInsertChildBlock] = useState<{ block: BlockInterface; display: TipTapChildBlockDisplay } | null>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
     const hasInlineFormatButtons = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
@@ -634,30 +641,35 @@ export const TipTapToolbar = ({
                         </Box>
                     </Tooltip>
                     <Menu open={Boolean(childBlockAnchorEl)} anchorEl={childBlockAnchorEl} onClose={handleChildBlockClose}>
-                        {childBlocks.map((block) => (
+                        {childBlocks.map((childBlock) => (
                             <MenuItem
-                                key={block.name}
+                                key={childBlock.block.name}
                                 onClick={() => {
                                     handleChildBlockClose();
-                                    setInsertBlock(block);
+                                    setInsertChildBlock(childBlock);
                                 }}
                             >
-                                {block.displayName}
+                                {childBlock.block.displayName}
                             </MenuItem>
                         ))}
                     </Menu>
                 </ToolbarGroup>
             )}
             {linkDialogOpen && linkBlock && <TipTapLinkDialog editor={editor} linkBlock={linkBlock} onClose={() => setLinkDialogOpen(false)} />}
-            {insertBlock && (
+            {insertChildBlock && (
                 <TipTapBlockDialog
-                    block={insertBlock}
-                    initialState={insertBlock.defaultValues() as BlockState<typeof insertBlock>}
+                    block={insertChildBlock.block}
+                    initialState={insertChildBlock.block.defaultValues() as BlockState<typeof insertChildBlock.block>}
                     isEditing={false}
                     onSubmit={(data) => {
-                        editor.commands.insertCmsBlock({ blockType: insertBlock.name, data });
+                        const attrs = { blockType: insertChildBlock.block.name, data };
+                        if (insertChildBlock.display === "inline") {
+                            editor.commands.insertCmsInlineBlock(attrs);
+                        } else {
+                            editor.commands.insertCmsBlock(attrs);
+                        }
                     }}
-                    onClose={() => setInsertBlock(null)}
+                    onClose={() => setInsertChildBlock(null)}
                 />
             )}
         </Box>

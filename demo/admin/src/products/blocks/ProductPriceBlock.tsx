@@ -5,9 +5,14 @@ import { type BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@come
 import type { ProductPriceBlockData, ProductPriceBlockInput } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
-import type { GQLProductPriceSelectQuery, GQLProductPriceSelectQueryVariables } from "./ProductPriceBlock.generated";
+import type {
+    GQLProductPriceBlockProductQuery,
+    GQLProductPriceBlockProductQueryVariables,
+    GQLProductPriceSelectQuery,
+    GQLProductPriceSelectQueryVariables,
+} from "./ProductPriceBlock.generated";
 
-type ProductOption = { id: string; title: string };
+type ProductOption = { id: string; title: string; price?: number };
 
 type State = {
     product?: ProductOption;
@@ -19,7 +24,18 @@ const productPriceSelectQuery = gql`
             nodes {
                 id
                 title
+                price
             }
+        }
+    }
+`;
+
+const productPriceProductQuery = gql`
+    query ProductPriceBlockProduct($id: ID!) {
+        product(id: $id) {
+            id
+            title
+            price
         }
     }
 `;
@@ -34,12 +50,27 @@ const ProductPriceBlock: BlockInterface<ProductPriceBlockData, State, ProductPri
     defaultValues: () => ({}),
 
     input2State: (input) => ({
-        product: input.product ? { id: input.product.id, title: input.product.title } : undefined,
+        product: input.product ? { id: input.product.id, title: input.product.title, price: input.product.price } : undefined,
     }),
 
     state2Output: (state) => ({
         productId: state.product?.id,
     }),
+
+    output2State: async (output, { apolloClient }) => {
+        if (output.productId === undefined) {
+            return {};
+        }
+
+        const { data } = await apolloClient.query<GQLProductPriceBlockProductQuery, GQLProductPriceBlockProductQueryVariables>({
+            query: productPriceProductQuery,
+            variables: { id: output.productId },
+        });
+
+        return {
+            product: { id: data.product.id, title: data.product.title, price: data.product.price ?? undefined },
+        };
+    },
 
     AdminComponent: ({ state, updateState }) => {
         const client = useApolloClient();
@@ -54,7 +85,7 @@ const ProductPriceBlock: BlockInterface<ProductPriceBlockData, State, ProductPri
                         const { data } = await client.query<GQLProductPriceSelectQuery, GQLProductPriceSelectQueryVariables>({
                             query: productPriceSelectQuery,
                         });
-                        return data.products.nodes;
+                        return data.products.nodes.map((node) => ({ id: node.id, title: node.title, price: node.price ?? undefined }));
                     }}
                     getOptionLabel={(option: ProductOption) => option.title}
                 />
@@ -62,7 +93,15 @@ const ProductPriceBlock: BlockInterface<ProductPriceBlockData, State, ProductPri
         );
     },
 
-    previewContent: (state) => (state.product ? [{ type: "text", content: state.product.title }] : []),
+    previewContent: (state) =>
+        state.product
+            ? [
+                  {
+                      type: "text",
+                      content: state.product.price != null ? `${state.product.title} (${state.product.price} €)` : state.product.title,
+                  },
+              ]
+            : [],
 
     icon: () => <Tag color="primary" />,
 };
