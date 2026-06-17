@@ -7,7 +7,6 @@ import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
 import Script from "next/script";
-import { useCallback } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -65,31 +64,6 @@ export const ContactFormBlock = withPreview(
 
         const attachments = useWatch({ control, name: "attachments" });
         const isUploading = !areAttachmentsSettled(attachments);
-
-        const uploadFile = useCallback(
-            async (file: File) => {
-                if (!recaptchaSiteKey) {
-                    throw new Error("Missing recaptchaSiteKey in siteConfig");
-                }
-                const recaptchaToken = await getRecaptchaToken("file_upload", recaptchaSiteKey);
-
-                const body = new FormData();
-                body.append("file", file, file.name);
-                body.append("recaptchaToken", recaptchaToken);
-
-                const response = await fetch(`/${language}/api/file-upload`, {
-                    method: "POST",
-                    body,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`File upload failed for ${file.name}`);
-                }
-
-                return (await response.json()) as { id: string };
-            },
-            [language, recaptchaSiteKey],
-        );
 
         const onSubmit = async (formValues: ContactFormValues) => {
             let recaptchaToken: string;
@@ -242,7 +216,6 @@ export const ContactFormBlock = withPreview(
                         control={control}
                         accept={acceptedFileTypes.join(",")}
                         label={intl.formatMessage({ id: "contactForm.attachments.label", defaultMessage: "Attachments" })}
-                        uploadFile={uploadFile}
                         validateFile={(file) => {
                             if (file.size > maxFileSize) {
                                 return intl.formatMessage({

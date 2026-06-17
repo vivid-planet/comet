@@ -1,5 +1,8 @@
 import { SvgUse } from "@src/common/helpers/SvgUse";
+import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
+import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import clsx from "clsx";
+import { useParams } from "next/navigation";
 import { type ChangeEvent, type ReactNode, useId, useRef } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -25,7 +28,6 @@ type FileUploadFieldProps<TFieldValues extends FieldValues> = Pick<ControllerPro
         accept?: string;
         multiple?: boolean;
         buttonLabel?: ReactNode;
-        uploadFile: (file: File) => Promise<{ id: string }>;
         validateFile?: (file: File) => string | undefined;
     };
 
@@ -38,7 +40,6 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
     accept,
     multiple = true,
     buttonLabel,
-    uploadFile,
     validateFile,
 }: FileUploadFieldProps<TFieldValues>) => {
     const id = useId();
@@ -46,6 +47,32 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
     const attachmentsRef = useRef<Attachment[]>([]);
     const required = !!rules?.required;
     const intl = useIntl();
+
+    const { recaptchaSiteKey } = useSiteConfig();
+    const params = useParams<{ language: string }>();
+    const language = params?.language;
+
+    const uploadFile = async (file: File): Promise<{ id: string }> => {
+        if (!recaptchaSiteKey) {
+            throw new Error("Missing recaptchaSiteKey in siteConfig");
+        }
+        const recaptchaToken = await getRecaptchaToken("file_upload", recaptchaSiteKey);
+
+        const body = new FormData();
+        body.append("file", file, file.name);
+        body.append("recaptchaToken", recaptchaToken);
+
+        const response = await fetch(`/${language}/api/file-upload`, {
+            method: "POST",
+            body,
+        });
+
+        if (!response.ok) {
+            throw new Error(`File upload failed for ${file.name}`);
+        }
+
+        return (await response.json()) as { id: string };
+    };
 
     return (
         <Controller
