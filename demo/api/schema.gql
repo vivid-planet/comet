@@ -432,6 +432,7 @@ type DamFileImage {
   height: Int!
   id: ID!
   url(height: Int!, width: Int!): String
+  urlTemplate: String
   width: Int!
 }
 
@@ -1017,6 +1018,7 @@ type Mutation {
   deleteProductTag(id: ID!): Boolean!
   deleteProductVariant(id: ID!): Boolean!
   deleteRedirect(id: ID!): Boolean!
+  deleteRedirects(ids: [ID!]!): Boolean!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   moveDamFolders(folderIds: [ID!]!, scope: DamScopeInput!, targetFolderId: ID): [DamFolder!]!
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
@@ -2011,7 +2013,6 @@ type Query {
   damMediaAlternatives(alternative: ID, for: ID, limit: Int! = 25, offset: Int! = 0, search: String, sort: [DamMediaAlternativeSort!], type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   findCopiesOfFileInScope(id: ID!, imageCropArea: ImageCropAreaInput, scope: DamScopeInput!): [DamFile!]!
   footer(scope: FooterScopeInput!): Footer
-  fullTextSearch(limit: Int! = 25, offset: Int! = 0, search: String!): PaginatedEntityInfo!
   isBrevoConfigDefined(scope: EmailCampaignContentScopeInput!): Boolean!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesCronJobs: [KubernetesCronJob!]!
@@ -2025,6 +2026,7 @@ type Query {
   manufacturer(id: ID!): Manufacturer!
   manufacturerCountries(filter: ManufacturerCountryFilter, limit: Int! = 25, offset: Int! = 0, search: String): PaginatedManufacturerCountries!
   manufacturers(filter: ManufacturerFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ManufacturerSort!]! = [{direction: ASC, field: id}]): PaginatedManufacturers!
+  myFullTextSearch(limit: Int! = 25, offset: Int! = 0, scope: JSONObject, search: String!): PaginatedEntityInfo!
   news(id: ID!): News!
   newsBySlug(scope: NewsContentScopeInput!, slug: String!): News
   newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]! = [{direction: ASC, field: createdAt}]): PaginatedNews!

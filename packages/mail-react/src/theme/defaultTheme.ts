@@ -1,3 +1,5 @@
+import { defaultButtonStyles } from "../components/button/defaultButtonStyles.js";
+import { defaultDividerStyles } from "../components/divider/defaultDividerStyles.js";
 import { createBreakpoint } from "./createBreakpoint.js";
 import type { Theme } from "./themeTypes.js";
 
@@ -16,6 +18,8 @@ export const defaultTheme: Theme = {
         lineHeight: "20px",
         bottomSpacing: "16px",
     },
+    divider: defaultDividerStyles,
+    button: defaultButtonStyles,
     colors: {
         background: {
             body: "#F2F2F2",

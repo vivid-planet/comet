@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { FillSpace, Stack, Toolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { styled } from "@mui/material/styles";
-import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
@@ -10,6 +9,7 @@ import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { JobRuntime } from "../cronJobs/JobRuntime";
+import { DataGrid } from "../dataGrid/DataGrid";
 import { PublishButton } from "./PublishButton";
 import type { GQLBuildsQuery } from "./PublisherPage.generated";
 

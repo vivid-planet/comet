@@ -1,8 +1,8 @@
 ---
-"@comet/site-nextjs": major
+"@comet/site-nextjs": minor
 "@comet/eslint-config": major
 ---
 
-Bump Next.js peer dependency to v16
+Add support for Next.js 15 and 16
 
-Follow the official migration guides ([v15](https://nextjs.org/docs/app/guides/upgrading/version-15), [v16](https://nextjs.org/docs/app/guides/upgrading/version-16)) to upgrade.
+`@comet/site-nextjs` now supports Next.js 14, 15, and 16. We recommend using Next.js 16.

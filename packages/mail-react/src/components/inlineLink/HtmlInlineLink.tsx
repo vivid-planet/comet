@@ -5,7 +5,14 @@ import { registerStyles } from "../../styles/registerStyles.js";
 import { css } from "../../utils/css.js";
 import { useOutlookTextStyle } from "../text/OutlookTextStyleContext.js";
 
-export type HtmlInlineLinkProps = ComponentProps<"a">;
+export type HtmlInlineLinkProps = Omit<ComponentProps<"a">, "target"> & {
+    /**
+     * Where to open the linked document.
+     *
+     * @defaultValue `"_blank"`
+     */
+    target?: ComponentProps<"a">["target"];
+};
 
 /**
  * Inline link styled to match the surrounding text, for use inside `HtmlText` or `MjmlText`.

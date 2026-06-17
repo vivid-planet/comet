@@ -1,17 +1,16 @@
-import {
-    Button,
-    DataGridToolbar,
-    FillSpace,
-    GridColumnsButton,
-    GridFilterButton,
-    GridToolbarQuickFilter,
-    StackLink,
-    useDataGridRemote,
-    usePersistentColumnState,
-} from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { DataGrid as DataGridCommunity } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+
+import { GridColumnsButton } from "../../../dataGrid/GridColumnsButton";
+import { GridFilterButton } from "../../../dataGrid/GridFilterButton";
+import { GridToolbarQuickFilter } from "../../../dataGrid/GridToolbarQuickFilter";
+import { useDataGridRemote } from "../../../dataGrid/useDataGridRemote";
+import { usePersistentColumnState } from "../../../dataGrid/usePersistentColumnState";
+import { StackLink } from "../../../stack/StackLink";
+import { Button } from "../../buttons/Button";
+import { FillSpace } from "../../FillSpace";
+import { DataGridToolbar } from "../DataGridToolbar";
 
 const data = [
     { id: "1f30a6a0-5b9d-4b25-8307-9e8b4a4d2b1c", firstname: "Emily", lastname: "Smith" },

@@ -114,6 +114,12 @@ export const YouTubeVideoBlock = withPreview(
         const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);
         youtubeUrl.search = searchParams.toString();
 
+        const handlePreviewPlay = () => {
+            setShowPreviewImage(false);
+            setIsPlaying(true);
+            setIsHandledManually(true);
+        };
+
         const handlePlayPauseClick = () => {
             if (isPlaying) {
                 setIsPlaying(false);
@@ -130,7 +136,7 @@ export const YouTubeVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage({
-                        onPlay: () => setShowPreviewImage(false),
+                        onPlay: handlePreviewPlay,
                         image: previewImage,
                         aspectRatio,
                         sizes: previewImageSizes,

@@ -33,4 +33,3 @@ pnpm run install-agent-features
 pnpm run create-site-configs-env
 
 pnpm run setup:download-oauth2-proxy
-pnpm run setup:download-mitmproxy

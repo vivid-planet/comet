@@ -114,6 +114,7 @@ export class ImportRedirectsCommand extends CommandRunner {
                                         props: {
                                             targetUrl: row["target"],
                                             openInNewWindow: true,
+                                            noFollow: false,
                                         },
                                     },
                                 ],
@@ -136,6 +137,7 @@ export class ImportRedirectsCommand extends CommandRunner {
                                         props: {
                                             targetUrl: row["target"],
                                             openInNewWindow: true,
+                                            noFollow: false,
                                         },
                                     },
                                 ],

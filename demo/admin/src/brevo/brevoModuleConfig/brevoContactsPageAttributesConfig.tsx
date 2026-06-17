@@ -7,10 +7,10 @@ import type { DocumentNode } from "graphql";
 import type { ReactNode } from "react";
 import { FormattedMessage, type IntlShape } from "react-intl";
 
-import type { GQLBrevoContactAttributesFragmentFragment } from "./brevoContactsPageAttributesConfig.generated";
+import type { GQLBrevoContactAttributesFragment } from "./brevoContactsPageAttributesConfig.generated";
 
 const attributesFragment = gql`
-    fragment BrevoContactAttributesFragment on BrevoContact {
+    fragment BrevoContactAttributes on BrevoContact {
         attributes {
             LASTNAME
             FIRSTNAME
@@ -56,7 +56,7 @@ interface AdditionalFormConfigInputProps extends EditBrevoContactFormValues {
 }
 
 export interface BrevoContactConfig {
-    additionalGridFields: GridColDef<GQLBrevoContactAttributesFragmentFragment>[];
+    additionalGridFields: GridColDef<GQLBrevoContactAttributesFragment>[];
     additionalFormFields: ReactNode;
     additionalAttributesFragment: {
         fragment: DocumentNode;
@@ -66,7 +66,7 @@ export interface BrevoContactConfig {
         attributes: { BRANCH?: Array<GQLBrevoContactBranch>; SALUTATION?: GQLBrevoContactSalutation; FIRSTNAME?: string; LASTNAME?: string };
     };
     exportFields: {
-        renderValue: (row: GQLBrevoContactAttributesFragmentFragment) => string;
+        renderValue: (row: GQLBrevoContactAttributesFragment) => string;
         headerName: string;
     }[];
 }
@@ -143,15 +143,15 @@ export const getBrevoContactConfig = (intl: IntlShape): BrevoContactConfig => {
         },
         additionalAttributesFragment: {
             fragment: attributesFragment,
-            name: "BrevoContactAttributesFragment",
+            name: "BrevoContactAttributes",
         },
         exportFields: [
             {
-                renderValue: (row: GQLBrevoContactAttributesFragmentFragment) => row.attributes?.FIRSTNAME,
+                renderValue: (row: GQLBrevoContactAttributesFragment) => row.attributes?.FIRSTNAME,
                 headerName: intl.formatMessage({ id: "brevoContact.firstName", defaultMessage: "First name" }),
             },
             {
-                renderValue: (row: GQLBrevoContactAttributesFragmentFragment) => row.attributes?.LASTNAME,
+                renderValue: (row: GQLBrevoContactAttributesFragment) => row.attributes?.LASTNAME,
                 headerName: intl.formatMessage({ id: "brevoContact.lastName", defaultMessage: "Last name" }),
             },
         ],

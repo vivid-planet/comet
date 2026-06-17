@@ -1,4 +1,4 @@
-import { ActionLogs, CrudGenerator, EntityInfo, IsNullable, IsUndefinable } from "@comet/cms-api";
+import { ActionLogs, CrudGenerator, EntityInfo, IsNullable, IsUndefinable, RequiredPermission } from "@comet/cms-api";
 import {
     BaseEntity,
     Embeddable,
@@ -95,6 +95,7 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
     name: "name",
     fullText: "fullText",
 })
+@RequiredPermission("manufacturers", { skipScopeCheck: true })
 @Entity()
 @ObjectType()
 @CrudGenerator({ requiredPermission: ["manufacturers"] })
@@ -134,9 +135,14 @@ export class Manufacturer extends BaseEntity {
     @Property<Manufacturer>({
         nullable: true,
         type: new FullTextType(),
-        onUpdate: (page) => {
+        onCreate: (manufacturer) => {
             return {
-                A: page.name,
+                A: manufacturer.name,
+            };
+        },
+        onUpdate: (manufacturer) => {
+            return {
+                A: manufacturer.name,
             };
         },
     })

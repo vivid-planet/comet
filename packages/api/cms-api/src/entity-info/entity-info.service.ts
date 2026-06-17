@@ -2,8 +2,10 @@ import { AnyEntity, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { DiscoverService } from "../dependencies/discover.service";
+import { REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "../user-permissions/decorators/required-permission.decorator";
 import { ENTITY_INFO_METADATA_KEY, EntityInfo } from "./entity-info.decorator";
 import { EntityInfoObject } from "./entity-info.object";
+import { isEntityInfoSql, requiredPermissionToSql } from "./entity-info.utils";
 import { resolveFieldToSql } from "./resolve-field-to-sql";
 
 @Injectable()
@@ -24,9 +26,15 @@ export class EntityInfoService {
                 continue;
             }
 
-            if (typeof entityInfo === "string") {
+            if (typeof entityInfo === "string" || isEntityInfoSql(entityInfo)) {
+                const sql = typeof entityInfo === "string" ? entityInfo : entityInfo.sql;
+                const permissionMetadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, targetEntity.entity) as
+                    | RequiredPermissionMetadata
+                    | undefined;
+                const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
+
                 indexSelects.push(
-                    `SELECT sub."name", sub."secondaryInformation", sub."visible", sub."id", sub."entityName" FROM (${entityInfo}) sub`,
+                    `SELECT sub."name", sub."secondaryInformation", sub."visible", sub."id", sub."entityName", ${requiredPermissionSql} AS "requiredPermission" FROM (${sql}) sub`,
                 );
             } else {
                 const { entityName, metadata } = targetEntity;
@@ -53,19 +61,25 @@ export class EntityInfoService {
                     visibleSql = sqlWhereMatch[1];
                 }
 
+                const permissionMetadata = Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, targetEntity.entity) as
+                    | RequiredPermissionMetadata
+                    | undefined;
+                const requiredPermissionSql = requiredPermissionToSql(permissionMetadata?.requiredPermission);
+
                 const select = `SELECT
                                 ${nameSql} "name",
                                 ${secondaryInformationSql} "secondaryInformation",
                                 ${visibleSql} AS "visible",
                                 "${metadata.tableName}"."${primary}"::text "id",
-                                '${entityName}' "entityName"
+                                '${entityName}' "entityName",
+                                ${requiredPermissionSql} AS "requiredPermission"
                             FROM "${metadata.tableName}"`;
                 indexSelects.push(select);
             }
         }
 
         // add all PageTreeNode Documents (Page, Link etc) thru PageTreeNodeDocument (no @EntityInfo needed on Page/Link)
-        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName"
+        indexSelects.push(`SELECT "PageTreeNodeEntityInfo"."name", "PageTreeNodeEntityInfo"."secondaryInformation", "PageTreeNodeEntityInfo"."visible", "PageTreeNodeDocument"."documentId"::text "id", "type" "entityName", ARRAY['pageTree']::text[] AS "requiredPermission"
             FROM "PageTreeNodeDocument"
             JOIN "PageTreeNodeEntityInfo" ON "PageTreeNodeEntityInfo"."id" = "PageTreeNodeDocument"."pageTreeNodeId"::text
         `);

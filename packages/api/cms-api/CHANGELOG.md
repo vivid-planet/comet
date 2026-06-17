@@ -1,5 +1,24 @@
 # @comet/cms-api
 
+## 9.0.0-beta.5
+
+### Minor Changes
+
+- c0cee12: Add `placeholders` option to `createTipTapRichTextBlock` that allows inserting pre-defined placeholder tokens into the rich text editor. Placeholders are rendered as non-editable chips and can only be removed as a whole unit.
+- 9d5f045: Add a `urlTemplate` field resolver to `FileImagesResolver`
+- b0ceb9c: Export `IsLinkTarget` validator
+- 8ad9dd8: Add support for deleting multiple redirects in the grid
+
+### Patch Changes
+
+- 6b7adc7: Fix `damFilesList` returning no files in subfolders when filtering by `ids`
+
+    `damFilesList` implicitly constrains to the scope root when no `folderId` is passed. The constraint already had an escape hatch for `filter.searchText`; the same now applies to `filter.ids`. Resolving a selection via `filter: { ids: ... }` returns all matching files regardless of which folder they live in, which unblocks the admin `FileField` multi-select for files in subfolders.
+
+- a2c2eb5: Log the reason when a permission check denies access
+
+    `AbstractAccessControlService.isEqualOrMorePermissions` now emits a NestJS `Logger.debug` line identifying the missing permission or content scope whenever it returns `false`. The `impersonationAllowed` resolver field additionally logs when a user attempts to impersonate themselves.
+
 ## 9.0.0-beta.4
 
 ### Minor Changes

@@ -9,18 +9,18 @@ export class UserService implements UserPermissionsUserServiceInterface, JwtToUs
         if (!jwt.sub) {
             throw new Error("JWT does not contain sub");
         }
-        const user = this.getUser(jwt.sub);
+        return this.findUserOrThrow(jwt.sub);
+    }
+    findUser(id: string): User | null {
+        const index = parseInt(id) - 1;
+        return staticUsers[index] ?? null;
+    }
+    findUserOrThrow(id: string): User {
+        const user = this.findUser(id);
         if (!user) {
-            throw new Error(`User not found: ${jwt.sub}`);
+            throw new Error(`User not found: ${id}`);
         }
         return user;
-    }
-    getUser(id: string): User {
-        const index = parseInt(id) - 1;
-        if (staticUsers[index]) {
-            return staticUsers[index];
-        }
-        throw new Error("User not found");
     }
     findUsers(args: FindUsersArgs): Users {
         const search = args.search?.toLowerCase();
