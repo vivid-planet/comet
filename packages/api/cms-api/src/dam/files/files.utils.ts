@@ -1,8 +1,9 @@
-import { XMLParser } from "fast-xml-parser";
+import createDOMPurify from "dompurify";
 import FileType from "file-type";
 import fs from "fs";
 import { unlink } from "fs/promises";
 import got from "got";
+import { JSDOM } from "jsdom";
 import * as mimedb from "mime-db";
 import os from "os";
 import { basename, extname } from "path";
@@ -43,59 +44,34 @@ export const calculatePartialRanges = (size: number, range: string): { start: nu
     };
 };
 
-type SvgNode =
-    | string
-    | {
-          [key: string]: SvgNode;
-      };
+const { window } = new JSDOM("");
+const DOMPurify = createDOMPurify(window);
 
-const disallowedSvgTags = [
-    "script", // can lead to XSS
-    "foreignObject", // can embed non-SVG content
-    "image", // can load external resources
-    "animate", // can modify attributes; resource exhaustion
-    "animateMotion", // can modify attributes; resource exhaustion
-    "animateTransform", // can modify attributes; resource exhaustion
-    "set", // can modify attributes
-];
-
-const recursiveIsValidSvgNode = (node: SvgNode): boolean => {
-    if (typeof node === "string") {
-        // is plain text -> can't contain JS
-        return true;
+// `<use>` is forbidden by DOMPurify's svg profile because it can pull in external or
+// attacker-controlled content (XSS/SSRF). Allow it only for same-document fragment references
+// (e.g. href="#id"); any other reference is dropped, which makes the SVG fail validation below.
+DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
+    if ((node as unknown as { nodeName: string }).nodeName.toLowerCase() !== "use") {
+        return;
     }
-
-    for (const [tagOrAttributeName, value] of Object.entries(node)) {
-        const containsDisallowedTags = disallowedSvgTags.some((tag) => tag.toLowerCase() === tagOrAttributeName.toLowerCase());
-
-        const containsEventHandler = tagOrAttributeName.toLowerCase().startsWith("on"); // can execute JavaScript
-
-        const containsHref = // can execute JavaScript or link to malicious targets
-            ["href", "xlink:href"].includes(tagOrAttributeName) &&
-            typeof value === "string" &&
-            (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("javascript:"));
-
-        if (containsDisallowedTags || containsEventHandler || containsHref) {
-            return false;
-        }
-
-        // is node -> children can contain JS
-        const children = node[tagOrAttributeName];
-        const childrenAreValid = recursiveIsValidSvgNode(children);
-
-        if (!childrenAreValid) {
-            return false;
-        }
+    if ((data.attrName === "href" || data.attrName === "xlink:href") && !data.attrValue.startsWith("#")) {
+        data.keepAttr = false;
     }
+});
 
-    return true;
-};
+export const isValidSvg = (svg: string): boolean => {
+    // `role` and `<use>` aren't part of DOMPurify's svg profile, so they're allowed explicitly.
+    // `<use>` is additionally constrained to same-document references by the hook above.
+    DOMPurify.sanitize(svg, {
+        USE_PROFILES: { svg: true, svgFilters: true },
+        WHOLE_DOCUMENT: true,
+        ADD_TAGS: ["use"],
+        ADD_ATTR: ["role", "href", "xlink:href"],
+    });
 
-export const isValidSvg = (svg: string) => {
-    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" });
-    const jsonObj = parser.parse(svg) as SvgNode;
-
-    return recursiveIsValidSvgNode(jsonObj);
+    // DOMPurify strips forbidden tags (e.g. <script>) and attributes (e.g. event handlers, javascript: URLs).
+    // If it had to remove anything, the SVG contained content we don't consider safe.
+    return DOMPurify.removed.length === 0;
 };
 
 export const removeMulterTempFile = async (file: FileUploadInput) => {
