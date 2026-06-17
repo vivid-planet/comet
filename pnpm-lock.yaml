@@ -1591,7 +1591,7 @@ importers:
         version: 2.0.7(react@19.2.6)
       react-diff-viewer-continued:
         specifier: ^4.0.6
-        version: 4.0.6(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 4.0.6(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-dropzone:
         specifier: ^14.3.8
         version: 14.3.8(react@19.2.6)
@@ -33700,10 +33700,10 @@ snapshots:
       react-list: 0.8.18(react@19.2.6)
       shallow-equal: 1.2.1
 
-  react-diff-viewer-continued@4.0.6(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  react-diff-viewer-continued@4.0.6(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       '@emotion/css': 11.13.5
-      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.6)
+      '@emotion/react': 11.14.0(@types/react@19.2.15)(react@19.2.6)
       classnames: 2.5.1
       diff: 5.2.0
       memoize-one: 6.0.0
