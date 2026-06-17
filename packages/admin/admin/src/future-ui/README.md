@@ -29,7 +29,29 @@ Any export may change or be removed at any time, without deprecation notice. Eve
 
 ### TSDoc
 
-A component's doc comment and its prop docs say what it does, not how — they leave out implementation details (the rendered element, prop forwarding, the base-ui foundation) and never restate the component's name, the same "express the rule, not the code" principle the READMEs follow.
+Components and utilities are documented in TSDoc on the export itself, so the docs ship with the package, get picked up by Storybook, and stay next to the code.
+
+Keep each comment as close as possible to what it describes: the component comment says what the component is for, while a prop's description and its `@defaultValue` go on the prop. Say what a feature does, not how (leave out the rendered element, prop forwarding, the base-ui foundation) and not why (the commit carries that); don't merely restate the name. Keep it as short as the feature allows.
+
+```tsx
+/**
+ * Buttons allow users to take actions, and make choices, with a single tap.
+ */
+export function Button(props: ButtonProps) {
+    // ...
+}
+
+export interface ButtonProps {
+    /**
+     * Use `primary` only for the single main action on a page, dialog, etc.
+     *
+     * @defaultValue `"primary"`
+     */
+    variant?: "primary" | "secondary";
+}
+```
+
+A change that makes a comment inaccurate updates it in the same change.
 
 ### Root element props
 
@@ -65,48 +87,3 @@ Future UI's styling contract is its class names. Components built on `@base-ui/r
 ## Known issues
 
 - Styles are not delivered by the package build yet. The Babel build compiles no CSS Modules, so the class-name mapping applies in Storybook but not in published output.
-
-## Internal documentation
-
-A feature may have a `README.md` for what its name, types, TSDoc, and commits can't carry — a non-obvious part of what it is, or a boundary it deliberately doesn't cross. These READMEs are internal: for the people and agents maintaining the code, not its consumers.
-
-Information hierarchy: code is the source of truth for what is, TSDoc for what a feature does for its consumers, commits for why each step was taken, internal documentation for a feature's scope — what it is and isn't — that none of the others record.
-
-### What is a feature
-
-A feature is any self-contained part of the codebase worth describing on its own — a component, a utility, or the sub-package itself. Features nest: this README documents Future UI as a feature, and the components and utilities inside it are features in their own right. A feature README describes only its own feature, never the parent that contains it nor the sub-features it contains — each of those has its own README.
-
-### Where they live
-
-A feature that warrants a README is a directory, with the README at its root (for example, a component folder's `README.md`). A feature small enough to live as a single file inside a parent doesn't get its own README — it is part of the parent. Turn a file into a directory at the moment you give it a README.
-
-### What goes in a feature README
-
-**Title.** The exact identifier when the feature is a single component or function (`Button`); otherwise a sentence-case name.
-
-Most READMEs use one or both of two sections:
-
-1. **Intro.** The non-obvious part of what the feature is or does, in present tense.
-2. **Non-goals.** What a reader would reasonably assume the feature does but it doesn't. Write each as a noun phrase, with one follow-up sentence only to point to the alternative or give the reason.
-
-A complex feature may add sections specific to its scope, as this sub-package's own README does. Not sections of their own: Architecture (the code shows it), Design decisions (commits carry them), Usage (consumer docs), Dependencies (imports show them).
-
-**Express the rule, not the code.** Every line says something the name and code don't — "A button component with a set of optional variants", never "The Button component".
-
-**Length.** Keep a README as short as the feature allows — often a line of intro or a few non-goals. A genuinely complex feature may run to about a screen. Past a screen you are duplicating commit history or describing what the code shows.
-
-### Template
-
-```md
-# <feature-name>
-
-<Intro (optional) — the non-obvious part of what the feature is or does.>
-
-## Non-goals <!-- only if any -->
-
-- <Noun phrase naming what the feature deliberately doesn't do.> <Optional follow-up pointing to the alternative or stating why.>
-```
-
-### Living documents
-
-These READMEs stay current. A change that makes one inaccurate, shifts a convention, or reverses a decision updates the affected README in the same change.
