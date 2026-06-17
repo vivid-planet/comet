@@ -2663,6 +2663,23 @@
         ]
     },
     {
+        "name": "ProductTeaser",
+        "fields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "RedirectsLink",
         "fields": [
             {
@@ -3793,15 +3810,23 @@
         "fields": [
             {
                 "name": "tipTapContent",
-                "kind": "Json",
-                "nullable": false
+                "kind": "TipTapRichTextBlock",
+                "nullable": false,
+                "childBlocks": {
+                    "productPrice": "ProductPrice",
+                    "productTeaser": "ProductTeaser"
+                }
             }
         ],
         "inputFields": [
             {
                 "name": "tipTapContent",
-                "kind": "Json",
-                "nullable": false
+                "kind": "TipTapRichTextBlock",
+                "nullable": false,
+                "childBlocks": {
+                    "productPrice": "ProductPrice",
+                    "productTeaser": "ProductTeaser"
+                }
             }
         ]
     },
