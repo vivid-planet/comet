@@ -7,12 +7,13 @@ import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
 import Script from "next/script";
-import { useForm, useWatch } from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { Button } from "../components/Button";
 import { CheckboxField } from "../components/form/CheckboxField";
-import { areAttachmentsSettled, type Attachment, FileUploadField, getAttachmentIds } from "../components/form/FileUploadField";
+import { FileUploadField } from "../components/form/FileUploadField";
 import { SelectField } from "../components/form/SelectField";
 import { TextareaField } from "../components/form/TextareaField";
 import { TextField } from "../components/form/TextField";
@@ -32,7 +33,7 @@ interface ContactFormValues {
     phoneNumber?: string;
     subject: string;
     message: string;
-    attachments: Attachment[];
+    attachments: string[];
     privacyConsent: boolean;
 }
 
@@ -62,8 +63,7 @@ export const ContactFormBlock = withPreview(
             },
         });
 
-        const attachments = useWatch({ control, name: "attachments" });
-        const isUploading = !areAttachmentsSettled(attachments);
+        const [isUploading, setIsUploading] = useState(false);
 
         const onSubmit = async (formValues: ContactFormValues) => {
             let recaptchaToken: string;
@@ -75,17 +75,6 @@ export const ContactFormBlock = withPreview(
                     message: intl.formatMessage({
                         id: "contactFormBlock.missingRecaptchaKey",
                         defaultMessage: "The form is currently unavailable. Please try again later.",
-                    }),
-                });
-                return;
-            }
-
-            if (formValues.attachments.some((attachment) => attachment.status === "error")) {
-                setError("attachments", {
-                    type: "manual",
-                    message: intl.formatMessage({
-                        id: "contactForm.attachments.hasErrors",
-                        defaultMessage: "Please remove attachments that failed to upload.",
                     }),
                 });
                 return;
@@ -106,13 +95,13 @@ export const ContactFormBlock = withPreview(
             }
 
             try {
-                const { attachments: formAttachments, ...rest } = formValues;
+                const { attachments: attachmentIds, ...rest } = formValues;
                 const response = await fetch(`/${language}/api/contact-form`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         ...rest,
-                        attachmentIds: getAttachmentIds(formAttachments),
+                        attachmentIds,
                         recaptchaToken,
                     }),
                 });
@@ -214,6 +203,7 @@ export const ContactFormBlock = withPreview(
                     <FileUploadField
                         name="attachments"
                         control={control}
+                        onUploadingChange={setIsUploading}
                         accept={acceptedFileTypes.join(",")}
                         label={intl.formatMessage({ id: "contactForm.attachments.label", defaultMessage: "Attachments" })}
                         validateFile={(file) => {

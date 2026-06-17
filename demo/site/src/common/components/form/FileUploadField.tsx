@@ -3,14 +3,14 @@ import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
-import { type ChangeEvent, type ReactNode, useId, useRef } from "react";
+import { type ChangeEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
 import styles from "./FileUploadField.module.scss";
 
-export type Attachment = {
+type Attachment = {
     key: string;
     file: File;
     status: "uploading" | "uploaded" | "error";
@@ -18,10 +18,8 @@ export type Attachment = {
     errorMessage?: string;
 };
 
-export const getAttachmentIds = (attachments: Attachment[]): string[] =>
+const getUploadedIds = (attachments: Attachment[]): string[] =>
     attachments.flatMap((attachment) => (attachment.status === "uploaded" && attachment.id ? [attachment.id] : []));
-
-export const areAttachmentsSettled = (attachments: Attachment[]): boolean => attachments.every((attachment) => attachment.status !== "uploading");
 
 type FileUploadFieldProps<TFieldValues extends FieldValues> = Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
     FieldContainerFieldProps & {
@@ -29,6 +27,7 @@ type FileUploadFieldProps<TFieldValues extends FieldValues> = Pick<ControllerPro
         multiple?: boolean;
         buttonLabel?: ReactNode;
         validateFile?: (file: File) => string | undefined;
+        onUploadingChange?: (isUploading: boolean) => void;
     };
 
 export const FileUploadField = <TFieldValues extends FieldValues>({
@@ -41,16 +40,26 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
     multiple = true,
     buttonLabel,
     validateFile,
+    onUploadingChange,
 }: FileUploadFieldProps<TFieldValues>) => {
     const id = useId();
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const attachmentsRef = useRef<Attachment[]>([]);
     const required = !!rules?.required;
     const intl = useIntl();
+
+    const [attachments, setAttachments] = useState<Attachment[]>([]);
+    const attachmentsRef = useRef<Attachment[]>(attachments);
+    attachmentsRef.current = attachments;
 
     const { recaptchaSiteKey } = useSiteConfig();
     const params = useParams<{ language: string }>();
     const language = params?.language;
+
+    const isUploading = attachments.some((attachment) => attachment.status === "uploading");
+
+    useEffect(() => {
+        onUploadingChange?.(isUploading);
+    }, [isUploading, onUploadingChange]);
 
     const uploadFile = async (file: File): Promise<{ id: string }> => {
         if (!recaptchaSiteKey) {
@@ -78,18 +87,28 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
         <Controller
             name={name}
             control={control}
-            rules={rules}
+            rules={{
+                ...rules,
+                validate: {
+                    ...(rules?.validate ? (typeof rules.validate === "function" ? { custom: rules.validate } : rules.validate) : {}),
+                    attachmentsHaveErrors: () =>
+                        attachmentsRef.current.some((attachment) => attachment.status === "error")
+                            ? intl.formatMessage({
+                                  id: "fileUploadField.hasErrors",
+                                  defaultMessage: "Please remove attachments that failed to upload.",
+                              })
+                            : true,
+                },
+            }}
             render={({ field, fieldState }) => {
-                const attachments: Attachment[] = Array.isArray(field.value) ? field.value : [];
-                attachmentsRef.current = attachments;
-
-                const setAttachments = (next: Attachment[]) => {
+                const updateAttachments = (next: Attachment[]) => {
                     attachmentsRef.current = next;
-                    field.onChange(next);
+                    setAttachments(next);
+                    field.onChange(getUploadedIds(next));
                 };
 
                 const patchAttachment = (attachmentKey: string, patch: Partial<Attachment>) => {
-                    setAttachments(
+                    updateAttachments(
                         attachmentsRef.current.map((attachment) => (attachment.key === attachmentKey ? { ...attachment, ...patch } : attachment)),
                     );
                 };
@@ -108,7 +127,7 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
                         };
                     });
 
-                    setAttachments(multiple ? [...attachmentsRef.current, ...added] : added);
+                    updateAttachments(multiple ? [...attachmentsRef.current, ...added] : added);
 
                     for (const attachment of added) {
                         if (attachment.status === "error") {
@@ -131,7 +150,7 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
                 };
 
                 const handleRemove = (attachmentKey: string) => {
-                    setAttachments(attachmentsRef.current.filter((attachment) => attachment.key !== attachmentKey));
+                    updateAttachments(attachmentsRef.current.filter((attachment) => attachment.key !== attachmentKey));
                 };
 
                 const erroredAttachment = attachments.find((attachment) => attachment.status === "error");
