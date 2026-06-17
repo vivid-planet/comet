@@ -37,7 +37,7 @@
             "entry": ["./src/index.ts", "./src/future-ui/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": [".storybook/public/mockServiceWorker.js"],
-            "ignoreDependencies": ["@mui/x-data-grid-premium"]
+            "ignoreDependencies": ["@mui/x-data-grid-premium", "sass"]
         },
         "packages/admin/admin-color-picker": {
             "project": ["./src/**/*.{ts,tsx}"]
