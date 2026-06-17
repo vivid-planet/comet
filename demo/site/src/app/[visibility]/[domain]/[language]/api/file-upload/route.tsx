@@ -1,9 +1,7 @@
+import { acceptedFileTypes, maxFileSize } from "@src/util/fileUpload";
 import { assessRecaptchaToken } from "@src/util/recaptcha/assessRecaptchaToken";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
-
-const acceptedMimeTypes = ["application/pdf", "image/jpeg", "image/png"];
-const maxFileSize = 5 * 1024 * 1024;
 
 export async function POST(request: NextRequest, context: RouteContext<"/[visibility]/[domain]/[language]/api/file-upload">) {
     const { domain } = await context.params;
@@ -20,7 +18,7 @@ export async function POST(request: NextRequest, context: RouteContext<"/[visibi
         return NextResponse.json({ message: "Missing recaptchaToken" }, { status: 400 });
     }
 
-    if (!acceptedMimeTypes.includes(file.type)) {
+    if (!acceptedFileTypes.includes(file.type)) {
         return NextResponse.json({ message: `File type not allowed: ${file.name}` }, { status: 400 });
     }
 

@@ -2,6 +2,7 @@
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import type { ContactFormBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import { acceptedFileTypes, maxFileSize } from "@src/util/fileUpload";
 import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
@@ -24,9 +25,6 @@ const subjectOptions = [
     { value: "Option 2", label: "Option 2" },
     { value: "Option 3", label: "Option 3" },
 ];
-
-const acceptedFileTypes = ["application/pdf", "image/jpeg", "image/png"];
-const maxFileSize = 5 * 1024 * 1024;
 
 interface ContactFormValues {
     name: string;
