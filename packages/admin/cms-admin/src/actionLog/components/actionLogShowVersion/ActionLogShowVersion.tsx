@@ -21,7 +21,7 @@ type ActionLogShowVersionProps = {
      * Latest name of the actual object, displayed in the title
      */
     name?: string;
-    onClickShowVersionHistory?: () => void;
+    onClickShowVersionHistory: () => void;
 };
 
 export const ActionLogShowVersion: FunctionComponent<ActionLogShowVersionProps> = ({
@@ -52,13 +52,11 @@ export const ActionLogShowVersion: FunctionComponent<ActionLogShowVersionProps> 
 
     return (
         <Root>
-            {onClickShowVersionHistory && (
-                <Box marginBottom={4}>
-                    <Button onClick={onClickShowVersionHistory} startIcon={<ArrowLeft />} variant="primary">
-                        <FormattedMessage defaultMessage="Show Version History" id="actionLog.actionLogCompare.showVersionHistory" />
-                    </Button>
-                </Box>
-            )}
+            <Box marginBottom={4}>
+                <Button onClick={onClickShowVersionHistory} startIcon={<ArrowLeft />} variant="primary">
+                    <FormattedMessage defaultMessage="Show Version History" id="actionLog.actionLogCompare.showVersionHistory" />
+                </Button>
+            </Box>
 
             <ActionLogHeader dbTypes={version?.entityName ? [version.entityName] : []} id={id} title={title} />
 
