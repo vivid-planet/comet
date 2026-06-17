@@ -1,5 +1,13 @@
 # @comet/site-react
 
+## 8.24.1
+
+### Patch Changes
+
+- 06ea333: Fix Cookiebot consent initialization
+
+    Fix a race condition where the `CookiebotOnConsentReady` event fires before the `useCookieBotCookieApi` hook is mounted.
+
 ## 8.24.0
 
 ## 8.23.4
