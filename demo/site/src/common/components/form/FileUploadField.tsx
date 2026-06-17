@@ -3,7 +3,7 @@ import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
-import { type ChangeEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
+import { type ChangeEvent, type ReactNode, useId, useRef, useState } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -54,12 +54,6 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
     const { recaptchaSiteKey } = useSiteConfig();
     const params = useParams<{ language: string }>();
     const language = params?.language;
-
-    const isUploading = attachments.some((attachment) => attachment.status === "uploading");
-
-    useEffect(() => {
-        onUploadingChange?.(isUploading);
-    }, [isUploading, onUploadingChange]);
 
     const uploadFile = async (file: File): Promise<{ id: string }> => {
         if (!recaptchaSiteKey) {
@@ -129,23 +123,30 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
 
                     updateAttachments(multiple ? [...attachmentsRef.current, ...added] : added);
 
-                    for (const attachment of added) {
-                        if (attachment.status === "error") {
-                            continue;
+                    const toUpload = added.filter((attachment) => attachment.status === "uploading");
+                    if (toUpload.length === 0) {
+                        return;
+                    }
+
+                    onUploadingChange?.(true);
+                    try {
+                        for (const attachment of toUpload) {
+                            try {
+                                const { id: uploadedId } = await uploadFile(attachment.file);
+                                patchAttachment(attachment.key, { status: "uploaded", id: uploadedId });
+                            } catch (error) {
+                                console.error(error);
+                                patchAttachment(attachment.key, {
+                                    status: "error",
+                                    errorMessage: intl.formatMessage({
+                                        id: "fileUploadField.uploadFailed",
+                                        defaultMessage: "Upload failed. Please try again.",
+                                    }),
+                                });
+                            }
                         }
-                        try {
-                            const { id: uploadedId } = await uploadFile(attachment.file);
-                            patchAttachment(attachment.key, { status: "uploaded", id: uploadedId });
-                        } catch (error) {
-                            console.error(error);
-                            patchAttachment(attachment.key, {
-                                status: "error",
-                                errorMessage: intl.formatMessage({
-                                    id: "fileUploadField.uploadFailed",
-                                    defaultMessage: "Upload failed. Please try again.",
-                                }),
-                            });
-                        }
+                    } finally {
+                        onUploadingChange?.(false);
                     }
                 };
 
