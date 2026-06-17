@@ -1,10 +1,11 @@
 import { type GridColDef, useBufferedRowCount, type useDataGridRemote, type usePersistentColumnState } from "@comet/admin";
 import { View } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
-import { DataGrid, gridClasses, type GridRowSelectionModel, type GridSlotsComponent } from "@mui/x-data-grid";
+import { gridClasses, type GridRowSelectionModel, type GridSlotsComponent } from "@mui/x-data-grid";
 import { type FunctionComponent, useMemo, useState } from "react";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 
+import { DataGrid } from "../../../dataGrid/DataGrid";
 import { ActionLogHeader } from "../../components/actionLogHeader/ActionLogHeader";
 import { UserCell } from "../../components/userCell/UserCell";
 import { ActionGridToolbar, type ActionGridToolbarProps } from "./actionGridToolbar/ActionGridToolbar";
