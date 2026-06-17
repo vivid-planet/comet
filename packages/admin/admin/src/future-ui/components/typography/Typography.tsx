@@ -11,6 +11,8 @@ export interface TypographyProps extends ComponentPropsWithoutRef<"p"> {
 /**
  * Renders a single block of text.
  *
+ * Carries no margin of its own; spacing around it is the caller's responsibility.
+ *
  * @experimental
  */
 export function Typography({ className, children, ref, ...restProps }: TypographyProps) {
