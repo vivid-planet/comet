@@ -77,6 +77,13 @@ export const ChildBlocks: StoryObj<typeof ChildBlocksStory> = {
             );
         });
 
+        await step("Type the surrounding text and place the cursor between the words", async () => {
+            await userEvent.click(canvas.getByRole("textbox"));
+            // Type both words first, then move the cursor back before "after" so the child block
+            // ends up between them. Inserting the block last avoids typing next to the atom node.
+            await userEvent.type(canvas.getByRole("textbox"), "Text before after{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}");
+        });
+
         await step("Insert-block button opens a menu listing the block and inline child blocks", async () => {
             await userEvent.click(canvas.getByRole("button", { name: "Insert block" }));
 
@@ -101,13 +108,13 @@ export const ChildBlocks: StoryObj<typeof ChildBlocksStory> = {
             );
         });
 
-        await step("Inserting an inline child block renders its preview inline within the text", async () => {
+        await step("Inserting the inline child block places it inline between the text", async () => {
             await userEvent.type(within(document.body).getByLabelText("Label"), "Inline preview");
             await userEvent.click(within(document.body).getByRole("button", { name: "OK" }));
 
             await waitFor(
                 () => {
-                    // The inline preview sits inside a paragraph (text flow), unlike a block-level child block
+                    // The inline preview shares a paragraph (text flow) with the text before and after it
                     expect(canvas.getByText("Inline preview").closest("p")).toBeInTheDocument();
                 },
                 { timeout: 3000 },
@@ -125,6 +132,17 @@ export const BlockChildBlock: StoryObj<typeof ChildBlocksStory> = {
                     expect(canvas.getByRole("textbox")).toBeInTheDocument();
                 },
                 { timeout: 5000 },
+            );
+        });
+
+        await step("Type the surrounding text on separate lines and place the cursor between them", async () => {
+            await userEvent.click(canvas.getByRole("textbox"));
+            // Type two paragraphs, then move the cursor to the start of the second one ("Text after"
+            // has 10 characters) so the block-level child block is inserted between them. Inserting last
+            // avoids typing next to the atom node.
+            await userEvent.type(
+                canvas.getByRole("textbox"),
+                "Text before{Enter}Text after{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}",
             );
         });
 
@@ -149,7 +167,7 @@ export const BlockChildBlock: StoryObj<typeof ChildBlocksStory> = {
             );
         });
 
-        await step("Inserting a block-level child block renders its preview as a standalone block", async () => {
+        await step("Inserting the block-level child block places it as a standalone block between the paragraphs", async () => {
             await userEvent.type(within(document.body).getByLabelText("Label"), "Block preview");
             await userEvent.click(within(document.body).getByRole("button", { name: "OK" }));
 
