@@ -112,15 +112,19 @@ export const FullTextSearchBlock = withPreview(
                                 />
                             </p>
                             <ul className={styles.list}>
-                                {results.map((result) => (
-                                    <li key={`${result.entityName}-${result.id}`} className={styles.listItem}>
-                                        <span className={styles.name}>{result.name}</span>
-                                        {result.secondaryInformation && (
-                                            <span className={styles.secondaryInformation}>{result.secondaryInformation}</span>
-                                        )}
-                                        <span className={styles.entityName}>{result.entityName}</span>
-                                    </li>
-                                ))}
+                                {results.map((result) => {
+                                    const showSecondaryInformation =
+                                        result.secondaryInformation && result.secondaryInformation.toLowerCase() !== result.name.toLowerCase();
+
+                                    return (
+                                        <li key={`${result.entityName}-${result.id}`} className={styles.listItem}>
+                                            <span className={styles.name}>{result.name}</span>
+                                            {showSecondaryInformation && (
+                                                <span className={styles.secondaryInformation}>{result.secondaryInformation}</span>
+                                            )}
+                                        </li>
+                                    );
+                                })}
                             </ul>
                         </>
                     )}
