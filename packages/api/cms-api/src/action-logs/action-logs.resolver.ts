@@ -11,7 +11,7 @@ export class ActionLogsResolver {
     @ResolveField(() => ActionLogsUser)
     async user(@Parent() actionLog: ActionLog): Promise<ActionLogsUser> {
         try {
-            const user = await this.userPermissionsService.getUser(actionLog.userId);
+            const user = await this.userPermissionsService.findUserOrThrow(actionLog.userId);
             return { id: user.id, name: user.name };
         } catch {
             return { id: actionLog.userId };
