@@ -107,7 +107,7 @@ export const ContactFormBlock = withPreview(
             }
 
             if (formValues.attachments.some((attachment) => attachment.status === "error")) {
-                setError("root.serverError", {
+                setError("attachments", {
                     type: "manual",
                     message: intl.formatMessage({
                         id: "contactForm.attachments.hasErrors",
