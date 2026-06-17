@@ -244,12 +244,6 @@ export const ContactFormBlock = withPreview(
                         label={intl.formatMessage({ id: "contactForm.attachments.label", defaultMessage: "Attachments" })}
                         uploadFile={uploadFile}
                         validateFile={(file) => {
-                            if (!acceptedFileTypes.includes(file.type)) {
-                                return intl.formatMessage({
-                                    id: "contactForm.attachments.invalidType",
-                                    defaultMessage: "File type not allowed.",
-                                });
-                            }
                             if (file.size > maxFileSize) {
                                 return intl.formatMessage({
                                     id: "contactForm.attachments.tooLarge",
