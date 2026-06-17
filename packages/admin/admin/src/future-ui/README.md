@@ -25,13 +25,14 @@ Any export may change or be removed at any time, without deprecation notice. Eve
 ### Exports
 
 - Props are exported as an interface named `<ComponentName>Props`, never a type alias.
+- The resolved configuration is exported as a type named `<ComponentName>OwnerState`.
 - The component is exported as `<ComponentName>`.
 
 ### TSDoc
 
 Components and utilities are documented in TSDoc on the export itself, so the docs ship with the package, get picked up by Storybook, and stay next to the code.
 
-Keep each comment as close as possible to what it describes: the component comment says what the component is for, while a prop's description and its `@defaultValue` go on the prop. Say what a feature does, not how (leave out the rendered element, prop forwarding, the base-ui foundation) and not why (the commit carries that); don't merely restate the name. Keep it as short as the feature allows.
+Keep each comment as close as possible to what it describes: the component comment says what the component is for, while a prop's description and its `@defaultValue` go on the prop. Say what a feature does, not how (leave out the rendered element, prop forwarding, the base-ui foundation) and not why (the commit carries that); don't merely restate the name. Keep it as short as the feature allows. The shared override-API members — `className`, `slots`, `slotProps`, and the `OwnerState` type — share the wording shown below, extended only where a component needs more detail.
 
 ```tsx
 /**
@@ -41,6 +42,14 @@ export function Button(props: ButtonProps) {
     // ...
 }
 
+/**
+ * The resolved configuration that influences the component's appearance or behavior.
+ */
+export type ButtonOwnerState = {
+    variant: "primary" | "secondary";
+    disabled: boolean;
+};
+
 export interface ButtonProps {
     /**
      * Use `primary` only for the single main action on a page, dialog, etc.
@@ -48,6 +57,12 @@ export interface ButtonProps {
      * @defaultValue `"primary"`
      */
     variant?: "primary" | "secondary";
+    /** Added alongside the component's own classes. */
+    className?: string;
+    /** Sets which element a named inner part renders as. */
+    slots?: ButtonSlots;
+    /** Props for each slot, merged with the slot's own props rather than replacing them. */
+    slotProps?: ButtonSlotProps;
 }
 ```
 
@@ -55,8 +70,16 @@ A change that makes a comment inaccurate updates it in the same change.
 
 ### Root element props
 
-- A component extends the props of its root element and forwards the ones it doesn't handle itself to that element, so a consumer can set any attribute or event handler the root element accepts without a dedicated prop for each.
-- A consumer-set `className` is merged with the contract classes, never replacing them.
+A component extends the props of its root element and passes the ones it doesn't handle itself to that element, so a consumer can set any attribute or event handler the root element accepts without us maintaining a dedicated prop for each. By default it doesn't re-declare or document them; they stay as the root element defines them. It may still re-declare one to support it as a documented feature.
+
+### Override props
+
+Future UI's exported components share one set of override props; each offers the ones that apply to it. The [class-name contract](#class-name-contract) is the primary way to style a component; these props do what it can't — place and swap inner parts, and set or vary their props.
+
+- **`className`** — a string, merged with the contract classes, never replacing them. It is not a function: every value in `ownerState` already emits a modifier class, so an `ownerState`-dependent class would add nothing.
+- **`slots`** — sets which element a named inner part renders as. The root is not a slot — it is the component's own outermost element, configured through the component's top-level props directly (`className`, event handlers, ARIA, …).
+- **`slotProps`** — props for those same inner parts, as an object **or** a function of `ownerState`. They are merged with the component's own props, so a contract class or handler is never dropped.
+- **`ownerState`** — one object per component: the resolved configuration (`variant`, `disabled`, …) that influences the component's appearance or behavior; the root modifier classes are derived from it. It holds no transient interaction state (hover/press/focus).
 
 ### Class-name contract
 
