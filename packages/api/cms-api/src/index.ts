@@ -106,6 +106,8 @@ export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
 export {
     createTipTapRichTextBlock,
     type CreateTipTapRichTextBlockOptions,
+    type TipTapChildBlock,
+    type TipTapChildBlockDisplay,
     type TipTapRichTextBlockContent,
 } from "./blocks/tipTap/createTipTapRichTextBlock";
 export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
