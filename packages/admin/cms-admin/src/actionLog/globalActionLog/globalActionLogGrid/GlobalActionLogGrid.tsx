@@ -4,19 +4,22 @@ import {
     DataGridToolbar,
     GridCellContent,
     type GridColDef,
+    GridFilterButton,
     MainContent,
     messages,
+    muiGridFilterToGql,
     muiGridSortToGql,
+    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Box, Chip } from "@mui/material";
+import { Autocomplete, Box, Chip } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, type GridFilterInputValueProps, type GridFilterItem, type GridFilterOperator, useGridRootProps } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
-import { useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { type ContentScope, useContentScope } from "../../../contentScope/Provider";
@@ -50,6 +53,107 @@ const EntityTypeChip = styled(Chip)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
+const GLOBAL_SCOPE_VALUE = "__global__";
+
+function scopeColumnToGqlFilter(filterItem: GridFilterItem) {
+    if (filterItem.operator === "isAnyOf") {
+        const values = (filterItem.value as string[] | undefined) ?? [];
+        const hasGlobal = values.includes(GLOBAL_SCOPE_VALUE);
+        const scopes = values.filter((value) => value !== GLOBAL_SCOPE_VALUE).map((value) => JSON.parse(value));
+        if (hasGlobal && scopes.length > 0) {
+            return { or: [{ scope: { isGlobal: true } }, { scope: { isAnyOf: scopes } }] };
+        }
+        if (hasGlobal) {
+            return { scope: { isGlobal: true } };
+        }
+        return { scope: { isAnyOf: scopes } };
+    }
+    if (filterItem.value === GLOBAL_SCOPE_VALUE) {
+        return { scope: { isGlobal: filterItem.operator !== "not" } };
+    }
+    const gqlOperator = filterItem.operator === "not" ? "notEqual" : "equal";
+    const value = typeof filterItem.value === "string" ? JSON.parse(filterItem.value) : filterItem.value;
+    return { scope: { [gqlOperator]: value } };
+}
+
+type ScopeOption = { value: string; label: string };
+
+const ScopeFilterOptionsContext = createContext<ScopeOption[]>([]);
+
+function ScopeFilterSingleInput({ item, applyValue, focusElementRef, apiRef }: GridFilterInputValueProps) {
+    const options = useContext(ScopeFilterOptionsContext);
+    const rootProps = useGridRootProps();
+    const selectedValue = typeof item.value === "string" ? (options.find((option) => option.value === item.value) ?? null) : null;
+    return (
+        <Autocomplete<ScopeOption, false, false, false>
+            options={options}
+            value={selectedValue}
+            getOptionLabel={(option) => option.label}
+            isOptionEqualToValue={(option, candidate) => option.value === candidate.value}
+            onChange={(_, newValue) => applyValue({ ...item, value: newValue?.value ?? null })}
+            renderInput={(params) => (
+                <rootProps.slots.baseTextField
+                    {...params}
+                    label={apiRef.current.getLocaleText("filterPanelInputLabel")}
+                    inputRef={focusElementRef}
+                    slotProps={{
+                        inputLabel: { shrink: true },
+                        input: params.InputProps,
+                    }}
+                />
+            )}
+        />
+    );
+}
+
+function ScopeFilterMultiInput({ item, applyValue, focusElementRef, apiRef }: GridFilterInputValueProps) {
+    const options = useContext(ScopeFilterOptionsContext);
+    const rootProps = useGridRootProps();
+    const selectedValues = Array.isArray(item.value) ? (item.value as string[]) : [];
+    const selectedOptions = options.filter((option) => selectedValues.includes(option.value));
+    return (
+        <Autocomplete<ScopeOption, true, false, false>
+            multiple
+            options={options}
+            value={selectedOptions}
+            getOptionLabel={(option) => option.label}
+            isOptionEqualToValue={(option, candidate) => option.value === candidate.value}
+            onChange={(_, newValue) => applyValue({ ...item, value: newValue.map((option) => option.value) })}
+            renderInput={(params) => (
+                <rootProps.slots.baseTextField
+                    {...params}
+                    label={apiRef.current.getLocaleText("filterPanelInputLabel")}
+                    inputRef={focusElementRef}
+                    slotProps={{
+                        inputLabel: { shrink: true },
+                        input: params.InputProps,
+                    }}
+                />
+            )}
+        />
+    );
+}
+
+const throwOnLocalScopeFilter = () => {
+    throw new Error("Server-side filter; not applied on the client.");
+};
+
+const scopeFilterOperators: GridFilterOperator[] = [
+    { value: "is", getApplyFilterFn: throwOnLocalScopeFilter, InputComponent: ScopeFilterSingleInput },
+    { value: "not", getApplyFilterFn: throwOnLocalScopeFilter, InputComponent: ScopeFilterSingleInput },
+    { value: "isAnyOf", getApplyFilterFn: throwOnLocalScopeFilter, InputComponent: ScopeFilterMultiInput },
+];
+
+function GlobalActionLogGridToolbar() {
+    return (
+        <DataGridToolbar>
+            <ToolbarItem>
+                <GridFilterButton />
+            </ToolbarItem>
+        </DataGridToolbar>
+    );
+}
+
 export function GlobalActionLogGrid() {
     const intl = useIntl();
     const { values: scopeValues } = useContentScope();
@@ -72,6 +176,17 @@ export function GlobalActionLogGrid() {
         [scopeValues],
     );
 
+    const scopeValueOptions = useMemo(
+        () => [
+            { value: GLOBAL_SCOPE_VALUE, label: intl.formatMessage(messages.globalContentScope) },
+            ...scopeValues.map((item) => ({
+                value: JSON.stringify(item.scope),
+                label: formatScopeLabel(item.scope),
+            })),
+        ],
+        [intl, scopeValues, formatScopeLabel],
+    );
+
     const columns = useMemo<GridColDef<GQLGlobalActionLogGridFragment>[]>(
         () => [
             {
@@ -83,8 +198,8 @@ export function GlobalActionLogGrid() {
             {
                 field: "scope",
                 headerName: intl.formatMessage({ id: "comet.globalActionLog.columns.scope", defaultMessage: "Scope" }),
-                sortable: false,
-                filterable: false,
+                filterOperators: scopeFilterOperators,
+                toGqlFilter: scopeColumnToGqlFilter,
                 width: 150,
                 renderCell: ({ row }) => {
                     const scopes = (row.scope as ContentScope[] | null | undefined) ?? [];
@@ -141,12 +256,15 @@ export function GlobalActionLogGrid() {
         [intl, formatScopeLabel],
     );
 
+    const { filter: gqlFilter } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+
     const scopes = useMemo(() => scopeValues.map((item) => item.scope), [scopeValues]);
 
     const { data, loading, error } = useQuery<GQLGlobalActionLogGridQuery, GQLGlobalActionLogGridQueryVariables>(globalActionLogGridQuery, {
         variables: {
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
+            filter: gqlFilter,
             scopes,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
@@ -159,20 +277,22 @@ export function GlobalActionLogGrid() {
     }
 
     return (
-        <MainContent fullHeight>
-            <DataGrid
-                {...dataGridProps}
-                columns={columns}
-                rows={data?.actionLogs.nodes ?? []}
-                rowCount={rowCount}
-                loading={loading}
-                disableRowSelectionOnClick
-                onRowClick={({ row }) => setOpenVersionId(row.id)}
-                slots={{ toolbar: DataGridToolbar }}
-                showToolbar
-            />
-            <GlobalActionLogShowVersionDialog actionLogId={openVersionId} open={openVersionId !== null} onClose={() => setOpenVersionId(null)} />
-        </MainContent>
+        <ScopeFilterOptionsContext.Provider value={scopeValueOptions}>
+            <MainContent fullHeight>
+                <DataGrid
+                    {...dataGridProps}
+                    columns={columns}
+                    rows={data?.actionLogs.nodes ?? []}
+                    rowCount={rowCount}
+                    loading={loading}
+                    disableRowSelectionOnClick
+                    onRowClick={({ row }) => setOpenVersionId(row.id)}
+                    slots={{ toolbar: GlobalActionLogGridToolbar }}
+                    showToolbar
+                />
+                <GlobalActionLogShowVersionDialog actionLogId={openVersionId} open={openVersionId !== null} onClose={() => setOpenVersionId(null)} />
+            </MainContent>
+        </ScopeFilterOptionsContext.Provider>
     );
 }
 
