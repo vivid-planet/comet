@@ -24,11 +24,10 @@ export class ActionLogsResolver {
 
     @ResolveField(() => ActionLogsUser)
     async user(@Parent() actionLog: ActionLog): Promise<ActionLogsUser> {
-        try {
-            const user = await this.userPermissionsService.findUserOrThrow(actionLog.userId);
-            return { id: user.id, name: user.name };
-        } catch {
-            return { id: actionLog.userId };
+        if (this.userPermissionsService.isSystemUser(actionLog.userId)) {
+            return { id: actionLog.userId, name: actionLog.userId };
         }
+        const user = await this.userPermissionsService.findUser(actionLog.userId);
+        return user ? { id: user.id, name: user.name } : { id: actionLog.userId };
     }
 }

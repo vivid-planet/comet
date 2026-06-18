@@ -18,6 +18,15 @@ export const StandardDiffHeader: Story = {
     },
 };
 
+export const SystemUser: Story = {
+    args: {
+        createdAt: "2023-10-01T12:00:00Z",
+        userId: "system-user",
+        userName: "system-user",
+        version: 1,
+    },
+};
+
 export const UnknownUser: Story = {
     args: {
         createdAt: "2023-10-01T12:00:00Z",

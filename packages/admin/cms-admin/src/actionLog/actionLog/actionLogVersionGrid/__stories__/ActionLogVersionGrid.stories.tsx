@@ -6,8 +6,16 @@ import { ActionLogVersionGrid } from "../ActionLogVersionGrid";
 import type { GQLActionLogVersionGridFragment } from "../ActionLogVersionGrid.gql.generated";
 
 const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragment[] } = {
-    totalCount: 3,
+    totalCount: 4,
     nodes: [
+        {
+            id: "log4",
+            user: { id: "system-user", name: "system-user" },
+            entityName: "TestEntity",
+            version: 4,
+            action: "Updated",
+            createdAt: "2023-10-04T12:00:00Z",
+        },
         {
             id: "log3",
             user: { id: "1", name: "Max Mustermann" },
