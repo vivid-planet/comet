@@ -8,8 +8,9 @@ import {
     BlockMetaField,
     BlockMetaFieldKind,
     createBlock,
+    IsUndefinable,
 } from "@comet/cms-api";
-import { IsOptional, IsUUID } from "class-validator";
+import { IsUUID } from "class-validator";
 
 import { ProductPriceBlockTransformerService } from "./product-price-block-transformer.service";
 
@@ -72,7 +73,7 @@ class Meta extends AnnotationBlockMeta {
 class ProductPriceBlockInput extends BlockInput {
     @BlockField({ nullable: true })
     @IsUUID()
-    @IsOptional()
+    @IsUndefinable()
     productId?: string;
 
     transformToBlockData(): ProductPriceBlockData {

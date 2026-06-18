@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type ReactNode, useState } from "react";
+import { useState } from "react";
 import { expect, waitFor, within } from "storybook/test";
 
 import { createBlockSkeleton } from "../../helpers/createBlockSkeleton";
@@ -12,15 +12,6 @@ function StatePreview({ state }: { state: TipTapRichTextBlockState }) {
         <Box component="pre" sx={{ mt: 2, p: 2, backgroundColor: "#f5f5f5", fontSize: 12, overflow: "auto", borderRadius: 1 }}>
             {JSON.stringify(state, null, 2)}
         </Box>
-    );
-}
-
-function StoryWrapper({ children, state }: { children: ReactNode; state: TipTapRichTextBlockState }) {
-    return (
-        <>
-            {children}
-            <StatePreview state={state} />
-        </>
     );
 }
 
@@ -38,26 +29,23 @@ const ExampleChildBlock: BlockInterface<ExampleChildBlockState, ExampleChildBloc
     previewContent: (state) => (state.label ? [{ type: "text", content: state.label }] : []),
 };
 
-const ExampleInlineChildBlock: BlockInterface<ExampleChildBlockState, ExampleChildBlockState, ExampleChildBlockState> = {
-    ...ExampleChildBlock,
-    name: "ExampleInlineChild",
-    displayName: "Example Inline Child",
-};
-
-const ChildBlocksBlock = createTipTapRichTextBlock({
-    childBlocks: {
-        exampleChild: { block: ExampleChildBlock, display: "block" },
-        exampleInlineChild: { block: ExampleInlineChildBlock, display: "inline" },
-    },
+const InlineChildBlocksBlock = createTipTapRichTextBlock({
+    childBlocks: { example: { block: ExampleChildBlock, display: "inline" } },
 });
 
-function ChildBlocksStory() {
-    const [state, setState] = useState<TipTapRichTextBlockState>(ChildBlocksBlock.defaultValues());
+const BlockChildBlocksBlock = createTipTapRichTextBlock({
+    childBlocks: { example: { block: ExampleChildBlock, display: "block" } },
+});
+
+function ChildBlocksStory({ block }: { block: ReturnType<typeof createTipTapRichTextBlock> }) {
+    const [state, setState] = useState<TipTapRichTextBlockState>(block.defaultValues());
+    const { AdminComponent } = block;
 
     return (
-        <StoryWrapper state={state}>
-            <ChildBlocksBlock.AdminComponent state={state} updateState={setState} />
-        </StoryWrapper>
+        <>
+            <AdminComponent state={state} updateState={setState} />
+            <StatePreview state={state} />
+        </>
     );
 }
 
@@ -68,8 +56,8 @@ const config: Meta<typeof ChildBlocksStory> = {
 
 export default config;
 
-export const ChildBlocks: StoryObj<typeof ChildBlocksStory> = {
-    render: () => <ChildBlocksStory />,
+export const InlineChildBlocks: StoryObj<typeof ChildBlocksStory> = {
+    render: () => <ChildBlocksStory block={InlineChildBlocksBlock} />,
     play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready", async () => {
             await waitFor(
@@ -87,21 +75,18 @@ export const ChildBlocks: StoryObj<typeof ChildBlocksStory> = {
             await userEvent.type(canvas.getByRole("textbox"), "Text before after{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}");
         });
 
-        await step("Insert-block button opens a menu listing the block and inline child blocks", async () => {
+        await step("Selecting the inline child block opens its dialog", async () => {
             await userEvent.click(canvas.getByRole("button", { name: "Insert block" }));
 
             // The menu is rendered in a portal, so it lives in document.body rather than within the canvas
             await waitFor(
                 () => {
                     expect(within(document.body).getByRole("menuitem", { name: "Example Child" })).toBeInTheDocument();
-                    expect(within(document.body).getByRole("menuitem", { name: "Example Inline Child" })).toBeInTheDocument();
                 },
                 { timeout: 3000 },
             );
-        });
 
-        await step("Selecting an inline child block opens its dialog", async () => {
-            await userEvent.click(within(document.body).getByRole("menuitem", { name: "Example Inline Child" }));
+            await userEvent.click(within(document.body).getByRole("menuitem", { name: "Example Child" }));
 
             await waitFor(
                 () => {
@@ -126,8 +111,8 @@ export const ChildBlocks: StoryObj<typeof ChildBlocksStory> = {
     },
 };
 
-export const BlockChildBlock: StoryObj<typeof ChildBlocksStory> = {
-    render: () => <ChildBlocksStory />,
+export const BlockChildBlocks: StoryObj<typeof ChildBlocksStory> = {
+    render: () => <ChildBlocksStory block={BlockChildBlocksBlock} />,
     play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready", async () => {
             await waitFor(
@@ -149,7 +134,7 @@ export const BlockChildBlock: StoryObj<typeof ChildBlocksStory> = {
             );
         });
 
-        await step("Selecting a block-level child block opens its dialog", async () => {
+        await step("Selecting the block-level child block opens its dialog", async () => {
             await userEvent.click(canvas.getByRole("button", { name: "Insert block" }));
 
             // The menu is rendered in a portal, so it lives in document.body rather than within the canvas
