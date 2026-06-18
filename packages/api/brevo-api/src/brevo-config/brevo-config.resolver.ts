@@ -69,7 +69,6 @@ export function createBrevoConfigResolver({
             return false;
         }
 
-        @RequiredPermission("brevoNewsletterConfig", { skipScopeCheck: true })
         @Query(() => [BrevoApiSender], { nullable: true })
         async brevoSenders(
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope))
@@ -79,7 +78,6 @@ export function createBrevoConfigResolver({
             return senders;
         }
 
-        @RequiredPermission("brevoNewsletterConfig", { skipScopeCheck: true })
         @Query(() => [BrevoApiEmailTemplate], { nullable: true })
         async brevoDoubleOptInTemplates(
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope))
