@@ -3,6 +3,10 @@
 # ------------------------------------------------------
 
 type ActionLog {
+  """
+  Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.
+  """
+  action: ActionLogAction!
   createdAt: DateTime!
   entityId: ID!
   entityName: String!
@@ -11,6 +15,12 @@ type ActionLog {
   snapshot: JSONObject
   user: ActionLogsUser!
   version: Int!
+}
+
+enum ActionLogAction {
+  Created
+  Deleted
+  Updated
 }
 
 input ActionLogSort {

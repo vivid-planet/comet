@@ -1,6 +1,7 @@
 export { ActionLogButton } from "./actionLog/actionLog/actionLogButton/ActionLogButton";
 export { ActionLogDialog } from "./actionLog/actionLog/actionLogDialog/ActionLogDialog";
 export { ActionLogVersionGrid, actionLogVersionGridFragment } from "./actionLog/actionLog/actionLogVersionGrid/ActionLogVersionGrid";
+export { ActionChip } from "./actionLog/components/actionChip/ActionChip";
 export { ActionLogCompare, actionLogCompareFragment } from "./actionLog/components/actionLogCompare/ActionLogCompare";
 export { ActionLogHeader, type ActionLogHeaderProps } from "./actionLog/components/actionLogHeader/ActionLogHeader";
 export { ActionLogShowVersion, actionLogShowVersionFragment } from "./actionLog/components/actionLogShowVersion/ActionLogShowVersion";

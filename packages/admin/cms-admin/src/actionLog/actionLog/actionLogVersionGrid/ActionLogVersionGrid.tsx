@@ -6,6 +6,7 @@ import { type FunctionComponent, useMemo, useState } from "react";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 
 import { DataGrid } from "../../../dataGrid/DataGrid";
+import { ActionChip } from "../../components/actionChip/ActionChip";
 import { ActionLogHeader } from "../../components/actionLogHeader/ActionLogHeader";
 import { UserCell } from "../../components/userCell/UserCell";
 import { ActionGridToolbar, type ActionGridToolbarProps } from "./actionGridToolbar/ActionGridToolbar";
@@ -44,6 +45,13 @@ export const ActionLogVersionGrid: FunctionComponent<ActionLogVersionGridProps> 
             {
                 field: "version",
                 headerName: intl.formatMessage({ defaultMessage: "Version", id: "actionLog.actionLogVersionGrid.columns.version" }),
+            },
+            {
+                field: "action",
+                headerName: intl.formatMessage({ defaultMessage: "Action", id: "actionLog.actionLogVersionGrid.columns.action" }),
+                sortable: false,
+                width: 130,
+                renderCell: ({ row }) => <ActionChip actionValue={row.action} label={row.action} />,
             },
             {
                 field: "createdAt",
