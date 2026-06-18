@@ -23,6 +23,13 @@ export const OneName: Story = {
     },
 };
 
+export const SystemUser: Story = {
+    args: {
+        id: "system-user",
+        name: "system-user",
+    },
+};
+
 export const UnknownUser: Story = {
     args: {
         id: "abc-123",
