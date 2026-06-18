@@ -34,5 +34,3 @@ To keep the data up to date, refetch the query explicitly:
     +     refetchQueries: ["ItemsList"],
       });
     ```
-
-We recommend migrating away from the legacy table components to MUI X Data Grid in combination with `useDataGridRemote`, which handles refetching for you.
