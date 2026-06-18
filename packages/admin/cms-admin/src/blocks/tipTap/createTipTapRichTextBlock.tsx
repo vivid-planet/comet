@@ -123,13 +123,15 @@ interface TipTapRichTextBlockFactoryOptions {
     placeholders?: TipTapPlaceholder[];
     link?: BlockInterface & LinkBlockInterface;
     /**
-     * Child blocks that can be inserted into the editor via the toolbar's "+" menu.
+     * Child blocks that can be inserted into the editor via the toolbar's "+" menu, keyed by a
+     * stable key. The key (not the block's name) is stored in the content, so blocks can be
+     * renamed or swapped without invalidating existing content.
      * Each block is rendered as a non-editable preview that can be edited (dialog) or removed.
      *
      * Pass `{ block, display }` for each child block, where `display` is `"block"` (standalone
      * block element) or `"inline"` (inline within the surrounding text).
      */
-    childBlocks?: TipTapChildBlock[];
+    childBlocks?: Record<string, TipTapChildBlock>;
     /**
      * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be created in the editor.
@@ -300,7 +302,7 @@ const TipTapEditor = ({
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
-    childBlocks: TipTapChildBlock[];
+    childBlocks: Record<string, TipTapChildBlock>;
     maxTextBlocks?: number;
     listLevelMax?: number;
 }) => {
@@ -308,8 +310,10 @@ const TipTapEditor = ({
     const hasInlineStyles = inlineStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
     const hasPlaceholders = placeholders.length > 0;
-    const hasBlockChildBlocks = childBlocks.some((childBlock) => childBlock.display === "block");
-    const hasInlineChildBlocks = childBlocks.some((childBlock) => childBlock.display === "inline");
+    const childBlockEntries = Object.values(childBlocks);
+    const hasBlockChildBlocks = childBlockEntries.some((childBlock) => childBlock.display === "block");
+    const hasInlineChildBlocks = childBlockEntries.some((childBlock) => childBlock.display === "inline");
+    const childBlocksByKey: Record<string, BlockInterface> = Object.fromEntries(Object.entries(childBlocks).map(([key, { block }]) => [key, block]));
 
     const editor = useEditor({
         extensions: [
@@ -380,7 +384,7 @@ const TipTapEditor = ({
     return (
         <TextBlockStyleContext.Provider value={textBlockStyles}>
             <InlineStyleContext.Provider value={inlineStyles}>
-                <ChildBlocksContext.Provider value={childBlocks.map((childBlock) => childBlock.block)}>
+                <ChildBlocksContext.Provider value={childBlocksByKey}>
                     <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
                         <TipTapToolbar
                             editor={editor}
@@ -413,9 +417,9 @@ export const createTipTapRichTextBlock = (
     const inlineStyles = options?.inlineStyles ?? [];
     const placeholders = options?.placeholders ?? [];
     const linkBlock = options?.link;
-    const childBlocks = options?.childBlocks ?? [];
-    const childBlocksByName: Record<string, BlockInterface> = Object.fromEntries(childBlocks.map(({ block }) => [block.name, block]));
-    const hasChildBlocks = childBlocks.length > 0;
+    const childBlocks = options?.childBlocks ?? {};
+    const childBlocksByKey: Record<string, BlockInterface> = Object.fromEntries(Object.entries(childBlocks).map(([key, { block }]) => [key, block]));
+    const hasChildBlocks = Object.keys(childBlocks).length > 0;
     const maxTextBlocks = options?.maxTextBlocks;
     const listLevelMax = options?.listLevelMax;
 
@@ -441,7 +445,7 @@ export const createTipTapRichTextBlock = (
                 content = mapLinkMarksData(content, (data) => linkBlock.input2State(data));
             }
             if (hasChildBlocks) {
-                content = mapCmsBlockNodesData(content, (blockType, data) => childBlocksByName[blockType]?.input2State(data) ?? data);
+                content = mapCmsBlockNodesData(content, (blockType, data) => childBlocksByKey[blockType]?.input2State(data) ?? data);
             }
             return { tipTapContent: content };
         },
@@ -452,7 +456,7 @@ export const createTipTapRichTextBlock = (
                 content = mapLinkMarksData(content, (data) => linkBlock.state2Output(data));
             }
             if (hasChildBlocks) {
-                content = mapCmsBlockNodesData(content, (blockType, data) => childBlocksByName[blockType]?.state2Output(data) ?? data);
+                content = mapCmsBlockNodesData(content, (blockType, data) => childBlocksByKey[blockType]?.state2Output(data) ?? data);
             }
             return { tipTapContent: content };
         },
@@ -464,7 +468,7 @@ export const createTipTapRichTextBlock = (
             }
             if (hasChildBlocks) {
                 content = await mapCmsBlockNodesDataAsync(content, async (blockType, data) =>
-                    childBlocksByName[blockType] ? childBlocksByName[blockType].output2State(data, context) : data,
+                    childBlocksByKey[blockType] ? childBlocksByKey[blockType].output2State(data, context) : data,
                 );
             }
             return { tipTapContent: content };
@@ -478,7 +482,7 @@ export const createTipTapRichTextBlock = (
             if (hasChildBlocks) {
                 content = mapCmsBlockNodesData(
                     content,
-                    (blockType, data) => childBlocksByName[blockType]?.createPreviewState(data, previewCtx) ?? data,
+                    (blockType, data) => childBlocksByKey[blockType]?.createPreviewState(data, previewCtx) ?? data,
                 );
             }
             return {
@@ -518,7 +522,7 @@ export const createTipTapRichTextBlock = (
             }
             if (hasChildBlocks) {
                 for (const { blockType, data } of collectCmsBlockNodes(state.tipTapContent)) {
-                    const childBlock = childBlocksByName[blockType];
+                    const childBlock = childBlocksByKey[blockType];
                     if (childBlock?.extractTextContents) {
                         texts.push(...childBlock.extractTextContents(data, options));
                     }

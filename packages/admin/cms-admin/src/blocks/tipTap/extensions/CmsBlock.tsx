@@ -49,7 +49,7 @@ const CmsBlockView = ({ node, updateAttributes, deleteNode, selected }: ReactNod
     const [editDialogOpen, setEditDialogOpen] = useState(false);
 
     const blockType = node.attrs.blockType as string;
-    const block = childBlocks.find((childBlock) => childBlock.name === blockType);
+    const block = childBlocks[blockType];
     const isInline = node.type.isInline;
 
     const dialog = editDialogOpen && block && (

@@ -30,7 +30,7 @@ const headingLevelToVariant: Record<1 | 2 | 3 | 4 | 5 | 6, TypographyVariant> = 
 };
 
 const renderCmsBlock: TipTapNodeHandler = ({ node }) => {
-    if (node.attrs?.blockType === "ProductPrice") {
+    if (node.attrs?.blockType === "productPrice") {
         return <ProductPriceBlock data={node.attrs?.data as ProductPriceBlockData} />;
     }
     return null;

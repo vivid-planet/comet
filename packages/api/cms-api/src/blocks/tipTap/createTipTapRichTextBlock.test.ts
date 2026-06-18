@@ -1191,7 +1191,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
     describe("childBlocks option", () => {
         const block = createTipTapRichTextBlock(
-            { supports: ["bold"], childBlocks: [{ block: ExternalLinkBlock, display: "block" }] },
+            { supports: ["bold"], childBlocks: { externalLink: { block: ExternalLinkBlock, display: "block" } } },
             "TestChildBlocks",
         );
 
@@ -1205,7 +1205,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should accept a valid child block node", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: cmsBlockNode("ExternalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
+                tipTapContent: cmsBlockNode("externalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
@@ -1222,7 +1222,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should reject a child block node with invalid data", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: cmsBlockNode("ExternalLink", { targetUrl: "not-a-url", openInNewWindow: false, noFollow: false }),
+                tipTapContent: cmsBlockNode("externalLink", { targetUrl: "not-a-url", openInNewWindow: false, noFollow: false }),
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
@@ -1231,7 +1231,7 @@ describe("createTipTapRichTextBlock validation", () => {
         it("should reject a child block node when no childBlocks are configured", async () => {
             const blockWithoutChildBlocks = createTipTapRichTextBlock({ supports: ["bold"] }, "TestNoChildBlocks");
             const input = blockWithoutChildBlocks.blockInputFactory({
-                tipTapContent: cmsBlockNode("ExternalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
+                tipTapContent: cmsBlockNode("externalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
@@ -1239,7 +1239,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should return childBlocksInfo for child block nodes", () => {
             const blockData = block.blockDataFactory({
-                tipTapContent: cmsBlockNode("ExternalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
+                tipTapContent: cmsBlockNode("externalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
             });
 
             const childBlocks = blockData.childBlocksInfo();
@@ -1252,7 +1252,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
     describe("inline childBlocks option", () => {
         const block = createTipTapRichTextBlock(
-            { supports: ["bold"], childBlocks: [{ block: ExternalLinkBlock, display: "inline" }] },
+            { supports: ["bold"], childBlocks: { externalLink: { block: ExternalLinkBlock, display: "inline" } } },
             "TestInlineChildBlocks",
         );
 
@@ -1271,7 +1271,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should accept a valid inline child block node", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: inlineCmsBlockNode("ExternalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
+                tipTapContent: inlineCmsBlockNode("externalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(0);
@@ -1279,7 +1279,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should reject an inline child block node with invalid data", async () => {
             const input = block.blockInputFactory({
-                tipTapContent: inlineCmsBlockNode("ExternalLink", { targetUrl: "not-a-url", openInNewWindow: false, noFollow: false }),
+                tipTapContent: inlineCmsBlockNode("externalLink", { targetUrl: "not-a-url", openInNewWindow: false, noFollow: false }),
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
@@ -1298,7 +1298,7 @@ describe("createTipTapRichTextBlock validation", () => {
 
         it("should return childBlocksInfo for inline child block nodes", () => {
             const blockData = block.blockDataFactory({
-                tipTapContent: inlineCmsBlockNode("ExternalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
+                tipTapContent: inlineCmsBlockNode("externalLink", { targetUrl: "https://example.com", openInNewWindow: false, noFollow: false }),
             });
 
             const childBlocks = blockData.childBlocksInfo();

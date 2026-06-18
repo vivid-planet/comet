@@ -122,14 +122,16 @@ export interface CreateTipTapRichTextBlockOptions {
     indexSearchText?: boolean;
     link?: Block;
     /**
-     * Child blocks that can be inserted into the editor (e.g. via the toolbar's "+" menu).
+     * Child blocks that can be inserted into the editor (e.g. via the toolbar's "+" menu), keyed by
+     * a stable key. The key (not the block's name) is stored in the content, so blocks can be
+     * renamed or swapped without invalidating existing content.
      * Each block is stored as an atomic node with its data kept in the node's `data` attribute:
      * `cmsBlock` for block-level display, `cmsInlineBlock` for inline display.
      *
      * Pass `{ block, display }` for each child block, where `display` is `"block"` (standalone
      * block element) or `"inline"` (inline within the surrounding text).
      */
-    childBlocks?: TipTapChildBlock[];
+    childBlocks?: Record<string, TipTapChildBlock>;
     /**
      * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be stored. Content exceeding this limit will be rejected during validation.
@@ -539,7 +541,7 @@ export function createTipTapRichTextBlock(
         placeholders = [],
         indexSearchText = true,
         link: LinkBlock,
-        childBlocks: childBlocksArray = [],
+        childBlocks: childBlocksConfig = {},
         maxTextBlocks,
         listLevelMax,
         migrateFromDraftJs = false,
@@ -550,10 +552,11 @@ export function createTipTapRichTextBlock(
     const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const childBlocks: Record<string, Block> = Object.fromEntries(childBlocksArray.map(({ block }) => [block.name, block]));
-    const hasChildBlocks = childBlocksArray.length > 0;
-    const hasBlockChildBlocks = childBlocksArray.some(({ display }) => display === "block");
-    const hasInlineChildBlocks = childBlocksArray.some(({ display }) => display === "inline");
+    const childBlocks: Record<string, Block> = Object.fromEntries(Object.entries(childBlocksConfig).map(([key, { block }]) => [key, block]));
+    const childBlockConfigs = Object.values(childBlocksConfig);
+    const hasChildBlocks = childBlockConfigs.length > 0;
+    const hasBlockChildBlocks = childBlockConfigs.some(({ display }) => display === "block");
+    const hasInlineChildBlocks = childBlockConfigs.some(({ display }) => display === "inline");
     const extensions = buildExtensions(supports, textBlockStyles, inlineStyles, placeholders, hasLink, hasBlockChildBlocks, hasInlineChildBlocks);
     const schema = getSchema(extensions);
 

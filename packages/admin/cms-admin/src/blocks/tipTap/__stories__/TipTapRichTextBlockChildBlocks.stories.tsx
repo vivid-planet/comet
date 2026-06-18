@@ -45,10 +45,10 @@ const ExampleInlineChildBlock: BlockInterface<ExampleChildBlockState, ExampleChi
 };
 
 const ChildBlocksBlock = createTipTapRichTextBlock({
-    childBlocks: [
-        { block: ExampleChildBlock, display: "block" },
-        { block: ExampleInlineChildBlock, display: "inline" },
-    ],
+    childBlocks: {
+        exampleChild: { block: ExampleChildBlock, display: "block" },
+        exampleInlineChild: { block: ExampleInlineChildBlock, display: "inline" },
+    },
 });
 
 function ChildBlocksStory() {

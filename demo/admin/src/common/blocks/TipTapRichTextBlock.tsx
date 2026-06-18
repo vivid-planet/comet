@@ -7,7 +7,7 @@ import { LinkBlock } from "./LinkBlock";
 
 export const TipTapRichTextBlock = createTipTapRichTextBlock({
     link: LinkBlock,
-    childBlocks: [{ block: ProductPriceBlock, display: "inline" }],
+    childBlocks: { productPrice: { block: ProductPriceBlock, display: "inline" } },
     textBlockStyles: [
         {
             name: "paragraph300",

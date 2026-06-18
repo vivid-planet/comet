@@ -171,14 +171,14 @@ export const TipTapToolbar = ({
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
-    childBlocks: TipTapChildBlock[];
+    childBlocks: Record<string, TipTapChildBlock>;
     listLevelMax?: number;
 }) => {
     const intl = useIntl();
     const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     const [placeholderAnchorEl, setPlaceholderAnchorEl] = useState<null | HTMLElement>(null);
     const [childBlockAnchorEl, setChildBlockAnchorEl] = useState<null | HTMLElement>(null);
-    const [insertChildBlock, setInsertChildBlock] = useState<TipTapChildBlock | null>(null);
+    const [insertChildBlock, setInsertChildBlock] = useState<({ key: string } & TipTapChildBlock) | null>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
     const hasInlineFormatButtons = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
@@ -187,7 +187,7 @@ export const TipTapToolbar = ({
     const hasLink = supports.includes("link") && !!linkBlock;
     const hasPlaceholders = placeholders.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
-    const hasChildBlocks = childBlocks.length > 0;
+    const hasChildBlocks = Object.keys(childBlocks).length > 0;
 
     const editorState = useEditorState({
         editor,
@@ -641,12 +641,12 @@ export const TipTapToolbar = ({
                         </Box>
                     </Tooltip>
                     <Menu open={Boolean(childBlockAnchorEl)} anchorEl={childBlockAnchorEl} onClose={handleChildBlockClose}>
-                        {childBlocks.map((childBlock) => (
+                        {Object.entries(childBlocks).map(([key, childBlock]) => (
                             <MenuItem
-                                key={childBlock.block.name}
+                                key={key}
                                 onClick={() => {
                                     handleChildBlockClose();
-                                    setInsertChildBlock(childBlock);
+                                    setInsertChildBlock({ key, ...childBlock });
                                 }}
                             >
                                 {childBlock.block.displayName}
@@ -662,7 +662,7 @@ export const TipTapToolbar = ({
                     initialState={insertChildBlock.block.defaultValues() as BlockState<typeof insertChildBlock.block>}
                     isEditing={false}
                     onSubmit={(data) => {
-                        const attrs = { blockType: insertChildBlock.block.name, data };
+                        const attrs = { blockType: insertChildBlock.key, data };
                         if (insertChildBlock.display === "inline") {
                             editor.commands.insertCmsInlineBlock(attrs);
                         } else {
