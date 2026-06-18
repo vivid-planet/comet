@@ -754,6 +754,12 @@ DateTimePicker:
 
 ### Import legacy table components from `@comet/admin-legacy`
 
+:::note
+
+This section only applies if your project still uses the deprecated Comet table components. If you have already migrated to the MUI X Data Grid, you can skip it.
+
+:::
+
 The deprecated Comet table components have been moved out of `@comet/admin` into a new `@comet/admin-legacy` package. This includes `Table`, `TableQuery`, `TableQueryContext`, `useTableQuery`, `useTableQuerySort`, `useTableQueryFilter`, `useTableQueryPaging`, the `FilterBar` components, the Excel export helpers (`ExcelExportButton`, `createExcelExportDownload`, `useExport*`), the paging action creators (`create*PagingActions`), `TableAddButton`, `TableDeleteButton`, `TableBodyRow`, `TableDndOrder`, `TableFilterFinalForm`, `TableLocalChanges`, `TablePagination`, `usePersistedState`, `usePersistedStateId`, `withTableQueryContext` and their related types.
 
 Add the `@comet/admin-legacy` dependency to `admin/package.json`:
