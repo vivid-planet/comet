@@ -11,6 +11,6 @@ Child blocks can now be embedded into the TipTap rich text editor, similar to th
 
 ```tsx
 createTipTapRichTextBlock({
-    childBlocks: [ProductPriceBlock],
+    childBlocks: { productPrice: { block: ProductPriceBlock, display: "inline" } },
 });
 ```
