@@ -45,9 +45,9 @@ export class ContentScopeService {
         if (affectedScope) {
             const scope = affectedScope.argsToScope(args);
             if (Array.isArray(scope)) {
-                contentScopes.push(...scope.map((s) => [s as ContentScope]));
+                contentScopes.push(...scope.map((s) => [s]));
             } else {
-                contentScopes.push([scope as ContentScope]);
+                contentScopes.push([scope]);
             }
         }
 
