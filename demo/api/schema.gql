@@ -1366,11 +1366,6 @@ type PaginatedRedirects {
   totalCount: Int!
 }
 
-type PaginatedSiteFullTextSearchResult {
-  nodes: [SiteFullTextSearchResult!]!
-  totalCount: Int!
-}
-
 type PaginatedTargetGroups {
   nodes: [BrevoTargetGroup!]!
   totalCount: Int!
@@ -2026,7 +2021,7 @@ type Query {
   redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceType!): Redirect
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   redirects(active: Boolean, query: String, scope: RedirectScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC, type: RedirectGenerationType): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
-  siteFullTextSearch(limit: Int! = 25, offset: Int! = 0, scope: JSONObject, search: String!): PaginatedSiteFullTextSearchResult!
+  siteFullTextSearch(limit: Int! = 25, offset: Int! = 0, scope: JSONObject, search: String!): PaginatedEntityInfo!
   sitePreviewJwt(includeInvisible: Boolean!, path: String!, scope: JSONObject!): String!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
@@ -2153,13 +2148,6 @@ scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publica
 
 """Seo root block input"""
 scalar SeoBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type SiteFullTextSearchResult {
-  entityName: String!
-  id: String!
-  name: String!
-  secondaryInformation: String
-}
 
 enum SlugAvailability {
   Available
