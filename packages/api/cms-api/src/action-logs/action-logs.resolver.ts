@@ -1,7 +1,7 @@
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { UserPermissionsService } from "../user-permissions/user-permissions.service";
-import { ActionLogAction } from "./dto/action-log-action.enum";
+import { ActionLogType } from "./dto/action-log-type.enum";
 import { ActionLogsUser } from "./dto/action-logs-user";
 import { ActionLog } from "./entities/action-log.entity";
 
@@ -9,17 +9,17 @@ import { ActionLog } from "./entities/action-log.entity";
 export class ActionLogsResolver {
     constructor(private readonly userPermissionsService: UserPermissionsService) {}
 
-    @ResolveField(() => ActionLogAction, {
+    @ResolveField(() => ActionLogType, {
         description: "Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.",
     })
-    action(@Parent() actionLog: ActionLog): ActionLogAction {
+    type(@Parent() actionLog: ActionLog): ActionLogType {
         if (actionLog.snapshot == null) {
-            return ActionLogAction.Deleted;
+            return ActionLogType.Deleted;
         }
         if (actionLog.version === 1) {
-            return ActionLogAction.Created;
+            return ActionLogType.Created;
         }
-        return ActionLogAction.Updated;
+        return ActionLogType.Updated;
     }
 
     @ResolveField(() => ActionLogsUser)

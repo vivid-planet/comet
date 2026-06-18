@@ -60,11 +60,11 @@ type ActionLog {
   """
   Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.
   """
-  action: ActionLogAction!
+  type: ActionLogType!
   user: ActionLogsUser!
 }
 
-enum ActionLogAction {
+enum ActionLogType {
   Created
   Updated
   Deleted

@@ -1,11 +1,11 @@
 import { registerEnumType } from "@nestjs/graphql";
 
-export enum ActionLogAction {
+export enum ActionLogType {
     Created = "Created",
     Updated = "Updated",
     Deleted = "Deleted",
 }
 
-registerEnumType(ActionLogAction, {
-    name: "ActionLogAction",
+registerEnumType(ActionLogType, {
+    name: "ActionLogType",
 });

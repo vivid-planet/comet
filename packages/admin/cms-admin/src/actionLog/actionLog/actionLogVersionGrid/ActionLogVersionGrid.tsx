@@ -47,11 +47,11 @@ export const ActionLogVersionGrid: FunctionComponent<ActionLogVersionGridProps> 
                 headerName: intl.formatMessage({ defaultMessage: "Version", id: "actionLog.actionLogVersionGrid.columns.version" }),
             },
             {
-                field: "action",
-                headerName: intl.formatMessage({ defaultMessage: "Action", id: "actionLog.actionLogVersionGrid.columns.action" }),
+                field: "type",
+                headerName: intl.formatMessage({ defaultMessage: "Action", id: "actionLog.actionLogVersionGrid.columns.type" }),
                 sortable: false,
                 width: 130,
-                renderCell: ({ row }) => <ActionChip actionValue={row.action} label={row.action} />,
+                renderCell: ({ row }) => <ActionChip actionValue={row.type} label={row.type} />,
             },
             {
                 field: "createdAt",

@@ -9,7 +9,7 @@ export const actionLogVersionGridFragment = gql`
         }
         entityName
         version
-        action
+        type
         createdAt
     }
 `;

@@ -13,7 +13,7 @@ const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragme
             user: { id: "system-user", name: "system-user" },
             entityName: "TestEntity",
             version: 4,
-            action: "Updated",
+            type: "Updated",
             createdAt: "2023-10-04T12:00:00Z",
         },
         {
@@ -21,7 +21,7 @@ const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragme
             user: { id: "1", name: "Max Mustermann" },
             entityName: "TestEntity",
             version: 3,
-            action: "Updated",
+            type: "Updated",
             createdAt: "2023-10-03T12:00:00Z",
         },
         {
@@ -29,7 +29,7 @@ const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragme
             user: { id: "2", name: "Jane Doe" },
             entityName: "TestEntity",
             version: 2,
-            action: "Updated",
+            type: "Updated",
             createdAt: "2023-10-02T12:00:00Z",
         },
         {
@@ -37,7 +37,7 @@ const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragme
             user: { id: "deleted-user-id", name: null },
             entityName: "TestEntity",
             version: 1,
-            action: "Created",
+            type: "Created",
             createdAt: "2023-10-01T12:00:00Z",
         },
     ],
