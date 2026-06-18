@@ -9,6 +9,7 @@ import { ContentScopeProvider, type ContentScopeValues, useContentScope } from "
 const config: Meta<typeof ContentScopeProvider> = {
     component: ContentScopeProvider,
     title: "contentScope/ContentScopeProvider",
+    parameters: { skipContentScopeProvider: true },
 };
 
 export default config;
