@@ -1,5 +1,14 @@
 # @comet/brevo-api
 
+## 8.24.2
+
+### Patch Changes
+
+- 01b2103: Fix fetching Brevo statistics
+
+    Fetching a Brevo campaign (and therefore its statistics) is broken in `@getbrevo/brevo` v3. Fix by temporarily downgrading to v2.
+    - @comet/cms-api@8.24.2
+
 ## 8.24.1
 
 ### Patch Changes
