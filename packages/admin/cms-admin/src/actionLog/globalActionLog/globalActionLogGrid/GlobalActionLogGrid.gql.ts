@@ -21,8 +21,8 @@ export const globalActionLogGridFragment = gql`
 `;
 
 export const globalActionLogGridQuery = gql`
-    query GlobalActionLogGrid($offset: Int!, $limit: Int!, $sort: [ActionLogSort!], $scopes: [JSONObject!]!) {
-        actionLogs(offset: $offset, limit: $limit, sort: $sort, scopes: $scopes) {
+    query GlobalActionLogGrid($offset: Int!, $limit: Int!, $sort: [ActionLogSort!], $filter: ActionLogFilter, $scopes: [JSONObject!]!) {
+        actionLogs(offset: $offset, limit: $limit, sort: $sort, filter: $filter, scopes: $scopes) {
             nodes {
                 ...GlobalActionLogGrid
             }
