@@ -16,6 +16,9 @@ import { SubscribeInputFactory } from "./dto/subscribe-input.factory";
 // so they are referenced here by their stable string values.
 const REQUIRED_PERMISSION_METADATA_KEY = "requiredPermission";
 const AFFECTED_ENTITY_METADATA_KEY = "affectedEntities";
+// Set by @nestjs/graphql's @Query/@Mutation on the method, holding the resolver type ("Query" | "Mutation").
+// Used to discover a resolver's GraphQL operations so newly added ones are checked automatically.
+const RESOLVER_TYPE_METADATA_KEY = "graphql:resolver_type";
 
 class Scope {
     domain: string;
@@ -47,6 +50,19 @@ const getRequiredPermission = (target: object): RequiredPermissionMetadata | und
 
 const getPrototypeMember = (resolver: object, member: string): object => (resolver as { prototype: Record<string, object> }).prototype[member];
 
+// Discovers the resolver's GraphQL operations (queries and mutations) so newly added operations are
+// covered by the scope-check assertions automatically, instead of relying on a hand-maintained list.
+const getGraphQLOperations = (resolver: object): string[] => {
+    const prototype = (resolver as { prototype: object }).prototype;
+    return Object.getOwnPropertyNames(prototype).filter((member) => {
+        if (member === "constructor") {
+            return false;
+        }
+        const resolverType = Reflect.getMetadata(RESOLVER_TYPE_METADATA_KEY, getPrototypeMember(resolver, member));
+        return resolverType === "Query" || resolverType === "Mutation";
+    });
+};
+
 // Mirrors Reflector.getAllAndOverride([handler, class]) used by the guard: a method-level
 // decorator overrides the class-level one.
 const getEffectiveRequiredPermission = (resolver: object, operation: string): RequiredPermissionMetadata | undefined =>
@@ -57,22 +73,21 @@ const expectScopeCheckEnforced = (permission: RequiredPermissionMetadata | undef
     expect(permission?.options?.skipScopeCheck ?? false).toBe(false);
 };
 
-const contactOperations = [
-    "brevoContact",
-    "brevoContacts",
-    "brevoTestContacts",
-    "manuallyAssignedBrevoContacts",
-    "updateBrevoContact",
-    "createBrevoContact",
-    "createBrevoTestContact",
-    "deleteBrevoContact",
-    "deleteBrevoTestContact",
-    "subscribeBrevoContact",
-];
+// Operations that are intentionally exposed without a content-scope check. Adding an entry here is a
+// deliberate security decision: the operation must be safe to call across all scopes.
+const operationsExemptFromScopeCheck: string[] = [];
+
+const contactOperations = getGraphQLOperations(BrevoContactResolver).filter((operation) => !operationsExemptFromScopeCheck.includes(operation));
 
 describe("BrevoContactResolver authorization", () => {
     it("requires the scope-checked brevoNewsletter permission on the resolver", () => {
         expectScopeCheckEnforced(getRequiredPermission(BrevoContactResolver));
+    });
+
+    it("discovers the resolver's GraphQL operations", () => {
+        // Guards against the metadata key drifting and silently turning the per-operation checks
+        // below into a no-op (it.each([]) passes vacuously).
+        expect(contactOperations.length).toBeGreaterThan(0);
     });
 
     it.each(contactOperations)("enforces the content scope on %s", (operation) => {
@@ -93,7 +108,13 @@ describe("BrevoContactResolver authorization", () => {
 });
 
 describe("BrevoContactImportResolver authorization", () => {
-    it("enforces the content scope on startBrevoContactImport", () => {
-        expectScopeCheckEnforced(getEffectiveRequiredPermission(BrevoContactImportResolver, "startBrevoContactImport"));
+    const importOperations = getGraphQLOperations(BrevoContactImportResolver);
+
+    it("discovers the resolver's GraphQL operations", () => {
+        expect(importOperations.length).toBeGreaterThan(0);
+    });
+
+    it.each(importOperations)("enforces the content scope on %s", (operation) => {
+        expectScopeCheckEnforced(getEffectiveRequiredPermission(BrevoContactImportResolver, operation));
     });
 });
