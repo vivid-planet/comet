@@ -9,12 +9,16 @@ export const actionLogRowFragment = gql`
         entityName
         entityId
         version
+        action
         createdAt
         scope
         snapshot
         user {
             id
             name
+        }
+        previousVersion {
+            snapshot
         }
         ...ActionLogCompare
     }
