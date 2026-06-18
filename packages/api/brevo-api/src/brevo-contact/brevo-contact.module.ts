@@ -51,6 +51,7 @@ export class BrevoContactModule {
             BrevoContactInput,
             BrevoContactUpdateInput,
             BrevoTestContactInput,
+            BrevoTargetGroup,
         });
 
         const BrevoContactImportResolver = createBrevoContactImportResolver({ Scope, BrevoContact });

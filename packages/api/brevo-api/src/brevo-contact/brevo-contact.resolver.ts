@@ -30,6 +30,7 @@ export function createBrevoContactResolver({
     BrevoContactInput,
     BrevoContactUpdateInput,
     BrevoTestContactInput,
+    BrevoTargetGroup,
 }: {
     BrevoContact: Type<BrevoContactInterface>;
     BrevoContactSubscribeInput: Type<SubscribeInputInterface>;
@@ -37,6 +38,7 @@ export function createBrevoContactResolver({
     BrevoContactUpdateInput: Type<Partial<BrevoContactInputInterface>>;
     BrevoTestContactInput: Type<BrevoTestContactInputInterface>;
     Scope: Type<EmailCampaignScopeInterface>;
+    BrevoTargetGroup: Type<TargetGroupInterface>;
 }): Type<unknown> {
     @ObjectType()
     class PaginatedBrevoContacts extends PaginatedResponseFactory.create(BrevoContact) {}
@@ -45,7 +47,7 @@ export function createBrevoContactResolver({
     class BrevoContactsArgs extends BrevoContactsArgsFactory.create({ Scope }) {}
 
     @Resolver(() => BrevoContact)
-    @RequiredPermission(["brevoNewsletter"], { skipScopeCheck: true })
+    @RequiredPermission(["brevoNewsletter"])
     class BrevoContactResolver {
         constructor(
             @Inject(BREVO_MODULE_CONFIG) private readonly config: BrevoModuleConfig,
@@ -58,7 +60,6 @@ export function createBrevoContactResolver({
         ) {}
 
         @Query(() => BrevoContact)
-        @AffectedEntity(BrevoContact)
         async brevoContact(
             @Args("id", { type: () => Int }) id: number,
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: typeof Scope,
@@ -128,6 +129,7 @@ export function createBrevoContactResolver({
         }
 
         @Query(() => PaginatedBrevoContacts)
+        @AffectedEntity(BrevoTargetGroup, { idArg: "targetGroupId" })
         async manuallyAssignedBrevoContacts(
             @Args() { offset, limit, email, targetGroupId }: ManuallyAssignedBrevoContactsArgs,
         ): Promise<PaginatedBrevoContacts> {
@@ -155,7 +157,6 @@ export function createBrevoContactResolver({
         }
 
         @Mutation(() => BrevoContact)
-        @AffectedEntity(BrevoContact)
         async updateBrevoContact(
             @Args("id", { type: () => Int }) id: number,
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: typeof Scope,
@@ -204,7 +205,6 @@ export function createBrevoContactResolver({
         }
 
         @Mutation(() => SubscribeResponse)
-        @RequiredPermission(["brevoNewsletter"], { skipScopeCheck: true })
         async createBrevoContact(
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: typeof Scope,
             @Args("input", { type: () => BrevoContactInput })
@@ -230,7 +230,6 @@ export function createBrevoContactResolver({
         }
 
         @Mutation(() => SubscribeResponse)
-        @RequiredPermission(["brevoNewsletter"], { skipScopeCheck: true })
         async createBrevoTestContact(
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: typeof Scope,
             @Args("input", { type: () => BrevoTestContactInput })
@@ -275,7 +274,6 @@ export function createBrevoContactResolver({
         }
 
         @Mutation(() => Boolean)
-        @AffectedEntity(BrevoContact)
         async deleteBrevoContact(
             @Args("id", { type: () => Int }) id: number,
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: typeof Scope,
@@ -309,7 +307,6 @@ export function createBrevoContactResolver({
         }
 
         @Mutation(() => Boolean)
-        @AffectedEntity(BrevoContact)
         async deleteBrevoTestContact(
             @Args("id", { type: () => Int }) id: number,
             @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: typeof Scope,
