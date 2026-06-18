@@ -19,11 +19,12 @@ import {
     DialogTitle,
     Typography,
 } from "@mui/material";
-import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import type { GridToolbarProps } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { DataGrid } from "../../../dataGrid/DataGrid";
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import type { GQLContentScopesQuery, GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
 import { SelectScopesDialogContent } from "./selectScopesDialogContent/SelectScopesDialogContent";

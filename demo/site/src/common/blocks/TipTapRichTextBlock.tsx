@@ -30,7 +30,7 @@ const headingLevelToVariant: Record<1 | 2 | 3 | 4 | 5 | 6, TypographyVariant> = 
 
 const nodeMapping: Record<string, TipTapNodeHandler> = {
     paragraph: ({ node, children }) => (
-        <Typography variant={(node.attrs?.blockStyle as TypographyVariant | null) ?? undefined} bottomSpacing className={styles.text}>
+        <Typography variant={(node.attrs?.textBlockStyle as TypographyVariant | null) ?? undefined} bottomSpacing className={styles.text}>
             {children}
         </Typography>
     ),
@@ -44,9 +44,9 @@ const nodeMapping: Record<string, TipTapNodeHandler> = {
     },
     listItem: ({ node, children }) => {
         const firstParagraph = node.content?.find((child) => child.type === "paragraph");
-        const blockStyle = (firstParagraph?.attrs?.blockStyle as TypographyVariant | null) ?? undefined;
+        const textBlockStyle = (firstParagraph?.attrs?.textBlockStyle as TypographyVariant | null) ?? undefined;
         return (
-            <Typography as="li" variant={blockStyle} className={styles.text}>
+            <Typography as="li" variant={textBlockStyle} className={styles.text}>
                 {children}
             </Typography>
         );

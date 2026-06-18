@@ -12,6 +12,11 @@ export interface PageTreeConfig {
         fragment: DocumentNode;
     };
     scopeParts?: string[];
+    /**
+     * Controls whether delete actions are shown in the page tree UI.
+     * Defaults to `true` when not set.
+     */
+    allowPageDelete?: boolean;
 }
 
 export function usePageTreeConfig(): PageTreeConfig {

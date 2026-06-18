@@ -420,6 +420,67 @@ To set a custom link color that persists across all viewports, use `!important` 
 
 **CSS class name:** `.htmlInlineLink`.
 
+## Image
+
+`MjmlImage` and `HtmlImage` are responsive — the image scales down to fit narrow viewports.
+
+**CSS class names:** `.mjmlImage`, `.htmlImage`.
+
+## Divider
+
+`MjmlDivider` and `HtmlDivider` render a themed horizontal line. Set `height`, `backgroundColor`, and `backgroundImage` directly as props, or define named `variant`s under `theme.divider` with an optional `defaultVariant`.
+
+```tsx
+const theme = createTheme({
+    divider: {
+        defaultVariant: "thin",
+        variants: {
+            thin: { height: 1, backgroundColor: "#999999" },
+            thick: { height: { default: 12, mobile: 8 }, backgroundColor: "#222222" },
+        },
+    },
+});
+
+<MjmlDivider variant="thick" />;
+```
+
+A `backgroundImage` (typically a gradient) renders on top of `backgroundColor`. Clients that ignore `background-image` fall back to the solid color, so set both when using a gradient.
+
+**CSS class names:** `.mjmlDivider`, `.htmlDivider`, and `.mjmlDivider--{variant}` / `.htmlDivider--{variant}`.
+
+## Button
+
+`MjmlButton` and `HtmlButton` render a themed button. Use `MjmlButton` inside an `MjmlColumn`; use `HtmlButton` inside an [ending tag](./1-email-basics.md#ending-tags) or outside the MJML context. Both default `href` to `#` and `target` to `_blank`. Style them through `theme.button` — base styles plus named `variant`s with an optional `defaultVariant`.
+
+```ts title="theme.ts"
+const theme = createTheme({
+    button: {
+        defaultVariant: "primary",
+        variants: {
+            primary: { backgroundColor: "#5B4FC7", color: "#FFFFFF" },
+            gradient: {
+                backgroundColor: "#5B4FC7",
+                backgroundImage: "linear-gradient(90deg, #5B4FC7, #9C5BC7)",
+            },
+        },
+    },
+});
+```
+
+```tsx
+<MjmlButton variant="gradient" href="https://example.com">
+    Click me
+</MjmlButton>
+```
+
+The `variant` prop requires a `ThemeProvider` or `MjmlMailRoot` ancestor. Set `fullWidth` to make the button span its container.
+
+`theme.button.padding` is the inner spacing around the label. On `MjmlButton`, the separate `padding` prop is the outer spacing between the button and the surrounding content.
+
+A `backgroundImage` (typically a gradient) renders on top of `backgroundColor`. Clients that ignore `background-image`, such as Outlook, fall back to the solid color, so set both when using a gradient. Outlook ignores `border-radius` as well, so a rounded button renders with square corners there (see [Email Basics](./1-email-basics.md)).
+
+**CSS class names:** `.mjmlButton`, `.htmlButton`, `.mjmlButton--{variant}` / `.htmlButton--{variant}`, and `.mjmlButton--fullWidth` / `.htmlButton--fullWidth`.
+
 ## Scoped Theming
 
 `ThemeProvider` makes a theme available to its children via React context. `MjmlMailRoot` uses it internally, so you don't need it for the top-level theme. Its main use case is **scoped theming** — applying a different theme to a subsection of the email.

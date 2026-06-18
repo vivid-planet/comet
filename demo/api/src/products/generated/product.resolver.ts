@@ -14,7 +14,6 @@ import {
     DamImageBlock,
     FileUpload,
     GetCurrentUser,
-    RequiredPermission,
     RootBlockDataScalar,
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
@@ -37,7 +36,6 @@ class CreateProductPayload {
     errors: ProductMutationError[];
 }
 @Resolver(() => Product)
-@RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
     constructor(
         protected readonly entityManager: EntityManager,

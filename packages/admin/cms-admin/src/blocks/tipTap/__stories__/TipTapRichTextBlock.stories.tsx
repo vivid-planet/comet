@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, chipClasses, Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type HTMLAttributes, type ReactNode, useState } from "react";
 import { expect, waitFor, within } from "storybook/test";
@@ -105,8 +105,8 @@ export const BoldOnly: StoryObj<typeof BoldOnlyStory> = {
     },
 };
 
-const BlockStylesBlock = createTipTapRichTextBlock({
-    blockStyles: [
+const TextBlockStylesBlock = createTipTapRichTextBlock({
+    textBlockStyles: [
         {
             name: "large-heading",
             label: "Large Heading",
@@ -127,21 +127,21 @@ const BlockStylesBlock = createTipTapRichTextBlock({
     ],
 });
 
-function BlockStylesStory() {
-    const [state, setState] = useState<TipTapRichTextBlockState>(BlockStylesBlock.defaultValues());
+function TextBlockStylesStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(TextBlockStylesBlock.defaultValues());
 
     return (
         <StoryWrapper state={state}>
-            <BlockStylesBlock.AdminComponent state={state} updateState={setState} />
+            <TextBlockStylesBlock.AdminComponent state={state} updateState={setState} />
         </StoryWrapper>
     );
 }
 
-export const BlockStyles: StoryObj<typeof BlockStylesStory> = {
-    render: () => <BlockStylesStory />,
+export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
+    render: () => <TextBlockStylesStory />,
     play: async ({ canvas, userEvent, step }) => {
-        await step("Editor is ready with block style dropdown", async () => {
-            // Both heading select and block style select show "Default"
+        await step("Editor is ready with text block style dropdown", async () => {
+            // Both heading select and text block style select show "Default"
             await waitFor(
                 () => {
                     const comboboxes = canvas.getAllByRole("combobox");
@@ -154,8 +154,8 @@ export const BlockStyles: StoryObj<typeof BlockStylesStory> = {
             expect(defaults.length).toBeGreaterThanOrEqual(2);
         });
 
-        await step("Select block style 'Intro Text'", async () => {
-            // Click the second combobox (block style select)
+        await step("Select text block style 'Intro Text'", async () => {
+            // Click the second combobox (text block style select)
             const comboboxes = canvas.getAllByRole("combobox");
             await userEvent.click(comboboxes[1]);
 
@@ -191,8 +191,155 @@ export const BlockStyles: StoryObj<typeof BlockStylesStory> = {
     },
 };
 
-const BlockStyleInteractionsBlock = createTipTapRichTextBlock({
-    blockStyles: [
+const PlaceholdersBlock = createTipTapRichTextBlock({
+    placeholders: [
+        { name: "firstName", label: "First Name" },
+        { name: "lastName", label: "Last Name" },
+        { name: "email", label: "Email Address" },
+        { name: "company", label: "Company" },
+    ],
+});
+
+function PlaceholdersStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(PlaceholdersBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <PlaceholdersBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const Placeholders: StoryObj<typeof PlaceholdersStory> = {
+    render: () => <PlaceholdersStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Editor is ready with placeholder button", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+
+            // The placeholder button is identified by its accessible name, not by index among all toolbar buttons
+            expect(canvas.getByRole("button", { name: "Insert placeholder" })).toBeInTheDocument();
+        });
+
+        await step("Open the placeholder menu and insert 'First Name'", async () => {
+            await userEvent.click(canvas.getByRole("button", { name: "Insert placeholder" }));
+
+            // The menu is rendered in a portal, so it lives in document.body rather than within the canvas
+            await waitFor(
+                () => {
+                    expect(within(document.body).getByRole("menuitem", { name: "First Name" })).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+
+            await userEvent.click(within(document.body).getByRole("menuitem", { name: "First Name" }));
+        });
+
+        await step("Inserted placeholder is rendered as a chip in the editor", async () => {
+            const editor = canvas.getByRole("textbox");
+            // Placeholders render as chips labelled `{{name}}`
+            await waitFor(
+                () => {
+                    expect(within(editor).getByText("{{firstName}}")).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+
+        await step("Block state contains the placeholder node", async () => {
+            await waitFor(
+                () => {
+                    const state = JSON.parse(canvas.getByText(/"tipTapContent"/).textContent ?? "{}");
+                    const [paragraph] = state.tipTapContent.content;
+                    expect(paragraph.content).toContainEqual({ type: "placeholder", attrs: { name: "firstName" } });
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};
+
+const PlaceholdersWithContentBlock = createTipTapRichTextBlock({
+    supports: ["bold", "italic"],
+    placeholders: [
+        { name: "firstName", label: "First Name" },
+        { name: "lastName", label: "Last Name" },
+        { name: "email", label: "Email Address" },
+    ],
+});
+
+function PlaceholdersWithContentStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>({
+        tipTapContent: {
+            type: "doc",
+            content: [
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "Hello " },
+                        { type: "placeholder", attrs: { name: "firstName" } },
+                        { type: "text", text: " " },
+                        { type: "placeholder", attrs: { name: "lastName" } },
+                        { type: "text", text: ", welcome to our platform!" },
+                    ],
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "Your registered email is: " },
+                        { type: "placeholder", attrs: { name: "email" } },
+                    ],
+                },
+            ],
+        },
+    });
+
+    return (
+        <StoryWrapper state={state}>
+            <PlaceholdersWithContentBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const PlaceholdersWithContent: StoryObj<typeof PlaceholdersWithContentStory> = {
+    render: () => <PlaceholdersWithContentStory />,
+    play: async ({ canvas, step }) => {
+        await step("Editor is ready", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("textbox")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Pre-filled placeholders are rendered as chips", async () => {
+            const editor = canvas.getByRole("textbox");
+
+            await waitFor(
+                () => {
+                    // Each placeholder is rendered as a chip labelled `{{name}}` (not as plain text)
+                    for (const name of ["firstName", "lastName", "email"]) {
+                        const chipLabel = within(editor).getByText(`{{${name}}}`);
+                        expect(chipLabel.closest(`.${chipClasses.root}`)).toBeInTheDocument();
+                    }
+                },
+                { timeout: 3000 },
+            );
+
+            // Text surrounding the chips is preserved
+            expect(editor).toHaveTextContent("Hello {{firstName}} {{lastName}}, welcome to our platform!");
+            expect(editor).toHaveTextContent("Your registered email is: {{email}}");
+        });
+    },
+};
+
+const TextBlockStyleInteractionsBlock = createTipTapRichTextBlock({
+    textBlockStyles: [
         {
             name: "chapter-heading",
             label: "Chapter Heading",
@@ -219,18 +366,18 @@ const BlockStyleInteractionsBlock = createTipTapRichTextBlock({
     ],
 });
 
-function BlockStyleInteractionsStory() {
-    const [state, setState] = useState<TipTapRichTextBlockState>(BlockStyleInteractionsBlock.defaultValues());
+function TextBlockStyleInteractionsStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(TextBlockStyleInteractionsBlock.defaultValues());
 
     return (
         <StoryWrapper state={state}>
-            <BlockStyleInteractionsBlock.AdminComponent state={state} updateState={setState} />
+            <TextBlockStyleInteractionsBlock.AdminComponent state={state} updateState={setState} />
         </StoryWrapper>
     );
 }
 
-export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory> = {
-    render: () => <BlockStyleInteractionsStory />,
+export const TextBlockStyleInteractions: StoryObj<typeof TextBlockStyleInteractionsStory> = {
+    render: () => <TextBlockStyleInteractionsStory />,
     play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready", async () => {
             await waitFor(
@@ -242,8 +389,8 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         });
 
         await step("Select Heading 1", async () => {
-            const blockTypeSelect = canvas.getAllByRole("combobox")[0];
-            await userEvent.click(blockTypeSelect);
+            const textBlockTypeSelect = canvas.getAllByRole("combobox")[0];
+            await userEvent.click(textBlockTypeSelect);
 
             await waitFor(
                 () => {
@@ -262,8 +409,8 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         });
 
         await step("Verify available styles for Heading 1: Chapter Heading, Large Heading, Highlight — but not Intro Text", async () => {
-            const blockStyleSelect = canvas.getAllByRole("combobox")[1];
-            await userEvent.click(blockStyleSelect);
+            const textBlockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(textBlockStyleSelect);
 
             await waitFor(
                 () => {
@@ -291,7 +438,7 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         await step("Verify chapter heading styling is applied (uppercase)", async () => {
             await waitFor(
                 () => {
-                    const styledEl = document.querySelector('[data-block-style="chapter-heading"]');
+                    const styledEl = document.querySelector('[data-text-block-style="chapter-heading"]');
                     expect(styledEl).toBeTruthy();
                     expect(styledEl).toHaveStyle({ textTransform: "uppercase" });
                 },
@@ -300,8 +447,8 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         });
 
         await step("Switch to Heading 2", async () => {
-            const blockTypeSelect = canvas.getAllByRole("combobox")[0];
-            await userEvent.click(blockTypeSelect);
+            const textBlockTypeSelect = canvas.getAllByRole("combobox")[0];
+            await userEvent.click(textBlockTypeSelect);
 
             await waitFor(
                 () => {
@@ -331,7 +478,7 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
         await step("Verify chapter heading styling is removed", async () => {
             await waitFor(
                 () => {
-                    expect(document.querySelector("[data-block-style]")).toBeNull();
+                    expect(document.querySelector("[data-text-block-style]")).toBeNull();
                 },
                 { timeout: 3000 },
             );
@@ -339,9 +486,9 @@ export const BlockStyleInteractions: StoryObj<typeof BlockStyleInteractionsStory
     },
 };
 
-const ListBlockStylesBlock = createTipTapRichTextBlock({
+const ListTextBlockStylesBlock = createTipTapRichTextBlock({
     supports: ["bold", "ordered-list", "unordered-list", "heading"],
-    blockStyles: [
+    textBlockStyles: [
         {
             name: "intro",
             label: "Intro Text",
@@ -374,18 +521,18 @@ const ListBlockStylesBlock = createTipTapRichTextBlock({
     ],
 });
 
-function ListBlockStylesStory() {
-    const [state, setState] = useState<TipTapRichTextBlockState>(ListBlockStylesBlock.defaultValues());
+function ListTextBlockStylesStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(ListTextBlockStylesBlock.defaultValues());
 
     return (
         <StoryWrapper state={state}>
-            <ListBlockStylesBlock.AdminComponent state={state} updateState={setState} />
+            <ListTextBlockStylesBlock.AdminComponent state={state} updateState={setState} />
         </StoryWrapper>
     );
 }
 
-export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
-    render: () => <ListBlockStylesStory />,
+export const ListTextBlockStyles: StoryObj<typeof ListTextBlockStylesStory> = {
+    render: () => <ListTextBlockStylesStory />,
     play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready with two comboboxes", async () => {
             await waitFor(
@@ -397,9 +544,9 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
             );
         });
 
-        await step("Paragraph mode: block style dropdown shows paragraph-applicable styles only", async () => {
-            const blockStyleSelect = canvas.getAllByRole("combobox")[1];
-            await userEvent.click(blockStyleSelect);
+        await step("Paragraph mode: text block style dropdown shows paragraph-applicable styles only", async () => {
+            const textBlockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(textBlockStyleSelect);
 
             await waitFor(
                 () => {
@@ -437,7 +584,7 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
             );
         });
 
-        await step("Unordered list mode: block style dropdown shows UL-applicable styles", async () => {
+        await step("Unordered list mode: text block style dropdown shows UL-applicable styles", async () => {
             await waitFor(
                 () => {
                     expect(canvas.getAllByRole("combobox").length).toBeGreaterThanOrEqual(2);
@@ -445,8 +592,8 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
                 { timeout: 3000 },
             );
 
-            const blockStyleSelect = canvas.getAllByRole("combobox")[1];
-            await userEvent.click(blockStyleSelect);
+            const textBlockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(textBlockStyleSelect);
 
             await waitFor(
                 () => {
@@ -477,9 +624,9 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
             );
         });
 
-        await step("Ordered list mode: block style dropdown includes OL-only style", async () => {
-            const blockStyleSelect = canvas.getAllByRole("combobox")[1];
-            await userEvent.click(blockStyleSelect);
+        await step("Ordered list mode: text block style dropdown includes OL-only style", async () => {
+            const textBlockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(textBlockStyleSelect);
 
             await waitFor(
                 () => {
@@ -497,8 +644,8 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
         });
 
         await step("Select 'List Large' style", async () => {
-            const blockStyleSelect = canvas.getAllByRole("combobox")[1];
-            await userEvent.click(blockStyleSelect);
+            const textBlockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(textBlockStyleSelect);
 
             await waitFor(
                 () => {
@@ -517,10 +664,10 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
             );
         });
 
-        await step("Verify 'list-large' block style attribute is applied in the editor", async () => {
+        await step("Verify 'list-large' text block style attribute is applied in the editor", async () => {
             await waitFor(
                 () => {
-                    const styledEl = document.querySelector('[data-block-style="list-large"]');
+                    const styledEl = document.querySelector('[data-text-block-style="list-large"]');
                     expect(styledEl).toBeTruthy();
                 },
                 { timeout: 3000 },
@@ -529,20 +676,20 @@ export const ListBlockStyles: StoryObj<typeof ListBlockStylesStory> = {
     },
 };
 
-const MaxBlocksBlock = createTipTapRichTextBlock({ maxBlocks: 2 });
+const MaxTextBlocksBlock = createTipTapRichTextBlock({ maxTextBlocks: 2 });
 
-function MaxBlocksStory() {
-    const [state, setState] = useState<TipTapRichTextBlockState>(MaxBlocksBlock.defaultValues());
+function MaxTextBlocksStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(MaxTextBlocksBlock.defaultValues());
 
     return (
         <StoryWrapper state={state}>
-            <MaxBlocksBlock.AdminComponent state={state} updateState={setState} />
+            <MaxTextBlocksBlock.AdminComponent state={state} updateState={setState} />
         </StoryWrapper>
     );
 }
 
-export const MaxBlocks: StoryObj<typeof MaxBlocksStory> = {
-    render: () => <MaxBlocksStory />,
+export const MaxTextBlocks: StoryObj<typeof MaxTextBlocksStory> = {
+    render: () => <MaxTextBlocksStory />,
     play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready", async () => {
             await waitFor(
@@ -553,7 +700,7 @@ export const MaxBlocks: StoryObj<typeof MaxBlocksStory> = {
             );
         });
 
-        await step("Type text and press Enter to create blocks", async () => {
+        await step("Type text and press Enter to create text blocks", async () => {
             const editor = canvas.getByRole("textbox");
             await userEvent.click(editor);
             await userEvent.keyboard("First block");
@@ -569,12 +716,12 @@ export const MaxBlocks: StoryObj<typeof MaxBlocksStory> = {
             );
         });
 
-        await step("Third Enter does not create a new block (maxBlocks=2 enforced)", async () => {
+        await step("Third Enter does not create a new text block (maxTextBlocks=2 enforced)", async () => {
             const editor = canvas.getByRole("textbox");
             await userEvent.keyboard("{Enter}");
             await userEvent.keyboard("Third block");
 
-            // The text "Third block" should be appended to second block (no new block created)
+            // The text "Third block" should be appended to second text block (no new text block created)
             await waitFor(
                 () => {
                     // Should still only have 2 paragraphs in the output
@@ -814,7 +961,7 @@ export const ListLevelMax: StoryObj<typeof ListLevelMaxStory> = {
 };
 
 const CombinedStylesBlock = createTipTapRichTextBlock({
-    blockStyles: [
+    textBlockStyles: [
         {
             name: "intro",
             label: "Intro Text",
@@ -848,10 +995,10 @@ function CombinedStylesStory() {
     );
 }
 
-export const CombinedBlockAndInlineStyles: StoryObj<typeof CombinedStylesStory> = {
+export const CombinedTextBlockAndInlineStyles: StoryObj<typeof CombinedStylesStory> = {
     render: () => <CombinedStylesStory />,
     play: async ({ canvas, step }) => {
-        await step("Editor is ready with both block style and inline style dropdowns", async () => {
+        await step("Editor is ready with both text block style and inline style dropdowns", async () => {
             await waitFor(
                 () => {
                     expect(canvas.getByRole("textbox")).toBeInTheDocument();
@@ -859,7 +1006,7 @@ export const CombinedBlockAndInlineStyles: StoryObj<typeof CombinedStylesStory> 
                 { timeout: 5000 },
             );
 
-            // Heading select + block style select + inline style select
+            // Heading select + text block style select + inline style select
             const comboboxes = canvas.getAllByRole("combobox");
             expect(comboboxes.length).toBeGreaterThanOrEqual(3);
         });

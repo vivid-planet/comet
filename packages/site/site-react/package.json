@@ -1,6 +1,6 @@
 {
     "name": "@comet/site-react",
-    "version": "9.0.0-beta.4",
+    "version": "9.0.0-beta.5",
     "description": "Comet Site React package",
     "repository": {
         "type": "git",
@@ -41,7 +41,8 @@
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml,css,scss}'",
         "lint:tsc": "tsc --noEmit",
-        "test": "vitest --run",
+        "test": "pnpm run test:unit",
+        "test:unit": "vitest --run",
         "test:watch": "vitest --watch"
     },
     "dependencies": {
@@ -56,7 +57,7 @@
         "@comet/eslint-config": "workspace:*",
         "@types/draft-js": "^0.11.20",
         "@types/lodash.isequal": "^4.5.8",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^4.7.0",
         "chokidar-cli": "^3.0.0",
@@ -74,7 +75,7 @@
         "typescript": "^5.9.3",
         "vite": "^7.2.4",
         "vite-plugin-dts": "^4.5.4",
-        "vitest": "^4.0.16",
+        "vitest": "^4.1.8",
         "webpack": "^5.106.2"
     },
     "peerDependencies": {

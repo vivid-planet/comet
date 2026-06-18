@@ -36,7 +36,12 @@ export class Page extends BaseEntity implements DocumentInterface {
     content: BlockDataInterface;
 
     @Index({ type: "fulltext" })
-    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.content) })
+    @Property<Page>({
+        nullable: true,
+        type: new FullTextType(),
+        onCreate: (page) => blockToMikroOrmFullText(page.content),
+        onUpdate: (page) => blockToMikroOrmFullText(page.content),
+    })
     fullTextContent?: string;
 
     @RootBlock(SeoBlock)
@@ -45,7 +50,12 @@ export class Page extends BaseEntity implements DocumentInterface {
     seo: BlockDataInterface;
 
     @Index({ type: "fulltext" })
-    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.seo) })
+    @Property<Page>({
+        nullable: true,
+        type: new FullTextType(),
+        onCreate: (page) => blockToMikroOrmFullText(page.seo),
+        onUpdate: (page) => blockToMikroOrmFullText(page.seo),
+    })
     fullTextSeo?: string;
 
     @RootBlock(StageBlock)
@@ -54,7 +64,12 @@ export class Page extends BaseEntity implements DocumentInterface {
     stage: BlockDataInterface;
 
     @Index({ type: "fulltext" })
-    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.stage) })
+    @Property<Page>({
+        nullable: true,
+        type: new FullTextType(),
+        onCreate: (page) => blockToMikroOrmFullText(page.stage),
+        onUpdate: (page) => blockToMikroOrmFullText(page.stage),
+    })
     fullTextStage?: string;
 
     @Property({

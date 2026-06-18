@@ -1,5 +1,6 @@
 import { MjmlColumn, MjmlRaw } from "@faire/mjml-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "storybook/test";
 
 import { createTheme } from "../../../theme/createTheme.js";
 import { MjmlSection } from "../../section/MjmlSection.js";
@@ -29,6 +30,10 @@ export const Default: Story = {
             </MjmlColumn>
         </MjmlSection>
     ),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByText("Default text with base theme styles")).toBeInTheDocument();
+    },
 };
 
 export const WithVariants: Story = {

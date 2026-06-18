@@ -2,10 +2,13 @@ import type { Preview } from "@storybook/react-vite";
 import { type GlobalTypes } from "storybook/internal/csf";
 
 import { ApolloDecorator } from "./decorators/Apollo.decorator";
+import { CometConfigProviderDecorator } from "./decorators/CometConfigProvider.decorator";
 import { CurrentUserProviderDecorator } from "./decorators/CurrentUserProvider.decorator";
+import { DndProviderDecorator } from "./decorators/DndProvider.decorator";
 import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
 import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
 import { RouterDecorator } from "./decorators/Router.decorator";
+import { SnackbarDecorator } from "./decorators/Snackbar.decorator";
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
 
@@ -53,7 +56,7 @@ export const globalTypes: GlobalTypes = {
 
 const preview: Preview = {
     tags: ["autodocs"],
-    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, RouterDecorator, CurrentUserProviderDecorator, ApolloDecorator],
+    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, RouterDecorator, CometConfigProviderDecorator, SnackbarDecorator, DndProviderDecorator, CurrentUserProviderDecorator, ApolloDecorator],
     loaders: [
         async () => {
             await mswReady;

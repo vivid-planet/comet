@@ -1,21 +1,20 @@
-import {
-    Button,
-    FillSpace,
-    HelpDialogButton,
-    Stack,
-    StackLink,
-    StackPage,
-    StackSwitch,
-    Toolbar,
-    ToolbarActions,
-    ToolbarAutomaticTitleItem,
-    ToolbarBackButton,
-    ToolbarItem,
-} from "@comet/admin";
 import { ArrowRight, Save } from "@comet/admin-icons";
 import { Box, Chip, Typography } from "@mui/material";
 import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
+
+import { StackPage } from "../../../stack/Page";
+import { Stack } from "../../../stack/Stack";
+import { StackLink } from "../../../stack/StackLink";
+import { StackSwitch } from "../../../stack/Switch";
+import { Button } from "../../buttons/Button";
+import { HelpDialogButton } from "../../buttons/helpDialogButton/HelpDialogButton";
+import { FillSpace } from "../../FillSpace";
+import { ToolbarActions } from "../actions/ToolbarActions";
+import { ToolbarAutomaticTitleItem } from "../automatictitleitem/ToolbarAutomaticTitleItem";
+import { ToolbarBackButton } from "../backbutton/ToolbarBackButton";
+import { ToolbarItem } from "../item/ToolbarItem";
+import { Toolbar } from "../Toolbar";
 
 function StackWrapper({ children }: { children: ReactNode }) {
     return (

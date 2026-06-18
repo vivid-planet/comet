@@ -1,6 +1,7 @@
 import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import { createErrorDialogApolloLink } from "@comet/admin";
 import type { Decorator } from "@storybook/react-vite";
+
+import { createErrorDialogApolloLink } from "../../src/error/errordialog/createErrorDialogApolloLink";
 
 const apolloClient = new ApolloClient({
     link: ApolloLink.from([createErrorDialogApolloLink(), createHttpLink({ uri: "/graphql" })]),

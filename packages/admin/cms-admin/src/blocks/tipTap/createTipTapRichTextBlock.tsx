@@ -10,15 +10,16 @@ import { FormattedMessage } from "react-intl";
 
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
-import { BlockStyleContext } from "./BlockStyleContext";
-import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
-import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
+import { Placeholder } from "./extensions/Placeholder";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { TextBlockStyleHeading } from "./extensions/TextBlockStyleHeading";
+import { TextBlockStyleParagraph } from "./extensions/TextBlockStyleParagraph";
 import { InlineStyleContext } from "./InlineStyleContext";
 import { createListLevelMaxExtension, getListNestingDepthFromJson, trimListNesting } from "./listLevelMaxHelpers";
+import { TextBlockStyleContext } from "./TextBlockStyleContext";
 import { TipTapToolbar } from "./TipTapToolbar";
 
 export type TipTapSupports =
@@ -49,7 +50,9 @@ const defaultSupports: TipTapSupports[] = [
     "soft-hyphen",
 ];
 
-export type TipTapBlockType =
+export type { JSONContent as TipTapRichTextBlockContent } from "@tiptap/core";
+
+export type TipTapTextBlockType =
     | "paragraph"
     | "heading-1"
     | "heading-2"
@@ -60,14 +63,14 @@ export type TipTapBlockType =
     | "ordered-list"
     | "unordered-list";
 
-export interface TipTapBlockStyle {
+export interface TipTapTextBlockStyle {
     name: string;
     label: ReactNode;
     /**
-     * Limits the block style to the provided block types.
-     * If none is specified, the block style is allowed for all block types.
+     * Limits the text block style to the provided text block types.
+     * If none is specified, the text block style is allowed for all text block types.
      */
-    appliesTo?: TipTapBlockType[];
+    appliesTo?: TipTapTextBlockType[];
     element: ComponentType<HTMLAttributes<HTMLElement>>;
 }
 
@@ -75,10 +78,10 @@ export interface TipTapInlineStyle {
     name: string;
     label: ReactNode;
     /**
-     * Limits the inline style to the provided block types.
-     * If none is specified, the inline style is allowed for all block types.
+     * Limits the inline style to the provided text block types.
+     * If none is specified, the inline style is allowed for all text block types.
      */
-    appliesTo?: TipTapBlockType[];
+    appliesTo?: TipTapTextBlockType[];
     element: ComponentType<HTMLAttributes<HTMLElement>>;
 }
 
@@ -94,16 +97,22 @@ interface TipTapRichTextBlockInput {
     tipTapContent: JSONContent;
 }
 
+export interface TipTapPlaceholder {
+    name: string;
+    label: ReactNode;
+}
+
 interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
-    blockStyles?: TipTapBlockStyle[];
+    textBlockStyles?: TipTapTextBlockStyle[];
     inlineStyles?: TipTapInlineStyle[];
+    placeholders?: TipTapPlaceholder[];
     link?: BlockInterface & LinkBlockInterface;
     /**
-     * Limits the maximum number of top-level blocks (paragraphs, headings, lists)
+     * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be created in the editor.
      */
-    maxBlocks?: number;
+    maxTextBlocks?: number;
     /**
      * Limits the maximum nesting depth of list items.
      * A value of 1 means only a flat list (no nesting), 2 allows one level of sub-lists, etc.
@@ -126,18 +135,18 @@ function getPlainTextFromContent(content: JSONContent): string {
 
 const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
 
-const createMaxBlocksExtension = (maxBlocks: number) =>
+const createMaxTextBlocksExtension = (maxTextBlocks: number) =>
     Extension.create({
-        name: "maxBlocks",
+        name: "maxTextBlocks",
         addKeyboardShortcuts() {
             return {
                 Enter: ({ editor }) => {
-                    if (editor.state.doc.childCount >= maxBlocks) {
-                        // Only block Enter when it would create a new block (not inside a list, etc.)
+                    if (editor.state.doc.childCount >= maxTextBlocks) {
+                        // Only block Enter when it would create a new text block (not inside a list, etc.)
                         const { $from } = editor.state.selection;
                         const isAtEndOfBlock = $from.parentOffset === $from.parent.content.size;
                         const parentDepth = $from.depth;
-                        // If at end of a top-level block (depth 1) or would split a top-level block
+                        // If at end of a top-level text block (depth 1) or would split a top-level text block
                         if (parentDepth === 1 && isAtEndOfBlock) {
                             return true; // prevent
                         }
@@ -200,24 +209,27 @@ const TipTapEditor = ({
     state,
     updateState,
     supports,
-    blockStyles,
+    textBlockStyles,
     inlineStyles,
+    placeholders,
     linkBlock,
-    maxBlocks,
+    maxTextBlocks,
     listLevelMax,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
-    blockStyles: TipTapBlockStyle[];
+    textBlockStyles: TipTapTextBlockStyle[];
     inlineStyles: TipTapInlineStyle[];
+    placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
-    maxBlocks?: number;
+    maxTextBlocks?: number;
     listLevelMax?: number;
 }) => {
-    const hasBlockStyles = blockStyles.length > 0;
+    const hasTextBlockStyles = textBlockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
+    const hasPlaceholders = placeholders.length > 0;
 
     const editor = useEditor({
         extensions: [
@@ -225,8 +237,8 @@ const TipTapEditor = ({
                 bold: supports.includes("bold") ? {} : false,
                 italic: supports.includes("italic") ? {} : false,
                 strike: supports.includes("strike") ? {} : false,
-                heading: supports.includes("heading") ? (hasBlockStyles ? false : {}) : false,
-                paragraph: hasBlockStyles ? false : undefined,
+                heading: supports.includes("heading") ? (hasTextBlockStyles ? false : {}) : false,
+                paragraph: hasTextBlockStyles ? false : undefined,
                 orderedList: supports.includes("ordered-list") ? {} : false,
                 bulletList: supports.includes("unordered-list") ? {} : false,
                 blockquote: false,
@@ -234,30 +246,31 @@ const TipTapEditor = ({
                 codeBlock: false,
                 link: false,
             }),
-            ...(hasBlockStyles ? [BlockStyleParagraph] : []),
-            ...(hasBlockStyles && supports.includes("heading") ? [BlockStyleHeading] : []),
+            ...(hasTextBlockStyles ? [TextBlockStyleParagraph] : []),
+            ...(hasTextBlockStyles && supports.includes("heading") ? [TextBlockStyleHeading] : []),
             ...(hasInlineStyles ? [InlineStyleMark] : []),
             ...(supports.includes("sup") ? [Superscript] : []),
             ...(supports.includes("sub") ? [Subscript] : []),
             ...(supports.includes("non-breaking-space") ? [NonBreakingSpace] : []),
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
+            ...(hasPlaceholders ? [Placeholder] : []),
             ...(hasLink ? [CmsLink] : []),
-            ...(maxBlocks !== undefined ? [createMaxBlocksExtension(maxBlocks)] : []),
+            ...(maxTextBlocks !== undefined ? [createMaxTextBlocksExtension(maxTextBlocks)] : []),
             ...(listLevelMax !== undefined ? [createListLevelMaxExtension(listLevelMax)] : []),
         ],
         content: state.tipTapContent,
         onUpdate: ({ editor }) => {
-            if (maxBlocks !== undefined && editor.state.doc.childCount > maxBlocks) {
-                // Remove excess blocks (e.g. from paste)
+            if (maxTextBlocks !== undefined && editor.state.doc.childCount > maxTextBlocks) {
+                // Remove excess text blocks (e.g. from paste)
                 const { tr } = editor.state;
                 const doc = editor.state.doc;
-                // Find the resolved position after the maxBlocks-th child
+                // Find the resolved position after the maxTextBlocks-th child
                 let pos = 0;
-                for (let i = 0; i < maxBlocks; i++) {
+                for (let i = 0; i < maxTextBlocks; i++) {
                     pos += doc.child(i).nodeSize;
                 }
                 // In ProseMirror, doc content positions are offset by 1 (for the doc open token)
-                // Delete from after the last allowed block to end of doc content
+                // Delete from after the last allowed text block to end of doc content
                 tr.delete(pos + 1, doc.content.size + 1);
                 editor.view.dispatch(tr);
                 return;
@@ -283,14 +296,15 @@ const TipTapEditor = ({
     }
 
     return (
-        <BlockStyleContext.Provider value={blockStyles}>
+        <TextBlockStyleContext.Provider value={textBlockStyles}>
             <InlineStyleContext.Provider value={inlineStyles}>
                 <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
                     <TipTapToolbar
                         editor={editor}
                         supports={supports}
-                        blockStyles={blockStyles}
+                        textBlockStyles={textBlockStyles}
                         inlineStyles={inlineStyles}
+                        placeholders={placeholders}
                         linkBlock={linkBlock}
                         listLevelMax={listLevelMax}
                     />
@@ -299,7 +313,7 @@ const TipTapEditor = ({
                     </Box>
                 </Box>
             </InlineStyleContext.Provider>
-        </BlockStyleContext.Provider>
+        </TextBlockStyleContext.Provider>
     );
 };
 
@@ -310,10 +324,11 @@ export const createTipTapRichTextBlock = (
     options?: TipTapRichTextBlockFactoryOptions,
 ): BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> => {
     let supports = options?.supports ?? defaultSupports;
-    const blockStyles = options?.blockStyles ?? [];
+    const textBlockStyles = options?.textBlockStyles ?? [];
     const inlineStyles = options?.inlineStyles ?? [];
+    const placeholders = options?.placeholders ?? [];
     const linkBlock = options?.link;
-    const maxBlocks = options?.maxBlocks;
+    const maxTextBlocks = options?.maxTextBlocks;
     const listLevelMax = options?.listLevelMax;
 
     // Auto-enable link support when a link block is provided
@@ -373,10 +388,11 @@ export const createTipTapRichTextBlock = (
                     state={state}
                     updateState={updateState}
                     supports={supports}
-                    blockStyles={blockStyles}
+                    textBlockStyles={textBlockStyles}
                     inlineStyles={inlineStyles}
+                    placeholders={placeholders}
                     linkBlock={linkBlock}
-                    maxBlocks={maxBlocks}
+                    maxTextBlocks={maxTextBlocks}
                     listLevelMax={listLevelMax}
                 />
             );
