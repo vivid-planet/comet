@@ -752,6 +752,50 @@ DateTimePicker:
 - `CometAdminFuture_TimePicker-*` -> `CometAdminTimePicker-*`
 - `CometAdminFuture_DateTimePicker-*` -> `CometAdminDateTimePicker-*`
 
+### Import legacy table components from `@comet/admin-legacy`
+
+The deprecated Comet table components have been moved out of `@comet/admin` into a new `@comet/admin-legacy` package. This includes `Table`, `TableQuery`, `TableQueryContext`, `useTableQuery`, `useTableQuerySort`, `useTableQueryFilter`, `useTableQueryPaging`, the `FilterBar` components, the Excel export helpers (`ExcelExportButton`, `createExcelExportDownload`, `useExport*`), the paging action creators (`create*PagingActions`), `TableAddButton`, `TableDeleteButton`, `TableBodyRow`, `TableDndOrder`, `TableFilterFinalForm`, `TableLocalChanges`, `TablePagination`, `usePersistedState`, `usePersistedStateId`, `withTableQueryContext` and their related types.
+
+Add the `@comet/admin-legacy` dependency to `admin/package.json`:
+
+```diff title="admin/package.json"
+{
+    "dependencies": {
++       "@comet/admin-legacy": "9.0.0",
+    }
+}
+```
+
+Update the imports of these components from `@comet/admin` to `@comet/admin-legacy`:
+
+```diff
+- import { Table, TableQuery, useTableQuery } from "@comet/admin";
++ import { Table, TableQuery, useTableQuery } from "@comet/admin-legacy";
+```
+
+#### Refetch the table query explicitly
+
+`FinalForm` and `DeleteMutation` no longer automatically refetch the surrounding legacy `TableQuery` via `TableQueryContext`. Previously, `FinalForm` (in `add` mode) and `DeleteMutation` implicitly refetched the table after a successful submit or delete. Since the table components have moved to `@comet/admin-legacy`, this implicit coupling has been removed.
+
+To keep the data up to date, refetch the query explicitly:
+
+- **`DeleteMutation`**: pass the queries to refetch via the existing `refetchQueries` prop.
+
+    ```diff
+    - <DeleteMutation mutation={deleteMutation}>
+    + <DeleteMutation mutation={deleteMutation} refetchQueries={["ItemsList"]}>
+    ```
+
+- **`FinalForm`**: add `refetchQueries` to the mutation in your `onSubmit` handler.
+
+    ```diff
+      client.mutate({
+          mutation: createMutation,
+          variables,
+    +     refetchQueries: ["ItemsList"],
+      });
+    ```
+
 ### Rename GraphQL operations and fragments with redundant kind suffixes
 
 `@comet/eslint-config` v9 adds the `@graphql-eslint/naming-convention` rule from `@graphql-eslint/eslint-plugin`. The rule forbids GraphQL fragment, query, mutation, and subscription names that end with their own kind (e.g. `FooFragment`, `BarQuery`), which would otherwise produce duplicated suffixes such as `FragmentFragment` or `QueryQuery` in generated TypeScript types.
