@@ -102,18 +102,6 @@ interface TipTapPlaceholder {
     name: string;
 }
 
-/**
- * Controls how a child block is displayed in the editor (and rendered output):
- * as a standalone block element (`"block"`) or inline within the
- * surrounding text (`"inline"`, as in CSS `display`).
- */
-export type TipTapChildBlockDisplay = "block" | "inline";
-
-export interface TipTapChildBlock {
-    block: Block;
-    display: TipTapChildBlockDisplay;
-}
-
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
     textBlockStyles?: TipTapTextBlockStyle[];
@@ -131,7 +119,7 @@ export interface CreateTipTapRichTextBlockOptions {
      * Pass `{ block, display }` for each child block, where `display` is `"block"` (standalone
      * block element) or `"inline"` (inline within the surrounding text).
      */
-    childBlocks?: Record<string, TipTapChildBlock>;
+    childBlocks?: Record<string, { block: Block; display: "block" | "inline" }>;
     /**
      * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be stored. Content exceeding this limit will be rejected during validation.

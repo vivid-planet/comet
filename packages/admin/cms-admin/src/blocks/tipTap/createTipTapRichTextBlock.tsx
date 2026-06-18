@@ -104,16 +104,13 @@ export interface TipTapPlaceholder {
     label: ReactNode;
 }
 
-/**
- * Controls how a child block is displayed in the editor (and rendered output):
- * as a standalone block element on its own line (`"block"`) or
- * inline within the surrounding text (`"inline"`, as in CSS `display`).
- */
-export type TipTapChildBlockDisplay = "block" | "inline";
-
 export interface TipTapChildBlock {
     block: BlockInterface;
-    display: TipTapChildBlockDisplay;
+    /**
+     * How the child block is displayed in the editor (and rendered output): as a standalone block
+     * element on its own line (`"block"`) or inline within the surrounding text (`"inline"`).
+     */
+    display: "block" | "inline";
 }
 
 interface TipTapRichTextBlockFactoryOptions {
