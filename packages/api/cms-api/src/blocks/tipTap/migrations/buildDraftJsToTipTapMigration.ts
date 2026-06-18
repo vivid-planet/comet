@@ -1,3 +1,4 @@
+import type { JSONContent } from "@tiptap/core";
 import type { Schema } from "@tiptap/pm/model";
 import type { ClassConstructor } from "class-transformer";
 
@@ -7,16 +8,13 @@ import type { BlockMigrationInterface } from "../../migrations/types";
 import { isValidTipTapContentSync } from "../tipTapValidation";
 import { buildStrippedTipTapDoc, convertDraftJsToTipTap, type ConvertOptions, type DraftJsContent } from "./convertDraftJsToTipTap";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TipTapContent = Record<string, any>;
-
 interface From {
     draftContent?: DraftJsContent;
-    tipTapContent?: TipTapContent;
+    tipTapContent?: JSONContent;
 }
 
 interface To {
-    tipTapContent: TipTapContent;
+    tipTapContent: JSONContent;
 }
 
 function isDraftJsContent(value: unknown): value is DraftJsContent {
@@ -33,14 +31,14 @@ function isDraftJsContent(value: unknown): value is DraftJsContent {
 
 interface BuildOptions extends ConvertOptions {
     schema: Schema;
-    maxBlocks?: number;
+    maxTextBlocks?: number;
     link?: Block;
 }
 
-const EMPTY_DOC: TipTapContent = { type: "doc", content: [{ type: "paragraph" }] };
+const EMPTY_DOC: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
 
 export function buildDraftJsToTipTapMigration(options: BuildOptions): ClassConstructor<BlockMigrationInterface> {
-    const { schema, maxBlocks, supports, link, blockStyleMap, inlineStyleMap } = options;
+    const { schema, maxTextBlocks, supports, link, textBlockStyleMap, inlineStyleMap } = options;
 
     return class DraftJsToTipTapMigration extends BlockMigration<(from: From) => To> implements BlockMigrationInterface {
         public readonly toVersion = 1;
@@ -54,8 +52,8 @@ export function buildDraftJsToTipTapMigration(options: BuildOptions): ClassConst
                 return { tipTapContent: EMPTY_DOC };
             }
 
-            const converted = convertDraftJsToTipTap(from.draftContent, { supports, link, blockStyleMap, inlineStyleMap });
-            if (isValidTipTapContentSync(converted, schema, { maxBlocks })) {
+            const converted = convertDraftJsToTipTap(from.draftContent, { supports, link, textBlockStyleMap, inlineStyleMap });
+            if (isValidTipTapContentSync(converted, schema, { maxTextBlocks })) {
                 return { tipTapContent: converted };
             }
 
@@ -64,7 +62,7 @@ export function buildDraftJsToTipTapMigration(options: BuildOptions): ClassConst
             }
 
             const stripped = buildStrippedTipTapDoc(from.draftContent);
-            if (isValidTipTapContentSync(stripped, schema, { maxBlocks })) {
+            if (isValidTipTapContentSync(stripped, schema, { maxTextBlocks })) {
                 console.warn("DraftJS->TipTap migration failed, using stripped content");
                 return { tipTapContent: stripped };
             }

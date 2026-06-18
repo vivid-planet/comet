@@ -79,14 +79,17 @@ const isComplete = true;
 
 :::
 
-## Don’t use Abbreviations
+## Avoid Non-Obvious Abbreviations
 
 Abbreviations make it harder read code. Even more for new Devs or Devs who are not regularly working on that project.
 
 > It’s better to save time thinking than to save time typing.
 
+Avoid non-obvious abbreviations. Obvious, conventional abbreviations whose meaning is unambiguous in context are fine. When in doubt, spell it out.
+
 ### Exceptions:
 
+- Obvious, conventional abbreviations whose meaning is unambiguous in context (e.g. `i` for a loop index, `id`, `ref`, `props`)
 - Well-known abbreviations such as protocols (HTML, CSS, TCP, IP, SSO, API, …)
 - Abbreviations coming from a 3rd party (API, Library, …)
 

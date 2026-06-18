@@ -49,7 +49,7 @@ export const PagesPageActionToolbar = ({
     const [confirmAction, setConfirmAction] = useState<ConfirmActionState | null>(null);
 
     const { tree } = usePageTreeContext();
-    const { documentTypes } = usePageTreeConfig();
+    const { documentTypes, allowPageDelete = true } = usePageTreeConfig();
     const selectedPages = treeMapToArray(selectedTree) as PageTreePage[];
     const {
         dialogs: translateDialogs,
@@ -229,27 +229,29 @@ export const PagesPageActionToolbar = ({
                             </span>
                         </Tooltip>
                     )}
-                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.delete" defaultMessage="Delete" />}>
-                        <span>
-                            <IconButton
-                                disabled={selectedTree.size === 0}
-                                onClick={async () => {
-                                    const selectedNodeIds: string[] = treeMapToArray(selectedTree).map((element) => {
-                                        return element.id;
-                                    });
-                                    const canSaveDelete = areAllSubTreesFullSelected(selectedNodeIds, tree);
-                                    if (canSaveDelete) {
-                                        setShowDeleteDialog(true);
-                                    } else {
-                                        setShowCanNotDeleteDialog(true);
-                                    }
-                                }}
-                                size="large"
-                            >
-                                {!deleting ? <Delete /> : <ThreeDotSaving />}
-                            </IconButton>
-                        </span>
-                    </Tooltip>
+                    {allowPageDelete && (
+                        <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.delete" defaultMessage="Delete" />}>
+                            <span>
+                                <IconButton
+                                    disabled={selectedTree.size === 0}
+                                    onClick={async () => {
+                                        const selectedNodeIds: string[] = treeMapToArray(selectedTree).map((element) => {
+                                            return element.id;
+                                        });
+                                        const canSaveDelete = areAllSubTreesFullSelected(selectedNodeIds, tree);
+                                        if (canSaveDelete) {
+                                            setShowDeleteDialog(true);
+                                        } else {
+                                            setShowCanNotDeleteDialog(true);
+                                        }
+                                    }}
+                                    size="large"
+                                >
+                                    {!deleting ? <Delete /> : <ThreeDotSaving />}
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                    )}
                 </CenterContainer>
                 <Grid>
                     <Button

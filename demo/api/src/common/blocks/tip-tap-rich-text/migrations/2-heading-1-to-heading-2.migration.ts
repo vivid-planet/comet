@@ -1,17 +1,14 @@
-import { BlockMigration, type BlockMigrationInterface } from "@comet/cms-api";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TipTapContent = Record<string, any>;
+import { BlockMigration, type BlockMigrationInterface, type TipTapRichTextBlockContent } from "@comet/cms-api";
 
 interface From {
-    tipTapContent: TipTapContent;
+    tipTapContent: TipTapRichTextBlockContent;
 }
 
 type To = From;
 
 // TipTap heading nodes are shaped like `{ type: "heading", attrs: { level: 1 }, content: [...] }`.
 // Walk the document tree and bump every level-1 heading to level 2.
-function changeHeading1ToHeading2(node: TipTapContent): TipTapContent {
+function changeHeading1ToHeading2(node: TipTapRichTextBlockContent): TipTapRichTextBlockContent {
     let result = node;
     if (node.type === "heading" && node.attrs?.level === 1) {
         result = { ...node, attrs: { ...node.attrs, level: 2 } };

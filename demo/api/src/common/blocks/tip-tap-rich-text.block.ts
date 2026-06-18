@@ -6,7 +6,7 @@ import { Heading1ToHeading2Migration } from "./tip-tap-rich-text/migrations/2-he
 export const TipTapRichTextBlock = createTipTapRichTextBlock(
     {
         link: LinkBlock,
-        blockStyles: [
+        textBlockStyles: [
             { name: "paragraph300", appliesTo: ["paragraph"] },
             { name: "paragraph200", appliesTo: ["paragraph"] },
             { name: "eyebrow600", appliesTo: ["paragraph"] },
@@ -19,8 +19,8 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock(
         inlineStyles: [{ name: "highlight" }, { name: "tag", appliesTo: ["paragraph"] }],
         migrateFromDraftJs: {
             // Map the DraftJS `blocktypeMap` entry `paragraph-small` (configured in the admin RichTextBlock)
-            // to the equivalent TipTap blockStyle so legacy content keeps its smaller paragraph variant.
-            blockStyleMap: { "paragraph-small": "paragraph200" },
+            // to the equivalent TipTap textBlockStyle so legacy content keeps its smaller paragraph variant.
+            textBlockStyleMap: { "paragraph-small": "paragraph200" },
         },
     },
     {
