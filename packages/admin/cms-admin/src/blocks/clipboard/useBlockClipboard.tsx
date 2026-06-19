@@ -2,8 +2,11 @@ import { readClipboardText, writeClipboardText } from "@comet/admin";
 import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
+import type { ContentScope } from "../../contentScope/Provider";
+import { resolveScopeCopyReplacements } from "../../dependencies/scopeCopy/resolveScopeCopyReplacements";
+import { useScopeCopyHandlers } from "../../dependencies/scopeCopy/useScopeCopyHandlers";
 import { useBlockContext } from "../context/useBlockContext";
-import type { BlockInterface, BlockOutputApi, BlockState } from "../types";
+import type { BlockDependency, BlockInterface, BlockOutputApi, BlockState, ReplaceDependencyObject } from "../types";
 
 interface ClipboardBlock {
     name: string;
@@ -18,10 +21,20 @@ interface TransformedClipboardBlock {
     name: string;
     visible: boolean;
     output: BlockOutputApi<BlockInterface>;
+    dependencies?: BlockDependency[];
     additionalFields?: Record<string, unknown>;
 }
 
 type TransformedClipboardContent = TransformedClipboardBlock[];
+
+/**
+ * Wrapper written to the clipboard. The source scope is needed to detect a scope-crossing paste and
+ * copy referenced entities (e.g. DAM files) to the target scope.
+ */
+interface ClipboardEnvelope {
+    scope?: ContentScope;
+    blocks: TransformedClipboardContent;
+}
 
 type GetClipboardContentResponse = { canPaste: true; content: ClipboardContent } | { canPaste: false; error: ReactNode };
 
@@ -36,6 +49,7 @@ interface UseBlockClipboardOptions {
 
 function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboardApi {
     const context = useBlockContext();
+    const handlers = useScopeCopyHandlers();
 
     const findBlockInterfaceForClipboardBlock = (content: ClipboardBlock | TransformedClipboardBlock) => {
         if (Array.isArray(supports)) {
@@ -61,11 +75,13 @@ function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboa
                 name: block.name,
                 visible: block.visible,
                 output: blockInterface.state2Output(block.state),
+                dependencies: blockInterface.dependencies?.(block.state),
                 additionalFields: block.additionalFields,
             };
         });
 
-        return writeClipboardText(JSON.stringify(blocks));
+        const envelope: ClipboardEnvelope = { scope: context.pageTreeScope, blocks };
+        return writeClipboardText(JSON.stringify(envelope));
     };
 
     const getClipboardContent = async (): Promise<GetClipboardContentResponse> => {
@@ -90,10 +106,18 @@ function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboa
             };
         }
 
-        let transformedContent: TransformedClipboardContent;
+        let envelope: ClipboardEnvelope;
 
         try {
-            transformedContent = JSON.parse(text) as TransformedClipboardContent;
+            const parsed = JSON.parse(text);
+            // Older clipboards stored a bare array of blocks without scope information.
+            if (Array.isArray(parsed)) {
+                envelope = { blocks: parsed as TransformedClipboardContent };
+            } else if (parsed && typeof parsed === "object" && Array.isArray((parsed as ClipboardEnvelope).blocks)) {
+                envelope = parsed as ClipboardEnvelope;
+            } else {
+                throw new Error("Invalid clipboard content");
+            }
         } catch {
             return {
                 canPaste: false,
@@ -106,12 +130,10 @@ function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboa
             };
         }
 
-        const blocks: ClipboardBlock[] = [];
+        const transformedContent = envelope.blocks;
 
         for (const clipboardBlock of transformedContent) {
-            const blockInterface = findBlockInterfaceForClipboardBlock(clipboardBlock);
-
-            if (!blockInterface) {
+            if (!findBlockInterfaceForClipboardBlock(clipboardBlock)) {
                 return {
                     canPaste: false,
                     error: (
@@ -122,11 +144,45 @@ function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboa
                     ),
                 };
             }
+        }
+
+        let dependencyReplacements: ReplaceDependencyObject[] = [];
+
+        if (envelope.scope) {
+            try {
+                dependencyReplacements = await resolveScopeCopyReplacements({
+                    dependencies: transformedContent.flatMap((block) => block.dependencies ?? []),
+                    handlers,
+                    context: { client: context.apolloClient, sourceScope: envelope.scope, targetScope: context.pageTreeScope },
+                });
+            } catch {
+                return {
+                    canPaste: false,
+                    error: (
+                        <FormattedMessage
+                            id="comet.blocks.cannotPasteBlock.messageFailedToCopyDependencies"
+                            defaultMessage="Failed to copy referenced files to the current scope"
+                        />
+                    ),
+                };
+            }
+        }
+
+        const blocks: ClipboardBlock[] = [];
+
+        for (const clipboardBlock of transformedContent) {
+            // already validated above
+            const blockInterface = findBlockInterfaceForClipboardBlock(clipboardBlock) as BlockInterface;
+
+            const output =
+                dependencyReplacements.length > 0
+                    ? blockInterface.replaceDependenciesInOutput(clipboardBlock.output, dependencyReplacements)
+                    : clipboardBlock.output;
 
             let state: BlockState<BlockInterface>;
 
             try {
-                state = await blockInterface.output2State(clipboardBlock.output, context);
+                state = await blockInterface.output2State(output, context);
             } catch {
                 return {
                     canPaste: false,
