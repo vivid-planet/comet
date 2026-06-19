@@ -53,9 +53,9 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className"> {
     slots?: ButtonSlots;
     /** Props for each slot, merged with the slot's own props rather than replacing them. */
     slotProps?: ButtonSlotProps;
-    /** Content rendered before `children`. */
+    /** The icon to render before the button's text. */
     startIcon?: ReactNode;
-    /** Content rendered after `children`. */
+    /** The icon to render after the button's text. */
     endIcon?: ReactNode;
 }
 
