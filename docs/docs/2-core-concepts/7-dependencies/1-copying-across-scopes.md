@@ -95,3 +95,64 @@ import { createUnscopedScopeCopyHandler } from "@comet/cms-admin";
     {/* ... */}
 </ScopeCopyHandlersProvider>;
 ```
+
+## Copying your own entities across scopes
+
+The examples above copy COMET content (a page or a block) and bring the referenced entities along.
+Your own entities can face the same problem: if a project entity (e.g. a `Product`) contains block data and a user copies it from one scope to another, the entities it references must be copied too.
+
+Use the `useCopyDependenciesToScope` hook to reuse the same mechanism in your own copy flow.
+It uses the same handler registry — so the built-in DAM file handler and any handlers you registered apply automatically — and returns the replacements to apply to the copied content.
+
+```tsx
+import { useApolloClient } from "@apollo/client";
+import { useCopyDependenciesToScope } from "@comet/cms-admin";
+
+function useCopyProductToScope() {
+    const client = useApolloClient();
+    const copyDependenciesToScope = useCopyDependenciesToScope();
+
+    return async ({
+        product,
+        sourceScope,
+        targetScope,
+    }: {
+        product: GQLProduct;
+        sourceScope: ContentScope;
+        targetScope: ContentScope;
+    }) => {
+        // 1. Collect the dependencies of the entity's block data.
+        const contentState = ProductContentBlock.input2State(product.content);
+
+        // 2. Copy the referenced entities to the target scope and get the replacements.
+        const replacements = await copyDependenciesToScope({
+            dependencies: ProductContentBlock.dependencies(contentState),
+            sourceScope,
+            targetScope,
+        });
+
+        // 3. Apply the replacements to the copied content and persist the copy in the target scope.
+        await client.mutate({
+            mutation: createProductInScopeMutation,
+            variables: {
+                scope: targetScope,
+                input: {
+                    ...product,
+                    content: ProductContentBlock.replaceDependenciesInOutput(
+                        ProductContentBlock.state2Output(contentState),
+                        replacements,
+                    ),
+                },
+            },
+        });
+    };
+}
+```
+
+Cloning the entity itself (step 3) is project-specific and remains your responsibility — only your project knows how to duplicate its entity. The hook only takes care of copying the referenced dependencies and computing the replacements.
+
+:::note
+
+If your entity is itself referenced by other content (i.e. it's also a dependency target with a registered `ScopeCopyHandler`), the copy mutation called from that handler should perform the same dependency copying for the entity's own content, so nested references are handled too.
+
+:::
