@@ -169,6 +169,7 @@ export { DependentsList, type DependentsListProps } from "./dependencies/Depende
 export { resolveScopeCopyReplacements } from "./dependencies/scopeCopy/resolveScopeCopyReplacements";
 export { createUnscopedScopeCopyHandler, type ScopeCopyHandler, type ScopeCopyHandlerContext } from "./dependencies/scopeCopy/ScopeCopyHandler";
 export { ScopeCopyHandlersProvider } from "./dependencies/scopeCopy/ScopeCopyHandlersContext";
+export { useCopyDependenciesToScope } from "./dependencies/scopeCopy/useCopyDependenciesToScope";
 export { useScopeCopyHandlers } from "./dependencies/scopeCopy/useScopeCopyHandlers";
 export type { DependencyInterface } from "./dependencies/types";
 export {
