@@ -165,6 +165,10 @@ export { createDependencyMethods } from "./dependencies/createDependencyMethods"
 export { createDocumentDependencyMethods } from "./dependencies/createDocumentDependencyMethods";
 export { DependenciesList, type DependenciesListProps } from "./dependencies/DependenciesList";
 export { DependentsList, type DependentsListProps } from "./dependencies/DependentsList";
+export { resolveScopeCopyReplacements } from "./dependencies/scopeCopy/resolveScopeCopyReplacements";
+export { createUnscopedScopeCopyHandler, type ScopeCopyHandler, type ScopeCopyHandlerContext } from "./dependencies/scopeCopy/ScopeCopyHandler";
+export { ScopeCopyHandlersProvider } from "./dependencies/scopeCopy/ScopeCopyHandlersContext";
+export { useScopeCopyHandlers } from "./dependencies/scopeCopy/useScopeCopyHandlers";
 export type { DependencyInterface } from "./dependencies/types";
 export {
     type ContentGenerationConfig,
