@@ -33,11 +33,14 @@
 }
 
 .listItem {
+    padding: var(--spacing-s300) 0;
+    border-bottom: 1px solid var(--brand-grey-200);
+}
+
+.result {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-s100);
-    padding: var(--spacing-s300) 0;
-    border-bottom: 1px solid var(--brand-grey-200);
 }
 
 .name {
@@ -47,4 +50,12 @@
 
 .secondaryInformation {
     color: var(--text-secondary);
+}
+
+.link {
+    text-decoration: none;
+
+    &:hover .name {
+        text-decoration: underline;
+    }
 }

@@ -2,7 +2,9 @@
 import { gql, type PropsWithData, withPreview } from "@comet/site-nextjs";
 import type { FullTextSearchBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import { createSitePath } from "@src/util/createSitePath";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -27,6 +29,23 @@ const fullTextSearchQuery = gql`
 type SearchResult = GQLFullTextSearchQuery["siteFullTextSearch"]["nodes"][number];
 
 const debounceMilliseconds = 300;
+
+// Search results carry no target URL (see EntityInfo), so the path is derived from the entity type.
+// `secondaryInformation` holds the routing key: the page-tree path for pages and the slug for news.
+function getSearchResultPath(result: SearchResult): string | undefined {
+    if (!result.secondaryInformation) {
+        return undefined;
+    }
+
+    switch (result.entityName) {
+        case "PageTreeNode":
+            return `/${result.secondaryInformation}`;
+        case "News":
+            return `/news/${result.secondaryInformation}`;
+        default:
+            return undefined;
+    }
+}
 
 export const FullTextSearchBlock = withPreview(
     (_props: PropsWithData<FullTextSearchBlockData>) => {
@@ -118,11 +137,26 @@ export const FullTextSearchBlock = withPreview(
                                     const showSecondaryInformation =
                                         result.secondaryInformation && result.secondaryInformation.toLowerCase() !== result.name.toLowerCase();
 
-                                    return (
-                                        <li key={`${result.entityName}-${result.id}`} className={styles.listItem}>
+                                    const path = getSearchResultPath(result);
+                                    const href = path && language ? createSitePath({ path, scope: { language } }) : undefined;
+
+                                    const content = (
+                                        <>
                                             <span className={styles.name}>{result.name}</span>
                                             {showSecondaryInformation && (
                                                 <span className={styles.secondaryInformation}>{result.secondaryInformation}</span>
+                                            )}
+                                        </>
+                                    );
+
+                                    return (
+                                        <li key={`${result.entityName}-${result.id}`} className={styles.listItem}>
+                                            {href ? (
+                                                <Link href={href} className={`${styles.result} ${styles.link}`}>
+                                                    {content}
+                                                </Link>
+                                            ) : (
+                                                <div className={styles.result}>{content}</div>
                                             )}
                                         </li>
                                     );
