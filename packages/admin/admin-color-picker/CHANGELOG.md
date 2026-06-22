@@ -1,5 +1,12 @@
 # @comet/admin-color-picker
 
+## 8.24.3
+
+### Patch Changes
+
+- @comet/admin@8.24.3
+- @comet/admin-icons@8.24.3
+
 ## 8.24.2
 
 ### Patch Changes

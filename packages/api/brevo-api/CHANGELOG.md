@@ -1,5 +1,12 @@
 # @comet/brevo-api
 
+## 8.24.3
+
+### Patch Changes
+
+- 7bde4d8: Fix error handling for non-existing contacts
+    - @comet/cms-api@8.24.3
+
 ## 8.24.2
 
 ### Patch Changes
