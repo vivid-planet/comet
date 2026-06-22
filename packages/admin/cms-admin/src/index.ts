@@ -4,6 +4,7 @@ export { ActionLogVersionGrid, actionLogVersionGridFragment } from "./actionLog/
 export { ActionLogCompare, actionLogCompareFragment } from "./actionLog/components/actionLogCompare/ActionLogCompare";
 export { ActionLogHeader, type ActionLogHeaderProps } from "./actionLog/components/actionLogHeader/ActionLogHeader";
 export { ActionLogShowVersion, actionLogShowVersionFragment } from "./actionLog/components/actionLogShowVersion/ActionLogShowVersion";
+export { ActionLogTypeChip } from "./actionLog/components/actionLogTypeChip/ActionLogTypeChip";
 export { DiffHeader, type DiffHeaderProps } from "./actionLog/components/diffHeader/DiffHeader";
 export { DiffViewer, type DiffViewerProps } from "./actionLog/components/diffViewer/DiffViewer";
 export { AnchorBlock } from "./blocks/AnchorBlock";

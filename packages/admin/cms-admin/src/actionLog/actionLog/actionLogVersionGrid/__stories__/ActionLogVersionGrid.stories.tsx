@@ -3,8 +3,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MemoryRouter } from "react-router";
 
 import { ActionLogVersionGrid } from "../ActionLogVersionGrid";
+import type { GQLActionLogVersionGridFragment } from "../ActionLogVersionGrid.gql.generated";
 
-const mockActionLogs = {
+const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragment[] } = {
     totalCount: 4,
     nodes: [
         {
@@ -12,6 +13,7 @@ const mockActionLogs = {
             user: { id: "system-user", name: "system-user" },
             entityName: "TestEntity",
             version: 4,
+            type: "Updated",
             createdAt: "2023-10-04T12:00:00Z",
         },
         {
@@ -19,6 +21,7 @@ const mockActionLogs = {
             user: { id: "1", name: "Max Mustermann" },
             entityName: "TestEntity",
             version: 3,
+            type: "Updated",
             createdAt: "2023-10-03T12:00:00Z",
         },
         {
@@ -26,6 +29,7 @@ const mockActionLogs = {
             user: { id: "2", name: "Jane Doe" },
             entityName: "TestEntity",
             version: 2,
+            type: "Updated",
             createdAt: "2023-10-02T12:00:00Z",
         },
         {
@@ -33,6 +37,7 @@ const mockActionLogs = {
             user: { id: "deleted-user-id", name: null },
             entityName: "TestEntity",
             version: 1,
+            type: "Created",
             createdAt: "2023-10-01T12:00:00Z",
         },
     ],

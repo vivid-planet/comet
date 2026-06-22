@@ -56,7 +56,18 @@ type ActionLog {
   version: Int!
   snapshot: JSONObject
   createdAt: DateTime!
+
+  """
+  Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.
+  """
+  type: ActionLogType!
   user: ActionLogsUser!
+}
+
+enum ActionLogType {
+  Created
+  Updated
+  Deleted
 }
 
 type ContentScopeWithLabel {

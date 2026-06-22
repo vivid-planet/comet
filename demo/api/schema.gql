@@ -9,6 +9,11 @@ type ActionLog {
   id: ID!
   scope: [JSONObject!]
   snapshot: JSONObject
+
+  """
+  Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.
+  """
+  type: ActionLogType!
   user: ActionLogsUser!
   version: Int!
 }
@@ -21,6 +26,12 @@ input ActionLogSort {
 enum ActionLogSortField {
   createdAt
   version
+}
+
+enum ActionLogType {
+  Created
+  Deleted
+  Updated
 }
 
 type ActionLogsUser {
