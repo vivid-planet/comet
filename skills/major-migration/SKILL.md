@@ -49,6 +49,7 @@ Record the resolved site list durably (e.g. a note on the first `TaskCreate` tas
     - **Site section: repeat every step once per resolved site.** Skip entirely if no site package.
     - Run any codemods the section prescribes — they catch edge cases hand-fixing misses.
     - Run any verification commands.
+    - **A green build is not proof a section is complete.** Hand-written types can mask a missing runtime change — a type that no longer matches a value's real shape (e.g. a synchronous type over what is now a `Promise`) lets `tsc` pass while the code breaks at runtime. When a guide step makes an API async or is otherwise runtime-only, scan **every** affected file in **every** site by hand instead of trusting `tsc`/lint to flag them.
     - After each section: `npm run lint` (and `npm run test` if present) in the affected package. Multi-site: lint each site after its pass.
     - **Commit after each section** with a message naming the section. For multi-site, either commit per-site or bundle the site section — pick one and be consistent.
 5. **Do not combine sections.** Keep commits separate to make bisecting trivial.
@@ -100,7 +101,7 @@ Running this fresh keeps the audit independent of the session that produced the 
 
 ## Offer a smoke test
 
-Once committed and audited, **offer the user a smoke test**. Lint/tsc green is necessary but not sufficient — React/Next/MUI majors introduce dev-only warnings, hydration mismatches, and silent routing breakage that only surface in the browser.
+Once committed and audited, **offer the user a smoke test**. Lint/tsc green is necessary but not sufficient — React/Next/MUI majors introduce dev-only warnings, hydration mismatches, silent routing breakage, and broken embedded webcomponents that only surface in the browser.
 
 Before starting, tell the user:
 

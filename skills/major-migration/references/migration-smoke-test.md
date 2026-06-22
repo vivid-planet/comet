@@ -2,7 +2,7 @@
 
 Run after a major migration finishes (lint/tsc green, all commits pushed) to catch runtime regressions that lint and tsc can't see.
 
-React majors commonly introduce dev-only warnings (DOM-prop leaks, hydration mismatches), Next.js majors break dynamic route resolution silently (async params, percent-encoding), and MUI X majors enforce previously-soft props at runtime. None surface in `tsc --noEmit` or eslint.
+React majors commonly introduce dev-only warnings (DOM-prop leaks, hydration mismatches), Next.js majors break dynamic route resolution silently (async params, percent-encoding), and MUI X majors enforce previously-soft props at runtime. Embedded third-party webcomponents that bundle their own copy of React can also crash against a new React major. None surface in `tsc --noEmit` or eslint.
 
 ## Project shape
 
@@ -66,7 +66,7 @@ Otherwise: the page tree exercises the most upstream code paths (block editor, R
 
 1. Navigate to `/at/pages/pagetree/<category>` (e.g. `main-navigation`).
 2. **Add:** click Add, fill Name (slug auto-fills), pick default Document Type, Save. Confirm row appears and URL is clean.
-3. **Edit:** open the row's `/edit`. **Walk all tabs** (Blocks, Stage, Seo, Config). The Config tab embeds the RTE and is where React 19 / MUI majors commonly surface prop-leak and `<div>`-in-`<p>` hydration errors. Capture console after each tab switch. Change one trivial field (e.g. `Menu description`), Save, reload, verify the value persisted.
+3. **Edit:** open the row's `/edit`. **Walk all tabs** (Blocks, Stage, Seo, Config). The Config tab embeds the RTE and is where React or MUI majors commonly surface prop-leak and `<div>`-in-`<p>` hydration errors. Capture console after each tab switch. Change one trivial field (e.g. `Menu description`), Save, reload, verify the value persisted.
 4. **Delete:** context menu → Delete → confirm. Verify row is gone.
 
 If any step fails, that's a blocker for the PR.
@@ -94,6 +94,17 @@ Write per-site results under their own subheading (e.g. `### Site: <site-name> (
 4. For each picked URL: navigate, snapshot, collect errors/warnings.
 5. For high-volume buckets, **bulk-fetch HTTP status first**: `curl -s -o /dev/null -w "%{http_code}"` catches blanket 404s in seconds. Browser-walk 200s plus a handful of 404s to see the error page.
 6. **Bytes-check sitemap URLs with special characters.** If a `<loc>` contains `:`, `?`, `#`, `&`, or other RFC 3986 sub-delims, verify it resolves. Use `od -c` to confirm a colon is real, not a `&#58;` artifact.
+
+### Embedded webcomponents (high-risk)
+
+If the site embeds third-party **webcomponents** / micro-frontends — a block that loads an external `<script>` mounting a widget owned by another team (forms, product sliders, search or booking widgets, etc.) — treat every page that renders one as high-risk and test each webcomponent **individually in the browser**.
+
+Webcomponents that bundle their own copy of React (and related libraries) can crash at runtime against a new React major while lint, `tsc`, and the build all pass — often with a cryptic minified error deep inside React. The migration guide documents any known per-version failure mode and workaround; apply that if present.
+
+1. **Detect:** `grep -rnE "customElements|next/script|<script" site/src`, plus any block whose job is to embed an external widget.
+2. **Browser-test each webcomponent type** (not just each page): navigate to a page that renders it, confirm it actually **mounts and is interactive** — a 200 status or a rendered page shell is not enough — and capture console errors.
+3. A crash here is a **production blocker**, not a warning.
+4. Call out every webcomponent and its result explicitly in `test-report.md`, and tell the user to verify each one on staging **before deploying to production**.
 
 ### Side effect of 404s
 
