@@ -1,160 +1,129 @@
 # Migration Smoke-Test
 
-Run this after a major migration finishes (lint/tsc green, all commits pushed) to catch runtime regressions that lint and tsc can't see.
+Run after a major migration finishes (lint/tsc green, all commits pushed) to catch runtime regressions that lint and tsc can't see.
 
-Lint-clean is necessary but not sufficient. React major upgrades commonly introduce dev-only warnings (DOM-prop leaks, hydration mismatches), Next.js major upgrades break dynamic route resolution silently (async params, percent-encoding rules), and MUI X majors enforce previously-soft props at runtime. None of these surface in `tsc --noEmit` or eslint.
-
-## Table of Contents
-
-1. [Project shape](#project-shape)
-2. [Prerequisites](#prerequisites)
-3. [Inventory the surface](#inventory-the-surface)
-4. [Admin pass](#admin-pass)
-5. [Site pass](#site-pass)
-6. [Triage findings](#triage-findings)
-7. [Output: `test-report.md`](#output-test-reportmd)
-8. [Re-verify after fixes](#re-verify-after-fixes)
-9. [When to stop and ask the human](#when-to-stop-and-ask-the-human)
-
----
+React majors commonly introduce dev-only warnings (DOM-prop leaks, hydration mismatches), Next.js majors break dynamic route resolution silently (async params, percent-encoding), and MUI X majors enforce previously-soft props at runtime. None surface in `tsc --noEmit` or eslint.
 
 ## Project shape
 
-The dispatching prompt should tell you the project shape — number of sites (with dev URLs / ports) and whether the page tree is present. **Use what's in the prompt; don't re-run the discovery `grep`.**
+The dispatching prompt should tell you the project shape — the list of sites with their dev URLs/ports. **Use what's in the prompt; don't re-run discovery `grep`.**
 
-Possible shapes and how they affect scope:
+**Sites and the page tree are tied** — both appear together or neither does. Two real shapes:
 
-| Project shape       | Admin pass | Page-tree CRUD | Site pass          |
-| ------------------- | ---------- | -------------- | ------------------ |
-| Full (admin + site) | yes        | yes            | yes, once per site |
-| Admin + no site     | yes        | if applicable  | **skip**           |
-| Admin + no PT       | yes        | **skip**       | yes, once per site |
+| Project shape        | Admin pass | Page-tree CRUD | Site pass          |
+| -------------------- | ---------- | -------------- | ------------------ |
+| Admin + 1+ sites     | yes        | yes            | yes, once per site |
+| Admin only (0 sites) | yes        | **skip**       | **skip**           |
 
-For multi-site projects, the site pass runs **once per site** — each has its own sitemap, URL buckets, and regression surface. A Next.js major can break one site's routes while leaving another working.
+For multi-site projects, the site pass runs **once per site** — each has its own sitemap and regression surface. A Next.js major can break one site while leaving another working.
 
-Note the shape (verbatim from the prompt) at the top of `test-report.md` so the reader knows exactly what was and wasn't covered, and list each site's directory plus dev URL.
+If the project is an unusual case (site without page tree, or vice versa), surface that to the user before running.
 
-**Fallback only if the prompt is missing this info:** scan for `package.json` files that depend on `@comet/site-nextjs` and grep `admin/src` for `MasterMenu` / `/at/pages/pagetree`. Flag the gap in your final summary so the dispatcher fixes the prompt next time.
+Note the shape (verbatim from the prompt) at the top of `test-report.md` so the reader knows what was and wasn't covered.
+
+**Fallback if the prompt is missing this info:** scan `package.json` files for `@comet/site-nextjs` and flag the gap in your summary.
 
 ```bash
 grep -l '"@comet/site-nextjs"' $(find . -name package.json -not -path '*/node_modules/*' -not -path '*/.next/*')
 ```
 
----
-
 ## Prerequisites
 
-Before starting:
-
-1. **Services running.** Use `dev-pm status`; admin (8000), api (4000), and codegens must be `Running`. The site service only matters if the project has an `@comet/site-nextjs` package — skip checking it on admin-only projects. Restart any that aren't.
-2. **Fixtures loaded.** `npm --prefix api run fixtures` — for projects with a page tree, this seeds the URLs the sitemap exposes for sampling. If the migration changed seed/slug logic, re-run fixtures.
-3. **Drive the browser via Playwright MCP** (`mcp__plugin_vps_playwright__browser_*`) so console errors are captured. `curl` is fine for HTTP-status sweeps but won't see hydration / DOM-prop errors.
-4. **Have a fresh repo-root `test-report.md` ready to write to.** Append findings as you go; don't keep them in conversation.
-
----
+1. **Services running.** `dev-pm status`; admin (8000), api (4000), codegens must be `Running`. Site only matters if `@comet/site-nextjs` exists. Restart any that aren't.
+2. **Fixtures loaded.** `npm --prefix api run fixtures` — for projects with a page tree, this seeds the sitemap URLs. Re-run if the migration changed seed/slug logic.
+3. **Drive via Playwright MCP** (`mcp__plugin_vps_playwright__browser_*`) so console errors are captured. `curl` is fine for HTTP-status sweeps but won't see hydration/DOM-prop errors.
+4. **Fresh repo-root `test-report.md` ready to write to.** Append findings as you go.
 
 ## Inventory the surface
 
-Skip this if the project already has an authoritative inventory file. Otherwise:
+Skip if the project already has an authoritative inventory file. Otherwise:
 
-- **Admin routes:** read `admin/src/common/MasterMenu.tsx` (or equivalent) and list every `path:` entry. Group by section (Dashboard, Page Tree, Structured Content, System, etc.).
-- **Admin grids/forms:** for each route, identify whether it renders a `DataGrid`/`FinalForm`. Note which entities are writable (have Add/Edit/Delete) — those need a full CRUD pass.
-- **Site URL buckets** _(skip if no `@comet/site-nextjs` package was detected)_: fetch the site's `sitemap.xml` (usually `http://localhost:3000/sitemap.xml`, but on multi-site setups use the port/host the resolved site actually runs on — check `dev-pm status`). Parse `<loc>` entries. Classify into buckets by URL pattern (e.g. `/news/...`, fixture/scaffold pages, ...). The buckets you see depend on the project.
+- **Admin routes:** read `admin/src/common/MasterMenu.tsx` (or equivalent), list every `path:` entry, group by section.
+- **Admin grids/forms:** for each route, identify writable entities (Add/Edit/Delete) — those need a full CRUD pass.
+- **Site URL buckets** _(skip if no site package)_: fetch `sitemap.xml` (usually `http://localhost:3000/sitemap.xml`, but use the port the resolved site listens on — check `dev-pm status`). Parse `<loc>` entries, classify into buckets by URL pattern.
 
-Save the inventory output briefly in scratch — don't write it to `test-report.md` yet.
-
----
+Keep inventory in scratch; don't write to `test-report.md` yet.
 
 ## Admin pass
 
-Walk the inventory list with Playwright MCP. For each admin route:
+For each admin route:
 
-1. `browser_navigate` to it (e.g. `http://localhost:8000/at/structured-content/news`).
-2. `browser_snapshot` to confirm what rendered. Look for `<main>` containing actual content vs an empty/error fallback.
-3. `browser_console_messages level=error` and `level=warning`. Record:
-    - count of errors, count of warnings
-    - one-line excerpt of each error (`<message>` truncated at ~120 chars)
-4. For writable entities, run a CRUD cycle:
-    - **Add:** open the Add form, fill required fields with a recognizable value like `playwright-smoke-<timestamp>`. Click Save.
-    - **Check the post-save URL.** A literal `undefined`, `null`, or `NaN` segment is a regression — log it. (Example bug: `…/edit/undefined` from `activatePage(\`edit/${tab}\`, id)`when`tab` is undefined.)
-    - **Edit:** change one field on the new record, save.
-    - **Delete:** remove the record. If the UI has no delete control (action cell shows only "Edit"), that's a finding — verify the underlying mutation still works via the browser console (`fetch('/api/graphql', {method:'POST', body:...})`) before declaring the API broken too.
-    - If Save fails, capture the error and skip Edit/Delete so you don't leave half-state behind.
+1. `browser_navigate` to it.
+2. `browser_snapshot` to confirm rendering — `<main>` with content vs empty/error fallback.
+3. `browser_console_messages level=error` and `level=warning`. Record error/warning counts and one-line excerpts (~120 chars).
+4. For writable entities, run CRUD:
+    - **Add:** open form, fill required fields with `playwright-smoke-<timestamp>`. Save.
+    - **Check the post-save URL** — a literal `undefined`/`null`/`NaN` segment is a regression (e.g. `…/edit/undefined`).
+    - **Edit:** change one field, save.
+    - **Delete:** remove the record. If no delete control, verify the underlying mutation works via console `fetch('/api/graphql', ...)` before declaring the API broken.
+    - If Save fails, capture the error and skip Edit/Delete to avoid half-state.
 
-### Page Tree CRUD is mandatory — do it every time (when the project has one)
+### Page Tree CRUD is mandatory (on projects with a site)
 
-**Skip this entire subsection if the project has no page tree** (see [Project shape](#project-shape)). Some projects are pure structured-content backends with no `/at/pages/pagetree` route, and forcing a CRUD run there will just hit 404s.
+**Skip on admin-only projects** — page tree presence follows site presence.
 
-Otherwise: the page tree is _the_ core Comet writable surface and exercises the most upstream code paths (block editor, RTE, file picker, page-tree GraphQL mutations, route-tab navigation). Skipping it leaves big classes of regressions invisible. Run a full Add → Edit → Delete on at least one page-tree category, regardless of what else you tested:
+Otherwise: the page tree exercises the most upstream code paths (block editor, RTE, file picker, page-tree GraphQL, route-tab navigation). Run a full Add → Edit → Delete on at least one category:
 
 1. Navigate to `/at/pages/pagetree/<category>` (e.g. `main-navigation`).
-2. **Add:** click Add, fill Name (slug auto-fills), pick the default Document Type, Save. Confirm the new row appears in the tree and the URL after save is clean (no `undefined`/`null`/`NaN`/duplicated segments).
-3. **Edit:** click the new row to open `/edit`. **Walk all tabs** (Blocks, Stage, Seo, Config). The Config tab in particular embeds the RTE and is where React 19 / MUI majors commonly surface prop-leak and `<div>` -in-`<p>` hydration errors that don't appear elsewhere. Capture console after each tab switch. Change one trivial field (e.g. `Menu description`), Save. Reload the page and verify the value persisted by reading the input back.
-4. **Delete:** open the row's context menu → Delete → confirm. Verify the row is gone.
+2. **Add:** click Add, fill Name (slug auto-fills), pick default Document Type, Save. Confirm row appears and URL is clean.
+3. **Edit:** open the row's `/edit`. **Walk all tabs** (Blocks, Stage, Seo, Config). The Config tab embeds the RTE and is where React 19 / MUI majors commonly surface prop-leak and `<div>`-in-`<p>` hydration errors. Capture console after each tab switch. Change one trivial field (e.g. `Menu description`), Save, reload, verify the value persisted.
+4. **Delete:** context menu → Delete → confirm. Verify row is gone.
 
-If any of those steps fails, that's a blocker for the PR — page tree is the feature most users actually use.
+If any step fails, that's a blocker for the PR.
 
-After the run, delete any test records you created (or note them in `test-report.md` as left behind).
+After the run, delete any test records (or note them in `test-report.md`).
 
 ### Two errors to expect everywhere
 
-Many Comet projects have one or two errors that fire on _every_ admin page (Sentry init, logo SVG, etc.). Identify them once at the top of the run and call them "baseline" — count per-route errors _above_ baseline rather than reporting baseline N times.
-
----
+Many projects have one or two errors that fire on _every_ admin page (Sentry init, logo SVG, etc.). Identify these once and call them "baseline" — count per-route errors _above_ baseline rather than reporting baseline N times.
 
 ## Site pass
 
-**Skip this entire section if the project has no `@comet/site-nextjs` package** anywhere (see [Project shape](#project-shape)). For admin-only / headless projects the site pass is not applicable — note "no site package, site pass skipped" in `test-report.md` and stop here.
+**Skip this section entirely if no `@comet/site-nextjs` package.** Note "no site package, site pass skipped" in `test-report.md` and stop here.
 
-**For multi-site projects (2+ resolved site directories), run this whole section once per site.** Do not collapse them — each site has its own sitemap, routes, and regression surface, and a Next.js or middleware regression frequently breaks one site while leaving another working. The way `<n>` sites typically expose themselves:
+**For multi-site projects, run once per site.** Each has its own sitemap, routes, and regression surface. Sites typically expose themselves:
 
-- Different ports on `localhost` (3000, 3001, …) — check `dev-pm status` for the actual port each site listens on.
-- Different hostnames via the project's middleware / domain routing (`site/src/middleware.ts`) — you may need to hit `http://<host>` with a `Host:` header override or via the per-site dev URL.
+- Different ports on `localhost` (3000, 3001, …) — check `dev-pm status`.
+- Different hostnames via project middleware (`site/src/middleware.ts`) — hit with `Host:` header override or per-site dev URL.
 
-Write per-site results under their own subheading in `test-report.md` (e.g. `### Site: <site-name> (port 3001)`). Apply every step below to every site.
+Write per-site results under their own subheading (e.g. `### Site: <site-name> (port 3001)`).
 
-1. Fetch the site's `sitemap.xml` (`http://localhost:<port>/sitemap.xml`). Parse `<loc>` entries.
-2. **Bucket the URLs** by pattern (e.g. locale-prefixed `/de/...`, fixture/scaffold pages, normal pages, ...). Some buckets may contain thousands of URLs and need sampling; others may have only a handful and can be exhausted.
-3. **Pick a seeded sample.** Common shape: 20 normal + all of any small bucket the user explicitly cares about. Use a deterministic shuffle (e.g. seeded sort) so re-runs hit the same URLs. If a bucket has fewer entries than the target sample size, take all of them and note the imbalance.
-4. For each picked URL: navigate, snapshot, collect console errors and warnings.
-5. For high-volume buckets, **bulk-fetch HTTP status first**: a single loop hitting all of them with `curl -s -o /dev/null -w "%{http_code}"` catches blanket 404s (e.g. news-route group completely broken) in seconds. Browser-walk only those that return 200, plus a handful of 404s to see the error page itself.
-6. Bytes-check sitemap URLs that contain special characters. If a `<loc>` contains `:`, `?`, `#`, `&`, or other RFC 3986 sub-delims in a path segment, verify the URL actually resolves. (`od -c` or hex-dump to confirm a colon is real, not a terminal-rendering artifact of `&#58;`.)
+1. Fetch `sitemap.xml`, parse `<loc>` entries.
+2. **Bucket URLs** by pattern (locale-prefixed, fixture/scaffold, normal pages, ...). Some buckets need sampling; small ones can be exhausted.
+3. **Pick a seeded sample.** Common shape: 20 normal + all of any small bucket the user cares about. Use a deterministic shuffle for reproducible runs.
+4. For each picked URL: navigate, snapshot, collect errors/warnings.
+5. For high-volume buckets, **bulk-fetch HTTP status first**: `curl -s -o /dev/null -w "%{http_code}"` catches blanket 404s in seconds. Browser-walk 200s plus a handful of 404s to see the error page.
+6. **Bytes-check sitemap URLs with special characters.** If a `<loc>` contains `:`, `?`, `#`, `&`, or other RFC 3986 sub-delims, verify it resolves. Use `od -c` to confirm a colon is real, not a `&#58;` artifact.
 
 ### Side effect of 404s
 
-Any URL that falls through to the not-found page produces _additional_ errors from the not-found page itself (`<a>` nested in `<a>` from a configurator button, hydration mismatch). Don't count these against the per-URL error budget — they're a single not-found-page bug surfacing N times.
-
----
+Any URL that falls through to not-found produces _additional_ errors from the not-found page itself (`<a>` nested in `<a>`, hydration mismatch). Don't count these against the per-URL budget — they're a single not-found bug surfacing N times.
 
 ## Triage findings
 
-Each console error/warning gets one of three labels — apply this _while_ you're walking the routes, not after:
+Apply one of three labels _while_ walking, not after:
 
-1. **Project-fixable** — the broken code lives under `admin/src`, `site/src`, or `api/src`. These belong in the migration PR or a follow-up.
-2. **Comet upstream** — the broken code lives under `node_modules/@comet/*`. Surface to the user; don't workaround. (See `feedback_comet_upstream.md` memory.)
-3. **Pre-existing / out-of-scope** — same warning was present before the migration (font preload, Swiper loop, etc.). Note once at the bottom of `test-report.md`; don't itemize per-route.
+1. **Project-fixable** — broken code is under `admin/src`, `site/src`, `api/src`. Belongs in the migration PR or a follow-up.
+2. **Comet upstream** — broken code is under `node_modules/@comet/*`. Surface to the user; don't workaround.
+3. **Pre-existing / out-of-scope** — same warning pre-existed migration (font preload, Swiper loop, etc.). Note once at the bottom; don't itemize per-route.
 
-If you can't tell from the error message which bucket a finding falls into, grep for the symbol/string in the project source — if it doesn't appear there, it's Comet upstream or a transitive dep.
-
----
+If you can't tell which bucket, grep for the symbol in the project source — if absent, it's upstream or a transitive dep.
 
 ## Output: `test-report.md`
 
-Write findings to `test-report.md` at the repo root as you go. Don't keep them only in conversation — the file is the deliverable.
-
-Suggested structure:
+Write findings to `test-report.md` at the repo root as you go. The file is the deliverable.
 
 ```markdown
 # Smoke-test findings — <date>
 
 Tool: Playwright MCP (Chromium). Branch: `<branch>`.
-Project shape: <full admin + site(s) | admin-only | admin + no page tree>.
+Project shape: <admin + 1+ sites | admin-only>.
 Sites detected: <none | list of site dirs + dev URLs>.
-Scope: <admin route count> admin routes; per site, <site URL count> URLs sampled from <total> in sitemap (or "site pass skipped — no site package").
+Scope: <admin route count> admin routes; per site, <URL count> sampled from <total>.
 
 ## TL;DR — biggest problems first
 
-<5–8 numbered bullets, ordered by user impact, each with file path or exact error excerpt>
+<5–8 numbered bullets, ordered by user impact, each with file path or error excerpt>
 
 ## Session-global console errors (every admin page)
 
@@ -171,7 +140,7 @@ Scope: <admin route count> admin routes; per site, <site URL count> URLs sampled
 
 ## Sites
 
-(Repeat the block below once per site for multi-site projects. Skip the whole "Sites" section for admin-only projects.)
+(One block per site. Skip the section entirely for admin-only.)
 
 ### Site: <site-name> (<dev-url>)
 
@@ -182,43 +151,39 @@ Scope: <admin route count> admin routes; per site, <site URL count> URLs sampled
 
 #### Per-URL results
 
-<grouped by error class, not one heading per URL — e.g. "0 errors", "1 error — Received false for non-boolean attribute active", "3 errors — <a> nested in <a> + hydration">
+<grouped by error class, e.g. "0 errors", "1 error — Received false for non-boolean attribute active">
 
 ## Hand off to Comet upstream
 
-<numbered list of upstream bugs with the relevant @comet/\* module path>
+<numbered list of upstream bugs with @comet/\* module paths>
 
 ## Numbers
 
 - Admin routes visited: <n>. Broken: <n>. With extra console errors: <n>.
-- Site URLs sampled: <n total across all sites>. HTTP 200: <n>. HTTP 404: <n>. (Break down per site if results diverge.)
+- Site URLs sampled: <n total>. HTTP 200: <n>. HTTP 404: <n>.
 
 ## Cleanup
 
 - Test records left in DB: <list or "none">.
 ```
 
-Avoid one heading per URL when most of the bucket looks the same — group by failure mode. Five URLs with the same `active={false}` warning are one finding with five examples, not five findings.
-
----
+Avoid one heading per URL when most look the same — group by failure mode. Five URLs with the same `active={false}` warning are one finding with five examples.
 
 ## Re-verify after fixes
 
-After the engineer fixes the project-fixable findings:
+After the engineer fixes project-fixable findings:
 
-1. **Re-run the failing scenarios in the browser via Playwright MCP** — not just the unit test. A green `tsc` doesn't tell you whether the URL resolves now.
-2. **For each item in the "Fixed" list in `test-report.md`**: load one URL that previously hit the bug, capture console messages, confirm the specific error string is gone. Don't just check the error count dropped — a different error could have replaced it.
-3. **Re-run fixtures if the migration changed seed/slug logic** before re-checking site URLs. The DB may still hold the pre-fix data.
-4. **Bytes-check the sitemap** for previously-broken URL patterns — e.g. if you fixed a `:` in slugs, confirm the sitemap now emits the new form (use `od -c`, not just `grep`, since some special characters render misleadingly in terminals).
-5. **Update `test-report.md`** with a "Fixed in this branch" section and move resolved items there. Keep upstream/out-of-scope findings in place.
+1. **Re-run failing scenarios in the browser** — not just the unit test. Green `tsc` doesn't tell you if the URL resolves.
+2. **For each "Fixed" item**: load a previously-broken URL, capture console, confirm the specific error string is gone. A different error could have replaced it.
+3. **Re-run fixtures if the migration changed seed/slug logic** before re-checking site URLs.
+4. **Bytes-check the sitemap** for previously-broken patterns (use `od -c`, not just `grep`).
+5. **Update `test-report.md`** with a "Fixed in this branch" section. Keep upstream/out-of-scope findings in place.
 
-A useful pattern: ask the user "do you want me to commit each fix atomically?" before starting — answer is almost always yes — and run the smoke test one more time after the commits to confirm pre-commit hooks didn't accidentally revert anything.
-
----
+Useful pattern: ask "commit each fix atomically?" before starting — answer is almost always yes — and re-run the smoke test after to confirm hooks didn't revert anything.
 
 ## When to stop and ask the human
 
-- **Hundreds of URLs in a bucket all 404.** That's a route-group regression, not N individual bugs. Stop and report after the first 5–10 confirm the pattern.
-- **A console error mentions a file you can't locate** under `src/` _or_ `node_modules/@comet/*`. Don't guess which bucket it falls into — ask.
-- **CRUD test fails with a 500 that suggests data corruption** (FK violation, dangling reference). Stop before continuing to other entities; the test data may be polluting subsequent runs.
-- **Playwright MCP can't reach the dev server** at all (timeouts, ECONNREFUSED). Check `dev-pm status`; if everything is `Running` but unreachable, surface the discrepancy to the user before retrying with random restart commands.
+- **Hundreds of URLs in a bucket all 404.** Route-group regression, not N bugs. Stop after the first 5–10 confirm the pattern.
+- **A console error mentions a file you can't locate** under `src/` or `node_modules/@comet/*`. Ask, don't guess.
+- **CRUD test fails with a 500 suggesting data corruption** (FK violation, dangling reference). Stop before continuing; test data may be polluting subsequent runs.
+- **Playwright MCP can't reach the dev server** (timeouts, ECONNREFUSED). Check `dev-pm status`; if everything is `Running` but unreachable, surface the discrepancy before random restart commands.
