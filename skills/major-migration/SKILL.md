@@ -104,7 +104,7 @@ Once committed and audited, **offer the user a smoke test**. Lint/tsc green is n
 
 Before starting, tell the user:
 
-- The smoke test drives admin and site(s) in a real browser via **Playwright MCP** (`mcp__plugin_vps_playwright__browser_*`). Confirm MCP is available.
+- The smoke test drives admin and site(s) in a real browser via **Playwright MCP** (`browser_*` tools). Confirm MCP is available.
 - The **app must be running** — admin (8000), api (4000), codegens, and **every site service** all `Running` per `dev-pm status`. Multi-site projects run each site on its own port. Ask them to start whatever isn't running.
 
 The project shape was already detected (see [Detect the project shape](#detect-the-project-shape)). **Pass it to the subagent** rather than making it re-run discovery.

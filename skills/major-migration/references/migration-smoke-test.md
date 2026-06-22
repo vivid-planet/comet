@@ -31,7 +31,7 @@ grep -l '"@comet/site-nextjs"' $(find . -name package.json -not -path '*/node_mo
 
 1. **Services running.** `dev-pm status`; admin (8000), api (4000), codegens must be `Running`. Site only matters if `@comet/site-nextjs` exists. Restart any that aren't.
 2. **Fixtures loaded.** `npm --prefix api run fixtures` — for projects with a page tree, this seeds the sitemap URLs. Re-run if the migration changed seed/slug logic.
-3. **Drive via Playwright MCP** (`mcp__plugin_vps_playwright__browser_*`) so console errors are captured. `curl` is fine for HTTP-status sweeps but won't see hydration/DOM-prop errors.
+3. **Drive via Playwright MCP** (`browser_*` tools) so console errors are captured. `curl` is fine for HTTP-status sweeps but won't see hydration/DOM-prop errors.
 4. **Fresh repo-root `test-report.md` ready to write to.** Append findings as you go.
 
 ## Inventory the surface
