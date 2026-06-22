@@ -1,11 +1,11 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, type ObjectQuery, raw } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
+import { gqlArgsToMikroOrmQuery, splitSearchString } from "../common/filter/mikro-orm";
 import { EntityInfoObject } from "../entity-info/entity-info.object";
 import { EntityInfoService } from "../entity-info/entity-info.service";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
@@ -15,6 +15,36 @@ import { ContentScope } from "../user-permissions/interfaces/content-scope.inter
 import { PaginatedWarnings } from "./dto/paginated-warnings";
 import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";
+
+// `type`, `name` and `secondaryInformation` are not plain columns on the Warning entity:
+// `type` is stored inside the `sourceInfo` JSONB column, while `name` and `secondaryInformation`
+// originate from the joined EntityInfo view. Remap these fields in the generated MikroORM query so
+// they resolve to the correct column / join alias.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function remapWarningQueryFields(query: any): any {
+    if (Array.isArray(query)) {
+        return query.map(remapWarningQueryFields);
+    }
+    if (query !== null && typeof query === "object") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result: Record<string, any> = {};
+        for (const [key, value] of Object.entries(query)) {
+            if (key === "type") {
+                result.sourceInfo = { rootEntityName: value };
+            } else if (key === "name") {
+                result["entityInfo.name"] = value;
+            } else if (key === "secondaryInformation") {
+                result["entityInfo.secondaryInformation"] = value;
+            } else if (key === "$and" || key === "$or") {
+                result[key] = (value as unknown[]).map(remapWarningQueryFields);
+            } else {
+                result[key] = value;
+            }
+        }
+        return result;
+    }
+    return query;
+}
 
 @Resolver(() => Warning)
 @RequiredPermission(["warnings"], { skipScopeCheck: true })
@@ -53,8 +83,27 @@ export class WarningResolver {
             filter.and = filter.and.filter((item) => item.scope === undefined);
         }
 
-        const where = gqlArgsToMikroOrmQuery({ search, filter: standardFilter }, this.entityManager.getMetadata(Warning));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const where: ObjectQuery<any> = remapWarningQueryFields(
+            gqlArgsToMikroOrmQuery({ filter: standardFilter }, this.entityManager.getMetadata(Warning)),
+        );
         where.status = { $in: status };
+
+        // Search across the warning message as well as the type and the name / secondary information
+        // of the related entity (the latter two are resolved via the joined EntityInfo view).
+        if (search) {
+            where.$and = where.$and ?? [];
+            for (const searchPart of splitSearchString(search)) {
+                where.$and.push({
+                    $or: [
+                        { message: { $ilike: searchPart } },
+                        { sourceInfo: { rootEntityName: { $ilike: searchPart } } },
+                        { "entityInfo.name": { $ilike: searchPart } },
+                        { "entityInfo.secondaryInformation": { $ilike: searchPart } },
+                    ],
+                });
+            }
+        }
 
         // A scope can be for example { domain: "main", language: "en" } but it should also query scopes that are only { domain: "main" }.
         // These additional scopes are calculated here.
@@ -89,17 +138,36 @@ export class WarningResolver {
             }
         }
 
-        const options: FindOptions<Warning> = { offset, limit };
+        // Join the EntityInfo view so warnings can be filtered, searched and sorted by the related
+        // entity's name and secondary information. The view is keyed by entity name and id, both of
+        // which are stored in the warning's `sourceInfo` JSONB column.
+        const entityInfoQueryBuilder = this.entityManager.createQueryBuilder(EntityInfoObject, "entityInfo");
+        const queryBuilder = this.entityManager
+            .createQueryBuilder(Warning, "warning")
+            .select("warning.*")
+            .leftJoin(entityInfoQueryBuilder, "entityInfo", {
+                "entityInfo.entityName": raw(`"warning"."sourceInfo"->>'rootEntityName'`),
+                "entityInfo.id": raw(`"warning"."sourceInfo"->>'targetId'`),
+            })
+            .where(where)
+            .limit(limit)
+            .offset(offset);
 
         if (sort) {
-            options.orderBy = sort.map((sortItem) => {
-                return {
-                    [sortItem.field]: sortItem.direction,
-                };
-            });
+            queryBuilder.orderBy(
+                sort.map((sortItem) => {
+                    if (sortItem.field === "type") {
+                        return { sourceInfo: { rootEntityName: sortItem.direction } };
+                    }
+                    if (sortItem.field === "name") {
+                        return { "entityInfo.name": sortItem.direction };
+                    }
+                    return { [sortItem.field]: sortItem.direction };
+                }),
+            );
         }
 
-        const [entities, totalCount] = await this.repository.findAndCount(where, options);
+        const [entities, totalCount] = await queryBuilder.getResultAndCount();
         return new PaginatedWarnings(entities, totalCount);
     }
 
