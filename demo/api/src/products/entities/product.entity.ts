@@ -95,22 +95,28 @@ export class ProductPriceRange {
 
 // In Migration20240222081515 the `packageDimensions` embedded property was dropped. Snapshots created before that
 // migration still carry it, so it is removed when an old snapshot is read.
-const removePackageDimensions: SnapshotMigration = (snapshot) => {
-    const { packageDimensions: _packageDimensions, ...rest } = snapshot;
-    return rest;
+const removePackageDimensions: SnapshotMigration = {
+    toVersion: 1,
+    migrate: (snapshot) => {
+        const { packageDimensions: _packageDimensions, ...rest } = snapshot;
+        return rest;
+    },
 };
 
 // In Migration20250707093716 the `type` enum values were changed from PascalCase to camelCase (e.g. "Cap" -> "cap").
 // The same mapping is applied to the `additionalTypes` array.
-const migrateTypesToCamelCase: SnapshotMigration = (snapshot) => {
-    const typeMapping: Record<string, string> = { Cap: "cap", Shirt: "shirt", Tie: "tie" };
-    return {
-        ...snapshot,
-        type: typeMapping[snapshot.type as string] ?? snapshot.type,
-        additionalTypes: Array.isArray(snapshot.additionalTypes)
-            ? snapshot.additionalTypes.map((type) => typeMapping[type] ?? type)
-            : snapshot.additionalTypes,
-    };
+const migrateTypesToCamelCase: SnapshotMigration = {
+    toVersion: 2,
+    migrate: (snapshot) => {
+        const typeMapping: Record<string, string> = { Cap: "cap", Shirt: "shirt", Tie: "tie" };
+        return {
+            ...snapshot,
+            type: typeMapping[snapshot.type as string] ?? snapshot.type,
+            additionalTypes: Array.isArray(snapshot.additionalTypes)
+                ? snapshot.additionalTypes.map((type) => typeMapping[type] ?? type)
+                : snapshot.additionalTypes,
+        };
+    },
 };
 
 @EntityInfo<Product>({

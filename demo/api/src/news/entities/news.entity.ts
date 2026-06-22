@@ -67,14 +67,17 @@ export class NewsContentScope {
 // In Migration20250707093716 the `status` and `category` enum values were changed from PascalCase to camelCase
 // (e.g. "Active" -> "active", "Events" -> "events"). Snapshots created before that migration still hold the old
 // values, so they are mapped to the current ones when an old snapshot is read.
-const migrateStatusAndCategoryToCamelCase: SnapshotMigration = (snapshot) => {
-    const statusMapping: Record<string, string> = { Active: "active", Deleted: "deleted" };
-    const categoryMapping: Record<string, string> = { Events: "events", Company: "company", Awards: "awards" };
-    return {
-        ...snapshot,
-        status: statusMapping[snapshot.status as string] ?? snapshot.status,
-        category: categoryMapping[snapshot.category as string] ?? snapshot.category,
-    };
+const migrateStatusAndCategoryToCamelCase: SnapshotMigration = {
+    toVersion: 1,
+    migrate: (snapshot) => {
+        const statusMapping: Record<string, string> = { Active: "active", Deleted: "deleted" };
+        const categoryMapping: Record<string, string> = { Events: "events", Company: "company", Awards: "awards" };
+        return {
+            ...snapshot,
+            status: statusMapping[snapshot.status as string] ?? snapshot.status,
+            category: categoryMapping[snapshot.category as string] ?? snapshot.category,
+        };
+    },
 };
 
 @EntityInfo<News>({

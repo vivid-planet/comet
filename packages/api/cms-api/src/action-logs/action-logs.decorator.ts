@@ -3,23 +3,26 @@ export const ACTION_LOGS_METADATA_KEY = "actionLogs";
 export type ActionLogSnapshot = Record<string, unknown>;
 
 /**
- * Migrates a snapshot from the schema it was created with to the next schema version.
+ * A single migration that brings a snapshot from version `toVersion - 1` up to `toVersion`.
  *
- * Snapshots stored in `ActionLog` are frozen copies of an entity at a point in time.
- * When the entity's schema changes (e.g. a renamed property or a changed enum value),
- * older snapshots no longer match the current schema. A `SnapshotMigration` brings such
- * a snapshot one version forward. Migrations are applied lazily when a snapshot is read,
- * the stored snapshots are not modified.
+ * Snapshots stored in `ActionLog` are frozen copies of an entity at a point in time. When the entity's schema changes
+ * (e.g. a renamed property or a changed enum value), older snapshots no longer match the current schema. A migration
+ * is applied lazily when a snapshot is read and only when the snapshot's stored version is below its `toVersion`, so a
+ * migration only ever receives a snapshot at exactly version `toVersion - 1` — it does not need to handle other versions.
+ * The stored snapshots are never modified.
  */
-export type SnapshotMigration = (snapshot: ActionLogSnapshot) => ActionLogSnapshot;
+export interface SnapshotMigration {
+    /** Version this migration produces. Versions start at 1 and must be ascending, unique and gapless across an entity. */
+    toVersion: number;
+    migrate: (snapshot: ActionLogSnapshot) => ActionLogSnapshot;
+}
 
 export interface ActionLogsOptions {
     /**
-     * Ordered list of migrations that are applied to a snapshot to bring it up to the current schema.
+     * Migrations that bring a snapshot up to the current schema.
      *
-     * Append new migrations to the end of the array whenever the entity's schema changes in a way
-     * that affects the snapshot. The index of a migration in the array defines its version, so existing
-     * migrations must never be reordered or removed.
+     * Add a new migration with the next `toVersion` whenever the entity's schema changes in a way that affects the
+     * snapshot. Existing migrations must never be changed or removed, as that would alter the meaning of stored versions.
      */
     snapshotMigrations?: SnapshotMigration[];
 }

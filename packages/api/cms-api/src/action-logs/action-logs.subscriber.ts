@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { UserPermissionsStorageService } from "../user-permissions/user-permissions-storage.service";
 import { ACTION_LOGS_METADATA_KEY, ActionLogMetadata } from "./action-logs.decorator";
 import { ActionLogsService } from "./action-logs.service";
+import { getCurrentSnapshotVersion } from "./apply-snapshot-migrations";
 import { ActionLog } from "./entities/action-log.entity";
 
 @Injectable()
@@ -66,7 +67,7 @@ export class ActionLogsSubscriber implements EventSubscriber {
                 entityName,
                 entityId,
                 snapshot,
-                snapshotVersion: actionLogsMetadata.snapshotMigrations.length,
+                snapshotVersion: getCurrentSnapshotVersion(actionLogsMetadata.snapshotMigrations),
                 version: raw(
                     `(${this.entityManager
                         .createQueryBuilder(ActionLog)
