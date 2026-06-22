@@ -7,7 +7,7 @@ function ExampleFetch() {
     const [data, setData] = useState<object | null>(null);
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`/launches`);
+            const response = await fetch(`/users`);
             setData(await response.json());
         };
         fetchData();

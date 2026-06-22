@@ -198,7 +198,7 @@ export class BrevoApiCampaignsService {
             return this.cacheManager.wrap<BrevoApiCampaign>(`brevo-campaign-${campaign.id}`, async () => {
                 const response = await this.getCampaignsApi(campaign.scope).getEmailCampaign(brevoId);
 
-                return response.body;
+                return response.body as BrevoApiCampaign;
             });
         } catch (error) {
             handleBrevoError(error);

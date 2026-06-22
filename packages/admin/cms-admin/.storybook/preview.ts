@@ -3,6 +3,7 @@ import { type GlobalTypes } from "storybook/internal/csf";
 
 import { ApolloDecorator } from "./decorators/Apollo.decorator";
 import { CometConfigProviderDecorator } from "./decorators/CometConfigProvider.decorator";
+import { ContentScopeProviderDecorator } from "./decorators/ContentScopeProvider.decorator";
 import { CurrentUserProviderDecorator } from "./decorators/CurrentUserProvider.decorator";
 import { DndProviderDecorator } from "./decorators/DndProvider.decorator";
 import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
@@ -56,7 +57,18 @@ export const globalTypes: GlobalTypes = {
 
 const preview: Preview = {
     tags: ["autodocs"],
-    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, RouterDecorator, CometConfigProviderDecorator, SnackbarDecorator, DndProviderDecorator, CurrentUserProviderDecorator, ApolloDecorator],
+    decorators: [
+        ThemeProviderDecorator,
+        IntlDecorator,
+        LayoutDecorator,
+        ContentScopeProviderDecorator,
+        RouterDecorator,
+        CometConfigProviderDecorator,
+        SnackbarDecorator,
+        DndProviderDecorator,
+        CurrentUserProviderDecorator,
+        ApolloDecorator,
+    ],
     loaders: [
         async () => {
             await mswReady;

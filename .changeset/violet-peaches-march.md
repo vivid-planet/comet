@@ -1,7 +1,7 @@
 ---
-"@comet/site-nextjs": major
+"@comet/site-nextjs": minor
 ---
 
-Bump React peer dependency to v19
+Add support for React 19
 
-Follow the official [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
+`@comet/site-nextjs` now supports React 18 and React 19.

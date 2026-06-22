@@ -737,4 +737,107 @@ describe("UserPermissionsGuard", () => {
             ),
         ).toBe(false);
     });
+
+    it("allows user by AffectedScope returning multiple scopes when user has all scopes", async () => {
+        mockAnnotations({
+            requiredPermission: {
+                requiredPermission: [permissions.p1],
+                options: undefined,
+            },
+            affectedScope: { argsToScope: (args) => [{ a: args.a }, { a: args.b }] },
+        });
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [{ a: 1 }, { a: 2 }],
+                        },
+                    ],
+                    args: { a: 1, b: 2 },
+                }),
+            ),
+        ).toBe(true);
+    });
+
+    it("denies by AffectedScope returning multiple scopes when user is missing any scope", async () => {
+        mockAnnotations({
+            requiredPermission: {
+                requiredPermission: [permissions.p1],
+                options: undefined,
+            },
+            affectedScope: { argsToScope: (args) => [{ a: args.a }, { a: args.b }] },
+        });
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [{ a: 1 }], // Missing {a: 2}
+                        },
+                    ],
+                    args: { a: 1, b: 2 },
+                }),
+            ),
+        ).toBe(false);
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [{ a: 2 }], // Missing {a: 1}
+                        },
+                    ],
+                    args: { a: 1, b: 2 },
+                }),
+            ),
+        ).toBe(false);
+    });
+
+    it("allows user by AffectedScope returning multiple multidimensional scopes when user has all scopes", async () => {
+        mockAnnotations({
+            requiredPermission: {
+                requiredPermission: [permissions.p1],
+                options: undefined,
+            },
+            affectedScope: {
+                argsToScope: (args) => [
+                    { a: args.a, b: args.b },
+                    { a: args.c, b: args.d },
+                ],
+            },
+        });
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [
+                                { a: 1, b: "x" },
+                                { a: 2, b: "y" },
+                            ],
+                        },
+                    ],
+                    args: { a: 1, b: "x", c: 2, d: "y" },
+                }),
+            ),
+        ).toBe(true);
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [{ a: 1, b: "x" }], // Missing {a: 2, b: "y"}
+                        },
+                    ],
+                    args: { a: 1, b: "x", c: 2, d: "y" },
+                }),
+            ),
+        ).toBe(false);
+    });
 });

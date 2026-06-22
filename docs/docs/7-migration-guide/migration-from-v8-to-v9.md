@@ -789,23 +789,15 @@ Repeat this step, fixing all lint errors, until the lint passes.
 
 ## Site
 
-### Update Comet and peer dependencies
+### Update Comet dependencies
 
-Update all `@comet/*` dependencies in `site/package.json` to version `9.0.0` and update peer dependencies:
+Update all `@comet/*` dependencies in `site/package.json` to version `9.0.0`:
 
 ```diff title="site/package.json"
 {
     "dependencies": {
 -       "@comet/site-nextjs": "^8.0.0",
 +       "@comet/site-nextjs": "9.0.0",
--       "@next/bundle-analyzer": "^14.2.30",
-+       "@next/bundle-analyzer": "^16.1.6",
--       "next": "^14.2.30",
-+       "next": "^16.1.6",
--       "react": "^18.3.1",
--       "react-dom": "^18.3.1",
-+       "react": "^19.2.0",
-+       "react-dom": "^19.2.0",
 -       "react-intl": "^6.8.9",
 +       "react-intl": "^7.1.9",
     },
@@ -814,6 +806,47 @@ Update all `@comet/*` dependencies in `site/package.json` to version `9.0.0` and
 +       "@comet/cli": "9.0.0",
 -       "@comet/eslint-config": "^8.0.0",
 +       "@comet/eslint-config": "9.0.0",
+    }
+}
+```
+
+`react-intl` v7 is compatible with both React 18 and React 19.
+
+:::info Next.js and React versions
+
+`@comet/site-nextjs` v9 supports Next.js 14, 15, and 16 and React 18 and 19.
+You can adopt Comet v9 without changing your Next.js or React version.
+
+We recommend upgrading to Next.js 16 — see [Upgrade to Next.js 16 (recommended)](#upgrade-to-nextjs-16-recommended) for the upgrade steps and the corresponding `next`, `react`, `react-dom`, and `@next/bundle-analyzer` bumps.
+
+:::
+
+After updating the dependencies, remove `node_modules/` and `package-lock.json` (or your lock file) before reinstalling to avoid peer dependency conflicts:
+
+```sh
+rm -rf site/node_modules site/package-lock.json
+npm install
+```
+
+### Upgrade to Next.js 16 (recommended)
+
+Next.js 16 is recommended but not required. `@comet/site-nextjs` v9 also supports Next.js 14 and 15 and React 18, so you can skip this section and stay on your current Next.js and React version.
+
+To upgrade, update the framework dependencies and follow the steps below:
+
+```diff title="site/package.json"
+{
+    "dependencies": {
+-       "@next/bundle-analyzer": "^14.2.30",
++       "@next/bundle-analyzer": "^16.1.6",
+-       "next": "^14.2.30",
++       "next": "^16.1.6",
+-       "react": "^18.3.1",
+-       "react-dom": "^18.3.1",
++       "react": "^19.2.0",
++       "react-dom": "^19.2.0",
+    },
+    "devDependencies": {
 -       "@types/react": "^18.3.23",
 -       "@types/react-dom": "^18.3.7",
 +       "@types/react": "^19.2.0",
@@ -823,15 +856,9 @@ Update all `@comet/*` dependencies in `site/package.json` to version `9.0.0` and
 ```
 
 Ensure that all other dependencies are compatible with React 19 and Next.js 16.
+After updating the dependencies, remove `node_modules/` and your lock file and reinstall to avoid peer dependency conflicts.
 
-After updating the dependencies, remove `node_modules/` and `package-lock.json` (or your lock file) before reinstalling to avoid peer dependency conflicts:
-
-```sh
-rm -rf site/node_modules site/package-lock.json
-npm install
-```
-
-### Add `next-env.d.ts` to `.gitignore`
+#### Add `next-env.d.ts` to `.gitignore`
 
 ```sh
 git rm site/next-env.d.ts
@@ -839,7 +866,7 @@ git rm site/next-env.d.ts
 echo "next-env.d.ts" >> site/.gitignore
 ```
 
-### Add `next typegen` to `lint:tsc` script
+#### Add `next typegen` to `lint:tsc` script
 
 This is necessary for the lint to work during CI.
 
@@ -854,7 +881,7 @@ This is necessary for the lint to work during CI.
 
 Now, execute `npx next typegen` once to generate the necessary types.
 
-### Remove `eslint` from the Next.js config file
+#### Remove `eslint` from the Next.js config file
 
 ```diff title="site/next.config.(js|mjs|ts)"
 const nextConfig: NextConfig = {
@@ -865,7 +892,7 @@ const nextConfig: NextConfig = {
 };
 ```
 
-### Remove deprecated `experimental.instrumentationHook`
+#### Remove deprecated `experimental.instrumentationHook`
 
 In Next.js 16, the instrumentation hook is built in and the experimental flag is no longer valid.
 Leaving it in place logs a deprecation warning on every start.
@@ -879,7 +906,7 @@ const nextConfig: NextConfig = {
 };
 ```
 
-### Update `tsconfig.server.json`
+#### Update `tsconfig.server.json`
 
 If you have a separate `tsconfig.server.json` for `server.ts` / `tracing.ts` / `cache-handler.ts` that sets `module: "commonjs"`, you must also override `moduleResolution`.
 Otherwise `tsc` fails with `TS5095: Option 'bundler' can only be used when 'module' is set to 'preserve' or to 'es2015' or later` — because Next 16 enforces `moduleResolution: "bundler"` in the base `tsconfig.json` and rewrites it back if you change it.
@@ -895,7 +922,7 @@ Otherwise `tsc` fails with `TS5095: Option 'bundler' can only be used when 'modu
 }
 ```
 
-### Disable Turbopack
+#### Disable Turbopack
 
 Our site packages currently aren't compatible with Turbopack.
 Disable Turbopack until this is resolved:
@@ -914,7 +941,7 @@ Disable Turbopack until this is resolved:
 }
 ```
 
-### Upgrade to React 19
+#### Upgrade to React 19
 
 Execute the following codemods:
 
@@ -930,7 +957,7 @@ npx types-react-codemod@latest preset-19 ./src
 
 See the official React 19 [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) for more information.
 
-### Change to Next.js Async Request APIs
+#### Change to Next.js Async Request APIs
 
 Multiple Next.js APIs are now asynchronous and must be `await`ed. This applies to:
 
@@ -998,7 +1025,7 @@ Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/versio
     }
 ```
 
-### Rename `middleware.ts` to `proxy.ts`
+#### Rename `middleware.ts` to `proxy.ts`
 
 ```sh
 mv site/src/middleware.ts site/src/proxy.ts
@@ -1032,6 +1059,29 @@ If you're using Knip, you may need to add `proxy.ts` as entry point:
 ```
 
 :::
+
+#### Add `cache: "force-cache"` to GraphQL fetch
+
+Since Next.js 15, `fetch` requests are no longer cached by default.
+Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-15#fetch-requests) for more information.
+Add `cache: "force-cache"` to `createGraphQLFetch()`.
+The file might be named differently in some Comet projects (e.g. `createGraphQLFetch.ts`):
+
+```diff title="site/src/util/graphQLClient.ts"
+export function createGraphQLFetch() {
+    // ...
+
+    return createGraphQLFetchLibrary(
+        createFetchWithDefaults(createFetchWithDefaultNextRevalidate(fetch, 7.5 * 60), {
++           cache: "force-cache",
+            headers: {
+                // ...
+            },
+        }),
+        `${process.env.API_URL_INTERNAL}/graphql`,
+    );
+}
+```
 
 ### Domain Redirects
 
@@ -1240,29 +1290,6 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
 `createGraphQLFetch` must be callable from a proxy. In Next.js 16 the proxy runs in the Node.js runtime by default, so a non-edge `createGraphQLFetch` works here. If your project previously had an edge-runtime guard in `createGraphQLFetch` (e.g. a `throw` when `process.env.NEXT_RUNTIME === "edge"`), you can remove it — or call the fetch inside `memoryCache.wrap` so the throw only fires on a real edge deploy.
 
 :::
-
-### Add `cache: "force-cache"` to GraphQL fetch
-
-Next.js no longer caches `fetch` requests by default.
-Review the [migration guide](https://nextjs.org/docs/app/guides/upgrading/version-15#fetch-requests) for more information.
-Add `cache: "force-cache"` to `createGraphQLFetch()`.
-The file might be named differently in some Comet projects (e.g. `createGraphQLFetch.ts`):
-
-```diff title="site/src/util/graphQLClient.ts"
-export function createGraphQLFetch() {
-    // ...
-
-    return createGraphQLFetchLibrary(
-        createFetchWithDefaults(createFetchWithDefaultNextRevalidate(fetch, 7.5 * 60), {
-+           cache: "force-cache",
-            headers: {
-                // ...
-            },
-        }),
-        `${process.env.API_URL_INTERNAL}/graphql`,
-    );
-}
-```
 
 ### Import server-only modules from `@comet/site-nextjs/server`
 

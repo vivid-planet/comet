@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Inject, Injectable, Logger } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
+import { TypeMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/type-metadata.storage.js";
 
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
 import { getRequestFromExecutionContext } from "../../common/decorators/utils";
@@ -25,7 +26,8 @@ export class UserPermissionsGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, REQUIRED_PERMISSION_METADATA_KEY);
+        const requiredPermission =
+            this.getDecorator<RequiredPermissionMetadata>(context, REQUIRED_PERMISSION_METADATA_KEY) ?? this.getRequiredPermissionFromEntity(context);
         const skipScopeCheck = requiredPermission?.options?.skipScopeCheck ?? false;
 
         let requiredContentScopes: ContentScope[][] = [];
@@ -111,6 +113,30 @@ export class UserPermissionsGuard implements CanActivate {
 
     private getDecorator<T = object>(context: ExecutionContext, decorator: string): T {
         return this.reflector.getAllAndOverride(decorator, [context.getHandler(), context.getClass()]);
+    }
+
+    private getRequiredPermissionFromEntity(context: ExecutionContext): RequiredPermissionMetadata | undefined {
+        const resolverClass = context.getClass();
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const metadataByTargetCollection = (TypeMetadataStorage as any).metadataByTargetCollection;
+        if (!metadataByTargetCollection) {
+            return undefined;
+        }
+
+        const targetMetadata = metadataByTargetCollection.get(resolverClass);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const resolverMetadata = targetMetadata?.resolver as { typeFn?: () => any } | undefined;
+        if (!resolverMetadata?.typeFn) {
+            return undefined;
+        }
+
+        const entityClass = resolverMetadata.typeFn();
+        if (!entityClass) {
+            return undefined;
+        }
+
+        return Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, entityClass) as RequiredPermissionMetadata | undefined;
     }
 
     // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
