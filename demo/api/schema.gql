@@ -8,6 +8,10 @@ type ActionLog {
   entityName: String!
   id: ID!
   scope: [JSONObject!]
+
+  """
+  Snapshot of the entity at the time of the action, migrated to the current schema when read.
+  """
   snapshot: JSONObject
 
   """

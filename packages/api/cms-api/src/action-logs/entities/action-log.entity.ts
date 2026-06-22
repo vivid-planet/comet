@@ -37,9 +37,15 @@ export class ActionLog extends BaseEntity {
     @Property({ type: "integer" })
     version: number;
 
-    @Field(() => GraphQLJSONObject, { nullable: true })
+    @Field(() => GraphQLJSONObject, {
+        nullable: true,
+        description: "Snapshot of the entity at the time of the action, migrated to the current schema when read.",
+    })
     @Property({ type: "jsonb", nullable: true })
     snapshot?: Record<string, unknown>;
+
+    @Property({ type: "integer", nullable: true })
+    snapshotVersion?: number;
 
     @Field()
     @Property({ type: Date, columnType: "timestamp with time zone" })

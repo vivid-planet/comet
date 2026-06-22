@@ -66,6 +66,7 @@ export class ActionLogsSubscriber implements EventSubscriber {
                 entityName,
                 entityId,
                 snapshot,
+                snapshotVersion: actionLogsMetadata.snapshotMigrations.length,
                 version: raw(
                     `(${this.entityManager
                         .createQueryBuilder(ActionLog)

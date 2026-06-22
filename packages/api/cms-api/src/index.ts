@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 export { AccessLogModule } from "./access-log/access-log.module";
-export { ActionLogs } from "./action-logs/action-logs.decorator";
+export { ActionLogs, type ActionLogSnapshot, type ActionLogsOptions, type SnapshotMigration } from "./action-logs/action-logs.decorator";
 export { ActionLogsModule } from "./action-logs/action-logs.module";
 export { ActionLogType } from "./action-logs/dto/action-log-type.enum";
 export { DisableCometGuards } from "./auth/decorators/disable-comet-guards.decorator";
