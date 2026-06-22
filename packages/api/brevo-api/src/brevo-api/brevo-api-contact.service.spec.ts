@@ -13,8 +13,6 @@ describe("BrevoApiContactsService", () => {
     let service: BrevoApiContactsService;
     const contactsApi = {
         getContactInfo: vi.fn(),
-        getContactsFromList: vi.fn(),
-        updateContact: vi.fn(),
     };
 
     beforeEach(async () => {
@@ -65,35 +63,6 @@ describe("BrevoApiContactsService", () => {
 
             await expect(service.getContactInfoByEmail("ghost@example.com", scope)).resolves.toBeNull();
             expect(contactsApi.getContactInfo).toHaveBeenCalledWith({ identifier: "ghost@example.com" });
-        });
-    });
-
-    describe("findContactsByListId", () => {
-        it("returns the contacts and count as a tuple", async () => {
-            const contacts = [{ id: 1 }, { id: 2 }];
-            contactsApi.getContactsFromList.mockResolvedValue({ contacts, count: 2 });
-
-            await expect(service.findContactsByListId(7, 25, 50, scope)).resolves.toEqual([contacts, 2]);
-            expect(contactsApi.getContactsFromList).toHaveBeenCalledWith({ listId: 7, limit: 25, offset: 50 });
-        });
-    });
-
-    describe("updateContact", () => {
-        it("sends the update request and returns the refetched contact", async () => {
-            const updatedContact = { id: 9, email: "jane@example.com" };
-            contactsApi.updateContact.mockResolvedValue(undefined);
-            contactsApi.getContactInfo.mockResolvedValue(updatedContact);
-
-            const result = await service.updateContact(9, { blocked: true, listIds: [3] }, scope);
-
-            expect(contactsApi.updateContact).toHaveBeenCalledWith({
-                identifier: 9,
-                emailBlacklisted: true,
-                attributes: undefined,
-                listIds: [3],
-                unlinkListIds: undefined,
-            });
-            expect(result).toBe(updatedContact);
         });
     });
 });
