@@ -1,10 +1,10 @@
 # Components & Theme Reference
 
-Detailed reference for all `@comet/mail-react` components, the theme system, module augmentation, and scoped theming.
+Theme system, module augmentation, scoped theming, and the component behavior for `@comet/mail-react` that its types and TSDoc don't capture on their own. For prop names, types, and defaults, read the types and their TSDoc.
 
 ## Table of Contents
 
-1. [Theme Structure & Defaults](#theme-structure--defaults)
+1. [Theme tokens](#theme-tokens)
 2. [Module Augmentation Interfaces](#module-augmentation-interfaces)
 3. [MjmlMailRoot](#mjmlmailroot)
 4. [MjmlSection](#mjmlsection)
@@ -13,29 +13,15 @@ Detailed reference for all `@comet/mail-react` components, the theme system, mod
 7. [HtmlInlineLink](#htmlinlinelink)
 8. [Image](#image)
 9. [Divider](#divider)
-10. [Scoped Theming](#scoped-theming)
-11. [MJML Component Re-exports](#mjml-component-re-exports)
+10. [Button](#button)
+11. [Scoped Theming](#scoped-theming)
+12. [MJML Component Re-exports](#mjml-component-re-exports)
 
 ---
 
-## Theme Structure & Defaults
+## Theme tokens
 
-`createTheme(overrides?)` merges partial overrides into the default theme:
-
-| Path                        | Default                       | Description                                                 |
-| --------------------------- | ----------------------------- | ----------------------------------------------------------- |
-| `sizes.bodyWidth`           | `600`                         | Email container width in pixels                             |
-| `sizes.contentIndentation`  | `{ default: 32, mobile: 16 }` | Left/right padding when `indent` is used                    |
-| `breakpoints.default`       | `createBreakpoint(bodyWidth)` | Auto-set to body width unless explicitly overridden         |
-| `breakpoints.mobile`        | `createBreakpoint(420)`       | Mobile breakpoint (`max-width: 419px`)                      |
-| `text.fontFamily`           | System default                | Base font family                                            |
-| `text.fontSize`             | `"16px"`                      | Base font size                                              |
-| `text.lineHeight`           | `"20px"`                      | Base line height                                            |
-| `text.bottomSpacing`        | `"16px"`                      | Default spacing below text when `bottomSpacing` prop is set |
-| `text.defaultVariant`       | `undefined`                   | Variant applied when no `variant` prop is specified         |
-| `text.variants`             | `{}`                          | Named typography presets                                    |
-| `colors.background.body`    | `"#F2F2F2"`                   | Email body background                                       |
-| `colors.background.content` | `"#FFFFFF"`                   | Section content background                                  |
+`createTheme(overrides?)` merges partial overrides into the default theme; every token is optional and the `Theme` type lists them. Defaults live in `createTheme`. One behavior isn't visible from the types: **the default breakpoint derives from `sizes.bodyWidth`** unless `breakpoints.default` is overridden — they describe the same boundary, so setting them apart silently desyncs the layout.
 
 ### Breakpoints
 
@@ -129,6 +115,34 @@ declare module "@comet/mail-react" {
 
 Variant properties (`height`, `backgroundColor`, `backgroundImage`) accept responsive values.
 
+### ButtonVariants
+
+Controls the `variant` prop on `MjmlButton` and `HtmlButton`:
+
+```ts
+const theme = createTheme({
+    button: {
+        defaultVariant: "primary",
+        variants: {
+            primary: { backgroundColor: "#5B4FC7", color: "#FFFFFF" },
+            gradient: {
+                backgroundColor: "#5B4FC7",
+                backgroundImage: "linear-gradient(90deg, #5B4FC7, #9C5BC7)",
+            },
+        },
+    },
+});
+
+declare module "@comet/mail-react" {
+    interface ButtonVariants {
+        primary: true;
+        gradient: true;
+    }
+}
+```
+
+Variant properties (`color`, `backgroundColor`, `backgroundImage`, `border`, `borderRadius`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `padding`) accept responsive values.
+
 ### ThemeBreakpoints
 
 Built-in keys are `default` and `mobile`. Add custom breakpoints:
@@ -181,14 +195,6 @@ declare module "@comet/mail-react" {
 
 Root element for every email template. Renders the full MJML skeleton (`<mjml>`, `<mj-head>`, `<mj-body>`) and provides the theme to all descendant components.
 
-**Props:**
-
-| Prop       | Type        | Default         | Description                                               |
-| ---------- | ----------- | --------------- | --------------------------------------------------------- |
-| `theme`    | `Theme`     | `createTheme()` | Theme for the email                                       |
-| `config`   | `Config`    | —               | Augmentable values exposed to descendants via `useConfig` |
-| `children` | `ReactNode` | —               | Email content                                             |
-
 **What it configures from the theme:**
 
 - Body width from `theme.sizes.bodyWidth`
@@ -205,15 +211,6 @@ Root element for every email template. Renders the full MJML skeleton (`<mjml>`,
 ## MjmlSection
 
 Full-width horizontal row with theme integration.
-
-**Props** (in addition to standard MJML section props):
-
-| Prop                        | Type                                  | Default                           | Description                                                                     |
-| --------------------------- | ------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------- |
-| `indent`                    | `boolean`                             | `false`                           | Applies theme-based left/right padding                                          |
-| `disableResponsiveBehavior` | `boolean`                             | `false`                           | Prevents columns from stacking on mobile                                        |
-| `slotProps`                 | `{ group?: Partial<MjmlGroupProps> }` | —                                 | Forward props to internal `MjmlGroup` (when `disableResponsiveBehavior` is set) |
-| `backgroundColor`           | `string`                              | `theme.colors.background.content` | Override section background color                                               |
 
 **CSS classes:** `.mjmlSection`, `.mjmlSection--indented` (when `indent` is set).
 
@@ -238,14 +235,7 @@ Indentation values come from `theme.sizes.contentIndentation`, which supports re
 
 Groups multiple `MjmlSection`s that share a background. Must be a direct child of `MjmlBody`; sections go inside.
 
-**Props** (standard MJML wrapper props):
-
-| Prop              | Type        | Default                           | Description                                                           |
-| ----------------- | ----------- | --------------------------------- | --------------------------------------------------------------------- |
-| `backgroundColor` | `string`    | `theme.colors.background.content` | Background applied to the whole wrapper; shows through inner sections |
-| `children`        | `ReactNode` | —                                 | Sections to group                                                     |
-
-When a theme is present, `MjmlWrapper` applies `theme.colors.background.content` as its default `backgroundColor`. Inner `MjmlSection`s suppress their own theme-default background so the wrapper's color is visible; an explicit `backgroundColor` prop on an inner section still wins.
+The wrapper takes the theme's content background by default. Inner `MjmlSection`s suppress their own theme-default background so the wrapper's color shows through; an explicit `backgroundColor` on an inner section still wins.
 
 ```tsx
 <MjmlWrapper backgroundColor="#dddddd">
@@ -272,13 +262,6 @@ Typical uses: multi-section footers with their own color, or grouping sections b
 
 MJML text component — use inside `MjmlColumn` following the standard layout model.
 
-**Props** (in addition to standard MJML text props):
-
-| Prop            | Type                 | Description                               |
-| --------------- | -------------------- | ----------------------------------------- |
-| `variant`       | `keyof TextVariants` | Named typography preset from theme        |
-| `bottomSpacing` | `boolean`            | Add spacing below (from theme or variant) |
-
 **CSS classes:** `.mjmlText`, `.mjmlText--{variant}`, `.mjmlText--bottomSpacing`.
 
 ```tsx
@@ -292,14 +275,6 @@ Variant styles merge on top of base theme text styles — properties not set by 
 ### HtmlText
 
 Themed text for use inside ending tags (`MjmlText`, `MjmlRaw`) or custom HTML structures where MJML components can't be used. Renders a plain HTML element.
-
-**Props:**
-
-| Prop            | Type                 | Default | Description            |
-| --------------- | -------------------- | ------- | ---------------------- |
-| `variant`       | `keyof TextVariants` | —       | Typography preset      |
-| `bottomSpacing` | `boolean`            | `false` | Add spacing below      |
-| `element`       | `string`             | `"td"`  | HTML element to render |
 
 **CSS classes:** `.htmlText`, `.htmlText--{variant}`, `.htmlText--bottomSpacing`.
 
@@ -334,8 +309,6 @@ The base spacing value comes from `theme.text.bottomSpacing`. Variants can overr
 ## HtmlInlineLink
 
 `<a>` element for use inside `MjmlText` or `HtmlText`. Inherits parent's font styles — even on Outlook Desktop, which normally overrides link typography with its own defaults.
-
-**Props:** Standard `<a>` props. Defaults to `target="_blank"` and `text-decoration: underline`.
 
 **CSS class:** `.htmlInlineLink`.
 
@@ -376,6 +349,23 @@ Themed horizontal line, styled from `theme.divider` (base styles plus variants).
 
 ```tsx
 <MjmlDivider variant="thick" />
+```
+
+---
+
+## Button
+
+Themed button, styled from `theme.button` (base styles plus variants). Falls back to a built-in default when no theme is in scope; only `variant` requires a theme.
+
+- **`MjmlButton`** — inside `MjmlColumn`. Classes `.mjmlButton`, `.mjmlButton--{variant}`, `.mjmlButton--fullWidth`.
+- **`HtmlButton`** — inside ending tags (`MjmlRaw`) or any non-MJML context. Classes `.htmlButton`, `.htmlButton--{variant}`, `.htmlButton--fullWidth`.
+
+`theme.button.padding` is the inner spacing around the label; `MjmlButton`'s `padding` prop is the outer spacing. `fullWidth` makes the button span its container. A gradient `backgroundImage` overlays the solid `backgroundColor`, which stays the fallback for clients that drop `background-image` (Outlook). Outlook ignores `border-radius`, so rounded buttons render with square corners there.
+
+```tsx
+<MjmlButton variant="primary" fullWidth href="https://example.com">
+    Click me
+</MjmlButton>
 ```
 
 ---
@@ -436,6 +426,6 @@ Theme-aware `registerStyles` entries always resolve against the **root theme** f
 
 `@comet/mail-react` re-exports all MJML components from `@faire/mjml-react`. Consumers import everything from `@comet/mail-react` — never from `@faire/mjml-react` directly.
 
-Common re-exports: `MjmlColumn`, `MjmlButton`, `MjmlSpacer`, `MjmlTable`, `MjmlRaw`, `MjmlGroup`, `MjmlAttributes`, `MjmlAll`, `MjmlClass`, `MjmlStyle`, `MjmlComment`, `MjmlConditionalComment`.
+Common re-exports: `MjmlColumn`, `MjmlSpacer`, `MjmlTable`, `MjmlRaw`, `MjmlGroup`, `MjmlAttributes`, `MjmlAll`, `MjmlClass`, `MjmlStyle`, `MjmlComment`, `MjmlConditionalComment`.
 
 For the full MJML tag reference: https://documentation.mjml.io/

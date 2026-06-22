@@ -4,12 +4,12 @@ import { ModuleRef, Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
-import { isInjectableService } from "../common/helper/is-injectable-service.helper";
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AFFECTED_ENTITY_METADATA_KEY, AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 import { AFFECTED_SCOPE_METADATA_KEY, AffectedScopeMeta } from "./decorators/affected-scope.decorator";
+import { getScopesForScopedEntity } from "./get-scopes-for-scoped-entity";
 
 // TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()
@@ -43,7 +43,12 @@ export class ContentScopeService {
         // AffectedScope
         const affectedScope = this.reflector.getAllAndOverride<AffectedScopeMeta>(AFFECTED_SCOPE_METADATA_KEY, [context.getHandler()]) || undefined;
         if (affectedScope) {
-            contentScopes.push([affectedScope.argsToScope(args) as ContentScope]);
+            const scope = affectedScope.argsToScope(args);
+            if (Array.isArray(scope)) {
+                contentScopes.push(...scope.map((s) => [s]));
+            } else {
+                contentScopes.push([scope]);
+            }
         }
 
         // Scope arg
@@ -101,13 +106,13 @@ export class ContentScopeService {
                         if (!scoped) {
                             throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
                         }
-                        let scopes;
-                        if (isInjectableService(scoped)) {
-                            const service = this.moduleRef.get(scoped, { strict: false });
-                            scopes = await service.getEntityScope(row);
-                        } else {
-                            scopes = await scoped(row);
-                        }
+                        const scopes = await getScopesForScopedEntity({
+                            scoped,
+                            entity: affectedEntity.entity,
+                            row,
+                            entityManager: this.orm.em,
+                            moduleRef: this.moduleRef,
+                        });
                         if (!scopes) {
                             throw new Error(`@ScopedEntity function for ${affectedEntity.entity} didn't return any scopes`);
                         }

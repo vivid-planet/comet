@@ -6,9 +6,8 @@ import { ManufacturerInput, ManufacturerUpdateInput } from "./dto/manufacturer.i
 import { PaginatedManufacturers } from "./dto/paginated-manufacturers";
 import { ManufacturersArgs } from "./dto/manufacturers.args";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { AffectedEntity, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => Manufacturer)
-@RequiredPermission(["manufacturers"], { skipScopeCheck: true })
 export class ManufacturerResolver {
     constructor(protected readonly entityManager: EntityManager) {}
     @Query(() => Manufacturer)

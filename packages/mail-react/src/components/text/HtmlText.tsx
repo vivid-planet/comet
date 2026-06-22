@@ -29,6 +29,9 @@ interface HtmlTextOwnProps {
      *         },
      *     },
      * });
+     * ```
+     *
+     * @defaultValue The theme's `text.defaultVariant`, when set
      */
     variant?: VariantName;
     /** When true, applies spacing below the text. */

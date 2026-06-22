@@ -1,4 +1,4 @@
-import { type Extensions, getSchema } from "@tiptap/core";
+import { type Extensions, getSchema, type JSONContent } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { Node as ProseMirrorNode, type Schema } from "@tiptap/pm/model";
@@ -23,17 +23,14 @@ import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFac
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
 import type { SearchText, WeightedSearchText } from "../search/get-search-text";
-import { BlockStyleHeading } from "./extensions/BlockStyleHeading";
-import { BlockStyleParagraph } from "./extensions/BlockStyleParagraph";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
 import { Placeholder } from "./extensions/Placeholder";
 import { SoftHyphen } from "./extensions/SoftHyphen";
+import { TextBlockStyleHeading } from "./extensions/TextBlockStyleHeading";
+import { TextBlockStyleParagraph } from "./extensions/TextBlockStyleParagraph";
 import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TipTapContent = Record<string, any>;
 
 export type TipTapSupports =
     | "bold"
@@ -48,7 +45,17 @@ export type TipTapSupports =
     | "soft-hyphen"
     | "link";
 
-type TipTapBlockType =
+export type { JSONContent as TipTapRichTextBlockContent } from "@tiptap/core";
+
+export interface TipTapRichTextBlockDataInterface extends BlockDataInterface {
+    tipTapContent: JSONContent;
+}
+
+export interface TipTapRichTextBlockInputInterface extends BlockInputInterface<TipTapRichTextBlockDataInterface, { tipTapContent: JSONContent }> {
+    tipTapContent: JSONContent;
+}
+
+type TipTapTextBlockType =
     | "paragraph"
     | "heading-1"
     | "heading-2"
@@ -59,22 +66,22 @@ type TipTapBlockType =
     | "ordered-list"
     | "unordered-list";
 
-interface TipTapBlockStyle {
+interface TipTapTextBlockStyle {
     name: string;
     /**
-     * Limits the block style to the provided block types.
-     * If none is specified, the block style is allowed for all block types.
+     * Limits the text block style to the provided text block types.
+     * If none is specified, the text block style is allowed for all text block types.
      */
-    appliesTo?: TipTapBlockType[];
+    appliesTo?: TipTapTextBlockType[];
 }
 
 interface TipTapInlineStyle {
     name: string;
     /**
-     * Limits the inline style to the provided block types.
-     * If none is specified, the inline style is allowed for all block types.
+     * Limits the inline style to the provided text block types.
+     * If none is specified, the inline style is allowed for all text block types.
      */
-    appliesTo?: TipTapBlockType[];
+    appliesTo?: TipTapTextBlockType[];
 }
 
 const defaultSupports: TipTapSupports[] = [
@@ -96,16 +103,16 @@ interface TipTapPlaceholder {
 
 export interface CreateTipTapRichTextBlockOptions {
     supports?: TipTapSupports[];
-    blockStyles?: TipTapBlockStyle[];
+    textBlockStyles?: TipTapTextBlockStyle[];
     inlineStyles?: TipTapInlineStyle[];
     placeholders?: TipTapPlaceholder[];
     indexSearchText?: boolean;
     link?: Block;
     /**
-     * Limits the maximum number of top-level blocks (paragraphs, headings, lists)
+     * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be stored. Content exceeding this limit will be rejected during validation.
      */
-    maxBlocks?: number;
+    maxTextBlocks?: number;
     /**
      * Limits the maximum nesting depth of list items.
      * A value of 1 means only a flat list (no nesting), 2 allows one level of sub-lists, etc.
@@ -113,31 +120,31 @@ export interface CreateTipTapRichTextBlockOptions {
      */
     listLevelMax?: number;
     /**
-     * Enables best-effort block migration of DraftJS-based RichTextBlock data
+     * Enables best-effort migration of DraftJS-based RichTextBlock data
      * (`{ draftContent: { blocks, entityMap } }`) into TipTap data.
      *
-     * The migration uses the `supports`, `blockStyles`, `link`, and `maxBlocks` options
+     * The migration uses the `supports`, `textBlockStyles`, `link`, and `maxTextBlocks` options
      * to build the target schema, validates the converted document, and falls back to a
      * stripped-down plain-text-paragraph document if validation fails.
      *
-     * Pass an object with `blockStyleMap` to map DraftJS custom block types (e.g.
-     * `paragraph-small` from a DraftJS `blocktypeMap`) to TipTap paragraph `blockStyle`
+     * Pass an object with `textBlockStyleMap` to map DraftJS custom block types (e.g.
+     * `paragraph-small` from a DraftJS `blocktypeMap`) to TipTap paragraph `textBlockStyle`
      * attribute values.
      *
      * Pass an object with `inlineStyleMap` to map DraftJS custom inline style names (e.g.
      * `highlight` from a DraftJS `customInlineStyles`) to TipTap `inlineStyle` mark type values.
      */
-    migrateFromDraftJs?: boolean | { blockStyleMap?: Record<string, string>; inlineStyleMap?: Record<string, string> };
+    migrateFromDraftJs?: boolean | { textBlockStyleMap?: Record<string, string>; inlineStyleMap?: Record<string, string> };
 }
 
 function buildExtensions(
     supports: TipTapSupports[],
-    blockStyles: TipTapBlockStyle[],
+    textBlockStyles: TipTapTextBlockStyle[],
     inlineStyles: TipTapInlineStyle[],
     placeholders: TipTapPlaceholder[],
     hasLink: boolean,
 ): Extensions {
-    const hasBlockStyles = blockStyles.length > 0;
+    const hasTextBlockStyles = textBlockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
     const hasPlaceholders = placeholders.length > 0;
     return [
@@ -145,8 +152,8 @@ function buildExtensions(
             bold: supports.includes("bold") ? {} : false,
             italic: supports.includes("italic") ? {} : false,
             strike: supports.includes("strike") ? {} : false,
-            heading: supports.includes("heading") ? (hasBlockStyles ? false : {}) : false,
-            paragraph: hasBlockStyles ? false : undefined,
+            heading: supports.includes("heading") ? (hasTextBlockStyles ? false : {}) : false,
+            paragraph: hasTextBlockStyles ? false : undefined,
             orderedList: supports.includes("ordered-list") ? {} : false,
             bulletList: supports.includes("unordered-list") ? {} : false,
             blockquote: false,
@@ -154,8 +161,8 @@ function buildExtensions(
             codeBlock: false,
             link: false,
         }),
-        ...(hasBlockStyles ? [BlockStyleParagraph] : []),
-        ...(hasBlockStyles && supports.includes("heading") ? [BlockStyleHeading] : []),
+        ...(hasTextBlockStyles ? [TextBlockStyleParagraph] : []),
+        ...(hasTextBlockStyles && supports.includes("heading") ? [TextBlockStyleHeading] : []),
         ...(hasInlineStyles ? [InlineStyleMark] : []),
         ...(supports.includes("sup") ? [Superscript] : []),
         ...(supports.includes("sub") ? [Subscript] : []),
@@ -191,14 +198,14 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTapContent {
+function mapLinkMarksData(content: JSONContent, fn: (data: any) => any): JSONContent {
     if (!content || typeof content !== "object") {
         return content;
     }
     const result = { ...content };
 
     if (Array.isArray(result.marks)) {
-        result.marks = result.marks.map((mark: TipTapContent) => {
+        result.marks = result.marks.map((mark) => {
             if (mark.type === "link" && mark.attrs?.data) {
                 return { ...mark, attrs: { ...mark.attrs, data: fn(mark.attrs.data) } };
             }
@@ -207,17 +214,17 @@ function mapLinkMarksData(content: TipTapContent, fn: (data: any) => any): TipTa
     }
 
     if (Array.isArray(result.content)) {
-        result.content = result.content.map((child: TipTapContent) => mapLinkMarksData(child, fn));
+        result.content = result.content.map((child: JSONContent) => mapLinkMarksData(child, fn));
     }
 
     return result;
 }
 
-function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapContent"]): Array<{ data: unknown; path: string[] }> {
+function collectLinkMarks(content: JSONContent, basePath: string[] = ["tipTapContent"]): Array<{ data: unknown; path: string[] }> {
     const results: Array<{ data: unknown; path: string[] }> = [];
 
     if (Array.isArray(content.marks)) {
-        content.marks.forEach((mark: TipTapContent, markIdx: number) => {
+        content.marks.forEach((mark, markIdx) => {
             if (mark.type === "link" && mark.attrs?.data) {
                 results.push({
                     data: mark.attrs.data,
@@ -228,7 +235,7 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     }
 
     if (Array.isArray(content.content)) {
-        content.content.forEach((child: TipTapContent, childIdx: number) => {
+        content.content.forEach((child: JSONContent, childIdx: number) => {
             results.push(...collectLinkMarks(child, [...basePath, "content", String(childIdx)]));
         });
     }
@@ -236,7 +243,7 @@ function collectLinkMarks(content: TipTapContent, basePath: string[] = ["tipTapC
     return results;
 }
 
-function collectPlaceholderNames(content: TipTapContent): string[] {
+function collectPlaceholderNames(content: JSONContent): string[] {
     const names: string[] = [];
 
     if (content.type === "placeholder" && content.attrs?.name) {
@@ -252,7 +259,7 @@ function collectPlaceholderNames(content: TipTapContent): string[] {
     return names;
 }
 
-function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
+function getListNestingDepth(content: JSONContent, currentDepth = 0): number {
     if (!content || typeof content !== "object") {
         return 0;
     }
@@ -274,18 +281,22 @@ function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
     return maxDepth;
 }
 
-function getBlockTypeFromNode(node: TipTapContent): TipTapBlockType | undefined {
+function getTextBlockTypeFromNode(node: JSONContent): TipTapTextBlockType | undefined {
     if (node.type === "paragraph") {
         return "paragraph";
     }
     if (node.type === "heading" && node.attrs?.level) {
-        return `heading-${node.attrs.level}` as TipTapBlockType;
+        return `heading-${node.attrs.level}` as TipTapTextBlockType;
     }
     return undefined;
 }
 
-function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: TipTapInlineStyle[], parentBlockType?: TipTapBlockType): boolean {
-    const currentBlockType = getBlockTypeFromNode(content) ?? parentBlockType;
+function containsInvalidInlineStyleMarks(
+    content: JSONContent,
+    inlineStyles: TipTapInlineStyle[],
+    parentTextBlockType?: TipTapTextBlockType,
+): boolean {
+    const currentTextBlockType = getTextBlockTypeFromNode(content) ?? parentTextBlockType;
 
     if (Array.isArray(content.content)) {
         for (const child of content.content) {
@@ -293,14 +304,15 @@ function containsInvalidInlineStyleMarks(content: TipTapContent, inlineStyles: T
             if (child.type === "text" && Array.isArray(child.marks)) {
                 for (const mark of child.marks) {
                     if (mark.type === "inlineStyle" && mark.attrs?.type) {
-                        const styleConfig = inlineStyles.find((s) => s.name === mark.attrs.type);
-                        if (styleConfig?.appliesTo && currentBlockType && !styleConfig.appliesTo.includes(currentBlockType)) {
+                        const markAttrs = mark.attrs;
+                        const styleConfig = inlineStyles.find((s) => s.name === markAttrs.type);
+                        if (styleConfig?.appliesTo && currentTextBlockType && !styleConfig.appliesTo.includes(currentTextBlockType)) {
                             return true;
                         }
                     }
                 }
             }
-            if (containsInvalidInlineStyleMarks(child, inlineStyles, currentBlockType)) {
+            if (containsInvalidInlineStyleMarks(child, inlineStyles, currentTextBlockType)) {
                 return true;
             }
         }
@@ -314,10 +326,10 @@ function IsTipTapContent(
     {
         inlineStyles,
         linkBlock,
-        maxBlocks,
+        maxTextBlocks,
         allowedPlaceholderNames,
         listLevelMax,
-    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxBlocks?: number; allowedPlaceholderNames?: string[]; listLevelMax?: number },
+    }: { inlineStyles: TipTapInlineStyle[]; linkBlock?: Block; maxTextBlocks?: number; allowedPlaceholderNames?: string[]; listLevelMax?: number },
     validationOptions?: ValidationOptions,
 ) {
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
@@ -341,21 +353,21 @@ function IsTipTapContent(
                         node.check();
 
                         // Validate inline style appliesTo constraints
-                        if (containsInvalidInlineStyleMarks(value as TipTapContent, inlineStyles)) {
+                        if (containsInvalidInlineStyleMarks(value as JSONContent, inlineStyles)) {
                             return false;
                         }
 
-                        // Enforce maxBlocks limit on top-level content nodes
-                        if (maxBlocks !== undefined) {
-                            const content = (value as TipTapContent).content;
-                            if (Array.isArray(content) && content.length > maxBlocks) {
+                        // Enforce maxTextBlocks limit on top-level content nodes
+                        if (maxTextBlocks !== undefined) {
+                            const content = (value as JSONContent).content;
+                            if (Array.isArray(content) && content.length > maxTextBlocks) {
                                 return false;
                             }
                         }
 
                         // Enforce listLevelMax limit on list nesting depth
                         if (listLevelMax !== undefined) {
-                            const depth = getListNestingDepth(value as TipTapContent);
+                            const depth = getListNestingDepth(value as JSONContent);
                             if (depth > listLevelMax) {
                                 return false;
                             }
@@ -363,7 +375,7 @@ function IsTipTapContent(
 
                         // Validate link mark data
                         if (linkBlock) {
-                            const linkMarks = collectLinkMarks(value as TipTapContent);
+                            const linkMarks = collectLinkMarks(value as JSONContent);
                             for (const { data } of linkMarks) {
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 const validationErrors = await validate(linkBlock.blockInputFactory(data as any), {
@@ -378,7 +390,7 @@ function IsTipTapContent(
 
                         // Validate placeholder names
                         if (allowedPlaceholderNames) {
-                            const usedNames = collectPlaceholderNames(value as TipTapContent);
+                            const usedNames = collectPlaceholderNames(value as JSONContent);
                             for (const name of usedNames) {
                                 if (!allowedPlaceholderNames.includes(name)) {
                                     return false;
@@ -401,7 +413,7 @@ interface TextEntry {
     headingLevel?: number;
 }
 
-function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEntry[] {
+function extractTextEntries(node: JSONContent, headingLevel?: number): TextEntry[] {
     const results: TextEntry[] = [];
     const currentHeadingLevel = node.type === "heading" ? (node.attrs?.level as number) : headingLevel;
 
@@ -423,25 +435,25 @@ function extractTextEntries(node: TipTapContent, headingLevel?: number): TextEnt
 export function createTipTapRichTextBlock(
     {
         supports = defaultSupports,
-        blockStyles = [],
+        textBlockStyles = [],
         inlineStyles = [],
         placeholders = [],
         indexSearchText = true,
         link: LinkBlock,
-        maxBlocks,
+        maxTextBlocks,
         listLevelMax,
         migrateFromDraftJs = false,
     }: CreateTipTapRichTextBlockOptions = {},
     nameOrOptions: BlockFactoryNameOrOptions = "TipTapRichText",
-): Block {
+): Block<TipTapRichTextBlockDataInterface, TipTapRichTextBlockInputInterface> {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const baseMigrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     const hasLink = !!LinkBlock;
-    const extensions = buildExtensions(supports, blockStyles, inlineStyles, placeholders, hasLink);
+    const extensions = buildExtensions(supports, textBlockStyles, inlineStyles, placeholders, hasLink);
     const schema = getSchema(extensions);
 
-    const draftJsBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.blockStyleMap : undefined;
+    const draftJsTextBlockStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.textBlockStyleMap : undefined;
     const draftJsInlineStyleMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.inlineStyleMap : undefined;
 
     if (migrateFromDraftJs && baseMigrate) {
@@ -463,8 +475,8 @@ export function createTipTapRichTextBlock(
                       schema,
                       supports,
                       link: LinkBlock,
-                      maxBlocks,
-                      blockStyleMap: draftJsBlockStyleMap,
+                      maxTextBlocks,
+                      textBlockStyleMap: draftJsTextBlockStyleMap,
                       inlineStyleMap: draftJsInlineStyleMap,
                   }),
                   ...baseMigrate.migrations,
@@ -473,9 +485,9 @@ export function createTipTapRichTextBlock(
         : baseMigrate;
 
     @BlockDataMigrationVersion(migrate.version)
-    class TipTapRichTextBlockData extends BlockData {
+    class TipTapRichTextBlockData extends BlockData implements TipTapRichTextBlockDataInterface {
         @BlockField({ type: "json" })
-        tipTapContent: TipTapContent;
+        tipTapContent: JSONContent;
 
         searchText(): SearchText[] {
             if (!indexSearchText) {
@@ -506,10 +518,10 @@ export function createTipTapRichTextBlock(
 
     const allowedPlaceholderNames = placeholders.length > 0 ? placeholders.map((p) => p.name) : undefined;
 
-    class TipTapRichTextBlockInput implements BlockInputInterface {
-        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxBlocks, allowedPlaceholderNames, listLevelMax })
+    class TipTapRichTextBlockInput implements TipTapRichTextBlockInputInterface {
+        @IsTipTapContent(schema, { inlineStyles, linkBlock: LinkBlock, maxTextBlocks, allowedPlaceholderNames, listLevelMax })
         @BlockField({ type: "json" })
-        tipTapContent: TipTapContent;
+        tipTapContent: JSONContent;
 
         transformToBlockData(): TipTapRichTextBlockData {
             let tipTapContent = this.tipTapContent;
@@ -534,7 +546,7 @@ export function createTipTapRichTextBlock(
         }
         return plainToInstance(TipTapRichTextBlockData, { tipTapContent });
     };
-    const blockInputFactory: BlockInputFactory<TipTapRichTextBlockInput> = (o) => plainToInstance(TipTapRichTextBlockInput, o);
+    const blockInputFactory: BlockInputFactory<TipTapRichTextBlockInputInterface> = (o) => plainToInstance(TipTapRichTextBlockInput, o);
 
     // Decorate BlockDataFactory
     let decorateBlockDataFactory = blockDataFactory;
@@ -547,7 +559,7 @@ export function createTipTapRichTextBlock(
     // Decorate BlockInputFactory
     const decorateBlockInputFactory = strictBlockInputFactoryDecorator(blockInputFactory);
 
-    const TipTapRichTextBlock: Block = {
+    const TipTapRichTextBlock: Block<TipTapRichTextBlockDataInterface, TipTapRichTextBlockInputInterface> = {
         name: blockName,
         blockDataFactory: decorateBlockDataFactory,
         blockInputFactory: decorateBlockInputFactory,

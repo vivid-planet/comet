@@ -37,7 +37,7 @@
     "dependencies": {
         "@comet/cms-api": "workspace:*",
         "@fast-csv/parse": "^5.0.7",
-        "@getbrevo/brevo": "^3.0.4",
+        "@getbrevo/brevo": "^2.5.0",
         "@nestjs/axios": "^4.0.1",
         "@nestjs/cache-manager": "^3.1.2",
         "@nestjs/jwt": "^11.0.2",
@@ -75,7 +75,7 @@
         "rxjs": "^7.8.2",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",
-        "vitest": "^4.0.16"
+        "vitest": "^4.1.8"
     },
     "peerDependencies": {
         "@mikro-orm/cli": "^6.0.0",

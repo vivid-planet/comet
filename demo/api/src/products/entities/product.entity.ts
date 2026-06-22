@@ -6,6 +6,7 @@ import {
     EntityInfo,
     FileUpload,
     ImportTargetInterface,
+    RequiredPermission,
     RootBlock,
     RootBlockEntity,
     RootBlockType,
@@ -96,6 +97,7 @@ export class ProductPriceRange {
     visible: { status: { $eq: ProductStatus.Published } },
     fullText: "fullText",
 })
+@RequiredPermission("products", { skipScopeCheck: true })
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
@@ -254,10 +256,16 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @Property<Product>({
         nullable: true,
         type: new FullTextType(),
-        onUpdate: (page) => {
+        onCreate: (product) => {
             return {
-                A: page.title,
-                D: page.description,
+                A: product.title,
+                D: product.description,
+            };
+        },
+        onUpdate: (product) => {
+            return {
+                A: product.title,
+                D: product.description,
             };
         },
     })

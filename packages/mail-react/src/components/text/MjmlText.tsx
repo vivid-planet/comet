@@ -30,6 +30,9 @@ export type MjmlTextProps = IMjmlTextProps & {
      *         },
      *     },
      * });
+     * ```
+     *
+     * @defaultValue The theme's `text.defaultVariant`, when set
      */
     variant?: VariantName;
     /** When true, applies spacing below the text. */
