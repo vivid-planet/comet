@@ -70,8 +70,6 @@ export function Typography({ variant = "body", element, className, children, ref
         render,
         ref,
         state: ownerState,
-        // Typography styles through the class-name contract, not data-* attributes.
-        stateAttributesMapping: { variant: () => null },
         defaultTagName: tagName,
         props: { ...restProps, className: rootClassName, children },
     });
