@@ -1,6 +1,11 @@
 import "reflect-metadata";
 
 export { AccessLogModule } from "./access-log/access-log.module";
+export {
+    type ActionLogSnapshot,
+    type ActionLogSnapshotMigration,
+    type MigrateActionLogSnapshotArgs,
+} from "./action-logs/action-log-snapshot-migration";
 export { ActionLogs } from "./action-logs/action-logs.decorator";
 export { ActionLogsModule } from "./action-logs/action-logs.module";
 export { ActionLogType } from "./action-logs/dto/action-log-type.enum";
