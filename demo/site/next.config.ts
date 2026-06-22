@@ -75,7 +75,14 @@ const nextConfig: NextConfig = {
             ],
         };
     },
-    webpack: (config, { isServer }) => {
+    webpack: (config, { isServer, dev }) => {
+        if (dev && config.cache && typeof config.cache === "object" && config.cache.type === "filesystem") {
+            // Webpack's filesystem cache gzip-compresses its pack files. Its bundled serialization
+            // allocates a fixed 100 MB zlib chunk buffer per (de)serialization stream — one per
+            // compiler (client, server, edge) — which stays allocated for the dev server's lifetime,
+            // adding ~300 MB of off-heap memory. Disabling compression avoids these buffers.
+            config.cache.compression = false;
+        }
         if (!isServer) {
             config.module.rules.push({
                 test: /\.[jt]sx?$/,
