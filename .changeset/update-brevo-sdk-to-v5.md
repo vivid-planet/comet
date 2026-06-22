@@ -1,5 +1,5 @@
 ---
-"@comet/brevo-api": minor
+"@comet/brevo-api": major
 ---
 
 Update `@getbrevo/brevo` to v5
