@@ -6,6 +6,7 @@ import {
     DamImageBlock,
     EntityInfo,
     FileUpload,
+    GroupedActionLogs,
     ImportTargetInterface,
     RequiredPermission,
     RootBlock,
@@ -196,6 +197,7 @@ export class Product extends BaseEntity implements ImportTargetInterface {
         //sort: true, //not yet implemented
         input: true, //default is true
     })
+    @GroupedActionLogs()
     colors = new Collection<ProductColor>(this);
 
     @OneToMany(() => ProductVariant, (variant) => variant.product, { orphanRemoval: true })
