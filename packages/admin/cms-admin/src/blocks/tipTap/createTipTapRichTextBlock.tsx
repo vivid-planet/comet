@@ -280,6 +280,43 @@ function collectCmsBlockNodes(content: JSONContent): Array<{ blockType: string; 
     return results;
 }
 
+function collectLinkMarksData(content: JSONContent): unknown[] {
+    const results: unknown[] = [];
+
+    if (Array.isArray(content.marks)) {
+        for (const mark of content.marks) {
+            if (mark.type === "link" && mark.attrs?.data) {
+                results.push(mark.attrs.data);
+            }
+        }
+    }
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            results.push(...collectLinkMarksData(child));
+        }
+    }
+
+    return results;
+}
+
+async function translateTextNodesAsync(content: JSONContent, translate: (text: string) => Promise<string>): Promise<JSONContent> {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (typeof result.text === "string" && result.text.trim().length > 0) {
+        result.text = await translate(result.text);
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = await Promise.all(result.content.map((child) => translateTextNodesAsync(child, translate)));
+    }
+
+    return result;
+}
+
 const TipTapEditor = ({
     state,
     updateState,
@@ -517,6 +554,11 @@ export const createTipTapRichTextBlock = (
             if (text.length > 0) {
                 texts.push(text);
             }
+            if (linkBlock?.extractTextContents) {
+                for (const data of collectLinkMarksData(state.tipTapContent)) {
+                    texts.push(...linkBlock.extractTextContents(data, options));
+                }
+            }
             if (hasChildBlocks) {
                 for (const { blockType, data } of collectCmsBlockNodes(state.tipTapContent)) {
                     const childBlock = childBlocksByKey[blockType];
@@ -526,6 +568,21 @@ export const createTipTapRichTextBlock = (
                 }
             }
             return texts;
+        },
+
+        translateContent: async (state, translate) => {
+            let content = await translateTextNodesAsync(state.tipTapContent, translate);
+            if (linkBlock?.translateContent) {
+                const translateLinkContent = linkBlock.translateContent;
+                content = await mapLinkMarksDataAsync(content, (data) => translateLinkContent(data, translate));
+            }
+            if (hasChildBlocks) {
+                content = await mapCmsBlockNodesDataAsync(content, async (blockType, data) => {
+                    const childBlock = childBlocksByKey[blockType];
+                    return childBlock?.translateContent ? childBlock.translateContent(data, translate) : data;
+                });
+            }
+            return { tipTapContent: content };
         },
     };
 
