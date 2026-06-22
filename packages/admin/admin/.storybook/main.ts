@@ -11,7 +11,7 @@ function generateScopedName(name: string, filename: string): string {
     const futureUiMatch = filename.match(futureUiModulePattern);
 
     if (futureUiMatch) {
-        const componentName = futureUiMatch[2];
+        const componentName = futureUiMatch[1];
 
         if (name === "root") {
             return `${futureUiClassnamePrefix}${componentName}`;
