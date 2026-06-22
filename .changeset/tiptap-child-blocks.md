@@ -5,7 +5,7 @@
 
 Add support for child blocks in `createTipTapRichTextBlock`
 
-Child blocks can now be embedded into the TipTap rich text editor, similar to the existing link feature. Configure the supported blocks via the new `childBlocks` option (both admin and API), a record keyed by a stable key. A "+" button in the toolbar opens a menu listing the configured child blocks. Selecting one opens a dialog with the block's Admin component; on confirmation, the block is inserted into the editor as a non-editable preview that can be edited (by clicking it) or removed.
+Child blocks can now be embedded into the TipTap rich text editor, similar to the existing link feature. Configure the supported blocks via the new `childBlocks` option (both admin and API): a record keyed by a stable key, where each entry is `{ block, display }`. `display` is either `"block"` (a standalone block element on its own line) or `"inline"` (rendered inline within the surrounding text). A "+" button in the toolbar opens a menu listing the configured child blocks. Selecting one opens a dialog with the block's Admin component; on confirmation, the block is inserted into the editor as a non-editable preview that can be edited (by clicking it) or removed.
 
 **Example**
 
