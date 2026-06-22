@@ -12,6 +12,7 @@ export default defineConfig([
         "lang/**",
         "lang-compiled/**",
         "lang-extracted/**",
+        ".storybook/public/**",
     ]),
     ...eslintConfigNestJs,
     ...storybook.configs["flat/recommended"],

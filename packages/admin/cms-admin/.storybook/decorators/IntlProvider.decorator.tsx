@@ -1,6 +1,6 @@
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { type Decorator } from "@storybook/react-vite";
+import type { Decorator } from "@storybook/react-vite";
 import { de, enUS } from "date-fns/locale";
 import { IntlProvider } from "react-intl";
 
@@ -9,7 +9,7 @@ export enum LocaleOption {
     English = "en",
 }
 
-function isLocaleOption(value: any): value is LocaleOption {
+function isLocaleOption(value: unknown): value is LocaleOption {
     return value === "de" || value === "en";
 }
 

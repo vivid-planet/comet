@@ -49,7 +49,7 @@
         },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["**/*.generated.ts", ".storybook/public/mockServiceWorker.js"]
+            "ignore": ["**/*.generated.ts", ".storybook/public/mockServiceWorker.js", ".storybook/svg.d.ts"]
         },
         "packages/admin/admin-generator": {
             "project": ["./src/**/*.{ts,tsx}"]
