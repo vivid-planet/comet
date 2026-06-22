@@ -1,20 +1,52 @@
 import { graphql, HttpResponse } from "msw";
 
 const mockGridNodes = [
-    { __typename: "ActionLog", id: "log3", userId: "Max Mustermann", entityName: "TestEntity", version: 3, createdAt: "2023-10-03T12:00:00Z" },
-    { __typename: "ActionLog", id: "log2", userId: "user2", entityName: "TestEntity", version: 2, createdAt: "2023-10-02T12:00:00Z" },
-    { __typename: "ActionLog", id: "log1", userId: "system-user", entityName: "TestEntity", version: 1, createdAt: "2023-10-01T12:00:00Z" },
+    {
+        __typename: "ActionLog",
+        id: "log3",
+        user: { __typename: "ActionLogsUser", id: "1", name: "Max Mustermann" },
+        entityName: "TestEntity",
+        version: 3,
+        type: "Updated",
+        createdAt: "2023-10-03T12:00:00Z",
+    },
+    {
+        __typename: "ActionLog",
+        id: "log2",
+        user: { __typename: "ActionLogsUser", id: "user2", name: "User Two" },
+        entityName: "TestEntity",
+        version: 2,
+        type: "Updated",
+        createdAt: "2023-10-02T12:00:00Z",
+    },
+    {
+        __typename: "ActionLog",
+        id: "log1",
+        user: { __typename: "ActionLogsUser", id: "system-user", name: "system-user" },
+        entityName: "TestEntity",
+        version: 1,
+        type: "Created",
+        createdAt: "2023-10-01T12:00:00Z",
+    },
 ];
 
 const mockVersionById: Record<
     string,
-    { __typename: "ActionLog"; id: string; version: number; userId: string; entityName: string; snapshot: object; createdAt: string }
+    {
+        __typename: "ActionLog";
+        id: string;
+        version: number;
+        user: { __typename: "ActionLogsUser"; id: string; name: string | null };
+        entityName: string;
+        snapshot: object;
+        createdAt: string;
+    }
 > = {
     log1: {
         __typename: "ActionLog",
         id: "log1",
         version: 1,
-        userId: "system-user",
+        user: { __typename: "ActionLogsUser", id: "system-user", name: "system-user" },
         entityName: "TestEntity",
         snapshot: { title: "My Page", slug: "my-page", createdAt: "2023-10-01T12:00:00Z" },
         createdAt: "2023-10-01T12:00:00Z",
@@ -23,7 +55,7 @@ const mockVersionById: Record<
         __typename: "ActionLog",
         id: "log2",
         version: 2,
-        userId: "user2",
+        user: { __typename: "ActionLogsUser", id: "user2", name: "User Two" },
         entityName: "TestEntity",
         snapshot: { title: "My Page (updated)", slug: "my-page", createdAt: "2023-10-01T12:00:00Z" },
         createdAt: "2023-10-02T12:00:00Z",
@@ -32,7 +64,7 @@ const mockVersionById: Record<
         __typename: "ActionLog",
         id: "log3",
         version: 3,
-        userId: "Max Mustermann",
+        user: { __typename: "ActionLogsUser", id: "1", name: "Max Mustermann" },
         entityName: "TestEntity",
         snapshot: { title: "My Page (v3)", slug: "my-page", createdAt: "2023-10-03T12:00:00Z" },
         createdAt: "2023-10-03T12:00:00Z",
