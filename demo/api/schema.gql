@@ -1038,6 +1038,21 @@ type Mutation {
   removeBrevoContactFromTargetGroup(id: ID!, input: RemoveBrevoContactInput!): Boolean!
   restoreDamFile(id: ID!): DamFile!
   restoreDamFiles(ids: [ID!]!): [DamFile!]!
+
+  """
+  Restore the Manufacturer to the state stored in the given action log's snapshot.
+  """
+  restoreManufacturer(actionLogId: ID!, id: ID!): Manufacturer!
+
+  """
+  Restore the News to the state stored in the given action log's snapshot.
+  """
+  restoreNews(actionLogId: ID!, id: ID!): News!
+
+  """
+  Restore the Product to the state stored in the given action log's snapshot.
+  """
+  restoreProduct(actionLogId: ID!, id: ID!): Product!
   saveFooter(input: FooterInput!, scope: FooterScopeInput!): Footer!
   saveLink(attachedPageTreeNodeId: ID, id: ID!, input: LinkInput!, lastUpdatedAt: DateTime): Link!
   savePage(attachedPageTreeNodeId: ID, input: PageInput!, lastUpdatedAt: DateTime, pageId: ID!): Page!

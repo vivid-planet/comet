@@ -71,4 +71,11 @@ export const actionLogDialogHandlers = [
             },
         }),
     ),
+    graphql.mutation("ActionLogDialogRestore", ({ variables }) =>
+        HttpResponse.json({
+            data: {
+                restore: { __typename: "Manufacturer", id: variables.id },
+            },
+        }),
+    ),
 ];

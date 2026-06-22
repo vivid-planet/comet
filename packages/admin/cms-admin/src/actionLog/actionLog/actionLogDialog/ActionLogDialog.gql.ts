@@ -41,6 +41,15 @@ export type ActionLogDialogCompareQueryVariables = {
     afterVersionId: string;
 };
 
+export type ActionLogDialogRestoreMutationResult = {
+    restore: { id: string };
+};
+
+export type ActionLogDialogRestoreMutationVariables = {
+    id: string;
+    actionLogId: string;
+};
+
 export const createActionLogDialogGridQuery = (rootField: string): DocumentNode => gql`
     query ActionLogDialogGrid($id: ID!, $offset: Int!, $limit: Int!, $sort: [ActionLogSort!]) {
         entity: ${rootField}(id: $id) {
@@ -79,3 +88,18 @@ export const createActionLogDialogCompareQuery = (rootField: string): DocumentNo
     }
     ${actionLogCompareFragment}
 `;
+
+/**
+ * The restore mutation is named `restore<EntityName>` on the API (e.g. `restoreManufacturer`).
+ * It is derived from the `rootField`, which exposes the same entity (e.g. `manufacturer`).
+ */
+export const createActionLogDialogRestoreMutation = (rootField: string): DocumentNode => {
+    const mutationName = `restore${rootField.charAt(0).toUpperCase()}${rootField.slice(1)}`;
+    return gql`
+        mutation ActionLogDialogRestore($id: ID!, $actionLogId: ID!) {
+            restore: ${mutationName}(id: $id, actionLogId: $actionLogId) {
+                id
+            }
+        }
+    `;
+};

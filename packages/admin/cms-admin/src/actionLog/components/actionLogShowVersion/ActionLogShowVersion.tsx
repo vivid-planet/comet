@@ -1,5 +1,5 @@
 import { Button, InlineAlert, Loading } from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
+import { ArrowLeft, Restore } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import type { FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
@@ -22,6 +22,12 @@ type ActionLogShowVersionProps = {
      */
     name?: string;
     onClickShowVersionHistory: () => void;
+    /**
+     * Called when the user wants to restore the entity to this version's snapshot.
+     * The restore action is only available for versions that have a snapshot (not for deletions).
+     */
+    onRestore?: () => void;
+    restoring?: boolean;
 };
 
 export const ActionLogShowVersion: FunctionComponent<ActionLogShowVersionProps> = ({
@@ -32,6 +38,8 @@ export const ActionLogShowVersion: FunctionComponent<ActionLogShowVersionProps> 
     loading,
     name,
     onClickShowVersionHistory,
+    onRestore,
+    restoring,
 }) => {
     const filterKeys = passedFilterKeys != null ? [...passedFilterKeys, ...defaultFilterOutKeys] : defaultFilterOutKeys;
 
@@ -52,10 +60,15 @@ export const ActionLogShowVersion: FunctionComponent<ActionLogShowVersionProps> 
 
     return (
         <Root>
-            <Box marginBottom={4}>
-                <Button onClick={onClickShowVersionHistory} startIcon={<ArrowLeft />} variant="primary">
+            <Box display="flex" gap={2} justifyContent="space-between" marginBottom={4}>
+                <Button onClick={onClickShowVersionHistory} startIcon={<ArrowLeft />} variant="textDark">
                     <FormattedMessage defaultMessage="Show Version History" id="actionLog.actionLogCompare.showVersionHistory" />
                 </Button>
+                {onRestore != null && version?.snapshot != null && (
+                    <Button disabled={restoring} onClick={onRestore} startIcon={<Restore />} variant="primary">
+                        <FormattedMessage defaultMessage="Restore this version" id="actionLog.actionLogShowVersion.restore" />
+                    </Button>
+                )}
             </Box>
 
             <ActionLogHeader dbTypes={version?.entityName ? [version.entityName] : []} id={id} title={title} />

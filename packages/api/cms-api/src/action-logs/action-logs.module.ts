@@ -22,7 +22,7 @@ export class ActionLogsModule {
         const resolvers = entities.map((entity) => ActionLogsResolverFactory.create(entity));
         return {
             module: ActionLogsFeatureModule,
-            providers: [...resolvers],
+            providers: [ActionLogsService, ...resolvers],
         };
     }
 }

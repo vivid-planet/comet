@@ -1,5 +1,7 @@
-import { useQuery } from "@apollo/client";
-import { Dialog, InlineAlert, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
+import { useMutation, useQuery } from "@apollo/client";
+import { Button, CancelButton, Dialog, InlineAlert, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
+import { Restore } from "@comet/admin-icons";
+import { DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -11,10 +13,13 @@ import {
     type ActionLogDialogCompareQueryVariables,
     type ActionLogDialogGridQueryResult,
     type ActionLogDialogGridQueryVariables,
+    type ActionLogDialogRestoreMutationResult,
+    type ActionLogDialogRestoreMutationVariables,
     type ActionLogDialogShowVersionQueryResult,
     type ActionLogDialogShowVersionQueryVariables,
     createActionLogDialogCompareQuery,
     createActionLogDialogGridQuery,
+    createActionLogDialogRestoreMutation,
     createActionLogDialogShowVersionQuery,
 } from "./ActionLogDialog.gql";
 
@@ -54,10 +59,12 @@ type ActionLogDialogProps<TQuery> = {
 export function ActionLogDialog<TQuery = Record<string, unknown>>({ id, rootField, name, open, onClose }: ActionLogDialogProps<TQuery>) {
     const intl = useIntl();
     const [view, setView] = useState<ActionLogDialogView>({ type: "grid" });
+    const [versionIdToRestore, setVersionIdToRestore] = useState<string>();
 
     useEffect(() => {
         if (!open) {
             setView({ type: "grid" });
+            setVersionIdToRestore(undefined);
         }
     }, [open]);
 
@@ -67,6 +74,7 @@ export function ActionLogDialog<TQuery = Record<string, unknown>>({ id, rootFiel
     const gridQuery = useMemo(() => createActionLogDialogGridQuery(rootField), [rootField]);
     const showVersionQuery = useMemo(() => createActionLogDialogShowVersionQuery(rootField), [rootField]);
     const compareQuery = useMemo(() => createActionLogDialogCompareQuery(rootField), [rootField]);
+    const restoreMutation = useMemo(() => createActionLogDialogRestoreMutation(rootField), [rootField]);
 
     const gridResult = useQuery<ActionLogDialogGridQueryResult, ActionLogDialogGridQueryVariables>(gridQuery, {
         variables: {
@@ -78,6 +86,8 @@ export function ActionLogDialog<TQuery = Record<string, unknown>>({ id, rootFiel
                 direction: entry.sort === "desc" ? "DESC" : "ASC",
             })),
         },
+        // Restoring a version creates a new action log, so the grid must reflect server state when reopened.
+        fetchPolicy: "cache-and-network",
         skip: !open || view.type !== "grid",
     });
 
@@ -93,6 +103,19 @@ export function ActionLogDialog<TQuery = Record<string, unknown>>({ id, rootFiel
                 : { id, beforeVersionId: "", afterVersionId: "" },
         skip: !open || view.type !== "compareVersions",
     });
+
+    const [restore, { loading: restoring }] = useMutation<ActionLogDialogRestoreMutationResult, ActionLogDialogRestoreMutationVariables>(
+        restoreMutation,
+    );
+
+    const handleConfirmRestore = async () => {
+        if (versionIdToRestore == null) {
+            return;
+        }
+        await restore({ variables: { id, actionLogId: versionIdToRestore } });
+        setVersionIdToRestore(undefined);
+        setView({ type: "grid" });
+    };
 
     return (
         <Dialog
@@ -132,6 +155,8 @@ export function ActionLogDialog<TQuery = Record<string, unknown>>({ id, rootFiel
                     loading={showVersionResult.loading}
                     name={name}
                     onClickShowVersionHistory={() => setView({ type: "grid" })}
+                    onRestore={() => setVersionIdToRestore(view.versionId)}
+                    restoring={restoring}
                 />
             )}
 
@@ -146,6 +171,30 @@ export function ActionLogDialog<TQuery = Record<string, unknown>>({ id, rootFiel
                     onClickShowVersionHistory={() => setView({ type: "grid" })}
                 />
             )}
+
+            <Dialog
+                open={versionIdToRestore != null}
+                onClose={() => setVersionIdToRestore(undefined)}
+                title={intl.formatMessage({
+                    defaultMessage: "Restore version",
+                    id: "actionLog.actionLogDialog.restoreConfirmation.title",
+                })}
+            >
+                <DialogContent>
+                    <DialogContentText>
+                        <FormattedMessage
+                            defaultMessage="Restoring overwrites the current state with this version's snapshot. A new version is created, so this can be undone."
+                            id="actionLog.actionLogDialog.restoreConfirmation.message"
+                        />
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <CancelButton onClick={() => setVersionIdToRestore(undefined)} />
+                    <Button disabled={restoring} onClick={handleConfirmRestore} startIcon={<Restore />} variant="primary">
+                        <FormattedMessage defaultMessage="Restore" id="actionLog.actionLogDialog.restoreConfirmation.confirm" />
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Dialog>
     );
 }

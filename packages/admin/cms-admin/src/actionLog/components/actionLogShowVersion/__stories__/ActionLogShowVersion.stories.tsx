@@ -40,6 +40,16 @@ export const Standard: Story = {
     },
 };
 
+export const WithRestore: Story = {
+    args: {
+        actionLog: mockActionLog,
+        id: "550e8400-e29b-41d4-a716-446655440000",
+        loading: false,
+        name: "My Page",
+        onRestore: () => undefined,
+    },
+};
+
 export const Loading: Story = {
     args: {
         actionLog: undefined,
