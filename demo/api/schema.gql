@@ -2339,8 +2339,10 @@ input WarningFilter {
   and: [WarningFilter!]
   createdAt: DateTimeFilter
   message: StringFilter
+  name: StringFilter
   or: [WarningFilter!]
   scope: ScopeFilter
+  secondaryInformation: StringFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
   type: StringFilter
@@ -2367,6 +2369,7 @@ input WarningSort {
 enum WarningSortField {
   createdAt
   message
+  name
   severity
   status
   type
