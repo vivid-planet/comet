@@ -58,11 +58,11 @@ export interface TypographyProps extends Omit<HTMLAttributes<HTMLElement>, "clas
  */
 export function Typography({ variant = "body", element, className, children, ref, render, ...restProps }: TypographyProps) {
     const ownerState: TypographyOwnerState = { variant };
-    const tagName = element ?? variantElement[variant];
+    const tagName = element ?? variantElement[ownerState.variant];
     const rootClassName = clsx(
         styles.root,
-        variant === "headline" && styles["root--variantHeadline"],
-        variant === "body" && styles["root--variantBody"],
+        ownerState.variant === "headline" && styles["root--variantHeadline"],
+        ownerState.variant === "body" && styles["root--variantBody"],
         className,
     );
 
