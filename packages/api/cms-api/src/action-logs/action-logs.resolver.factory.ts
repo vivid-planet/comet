@@ -3,9 +3,8 @@ import { AnyEntity, EntityManager, PostgreSqlDriver } from "@mikro-orm/postgresq
 import { Type } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
-import { gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
+import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { REQUIRED_PERMISSION_METADATA_KEY } from "../user-permissions/decorators/required-permission.decorator";
-import { actionLogFilterToWhere } from "./action-logs-filter.utils";
 import { EntityActionLogsArgs } from "./dto/entity-action-logs.args";
 import { PaginatedActionLogs } from "./dto/paginated-action-logs";
 import { ActionLog } from "./entities/action-log.entity";
@@ -42,7 +41,7 @@ export class ActionLogsResolverFactory {
                 }
 
                 if (filter) {
-                    andFilters.push(actionLogFilterToWhere(filter));
+                    andFilters.push(filtersToMikroOrmQuery(filter));
                 }
 
                 const [entities, totalCount] = await this.entityManager.findAndCount(
