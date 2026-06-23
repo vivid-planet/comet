@@ -23,6 +23,16 @@ type ActionLog {
   version: Int!
 }
 
+input ActionLogFilter {
+  and: [ActionLogFilter!]
+  createdAt: DateTimeFilter
+  entityId: IdFilter
+  entityName: StringFilter
+  or: [ActionLogFilter!]
+  userId: StringFilter
+  version: NumberFilter
+}
+
 input ActionLogSort {
   direction: SortDirection! = ASC
   field: ActionLogSortField!
@@ -1428,6 +1438,7 @@ type PaginatedWarnings {
 }
 
 enum Permission {
+  actionLog
   blockPreview
   brevoNewsletter
   brevoNewsletterConfig
@@ -1986,6 +1997,15 @@ input ProductVariantUpdateInput {
 }
 
 type Query {
+  """
+  Returns a single action log entry by id. Requires the `actionLog` permission.
+  """
+  actionLog(id: ID!): ActionLog!
+
+  """
+  Returns action log entries across all entities. Requires the `actionLog` permission.
+  """
+  actionLogs(filter: ActionLogFilter, limit: Int! = 25, offset: Int! = 0, scopes: [JSONObject!]!, search: String, sort: [ActionLogSort!]): PaginatedActionLogs!
   autoBuildStatus: AutoBuildStatus!
   blockPreviewJwt(includeInvisible: Boolean!, scope: JSONObject!, url: String!): String!
   brevoConfig(scope: EmailCampaignContentScopeInput!): BrevoConfig
