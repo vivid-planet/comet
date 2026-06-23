@@ -140,13 +140,10 @@ export function BrevoContactForm({ id, scope, input2State, additionalFormFields,
                 if (!id) {
                     throw new Error("Missing id in edit mode");
                 }
+                const { email, redirectionUrl, sendDoubleOptIn, ...rest } = output;
                 await client.mutate<GQLUpdateBrevoContactMutation, GQLUpdateBrevoContactMutationVariables>({
                     mutation: updateBrevoContactMutation(brevoContactFormFragment),
-                    variables: {
-                        id,
-                        input: { blocked: false, attributes: state.attributes } as GQLUpdateBrevoContactMutationVariables["input"],
-                        scope,
-                    },
+                    variables: { id, input: rest, scope },
                 });
             } else {
                 const { data: mutationResponse } = await client.mutate<GQLCreateBrevoContactMutation, GQLCreateBrevoContactMutationVariables>({
