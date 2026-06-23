@@ -51,6 +51,7 @@ export type EditBrevoContactFormValues = {
 type EditBrevoContactFormValuesWithAttributes = EditBrevoContactFormValues & {
     email: string;
     redirectionUrl: string;
+    sendDoubleOptIn?: boolean;
 };
 
 interface FormProps {
@@ -139,7 +140,7 @@ export function BrevoContactForm({ id, scope, input2State, additionalFormFields,
                 if (!id) {
                     throw new Error("Missing id in edit mode");
                 }
-                const { email, redirectionUrl, ...rest } = output;
+                const { email, redirectionUrl, sendDoubleOptIn, ...rest } = output;
                 await client.mutate<GQLUpdateBrevoContactMutation, GQLUpdateBrevoContactMutationVariables>({
                     mutation: updateBrevoContactMutation(brevoContactFormFragment),
                     variables: { id, input: rest, scope },
