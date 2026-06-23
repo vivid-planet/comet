@@ -27,7 +27,6 @@ input ActionLogFilter {
   and: [ActionLogFilter!]
   createdAt: DateTimeFilter
   entityId: IdFilter
-  entityName: StringFilter
   or: [ActionLogFilter!]
   userId: StringFilter
   version: NumberFilter
@@ -40,7 +39,6 @@ input ActionLogSort {
 
 enum ActionLogSortField {
   createdAt
-  entityName
   version
 }
 
