@@ -251,6 +251,10 @@ export function createPageTreeResolver({
         @Mutation(() => Boolean)
         @AffectedEntity(PageTreeNode)
         async deletePageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
+            if (!this.config.allowPageDelete) {
+                throw new GraphQLError("Page deletion is disabled in the configuration.");
+            }
+
             const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
             });

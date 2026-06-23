@@ -399,7 +399,10 @@ export class PageTreeService {
     }
 
     public async nodeWithSamePath(path: string, scope?: ScopeInterface): Promise<PageTreeNodeInterface | null> {
-        return this.createReadApi({ visibility: [Visibility.Published, Visibility.Unpublished] }).getNodeByPath(path, {
+        // The home page has the slug "home" but lives at the canonical path "/". getNodeByPath("/home") returns null by
+        // design, so the home page must be looked up via "/" to detect it as a duplicate (e.g. when copying it).
+        const lookupPath = path === "/home" ? "/" : path;
+        return this.createReadApi({ visibility: [Visibility.Published, Visibility.Unpublished] }).getNodeByPath(lookupPath, {
             scope,
         }); // Slugs of archived pages can be reused
     }

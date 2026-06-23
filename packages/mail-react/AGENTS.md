@@ -14,28 +14,14 @@ Before adding a new changeset, check `.changeset/` at the repo root for an exist
 
 ## Running processes (dev-pm)
 
-Two dev-pm scripts are relevant to this package:
+This package has two dev-pm scripts (see the `dev-pm` skill for command usage):
 
 | Name                   | What it does                              |
 | ---------------------- | ----------------------------------------- |
 | `mail-react`           | `tsc --watch` — rebuilds `lib/` on change |
 | `mail-react-storybook` | `storybook dev -p 6066 --no-open`         |
 
-Check whether they are currently running:
-
-```bash
-pnpm exec -- dev-pm status mail-react
-pnpm exec -- dev-pm status mail-react-storybook
-```
-
-Other useful commands:
-
-```bash
-pnpm exec -- dev-pm start mail-react-storybook
-pnpm exec -- dev-pm restart mail-react-storybook
-pnpm exec -- dev-pm logs --lines 100 mail-react-storybook
-pnpm exec -- dev-pm start @mail-react     # starts both scripts (group)
-```
+The `@mail-react` group starts both.
 
 ## Storybook
 

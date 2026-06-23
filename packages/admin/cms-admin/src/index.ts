@@ -80,7 +80,13 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
-export type { TipTapBlockStyle, TipTapBlockType, TipTapInlineStyle, TipTapPlaceholder } from "./blocks/tipTap/createTipTapRichTextBlock";
+export type {
+    TipTapInlineStyle,
+    TipTapPlaceholder,
+    TipTapRichTextBlockContent,
+    TipTapTextBlockStyle,
+    TipTapTextBlockType,
+} from "./blocks/tipTap/createTipTapRichTextBlock";
 export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
 export type {
     AnonymousBlockInterface,
@@ -168,6 +174,7 @@ export {
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionProps } from "./documents/types";
 export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+export { SearchHeaderItem } from "./fullTextSearch/SearchHeaderItem";
 /** @deprecated Use `ChooseDamFileDialog` instead. */
 export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
 export { ChooseDamFilesDialog } from "./form/file/chooseFile/ChooseDamFilesDialog";

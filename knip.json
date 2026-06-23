@@ -111,7 +111,7 @@
         "demo/site": {
             "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "tracing.dev.ts", "tracing.production.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@babel/core"],
+            "ignoreDependencies": ["@babel/core", "@types/grecaptcha"],
             "ignore": ["**/*.generated.ts"]
         },
         "storybook": {

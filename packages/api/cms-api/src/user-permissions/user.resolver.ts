@@ -23,7 +23,7 @@ export class UserResolver {
 
     @Query(() => UserPermissionsUser)
     async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<UserPermissionsUser> {
-        return this.userService.getUser(id);
+        return this.userService.findUserOrThrow(id);
     }
 
     @Query(() => UserPermissionPaginatedUserList)

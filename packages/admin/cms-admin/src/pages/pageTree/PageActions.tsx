@@ -27,7 +27,7 @@ interface Props {
 export default function PageActions({ page, editDialog, children, siteUrl }: PropsWithChildren<Props>) {
     const { tree } = usePageTreeContext();
     const { match: contentScopeMatch } = useContentScope();
-    const { documentTypes } = usePageTreeConfig();
+    const { documentTypes, allowPageDelete = true } = usePageTreeConfig();
     const stackSwitchApi = useStackSwitchApi();
     const client = useApolloClient();
 
@@ -145,15 +145,17 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                         ),
                         <Divider key="divider3" />,
                     ]}
-                    <RowActionsItem
-                        icon={<Delete />}
-                        disabled={page.slug === "home"}
-                        onClick={() => {
-                            setDeleteDialogOpen(true);
-                        }}
-                    >
-                        <FormattedMessage id="comet.pages.pages.page.delete" defaultMessage="Delete" />
-                    </RowActionsItem>
+                    {allowPageDelete && (
+                        <RowActionsItem
+                            icon={<Delete />}
+                            disabled={page.slug === "home"}
+                            onClick={() => {
+                                setDeleteDialogOpen(true);
+                            }}
+                        >
+                            <FormattedMessage id="comet.pages.pages.page.delete" defaultMessage="Delete" />
+                        </RowActionsItem>
+                    )}
                 </RowActionsMenu>
             </RowActionsMenu>
             {translateDialogs}
