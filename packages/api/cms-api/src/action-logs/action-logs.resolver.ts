@@ -1,13 +1,13 @@
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
-import { UserPermissionsService } from "../user-permissions/user-permissions.service";
+import { ActionLogsUserLoaderService } from "./action-logs-user-loader.service";
 import { ActionLogType } from "./dto/action-log-type.enum";
 import { ActionLogsUser } from "./dto/action-logs-user";
 import { ActionLog } from "./entities/action-log.entity";
 
 @Resolver(() => ActionLog)
 export class ActionLogsResolver {
-    constructor(private readonly userPermissionsService: UserPermissionsService) {}
+    constructor(private readonly actionLogsUserLoader: ActionLogsUserLoaderService) {}
 
     @ResolveField(() => ActionLogType, {
         description: "Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.",
@@ -24,10 +24,6 @@ export class ActionLogsResolver {
 
     @ResolveField(() => ActionLogsUser)
     async user(@Parent() actionLog: ActionLog): Promise<ActionLogsUser> {
-        if (this.userPermissionsService.isSystemUser(actionLog.userId)) {
-            return { id: actionLog.userId, name: actionLog.userId };
-        }
-        const user = await this.userPermissionsService.findUser(actionLog.userId);
-        return user ? { id: user.id, name: user.name } : { id: actionLog.userId };
+        return this.actionLogsUserLoader.load(actionLog.userId);
     }
 }
