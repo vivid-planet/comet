@@ -8,13 +8,14 @@ import { ActionLogsService } from "./action-logs.service";
 import { ActionLogsSubscriber } from "./action-logs.subscriber";
 import { ActionLogsFeatureModule } from "./action-logs-feature.module";
 import { ActionLog } from "./entities/action-log.entity";
+import { PreviousActionLogLoaderService } from "./previous-action-log-loader.service";
 
 export class ActionLogsModule {
     static forRoot(): DynamicModule {
         return {
             module: ActionLogsModule,
             imports: [MikroOrmModule.forFeature([ActionLog])],
-            providers: [ActionLogsSubscriber, ActionLogsService, ActionLogsResolver],
+            providers: [ActionLogsSubscriber, ActionLogsService, ActionLogsResolver, PreviousActionLogLoaderService],
         };
     }
 

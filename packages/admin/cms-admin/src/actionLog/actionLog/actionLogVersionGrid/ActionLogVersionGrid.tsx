@@ -160,7 +160,13 @@ export const ActionLogVersionGrid: FunctionComponent<ActionLogVersionGridProps> 
                     return selectionModel.ids.size < 2;
                 }}
                 loading={loading}
-                onRowClick={({ row }) => onShowVersionClick(row.id)}
+                onRowClick={({ row }) => {
+                    if (row.previousVersion) {
+                        onCompareVersionsClick(row.previousVersion.id, row.id);
+                    } else {
+                        onShowVersionClick(row.id);
+                    }
+                }}
                 onRowSelectionModelChange={(newSelectionModel) => {
                     setSelectionModel(newSelectionModel);
                 }}
