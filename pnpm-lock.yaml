@@ -935,9 +935,6 @@ importers:
       react:
         specifier: ^19.2.6
         version: 19.2.6
-      react-dnd:
-        specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@24.12.4)(@types/react@19.2.15)(react@19.2.6)
       react-dom:
         specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
