@@ -1083,6 +1083,53 @@ export function createGraphQLFetch() {
 }
 ```
 
+#### Store the wrapped cache value in the in-memory fallback in `cache-handler.ts`
+
+:::danger Very important — the site can crash in production if this is missing
+
+If your `cache-handler.ts` falls back to an in-memory cache when Valkey/Redis is unavailable, it must store the **same wrapped `{ lastModified, value }` shape** that the Valkey/Redis path stores (and that `get` returns).
+
+Previously the fallback stored the bare `value` instead. The two cache paths therefore returned different shapes, and on a fallback read Next.js received a value without the expected `kind` field. This was silent on Next.js 14, but on Next.js 16 it throws an invariant error (`Expected cached value to be a FETCH kind, got undefined`). As a result, **if Valkey goes down in production, the site crashes** instead of degrading gracefully to the in-memory cache — exactly when you need the fallback most.
+
+Type both cache paths with Next's `CacheHandlerValue` so they can no longer drift apart.
+
+:::
+
+```diff title="site/cache-handler.ts"
+- import { CacheHandler as NextCacheHandler } from "next/dist/server/lib/incremental-cache";
++ import { CacheHandler as NextCacheHandler, CacheHandlerValue } from "next/dist/server/lib/incremental-cache";
+
+- const fallbackCache = new LRUCache<string, any>({
++ const fallbackCache = new LRUCache<string, CacheHandlerValue>({
+      // ...
+  });
+
+export default class CacheHandler {
+-   async get(key: string): ReturnType<NextCacheHandler["get"]> {
++   async get(key: string): Promise<ReturnType<NextCacheHandler["get"]>> {
+        // ...
+-       const response = JSON.parse(redisResponse);
++       const response = JSON.parse(redisResponse) as CacheHandlerValue;
+        // ...
+    }
+
+    async set(key: string, value: Parameters<NextCacheHandler["set"]>[1]): Promise<void> {
+        // ...
+-       const data = {
++       const data: CacheHandlerValue = {
+            lastModified: Date.now(),
+            value,
+        };
+        const stringData = JSON.stringify(data);
+        // ...
+-       fallbackCache.set(key, value, { size: stringData.length });
++       fallbackCache.set(key, data, { size: stringData.length });
+    }
+}
+```
+
+See the [full reference implementation in the demo](https://github.com/vivid-planet/comet/blob/main/demo/site/cache-handler.ts).
+
 ### Domain Redirects
 
 Domain redirects can now be set in the admin. It is necessary to update your middleware — most likely the `redirectToMainHost` middleware — to handle domain redirects.
