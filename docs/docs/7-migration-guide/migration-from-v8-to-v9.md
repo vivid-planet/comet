@@ -1087,11 +1087,7 @@ export function createGraphQLFetch() {
 
 :::danger Very important — the site can crash in production if this is missing
 
-If your `cache-handler.ts` falls back to an in-memory cache when Valkey/Redis is unavailable, it must store the **same wrapped `{ lastModified, value }` shape** that the Valkey/Redis path stores (and that `get` returns).
-
-Previously the fallback stored the bare `value` instead. The two cache paths therefore returned different shapes, and on a fallback read Next.js received a value without the expected `kind` field. This was silent on Next.js 14, but on Next.js 16 it throws an invariant error (`Expected cached value to be a FETCH kind, got undefined`). As a result, **if Valkey goes down in production, the site crashes** instead of degrading gracefully to the in-memory cache — exactly when you need the fallback most.
-
-Type both cache paths with Next's `CacheHandlerValue` so they can no longer drift apart.
+The in-memory fallback in `cache-handler.ts` must store the same wrapped `{ lastModified, value }` shape as the Valkey/Redis path. If it stores the bare `value`, fallback reads are silent on Next.js 14 but crash on Next.js 16 (`Expected cached value to be a FETCH kind, got undefined`) — so **the site goes down whenever Valkey is down**. Type both paths with `CacheHandlerValue` so they can't drift apart.
 
 :::
 
