@@ -9,6 +9,7 @@ const mockGridNodes = [
         version: 3,
         type: "Updated",
         createdAt: "2023-10-03T12:00:00Z",
+        previousVersion: { __typename: "ActionLog", id: "log2" },
     },
     {
         __typename: "ActionLog",
@@ -18,6 +19,7 @@ const mockGridNodes = [
         version: 2,
         type: "Updated",
         createdAt: "2023-10-02T12:00:00Z",
+        previousVersion: { __typename: "ActionLog", id: "log1" },
     },
     {
         __typename: "ActionLog",
@@ -27,6 +29,7 @@ const mockGridNodes = [
         version: 1,
         type: "Created",
         createdAt: "2023-10-01T12:00:00Z",
+        previousVersion: null,
     },
 ];
 

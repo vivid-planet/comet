@@ -7,6 +7,11 @@ type ActionLog {
   entityId: ID!
   entityName: String!
   id: ID!
+
+  """
+  The most recent earlier action log entry for the same entity. Null when this is the first version.
+  """
+  previousVersion: ActionLog
   scope: [JSONObject!]
   snapshot: JSONObject
 

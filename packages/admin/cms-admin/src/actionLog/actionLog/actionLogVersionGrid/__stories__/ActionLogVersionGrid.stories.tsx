@@ -15,6 +15,7 @@ const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragme
             version: 4,
             type: "Updated",
             createdAt: "2023-10-04T12:00:00Z",
+            previousVersion: { id: "log3" },
         },
         {
             id: "log3",
@@ -23,6 +24,7 @@ const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragme
             version: 3,
             type: "Updated",
             createdAt: "2023-10-03T12:00:00Z",
+            previousVersion: { id: "log2" },
         },
         {
             id: "log2",
@@ -31,6 +33,7 @@ const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragme
             version: 2,
             type: "Updated",
             createdAt: "2023-10-02T12:00:00Z",
+            previousVersion: { id: "log1" },
         },
         {
             id: "log1",
@@ -39,6 +42,7 @@ const mockActionLogs: { totalCount: number; nodes: GQLActionLogVersionGridFragme
             version: 1,
             type: "Created",
             createdAt: "2023-10-01T12:00:00Z",
+            previousVersion: null,
         },
     ],
 };

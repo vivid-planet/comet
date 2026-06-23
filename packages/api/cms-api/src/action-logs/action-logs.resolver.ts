@@ -4,10 +4,25 @@ import { UserPermissionsService } from "../user-permissions/user-permissions.ser
 import { ActionLogType } from "./dto/action-log-type.enum";
 import { ActionLogsUser } from "./dto/action-logs-user";
 import { ActionLog } from "./entities/action-log.entity";
+import { PreviousActionLogLoaderService } from "./previous-action-log-loader.service";
 
 @Resolver(() => ActionLog)
 export class ActionLogsResolver {
-    constructor(private readonly userPermissionsService: UserPermissionsService) {}
+    constructor(
+        private readonly userPermissionsService: UserPermissionsService,
+        private readonly previousActionLogLoader: PreviousActionLogLoaderService,
+    ) {}
+
+    @ResolveField(() => ActionLog, {
+        nullable: true,
+        description: "The most recent earlier action log entry for the same entity. Null when this is the first version.",
+    })
+    async previousVersion(@Parent() actionLog: ActionLog): Promise<ActionLog | null> {
+        if (actionLog.version <= 1) {
+            return null;
+        }
+        return this.previousActionLogLoader.load(actionLog);
+    }
 
     @ResolveField(() => ActionLogType, {
         description: "Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.",

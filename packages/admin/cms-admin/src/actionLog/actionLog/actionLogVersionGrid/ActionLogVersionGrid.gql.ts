@@ -11,5 +11,8 @@ export const actionLogVersionGridFragment = gql`
         version
         type
         createdAt
+        previousVersion {
+            id
+        }
     }
 `;

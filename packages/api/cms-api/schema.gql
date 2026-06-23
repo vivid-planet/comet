@@ -58,6 +58,11 @@ type ActionLog {
   createdAt: DateTime!
 
   """
+  The most recent earlier action log entry for the same entity. Null when this is the first version.
+  """
+  previousVersion: ActionLog
+
+  """
   Derived from snapshot and version: snapshot null → Deleted, version 1 → Created, otherwise → Updated.
   """
   type: ActionLogType!
