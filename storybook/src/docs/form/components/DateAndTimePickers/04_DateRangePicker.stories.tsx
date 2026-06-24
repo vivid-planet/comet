@@ -1,5 +1,4 @@
-import { Field, FieldContainer } from "@comet/admin";
-import { type DateRange, DateRangePicker, FinalFormDateRangePicker } from "@comet/admin-date-time";
+import { type DateRange, DateRangePicker, DateRangePickerField, FieldContainer } from "@comet/admin";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
@@ -15,38 +14,24 @@ export const Basic = () => {
 
     return (
         <Grid container spacing={4}>
-            <Grid
-                size={{
-                    xs: 6,
-                    md: 4,
-                }}
-            >
+            <Grid size={{ xs: 6, md: 4 }}>
                 <FieldContainer label="Date-Range Picker" fullWidth>
                     <DateRangePicker fullWidth value={dateOne} onChange={setDateOne} />
                 </FieldContainer>
             </Grid>
-            <Grid
-                size={{
-                    xs: 6,
-                    md: 4,
-                }}
-            >
+            <Grid size={{ xs: 6, md: 4 }}>
                 <FieldContainer label="Required" fullWidth required>
                     <DateRangePicker fullWidth value={dateTwo} onChange={setDateTwo} required />
                 </FieldContainer>
             </Grid>
-            <Grid
-                size={{
-                    xs: 6,
-                    md: 4,
-                }}
-            >
-                <FieldContainer label="Formatted date" fullWidth>
+            <Grid size={{ xs: 6, md: 4 }}>
+                <FieldContainer label="With date restriction" fullWidth>
                     <DateRangePicker
                         fullWidth
                         value={dateThree}
                         onChange={setDateThree}
-                        formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
+                        minDate={new Date(2024, 0, 1)}
+                        maxDate={new Date(2024, 11, 31)}
                     />
                 </FieldContainer>
             </Grid>
@@ -68,34 +53,19 @@ export const FinalForm = () => {
         >
             {() => (
                 <Grid container spacing={4}>
-                    <Grid
-                        size={{
-                            xs: 6,
-                            md: 4,
-                        }}
-                    >
-                        <Field name="dateOne" label="Date-Range Picker" fullWidth component={FinalFormDateRangePicker} />
+                    <Grid size={{ xs: 6, md: 4 }}>
+                        <DateRangePickerField name="dateOne" label="Date-Range Picker" fullWidth />
                     </Grid>
-                    <Grid
-                        size={{
-                            xs: 6,
-                            md: 4,
-                        }}
-                    >
-                        <Field name="dateTwo" label="Required" fullWidth component={FinalFormDateRangePicker} required />
+                    <Grid size={{ xs: 6, md: 4 }}>
+                        <DateRangePickerField name="dateTwo" label="Required" fullWidth required />
                     </Grid>
-                    <Grid
-                        size={{
-                            xs: 6,
-                            md: 4,
-                        }}
-                    >
-                        <Field
+                    <Grid size={{ xs: 6, md: 4 }}>
+                        <DateRangePickerField
                             name="dateThree"
-                            label="Formatted date"
+                            label="With date restriction"
                             fullWidth
-                            component={FinalFormDateRangePicker}
-                            formatDateOptions={{ month: "short", day: "numeric", year: "numeric" }}
+                            minDate={new Date(2024, 0, 1)}
+                            maxDate={new Date(2024, 11, 31)}
                         />
                     </Grid>
                 </Grid>

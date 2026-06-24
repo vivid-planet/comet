@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 type Story = StoryObj<typeof TimeRangeField>;
 const config: Meta<typeof TimeRangeField> = {
     component: TimeRangeField,
-    title: "@comet/admin-date-time/timeRangePicker/TimeRangeField",
+    title: "Deprecated/@comet/admin-date-time/timeRangePicker/TimeRangeField",
 };
 export default config;
 

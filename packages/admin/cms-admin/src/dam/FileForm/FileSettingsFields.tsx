@@ -1,8 +1,7 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
-import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
-import { IconButton, InputAdornment } from "@mui/material";
+import { DatePickerField, Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
+import { ArtificialIntelligence } from "@comet/admin-icons";
+import { IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useCallback } from "react";
 import { useForm } from "react-final-form";
@@ -226,41 +225,23 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                                         disabled={licenseType === "NO_LICENSE"}
                                     >
                                         <DurationFieldWrapper>
-                                            <Field
+                                            <DatePickerField
                                                 name="license.durationFrom"
-                                                placeholder="from"
-                                                component={FinalFormDatePicker}
-                                                clearable
-                                                startAdornment={null}
-                                                endAdornment={
-                                                    <InputAdornment position="start">
-                                                        <Calendar />
-                                                    </InputAdornment>
-                                                }
                                                 validateFields={["license.durationTo"]}
                                                 disabled={licenseType === "NO_LICENSE"}
                                                 validate={requiredValidator}
                                                 shouldShowError={() => true}
                                             />
-                                            <Field
+                                            <DatePickerField
                                                 name="license.durationTo"
-                                                placeholder="to"
-                                                component={FinalFormDatePicker}
-                                                clearable
-                                                startAdornment={null}
-                                                endAdornment={
-                                                    <InputAdornment position="start">
-                                                        <Calendar />
-                                                    </InputAdornment>
-                                                }
-                                                validate={(value: Date | undefined, allValues) => {
+                                                validate={(value: string | undefined, allValues) => {
                                                     const requiredError = requiredValidator(value, allValues);
                                                     if (requiredError) {
                                                         return requiredError;
                                                     }
 
                                                     const durationFrom = (allValues as EditFileFormValues).license?.durationFrom;
-                                                    if (value && durationFrom && value < durationFrom) {
+                                                    if (value && durationFrom && new Date(value) < new Date(durationFrom)) {
                                                         return (
                                                             <FormattedMessage
                                                                 id="comet.dam.file.error.durationTo"

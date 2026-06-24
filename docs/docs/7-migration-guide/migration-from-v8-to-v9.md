@@ -632,6 +632,11 @@ In most cases, the new components will be a drop-in replacement for the legacy c
 | `DateTimePicker`                               | `DateTimePicker`                                   |
 | `DateTimeField`                                | `DateTimePickerField`                              |
 | `FinalFormDateTimePicker`                      | `DateTimePickerField` (without using `<Field />`)  |
+| `TimeRangePicker`                              | `TimeRangePicker`                                  |
+| `TimeRangeField`                               | `TimeRangePickerField`                             |
+| `FinalFormTimeRangePicker`                     | `TimeRangePickerField` (without using `<Field />`) |
+
+For localization, the new components use MUI X's `LocalizationProvider` (with `AdapterDateFns`) instead of `DateFnsLocaleProvider`. Wrap your app accordingly.
 
 ```diff title="Example of replacing DatePicker"
 -import { DatePicker } from "@comet/admin-date-time";
@@ -670,6 +675,7 @@ Update any use of class-names of the component's slots:
 - `CometAdminDateRangePicker-*` -> `CometAdminLegacyDateRangePicker-*`
 - `CometAdminDateTimePicker-*` -> `CometAdminLegacyDateTimePicker-*`
 - `CometAdminTimePicker-*` -> `CometAdminLegacyTimePicker-*`
+- `CometAdminTimeRangePicker-*` -> `CometAdminLegacyTimeRangePicker-*`
 
 ```diff title="Example of updating the class-names"
 const WrapperForStyling = styled(Box)(({ theme }) => ({
@@ -686,6 +692,7 @@ Update the component-keys when using `defaultProps` or `styleOverrides` in the t
 - `CometAdminDateRangePicker` -> `CometAdminLegacyDateRangePicker`
 - `CometAdminDateTimePicker` -> `CometAdminLegacyDateTimePicker`
 - `CometAdminTimePicker` -> `CometAdminLegacyTimePicker`
+- `CometAdminTimeRangePicker` -> `CometAdminLegacyTimeRangePicker`
 
 ```diff title="Example of updating the component-keys"
 export const theme = createCometTheme({

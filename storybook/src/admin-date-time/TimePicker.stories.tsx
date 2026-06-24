@@ -4,7 +4,7 @@ import { Card, CardContent } from "@mui/material";
 import { Form } from "react-final-form";
 
 export default {
-    title: "@comet/admin-date-time",
+    title: "Deprecated/@comet/admin-date-time",
 };
 
 export const TimePicker = () => {

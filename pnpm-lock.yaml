@@ -65,9 +65,6 @@ importers:
       '@comet/admin':
         specifier: workspace:*
         version: link:../../packages/admin/admin
-      '@comet/admin-date-time':
-        specifier: workspace:*
-        version: link:../../packages/admin/admin-date-time
       '@comet/admin-icons':
         specifier: workspace:*
         version: link:../../packages/admin/admin-icons
@@ -1399,9 +1396,6 @@ importers:
       '@comet/admin':
         specifier: workspace:*
         version: link:../admin
-      '@comet/admin-date-time':
-        specifier: workspace:*
-        version: link:../admin-date-time
       '@comet/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
@@ -1523,9 +1517,6 @@ importers:
       '@comet/admin':
         specifier: workspace:*
         version: link:../admin
-      '@comet/admin-date-time':
-        specifier: workspace:*
-        version: link:../admin-date-time
       '@comet/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
