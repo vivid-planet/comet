@@ -52,6 +52,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
         type: "include",
         ids: new Set([]),
     });
+    const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 5 });
 
     const rows = data?.buildTemplates ?? [];
 
@@ -90,7 +91,8 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     }}
                     disableRowSelectionExcludeModel
                     rowSelectionModel={selectionModel}
-                    paginationModel={{ page: 0, pageSize: 5 }}
+                    paginationModel={paginationModel}
+                    onPaginationModelChange={setPaginationModel}
                     hideFooterPagination={rows.length <= 5}
                 />
             </DialogContent>
