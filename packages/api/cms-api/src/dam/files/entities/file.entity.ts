@@ -14,7 +14,7 @@ import {
     Property,
 } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
-import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Float, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { EntityInfo } from "../../../entity-info/entity-info.decorator";
@@ -73,7 +73,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Property({ columnType: "text" })
         name: string;
 
-        @Field(() => Int)
+        @Field(() => Float)
         @Property({ type: new BigIntType("number") })
         size: number;
 

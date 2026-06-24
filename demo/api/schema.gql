@@ -393,7 +393,7 @@ type DamFile {
   mimetype: String!
   name: String!
   scope: DamScope!
-  size: Int!
+  size: Float!
   thisFileIsAlternativeFor: [DamMediaAlternative!]!
   title: String
   updatedAt: DateTime!
@@ -671,7 +671,7 @@ type FileUpload {
   mimetype: String!
   name: String!
   previewUrl: String!
-  size: Int!
+  size: Float!
   updatedAt: DateTime!
 }
 

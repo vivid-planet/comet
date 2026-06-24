@@ -244,7 +244,7 @@ type FilenameResponse {
 type FileUpload {
   id: ID!
   name: String!
-  size: Int!
+  size: Float!
   mimetype: String!
   contentHash: String!
   createdAt: DateTime!
@@ -451,7 +451,7 @@ type DamFile {
   id: ID!
   folder: DamFolder
   name: String!
-  size: Int!
+  size: Float!
   mimetype: String!
   contentHash: String!
   title: String
