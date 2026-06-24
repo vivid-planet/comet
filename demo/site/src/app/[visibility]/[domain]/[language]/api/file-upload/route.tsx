@@ -1,4 +1,4 @@
-import { acceptedFileTypes, maxFileSize } from "@src/util/fileUpload";
+import { acceptedFileTypes, maxFileSizeBytes } from "@src/util/fileUpload";
 import { assessRecaptchaToken } from "@src/util/recaptcha/assessRecaptchaToken";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest, context: RouteContext<"/[visibi
         return NextResponse.json({ message: `File type not allowed: ${file.name}` }, { status: 400 });
     }
 
-    if (file.size > maxFileSize) {
+    if (file.size > maxFileSizeBytes) {
         return NextResponse.json({ message: `File too large: ${file.name}` }, { status: 400 });
     }
 

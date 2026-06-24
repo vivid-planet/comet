@@ -2,7 +2,7 @@
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import type { ContactFormBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
-import { acceptedFileTypes, maxFileSize } from "@src/util/fileUpload";
+import { acceptedFileTypes, maxFileSizeBytes } from "@src/util/fileUpload";
 import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
@@ -207,7 +207,7 @@ export const ContactFormBlock = withPreview(
                         accept={acceptedFileTypes.join(",")}
                         label={intl.formatMessage({ id: "contactForm.attachments.label", defaultMessage: "Attachments" })}
                         validateFile={(file) => {
-                            if (file.size > maxFileSize) {
+                            if (file.size > maxFileSizeBytes) {
                                 return intl.formatMessage({
                                     id: "contactForm.attachments.tooLarge",
                                     defaultMessage: "File is too large.",
