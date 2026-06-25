@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 
 import { ChooseFilesButton } from "./ChooseFilesButton";
 import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
-import { FileItem } from "./FileItem";
+import { FileList } from "./FileList";
 import styles from "./FileUploadField.module.scss";
 import { useFileUpload } from "./useFileUpload";
 
@@ -86,13 +86,7 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
                                 className={styles.hiddenInput}
                             />
                             <ChooseFilesButton label={buttonLabel} onClick={() => inputRef.current?.click()} />
-                            {attachments.length > 0 && (
-                                <ul className={styles.fileList}>
-                                    {attachments.map((attachment) => (
-                                        <FileItem key={attachment.key} attachment={attachment} onRemove={() => handleRemove(attachment.key)} />
-                                    ))}
-                                </ul>
-                            )}
+                            {attachments.length > 0 && <FileList attachments={attachments} onRemove={handleRemove} />}
                         </div>
                     </FieldContainer>
                 );
