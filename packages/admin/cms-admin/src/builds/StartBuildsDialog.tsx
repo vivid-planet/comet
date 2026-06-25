@@ -90,8 +90,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     }}
                     disableRowSelectionExcludeModel
                     rowSelectionModel={selectionModel}
-                    paginationModel={{ page: 0, pageSize: 5 }}
-                    hideFooterPagination={rows.length <= 5}
+                    hideFooter
                 />
             </DialogContent>
             <DialogActions>
