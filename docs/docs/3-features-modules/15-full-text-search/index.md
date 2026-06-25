@@ -156,6 +156,243 @@ class TeaserBlockData extends BlockData {
 
 Child blocks do not need to collect their children's text manually — the traversal handles that automatically.
 
+### Site
+
+Site search differs from admin search in one important way: it must be publicly accessible without user authentication. The built-in `myFullTextSearch` query enforces permission checks and is therefore only suitable for the admin. For site search, you expose a separate resolver that skips permission checks but explicitly restricts the result set to entities whose content is meant to be publicly visible.
+
+#### 1. Create a public resolver
+
+Create a new resolver that uses `EntityInfoFullTextObject` and `PaginatedEntityInfo` from `@comet/cms-api`. Mark it with `@RequiredPermission(DisablePermissionCheck)` to make it accessible without authentication, and explicitly list which entity types may appear in results:
+
+```typescript title="site-full-text-search.resolver.ts"
+import {
+    ContentScope,
+    DisablePermissionCheck,
+    EntityInfoFullTextObject,
+    EntityInfoObject,
+    PaginatedEntityInfo,
+    RequiredPermission,
+} from "@comet/cms-api";
+import { EntityManager, type FilterQuery } from "@mikro-orm/postgresql";
+import { Args, Int, Query, Resolver } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-scalars";
+
+// Only list entities whose content is meant to be publicly searchable.
+const searchableEntityNames = ["PageTreeNode", "News"];
+
+@Resolver(() => EntityInfoObject)
+export class SiteFullTextSearchResolver {
+    constructor(private readonly entityManager: EntityManager) {}
+
+    @Query(() => PaginatedEntityInfo)
+    @RequiredPermission(DisablePermissionCheck)
+    async siteFullTextSearch(
+        @Args("search") search: string,
+        @Args("offset", { type: () => Int, defaultValue: 0 }) offset: number,
+        @Args("limit", { type: () => Int, defaultValue: 25 }) limit: number,
+        @Args("scope", { type: () => GraphQLJSONObject, nullable: true }) scope?: ContentScope,
+    ): Promise<PaginatedEntityInfo> {
+        const where: FilterQuery<EntityInfoFullTextObject> = {
+            fullText: { $fulltext: search },
+            entityName: { $in: searchableEntityNames },
+            entityInfo: { visible: true },
+        };
+
+        if (scope) {
+            // GraphQL sends the scope object with a null prototype, which breaks MikroORM's
+            // internal hasOwnProperty calls. Spreading into a plain object fixes this.
+            where.scopes = { $contains: [{ ...scope }] };
+        }
+
+        const [matches, totalCount] = await this.entityManager.findAndCount(EntityInfoFullTextObject, where, {
+            offset,
+            limit,
+            populate: ["entityInfo"],
+        });
+
+        return new PaginatedEntityInfo(
+            matches.map((match) => match.entityInfo),
+            totalCount,
+        );
+    }
+}
+```
+
+Register the resolver in its own module and import it in `AppModule` alongside `FullTextSearchModule`:
+
+```typescript title="site-full-text-search.module.ts"
+import { Module } from "@nestjs/common";
+import { SiteFullTextSearchResolver } from "./site-full-text-search.resolver";
+
+@Module({
+    providers: [SiteFullTextSearchResolver],
+})
+export class SiteFullTextSearchModule {}
+```
+
+#### 2. Create a FullTextSearch block (API)
+
+The search UI on the site is rendered by a block placed in the page content. The block itself carries no data — it is just a marker that tells the site to render the search component at that position:
+
+```typescript title="full-text-search.block.ts"
+import { BlockData, BlockInput, blockInputToData, createBlock } from "@comet/cms-api";
+
+class FullTextSearchBlockData extends BlockData {}
+
+class FullTextSearchBlockInput extends BlockInput {
+    transformToBlockData(): FullTextSearchBlockData {
+        return blockInputToData(FullTextSearchBlockData, this);
+    }
+}
+
+export const FullTextSearchBlock = createBlock(FullTextSearchBlockData, FullTextSearchBlockInput, "FullTextSearch");
+```
+
+Add it to your page content block's `supportedBlocks` map:
+
+```typescript title="page-content.block.ts"
+import { FullTextSearchBlock } from "@src/common/blocks/full-text-search.block";
+
+const supportedBlocks = {
+    // ... other blocks
+    fullTextSearch: FullTextSearchBlock,
+};
+```
+
+#### 3. Create a FullTextSearch block (Admin)
+
+On the admin side, create a minimal block definition so editors can place the search component on a page:
+
+```typescript title="FullTextSearchBlock.tsx"
+import { type BlockInterface, createBlockSkeleton } from "@comet/cms-admin";
+import type { FullTextSearchBlockData, FullTextSearchBlockInput } from "@src/blocks.generated";
+import { FormattedMessage } from "react-intl";
+
+export const FullTextSearchBlock: BlockInterface<FullTextSearchBlockData, Record<string, never>, FullTextSearchBlockInput> = {
+    ...createBlockSkeleton(),
+    name: "FullTextSearch",
+    displayName: <FormattedMessage id="blocks.fullTextSearch" defaultMessage="Full Text Search" />,
+    defaultValues: () => ({}),
+};
+```
+
+#### 4. Create a FullTextSearch block (Site)
+
+The site block component is a client component that renders the search input, debounces the query, fetches results from `siteFullTextSearch`, and renders them as links.
+
+Search results do not carry a target URL. Derive the path from the entity type using `secondaryInformation`, which holds the routing key configured via `@EntityInfo` — the page-tree path for `PageTreeNode` entries and the slug for `News`:
+
+```typescript title="FullTextSearchBlock.tsx"
+"use client";
+import { gql, type PropsWithData, withPreview } from "@comet/site-nextjs";
+import type { FullTextSearchBlockData } from "@src/blocks.generated";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
+
+const fullTextSearchQuery = gql`
+    query FullTextSearch($search: String!, $scope: JSONObject!) {
+        siteFullTextSearch(search: $search, scope: $scope) {
+            nodes {
+                id
+                entityName
+                name
+                secondaryInformation
+            }
+            totalCount
+        }
+    }
+`;
+
+type SearchResult = { id: string; entityName: string; name: string; secondaryInformation?: string | null };
+
+function getSearchResultPath(result: SearchResult): string | undefined {
+    if (!result.secondaryInformation) return undefined;
+
+    switch (result.entityName) {
+        case "PageTreeNode":
+            return `/${result.secondaryInformation}`;
+        case "News":
+            return `/news/${result.secondaryInformation}`;
+        default:
+            return undefined;
+    }
+}
+
+export const FullTextSearchBlock = withPreview(
+    (_props: PropsWithData<FullTextSearchBlockData>) => {
+        const intl = useIntl();
+        const params = useParams<{ domain: string; language: string }>();
+        const [query, setQuery] = useState("");
+        const [results, setResults] = useState<SearchResult[]>([]);
+        const [totalCount, setTotalCount] = useState(0);
+        const [isLoading, setIsLoading] = useState(false);
+        const [hasSearched, setHasSearched] = useState(false);
+
+        useEffect(() => {
+            const search = query.trim();
+
+            if (search.length === 0) {
+                setResults([]);
+                setTotalCount(0);
+                setHasSearched(false);
+                setIsLoading(false);
+                return;
+            }
+
+            let isCurrent = true;
+            setIsLoading(true);
+
+            const timeout = setTimeout(async () => {
+                const graphQLFetch = createGraphQLFetch();
+                try {
+                    const { siteFullTextSearch } = await graphQLFetch(fullTextSearchQuery, {
+                        search,
+                        scope: { domain: params?.domain, language: params?.language },
+                    });
+                    if (isCurrent) {
+                        setResults(siteFullTextSearch.nodes);
+                        setTotalCount(siteFullTextSearch.totalCount);
+                        setHasSearched(true);
+                    }
+                } finally {
+                    if (isCurrent) setIsLoading(false);
+                }
+            }, 300);
+
+            return () => {
+                isCurrent = false;
+                clearTimeout(timeout);
+            };
+        }, [query, params]);
+
+        return (
+            <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={intl.formatMessage({ id: "fullTextSearch.placeholder", defaultMessage: "Search…" })}
+            />
+            // render isLoading, hasSearched, results, totalCount …
+        );
+    },
+    { label: "Full Text Search" },
+);
+```
+
+Register the block in your page content block's `supportedBlocks` map on the site:
+
+```typescript title="PageContentBlock.tsx"
+import { FullTextSearchBlock } from "@src/common/blocks/FullTextSearchBlock";
+
+const supportedBlocks: SupportedBlocks = {
+    // ... other blocks
+    fullTextSearch: (props) => <FullTextSearchBlock data={props} />,
+};
+```
+
 ### Admin
 
 #### Search bar in the admin header
