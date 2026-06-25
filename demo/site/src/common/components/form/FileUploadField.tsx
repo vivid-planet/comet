@@ -11,7 +11,7 @@ import { useFileUpload } from "./useFileUpload";
 type FileUploadFieldProps<TFieldValues extends FieldValues> = Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
     FieldContainerFieldProps & {
         accept?: string;
-        multiple?: boolean;
+        disableMultiple?: boolean;
         buttonLabel?: ReactNode;
         validateFile?: (file: File) => string | undefined;
         onUploadingChange?: (isUploading: boolean) => void;
@@ -24,7 +24,7 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
     control,
     rules,
     accept,
-    multiple = true,
+    disableMultiple,
     buttonLabel,
     validateFile,
     onUploadingChange,
@@ -33,6 +33,7 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
     const inputRef = useRef<HTMLInputElement | null>(null);
     const required = !!rules?.required;
     const intl = useIntl();
+    const multiple = !disableMultiple;
 
     const onUploadedIdsChangeRef = useRef<(uploadedIds: string[]) => void>(() => undefined);
     const { attachments, handleSelect, handleRemove, hasErrors } = useFileUpload({
