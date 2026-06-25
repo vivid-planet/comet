@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { cssVarsProviderDecorator } from "../../../utils/cssVarsProviderDecorator";
+import { cssVarsProviderDecorator } from "../../../storybook/cssVarsProviderDecorator";
 import { Typography } from "../Typography";
 
 const meta: Meta<typeof Typography> = {
