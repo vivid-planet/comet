@@ -156,6 +156,27 @@ class TeaserBlockData extends BlockData {
 
 Child blocks do not need to collect their children's text manually — the traversal handles that automatically.
 
+### Admin
+
+#### Search bar in the admin header
+
+`@comet/cms-admin` exports a ready-to-use `SearchHeaderItem` component. Add it to your application's `Header`:
+
+```tsx title="MasterHeader.tsx"
+import { BuildEntry, ContentScopeControls, Header, SearchHeaderItem, UserHeaderItem } from "@comet/cms-admin";
+
+const MasterHeader = () => {
+    return (
+        <Header>
+            <SearchHeaderItem />
+            <ContentScopeControls />
+            <BuildEntry />
+            <UserHeaderItem />
+        </Header>
+    );
+};
+```
+
 ### Site
 
 Site search differs from admin search in one important way: it must be publicly accessible without user authentication. The built-in `myFullTextSearch` query enforces permission checks and is therefore only suitable for the admin. For site search, you expose a separate resolver that skips permission checks but explicitly restricts the result set to entities whose content is meant to be publicly visible.
@@ -390,26 +411,5 @@ import { FullTextSearchBlock } from "@src/common/blocks/FullTextSearchBlock";
 const supportedBlocks: SupportedBlocks = {
     // ... other blocks
     fullTextSearch: (props) => <FullTextSearchBlock data={props} />,
-};
-```
-
-### Admin
-
-#### Search bar in the admin header
-
-`@comet/cms-admin` exports a ready-to-use `SearchHeaderItem` component. Add it to your application's `Header`:
-
-```tsx title="MasterHeader.tsx"
-import { BuildEntry, ContentScopeControls, Header, SearchHeaderItem, UserHeaderItem } from "@comet/cms-admin";
-
-const MasterHeader = () => {
-    return (
-        <Header>
-            <SearchHeaderItem />
-            <ContentScopeControls />
-            <BuildEntry />
-            <UserHeaderItem />
-        </Header>
-    );
 };
 ```
