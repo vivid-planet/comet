@@ -77,6 +77,11 @@ type AutoBuildStatus {
   nextCheck: DateTime!
 }
 
+"""
+The `BigInt` scalar type represents non-fractional signed whole numeric values.
+"""
+scalar BigInt
+
 input BooleanFilter {
   equal: Boolean
 }
@@ -393,7 +398,7 @@ type DamFile {
   mimetype: String!
   name: String!
   scope: DamScope!
-  size: Int!
+  size: BigInt!
   thisFileIsAlternativeFor: [DamMediaAlternative!]!
   title: String
   updatedAt: DateTime!
@@ -646,7 +651,7 @@ type FileUpload {
   mimetype: String!
   name: String!
   previewUrl: String!
-  size: Int!
+  size: BigInt!
   updatedAt: DateTime!
 }
 

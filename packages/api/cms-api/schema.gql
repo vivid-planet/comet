@@ -235,7 +235,7 @@ type FilenameResponse {
 type FileUpload {
   id: ID!
   name: String!
-  size: Int!
+  size: BigInt!
   mimetype: String!
   contentHash: String!
   createdAt: DateTime!
@@ -249,6 +249,11 @@ type FileUpload {
   previewUrl: String!
   imageUrl(resizeWidth: Int!): String
 }
+
+"""
+The `BigInt` scalar type represents non-fractional signed whole numeric values.
+"""
+scalar BigInt
 
 type UserPermissionPaginatedUserList {
   nodes: [UserPermissionsUser!]!
@@ -398,7 +403,7 @@ type DamFile {
   id: ID!
   folder: DamFolder
   name: String!
-  size: Int!
+  size: BigInt!
   mimetype: String!
   contentHash: String!
   title: String
