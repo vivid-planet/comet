@@ -62,10 +62,10 @@ import { EntityInfo, entityToMikroOrmFullText } from "@comet/cms-api";
 import { FullTextType, Index, Property } from "@mikro-orm/postgresql";
 
 @EntityInfo<News>({
-    name: "title",                          // field shown as the result title
-    secondaryInformation: "slug",           // optional subtitle shown below the title
+    name: "title", // field shown as the result title
+    secondaryInformation: "slug", // optional subtitle shown below the title
     visible: { status: { $eq: NewsStatus.active } }, // optional filter: only index visible items
-    fullText: "fullText",                   // name of the tsvector column below
+    fullText: "fullText", // name of the tsvector column below
 })
 @Entity()
 export class News extends BaseEntity {
