@@ -133,6 +133,29 @@ entityToMikroOrmFullText(
 )
 ```
 
+Text extraction works by traversing the block tree depth-first and calling `searchText()` on each visible block. Built-in blocks such as `createRichTextBlock` already implement this method. For custom blocks, implement `searchText()` on the `BlockData` class to return the text that should be indexed:
+
+```typescript title="teaser.block.ts"
+import { BlockData, BlockInput, SearchText, blockInputToData, createBlock } from "@comet/cms-api";
+
+class TeaserBlockData extends BlockData {
+    @BlockField()
+    heading: string;
+
+    @BlockField()
+    text: string;
+
+    searchText(): SearchText[] {
+        return [
+            { weight: "h2", text: this.heading },
+            this.text, // plain string — indexed with weight "other" (D)
+        ];
+    }
+}
+```
+
+Child blocks do not need to collect their children's text manually — the traversal handles that automatically.
+
 ### Admin
 
 #### Search bar in the admin header
