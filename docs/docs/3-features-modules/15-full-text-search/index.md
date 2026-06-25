@@ -20,6 +20,16 @@ The `FullTextSearchModule` provides a simple, PostgreSQL-native full text search
 
 For large catalogs, complex relevance tuning, faceted filtering, or multilingual stemming, use a dedicated search engine instead.
 
+### How it works
+
+The module builds on two PostgreSQL views that are created dynamically at application startup and recreated on every restart:
+
+- **`EntityInfo`** — always created by the core framework (not specific to `FullTextSearchModule`). It provides display data for every entity decorated with `@EntityInfo`: `name`, `secondaryInformation`, `visible`, `id`, `entityName`, and `requiredPermission`.
+
+- **`EntityInfoFullText`** — created only when `FullTextSearchModule` is imported. It is a `UNION ALL` of all entities that have a `fullText` column referenced in their `@EntityInfo` decorator. Each row contains `id`, `entityName`, the `tsvector` value, `requiredPermission`, and `scopes`. It joins back to the `EntityInfo` view to read display data such as `name` and `secondaryInformation`.
+
+Because both are standard PostgreSQL views (not materialized views), they always reflect the current state of the underlying tables — no manual refresh is needed when content changes. The views are not managed by MikroORM migrations; they are dropped and recreated in code on every startup.
+
 ## Usage
 
 ### API
