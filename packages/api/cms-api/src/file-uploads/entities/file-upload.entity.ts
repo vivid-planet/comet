@@ -1,5 +1,6 @@
 import { BaseEntity, BigIntType, Entity, Index, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
-import { Field, Float, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { GraphQLBigInt } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 @ObjectType("FileUpload")
@@ -15,7 +16,7 @@ export class FileUpload extends BaseEntity {
     @Property({ columnType: "text" })
     name: string;
 
-    @Field(() => Float)
+    @Field(() => GraphQLBigInt)
     @Property({ type: new BigIntType("number") })
     size: number;
 
