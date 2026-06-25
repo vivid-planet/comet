@@ -179,7 +179,9 @@ const MasterHeader = () => {
 
 ### Site
 
-Site search differs from admin search in one important way: it must be publicly accessible without user authentication. The built-in `myFullTextSearch` query enforces permission checks and is therefore only suitable for the admin. For site search, you expose a separate resolver that skips permission checks but explicitly restricts the result set to entities whose content is meant to be publicly visible.
+Unlike the admin search bar, there is no ready-to-use resolver or block for site search. You need to implement both in your application. Comet does provide the underlying PostgreSQL views (`EntityInfoFullTextObject`) and the GraphQL types (`PaginatedEntityInfo`, `EntityInfoObject`) that you can build on, so the integration is straightforward.
+
+Site search must also be publicly accessible without user authentication. The built-in `myFullTextSearch` query enforces permission checks and is therefore only suitable for the admin. For site search, you expose a separate resolver that skips permission checks but explicitly restricts the result set to entities whose content is meant to be publicly visible.
 
 #### 1. Create a public resolver
 
