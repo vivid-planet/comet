@@ -2,7 +2,7 @@ import { type ReactNode, useId, useRef } from "react";
 import { Controller, type ControllerProps, type FieldValues } from "react-hook-form";
 import { useIntl } from "react-intl";
 
-import { ChooseButton } from "./ChooseButton";
+import { ChooseFilesButton } from "./ChooseFilesButton";
 import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
 import { FileItem } from "./FileItem";
 import styles from "./FileUploadField.module.scss";
@@ -85,7 +85,7 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
                                 aria-invalid={hasError ? true : undefined}
                                 className={styles.hiddenInput}
                             />
-                            <ChooseButton label={buttonLabel} onClick={() => inputRef.current?.click()} />
+                            <ChooseFilesButton label={buttonLabel} onClick={() => inputRef.current?.click()} />
                             {attachments.length > 0 && (
                                 <ul className={styles.fileList}>
                                     {attachments.map((attachment) => (
