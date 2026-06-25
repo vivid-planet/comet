@@ -153,11 +153,3 @@ const MasterHeader = () => {
     );
 };
 ```
-
-The component:
-
-- Renders a search input in the header bar.
-- Queries `myFullTextSearch` with a 250 ms debounce.
-- Displays a dropdown with up to 10 results, showing the `name` and `secondaryInformation` for each item.
-- Navigates to the matching entity's edit page when a result is clicked, using the application's dependency map.
-- Is automatically hidden when the current user does not have the `fullTextSearch` permission.
