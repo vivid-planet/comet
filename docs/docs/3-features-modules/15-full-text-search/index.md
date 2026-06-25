@@ -341,19 +341,6 @@ const fullTextSearchQuery = gql`
 
 type SearchResult = { id: string; entityName: string; name: string; secondaryInformation?: string | null };
 
-function getSearchResultPath(result: SearchResult): string | undefined {
-    if (!result.secondaryInformation) return undefined;
-
-    switch (result.entityName) {
-        case "PageTreeNode":
-            return `/${result.secondaryInformation}`;
-        case "News":
-            return `/news/${result.secondaryInformation}`;
-        default:
-            return undefined;
-    }
-}
-
 export const FullTextSearchBlock = withPreview(
     (_props: PropsWithData<FullTextSearchBlockData>) => {
         const intl = useIntl();
