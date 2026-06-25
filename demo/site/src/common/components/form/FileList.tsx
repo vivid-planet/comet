@@ -3,7 +3,14 @@ import clsx from "clsx";
 import { useIntl } from "react-intl";
 
 import styles from "./FileList.module.scss";
-import type { Attachment } from "./useFileUpload";
+
+export type Attachment = {
+    key: string;
+    file: File;
+    status: "uploading" | "uploaded" | "error";
+    id?: string;
+    errorMessage?: string;
+};
 
 type FileListProps = {
     attachments: Attachment[];
