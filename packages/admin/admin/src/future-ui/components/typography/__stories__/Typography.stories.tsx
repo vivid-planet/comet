@@ -3,39 +3,39 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { themeDecorator } from "../../../storybook/themeDecorator";
 import { Typography } from "../Typography";
 
-const meta: Meta<typeof Typography> = {
+const meta = {
     component: Typography,
     title: "Future UI/Typography",
     decorators: [themeDecorator],
+    args: {
+        children: "The quick brown fox jumps over the lazy dog",
+    },
     argTypes: {
         variant: {
-            control: "select",
+            control: "radio",
             options: ["headline", "body"],
         },
         element: {
             control: "select",
             options: ["h1", "h2", "h3", "h4", "h5", "h6", "p", "span"],
         },
+        className: { control: false },
+        ref: { control: false },
+        render: { control: false },
     },
-};
+} satisfies Meta<typeof Typography>;
 
 export default meta;
 
-type Story = StoryObj<typeof Typography>;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: Story = {};
+
+export const Headline: Story = {
     args: {
-        children: "The quick brown fox jumps over the lazy dog",
+        variant: "headline",
+        children: "Headline",
     },
-};
-
-export const Variants: Story = {
-    render: () => (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <Typography variant="headline">Headline</Typography>
-            <Typography variant="body">Body — the quick brown fox jumps over the lazy dog.</Typography>
-        </div>
-    ),
 };
 
 /**
