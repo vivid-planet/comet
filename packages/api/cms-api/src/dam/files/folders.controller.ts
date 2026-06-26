@@ -1,4 +1,4 @@
-import { Controller, ForbiddenException, Get, Inject, NotFoundException, Param, Res, Type } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Inject, NotFoundException, Optional, Param, Res, Type, UseGuards } from "@nestjs/common";
 import { Response } from "express";
 
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
@@ -6,14 +6,16 @@ import { RequiredPermission } from "../../user-permissions/decorators/required-p
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
+import { DamScopeAccessControlGuard } from "./dam-scope-access-control.guard";
 import { FoldersService } from "./folders.service";
 
 export const createFoldersController = ({ damBasePath }: { damBasePath: string }): Type<unknown> => {
     @Controller(`${damBasePath}/folders`)
+    @UseGuards(DamScopeAccessControlGuard)
     class FoldersController {
         constructor(
             private readonly foldersService: FoldersService,
-            @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+            @Optional() @Inject(ACCESS_CONTROL_SERVICE) private accessControlService?: AccessControlServiceInterface,
         ) {}
 
         @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in method
@@ -24,7 +26,7 @@ export const createFoldersController = ({ damBasePath }: { damBasePath: string }
                 throw new NotFoundException("Folder not found");
             }
 
-            if (folder.scope && !this.accessControlService.isAllowed(user, "dam", folder.scope)) {
+            if (folder.scope && this.accessControlService && !this.accessControlService.isAllowed(user, "dam", folder.scope)) {
                 throw new ForbiddenException("The current user is not allowed to access this scope and download this folder.");
             }
 
