@@ -13,17 +13,17 @@
     line-height: var(--comet-button-font-line-height);
     cursor: pointer;
 
-    &--variantPrimary {
+    &[data-variant="primary"] {
         background: var(--comet-button-primary-default-background);
         color: var(--comet-button-primary-default-foreground);
     }
 
-    &--variantSecondary {
+    &[data-variant="secondary"] {
         background: var(--comet-button-secondary-default-background);
         color: var(--comet-button-secondary-default-foreground);
     }
 
-    &--disabled {
+    &[data-disabled] {
         cursor: not-allowed;
         opacity: 0.5;
     }
