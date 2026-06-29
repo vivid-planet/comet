@@ -20,7 +20,7 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "pnpm run clean && tsc",
+        "build": "pnpm run clean && tsc -p tsconfig.build.json",
         "clean": "rimraf lib",
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
