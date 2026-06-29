@@ -256,10 +256,16 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @Property<Product>({
         nullable: true,
         type: new FullTextType(),
-        onUpdate: (page) => {
+        onCreate: (product) => {
             return {
-                A: page.title,
-                D: page.description,
+                A: product.title,
+                D: product.description,
+            };
+        },
+        onUpdate: (product) => {
+            return {
+                A: product.title,
+                D: product.description,
             };
         },
     })

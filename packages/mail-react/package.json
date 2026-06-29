@@ -20,7 +20,7 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "pnpm run clean && pnpm run generate-block-types && tsc",
+        "build": "pnpm run clean && pnpm run generate-block-types && tsc -p tsconfig.build.json",
         "build-storybook": "storybook build",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
         "dev": "pnpm run clean && pnpm generate-block-types && tsc --watch",

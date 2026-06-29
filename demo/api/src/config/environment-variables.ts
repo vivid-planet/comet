@@ -63,9 +63,6 @@ export class EnvironmentVariables {
     API_PORT: number;
 
     @IsString()
-    CORS_ALLOWED_ORIGIN: string;
-
-    @IsString()
     IMGPROXY_SALT: string;
 
     @IsString()
