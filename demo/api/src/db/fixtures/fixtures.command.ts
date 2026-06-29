@@ -6,11 +6,11 @@ import {
     PageTreeNodeVisibility,
     PageTreeService,
 } from "@comet/cms-api";
-import { faker } from "@faker-js/faker";
 import { CreateRequestContext, EntityManager, MikroORM } from "@mikro-orm/postgresql";
 import { Inject, Logger } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
+import { faker } from "@src/db/fixtures/faker";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import { StageBlock } from "@src/documents/pages/blocks/stage.block";
