@@ -17,11 +17,6 @@ function generateScopedName(name: string, filename: string): string {
             return `${futureUiClassnamePrefix}${componentName}`;
         }
 
-        const modifierPrefix = "root--";
-        if (name.startsWith(modifierPrefix)) {
-            return `${futureUiClassnamePrefix}${componentName}--${name.slice(modifierPrefix.length)}`;
-        }
-
         return `${futureUiClassnamePrefix}${componentName}__${name}`;
     }
 
