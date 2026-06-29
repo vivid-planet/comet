@@ -51,10 +51,6 @@
             "enabled": false
         },
         {
-            "groupName": "React Router",
-            "matchPackageNames": ["/^react-router/"]
-        },
-        {
             "matchPackageNames": ["@graphql-codegen/*"],
             "groupName": "GraphQL Codegen"
         },
