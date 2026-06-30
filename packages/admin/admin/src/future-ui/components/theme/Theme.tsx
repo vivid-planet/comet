@@ -2,10 +2,10 @@ import { clsx } from "clsx";
 import type { ComponentPropsWithoutRef } from "react";
 
 import type { ThemeColorScheme } from "../../theme/types";
-import styles from "./CssVarsProvider.module.scss";
+import styles from "./Theme.module.scss";
 
 /** @experimental */
-export interface CssVarsProviderProps extends ComponentPropsWithoutRef<"div"> {
+export interface ThemeProps extends ComponentPropsWithoutRef<"div"> {
     /**
      * The active color scheme.
      *
@@ -21,7 +21,7 @@ export interface CssVarsProviderProps extends ComponentPropsWithoutRef<"div"> {
  *
  * @experimental
  */
-export function CssVarsProvider({ colorScheme = "light", className, children, ...restProps }: CssVarsProviderProps) {
+export function Theme({ colorScheme = "light", className, children, ...restProps }: ThemeProps) {
     return (
         <div {...restProps} data-comet-color-scheme={colorScheme} className={clsx(styles.root, className)}>
             {children}
