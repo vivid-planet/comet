@@ -75,8 +75,6 @@ const Panel = styled("div")`
 <Panel>{children}</Panel>;
 ```
 
-Move the styles to a private `*.sc.ts` sibling once a component grows several styled parts.
-
 ### Spacing and color: theme tokens, not hard-coded values
 
 Read spacing and color from the theme instead of typing pixels and hex codes. The theme is the
@@ -136,3 +134,26 @@ const Title = styled("h2")`
 // Prefer — a Typography variant from the type scale
 <Typography variant="h4">{title}</Typography>;
 ```
+
+## Organizing styled components
+
+By default, define a component's styled parts at the bottom of its own file, below the component
+that uses them:
+
+```
+imports → types → component → styled components
+```
+
+When a file grows hard to read, refactor the component itself first — split it into smaller
+components and compose them, each keeping its own styled parts at the bottom. Move styles to a
+separate `*.sc.ts` sibling only when you are asked to, or when the styles grow but the component
+cannot be split logically. A `*.sc.ts` file is private to its equally-named component
+(`FooButton.sc.ts` belongs to `FooButton.tsx`). Don't import one component's `*.sc.ts` from another:
+that couples them through styling neither owns. When styling is shared, give it a single owner — a
+reusable component (below).
+
+When the same styled component is used by several components, it is no longer a styled part of any
+one of them. Promote it to its own reusable component: one export per file, named exactly as that
+export so it is easy to find, e.g. `SpecialButton.ts` exporting
+`export const SpecialButton = styled(Button)`. Group several small related ones into a single
+generically-named file only when explicitly instructed.
