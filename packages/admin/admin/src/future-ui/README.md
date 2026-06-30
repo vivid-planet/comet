@@ -74,38 +74,43 @@ A component extends the props of its root element and passes the ones it doesn't
 
 ### Override props
 
-Future UI's exported components share one set of override props; each offers the ones that apply to it. The [class-name contract](#class-name-contract) is the primary way to style a component; these props do what it can't — place and swap inner parts, and set or vary their props.
+Future UI's exported components share one set of override props; each offers the ones that apply to it. The [styling contract](#styling-contract) is the primary way to style a component; these props do what it can't — place and swap inner parts, and set or vary their props.
 
-- **`className`** — a string, merged with the contract classes, never replacing them. It is not a function: every value in `ownerState` already emits a modifier class, so an `ownerState`-dependent class would add nothing.
+- **`className`** — a string, merged with the contract classes, never replacing them. It is not a function: every value in `ownerState` already emits a `data-*` attribute, so an `ownerState`-dependent class would add nothing.
 - **`slots`** — sets which element a named inner part renders as. The root is not a slot — it is the component's own outermost element, configured through the component's top-level props directly (`className`, event handlers, ARIA, …).
 - **`slotProps`** — props for those same inner parts, as an object **or** a function of `ownerState`. They are merged with the component's own props, so a contract class or handler is never dropped.
-- **`ownerState`** — one object per component: the resolved configuration (`variant`, `disabled`, …) that influences the component's appearance or behavior; the root modifier classes are derived from it. It holds no transient interaction state (hover/press/focus).
+- **`ownerState`** — one object per component: the resolved configuration (`variant`, `disabled`, …) that influences the component's appearance or behavior; the root's `data-*` attributes are derived from it. It holds no transient interaction state (hover/press/focus).
 
-### Class-name contract
+### Styling contract
 
-Every component emits a stable, predictable set of class names. These class names are part of the public API — renaming an emitted class is a breaking change. They are the primary path for consumer styling: a consumer writes plain CSS against them, with no React API involvement required.
+Every component emits a stable, predictable contract for consumer styling: a consumer writes plain CSS against it, with no React API involvement required. It is part of the public API — renaming an emitted class or `data-*` attribute is a breaking change.
 
-**The emitted shape:**
+The contract has two parts: **structural class names** for a component's elements, and **owner-state styling** for the resolved configuration, expressed as `data-*` attributes.
+
+**Structural class names** identify a component's root and its parts:
 
 - **Root** — `comet<Component>`. The outermost element of a component, camelCased. Examples: `cometButton`, `cometTextField`.
 - **Parts** — `comet<Component>__<partName>`. A part is a named sub-element; the part name is camelCased. Examples: `cometButton__startIcon`, `cometTextField__label`.
-- **Modifiers, on the root only** — `comet<Component>--<propName><Value>` for enum props (camelCase value: `cometButton--variantPrimary`), `comet<Component>--<propName>` for booleans (`cometButton--disabled`).
 
-Future UI's styling contract is its class names. Components built on `@base-ui/react` also emit base-ui's `data-*` attributes (`[data-disabled]`, …); these are base-ui's contract passed through, not one Future UI maintains — style against the class names.
+**Owner-state styling** uses `data-*` attributes on the root element, following base-ui's own conversion of an owner-state object:
+
+- **Enum state** → a single valued attribute: `data-variant="primary"`.
+- **Boolean state** → presence only: `data-disabled` (absent when false).
+- The attribute name is `data-` + the lowercased owner-state key. Owner-state keys are single lowercase words, so the name needs no kebab-casing.
+
+**Emission.** These attributes cover owner-state values only; parts are class names. How a component emits them depends on its foundation: one rendered through `useRender` passes `state: ownerState` for base-ui to convert; one built on a base-ui primitive lets the primitive emit the state it owns and passes the rest inline (`data-variant={variant}`).
 
 **Composition.** When a Future UI component is used as the root of another component, both root classes appear on the same element — a `CustomButton` rendering through `Button` produces `cometButton cometCustomButton`. Either layer is targetable.
 
 **Authoring source.** The SCSS module's local class names match the public part names; the stylesheet's file name is the single source of a component's emitted name. The mapping:
 
-| Source local           | Emitted DOM class             |
-| ---------------------- | ----------------------------- |
-| `root`                 | `cometButton`                 |
-| `root--variantPrimary` | `cometButton--variantPrimary` |
-| `root--disabled`       | `cometButton--disabled`       |
-| `startIcon`            | `cometButton__startIcon`      |
+| Source local | Emitted DOM class        |
+| ------------ | ------------------------ |
+| `root`       | `cometButton`            |
+| `startIcon`  | `cometButton__startIcon` |
 
 - A component with no single dominant element names no class `root`.
-- Modifiers nest under `.root` with `&` (`&--disabled` → `cometButton--disabled`).
+- Owner-state styles use attribute selectors nested under `.root` with `&` (`.root { &[data-variant="primary"] { … } }`).
 
 ### Stories
 
