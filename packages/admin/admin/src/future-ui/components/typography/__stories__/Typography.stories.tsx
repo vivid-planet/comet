@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { cssVarsProviderDecorator } from "../../../storybook/cssVarsProviderDecorator";
+import { themeDecorator } from "../../../storybook/themeDecorator";
 import { Typography } from "../Typography";
 
 const meta: Meta<typeof Typography> = {
     component: Typography,
     title: "Future UI/Typography",
-    decorators: [cssVarsProviderDecorator],
+    decorators: [themeDecorator],
     argTypes: {
         variant: {
             control: "select",
