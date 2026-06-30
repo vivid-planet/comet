@@ -47,6 +47,12 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className"> {
      * @defaultValue `"primary"`
      */
     variant?: ButtonVariant;
+    /**
+     * Prevents interaction with the button.
+     *
+     * @defaultValue `false`
+     */
+    disabled?: boolean;
     /** Added alongside the component's own classes. */
     className?: string;
     /** Sets which element a named inner part renders as. */
