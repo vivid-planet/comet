@@ -581,7 +581,7 @@ export function createTipTapRichTextBlock(
 
     @BlockDataMigrationVersion(migrate.version)
     class TipTapRichTextBlockData extends BlockData implements TipTapRichTextBlockDataInterface {
-        @BlockField({ type: "json" })
+        @BlockField({ type: "tipTapRichTextBlock", childBlocks })
         tipTapContent: JSONContent;
 
         searchText(): SearchText[] {
@@ -641,7 +641,7 @@ export function createTipTapRichTextBlock(
             allowedPlaceholderNames,
             listLevelMax,
         })
-        @BlockField({ type: "json" })
+        @BlockField({ type: "tipTapRichTextBlock", childBlocks })
         tipTapContent: JSONContent;
 
         transformToBlockData(): TipTapRichTextBlockData {
