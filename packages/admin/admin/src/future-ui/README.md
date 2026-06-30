@@ -78,8 +78,10 @@ Future UI's exported components share one set of override props; each offers the
 
 - **`className`** — a string, merged with the contract classes, never replacing them. It is not a function: every value in `ownerState` already emits a modifier class, so an `ownerState`-dependent class would add nothing.
 - **`slots`** — sets which element a named inner part renders as. The root is not a slot — it is the component's own outermost element, configured through the component's top-level props directly (`className`, event handlers, ARIA, …).
-- **`slotProps`** — props for those same inner parts, as an object **or** a function of `ownerState`. They are merged with the component's own props, so a contract class or handler is never dropped.
+- **`slotProps`** — props for those same inner parts, as an object **or** a function of `ownerState`. Their type follows the element chosen for the slot in `slots`, and falls back to the slot's default element when `slots` is omitted. They are merged with the component's own props, so a contract class or handler is never dropped.
 - **`ownerState`** — one object per component: the resolved configuration (`variant`, `disabled`, …) that influences the component's appearance or behavior; the root modifier classes are derived from it. It holds no transient interaction state (hover/press/focus).
+
+A slot accepts any element only while the component injects nothing element-specific into it — a universal prop like `className` is fine, `href` is not. When the component injects an element-specific prop, the slot narrows to the elements that accept it — a minimum prop contract any intrinsic element or custom component can satisfy. A part limited for semantic reasons instead — a heading restricted to `h1`–`h6` — takes a fixed set of allowed elements.
 
 ### Class-name contract
 

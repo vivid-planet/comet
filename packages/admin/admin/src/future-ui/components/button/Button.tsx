@@ -17,30 +17,31 @@ export type ButtonOwnerState = {
     disabled: boolean;
 };
 
-interface ButtonSlots {
+interface ButtonSlots<StartIcon extends ElementType, EndIcon extends ElementType> {
     /**
      * Element for the `startIcon` slot.
      *
      * @defaultValue `span`
      */
-    startIcon?: ElementType;
+    startIcon?: StartIcon;
     /**
      * Element for the `endIcon` slot.
      *
      * @defaultValue `span`
      */
-    endIcon?: ElementType;
+    endIcon?: EndIcon;
 }
 
-interface ButtonSlotProps {
+interface ButtonSlotProps<StartIcon extends ElementType, EndIcon extends ElementType> {
     /** Props for the `startIcon` slot. */
-    startIcon?: SlotPropsValue<ButtonOwnerState, "span">;
+    startIcon?: SlotPropsValue<ButtonOwnerState, StartIcon>;
     /** Props for the `endIcon` slot. */
-    endIcon?: SlotPropsValue<ButtonOwnerState, "span">;
+    endIcon?: SlotPropsValue<ButtonOwnerState, EndIcon>;
 }
 
 /** @experimental */
-export interface ButtonProps extends Omit<BaseButton.Props, "className"> {
+export interface ButtonProps<StartIcon extends ElementType = "span", EndIcon extends ElementType = "span">
+    extends Omit<BaseButton.Props, "className"> {
     /**
      * Visual style.
      *
@@ -50,9 +51,9 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className"> {
     /** Added alongside the component's own classes. */
     className?: string;
     /** Sets which element a named inner part renders as. */
-    slots?: ButtonSlots;
+    slots?: ButtonSlots<StartIcon, EndIcon>;
     /** Props for each slot, merged with the slot's own props rather than replacing them. */
-    slotProps?: ButtonSlotProps;
+    slotProps?: ButtonSlotProps<StartIcon, EndIcon>;
     /** The icon to render before the button's text. */
     startIcon?: ReactNode;
     /** The icon to render after the button's text. */
@@ -64,7 +65,7 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className"> {
  *
  * @experimental
  */
-export function Button({
+export function Button<StartIcon extends ElementType = "span", EndIcon extends ElementType = "span">({
     disabled = false,
     type = "button",
     variant = "primary",
@@ -75,14 +76,14 @@ export function Button({
     endIcon,
     children,
     ...restProps
-}: ButtonProps) {
+}: ButtonProps<StartIcon, EndIcon>) {
     const ownerState: ButtonOwnerState = { variant, disabled };
 
-    const StartIconSlot = slots?.startIcon ?? "span";
-    const EndIconSlot = slots?.endIcon ?? "span";
+    const StartIconSlot: ElementType = slots?.startIcon ?? "span";
+    const EndIconSlot: ElementType = slots?.endIcon ?? "span";
 
-    const startIconProps = resolveSlotProps<ButtonOwnerState, "span">({ className: styles.startIcon }, slotProps?.startIcon, ownerState);
-    const endIconProps = resolveSlotProps<ButtonOwnerState, "span">({ className: styles.endIcon }, slotProps?.endIcon, ownerState);
+    const startIconProps = resolveSlotProps<ButtonOwnerState, StartIcon, "span">({ className: styles.startIcon }, slotProps?.startIcon, ownerState);
+    const endIconProps = resolveSlotProps<ButtonOwnerState, EndIcon, "span">({ className: styles.endIcon }, slotProps?.endIcon, ownerState);
 
     return (
         <BaseButton

@@ -10,15 +10,18 @@ function isOwnerStateFunction<OwnerState, T extends ElementType>(
 }
 
 /**
- * Resolves a slot's `slotProps` value — calling it with `ownerState` when it's a
- * function — then merges it with the slot's own props via `mergeProps`.
+ * Merges a slot's consumer props with the component's own props, resolving the
+ * consumer value with `ownerState` when it is a function.
+ *
+ * `ownProps` are typed for the slot's default element and the consumer value
+ * for the chosen element, so the result fits whichever element renders.
  */
-export function resolveSlotProps<OwnerState, T extends ElementType>(
-    ownProps: ComponentPropsWithRef<T>,
-    value: SlotPropsValue<OwnerState, T> | undefined,
+export function resolveSlotProps<OwnerState, Slot extends ElementType, Default extends ElementType>(
+    ownProps: ComponentPropsWithRef<Default>,
+    value: SlotPropsValue<OwnerState, Slot> | undefined,
     ownerState: OwnerState,
 ) {
     const consumerProps = isOwnerStateFunction(value) ? value(ownerState) : value;
 
-    return mergeProps<T>(ownProps, consumerProps);
+    return mergeProps<Slot>(ownProps, consumerProps);
 }
