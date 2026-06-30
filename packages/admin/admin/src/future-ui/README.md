@@ -107,6 +107,32 @@ Future UI's styling contract is its class names. Components built on `@base-ui/r
 - A component with no single dominant element names no class `root`.
 - Modifiers nest under `.root` with `&` (`&--disabled` → `cometButton--disabled`).
 
+## Theme
+
+Components read their colors and metrics from CSS custom properties (`var(--comet-button-…)`, `var(--comet-color-…)`, `var(--comet-typography-…)`) with **no fallback** — an unthemed component renders visibly unstyled rather than silently drifting to a default. There is no runtime JS theme object.
+
+### Token layers
+
+The tokens are defined in five SCSS partials under [`theme/`](theme), composed into the provider module with `@use` and wrapped in a single `@layer comet`: `_primitives.scss` (raw values, internal), `_brand.scss`, `_responsive.scss`, `_semantic.scss`, and `_components.scss`. [`generateThemeTokens.ts`](cli/generateThemeTokens.ts) generates them, along with the prop-value types ([`theme/types.ts`](theme/types.ts)).
+
+### Regenerating the tokens
+
+The partials and types are generated from a design-token export, not edited manually. To update them:
+
+1. Open the [DDS Figma design](https://www.figma.com/design/xAe7acdpccDSRCrfeOdAg3/DDS---Dextinity-Admin-UI---V-0.1).
+2. Install and run the [Design Token Exporter](https://www.figma.com/community/plugin/1590704268871516927) plugin.
+3. In the plugin, click **Export Tokens**, then **Download as ZIP**.
+4. Extract the ZIP outside the repository. It contains a `design-tokens` directory — a `manifest.json` plus one `*.tokens.json` file per collection and mode. The export itself is not committed.
+5. From the repo root, run the generator, pointing it at that directory by absolute path:
+
+    ```bash
+    pnpm --filter @comet/admin run generate-future-ui-theme-tokens /absolute/path/to/design-tokens
+    ```
+
+### Selecting a brand and color scheme
+
+`Theme` selects the active brand and color scheme. It stays a pure function of its props — reading no `window`, `localStorage`, or `matchMedia` — so it renders the same on server and client; switching, OS-scheme resolution, and preventing the first-paint flash on SSR stay in consumer code.
+
 ## Known issues
 
 - Styles are not delivered by the package build yet. The Babel build compiles no CSS Modules, so the class-name mapping applies in Storybook but not in published output.

@@ -1,11 +1,13 @@
 import { ArrowRight, Favorite } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import { themeDecorator } from "../../../storybook/themeDecorator";
 import { Button } from "../Button";
 
 const meta: Meta<typeof Button> = {
     component: Button,
     title: "Future UI/Button",
+    decorators: [themeDecorator],
 };
 
 export default meta;
