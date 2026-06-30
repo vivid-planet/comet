@@ -3,15 +3,15 @@ import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 
 import { Button } from "../../button/Button";
 import { Typography } from "../../typography/Typography";
-import { CssVarsProvider } from "../CssVarsProvider";
+import { Theme } from "../Theme";
 import styles from "./themeOverrides.module.scss";
 
 const brands = ["default", "crimson"];
 const colorSchemes = ["light", "dark", "high-contrast"];
 
-const meta: Meta<typeof CssVarsProvider> = {
-    component: CssVarsProvider,
-    title: "Future UI/CssVarsProvider",
+const meta: Meta<typeof Theme> = {
+    component: Theme,
+    title: "Future UI/Theme",
     argTypes: {
         brand: { control: "select", options: brands },
         colorScheme: { control: "select", options: colorSchemes },
@@ -24,7 +24,7 @@ const meta: Meta<typeof CssVarsProvider> = {
 
 export default meta;
 
-type Story = StoryObj<typeof CssVarsProvider>;
+type Story = StoryObj<typeof Theme>;
 
 function ExampleContent() {
     return (
@@ -85,9 +85,9 @@ function useSystemColorScheme() {
  */
 export const Default: Story = {
     render: (args) => (
-        <CssVarsProvider {...args}>
+        <Theme {...args}>
             <ExampleContent />
-        </CssVarsProvider>
+        </Theme>
     ),
 };
 
@@ -99,9 +99,9 @@ function SystemColorSchemeSwitcher() {
     return (
         <div>
             <ThemeSelect label="Appearance" value={choice} options={["light", "dark", "system"]} onChange={setChoice} />
-            <CssVarsProvider colorScheme={colorScheme}>
+            <Theme colorScheme={colorScheme}>
                 <ExampleContent />
-            </CssVarsProvider>
+            </Theme>
         </div>
     );
 }
@@ -123,9 +123,9 @@ export const SwitchSystemColorScheme: Story = {
  */
 export const OverrideBrandToken: Story = {
     render: () => (
-        <CssVarsProvider className={styles.brandPrimaryOverride}>
+        <Theme className={styles.brandPrimaryOverride}>
             <ExampleContent />
-        </CssVarsProvider>
+        </Theme>
     ),
     parameters: { controls: { disable: true } },
 };
