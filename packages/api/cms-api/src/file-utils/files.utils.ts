@@ -1,4 +1,4 @@
-import createDOMPurify from "dompurify";
+import type createDOMPurify from "dompurify";
 import fs from "fs";
 import { unlink } from "fs/promises";
 import * as mimedb from "mime-db";
@@ -43,11 +43,11 @@ export const calculatePartialRanges = (size: number, range: string): { start: nu
 
 let domPurify: ReturnType<typeof createDOMPurify> | undefined;
 
-// jsdom is heavy (~90 MB resident). It's loaded lazily so that importing @comet/cms-api
-// doesn't pull it into memory — it's only needed when an SVG upload is actually validated.
+// jsdom is heavy (~90 MB resident). It and dompurify are only used for SVG validation, so they're
+// loaded lazily — importing @comet/cms-api doesn't pull them into memory unless an SVG is validated.
 async function getDomPurify(): Promise<ReturnType<typeof createDOMPurify>> {
     if (!domPurify) {
-        const { JSDOM } = await import("jsdom");
+        const [{ JSDOM }, { default: createDOMPurify }] = await Promise.all([import("jsdom"), import("dompurify")]);
         const { window } = new JSDOM("");
         domPurify = createDOMPurify(window);
 
