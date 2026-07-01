@@ -1,6 +1,7 @@
 import { ChevronDown, Error } from "@comet/admin-icons";
 import {
     Autocomplete,
+    autocompleteClasses,
     type AutocompleteProps,
     type AutocompleteRenderInputParams,
     CircularProgress,
@@ -8,12 +9,42 @@ import {
     InputBase,
     Typography,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import type { ReactNode } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import type { AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
+
+// Keeps flex-wrap: wrap so chips + input flow naturally on the same lines.
+// padding-right reserves space for the absolutely positioned end adornment (clear + chevron ≈ 56px).
+const MultipleInputBase = styled(InputBase)`
+    && {
+        flex-wrap: wrap;
+        align-items: center;
+        position: relative;
+        padding-right: 56px;
+    }
+`;
+
+// Absolutely positioned so it never wraps below chips regardless of how many are selected.
+// Resets MUI's own absolute positioning on .MuiAutocomplete-endAdornment so it stays in our flex flow.
+const MultipleEndAdornmentContainer = styled("div")`
+    position: absolute;
+    right: 0;
+    /* Centered for single-row inputs (same as calc(50% - 14px) at 50px field height).
+       For multi-row inputs the min() clamps to the first-row center so icons never drift into chips.
+       14px = half the popup icon height (28px); 11px = (50px input row - 28px icon) / 2. */
+    top: min(calc(50% - 14px), 11px);
+    display: flex;
+    align-items: center;
+
+    & .${autocompleteClasses.endAdornment} {
+        position: static;
+        transform: none;
+    }
+`;
 
 export type FinalFormAutocompleteProps<
     T extends Record<string, any>,
@@ -92,23 +123,35 @@ export const FinalFormAutocomplete = <
             disabled={disabled}
             readOnly={readOnly}
             multiple={multiple as Multiple}
-            renderInput={(params: AutocompleteRenderInputParams) => (
-                <InputBase
-                    {...restInput}
-                    {...params}
-                    {...params.InputProps}
-                    // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
-                    required={multiple ? false : required}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            {loading && <CircularProgress color="inherit" size={16} />}
-                            {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
-                            {loadingError && <Error color="error" />}
-                            {params.InputProps.endAdornment}
-                        </InputAdornment>
-                    }
-                />
-            )}
+            renderInput={(params: AutocompleteRenderInputParams) => {
+                const RenderedInputBase = multiple ? MultipleInputBase : InputBase;
+                return (
+                    <RenderedInputBase
+                        {...restInput}
+                        {...params}
+                        {...params.InputProps}
+                        // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
+                        required={multiple ? false : required}
+                        endAdornment={
+                            multiple ? (
+                                <MultipleEndAdornmentContainer>
+                                    {loading && <CircularProgress color="inherit" size={16} />}
+                                    {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+                                    {loadingError && <Error color="error" />}
+                                    {params.InputProps.endAdornment}
+                                </MultipleEndAdornmentContainer>
+                            ) : (
+                                <InputAdornment position="end">
+                                    {loading && <CircularProgress color="inherit" size={16} />}
+                                    {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
+                                    {loadingError && <Error color="error" />}
+                                    {params.InputProps.endAdornment}
+                                </InputAdornment>
+                            )
+                        }
+                    />
+                );
+            }}
         />
     );
 };
