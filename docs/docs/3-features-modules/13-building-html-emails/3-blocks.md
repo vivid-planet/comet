@@ -74,25 +74,26 @@ On viewports narrower than the default body width, both blocks automatically sca
 
 ## Rich-text blocks
 
-The `createRichTextBlock` factory creates components that render `RichTextBlockData` (draft-js raw content) from the CMS. It returns one component for the MJML context and one for raw HTML, both driven by the same configuration.
+The `createRichTextBlockRenderer` factory creates a component that renders `RichTextBlockData` (draft-js raw content) from the CMS. Each call binds one configuration to one `blockTextComponent`, which determines how each draft block is rendered:
 
-| Component           | Renders each draft block as | Use within                                                                        |
-| ------------------- | --------------------------- | --------------------------------------------------------------------------------- |
-| `MjmlRichTextBlock` | `MjmlText`                  | an `MjmlColumn` (standard MJML layout model)                                      |
-| `HtmlRichTextBlock` | `HtmlText` (`<div>`)        | raw HTML or [MJML ending tags](./1-email-basics.md#ending-tags) such as `MjmlRaw` |
+| `blockTextComponent` | Renders each draft block as | Use within                                                                        |
+| -------------------- | --------------------------- | --------------------------------------------------------------------------------- |
+| `MjmlBlockText`      | `MjmlText`                  | an `MjmlColumn` (standard MJML layout model)                                      |
+| `HtmlBlockText`      | `HtmlText` (`<div>`)        | raw HTML or [MJML ending tags](./1-email-basics.md#ending-tags) such as `MjmlRaw` |
 
-Call the factory once — at the top level of a file, not inside a component — and export the returned components:
+Call the factory once per component — at the top level of a file, not inside a component — and export the returned components. To render the same configuration in both MJML and raw-HTML contexts, call it once with each `blockTextComponent`:
 
 ```tsx title="src/emails/blocks/richText.ts"
-import { createRichTextBlock } from "@comet/mail-react";
+import { createRichTextBlockRenderer, HtmlBlockText, MjmlBlockText } from "@comet/mail-react";
 
-export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
-    blockTypes: {
-        "header-one": { variant: "heading1" },
-        "header-two": { variant: "heading2" },
-        "paragraph-standard": { variant: "body" },
-    },
-});
+const blockTypes = {
+    "header-one": { variant: "heading1" },
+    "header-two": { variant: "heading2" },
+    "paragraph-standard": { variant: "body" },
+};
+
+export const MjmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: MjmlBlockText, blockTypes });
+export const HtmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: HtmlBlockText, blockTypes });
 ```
 
 Usage sites then pass only the block data:
@@ -109,7 +110,7 @@ Usage sites then pass only the block data:
 
 The `blockTypes` option maps the application's draft block types to the styling of the text component that renders them. Each entry accepts a theme [text variant](./2-components-and-theme.md), plain style values (`color`, `fontSize`, `fontWeight`, …), and a `className`.
 
-The factory works without any configuration: `createRichTextBlock()` renders every draft block with the base `theme.text` styles, as do block types missing from `blockTypes`. This makes the block usable before any text variants exist in the theme.
+The factory works without `blockTypes`: passing only a `blockTextComponent` renders every draft block with the base `theme.text` styles, as do block types missing from `blockTypes`. This makes the block usable before any text variants exist in the theme.
 
 Style values in `blockTypes` don't support responsive values — define a theme variant for responsive styling, or set a `className` and register responsive CSS via `registerStyles`.
 
@@ -118,7 +119,8 @@ Style values in `blockTypes` don't support responsive values — define a theme 
 `LINK` entities reference a link block (`{ type, props }`). The `external` link type is built in and renders as `HtmlInlineLink`. Add the application's other link types via the `linkTypes` option — a resolver per link block type that receives the link block's props and returns the href, or `undefined` to render the text without a link:
 
 ```tsx
-export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
+export const MjmlRichTextBlock = createRichTextBlockRenderer({
+    blockTextComponent: MjmlBlockText,
     linkTypes: {
         phone: (props) =>
             typeof props === "object" &&
@@ -135,18 +137,16 @@ Link types without a resolver render their text as plain text.
 
 ### Multiple configurations
 
-Each factory call is independent, so an application can create differently-configured pairs and name them by use case:
+Each factory call is independent, so an application can create differently-configured blocks and name them by use case:
 
 ```tsx
-export const {
-    MjmlRichTextBlock: MjmlHeadlineRichTextBlock,
-    HtmlRichTextBlock: HtmlHeadlineRichTextBlock,
-} = createRichTextBlock({
-    blockTypes: {
-        "header-one": { variant: "heading1" },
-        "header-two": { variant: "heading2" },
-    },
-});
+const headlineBlockTypes = {
+    "header-one": { variant: "heading1" },
+    "header-two": { variant: "heading2" },
+};
+
+export const MjmlHeadlineRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: MjmlBlockText, blockTypes: headlineBlockTypes });
+export const HtmlHeadlineRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: HtmlBlockText, blockTypes: headlineBlockTypes });
 ```
 
 ### Rendering behavior

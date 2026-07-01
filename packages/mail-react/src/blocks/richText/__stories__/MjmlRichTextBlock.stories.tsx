@@ -3,10 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { MjmlSection } from "../../../components/section/MjmlSection.js";
 import { createTheme } from "../../../theme/createTheme.js";
-import { createRichTextBlock } from "../createRichTextBlock.js";
+import { createRichTextBlockRenderer } from "../createRichTextBlockRenderer.js";
+import { MjmlBlockText } from "../MjmlBlockText.js";
 import { exampleBlockData, headlinesOnlyBlockData } from "./exampleBlockData.js";
 
-const { MjmlRichTextBlock } = createRichTextBlock();
+const MjmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: MjmlBlockText });
 
 type Story = StoryObj<typeof MjmlRichTextBlock>;
 
@@ -17,9 +18,8 @@ const config: Meta<typeof MjmlRichTextBlock> = {
     parameters: {
         docs: {
             description: {
-                // Duplicates the TSDoc on MjmlRichTextBlock in createRichTextBlock.tsx — Storybook cannot read it from factory return type properties. Update both when the description changes.
                 component:
-                    "Renders CMS RichText block data (draft-js raw content) as one `MjmlText` per draft block. Must be placed within an `MjmlColumn`.",
+                    "A block created by `createRichTextBlockRenderer` with `MjmlBlockText`: renders CMS RichText block data (draft-js raw content) as one `MjmlText` per draft block. Must be placed within an `MjmlColumn`.",
             },
         },
     },
@@ -27,7 +27,7 @@ const config: Meta<typeof MjmlRichTextBlock> = {
 
 export default config;
 
-/** A block from `createRichTextBlock()` without options: every draft block renders with the base theme text styles. */
+/** A block from `createRichTextBlockRenderer()` with only `blockTextComponent`: every draft block renders with the base theme text styles. */
 export const Default: Story = {
     render: () => (
         <MjmlSection indent>
@@ -38,7 +38,8 @@ export const Default: Story = {
     ),
 };
 
-const { MjmlRichTextBlock: MjmlVariantsRichTextBlock } = createRichTextBlock({
+const MjmlVariantsRichTextBlock = createRichTextBlockRenderer({
+    blockTextComponent: MjmlBlockText,
     blockTypes: {
         "header-one": { variant: "heading1" },
         "header-two": { variant: "heading2" },
@@ -88,7 +89,8 @@ function resolveInternalLinkHref(props: unknown): string | undefined {
     return typeof path === "string" ? `https://example.com${path}` : undefined;
 }
 
-const { MjmlRichTextBlock: MjmlCustomLinkTypeRichTextBlock } = createRichTextBlock({
+const MjmlCustomLinkTypeRichTextBlock = createRichTextBlockRenderer({
+    blockTextComponent: MjmlBlockText,
     linkTypes: {
         internal: resolveInternalLinkHref,
     },
@@ -105,7 +107,8 @@ export const WithCustomLinkType: Story = {
     ),
 };
 
-const { MjmlRichTextBlock: MjmlHeadlineRichTextBlock } = createRichTextBlock({
+const MjmlHeadlineRichTextBlock = createRichTextBlockRenderer({
+    blockTextComponent: MjmlBlockText,
     blockTypes: {
         "header-one": { variant: "heading1" },
         "header-two": { variant: "heading2" },

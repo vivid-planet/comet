@@ -5,7 +5,9 @@ import { describe, expect, it } from "vitest";
 import { createTheme } from "../../../theme/createTheme.js";
 import { ThemeProvider } from "../../../theme/ThemeProvider.js";
 import type { RichTextBlockData } from "../common.js";
-import { createRichTextBlock } from "../createRichTextBlock.js";
+import { createRichTextBlockRenderer } from "../createRichTextBlockRenderer.js";
+import { HtmlBlockText } from "../HtmlBlockText.js";
+import { MjmlBlockText } from "../MjmlBlockText.js";
 
 function renderWithTheme(node: ReactNode, theme = createTheme()): string {
     return renderToStaticMarkup(<ThemeProvider theme={theme}>{node}</ThemeProvider>);
@@ -28,8 +30,9 @@ const themeWithVariants = createTheme({
     },
 });
 
-describe("createRichTextBlock — base rendering", () => {
-    const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock();
+describe("createRichTextBlockRenderer — base rendering", () => {
+    const MjmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: MjmlBlockText });
+    const HtmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: HtmlBlockText });
 
     it("renders each draft block as its own MjmlText with base theme styles", () => {
         const data = createBlockData([createDraftBlock({ key: "a", text: "First" }), createDraftBlock({ key: "b", text: "Second" })]);
@@ -80,14 +83,14 @@ describe("createRichTextBlock — base rendering", () => {
     });
 });
 
-describe("createRichTextBlock — block type configuration", () => {
-    const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
-        blockTypes: {
-            "header-one": { variant: "heading1" },
-            "paragraph-standard": { variant: "body", className: "customParagraph" },
-            unstyled: { color: "#ff0000", fontWeight: 700 },
-        },
-    });
+describe("createRichTextBlockRenderer — block type configuration", () => {
+    const blockTypes = {
+        "header-one": { variant: "heading1" },
+        "paragraph-standard": { variant: "body", className: "customParagraph" },
+        unstyled: { color: "#ff0000", fontWeight: 700 },
+    };
+    const MjmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: MjmlBlockText, blockTypes });
+    const HtmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: HtmlBlockText, blockTypes });
 
     it("applies the mapped variant to the text component", () => {
         const data = createBlockData([createDraftBlock({ key: "a", text: "Heading", type: "header-one" })]);
@@ -127,8 +130,8 @@ describe("createRichTextBlock — block type configuration", () => {
     });
 });
 
-describe("createRichTextBlock — bottom spacing", () => {
-    const { HtmlRichTextBlock } = createRichTextBlock();
+describe("createRichTextBlockRenderer — bottom spacing", () => {
+    const HtmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: HtmlBlockText });
 
     it("applies bottomSpacing to every block except the last one with text", () => {
         const data = createBlockData([
@@ -144,8 +147,8 @@ describe("createRichTextBlock — bottom spacing", () => {
     });
 });
 
-describe("createRichTextBlock — inline styles and line breaks", () => {
-    const { HtmlRichTextBlock } = createRichTextBlock();
+describe("createRichTextBlockRenderer — inline styles and line breaks", () => {
+    const HtmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: HtmlBlockText });
 
     it("renders BOLD and ITALIC ranges as semantic tags with an explicit style fallback", () => {
         const data = createBlockData([
@@ -181,8 +184,8 @@ describe("createRichTextBlock — inline styles and line breaks", () => {
     });
 });
 
-describe("createRichTextBlock — links", () => {
-    const { HtmlRichTextBlock } = createRichTextBlock();
+describe("createRichTextBlockRenderer — links", () => {
+    const HtmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: HtmlBlockText });
 
     function createLinkBlockData(linkBlock: Record<string, unknown>): RichTextBlockData {
         return createBlockData([createDraftBlock({ key: "a", text: "Visit our website now", entityRanges: [{ offset: 6, length: 11, key: 0 }] })], {
@@ -208,7 +211,8 @@ describe("createRichTextBlock — links", () => {
     });
 
     it("resolves application-defined link types through the linkTypes option", () => {
-        const { HtmlRichTextBlock: HtmlPhoneLinkRichTextBlock } = createRichTextBlock({
+        const HtmlPhoneLinkRichTextBlock = createRichTextBlockRenderer({
+            blockTextComponent: HtmlBlockText,
             linkTypes: {
                 phone: (props) => {
                     if (typeof props !== "object" || props === null || !("phoneNumber" in props)) {
@@ -226,7 +230,7 @@ describe("createRichTextBlock — links", () => {
     });
 
     it("keeps the built-in external link type when linkTypes adds more", () => {
-        const { HtmlRichTextBlock: HtmlPhoneLinkRichTextBlock } = createRichTextBlock({ linkTypes: { phone: () => undefined } });
+        const HtmlPhoneLinkRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: HtmlBlockText, linkTypes: { phone: () => undefined } });
         const data = createLinkBlockData({ type: "external", props: { targetUrl: "https://example.com", openInNewWindow: false } });
         const markup = renderWithTheme(<HtmlPhoneLinkRichTextBlock data={data} />);
 
@@ -234,8 +238,9 @@ describe("createRichTextBlock — links", () => {
     });
 });
 
-describe("createRichTextBlock — lists", () => {
-    const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock();
+describe("createRichTextBlockRenderer — lists", () => {
+    const MjmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: MjmlBlockText });
+    const HtmlRichTextBlock = createRichTextBlockRenderer({ blockTextComponent: HtmlBlockText });
 
     it("groups consecutive unordered list items into one list within one text component", () => {
         const data = createBlockData([

@@ -1,3 +1,5 @@
+import type { ComponentType, PropsWithChildren } from "react";
+
 import type { TextStyles, VariantName } from "../../theme/themeTypes.js";
 import type { PropsWithData } from "../helpers/PropsWithData.js";
 
@@ -31,7 +33,25 @@ export type RichTextBlockTypeProps = Omit<TextStyles, "bottomSpacing"> & {
  */
 export type RichTextLinkHrefResolver = (props: unknown) => string | undefined;
 
-export interface CreateRichTextBlockOptions {
+/**
+ * Props of the text component that renders a single draft block. Passed to
+ * `createRichTextBlockRenderer` as `blockTextComponent` — `MjmlBlockText` for
+ * MJML context, `HtmlBlockText` for raw HTML.
+ */
+export type BlockTextProps = PropsWithChildren<
+    RichTextBlockTypeProps & {
+        /** Whether the theme's spacing below the text applies — set for every draft block except the last. */
+        bottomSpacing: boolean;
+    }
+>;
+
+export interface CreateRichTextBlockRendererOptions {
+    /**
+     * The text component that renders each draft block. Use `MjmlBlockText` for
+     * MJML context (within an `MjmlColumn`) or `HtmlBlockText` for raw-HTML
+     * contexts such as `MjmlRaw`.
+     */
+    blockTextComponent: ComponentType<BlockTextProps>;
     /**
      * Maps draft block types (e.g. `"header-one"`, `"paragraph-standard"`) to the
      * styling of the text component that renders them.
