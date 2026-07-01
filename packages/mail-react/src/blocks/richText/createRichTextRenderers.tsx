@@ -1,15 +1,8 @@
-import type { ComponentType, PropsWithChildren, ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import type { Renderers, TextBlockRenderFn } from "redraft";
 
 import { HtmlInlineLink } from "../../components/inlineLink/HtmlInlineLink.js";
-import type { RichTextBlockTypeProps, RichTextLinkHrefResolver } from "./common.js";
-
-export type BlockTextProps = PropsWithChildren<
-    RichTextBlockTypeProps & {
-        /** Whether the theme's spacing below the text applies — set for every draft block except the last. */
-        bottomSpacing: boolean;
-    }
->;
+import type { BlockTextProps, RichTextBlockTypeProps, RichTextLinkHrefResolver } from "./common.js";
 
 const inlineStyleRenderers: Renderers["inline"] = {
     // The explicit styles back up the semantic tags in rendering engines that don't apply their default styling.

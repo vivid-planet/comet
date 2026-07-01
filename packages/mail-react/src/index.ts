@@ -9,13 +9,16 @@ export { HtmlPixelImageBlock } from "./blocks/pixelImage/HtmlPixelImageBlock.js"
 export type { MjmlPixelImageBlockProps } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
 export { MjmlPixelImageBlock } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
 export type {
-    CreateRichTextBlockOptions,
+    BlockTextProps,
+    CreateRichTextBlockRendererOptions,
     RichTextBlockData,
     RichTextBlockProps,
     RichTextBlockTypeProps,
     RichTextLinkHrefResolver,
 } from "./blocks/richText/common.js";
-export { createRichTextBlock } from "./blocks/richText/createRichTextBlock.js";
+export { createRichTextBlockRenderer } from "./blocks/richText/createRichTextBlockRenderer.js";
+export { HtmlBlockText } from "./blocks/richText/HtmlBlockText.js";
+export { MjmlBlockText } from "./blocks/richText/MjmlBlockText.js";
 export type { HtmlButtonProps } from "./components/button/HtmlButton.js";
 export { HtmlButton } from "./components/button/HtmlButton.js";
 export type { MjmlButtonProps } from "./components/button/MjmlButton.js";
