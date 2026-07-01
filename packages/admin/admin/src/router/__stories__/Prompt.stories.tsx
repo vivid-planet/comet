@@ -1,9 +1,8 @@
-import { RouterPrompt } from "@comet/admin";
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { RouterPrompt } from "../Prompt";
 
 function Story() {
     return (
@@ -43,8 +42,7 @@ function Path() {
 }
 
 export default {
-    title: "@comet/admin/router",
-    decorators: [storyRouterDecorator()],
+    title: "components/router/Prompt",
 };
 
 export const NestedRouteWithNonSubPathRouteInPrompt = {
