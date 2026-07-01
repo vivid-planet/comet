@@ -2,8 +2,9 @@ name: CMS API Memory
 
 # Guards the base memory of @comet/cms-api: importing the package eagerly loads its dependency
 # graph, which dominates the API's startup memory and time. This compares the PR against the base
-# branch and warns if the base memory grows by more than the threshold (usually a newly added
-# eager import that should be lazy-loaded instead).
+# branch and comments if the base memory grew notably (usually a newly added eager import that
+# should be lazy-loaded instead) or dropped notably. The comment is removed once the change is
+# back within the threshold band.
 
 on:
     pull_request:
@@ -19,8 +20,11 @@ permissions:
     pull-requests: write
 
 env:
-    # Regression threshold in percent (heap), and number of isolated samples per measurement.
-    MEM_THRESHOLD_PERCENT: "3"
+    # Comment when the heap grows by more than INCREASE% or shrinks by more than DECREASE%;
+    # stay silent (and remove any existing comment) within that band. MEM_SAMPLES is the number
+    # of isolated samples per measurement.
+    MEM_INCREASE_THRESHOLD_PERCENT: "3"
+    MEM_DECREASE_THRESHOLD_PERCENT: "5"
     MEM_SAMPLES: "7"
 
 jobs:
@@ -69,7 +73,8 @@ jobs:
                   script: |
                       const fs = require("fs");
                       const marker = "<!-- cms-api-memory-check -->";
-                      const threshold = Number(process.env.MEM_THRESHOLD_PERCENT);
+                      const increaseThreshold = Number(process.env.MEM_INCREASE_THRESHOLD_PERCENT);
+                      const decreaseThreshold = Number(process.env.MEM_DECREASE_THRESHOLD_PERCENT);
 
                       const pr = JSON.parse(fs.readFileSync("pr-memory.json", "utf8"));
                       const base = JSON.parse(fs.readFileSync("base-memory.json", "utf8"));
@@ -78,47 +83,57 @@ jobs:
                       // runs, whereas RSS (allocator pages, native memory) swings by several percent from
                       // noise alone — a delta wider than the threshold, so it would be misleading to report.
                       const heapPct = ((pr.heapBytes - base.heapBytes) / base.heapBytes) * 100;
-                      const regression = heapPct > threshold;
+                      const increased = heapPct > increaseThreshold;
+                      const decreased = heapPct < -decreaseThreshold;
 
                       core.info(`base heap ${base.heapMB}MB`);
                       core.info(`pr   heap ${pr.heapMB}MB`);
-                      core.info(`Δ heap ${heapPct.toFixed(1)}% (threshold ${threshold}%)`);
+                      core.info(`Δ heap ${heapPct.toFixed(1)}% (thresholds +${increaseThreshold}% / -${decreaseThreshold}%)`);
 
                       const fmt = (n) => `${n > 0 ? "+" : ""}${n.toFixed(1)}%`;
+                      const measuredNote = `<sub>Measured as the minimum of ${pr.samples} isolated \`require\` samples with forced GC.</sub>`;
                       const table =
                           `| metric | base | this PR | Δ |\n` +
                           `| --- | --- | --- | --- |\n` +
                           `| heap | ${base.heapMB} MB | ${pr.heapMB} MB | ${fmt(heapPct)} |\n`;
+                      const baseRef = context.payload.pull_request.base.ref;
 
-                      const warningBody =
+                      const increasedBody =
                           `${marker}\n` +
                           `### ⚠️ \`@comet/cms-api\` base memory increased by ${fmt(heapPct)}\n\n` +
-                          `Loading \`@comet/cms-api\` (\`require("@comet/cms-api")\`) now uses **${fmt(heapPct)}** more heap than \`${context.payload.pull_request.base.ref}\` (threshold: ${threshold}%).\n\n` +
+                          `Loading \`@comet/cms-api\` (\`require("@comet/cms-api")\`) now uses **${fmt(heapPct)}** more heap than \`${baseRef}\` (threshold: +${increaseThreshold}%).\n\n` +
                           table +
                           `\nThis usually means a new dependency is **imported eagerly** at module load time. ` +
                           `Since this memory is paid by every consumer on startup (and by the migration init container), please consider **lazy-loading** it:\n\n` +
                           "- Use a lazy `require()` / dynamic `import()` inside the function that needs it, and keep type-only imports as `import type`.\n" +
                           "- Avoid module-scope side effects (e.g. instantiating a client at import time).\n\n" +
-                          `<sub>Measured as the minimum of ${pr.samples} isolated \`require\` samples with forced GC.</sub>`;
+                          measuredNote;
+
+                      const decreasedBody =
+                          `${marker}\n` +
+                          `### 📉 \`@comet/cms-api\` base memory decreased by ${Math.abs(heapPct).toFixed(1)}%\n\n` +
+                          `Loading \`@comet/cms-api\` (\`require("@comet/cms-api")\`) now uses **${fmt(heapPct)}** heap versus \`${baseRef}\` (threshold: -${decreaseThreshold}%). Nice.\n\n` +
+                          table +
+                          measuredNote;
 
                       const { owner, repo } = context.repo;
                       const issue_number = context.issue.number;
                       const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number });
                       const existing = comments.find((c) => c.body && c.body.includes(marker));
 
-                      if (regression) {
+                      if (increased || decreased) {
+                          const body = increased ? increasedBody : decreasedBody;
                           if (existing) {
-                              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body: warningBody });
+                              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
                           } else {
-                              await github.rest.issues.createComment({ owner, repo, issue_number, body: warningBody });
+                              await github.rest.issues.createComment({ owner, repo, issue_number, body });
                           }
-                          core.warning(`cms-api base memory increased by ${heapPct.toFixed(1)}% (threshold ${threshold}%)`);
+                          if (increased) {
+                              core.warning(`cms-api base memory increased by ${heapPct.toFixed(1)}% (threshold +${increaseThreshold}%)`);
+                          } else {
+                              core.info(`cms-api base memory decreased by ${Math.abs(heapPct).toFixed(1)}% (threshold -${decreaseThreshold}%)`);
+                          }
                       } else if (existing) {
-                          // Previously flagged but now within threshold — update the thread instead of leaving a stale warning.
-                          const resolvedBody =
-                              `${marker}\n` +
-                              `### ✅ \`@comet/cms-api\` base memory is within threshold\n\n` +
-                              `Δ heap ${fmt(heapPct)} vs \`${context.payload.pull_request.base.ref}\` (threshold: ${threshold}%).\n\n` +
-                              table;
-                          await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body: resolvedBody });
+                          // Back within the threshold band — remove the now-irrelevant comment.
+                          await github.rest.issues.deleteComment({ owner, repo, comment_id: existing.id });
                       }
