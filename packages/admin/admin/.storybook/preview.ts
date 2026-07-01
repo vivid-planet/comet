@@ -7,6 +7,7 @@ import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
 import { RouterDecorator } from "./decorators/Router.decorator";
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
+import { renderBodySourceTransform } from "./renderBodySource";
 
 const mswReady = typeof window === "undefined" ? Promise.resolve() : worker.start({ onUnhandledRequest: "bypass" });
 
@@ -63,6 +64,10 @@ const preview: Preview = {
     parameters: {
         docs: {
             codePanel: true,
+            source: {
+                type: "dynamic",
+                transform: renderBodySourceTransform,
+            },
         },
         controls: {
             matchers: {
