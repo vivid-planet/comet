@@ -63,6 +63,7 @@ const preview: Preview = {
     parameters: {
         docs: {
             codePanel: true,
+            source: { type: "dynamic" },
         },
         controls: {
             matchers: {
