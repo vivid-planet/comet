@@ -1,5 +1,33 @@
 # @comet/api-generator
 
+## 9.0.0-beta.6
+
+### Minor Changes
+
+- 70a77db: Reuse `@RequiredPermission` from entity in resolver permissions
+
+    The `UserPermissionsGuard` now falls back to the entity's `@RequiredPermission` decorator when no permission is explicitly set on the resolver. The entity is resolved from the `@Resolver(() => Entity)` decorator.
+
+    Additionally, the CRUD generator no longer emits `@RequiredPermission` on generated resolvers if the entity already has `@RequiredPermission` set. This avoids redundant permission declarations.
+
+### Patch Changes
+
+- Updated dependencies [f1a473a]
+- Updated dependencies [8954d64]
+- Updated dependencies [4c1aeb2]
+- Updated dependencies [67938b2]
+- Updated dependencies [7fbe2a7]
+- Updated dependencies [35e9e0d]
+- Updated dependencies [91f4a9f]
+- Updated dependencies [1b37655]
+- Updated dependencies [affbb11]
+- Updated dependencies [fad0167]
+- Updated dependencies [6793853]
+- Updated dependencies [70a77db]
+- Updated dependencies [8498a7c]
+- Updated dependencies [ac59b62]
+    - @comet/cms-api@9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ### Patch Changes

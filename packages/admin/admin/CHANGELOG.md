@@ -1,5 +1,22 @@
 # @comet/admin
 
+## 9.0.0-beta.6
+
+### Patch Changes
+
+- b4ba869: Fix Data Grid Excel export for `singleSelect` columns
+
+    When a `singleSelect` column uses `valueOptions`, Excel export now resolves the exported cell value to the matching option label unless a custom `valueFormatter` overrides it.
+
+- 57678d0: Fix `FinalFormNumberInput` dirtying the form on mount when the initial value is `null`
+
+    The value-sync effect inside `FinalFormNumberInput` ran on mount and called `input.onChange(undefined)` whenever `input.value` was empty. For a form whose initial value was `null`, this silently normalized the value to `undefined`, making the field `dirty` before any user interaction and breaking dirty-tracking features such as `EditDialog`, `SaveBoundary`, and the unsaved-changes router prompt.
+
+    The mount-time sync now only updates the formatted display string. The empty-input normalization to `undefined` still happens on real user interaction in `handleBlur`.
+
+- b459ec7: Reduce published package size by keeping non-runtime build artifacts out of the bundle
+    - @comet/admin-icons@9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ### Patch Changes
