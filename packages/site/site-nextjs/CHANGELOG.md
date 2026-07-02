@@ -1,5 +1,12 @@
 # @comet/site-nextjs
 
+## 8.25.0
+
+### Patch Changes
+
+- Updated dependencies [ba2729a]
+    - @comet/site-react@8.25.0
+
 ## 8.24.5
 
 ### Patch Changes

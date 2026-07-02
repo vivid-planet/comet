@@ -1,5 +1,23 @@
 # @comet/cms-admin
 
+## 8.25.0
+
+### Minor Changes
+
+- ba2729a: Add `noFollow` option to `ExternalLinkBlock`
+
+    Editors can now mark an external link as `nofollow` via a new checkbox in the admin form. When enabled, the rendered `<a>` tag receives `rel="nofollow"`. Existing links are unaffected by an automatic block-data migration that sets `noFollow` to `false`.
+
+### Patch Changes
+
+- 8aa1aa6: Fix page search not expanding the tree when navigating between matches after "Collapse all"
+
+    Previously, jumping to the next or previous search match only scrolled to the match without expanding its collapsed ancestors. After collapsing the tree via "Collapse all" during an active search, continuing the search revealed nothing. Navigating between matches now re-expands the current match's ancestors before scrolling to it.
+    - @comet/admin@8.25.0
+    - @comet/admin-date-time@8.25.0
+    - @comet/admin-icons@8.25.0
+    - @comet/admin-rte@8.25.0
+
 ## 8.24.5
 
 ### Patch Changes
