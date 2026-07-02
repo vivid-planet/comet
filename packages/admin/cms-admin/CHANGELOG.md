@@ -1,5 +1,53 @@
 # @comet/cms-admin
 
+## 9.0.0-beta.6
+
+### Minor Changes
+
+- 4c1aeb2: Add `noFollow` option to `ExternalLinkBlock`
+
+    Editors can now mark an external link as `nofollow` via a new checkbox in the admin form. When enabled, the rendered `<a>` tag receives `rel="nofollow"`. Existing links are unaffected by an automatic block-data migration that sets `noFollow` to `false`.
+
+- 7fbe2a7: Add `allowPageDelete` option to disable deletion of pages in the PageTree. When set to `false`, the delete option is hidden in the Admin UI and the API blocks deletion attempts.
+- 7ab96c2: Add `SearchHeaderItem` component for full-text search
+
+    The `SearchHeaderItem` component renders a search input (intended for the header) that opens a dropdown with the results of the `myFullTextSearch` query. The search is restricted to the currently selected content scope. Clicking a result opens the corresponding entity using the `entityDependencyMap` from the `DependenciesConfig` (the same mechanism used by warnings and dependencies).
+
+    **Example**
+
+    ```tsx
+    import { Header, SearchHeaderItem } from "@comet/cms-admin";
+
+    <Header>
+        <SearchHeaderItem />
+        <ContentScopeControls />
+        <UserHeaderItem />
+    </Header>;
+    ```
+
+### Patch Changes
+
+- 0e9189b: Export `AnonymousBlockInterface` type
+- c7f80e9: Fix page search not expanding the tree when navigating between matches after "Collapse all"
+
+    Previously, jumping to the next or previous search match only scrolled to the match without expanding its collapsed ancestors. After collapsing the tree via "Collapse all" during an active search, continuing the search revealed nothing. Navigating between matches now re-expands the current match's ancestors before scrolling to it.
+
+- b459ec7: Reduce published package size by keeping non-runtime build artifacts out of the bundle
+- 5e87236: Remove pagination from `StartBuildsDialog` data grid
+
+    The `buildTemplates` query always returns all templates, so the page-based pagination in the dialog grid was misleading. All templates are now displayed at once.
+
+- Updated dependencies [15e771b]
+- Updated dependencies [1a83c01]
+- Updated dependencies [15e771b]
+- Updated dependencies [b4ba869]
+- Updated dependencies [57678d0]
+- Updated dependencies [b459ec7]
+    - @comet/admin@9.0.0-beta.6
+    - @comet/admin-date-time@9.0.0-beta.6
+    - @comet/admin-rte@9.0.0-beta.6
+    - @comet/admin-icons@9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ### Minor Changes

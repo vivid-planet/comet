@@ -1,5 +1,131 @@
 # @comet/cms-api
 
+## 9.0.0-beta.6
+
+### Minor Changes
+
+- f1a473a: Allow `AffectedScope` to return multiple scopes
+
+    The `argsToScope` function can now return `ContentScope[]` in addition to a single `ContentScope`. When multiple scopes are returned, the user must have access to all of them (AND relationship).
+
+    ```ts
+    @AffectedScope((args: MyArgs) => [{ domain: args.fromDomain }, { domain: args.toDomain }])
+    ```
+
+- 8954d64: Add `findUser` / `findUserOrThrow` (and `findUserForLogin` / `findUserForLoginOrThrow`) to `UserPermissionsUserServiceInterface`
+
+    The throwing `getUser` and `getUserForLogin` methods on `UserPermissionsUserServiceInterface` are now deprecated in favor of paired find methods:
+    - `findUser(id): Promise<User | null>` / `findUserOrThrow(id): Promise<User>`
+    - `findUserForLogin(id): Promise<User | null>` / `findUserForLoginOrThrow(id): Promise<User>`
+
+    This lets consumers opt into a non-throwing path without wrapping lookups in `try`/`catch`. Existing implementations that only define `getUser` / `getUserForLogin` continue to work; the service falls back to them.
+
+    **Example**
+
+    ```ts
+    export class UserService implements UserPermissionsUserServiceInterface {
+        async findUser(id: string): Promise<User | null> {
+            return this.users.find((user) => user.id === id) ?? null;
+        }
+
+        async findUserOrThrow(id: string): Promise<User> {
+            const user = await this.findUser(id);
+            if (!user) {
+                throw new Error(`User not found: ${id}`);
+            }
+            return user;
+        }
+
+        // ...
+    }
+    ```
+
+- 4c1aeb2: Add `noFollow` option to `ExternalLinkBlock`
+
+    Editors can now mark an external link as `nofollow` via a new checkbox in the admin form. When enabled, the rendered `<a>` tag receives `rel="nofollow"`. Existing links are unaffected by an automatic block-data migration that sets `noFollow` to `false`.
+
+- 67938b2: Filter `myFullTextSearch` results by the entity's required permission
+
+    The `requiredPermission` of an entity (declared via the `@RequiredPermission` decorator) is now included in both the `EntityInfo` and `EntityInfoFullText` SQL views.
+
+    The `myFullTextSearch` query (formerly `fullTextSearch`) filters results based on the current user's permissions, only returning entities where the user has the required permission. Entries without a required permission are excluded from results, as the permission cannot be determined. The `my` prefix reflects that the query operates on the current user and only returns entities the user is allowed to see.
+
+    **Example usage:**
+
+    ```ts
+    @EntityInfo<Product>({
+        name: "title",
+        secondaryInformation: "category.name",
+        visible: { status: { $eq: ProductStatus.Published } },
+        fullText: "fullText",
+    })
+    @RequiredPermission("products")
+    @ObjectType()
+    @Entity()
+    export class Product {
+        // ...
+    }
+    ```
+
+- 7fbe2a7: Add `allowPageDelete` option to disable deletion of pages in the PageTree. When set to `false`, the delete option is hidden in the Admin UI and the API blocks deletion attempts.
+- 1b37655: Add scope support to `myFullTextSearch`
+
+    The `EntityInfoFullText` view now includes a `scopes` column, and the `myFullTextSearch` query accepts an optional `scope` argument to restrict results to a single content scope.
+
+    The scopes are derived from either a `scope` property on the entity (simple case) or the `@ScopedEntity` decorator. To support building the scopes in SQL, `@ScopedEntity` accepts a new declarative, SQL-convertible variant in addition to the existing callback/service:
+
+    ```ts
+    // Field path to the scope object (an embeddable)
+    @ScopedEntity("company.scope")
+
+    // Object mapping scope properties to field paths
+    @ScopedEntity({ companyId: "company.id" })
+
+    // Multiple scopes
+    @ScopedEntity(["company.scope", "otherCompany.scope"])
+    ```
+
+    The existing callback and service variants keep working everywhere `@ScopedEntity` is used (e.g. the auth guard). They cannot be converted to SQL, so an entity that is part of the full-text index must use the declarative variant (or have a `scope` property) — otherwise creating the `EntityInfoFullText` view throws.
+
+- 70a77db: Reuse `@RequiredPermission` from entity in resolver permissions
+
+    The `UserPermissionsGuard` now falls back to the entity's `@RequiredPermission` decorator when no permission is explicitly set on the resolver. The entity is resolved from the `@Resolver(() => Entity)` decorator.
+
+    Additionally, the CRUD generator no longer emits `@RequiredPermission` on generated resolvers if the entity already has `@RequiredPermission` set. This avoids redundant permission declarations.
+
+- 8498a7c: Export `EntityInfoObject`, `EntityInfoFullTextObject` and `PaginatedEntityInfo`
+
+    This allows building custom full-text search resolvers (for example a public, permission-independent site search) that reuse the existing full-text search views and re-use the `entityInfo` relation to return name and secondary information.
+
+### Patch Changes
+
+- 35e9e0d: Fix copying the home page creating a second page with the slug `home`
+
+    Previously, copying the home page produced a second page with the slug `home`, after which none of the home pages could be deleted (deleting a page with the slug `home` is forbidden). The copy now receives a different slug if the target scope already has a home page, and keeps `home` only when there is none yet.
+
+- 91f4a9f: Fix DAM file listing failing for files larger than ~2 GB
+
+    The `size` field of `DamFile` and `FileUpload` was exposed as a GraphQL `Int`, which can only represent 32-bit signed integers (max ~2.1 GB). Files exceeding this size (e.g. large videos) caused the GraphQL response to fail with `Int cannot represent non 32-bit signed integer value`, breaking the DAM file list and the "Select files from DAM" dialog. The field is now exposed as `BigInt`, which represents the full range of file sizes stored in the database (`bigint`).
+
+- affbb11: Load `jsdom` lazily for SVG validation
+
+    `jsdom` (~90 MB resident) was imported and instantiated at module load time, so importing anything from `@comet/cms-api` pulled it into memory even when no SVG was ever validated. It's now loaded on the first SVG validation instead, reducing the package's base memory footprint.
+
+- fad0167: Load `@kubernetes/client-node` lazily in `KubernetesService`
+
+    `@kubernetes/client-node` (~85 MB resident) was statically imported, so importing anything from `@comet/cms-api` pulled it into memory even for projects that don't use the Kubernetes-based builds feature. The runtime parts of the client are now required lazily when `KubernetesService` actually connects to a cluster, reducing the package's base memory footprint.
+
+- 6793853: Load `openai` lazily in `AzureOpenAiContentGenerationService`
+
+    The `openai` client was statically imported, so importing anything from `@comet/cms-api` pulled it into memory even when the content-generation feature was disabled. It's now required lazily when a client is actually created, reducing the package's base memory footprint.
+
+- ac59b62: Validate uploaded SVGs with `DOMPurify` (backed by `jsdom`) instead of the custom XML-based check
+
+    The previous implementation parsed SVGs with `fast-xml-parser` and applied a hand-written allow/deny list to reject scripts, event handlers and unsafe links.
+    SVGs are now sanitized with the vetted `DOMPurify` library and rejected when it has to strip any tags or attributes, providing more robust protection against XSS vectors in uploaded SVGs.
+
+    The `role` attribute and the `<use>` element are allowed, since they're commonly used in valid SVGs. `<use>` is restricted to same-document fragment references (e.g. `href="#id"`); references to external resources are rejected to prevent XSS/SSRF.
+
 ## 9.0.0-beta.5
 
 ### Minor Changes

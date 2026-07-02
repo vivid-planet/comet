@@ -1,5 +1,48 @@
 # @comet/admin-date-time
 
+## 9.0.0-beta.6
+
+### Major Changes
+
+- 15e771b: Deprecate `TimeRangePicker`, `TimeRangeField` and `FinalFormTimeRangePicker` and add a "Legacy" prefix to their class-names and theme component-key
+
+    Their new counterparts in `@comet/admin` are now considered stable.
+
+    **Consider using the new components from `@comet/admin`**
+
+    In most cases, the new components will be a drop-in replacement for the legacy components, so you can simply replace the imports:
+
+    | Legacy component from `@comet/admin-date-time` | New component from `@comet/admin`                  |
+    | ---------------------------------------------- | -------------------------------------------------- |
+    | `TimeRangePicker`                              | `TimeRangePicker`                                  |
+    | `TimeRangeField`                               | `TimeRangePickerField`                             |
+    | `FinalFormTimeRangePicker`                     | `TimeRangePickerField` (without using `<Field />`) |
+
+    **To continue using the existing component, the following changes will need to be made:**
+
+    Update any use of class-names of the component's slots:
+    - `CometAdminTimeRangePicker-*` -> `CometAdminLegacyTimeRangePicker-*`
+
+    Update the component-key when using `defaultProps` or `styleOverrides` in the theme:
+    - `CometAdminTimeRangePicker` -> `CometAdminLegacyTimeRangePicker`
+
+### Minor Changes
+
+- 1a83c01: Deprecate the `@comet/admin-date-time` package
+
+    All of its components now have stable replacements in `@comet/admin`. The remaining exports (`DatePickerNavigation`, `DateFnsLocaleProvider`, `DateFnsLocaleContext` and `useDateFnsLocale`) are now marked as deprecated as well.
+
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v8-to-v9) for how to migrate to the new components in `@comet/admin`.
+
+### Patch Changes
+
+- Updated dependencies [15e771b]
+- Updated dependencies [b4ba869]
+- Updated dependencies [57678d0]
+- Updated dependencies [b459ec7]
+    - @comet/admin@9.0.0-beta.6
+    - @comet/admin-icons@9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ### Patch Changes
