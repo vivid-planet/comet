@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { type IFilterApi, Stack, StackMainContent, StackPage, StackSwitch, Toolbar, useStackApi, useTableQueryFilter } from "@comet/admin";
+import { Stack, StackMainContent, StackPage, StackSwitch, Toolbar, useStackApi } from "@comet/admin";
+import { type IFilterApi, useTableQueryFilter } from "@comet/admin-legacy";
 import { type ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 

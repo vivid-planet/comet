@@ -1,13 +1,5 @@
-import {
-    Field,
-    FilterBar,
-    FilterBarPopoverFilter,
-    FinalFormRangeInput,
-    SwitchField,
-    Table,
-    TableFilterFinalForm,
-    useTableQueryFilter,
-} from "@comet/admin";
+import { Field, FinalFormRangeInput, SwitchField } from "@comet/admin";
+import { FilterBar, FilterBarPopoverFilter, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin-legacy";
 import { faker } from "@faker-js/faker";
 import { Box, Divider, Typography } from "@mui/material";
 

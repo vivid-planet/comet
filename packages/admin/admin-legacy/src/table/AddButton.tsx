@@ -1,10 +1,7 @@
+import { Button, type ISelectionApi, messages } from "@comet/admin";
 import { AddNoCircle } from "@comet/admin-icons";
 import { Component } from "react";
 import { FormattedMessage } from "react-intl";
-
-import { Button } from "../common/buttons/Button";
-import { messages } from "../messages";
-import type { ISelectionApi } from "../SelectionApi";
 
 interface IProps {
     selectionApi: ISelectionApi;

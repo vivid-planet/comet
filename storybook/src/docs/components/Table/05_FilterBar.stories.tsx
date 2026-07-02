@@ -1,9 +1,6 @@
 import {
     AutocompleteField,
     Field,
-    FilterBar,
-    FilterBarMoreFilters,
-    FilterBarPopoverFilter,
     FinalFormInput,
     FinalFormRangeInput,
     Stack,
@@ -11,14 +8,19 @@ import {
     StackLink,
     StackPage,
     StackSwitch,
-    Table,
-    TableFilterFinalForm,
     Toolbar,
     ToolbarItem,
     ToolbarTitleItem,
+} from "@comet/admin";
+import {
+    FilterBar,
+    FilterBarMoreFilters,
+    FilterBarPopoverFilter,
+    Table,
+    TableFilterFinalForm,
     usePersistedStateId,
     useTableQueryFilter,
-} from "@comet/admin";
+} from "@comet/admin-legacy";
 import { faker } from "@faker-js/faker";
 import { Typography } from "@mui/material";
 

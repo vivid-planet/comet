@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { Button, DataGridToolbar, FieldSet, FillSpace, GridCellContent, type GridColDef, TableDeleteButton } from "@comet/admin";
+import { Button, DataGridToolbar, FieldSet, FillSpace, GridCellContent, type GridColDef } from "@comet/admin";
 import { Add, Delete, Edit, StateFilled } from "@comet/admin-icons";
+import { TableDeleteButton } from "@comet/admin-legacy";
 import { IconButton, Typography } from "@mui/material";
 import type { GridToolbarProps } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";

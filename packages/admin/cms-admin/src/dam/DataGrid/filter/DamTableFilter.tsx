@@ -1,4 +1,5 @@
-import { Field, FilterBar, FilterBarPopoverFilter, FinalFormSearchTextField, type IFilterApi, SwitchField, TableFilterFinalForm } from "@comet/admin";
+import { Field, FinalFormSearchTextField, SwitchField } from "@comet/admin";
+import { FilterBar, FilterBarPopoverFilter, type IFilterApi, TableFilterFinalForm } from "@comet/admin-legacy";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import type { DamFilter } from "../../DamTable";

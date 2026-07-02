@@ -28,6 +28,7 @@
         "@comet/admin-color-picker": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
+        "@comet/admin-legacy": "workspace:*",
         "@comet/admin-rte": "workspace:*",
         "@comet/cms-admin": "workspace:*",
         "@emotion/react": "^11.14.0",

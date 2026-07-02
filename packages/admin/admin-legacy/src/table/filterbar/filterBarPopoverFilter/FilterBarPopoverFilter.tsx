@@ -1,3 +1,4 @@
+import { createComponentSlot, messages, type ThemedComponentBaseProps } from "@comet/admin";
 import { Check, Reset } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Button, type ButtonProps, type ComponentsOverrides, Popover as MuiPopover, type Theme } from "@mui/material";
@@ -6,9 +7,6 @@ import { type ComponentType, type MouseEvent, type PropsWithChildren, useState }
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
-import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
 import type { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 import { FilterBarButton, type FilterBarButtonProps } from "../filterBarButton/FilterBarButton";

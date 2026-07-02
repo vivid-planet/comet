@@ -1,4 +1,5 @@
-import { Button, Table } from "@comet/admin";
+import { Button } from "@comet/admin";
+import { Table } from "@comet/admin-legacy";
 import { useState } from "react";
 
 interface Person {

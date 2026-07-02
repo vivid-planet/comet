@@ -1,4 +1,5 @@
-import { type IFilterApi, StackLink } from "@comet/admin";
+import { StackLink } from "@comet/admin";
+import type { IFilterApi } from "@comet/admin-legacy";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type ReactNode, useEffect, useRef } from "react";
