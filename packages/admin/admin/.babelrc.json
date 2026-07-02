@@ -1,4 +1,4 @@
 {
-    "ignore": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/__tests__/**"],
+    "ignore": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/__tests__/**", "src/future-ui/cli/**"],
     "presets": ["@comet/admin-babel-preset"]
 }
