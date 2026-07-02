@@ -1,5 +1,19 @@
 # @comet/cms-api
 
+## 8.25.0
+
+### Minor Changes
+
+- ba2729a: Add `noFollow` option to `ExternalLinkBlock`
+
+    Editors can now mark an external link as `nofollow` via a new checkbox in the admin form. When enabled, the rendered `<a>` tag receives `rel="nofollow"`. Existing links are unaffected by an automatic block-data migration that sets `noFollow` to `false`.
+
+### Patch Changes
+
+- c6a5235: Load `jsdom` lazily for SVG validation
+
+    `jsdom` (~90 MB resident) was imported and instantiated at module load time, so importing anything from `@comet/cms-api` pulled it into memory even when no SVG was ever validated. It's now loaded on the first SVG validation instead, reducing the package's base memory footprint.
+
 ## 8.24.5
 
 ### Patch Changes
