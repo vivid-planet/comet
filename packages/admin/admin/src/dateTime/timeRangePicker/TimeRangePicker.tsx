@@ -58,10 +58,6 @@ const getTimeRangeValue = (value: TimeRange | undefined): [Date | null, Date | n
     return [getDateFromTimeString(value?.start), getDateFromTimeString(value?.end)];
 };
 
-// MUI types the `textField` slotProps `ownerState` as `FieldOwnerState`, which omits the `position`
-// that the multi-input range field always supplies. We rely on it to render a per-field clear button.
-type TimeRangeTextFieldOwnerState = { position: "start" | "end" };
-
 /**
  * The TimeRangePicker component allows users to select a time range from a time picker interface. It provides two
  * text fields with a time icon that opens a time range picker dialog. The component handles time strings in 24-hour
@@ -92,6 +88,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
     const [open, setOpen] = useState(false);
 
     const timeRangeValue = getTimeRangeValue(stringTimeRangeValue);
+    const hasTimeRangeValue = timeRangeValue.some((time) => time !== null);
 
     const { openPicker: openPickerIcon = <Time color="inherit" /> } = iconMapping;
 
@@ -136,20 +133,6 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                             ownerState,
                         };
 
-                        const { position } = ownerState as unknown as TimeRangeTextFieldOwnerState;
-                        const fieldHasValue = position === "end" ? Boolean(stringTimeRangeValue?.end) : Boolean(stringTimeRangeValue?.start);
-
-                        const clearField = () => {
-                            const remainingTime = position === "end" ? stringTimeRangeValue?.start : stringTimeRangeValue?.end;
-
-                            if (!remainingTime) {
-                                onChange?.(undefined);
-                                return;
-                            }
-
-                            onChange?.(position === "end" ? { start: remainingTime, end: null } : { start: null, end: remainingTime });
-                        };
-
                         return {
                             fullWidth,
                             required,
@@ -180,8 +163,12 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                                 endAdornment: (
                                     <>
                                         <ReadOnlyAdornment inputIsReadOnly={Boolean(readOnly)} {...slotProps?.readOnlyAdornment} />
-                                        {fieldHasValue && !required && !disabled && !readOnly && (
-                                            <ClearInputAdornment position="end" onClick={clearField} {...slotProps?.clearInputAdornment} />
+                                        {hasTimeRangeValue && !required && !disabled && !readOnly && (
+                                            <ClearInputAdornment
+                                                position="end"
+                                                onClick={() => onChange?.(undefined)}
+                                                {...slotProps?.clearInputAdornment}
+                                            />
                                         )}
                                     </>
                                 ),
