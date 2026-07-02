@@ -1,0 +1,17 @@
+.root {
+    margin: 0;
+    color: #1a1a1a;
+    font-family: inherit;
+
+    &--variantHeadline {
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    &--variantBody {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+}
