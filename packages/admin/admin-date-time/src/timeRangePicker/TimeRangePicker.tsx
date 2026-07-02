@@ -57,6 +57,9 @@ const Separator = createComponentSlot(Typography)<TimeRangePickerClassKey>({
     `,
 );
 
+/**
+ * @deprecated Use `TimeRange` from `@comet/admin` instead.
+ */
 export type TimeRange = {
     start: string;
     end: string;
