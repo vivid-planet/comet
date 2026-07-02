@@ -612,7 +612,7 @@ Callers should conditionally render the component instead of passing the `hasCle
 
 ### Replacement of `@comet/admin-date-time`
 
-Most components of `@comet/admin-date-time` are now deprecated and are being replaced by new components in `@comet/admin`.
+The `@comet/admin-date-time` package is deprecated. All of its components have been replaced by new components in `@comet/admin`.
 
 #### Use the new components from `@comet/admin` (recommended)
 
@@ -661,6 +661,23 @@ export const ExampleFields = () => {
         </>
     );
 };
+```
+
+##### Remove `DateFnsLocaleProvider`
+
+The new components from `@comet/admin` are based on MUI X and read the date-fns locale from MUI X's `LocalizationProvider` (`adapterLocale`).
+Once you no longer render any legacy components, the `DateFnsLocaleProvider` (and `useDateFnsLocale`) from `@comet/admin-date-time` are no longer needed and can be removed:
+
+```diff title="src/App.tsx"
+-import { DateFnsLocaleProvider } from "@comet/admin-date-time";
+ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+ import { LocalizationProvider } from "@mui/x-date-pickers";
+
+ <LocalizationProvider adapterLocale={dateFnsLocale} dateAdapter={AdapterDateFns}>
+-    <DateFnsLocaleProvider value={dateFnsLocale}>
+         {children}
+-    </DateFnsLocaleProvider>
+ </LocalizationProvider>;
 ```
 
 #### Continue using the deprecated components
