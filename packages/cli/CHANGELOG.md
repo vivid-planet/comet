@@ -1,5 +1,11 @@
 # @comet/cli
 
+## 9.0.0-beta.6
+
+### Patch Changes
+
+- b459ec7: Reduce published package size by keeping non-runtime build artifacts out of the bundle
+
 ## 9.0.0-beta.5
 
 ### Minor Changes

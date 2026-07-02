@@ -1,5 +1,31 @@
 # @comet/brevo-api
 
+## 9.0.0-beta.6
+
+### Major Changes
+
+- f932845: Update `@getbrevo/brevo` to v5
+
+    The transactional mail service's `send` method now accepts a `SendTransacEmailRequest` (without `sender`) instead of a `SendSmtpEmail`. The commonly used fields (`to`, `subject`, `htmlContent`, `textContent`) are unchanged, so existing calls continue to work.
+
+### Patch Changes
+
+- Updated dependencies [f1a473a]
+- Updated dependencies [8954d64]
+- Updated dependencies [4c1aeb2]
+- Updated dependencies [67938b2]
+- Updated dependencies [7fbe2a7]
+- Updated dependencies [35e9e0d]
+- Updated dependencies [91f4a9f]
+- Updated dependencies [1b37655]
+- Updated dependencies [affbb11]
+- Updated dependencies [fad0167]
+- Updated dependencies [6793853]
+- Updated dependencies [70a77db]
+- Updated dependencies [8498a7c]
+- Updated dependencies [ac59b62]
+    - @comet/cms-api@9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ### Patch Changes
