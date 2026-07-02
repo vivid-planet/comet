@@ -3,6 +3,7 @@
         "rootDir": "src"
     },
     "exclude": [
+        "src/future-ui/cli",
         "**/*.test.tsx",
         "**/*.test.ts",
         "**/*.spec.tsx",
