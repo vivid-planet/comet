@@ -7,9 +7,9 @@ description: Building or editing admin UI in a project that uses @comet/admin an
 
 `@comet/admin` and its sibling packages ship a design system: a theme (spacing,
 colors, shadows, typography, breakpoints) and a library of ready-made components. For
-internationalization, the project uses `react-intl` to translate text, numbers, and dates. The
-components and types are available in the consuming project through the installed packages —
-import them directly (e.g. `import { Button, MainContent } from "@comet/admin"`).
+internationalization, Comet recommends `react-intl` (the default) to translate text, numbers, and
+dates. The components and types are available in the consuming project through the installed
+packages — import them directly (e.g. `import { Button, MainContent } from "@comet/admin"`).
 
 Build admin UI by composing what the design system already provides. Add custom styling only
 after the system genuinely can't express what you need.
@@ -157,3 +157,72 @@ one of them. Promote it to its own reusable component: one export per file, name
 export so it is easy to find, e.g. `SpecialButton.ts` exporting
 `export const SpecialButton = styled(Button)`. Group several small related ones into a single
 generically-named file only when explicitly instructed.
+
+## Internationalization
+
+Comet recommends `react-intl` (the default). When a project uses it, its user-facing text,
+numbers, and dates go through the `react-intl` helpers instead of being hard-coded.
+
+### Text: `<FormattedMessage>` and `useIntl`, not literals
+
+Use `<FormattedMessage>` wherever a ReactNode fits. String attributes (`alt`, `placeholder`,
+`title`, `aria-*`) take a string, not a ReactNode, so translate those with
+`useIntl().formatMessage()`.
+
+```tsx
+// Avoid — hard-coded user-facing text
+<Button>Save</Button>;
+<img src={src} alt="Preview" />;
+
+// Prefer — translate through react-intl (formatMessage for string attributes)
+import { FormattedMessage, useIntl } from "react-intl";
+
+<Button>
+    <FormattedMessage id="product.save" defaultMessage="Save" />
+</Button>;
+
+const intl = useIntl();
+<img src={src} alt={intl.formatMessage({ id: "product.previewAlt", defaultMessage: "Preview" })} />;
+```
+
+Interpolate runtime values with `values` rather than concatenating strings, and pluralize with ICU
+syntax rather than by hand:
+
+```tsx
+<FormattedMessage id="product.greeting" defaultMessage="Welcome, {name}" values={{ name }} />;
+
+// # is the formatted count
+<FormattedMessage id="product.cartCount" defaultMessage="{count, plural, one {# item in cart} other {# items in cart}}" values={{ count }} />;
+```
+
+### Numbers: `<FormattedNumber>` / `intl.formatNumber()`
+
+Format plain numbers, currency, and percentages through react-intl so grouping, decimals, and
+symbols follow the active locale rather than a hand-written format.
+
+```tsx
+// Avoid — raw or hand-formatted numbers (no locale grouping, decimals, or symbol)
+<span>{count}</span>;
+<span>{`${price.toFixed(2)} €`}</span>;
+<span>{`${Math.round(ratio * 100)}%`}</span>;
+
+// Prefer — locale-aware grouping and decimals, currency, and percent
+<FormattedNumber value={count} />;
+<FormattedNumber value={price} style="currency" currency="EUR" />;
+<FormattedNumber value={ratio} style="percent" />;
+```
+
+### Dates and times: `<FormattedDate>` / `<FormattedTime>`
+
+Render dates and times through react-intl so they follow the active locale rather than a
+hand-built format.
+
+```tsx
+// Avoid — hand-built date and time strings
+<span>{date.toLocaleDateString("en-US")}</span>;
+<span>{date.toLocaleTimeString("en-US")}</span>;
+
+// Prefer — locale-aware formatting
+<FormattedDate value={date} year="numeric" month="long" day="numeric" />;
+<FormattedTime value={date} />;
+```
