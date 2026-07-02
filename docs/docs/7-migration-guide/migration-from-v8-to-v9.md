@@ -281,6 +281,18 @@ Repeat this step, fixing all lint errors, until the lint passes.
 
 Use `RedirectSourceType` instead of `RedirectSourceTypeValues` from `@comet/cms-api`
 
+### Brevo: `@getbrevo/brevo` upgraded to v5
+
+`@comet/brevo-api` now uses `@getbrevo/brevo` v5, which is a ground-up rewrite of the Brevo SDK. If your project imports `@getbrevo/brevo` directly, upgrade it to `^5` and follow the [Brevo SDK migration guide](https://github.com/getbrevo/brevo-node).
+
+`BrevoTransactionalMailsService.send()` now resolves to the Brevo response body directly instead of the previous `{ response, body }` wrapper, and its options are typed as `SendTransacEmailRequest` instead of `SendSmtpEmail`. The supported fields (`to`, `subject`, `htmlContent`, `textContent`, …) are unchanged, so only adjust code that reads the return value:
+
+```diff title="api/src/.../some.service.ts"
+- const { body } = await this.brevoTransactionalMailsService.send({ to: [{ email }], subject, htmlContent }, scope);
+- const messageId = body.messageId;
++ const { messageId } = await this.brevoTransactionalMailsService.send({ to: [{ email }], subject, htmlContent }, scope);
+```
+
 ## Admin
 
 ### Update Comet and peer dependencies
