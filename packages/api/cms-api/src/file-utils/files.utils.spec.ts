@@ -7,7 +7,7 @@ describe("Files Utils", () => {
                 <path fill="#242424" fill-rule="evenodd" d=""/>
             </svg>`;
 
-            expect(isValidSvg(cleanSvg)).toBe(true);
+            expect(await isValidSvg(cleanSvg)).toBe(true);
         });
 
         it("should return false if the svg contains a script tag", async () => {
@@ -18,7 +18,7 @@ describe("Files Utils", () => {
                 </script>
             </svg>`;
 
-            expect(isValidSvg(svgWithScriptTag)).toBe(false);
+            expect(await isValidSvg(svgWithScriptTag)).toBe(false);
         });
 
         it("should return false if the svg contains an event handler", async () => {
@@ -26,7 +26,7 @@ describe("Files Utils", () => {
                 <path onload="alert('XSS');" fill="#242424" fill-rule="evenodd" d=""/>
             </svg>`;
 
-            expect(isValidSvg(svgWithOnloadHandler)).toBe(false);
+            expect(await isValidSvg(svgWithOnloadHandler)).toBe(false);
         });
 
         it("should return false if the svg contains a href attribute containing javascript", async () => {
@@ -36,7 +36,7 @@ describe("Files Utils", () => {
                 </a>
             </svg>`;
 
-            expect(isValidSvg(svgWithOnloadHandler)).toBe(false);
+            expect(await isValidSvg(svgWithOnloadHandler)).toBe(false);
         });
 
         it("should return false if the svg contains a script tag with a namespace prefix", async () => {
@@ -44,7 +44,7 @@ describe("Files Utils", () => {
                 <x:script>alert("XSS");</x:script>
             </svg>`;
 
-            expect(isValidSvg(svgWithNamespacedScriptTag)).toBe(false);
+            expect(await isValidSvg(svgWithNamespacedScriptTag)).toBe(false);
         });
 
         it("should return false if the svg contains an uppercase href attribute containing javascript", async () => {
@@ -54,7 +54,7 @@ describe("Files Utils", () => {
                 </a>
             </svg>`;
 
-            expect(isValidSvg(svgWithUppercaseHref)).toBe(false);
+            expect(await isValidSvg(svgWithUppercaseHref)).toBe(false);
         });
 
         it("should return true if the svg contains a role attribute", async () => {
@@ -62,7 +62,7 @@ describe("Files Utils", () => {
                 <path role="presentation" fill="#242424" fill-rule="evenodd" d=""/>
             </svg>`;
 
-            expect(isValidSvg(svgWithRole)).toBe(true);
+            expect(await isValidSvg(svgWithRole)).toBe(true);
         });
 
         it("should return true if the svg contains a use element with a same-document fragment reference", async () => {
@@ -71,7 +71,7 @@ describe("Files Utils", () => {
                 <use xlink:href="#icon" mask="url(#mask0)" transform="matrix(1,0,0,1,0,0)"/>
             </svg>`;
 
-            expect(isValidSvg(svgWithFragmentUse)).toBe(true);
+            expect(await isValidSvg(svgWithFragmentUse)).toBe(true);
         });
 
         it("should return false if the svg contains a use element referencing an external resource", async () => {
@@ -79,7 +79,7 @@ describe("Files Utils", () => {
                 <use href="https://evil.example.com/payload.svg#icon"/>
             </svg>`;
 
-            expect(isValidSvg(svgWithExternalUse)).toBe(false);
+            expect(await isValidSvg(svgWithExternalUse)).toBe(false);
         });
     });
 });
