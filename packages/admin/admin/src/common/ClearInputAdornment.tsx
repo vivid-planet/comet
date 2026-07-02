@@ -44,7 +44,15 @@ export const ClearInputAdornment = (inProps: ClearInputAdornmentProps) => {
 
     return (
         <Root position={position} ownerState={ownerState} {...slotProps?.root} {...restProps}>
-            <Button onClick={onClick} focusRipple {...slotProps?.buttonBase}>
+            <Button
+                onClick={(event) => {
+                    // Prevent the click from bubbling to the surrounding input, which could trigger its own click handler.
+                    event.stopPropagation();
+                    onClick();
+                }}
+                focusRipple
+                {...slotProps?.buttonBase}
+            >
                 {icon}
             </Button>
         </Root>
