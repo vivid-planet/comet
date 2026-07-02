@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { FinalForm } from "../../../FinalForm";
 import { FinalFormDebug } from "../../../form/FinalFormDebug";
+import type { TimeRange } from "../../timeRangePicker/TimeRangePicker";
 import { TimeRangePickerField } from "../TimeRangePickerField";
 
 type Story = StoryObj<typeof TimeRangePickerField>;
@@ -13,7 +14,7 @@ const config: Meta<typeof TimeRangePickerField> = {
 export default config;
 
 interface FormValues {
-    value: { start: string | null; end: string | null };
+    value: TimeRange;
 }
 
 /**
