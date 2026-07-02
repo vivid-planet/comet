@@ -1,5 +1,5 @@
 import { Time } from "@comet/admin-icons";
-import { type ComponentsOverrides, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
+import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import type { TimeRangePickerProps as MuiTimeRangePickerProps } from "@mui/x-date-pickers-pro";
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
 import { useIntl } from "react-intl";
@@ -57,6 +57,10 @@ export type TimeRangePickerProps = ThemedComponentBaseProps<{
 const getTimeRangeValue = (value: TimeRange | undefined): [Date | null, Date | null] => {
     return [getDateFromTimeString(value?.start), getDateFromTimeString(value?.end)];
 };
+
+// MUI types the `textField` slotProps `ownerState` as `FieldOwnerState`, which omits the `position`
+// that the multi-input range field always supplies. We rely on it to render a per-field clear button.
+type TimeRangeTextFieldOwnerState = { position: "start" | "end" };
 
 /**
  * The TimeRangePicker component allows users to select a time range from a time picker interface. It provides two
@@ -132,7 +136,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                             ownerState,
                         };
 
-                        const position = (ownerState as { position?: "start" | "end" }).position;
+                        const { position } = ownerState as unknown as TimeRangeTextFieldOwnerState;
                         const fieldHasValue = position === "end" ? Boolean(stringTimeRangeValue?.end) : Boolean(stringTimeRangeValue?.start);
 
                         const clearField = () => {
@@ -152,15 +156,6 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                             onBlur,
                             onFocus,
                             ...textFieldProps,
-                            sx: {
-                                // Hide the per-field "Start"/"End" labels, which aren't part of the design.
-                                [`& .${inputLabelClasses.root}`]: {
-                                    display: "none",
-                                },
-                                [`& .${inputLabelClasses.root} + *`]: {
-                                    marginTop: 0,
-                                },
-                            },
                             InputProps: {
                                 startAdornment: (
                                     <OpenPickerAdornment
@@ -205,7 +200,16 @@ const LazyRoot = lazy(async () => {
     const Root = createComponentSlot(module.TimeRangePicker)<TimeRangePickerClassKey>({
         componentName: "TimeRangePicker",
         slotName: "root",
-    })();
+    })(css`
+        // Hide the per-field "Start"/"End" labels, which aren't part of the design.
+        .${inputLabelClasses.root} {
+            display: none;
+
+            & + .${module.pickersInputBaseClasses.root} {
+                margin-top: 0;
+            }
+        }
+    `);
 
     return {
         default: (props: MuiTimeRangePickerProps) => <Root {...props} slots={{ field: module.MultiInputTimeRangeField, ...props.slots }} />,

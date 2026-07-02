@@ -26,6 +26,10 @@ export const getTimeStringFromDate = (date: Date) => {
     return format(date, "HH:mm");
 };
 
+/**
+ * Parses a 24-hour time string (`HH:mm`) into a `Date`. Returns `null` for empty or malformed
+ * input so that a bad value renders as empty instead of throwing during render.
+ */
 export const getDateFromTimeString = (value: string | null | undefined): Date | null => {
     if (!value) {
         return null;
@@ -34,7 +38,7 @@ export const getDateFromTimeString = (value: string | null | undefined): Date | 
     const parsedDate = parse(value, "HH:mm", new Date());
 
     if (!isValidDate(parsedDate)) {
-        throw new Error(`Invalid time value: "${value}", must be a 24h time in format HH:mm`);
+        return null;
     }
 
     return parsedDate;
