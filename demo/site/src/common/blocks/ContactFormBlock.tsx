@@ -2,14 +2,18 @@
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import type { ContactFormBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import { acceptedFileTypes, maxFileSizeBytes } from "@src/util/fileUpload";
 import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
+import Script from "next/script";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { Button } from "../components/Button";
 import { CheckboxField } from "../components/form/CheckboxField";
+import { FileUploadField } from "../components/form/FileUploadField";
 import { SelectField } from "../components/form/SelectField";
 import { TextareaField } from "../components/form/TextareaField";
 import { TextField } from "../components/form/TextField";
@@ -29,6 +33,7 @@ interface ContactFormValues {
     phoneNumber?: string;
     subject: string;
     message: string;
+    attachments: string[];
     privacyConsent: boolean;
 }
 
@@ -53,9 +58,12 @@ export const ContactFormBlock = withPreview(
                 phoneNumber: "",
                 subject: "",
                 message: "",
+                attachments: [],
                 privacyConsent: false,
             },
         });
+
+        const [isUploading, setIsUploading] = useState(false);
 
         const onSubmit = async (formValues: ContactFormValues) => {
             let recaptchaToken: string;
@@ -87,12 +95,15 @@ export const ContactFormBlock = withPreview(
             }
 
             try {
+                const { attachments: attachmentIds, ...rest } = formValues;
                 const response = await fetch(`/${language}/api/contact-form`, {
                     method: "POST",
-                    headers: {
-                        "content-type": "application/json",
-                    },
-                    body: JSON.stringify({ ...formValues, recaptchaToken }),
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        ...rest,
+                        attachmentIds,
+                        recaptchaToken,
+                    }),
                 });
 
                 if (!response.ok) {
@@ -112,6 +123,7 @@ export const ContactFormBlock = withPreview(
 
         return (
             <PageLayout grid>
+                <Script src={`https://www.google.com/recaptcha/enterprise.js?render=${recaptchaSiteKey}`} />
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                     <TextField
                         name="name"
@@ -188,6 +200,22 @@ export const ContactFormBlock = withPreview(
                         placeholder={intl.formatMessage({ id: "contactForm.message.placeholder", defaultMessage: "Your message" })}
                         label={intl.formatMessage({ id: "contactForm.message.label", defaultMessage: "Message" })}
                     />
+                    <FileUploadField
+                        name="attachments"
+                        control={control}
+                        onUploadingChange={setIsUploading}
+                        accept={acceptedFileTypes.join(",")}
+                        label={intl.formatMessage({ id: "contactForm.attachments.label", defaultMessage: "Attachments" })}
+                        validateFile={(file) => {
+                            if (file.size > maxFileSizeBytes) {
+                                return intl.formatMessage({
+                                    id: "contactForm.attachments.tooLarge",
+                                    defaultMessage: "File is too large.",
+                                });
+                            }
+                            return undefined;
+                        }}
+                    />
                     <CheckboxField
                         name="privacyConsent"
                         control={control}
@@ -203,7 +231,7 @@ export const ContactFormBlock = withPreview(
                                 "I agree that my information from the contact form will be collected and processed to answer my inquiry. Note: You can revoke your consent at any time by email to hello@your-domain.com. For more information, please see our privacy policy.",
                         })}
                     />
-                    <Button type="submit" variant="contained" disabled={isSubmitting}>
+                    <Button type="submit" variant="contained" disabled={isSubmitting || isUploading}>
                         <FormattedMessage id="contactForm.submitButton.label" defaultMessage="Submit" />
                     </Button>
                     {errors.root?.serverError && <div>{errors.root.serverError.message}</div>}
