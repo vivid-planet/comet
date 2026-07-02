@@ -616,6 +616,11 @@
         ]
     },
     {
+        "name": "ContactForm",
+        "fields": [],
+        "inputFields": []
+    },
+    {
         "name": "ContentGroup",
         "fields": [
             {
@@ -1142,6 +1147,11 @@
                 "name": "openInNewWindow",
                 "kind": "Boolean",
                 "nullable": false
+            },
+            {
+                "name": "noFollow",
+                "kind": "Boolean",
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -1152,6 +1162,11 @@
             },
             {
                 "name": "openInNewWindow",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "noFollow",
                 "kind": "Boolean",
                 "nullable": false
             }
@@ -2214,8 +2229,10 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },
@@ -2280,8 +2297,10 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },
@@ -3724,6 +3743,23 @@
                 "name": "link",
                 "kind": "Block",
                 "block": "Link",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TipTapRichText",
+        "fields": [
+            {
+                "name": "tipTapContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "tipTapContent",
+                "kind": "Json",
                 "nullable": false
             }
         ]

@@ -63,9 +63,6 @@ export class EnvironmentVariables {
     API_PORT: number;
 
     @IsString()
-    CORS_ALLOWED_ORIGIN: string;
-
-    @IsString()
     IMGPROXY_SALT: string;
 
     @IsString()
@@ -191,9 +188,6 @@ export class EnvironmentVariables {
 
     @IsString()
     BREVO_API_KEY: string;
-
-    @IsString()
-    BREVO_REDIRECT_URL_FOR_IMPORT: string;
 
     @IsString()
     BREVO_ECG_RTR_LIST_API_KEY: string;

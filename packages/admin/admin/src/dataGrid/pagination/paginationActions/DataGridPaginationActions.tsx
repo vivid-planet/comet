@@ -10,8 +10,8 @@ import {
     useThemeProps,
 } from "@mui/material";
 import { gridPageCountSelector, gridPaginationSelector, useGridApiContext, useGridSelector } from "@mui/x-data-grid";
-import { type ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
-import { type FunctionComponent, type PropsWithChildren, type ReactNode } from "react";
+import type { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
+import type { FunctionComponent, PropsWithChildren, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { PageOf, PreviousNext, Root } from "./DataGridPaginationActions.styles";

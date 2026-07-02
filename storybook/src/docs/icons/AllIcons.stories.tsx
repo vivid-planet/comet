@@ -8,7 +8,9 @@ import { useDebounce } from "use-debounce";
 const iconBlockList = ["CometDigitalExperienceLogo"];
 
 const matchesSearchQuery = (str: string, query: string): boolean => {
-    if (!query.length) return true;
+    if (!query.length) {
+        return true;
+    }
 
     let strIncludesPartOfSearchQuery = false;
 
@@ -104,11 +106,7 @@ export const AllIcons = () => {
                     endAdornment={
                         debouncedSearchQuery.length !== 0 && (
                             <InputAdornment position="end">
-                                <ClearInputAdornment
-                                    position="end"
-                                    hasClearableContent={Boolean(debouncedSearchQuery.length !== 0)}
-                                    onClick={() => setSearchQuery("")}
-                                />
+                                <ClearInputAdornment position="end" onClick={() => setSearchQuery("")} />
                             </InputAdornment>
                         )
                     }

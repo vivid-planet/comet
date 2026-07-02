@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import { Fragment, type FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type FilenameData } from "./ManualDuplicatedFilenamesHandler";
+import type { FilenameData } from "./ManualDuplicatedFilenamesHandler";
 
 const StyledList = styled(List)`
     margin-top: ${({ theme }) => theme.spacing(4)};

@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as Excel from "exceljs/dist/exceljs.js";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { downloadFile } from "../../helpers/downloadFile";
 import { isVisible } from "../isVisible";

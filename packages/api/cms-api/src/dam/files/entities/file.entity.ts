@@ -14,10 +14,12 @@ import {
     Property,
 } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
-import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { GraphQLBigInt } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { EntityInfo } from "../../../entity-info/entity-info.decorator";
+import { RequiredPermission } from "../../../user-permissions/decorators/required-permission.decorator";
 import { CreateWarnings } from "../../../warnings/decorators/create-warnings.decorator";
 import { DamScopeInterface } from "../../types";
 import { DamMediaAlternative } from "../dam-media-alternatives/entities/dam-media-alternative.entity";
@@ -72,7 +74,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Property({ columnType: "text" })
         name: string;
 
-        @Field(() => Int)
+        @Field(() => GraphQLBigInt)
         @Property({ type: new BigIntType("number") })
         size: number;
 
@@ -162,7 +164,10 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
     }
 
     if (Scope) {
-        @EntityInfo<DamFile>(`SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`)
+        @EntityInfo<DamFile>({
+            sql: `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`,
+        })
+        @RequiredPermission("dam")
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {
@@ -172,7 +177,10 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         }
         return DamFile;
     } else {
-        @EntityInfo<DamFile>(`SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`)
+        @EntityInfo<DamFile>({
+            sql: `SELECT "name", "secondaryInformation", "visible", "id", 'DamFile' AS "entityName" FROM "DamFileEntityInfo"`,
+        })
+        @RequiredPermission("dam", { skipScopeCheck: true })
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {}

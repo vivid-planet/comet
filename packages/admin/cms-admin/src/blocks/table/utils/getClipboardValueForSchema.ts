@@ -1,7 +1,7 @@
 import { readClipboardText } from "@comet/admin";
-import { type z } from "zod";
+import type { z } from "zod";
 
-export const getClipboardValueForSchema = async <T>(schema: z.ZodSchema<T>): Promise<T | null> => {
+export const getClipboardValueForSchema = async <T>(schema: z.ZodType<T>): Promise<T | null> => {
     const clipboardData = await readClipboardText();
 
     if (!clipboardData) {

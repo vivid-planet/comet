@@ -306,10 +306,12 @@ Each component requires two props:
             $offset: Int!
             $limit: Int!
             $forceRefresh: Boolean = false
+            $filter: DependentFilter
+            $sort: [DependencySort!]
         ) {
             item: damFile(id: $id) {
                 id
-                dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+                dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
                     nodes {
                         rootGraphqlObjectType
                         rootId
@@ -317,6 +319,7 @@ Each component requires two props:
                         jsonPath
                         name
                         secondaryInformation
+                        visible
                     }
                     totalCount
                 }

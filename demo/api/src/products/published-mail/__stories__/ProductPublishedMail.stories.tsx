@@ -1,4 +1,4 @@
-import { type Meta, type StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Mail } from "../Mail";
 
@@ -7,6 +7,7 @@ type Story = StoryObj<typeof Mail>;
 const config: Meta = {
     title: "products/ProductPublishedMail",
     component: Mail,
+    parameters: { mailRoot: false },
     argTypes: {
         countProductPublished: {
             control: "select",

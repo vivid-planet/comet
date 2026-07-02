@@ -1,10 +1,10 @@
 import { type DocumentNode, type OperationVariables, useApolloClient } from "@apollo/client";
-import { type GridValidRowModel } from "@mui/x-data-grid";
+import type { GridValidRowModel } from "@mui/x-data-grid";
 import { useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { downloadFile } from "../../helpers/downloadFile";
-import { type GridColDef } from "../GridColDef";
+import type { GridColDef } from "../GridColDef";
 import { type ExcelGenerationOptions, generateExcelFile } from "./generateExcelFile";
 
 export interface ExportApi {

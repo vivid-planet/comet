@@ -103,13 +103,32 @@ export class UserPermissionsService {
         return this.userService;
     }
 
-    async getUser(id: string): Promise<User> {
-        if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
-        return this.userService.getUser(id);
+    async findUserForLoginOrThrow(id: string): Promise<User> {
+        if (this.userService?.findUserForLoginOrThrow) {
+            return this.userService.findUserForLoginOrThrow(id);
+        }
+        if (this.userService?.getUserForLogin) {
+            return this.userService.getUserForLogin(id);
+        }
+        throw new Error(
+            "For this functionality you need to define `findUserForLoginOrThrow` (or the deprecated `getUserForLogin`) in the userService.",
+        );
+    }
+
+    async findUserOrThrow(id: string): Promise<User> {
+        if (this.userService?.findUserOrThrow) {
+            return this.userService.findUserOrThrow(id);
+        }
+        if (this.userService?.getUser) {
+            return this.userService.getUser(id);
+        }
+        throw new Error("For this functionality you need to define `findUserOrThrow` (or the deprecated `getUser`) in the userService.");
     }
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
-        if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+        if (!this.userService) {
+            throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+        }
         return this.userService.findUsers(args);
     }
 
@@ -134,15 +153,21 @@ export class UserPermissionsService {
             const availablePermissions = await this.getAvailablePermissions();
             const permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
             if (permissionsByRule === UserPermissions.allPermissions) {
-                if (availablePermissions.some((p) => permissions.includes(p))) return true;
+                if (availablePermissions.some((p) => permissions.includes(p))) {
+                    return true;
+                }
             } else {
-                if (permissionsByRule.some((p) => permissions.includes(p.permission))) return true;
+                if (permissionsByRule.some((p) => permissions.includes(p.permission))) {
+                    return true;
+                }
             }
         }
         if (this.manualPermissions === undefined) {
             throw new Error('You need to call "warmupHasPermissionCache" before using "hasPermission" for the first time.');
         }
-        if (this.manualPermissions.some((p) => p.userId === user.id && permissions.includes(p.permission))) return true;
+        if (this.manualPermissions.some((p) => p.userId === user.id && permissions.includes(p.permission))) {
+            return true;
+        }
 
         return false;
     }
@@ -208,7 +233,7 @@ export class UserPermissionsService {
             const permissions = await this.getPermissions(authenticatedUser);
             if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
-                    const user = await this.getUser(request?.cookies["comet-impersonate-user-id"]);
+                    const user = await this.findUserOrThrow(request.cookies["comet-impersonate-user-id"]);
                     if (
                         await AbstractAccessControlService.isEqualOrMorePermissions(
                             await this.getPermissionsAndContentScopes(authenticatedUser),

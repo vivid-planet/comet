@@ -64,7 +64,9 @@ export class AccessLogInterceptor implements NestInterceptor {
             }
 
             requestData.push(`operationType: ${gqlInfo.parentType}`);
-            if (gqlInfo.operation.name?.value) requestData.push(`operationName: ${gqlInfo.operation.name.value}`);
+            if (gqlInfo.operation.name?.value) {
+                requestData.push(`operationName: ${gqlInfo.operation.name.value}`);
+            }
             requestData.push(`resolver function: ${gqlInfo.fieldName}`);
             requestData.push(`args: ${JSON.stringify(gqlArgs)}`);
         } else {
@@ -110,7 +112,9 @@ export class AccessLogInterceptor implements NestInterceptor {
                     ? this.config.userToLog
                     : (user: User, impersonatedUser?: User) => {
                           let log = `user: ${user.id}`;
-                          if (impersonatedUser) log += ` (impersonating: ${impersonatedUser.id})`;
+                          if (impersonatedUser) {
+                              log += ` (impersonating: ${impersonatedUser.id})`;
+                          }
                           return log;
                       };
             requestData.push(userToLog(user, impersonatedUser));

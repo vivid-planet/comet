@@ -1,4 +1,4 @@
-import { type ComponentNameToClassKey, type ComponentsPropsList, type Interpolation, type Theme } from "@mui/material/styles";
+import type { ComponentNameToClassKey, ComponentsPropsList, Interpolation, Theme } from "@mui/material/styles";
 import { deepmerge } from "@mui/utils";
 
 type OwnerState<PropsName extends keyof ComponentsPropsList> = PropsName extends keyof ComponentsPropsList

@@ -7,19 +7,19 @@ import { FormattedMessage } from "react-intl";
 
 import { UnknownError } from "../../common/errors/errorMessages";
 import { useCometConfig } from "../../config/CometConfigContext";
-import { type GQLDamFile, type GQLDamFolder } from "../../graphql.generated";
+import type { GQLDamFile, GQLDamFolder } from "../../graphql.generated";
 import { useDamBasePath } from "../config/damConfig";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { type GQLDeleteDamFolderMutation, type GQLDeleteDamFolderMutationVariables } from "./DamContextMenu.generated";
+import type { GQLDeleteDamFolderMutation, GQLDeleteDamFolderMutationVariables } from "./DamContextMenu.generated";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamContextMenu.gql";
-import {
-    type GQLArchiveFileMutation,
-    type GQLArchiveFileMutationVariables,
-    type GQLDeleteDamFileMutation,
-    type GQLDeleteDamFileMutationVariables,
-    type GQLRestoreFileMutation,
-    type GQLRestoreFileMutationVariables,
+import type {
+    GQLArchiveFileMutation,
+    GQLArchiveFileMutationVariables,
+    GQLDeleteDamFileMutation,
+    GQLDeleteDamFileMutationVariables,
+    GQLRestoreFileMutation,
+    GQLRestoreFileMutationVariables,
 } from "./DamContextMenu.gql.generated";
 
 interface FolderInnerMenuProps {

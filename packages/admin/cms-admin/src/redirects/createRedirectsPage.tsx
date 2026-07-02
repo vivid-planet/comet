@@ -1,12 +1,12 @@
 import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { Document, LinkExternal } from "@comet/admin-icons";
-import { type ComponentType, type JSX } from "react";
+import type { ComponentType, JSX } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";
 import { createOneOfBlock } from "../blocks/factories/createOneOfBlock";
 import { InternalLinkBlock } from "../blocks/InternalLinkBlock";
-import { type BlockInterface } from "../blocks/types";
+import type { BlockInterface } from "../blocks/types";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { RedirectForm } from "./RedirectForm";

@@ -5,9 +5,9 @@ import { v4 as uuid } from "uuid";
 
 import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
 import { type ClipboardContent, useBlockClipboard } from "../../clipboard/useBlockClipboard";
-import { type BlockAdminComponentProps, type BlockInterface, type BlockState } from "../../types";
+import type { BlockAdminComponentProps, BlockInterface, BlockState } from "../../types";
 import { resolveNewState } from "../../utils";
-import { type ListBlockAdditionalItemField, type ListBlockState } from "../createListBlock";
+import type { ListBlockAdditionalItemField, ListBlockState } from "../createListBlock";
 
 interface CreateListBlockUseAdminComponentOptions<T extends BlockInterface> {
     block: T;

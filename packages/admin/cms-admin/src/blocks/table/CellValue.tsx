@@ -1,7 +1,7 @@
 import { RteReadOnly } from "@comet/admin-rte";
 import { alpha, styled } from "@mui/material/styles";
 
-import { type RichTextBlockState } from "../createRichTextBlock";
+import type { RichTextBlockState } from "../createRichTextBlock";
 
 type Props = {
     highlighted: boolean;
@@ -64,4 +64,5 @@ const RteContentWrapper = styled("div")(({ theme }) => ({
 const RteContent = styled("div")({
     marginTop: "auto",
     marginBottom: "auto",
+    pointerEvents: "none",
 });

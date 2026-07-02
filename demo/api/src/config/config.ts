@@ -32,7 +32,6 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         apiUrl: envVars.API_URL,
         apiPort: envVars.API_PORT,
         adminUrl: envVars.ADMIN_URL,
-        corsAllowedOrigin: new RegExp(envVars.CORS_ALLOWED_ORIGIN),
         defaultLocale: "en", // fallback locale
         auth: {
             systemUserPassword: envVars.BASIC_AUTH_SYSTEM_USER_PASSWORD,
@@ -115,7 +114,6 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         siteConfigs: envVars.PRIVATE_SITE_CONFIGS,
         brevo: {
             apiKey: envVars.BREVO_API_KEY,
-            redirectUrlForImport: envVars.BREVO_REDIRECT_URL_FOR_IMPORT,
             campaign: {
                 basicAuth: {
                     username: envVars.BREVO_CAMPAIGN_BASIC_AUTH_USERNAME,

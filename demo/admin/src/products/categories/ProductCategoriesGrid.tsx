@@ -16,14 +16,14 @@ import { DataGridPro, type GridRowOrderChangeParams, type GridSlotsComponent } f
 import { useMemo } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
-import {
-    type GQLDeleteProductCategoryMutation,
-    type GQLDeleteProductCategoryMutationVariables,
-    type GQLProductCategoriesGridHandmadeFragment,
-    type GQLProductCategoriesGridQuery,
-    type GQLProductCategoriesGridQueryVariables,
-    type GQLUpdateProductCategoryPositionMutation,
-    type GQLUpdateProductCategoryPositionMutationVariables,
+import type {
+    GQLDeleteProductCategoryMutation,
+    GQLDeleteProductCategoryMutationVariables,
+    GQLProductCategoriesGridHandmadeFragment,
+    GQLProductCategoriesGridQuery,
+    GQLProductCategoriesGridQueryVariables,
+    GQLUpdateProductCategoryPositionMutation,
+    GQLUpdateProductCategoryPositionMutationVariables,
 } from "./ProductCategoriesGrid.generated";
 
 const productCategoriesFragment = gql`
@@ -156,7 +156,9 @@ export function ProductCategoriesGrid() {
         },
     });
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows =
         data?.productCategories.nodes.map((node) => ({
             ...node,
@@ -177,6 +179,7 @@ export function ProductCategoriesGrid() {
             rowReordering
             onRowOrderChange={handleRowOrderChange}
             hideFooterPagination
+            showToolbar
         />
     );
 }

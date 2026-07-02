@@ -1,8 +1,9 @@
 "use client";
 import { BlocksBlock, type PropsWithData, type SupportedBlocks } from "@comet/site-nextjs";
-import { type PageContentBlockData } from "@src/blocks.generated";
+import type { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
+import { ContactFormBlock } from "@src/common/blocks/ContactFormBlock";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { PageContentMediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
@@ -14,6 +15,7 @@ import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
 import { PageContentStandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { TableBlock } from "@src/common/blocks/TableBlock";
 import { PageContentTextImageBlock } from "@src/common/blocks/TextImageBlock";
+import { PageContentTipTapRichTextBlock } from "@src/common/blocks/TipTapRichTextBlock";
 import { BillboardTeaserBlock } from "@src/documents/pages/blocks/BillboardTeaserBlock";
 import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { ContentGroupBlock } from "@src/documents/pages/blocks/ContentGroupBlock";
@@ -48,8 +50,10 @@ const supportedBlocks: SupportedBlocks = {
     textImage: (props) => <PageContentTextImageBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
     table: (props) => <TableBlock data={props} />,
+    tipTapRichText: (props) => <PageContentTipTapRichTextBlock data={props} />,
     productList: (props) => <ProductListBlock data={props} />,
     pageTreeIndex: (props) => <PageTreeIndexBlock data={props} />,
+    contactForm: (props) => <ContactFormBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

@@ -29,7 +29,9 @@ describe("TimePickerField", () => {
             const user = userEvent.setup();
 
             const validateIsBusinessHours = vi.fn(async (value: string | undefined) => {
-                if (!value) return undefined;
+                if (!value) {
+                    return undefined;
+                }
                 const [hours] = value.split(":").map(Number);
                 return hours >= 9 ? undefined : "Please select a time during business hours";
             });

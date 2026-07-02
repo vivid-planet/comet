@@ -9,7 +9,7 @@ if (process.env.TRACING == "production") {
 import { CdnGuard, ExceptionFilter, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { type NestExpressApplication } from "@nestjs/platform-express";
+import type { NestExpressApplication } from "@nestjs/platform-express";
 import * as Sentry from "@sentry/node";
 import { AppModule } from "@src/app.module";
 import { useContainer } from "class-validator";
@@ -33,12 +33,6 @@ async function bootstrap(): Promise<void> {
     useContainer(app.select(appModule), { fallbackOnErrors: true });
 
     app.setGlobalPrefix("api");
-    app.enableCors({
-        origin: config.corsAllowedOrigin,
-        methods: ["GET", "POST"],
-        credentials: false,
-        maxAge: 600,
-    });
 
     app.useGlobalFilters(new ExceptionFilter(config.debug));
     app.useGlobalPipes(

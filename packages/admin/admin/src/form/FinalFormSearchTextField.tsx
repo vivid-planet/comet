@@ -1,7 +1,7 @@
 import { Search } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 

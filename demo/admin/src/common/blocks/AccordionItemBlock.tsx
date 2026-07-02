@@ -8,7 +8,7 @@ import {
     createCompositeBlockSelectField,
     createCompositeBlockTextField,
 } from "@comet/cms-admin";
-import { type AccordionItemBlockData } from "@src/blocks.generated";
+import type { AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";

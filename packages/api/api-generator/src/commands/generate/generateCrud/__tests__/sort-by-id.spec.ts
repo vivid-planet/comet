@@ -1,7 +1,8 @@
 import { CrudField } from "@comet/cms-api";
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { formatGeneratedFiles, testPermission } from "../../utils/test-helper";
 import { buildSortProps } from "../build-options";
@@ -79,7 +80,9 @@ describe("sort by id", () => {
         const formattedOut = await formatGeneratedFiles(out);
 
         const file = formattedOut.find((file) => file.name === "dto/test-entity3s.args.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
 
         expect(file.content).toMatchSnapshot();
         await orm.close();

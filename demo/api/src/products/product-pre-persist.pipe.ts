@@ -1,12 +1,12 @@
-import { type ImporterPipe } from "@comet/cms-api";
+import type { ImporterPipe } from "@comet/cms-api";
 import { type Connection, type EntityManager, type IDatabaseDriver, Reference } from "@mikro-orm/core";
-import { type LoggerService } from "@nestjs/common";
+import type { LoggerService } from "@nestjs/common";
 import slugify from "slugify";
 import { Transform, type TransformCallback } from "stream";
 import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./entities/product-category.entity";
-import { type ProductImporterInput } from "./product-importer.input";
+import type { ProductImporterInput } from "./product-importer.input";
 
 type RawProductData = Omit<ProductImporterInput, "category"> & {
     category: string;
@@ -20,7 +20,7 @@ export class ProductPrePersistPipe implements ImporterPipe {
     }
 }
 
-export class ProductPrePersist extends Transform {
+class ProductPrePersist extends Transform {
     private persistedEntitiesAmount: number;
 
     constructor(

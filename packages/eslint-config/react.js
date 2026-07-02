@@ -2,6 +2,7 @@ import coreConfig, { restrictedImportPatterns } from "./core.js";
 import reactIntlFormatPlugin from "@calm/eslint-plugin-react-intl";
 import globals from "globals";
 import formatJs from "eslint-plugin-formatjs";
+import graphqlPlugin from "@graphql-eslint/eslint-plugin";
 import react from "eslint-plugin-react";
 import cometPlugin from "@comet/eslint-plugin";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -46,6 +47,21 @@ export const restrictedImportPaths = [
         importNames: ["GridColDef"],
         message: "Please use GridColDef from @comet/admin instead",
     },
+    {
+        name: "@mui/x-data-grid",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-pro",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
+    {
+        name: "@mui/x-data-grid-premium",
+        importNames: ["GridToolbarQuickFilter"],
+        message: "Please use GridToolbarQuickFilter from @comet/admin instead",
+    },
 ];
 
 /** @type {import('eslint')} */
@@ -61,7 +77,7 @@ const config = [
             formatjs: formatJs,
         },
         rules: {
-            "formatjs/enforce-default-message": "error",
+            "formatjs/enforce-default-message": ["error", "literal"],
             "formatjs/enforce-placeholders": "error",
         },
     },
@@ -69,6 +85,24 @@ const config = [
         files: ["**/*.ts", "**/*.tsx"],
         rules: {
             "@calm/react-intl/missing-formatted-message": ["error", { enforceLabels: true }],
+        },
+    },
+    {
+        files: ["**/*.ts", "**/*.tsx"],
+        ignores: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+        rules: {
+            "react/jsx-no-literals": [
+                "error",
+                {
+                    allowedStrings: ["…", "€", "$", "?", "–", "—", "/", "(", ")", "%"],
+                },
+            ],
+            "@typescript-eslint/consistent-type-exports": [
+                "error",
+                {
+                    fixMixedExportsWithInlineTypeSpecifier: true,
+                },
+            ],
         },
     },
     {
@@ -122,6 +156,35 @@ const config = [
         },
         rules: {
             "@comet/no-private-sibling-import": "error",
+        },
+    },
+    {
+        files: ["**/*.{ts,tsx,js,jsx}"],
+        processor: graphqlPlugin.processor,
+    },
+    {
+        files: ["**/*.graphql"],
+        languageOptions: {
+            parser: graphqlPlugin.parser,
+        },
+        plugins: {
+            "@graphql-eslint": graphqlPlugin,
+        },
+        rules: {
+            // Type-info rules from typescript-eslint cannot run on virtual GraphQL blocks extracted by the processor.
+            "@typescript-eslint/consistent-type-imports": "off",
+            "@typescript-eslint/consistent-type-exports": "off",
+            "@graphql-eslint/naming-convention": [
+                "error",
+                {
+                    OperationDefinition: {
+                        forbiddenSuffixes: ["Query", "Mutation", "Subscription"],
+                    },
+                    FragmentDefinition: {
+                        forbiddenSuffixes: ["Fragment"],
+                    },
+                },
+            ],
         },
     },
 ];
