@@ -13,7 +13,12 @@ interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData>, O
     legacyBehavior?: boolean;
 }
 
-export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, children, legacyBehavior, ...anchorProps }: ExternalLinkBlockProps) {
+export function ExternalLinkBlock({
+    data: { targetUrl, openInNewWindow, noFollow },
+    children,
+    legacyBehavior,
+    ...anchorProps
+}: ExternalLinkBlockProps) {
     const preview = usePreview();
 
     if (preview.previewType === "SitePreview" || preview.previewType === "BlockPreview") {
@@ -23,7 +28,7 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
                 // send link to admin to handle external link
                 sendSitePreviewIFrameMessage({
                     cometType: SitePreviewIFrameMessageType.OpenLink,
-                    data: { link: { openInNewWindow, targetUrl } },
+                    data: { link: { openInNewWindow, targetUrl, noFollow } },
                 });
             }
         };
@@ -48,13 +53,14 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
 
         const href = targetUrl;
         const target = openInNewWindow ? "_blank" : anchorProps.target;
+        const rel = [anchorProps.rel, noFollow ? "nofollow" : undefined].filter(Boolean).join(" ") || undefined;
 
         if (legacyBehavior) {
-            return cloneElement(children, { ...anchorProps, href, target });
+            return cloneElement(children, { ...anchorProps, href, target, rel });
         }
 
         return (
-            <a {...anchorProps} href={href} target={target}>
+            <a {...anchorProps} href={href} target={target} rel={rel}>
                 {children}
             </a>
         );
