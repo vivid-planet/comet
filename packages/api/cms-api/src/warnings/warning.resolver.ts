@@ -46,6 +46,19 @@ function remapWarningQueryFields(query: any): any {
     return query;
 }
 
+// Whether a query (where clause or order-by) references the joined EntityInfo view. Used to only add
+// the (potentially expensive) join when filtering, searching or sorting by name / secondary information
+// actually requires it. Filtering / sorting by type reads from `sourceInfo` and needs no join.
+function referencesEntityInfo(value: unknown): boolean {
+    if (Array.isArray(value)) {
+        return value.some(referencesEntityInfo);
+    }
+    if (value !== null && typeof value === "object") {
+        return Object.entries(value).some(([key, nestedValue]) => key.startsWith("entityInfo.") || referencesEntityInfo(nestedValue));
+    }
+    return false;
+}
+
 @Resolver(() => Warning)
 @RequiredPermission(["warnings"], { skipScopeCheck: true })
 export class WarningResolver {
@@ -138,33 +151,34 @@ export class WarningResolver {
             }
         }
 
-        // Join the EntityInfo view so warnings can be filtered, searched and sorted by the related
-        // entity's name and secondary information. The view is keyed by entity name and id, both of
-        // which are stored in the warning's `sourceInfo` JSONB column.
-        const entityInfoQueryBuilder = this.entityManager.createQueryBuilder(EntityInfoObject, "entityInfo");
-        const queryBuilder = this.entityManager
-            .createQueryBuilder(Warning, "warning")
-            .select("warning.*")
-            .leftJoin(entityInfoQueryBuilder, "entityInfo", {
+        const orderBy = sort?.map((sortItem) => {
+            if (sortItem.field === "type") {
+                return { sourceInfo: { rootEntityName: sortItem.direction } };
+            }
+            if (sortItem.field === "name") {
+                return { "entityInfo.name": sortItem.direction };
+            }
+            return { [sortItem.field]: sortItem.direction };
+        });
+
+        const queryBuilder = this.entityManager.createQueryBuilder(Warning, "warning").select("warning.*");
+
+        // Only join the EntityInfo view when the query actually filters, searches or sorts by the
+        // related entity's name / secondary information. The view is a union over all entity tables,
+        // so joining it unconditionally would slow down the common case (and count query) needlessly.
+        // The view is keyed by entity name and id, both stored in the warning's `sourceInfo` column.
+        if (referencesEntityInfo(where) || referencesEntityInfo(orderBy)) {
+            const entityInfoQueryBuilder = this.entityManager.createQueryBuilder(EntityInfoObject, "entityInfo");
+            queryBuilder.leftJoin(entityInfoQueryBuilder, "entityInfo", {
                 "entityInfo.entityName": raw(`"warning"."sourceInfo"->>'rootEntityName'`),
                 "entityInfo.id": raw(`"warning"."sourceInfo"->>'targetId'`),
-            })
-            .where(where)
-            .limit(limit)
-            .offset(offset);
+            });
+        }
 
-        if (sort) {
-            queryBuilder.orderBy(
-                sort.map((sortItem) => {
-                    if (sortItem.field === "type") {
-                        return { sourceInfo: { rootEntityName: sortItem.direction } };
-                    }
-                    if (sortItem.field === "name") {
-                        return { "entityInfo.name": sortItem.direction };
-                    }
-                    return { [sortItem.field]: sortItem.direction };
-                }),
-            );
+        queryBuilder.where(where).limit(limit).offset(offset);
+
+        if (orderBy) {
+            queryBuilder.orderBy(orderBy);
         }
 
         const [entities, totalCount] = await queryBuilder.getResultAndCount();
