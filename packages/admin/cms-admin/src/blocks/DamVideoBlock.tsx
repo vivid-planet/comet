@@ -6,6 +6,8 @@ import { deepClone } from "@mui/x-data-grid/internals";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import type { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
+import { useDamVideoFileSizeWarning } from "../dam/config/damConfig";
+import { DamVideoFileSizeWarning } from "../dam/helpers/DamVideoFileSizeWarning";
 import { FileField } from "../form/file/FileField";
 import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
@@ -116,6 +118,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     AdminComponent: ({ state, updateState }) => {
         const isInPaper = useBlockAdminComponentPaper();
+        const { isVideoTooLarge } = useDamVideoFileSizeWarning();
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
@@ -127,6 +130,11 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                         allowedMimetypes={["video/mp4", "video/webm"]}
                         preview={<Video fontSize="large" color="primary" />}
                     />
+                    {state.damFile && isVideoTooLarge(state.damFile) && (
+                        <Box pt={2}>
+                            <DamVideoFileSizeWarning />
+                        </Box>
+                    )}
                     <VideoOptionsFields />
                     <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
                         <PixelImageBlock.AdminComponent

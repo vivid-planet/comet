@@ -6,8 +6,10 @@ import { styled } from "@mui/material/styles";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { useDamVideoFileSizeWarning } from "../config/damConfig";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
+import { DamVideoFileSizeWarning } from "../helpers/DamVideoFileSizeWarning";
 import type { DamFileDetails } from "./EditFile";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
 import type {
@@ -42,6 +44,10 @@ const FilePreviewWrapper = styled("div")`
     width: 100%;
 `;
 
+const WarningContainer = styled("div")`
+    margin-bottom: ${({ theme }) => theme.spacing(4)};
+`;
+
 const ZipFileIcon = styled(ZipFile)`
     color: ${({ theme }) => theme.palette.primary.main};
     width: 54px;
@@ -55,6 +61,7 @@ interface FilePreviewProps {
 export const FilePreview = ({ file }: FilePreviewProps) => {
     const client = useApolloClient();
     const stackApi = useStackApi();
+    const { isVideoTooLarge } = useDamVideoFileSizeWarning();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
     let preview: ReactNode;
@@ -75,6 +82,11 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
 
     return (
         <FilePreviewWrapper>
+            {isVideoTooLarge(file) && (
+                <WarningContainer>
+                    <DamVideoFileSizeWarning />
+                </WarningContainer>
+            )}
             <ActionsContainer>
                 <Button
                     variant="textLight"

@@ -6,7 +6,7 @@ import { NetworkError, UnknownError } from "../../../common/errors/errorMessages
 import { useCometConfig } from "../../../config/CometConfigContext";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
 import type { GQLLicenseInput } from "../../../graphql.generated";
-import { useDamBasePath, useDamConfig } from "../../config/damConfig";
+import { useDamBasePath, useDamConfig, useDamVideoFileSizeWarning } from "../../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
@@ -27,6 +27,7 @@ import {
     SvgContainsJavaScriptError,
     UnsupportedTypeError,
 } from "./fileUploadErrorMessages";
+import { type FileUploadWarning, FileUploadWarningDialog } from "./FileUploadWarningDialog";
 import { ProgressDialog } from "./ProgressDialog";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useDamFileUpload.gql";
 import type {
@@ -138,6 +139,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
     const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
     const scope = useDamScope();
 
+    const { isVideoTooLarge } = useDamVideoFileSizeWarning();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const accept: Accept = useMemo(() => {
         return convertMimetypesToDropzoneAccept(options.acceptedMimetypes ?? allAcceptedMimeTypes);
@@ -148,6 +150,8 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
     const [progressDialogOpen, setProgressDialogOpen] = useState<boolean>(false);
     const [validationErrors, setValidationErrors] = useState<FileUploadValidationError[] | undefined>();
     const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+    const [validationWarnings, setValidationWarnings] = useState<FileUploadWarning[] | undefined>();
+    const [warningDialogOpen, setWarningDialogOpen] = useState<boolean>(false);
     const [totalSizes, setTotalSizes] = useState<{ [key: string]: number }>({});
     const [uploadedSizes, setUploadedSizes] = useState<{ [key: string]: number }>({});
 
@@ -372,6 +376,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
     ): Promise<{ hasError: boolean; rejectedFiles: RejectedFile[]; uploadedItems: NewlyUploadedItem[] }> => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
+        setValidationWarnings(undefined);
 
         const uploadedFolders: Array<NewlyUploadedItem & { type: "folder" }> = [];
         const uploadedFiles: Array<NewlyUploadedItem & { type: "file" }> = [];
@@ -471,9 +476,19 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
             clearDamItemCache(client.cache);
         }
 
+        const tooLargeVideoWarnings: FileUploadWarning[] = [];
+        for (const { file } of uploadedFiles) {
+            if (file !== undefined && isVideoTooLarge({ mimetype: file.type, size: file.size })) {
+                tooLargeVideoWarnings.push({ file: { name: file.name, path: file.path } });
+            }
+        }
+
         setProgressDialogOpen(false);
         if (errorOccurred) {
             setErrorDialogOpen(true);
+        } else if (tooLargeVideoWarnings.length > 0) {
+            setValidationWarnings(tooLargeVideoWarnings);
+            setWarningDialogOpen(true);
         }
         setTotalSizes({});
         setUploadedSizes({});
@@ -495,6 +510,14 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     onClose={() => {
                         setValidationErrors(undefined);
                         setErrorDialogOpen(false);
+                    }}
+                />
+                <FileUploadWarningDialog
+                    open={warningDialogOpen}
+                    warnings={validationWarnings}
+                    onClose={() => {
+                        setValidationWarnings(undefined);
+                        setWarningDialogOpen(false);
                     }}
                 />
                 <ProgressDialog open={progressDialogOpen} totalSize={totalSize} loadedSize={uploadedSize} />
