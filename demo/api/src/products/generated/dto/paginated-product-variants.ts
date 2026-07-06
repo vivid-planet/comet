@@ -4,5 +4,4 @@ import { ObjectType } from "@nestjs/graphql";
 import { PaginatedResponseFactory } from "@comet/cms-api";
 import { ProductVariant } from "../../entities/product-variant.entity";
 @ObjectType()
-export class PaginatedProductVariants extends PaginatedResponseFactory.create(ProductVariant) {
-}
+export class PaginatedProductVariants extends PaginatedResponseFactory.create(ProductVariant) {}

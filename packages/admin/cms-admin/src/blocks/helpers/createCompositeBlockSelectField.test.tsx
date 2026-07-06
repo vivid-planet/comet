@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { createCompositeBlockSelectField } from "./createCompositeBlockSelectField";
 
 const optionsString = [

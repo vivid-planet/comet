@@ -1,5 +1,201 @@
 # @comet/site-nextjs
 
+## 9.0.0-beta.6
+
+### Patch Changes
+
+- Updated dependencies [4c1aeb2]
+- Updated dependencies [d870d05]
+    - @comet/site-react@9.0.0-beta.6
+
+## 9.0.0-beta.5
+
+### Patch Changes
+
+- Updated dependencies [cfa70a2]
+- Updated dependencies [4f018d5]
+    - @comet/site-react@9.0.0-beta.5
+
+## 9.0.0-beta.4
+
+### Major Changes
+
+- 8b3932d: Move server-only exports to `/server` subpath
+
+    Server-only exports have been moved to a separate `/server` entry point to prevent server-only code from being pulled into client bundles. While tree-shaking previously removed unused server code, this is an optional optimization — Vite's dev server, for example, does not tree-shake, causing errors when importing these packages in non-server environments (e.g., Storybook).
+
+    **`@comet/site-nextjs`**: `sitePreviewRoute`, `legacyPagesRouterSitePreviewApiHandler`, `previewParams`, `legacyPagesRouterPreviewParams`, and `persistedQueryRoute` must now be imported from `@comet/site-nextjs/server`:
+
+    ```diff
+    - import { sitePreviewRoute } from "@comet/site-nextjs";
+    + import { sitePreviewRoute } from "@comet/site-nextjs/server";
+    ```
+
+    ```diff
+    - import { previewParams } from "@comet/site-nextjs";
+    + import { previewParams } from "@comet/site-nextjs/server";
+    ```
+
+    ```diff
+    - import { persistedQueryRoute } from "@comet/site-nextjs";
+    + import { persistedQueryRoute } from "@comet/site-nextjs/server";
+    ```
+
+    **`@comet/site-react`**: `persistedQueryRoute` must now be imported from `@comet/site-react/server`:
+
+    ```diff
+    - import { persistedQueryRoute } from "@comet/site-react";
+    + import { persistedQueryRoute } from "@comet/site-react/server";
+    ```
+
+### Minor Changes
+
+- ab5e547: Add `JsonLd` component for typed schema.org structured data
+
+    Renders any [`schema-dts`](https://www.npmjs.com/package/schema-dts) entity inside a `<script type="application/ld+json">` tag. The payload is escaped so a `</script>` sequence in user content cannot break out of the script tag.
+
+    ```tsx
+    import { JsonLd } from "@comet/site-react";
+    import type { Organization } from "schema-dts";
+
+    <JsonLd<Organization>
+        data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Acme",
+            url: "https://acme.example",
+            logo: "https://acme.example/logo.png",
+        }}
+    />;
+    ```
+
+    Also re-exported from `@comet/site-nextjs`.
+
+### Patch Changes
+
+- b7daf28: Fix `PixelImageBlock` and `Image` failing to render in Next.js Pages Router with `Error: Element type is invalid ... but got: object`
+
+    `@comet/site-nextjs` is published as ESM (`"type": "module"`) and the components used a default import of `next/image` (CJS). Under Next.js Pages Router the server bundler keeps node_modules ESM packages as Node-style externals, which applies Node-style ESM↔CJS interop: `import NextImage from "next/image"` yields the entire module-namespace object (`{ default, getImageProps, __esModule: true }`) instead of the component. The default import is now unwrapped at module evaluation time so the components work under both bundler-style and Node-style interop.
+
+- Updated dependencies [ab5e547]
+- Updated dependencies [8b3932d]
+    - @comet/site-react@9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+### Patch Changes
+
+- Updated dependencies [e125c84]
+    - @comet/site-react@9.0.0-beta.3
+
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- @comet/site-react@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- 865fcfd: Remove legacy CJS fields (`module`, `types`) from package.json as these packages are ESM-only
+- Updated dependencies [865fcfd]
+    - @comet/site-react@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- 740dba8: Bump Next.js peer dependency to v16
+
+    Follow the official migration guides ([v15](https://nextjs.org/docs/app/guides/upgrading/version-15), [v16](https://nextjs.org/docs/app/guides/upgrading/version-16)) to upgrade.
+
+- 740dba8: Bump React peer dependency to v19
+
+    Follow the official [migration guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) to upgrade.
+
+### Patch Changes
+
+- Updated dependencies [740dba8]
+    - @comet/site-react@9.0.0-beta.0
+
+## 8.20.0
+
+### Patch Changes
+
+- @comet/site-react@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- @comet/site-react@8.19.0
+
+## 8.18.0
+
+### Patch Changes
+
+- Updated dependencies [2a9e770]
+    - @comet/site-react@8.18.0
+
+## 8.17.1
+
+### Patch Changes
+
+- 91e9a8f: Raise Next.js peer dependency minimum to 14.2.35 to fix CVE-2026-23864 (request deserialization DoS)
+    - @comet/site-react@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- Updated dependencies [35c338e]
+    - @comet/site-react@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- @comet/site-react@8.16.0
+
+## 8.15.0
+
+### Patch Changes
+
+- @comet/site-react@8.15.0
+
+## 8.14.0
+
+### Patch Changes
+
+- @comet/site-react@8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- Updated dependencies [9f5c4e6]
+    - @comet/site-react@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- @comet/site-react@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [02d2ba8]
+    - @comet/site-react@8.11.1
+
+## 8.11.0
+
+### Patch Changes
+
+- @comet/site-react@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

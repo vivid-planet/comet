@@ -1,3 +1,4 @@
+import { defineConfig, globalIgnores } from "eslint/config";
 import eslint from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -9,11 +10,8 @@ import { configs as eslintPluginJsonc } from "eslint-plugin-jsonc";
 import importPlugin from "eslint-plugin-import";
 import packageJson from "eslint-plugin-package-json";
 
-/** @type {import('eslint')} */
-const config = [
-    {
-        ignores: ["lib/**/*", "bin/**/*"],
-    },
+export default defineConfig([
+    globalIgnores(["lib/**/*", "bin/**/*"]),
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
     prettierConfig,
@@ -50,7 +48,12 @@ const config = [
             "jsonc/sort-keys": "error",
         },
     },
-    packageJson.configs.recommended,
+    {
+        ...packageJson.configs.recommended,
+        rules: {
+            "package-json/require-attribution": "off",
+        },
+    },
     {
         ignores: ["*.json"],
         languageOptions: {
@@ -68,7 +71,7 @@ const config = [
         // Rules
         rules: {
             "prefer-template": "error",
-            "no-console": ["error", { allow: ["warn", "error"] }],
+            "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
             "no-return-await": "error",
             "@typescript-eslint/consistent-type-imports": [
                 "error",
@@ -80,6 +83,4 @@ const config = [
             ],
         },
     },
-];
-
-export default config;
+]);

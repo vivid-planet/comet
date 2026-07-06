@@ -19,10 +19,12 @@ export { default as filterEditorUtilsRemoveInlineStyles } from "./core/filterEdi
 export { type IMakeRteApiProps, type IRteApiProps, default as makeRteApi, type OnDebouncedContentChangeFn } from "./core/makeRteApi";
 export { type FilterEditorStateBeforeUpdateFn, type IOptions as IRteOptions, type IRteRef, Rte, type RteClassKey, type RteProps } from "./core/Rte";
 export { type IOptions as IRteReadOnlyOptions, type IProps as IRteReadOnlyProps, default as RteReadOnly } from "./core/RteReadOnly";
+export { htmlToState } from "./core/translation/htmlToState";
 export { stateToHtml } from "./core/translation/stateToHtml";
 export { default as findEntityInCurrentSelection } from "./core/utils/findEntityInCurrentSelection";
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
 export { pasteAndFilterText } from "./core/utils/pasteAndFilterText";
 export { default as selectionIsInOneBlock } from "./core/utils/selectionIsInOneBlock";
 export { default as createFinalFormRte } from "./field/createFinalFormRte";
+export { createRteField, type RteFieldProps } from "./field/createRteField";
 export { requiredValidator } from "./utils/requiredValidator";

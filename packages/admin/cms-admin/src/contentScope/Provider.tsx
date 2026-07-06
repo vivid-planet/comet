@@ -1,3 +1,4 @@
+import isEqual from "lodash.isequal";
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { type match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
@@ -162,7 +163,17 @@ export function ContentScopeProvider({
     let defaultUrl: string;
 
     if (storedScope && storedScope !== "undefined") {
-        defaultUrl = location.createUrl(JSON.parse(storedScope));
+        const parsedStoredScope = JSON.parse(storedScope);
+        // Validate that the stored scope is in the user's allowed scopes
+        const isStoredScopeAllowed = values.some((value) => isEqual(parsedStoredScope, value.scope));
+
+        if (isStoredScopeAllowed) {
+            defaultUrl = location.createUrl(parsedStoredScope);
+        } else {
+            // If stored scope is not allowed, clear it and use default
+            localStorage.removeItem(contentScopeLocalStorageKey);
+            defaultUrl = location.createUrl(defaultValue);
+        }
     } else {
         defaultUrl = location.createUrl(defaultValue);
     }

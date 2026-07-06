@@ -1,4 +1,6 @@
-import { type ContentScopeValues } from "../Provider";
+import { describe, expect, it } from "vitest";
+
+import type { ContentScopeValues } from "../Provider";
 import { defaultCreatePath } from "./defaultCreatePath";
 
 describe("defaultCreatePath", () => {

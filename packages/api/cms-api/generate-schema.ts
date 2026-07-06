@@ -19,6 +19,7 @@ import {
     InternalLinkBlock,
     PageTreeNodeBase,
     PageTreeNodeCategory,
+    PaginatedPageTreeNodesFactory,
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { GenerateAltTextResolver } from "./src/content-generation/generate-alt-text.resolver";
@@ -34,6 +35,7 @@ import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { FileUploadsResolver } from "./src/file-uploads/file-uploads.resolver";
+import { FullTextSearchResolver } from "./src/full-text-search/full-text-search.resolver";
 import { SitePreviewResolver } from "./src/page-tree/site-preview.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
@@ -74,9 +76,11 @@ async function generateSchema(): Promise<void> {
     const RedirectInput = RedirectInputFactory.create({ linkBlock });
 
     const redirectsResolver = createRedirectsResolver({ Redirect: RedirectEntity, RedirectInput });
-    const pageTreeResolver = createPageTreeResolver({
+    const PaginatedPageTreeNodes = PaginatedPageTreeNodesFactory.create({ PageTreeNode });
+    const PageTreeResolver = createPageTreeResolver({
         PageTreeNode,
         Documents: [Page],
+        PaginatedPageTreeNodes,
     }); // no scope
     const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 
@@ -98,37 +102,36 @@ async function generateSchema(): Promise<void> {
 
     registerEnumType(CombinedPermission, { name: "Permission" });
 
-    const schema = await gqlSchemaFactory.create(
-        [
-            BuildsResolver,
-            BuildTemplatesResolver,
-            redirectsResolver,
-            createDamItemsResolver({ File, Folder }),
-            createFilesResolver({ File, Folder }),
-            FileLicensesResolver,
-            FileImagesResolver,
-            createFoldersResolver({ Folder }),
-            pageTreeResolver,
-            CronJobsResolver,
-            JobsResolver,
-            AuthResolver,
-            RedirectsDependenciesResolver,
-            PageTreeDependentsResolver,
-            FileDependentsResolver,
-            UserResolver,
-            UserPermissionResolver,
-            UserContentScopesResolver,
-            MockFileUploadResolver,
-            AzureAiTranslatorResolver,
-            GenerateAltTextResolver,
-            GenerateImageTitleResolver,
-            GenerateSeoTagsResolver,
-            FileUploadsResolver,
-            SitePreviewResolver,
-            WarningResolver,
-            createDamMediaAlternativeResolver({ File }),
-        ]
-    );
+    const schema = await gqlSchemaFactory.create([
+        BuildsResolver,
+        BuildTemplatesResolver,
+        redirectsResolver,
+        createDamItemsResolver({ File, Folder }),
+        createFilesResolver({ File, Folder }),
+        FileLicensesResolver,
+        FileImagesResolver,
+        createFoldersResolver({ Folder }),
+        PageTreeResolver,
+        CronJobsResolver,
+        JobsResolver,
+        AuthResolver,
+        RedirectsDependenciesResolver,
+        PageTreeDependentsResolver,
+        FileDependentsResolver,
+        UserResolver,
+        UserPermissionResolver,
+        UserContentScopesResolver,
+        MockFileUploadResolver,
+        AzureAiTranslatorResolver,
+        GenerateAltTextResolver,
+        GenerateImageTitleResolver,
+        GenerateSeoTagsResolver,
+        FileUploadsResolver,
+        SitePreviewResolver,
+        WarningResolver,
+        createDamMediaAlternativeResolver({ File }),
+        FullTextSearchResolver,
+    ]);
 
     await writeFile("schema.gql", printSchema(schema));
 

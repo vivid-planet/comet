@@ -5,8 +5,8 @@ import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHost } from "
 import { type NextRequest, NextResponse } from "next/server";
 
 import { memoryCache } from "./cache";
-import { type CustomMiddleware } from "./chain";
-import { type GQLPredefinedPagesQuery, type GQLPredefinedPagesQueryVariables } from "./predefinedPages.generated";
+import type { CustomMiddleware } from "./chain";
+import type { GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables } from "./predefinedPages.generated";
 
 async function getPredefinedPageRedirect(domain: string, pathname: string): Promise<string | undefined> {
     const pages = await fetchPredefinedPages(domain);

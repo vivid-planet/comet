@@ -1,5 +1,124 @@
 # @comet/cli
 
+## 9.0.0-beta.6
+
+### Patch Changes
+
+- b459ec7: Reduce published package size by keeping non-runtime build artifacts out of the bundle
+
+## 9.0.0-beta.5
+
+### Minor Changes
+
+- 644b4ee: Add node_modules skills and rules discovery to `install-agent-features` command
+
+    The command now scans direct dependencies in `node_modules` (including `@scoped` packages) for `skills/` and `rules/` directories and creates symlinks to agent-specific directories. This is compatible with the [npm-based Agent Skills convention](https://github.com/antfu/skills-npm/blob/HEAD/PROPOSAL.md) and extends it to also support rules.
+
+## 9.0.0-beta.4
+
+### Major Changes
+
+- 2529907: Replace `install-agent-skills` with `install-agent-features` — a combined installer for agent skills and agent rules
+
+    `install-agent-features` installs skills from `skills/<name>/SKILL.md` and `agentic-plugin/skills/<name>/SKILL.md` (folders) and rules from `rules/<name>.md` (single markdown files) — both from the local repo and from external git repos listed in `agent-features.json`. Skills install into `.agents/skills/` and `.claude/skills/`; rules install into `.agents/rules/`, `.claude/rules/`, `.cursor/rules/`, and `.github/instructions/` so they are picked up by Claude Code, Cursor, GitHub Copilot, and other cloud agents. Rules support the same optional `metadata.internal: true` frontmatter as skills, and may be organized into subdirectories (the layout is preserved in each target).
+
+    Example `agent-features.json`:
+
+    ```json
+    {
+        "repos": ["https://github.com/vivid-planet/comet.git"]
+    }
+    ```
+
+    Run:
+
+    ```sh
+    npx @comet/cli install-agent-features
+    ```
+
+    **Breaking change:** the `install-agent-skills` command and its `agent-skills.json` config are removed. Migrate by renaming `agent-skills.json` to `agent-features.json` (the schema is identical) and replacing the `install-agent-skills` invocation in `package.json` and `install.sh` with `install-agent-features`.
+
+## 9.0.0-beta.3
+
+### Minor Changes
+
+- 9746947: `install-agent-skills`: also install skills from `agentic-plugin/skills/`
+
+    In addition to the existing `skills/` directory, the command now installs skills from `agentic-plugin/skills/`. This allows shipping agent skills as part of a Claude Code plugin (with a `.claude-plugin/plugin.json` manifest) without losing the ability to install them via `install-agent-skills`.
+
+    Both directories are also fetched (via git sparse checkout) when consuming external repos listed in `agent-skills.json`. `skills/` keeps priority over `agentic-plugin/skills/`.
+
+### Patch Changes
+
+- 560a8f2: Cache `getSiteConfigs` and `op read` calls to avoid redundant execution
+
+    When a template contains multiple placeholders for the same environment, `getSiteConfigs(env)` and `op read` were called repeatedly with identical arguments. Both are now cached per invocation so each unique `env` and each unique `op://` URI is resolved only once.
+
+## 9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+## 8.20.0
+
+### Minor Changes
+
+- 7c27867: `install-agent-skills`: add support for a `skills/` directory as the primary source for agent skills
+
+    The `project-skills/` and `package-skills/` directories are no longer supported. Move all skills into a single `skills/` directory at the repo root:
+    - Skills previously in `project-skills/`: move to `skills/` and add `metadata.internal: true` to their `SKILL.md`
+    - Skills previously in `package-skills/`: move to `skills/` (without the `internal` flag)
+
+## 8.19.0
+
+### Minor Changes
+
+- 539d53f: Add `install-agent-skills` command
+
+    see https://docs.comet-dxp.com/docs/guides/installing-agent-skills for more info
+
+## 8.18.0
+
+## 8.17.1
+
+## 8.17.0
+
+## 8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 7740f1e: Support 1Password references in site configs
+
+    Allows referencing secrets stored in 1Password directly in the site config using the `{{ op://... }}` syntax. For example:
+
+    ```ts site-configs/your-site.ts
+    export default ((env) => {
+        return {
+            // ,,,
+            apiKey: `{{ op://example-project-prod/api-key/password }}`,
+        };
+    }) satisfies GetSiteConfig;
+    ```
+
+    They are then replaced with the actual values by `inject-site-configs`.
+
+## 8.14.0
+
+## 8.13.0
+
+## 8.12.0
+
+### Minor Changes
+
+- 979a1d3: Use renovate for updating local oauth2-proxy and mitmproxy
+
+## 8.11.1
+
+## 8.11.0
+
 ## 8.10.0
 
 ## 8.9.0

@@ -3,8 +3,8 @@ import { type BlockMap, type ContentState, EditorState } from "draft-js";
 import { type MouseEvent, useCallback, useMemo } from "react";
 import { useIntl } from "react-intl";
 
-import { type SupportedThings } from "../Rte";
-import { type IFeatureConfig } from "../types";
+import type { SupportedThings } from "../Rte";
+import type { IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
 import selectionIsInOneBlock from "../utils/selectionIsInOneBlock";
 

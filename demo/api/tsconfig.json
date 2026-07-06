@@ -5,9 +5,10 @@
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "incremental": true,
-        "lib": ["esnext"],
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "jsx": "react-jsx",
+        "lib": ["ES2023"],
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "outDir": "./dist",
         "paths": {
             "@src/*": ["src/*"]
@@ -19,6 +20,7 @@
         "strict": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": false,
-        "target": "es2017"
+        "target": "ES2023",
+        "useDefineForClassFields": false
     }
 }

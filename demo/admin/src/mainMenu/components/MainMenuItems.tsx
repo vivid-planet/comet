@@ -5,7 +5,7 @@ import { ContentScopeIndicator, useContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { type GQLMainMenuQuery, type GQLMainMenuQueryVariables } from "./MainMenuItems.generated";
+import type { GQLMainMenuQuery, GQLMainMenuQueryVariables } from "./MainMenuItems.generated";
 
 const mainMenuQuery = gql`
     query MainMenu($contentScope: PageTreeNodeScopeInput!) {

@@ -1,8 +1,8 @@
 import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type MainNavigationContext } from "./Context";
-import { type MainNavigationItemLevel } from "./Item";
+import type { MainNavigationContext } from "./Context";
+import type { MainNavigationItemLevel } from "./Item";
 
 export type MainNavigationItemClassKey =
     | "root"
@@ -14,7 +14,8 @@ export type MainNavigationItemClassKey =
     | "hasSecondaryText"
     | "hasSecondaryAction"
     | "icon"
-    | "text";
+    | "text"
+    | "tooltip";
 
 export type OwnerState = {
     level: MainNavigationItemLevel;

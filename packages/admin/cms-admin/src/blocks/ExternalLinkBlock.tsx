@@ -1,7 +1,7 @@
 import { CheckboxField, Field, FinalFormInput } from "@comet/admin";
 import { FormattedMessage } from "react-intl";
 
-import { type ExternalLinkBlockData, type ExternalLinkBlockInput } from "../blocks.generated";
+import type { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
 import { isLinkTarget } from "../validation/isLinkTarget";
 import { validateLinkTarget } from "../validation/validateLinkTarget";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
@@ -18,7 +18,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
 
     displayName: <FormattedMessage id="comet.blocks.externalLink" defaultMessage="External Link" />,
 
-    defaultValues: () => ({ targetUrl: undefined, openInNewWindow: false }),
+    defaultValues: () => ({ targetUrl: undefined, openInNewWindow: false, noFollow: false }),
 
     category: BlockCategory.Navigation,
 
@@ -30,6 +30,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
         return {
             targetUrl: state.targetUrl,
             openInNewWindow: state.openInNewWindow,
+            noFollow: state.noFollow,
         };
     },
 
@@ -37,6 +38,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
         return {
             targetUrl: output.targetUrl,
             openInNewWindow: output.openInNewWindow,
+            noFollow: output.noFollow,
         };
     },
 
@@ -49,6 +51,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
             return {
                 targetUrl: url,
                 openInNewWindow: false,
+                noFollow: false,
             };
         }
 
@@ -75,6 +78,16 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                     <CheckboxField
                         label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
                         name="openInNewWindow"
+                    />
+                    <CheckboxField
+                        label={<FormattedMessage id="comet.blocks.link.external.noFollow" defaultMessage="No follow" />}
+                        name="noFollow"
+                        helperText={
+                            <FormattedMessage
+                                id="comet.blocks.link.external.noFollow.helperText"
+                                defaultMessage='Adds rel="nofollow" to the link, telling search engines not to follow it. Use for sponsored, paid, user-generated or untrusted links so that no SEO authority is passed to the target.'
+                            />
+                        }
                     />
                 </BlocksFinalForm>
             </SelectPreviewComponent>

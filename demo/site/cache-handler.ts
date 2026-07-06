@@ -1,23 +1,23 @@
 /* eslint-disable no-console */
 import { Redis } from "ioredis";
 import { LRUCache } from "lru-cache";
-import { CacheHandler as NextCacheHandler } from "next/dist/server/lib/incremental-cache";
+import { CacheHandler as NextCacheHandler, CacheHandlerValue } from "next/dist/server/lib/incremental-cache";
 
 import { getOrCreateCounter, getOrCreateHistogram } from "./opentelemetry-metrics";
 
-const REDIS_HOST = process.env.REDIS_HOST;
-if (!REDIS_HOST) {
-    throw new Error("REDIS_HOST is required");
+const VALKEY_HOST = process.env.VALKEY_HOST;
+if (!VALKEY_HOST) {
+    throw new Error("VALKEY_HOST is required");
 }
 
-const REDIS_PORT = parseInt(process.env.REDIS_PORT || "6379", 10);
+const VALKEY_PORT = parseInt(process.env.VALKEY_PORT || "6379", 10);
 
-const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
-if (!REDIS_PASSWORD) {
-    throw new Error("REDIS_PASSWORD is required");
+const VALKEY_PASSWORD = process.env.VALKEY_PASSWORD;
+if (!VALKEY_PASSWORD) {
+    throw new Error("VALKEY_PASSWORD is required");
 }
 
-const REDIS_KEY_PREFIX = process.env.REDIS_KEY_PREFIX || "";
+const VALKEY_KEY_PREFIX = process.env.VALKEY_KEY_PREFIX || "";
 
 const CACHE_HANDLER_DEBUG = process.env.CACHE_HANDLER_DEBUG === "true";
 
@@ -25,15 +25,17 @@ const CACHE_TTL_IN_S = 24 * 60 * 60; // 1 day
 
 const redis = new Redis({
     enableOfflineQueue: false,
-    host: REDIS_HOST,
-    keyPrefix: REDIS_KEY_PREFIX,
-    password: REDIS_PASSWORD,
-    port: REDIS_PORT,
+    host: VALKEY_HOST,
+    keyPrefix: VALKEY_KEY_PREFIX,
+    password: VALKEY_PASSWORD,
+    port: VALKEY_PORT,
     enableAutoPipelining: true,
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fallbackCache = new LRUCache<string, any>({
+// Typed with Next's `CacheHandlerValue` so the in-memory fallback stores the exact same
+// wrapped `{ lastModified, value }` shape as the Redis path (and as `get` returns). This
+// prevents the two cache paths from drifting apart
+const fallbackCache = new LRUCache<string, CacheHandlerValue>({
     maxSize: 50 * 1024 * 1024, // 50MB
     ttl: CACHE_TTL_IN_S * 1000,
     ttlAutopurge: true,
@@ -79,7 +81,7 @@ function isCacheKeyFullRoute(key: string) {
 }
 
 export default class CacheHandler {
-    async get(key: string): ReturnType<NextCacheHandler["get"]> {
+    async get(key: string): Promise<ReturnType<NextCacheHandler["get"]>> {
         if (isCacheKeyFullRoute(key)) {
             return null;
         }
@@ -92,14 +94,14 @@ export default class CacheHandler {
                 const redisResponse = await redis.get(key);
                 if (isFallbackInUse) {
                     isFallbackInUse = false;
-                    console.info(`${new Date().toISOString()} [${REDIS_HOST} up] Switching back to redis cache`);
+                    console.info(`${new Date().toISOString()} [${VALKEY_HOST} up] Switching back to redis cache`);
                 }
                 if (!redisResponse) {
                     cacheMissCount.add(1);
                     return null;
                 }
                 cacheHitCount.add(1);
-                const response = JSON.parse(redisResponse);
+                const response = JSON.parse(redisResponse) as CacheHandlerValue;
                 if (response.lastModified) {
                     cacheGetAge.record((new Date().getTime() - response.lastModified) / 1000);
                 }
@@ -115,7 +117,7 @@ export default class CacheHandler {
 
         // fallback to in-memory cache
         if (!isFallbackInUse) {
-            console.warn(`${new Date().toISOString()} | [${REDIS_HOST} down] switching to fallback in-memory cache`);
+            console.warn(`${new Date().toISOString()} | [${VALKEY_HOST} down] switching to fallback in-memory cache`);
             isFallbackInUse = true;
         }
 
@@ -143,10 +145,11 @@ export default class CacheHandler {
         }
         cacheSetCount.add(1);
 
-        const stringData = JSON.stringify({
+        const data: CacheHandlerValue = {
             lastModified: Date.now(),
             value,
-        });
+        };
+        const stringData = JSON.stringify(data);
 
         if (redis.status === "ready") {
             try {
@@ -162,7 +165,7 @@ export default class CacheHandler {
         if (CACHE_HANDLER_DEBUG) {
             console.log("CacheHandler.set fallbackCache", key);
         }
-        fallbackCache.set(key, value, { size: stringData.length });
+        fallbackCache.set(key, data, { size: stringData.length });
     }
 
     async revalidateTag(tags: string | string[]): Promise<void> {

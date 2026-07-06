@@ -1,5 +1,5 @@
 import { Check } from "@comet/admin-icons";
-import { type ComponentsOverrides } from "@mui/material";
+import type { ComponentsOverrides } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 

@@ -1,5 +1,5 @@
 import { type ApolloClient, type RefetchQueriesOptions, useApolloClient } from "@apollo/client";
-import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
+import { Copy, Delete as DeleteIcon, Domain, Paste, Remove as RemoveIcon, ThreeDotSaving } from "@comet/admin-icons";
 import { type ComponentsOverrides, Divider, Snackbar, type Theme, useThemeProps } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -10,7 +10,7 @@ import { writeClipboardText } from "../clipboard/writeClipboardText";
 import { DeleteDialog as CommonDeleteDialog } from "../common/DeleteDialog";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { messages } from "../messages";
 import { RowActionsItem } from "../rowActions/RowActionsItem";
 import { RowActionsMenu } from "../rowActions/RowActionsMenu";
@@ -54,6 +54,7 @@ export interface CrudContextMenuProps<CopyData>
     url?: string;
     onPaste?: (options: { input: CopyData; client: ApolloClient<object> }) => Promise<void>;
     onDelete?: (options: { client: ApolloClient<object> }) => Promise<void>;
+    deleteType?: "delete" | "remove";
 
     refetchQueries?: RefetchQueriesOptions<any, unknown>["include"];
     copyData?: () => Promise<CopyData> | CopyData;
@@ -68,6 +69,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
         url,
         onPaste,
         onDelete,
+        deleteType = "delete",
         refetchQueries,
         copyData,
         slotProps,
@@ -86,14 +88,14 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
         copyLoading: copyLoadingIcon = <ThreeDotSaving />,
         paste: pasteIcon = <Paste />,
         pasteLoading: pasteLoadingIcon = <ThreeDotSaving />,
-        delete: deleteIcon = <DeleteIcon />,
+        delete: deleteIcon = deleteType === "delete" ? <DeleteIcon /> : <RemoveIcon />,
     } = iconMapping;
 
     const {
         copyUrl: copyUrlMessage = <FormattedMessage {...messages.copyUrl} />,
         copy: copyMessage = <FormattedMessage {...messages.copy} />,
         paste: pasteMessage = <FormattedMessage {...messages.paste} />,
-        delete: deleteMessage = <FormattedMessage {...messages.delete} />,
+        delete: deleteMessage = deleteType === "delete" ? <FormattedMessage {...messages.delete} /> : <FormattedMessage {...messages.remove} />,
     } = messagesMapping;
 
     const client = useApolloClient();
@@ -104,13 +106,17 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
     const [pasting, setPasting] = useState(false);
     const snackbarApi = useSnackbarApi();
     const handleDeleteClick = async () => {
-        if (!onDelete) return;
+        if (!onDelete) {
+            return;
+        }
 
         try {
             await onDelete({
                 client,
             });
-            if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
+            if (refetchQueries) {
+                await client.refetchQueries({ include: refetchQueries });
+            }
             setDeleteDialogOpen(false);
         } catch {
             throw new Error("Delete failed");
@@ -118,7 +124,9 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
     };
 
     const handlePasteClick = async () => {
-        if (!onPaste) return;
+        if (!onPaste) {
+            return;
+        }
         const clipboard = await readClipboardText();
 
         if (clipboard) {
@@ -140,7 +148,9 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
                         input,
                         client,
                     });
-                    if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
+                    if (refetchQueries) {
+                        await client.refetchQueries({ include: refetchQueries });
+                    }
                 } catch (e) {
                     errorDialog?.showError({
                         userMessage: (
@@ -236,6 +246,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
                 dialogOpen={deleteDialogOpen}
                 onCancel={() => setDeleteDialogOpen(false)}
                 onDelete={handleDeleteClick}
+                deleteType={deleteType}
                 {...slotProps?.deleteDialog}
             />
         </>

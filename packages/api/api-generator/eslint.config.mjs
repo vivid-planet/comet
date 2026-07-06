@@ -1,14 +1,13 @@
+import { defineConfig } from "eslint/config";
 import eslintConfigCore from "@comet/eslint-config/core.js";
 
-/** @type {import('eslint')} */
-const config = [
+export default defineConfig([
     ...eslintConfigCore,
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",
             "no-console": "off",
+            "package-json/require-exports": "off", // TODO reenable after migrating to ESM
         },
     },
-];
-
-export default config;
+]);

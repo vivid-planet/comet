@@ -1,9 +1,9 @@
 import { type ComponentsOverrides, Typography as MuiTypography, type TypographyTypeMap } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
-import { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { ToolbarItem } from "../item/ToolbarItem";
 
 export type ToolbarTitleItemClassKey = "root" | "typography";

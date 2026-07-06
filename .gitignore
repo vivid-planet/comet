@@ -8,8 +8,25 @@ lang/
 /.npm
 .pnp.*
 junit.xml
+junit-unit.xml
+junit-storybook.xml
 .env.local
 .env.site-configs
 **/.idea
 
 *storybook.log
+
+.context
+.playwright
+.playwright-mcp
+
+# Agent files
+.agents/skills/
+.agents/rules/
+.cursor/skills/
+.cursor/rules/
+.claude/skills/
+.claude/rules/
+.claude/worktrees/
+.claude/settings.local.json
+.github/instructions/

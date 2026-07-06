@@ -65,8 +65,9 @@ export const SelectionTable = () => {
         }),
     });
 
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    if (!tableData) return <></>;
+    if (!tableData) {
+        return null;
+    }
 
     return (
         <SelectionRoute>

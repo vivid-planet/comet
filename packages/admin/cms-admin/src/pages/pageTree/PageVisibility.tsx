@@ -5,11 +5,11 @@ import { Chip, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type GQLPageTreeNodeVisibility } from "../../graphql.generated";
-import { type GQLUpdatePageVisibilityMutation, type GQLUpdatePageVisibilityMutationVariables } from "./PageVisibility.generated";
+import type { GQLPageTreeNodeVisibility } from "../../graphql.generated";
+import type { GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables } from "./PageVisibility.generated";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";
 import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";
-import { type GQLPageTreePageFragment, type PageTreePage } from "./usePageTree";
+import type { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 export const updatePageVisibilityMutation = gql`

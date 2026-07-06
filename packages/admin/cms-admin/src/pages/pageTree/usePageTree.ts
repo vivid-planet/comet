@@ -2,9 +2,9 @@ import { gql } from "@apollo/client";
 import { useStoredState } from "@comet/admin";
 import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from "react";
 
-import { type PageSearchMatch } from "../pageSearch/usePageSearch";
+import type { PageSearchMatch } from "../pageSearch/usePageSearch";
 import { arrayToTreeMap, subTreeFromNodes, type TreeMap } from "./treemap/TreeMapUtils";
-import { type GQLPageTreePageFragment } from "./usePageTree.generated";
+import type { GQLPageTreePageFragment } from "./usePageTree.generated";
 
 export type { GQLPageTreePageFragment } from "./usePageTree.generated";
 
@@ -30,7 +30,7 @@ interface PageTreePageAdditionalFieldsForUi {
     level: number;
     matches: PageSearchMatch[];
 }
-export type PageTreePage = GQLPageTreePageFragment & PageTreePageAdditionalFieldsForUi;
+export type PageTreePage<AdditionalFields = object> = GQLPageTreePageFragment & AdditionalFields & PageTreePageAdditionalFieldsForUi;
 
 interface UsePageTreeProps {
     pages: GQLPageTreePageFragment[];
