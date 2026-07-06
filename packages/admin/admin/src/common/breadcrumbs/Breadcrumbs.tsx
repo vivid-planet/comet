@@ -4,7 +4,7 @@ import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { Fragment, type ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 type BreadcrumbsClassKey = "root" | "item" | "separator";
 
