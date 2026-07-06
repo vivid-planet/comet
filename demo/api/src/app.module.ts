@@ -101,6 +101,12 @@ export class AppModule {
                             return error;
                         },
                         context: ({ req }: { req: Request }) => ({ ...req }),
+                        cors: {
+                            origin: config.corsAllowedOrigin,
+                            methods: ["GET", "POST"],
+                            credentials: false,
+                            maxAge: 600,
+                        },
                         useGlobalPrefix: true,
                         buildSchemaOptions: {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
