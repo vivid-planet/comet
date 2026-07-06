@@ -40,20 +40,8 @@ export const Default: Story = {
     ),
 };
 
-function resolveInternalLinkHref(props: unknown): string | undefined {
-    if (typeof props !== "object" || props === null || !("targetPage" in props)) {
-        return undefined;
-    }
-
-    const { targetPage } = props;
-
-    if (typeof targetPage !== "object" || targetPage === null || !("path" in targetPage)) {
-        return undefined;
-    }
-
-    const { path } = targetPage;
-
-    return typeof path === "string" ? `https://example.com${path}` : undefined;
+function resolveInternalLinkHref(props: { targetPage: { path: string } }): string {
+    return `https://example.com${props.targetPage.path}`;
 }
 
 const { HtmlRichTextBlock: HtmlCustomLinkTypeRichTextBlock } = createRichTextBlock({

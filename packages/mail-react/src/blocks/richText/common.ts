@@ -31,7 +31,7 @@ export type RichTextBlockTypeProps = Omit<TextStyles, "bottomSpacing"> & {
  *
  * Return `undefined` to render the linked text without a link.
  */
-export type RichTextLinkHrefResolver = (props: unknown) => string | undefined;
+export type RichTextLinkHrefResolver<TProps = unknown> = (props: TProps) => string | undefined;
 
 /**
  * Renders the text spanned by one draft-js inline style (e.g. `BOLD`).
@@ -40,7 +40,7 @@ export type RichTextLinkHrefResolver = (props: unknown) => string | undefined;
  */
 export type RichTextInlineRenderer = (children: ReactNode, options: { key: string }) => ReactNode;
 
-export interface CreateRichTextBlockOptions {
+export interface CreateRichTextBlockOptions<TLinkTypes extends Record<string, unknown> = Record<string, unknown>> {
     /**
      * Maps draft block types (e.g. `"header-one"`, `"paragraph-standard"`) to the
      * styling of the text component that renders them.
@@ -55,7 +55,7 @@ export interface CreateRichTextBlockOptions {
      * Merged on top of the built-in `external` link type. Link types without
      * a resolver render their text without a link.
      */
-    linkTypes?: Record<string, RichTextLinkHrefResolver>;
+    linkTypes?: { [TLinkType in keyof TLinkTypes]: RichTextLinkHrefResolver<TLinkTypes[TLinkType]> };
     /**
      * Maps draft-js inline style names to renderers, keyed by the style name as
      * it appears in the content's `inlineStyleRanges`.

@@ -400,15 +400,12 @@ Key behaviors:
     });
     ```
 
-- **Links**: the `external` link type is built in — `LINK` entities with an `external` link block render as `HtmlInlineLink`. Add the application's other link types via `linkTypes`, a resolver per link block type that receives the link block's props and returns the href (or `undefined` for no link). Unconfigured link types render as plain text:
+- **Links**: the `external` link type is built in — `LINK` entities with an `external` link block render as `HtmlInlineLink`. Add the application's other link types via `linkTypes`, a resolver per link block type that receives the link block's props and returns the href (or `undefined` for no link). Annotate the resolver parameter to receive the props typed as the app declares them, rather than narrowing `unknown` by hand. Unconfigured link types render as plain text:
 
     ```tsx
     const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
         linkTypes: {
-            phone: (props) =>
-                typeof props === "object" && props !== null && "phoneNumber" in props && typeof props.phoneNumber === "string"
-                    ? `tel:${props.phoneNumber}`
-                    : undefined,
+            phone: (props: { phoneNumber: string }) => `tel:${props.phoneNumber}`,
         },
     });
     ```

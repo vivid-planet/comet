@@ -254,19 +254,41 @@ describe("createRichTextBlock — links", () => {
     it("resolves application-defined link types through the linkTypes option", () => {
         const { HtmlRichTextBlock: HtmlPhoneLinkRichTextBlock } = createRichTextBlock({
             linkTypes: {
-                phone: (props) => {
-                    if (typeof props !== "object" || props === null || !("phoneNumber" in props)) {
-                        return undefined;
-                    }
-
-                    return typeof props.phoneNumber === "string" ? `tel:${props.phoneNumber}` : undefined;
-                },
+                phone: (props: { phoneNumber: string }) => `tel:${props.phoneNumber}`,
             },
         });
         const data = createLinkBlockData({ type: "phone", props: { phoneNumber: "+431234567" } });
         const markup = renderWithTheme(<HtmlPhoneLinkRichTextBlock data={data} />);
 
         expect(markup).toContain('href="tel:+431234567"');
+    });
+
+    it("types resolver props from the factory's type argument", () => {
+        createRichTextBlock<{ phone: { phoneNumber: string } }>({
+            linkTypes: {
+                phone: (props) => {
+                    // Accessing `phoneNumber` compiles only because `props` is typed from the type argument, not `unknown`.
+                    const phoneNumber: string = props.phoneNumber;
+                    // @ts-expect-error `props.phoneNumber` is a string, not a number
+                    const wrongType: number = props.phoneNumber;
+
+                    return `tel:${phoneNumber}${String(wrongType)}`;
+                },
+            },
+        });
+    });
+
+    it("types resolver props from an annotated parameter", () => {
+        createRichTextBlock({
+            linkTypes: {
+                phone: (props: { phoneNumber: string }) => {
+                    // @ts-expect-error `props.phoneNumber` is a string, not a number
+                    const phoneNumber: number = props.phoneNumber;
+
+                    return `tel:${String(phoneNumber)}`;
+                },
+            },
+        });
     });
 
     it("keeps the built-in external link type when linkTypes adds more", () => {

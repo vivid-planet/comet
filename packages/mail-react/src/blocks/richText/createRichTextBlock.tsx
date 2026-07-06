@@ -113,7 +113,9 @@ function renderRichTextContent({ draftContent, blockTypes, linkTypes, inline, bl
  * });
  * ```
  */
-export function createRichTextBlock(options: CreateRichTextBlockOptions = {}): {
+export function createRichTextBlock<TLinkTypes extends Record<string, unknown> = Record<string, unknown>>(
+    options: CreateRichTextBlockOptions<TLinkTypes> = {},
+): {
     // The description below is duplicated in MjmlRichTextBlock.stories.tsx because Storybook cannot read TSDoc from factory return type properties. Update both when the description changes.
     /** Renders CMS RichText block data (draft-js raw content) as one `MjmlText` per draft block. Must be placed within an `MjmlColumn`. */
     MjmlRichTextBlock: (props: RichTextBlockProps) => ReactNode;
@@ -122,7 +124,13 @@ export function createRichTextBlock(options: CreateRichTextBlockOptions = {}): {
     HtmlRichTextBlock: (props: RichTextBlockProps) => ReactNode;
 } {
     const blockTypes = options.blockTypes ?? {};
-    const linkTypes = { ...builtInLinkTypes, ...options.linkTypes };
+    const linkTypes: Record<string, RichTextLinkHrefResolver> = {
+        ...builtInLinkTypes,
+        // Consumers declare each resolver's props via the typed map, but at
+        // runtime they are unknown draft-js data. This one contained cast lets
+        // consumers work typed without casting in their own resolvers.
+        ...(options.linkTypes as Record<string, RichTextLinkHrefResolver>),
+    };
     const inline = options.inline ?? {};
 
     function MjmlRichTextBlock({ data }: RichTextBlockProps): ReactNode {
