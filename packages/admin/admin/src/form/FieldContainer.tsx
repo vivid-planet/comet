@@ -3,7 +3,7 @@ import { type ComponentsOverrides, css, type Theme } from "@mui/material/styles"
 import { type PropsWithChildren, type ReactNode, useEffect, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FieldContainerProps = ThemedComponentBaseProps<{
     root: typeof FormControl;
@@ -215,6 +215,8 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
         css`
             @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
                 flex-grow: 1;
+                /* Overrides the flex default (min-width: auto), which would prevent the item from shrinking below its content width and cause layout overflow. */
+                min-width: 0;
             }
         `}
 

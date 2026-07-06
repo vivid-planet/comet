@@ -16,6 +16,7 @@ import { UserPermissionsPublicService } from "./user-permissions.public.service"
 import { UserPermissionsService } from "./user-permissions.service";
 import {
     CombinedPermission,
+    registerAdditionalPermissions,
     UserPermissionsAsyncOptions,
     UserPermissionsModuleAsyncOptions,
     UserPermissionsModuleSyncOptions,
@@ -115,9 +116,7 @@ export class UserPermissionsModule {
         }
 
         if (AppPermission) {
-            Object.entries(AppPermission).forEach(([key, value]) => {
-                CombinedPermission[key] = value;
-            });
+            registerAdditionalPermissions(AppPermission);
         }
         registerEnumType(CombinedPermission, { name: "Permission" });
         this.combinedPermissionEnumRegistered = true;

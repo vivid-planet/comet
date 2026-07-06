@@ -1,5 +1,495 @@
 # @comet/cms-api
 
+## 9.0.0-beta.6
+
+### Minor Changes
+
+- f1a473a: Allow `AffectedScope` to return multiple scopes
+
+    The `argsToScope` function can now return `ContentScope[]` in addition to a single `ContentScope`. When multiple scopes are returned, the user must have access to all of them (AND relationship).
+
+    ```ts
+    @AffectedScope((args: MyArgs) => [{ domain: args.fromDomain }, { domain: args.toDomain }])
+    ```
+
+- 8954d64: Add `findUser` / `findUserOrThrow` (and `findUserForLogin` / `findUserForLoginOrThrow`) to `UserPermissionsUserServiceInterface`
+
+    The throwing `getUser` and `getUserForLogin` methods on `UserPermissionsUserServiceInterface` are now deprecated in favor of paired find methods:
+    - `findUser(id): Promise<User | null>` / `findUserOrThrow(id): Promise<User>`
+    - `findUserForLogin(id): Promise<User | null>` / `findUserForLoginOrThrow(id): Promise<User>`
+
+    This lets consumers opt into a non-throwing path without wrapping lookups in `try`/`catch`. Existing implementations that only define `getUser` / `getUserForLogin` continue to work; the service falls back to them.
+
+    **Example**
+
+    ```ts
+    export class UserService implements UserPermissionsUserServiceInterface {
+        async findUser(id: string): Promise<User | null> {
+            return this.users.find((user) => user.id === id) ?? null;
+        }
+
+        async findUserOrThrow(id: string): Promise<User> {
+            const user = await this.findUser(id);
+            if (!user) {
+                throw new Error(`User not found: ${id}`);
+            }
+            return user;
+        }
+
+        // ...
+    }
+    ```
+
+- 4c1aeb2: Add `noFollow` option to `ExternalLinkBlock`
+
+    Editors can now mark an external link as `nofollow` via a new checkbox in the admin form. When enabled, the rendered `<a>` tag receives `rel="nofollow"`. Existing links are unaffected by an automatic block-data migration that sets `noFollow` to `false`.
+
+- 67938b2: Filter `myFullTextSearch` results by the entity's required permission
+
+    The `requiredPermission` of an entity (declared via the `@RequiredPermission` decorator) is now included in both the `EntityInfo` and `EntityInfoFullText` SQL views.
+
+    The `myFullTextSearch` query (formerly `fullTextSearch`) filters results based on the current user's permissions, only returning entities where the user has the required permission. Entries without a required permission are excluded from results, as the permission cannot be determined. The `my` prefix reflects that the query operates on the current user and only returns entities the user is allowed to see.
+
+    **Example usage:**
+
+    ```ts
+    @EntityInfo<Product>({
+        name: "title",
+        secondaryInformation: "category.name",
+        visible: { status: { $eq: ProductStatus.Published } },
+        fullText: "fullText",
+    })
+    @RequiredPermission("products")
+    @ObjectType()
+    @Entity()
+    export class Product {
+        // ...
+    }
+    ```
+
+- 7fbe2a7: Add `allowPageDelete` option to disable deletion of pages in the PageTree. When set to `false`, the delete option is hidden in the Admin UI and the API blocks deletion attempts.
+- 1b37655: Add scope support to `myFullTextSearch`
+
+    The `EntityInfoFullText` view now includes a `scopes` column, and the `myFullTextSearch` query accepts an optional `scope` argument to restrict results to a single content scope.
+
+    The scopes are derived from either a `scope` property on the entity (simple case) or the `@ScopedEntity` decorator. To support building the scopes in SQL, `@ScopedEntity` accepts a new declarative, SQL-convertible variant in addition to the existing callback/service:
+
+    ```ts
+    // Field path to the scope object (an embeddable)
+    @ScopedEntity("company.scope")
+
+    // Object mapping scope properties to field paths
+    @ScopedEntity({ companyId: "company.id" })
+
+    // Multiple scopes
+    @ScopedEntity(["company.scope", "otherCompany.scope"])
+    ```
+
+    The existing callback and service variants keep working everywhere `@ScopedEntity` is used (e.g. the auth guard). They cannot be converted to SQL, so an entity that is part of the full-text index must use the declarative variant (or have a `scope` property) — otherwise creating the `EntityInfoFullText` view throws.
+
+- 70a77db: Reuse `@RequiredPermission` from entity in resolver permissions
+
+    The `UserPermissionsGuard` now falls back to the entity's `@RequiredPermission` decorator when no permission is explicitly set on the resolver. The entity is resolved from the `@Resolver(() => Entity)` decorator.
+
+    Additionally, the CRUD generator no longer emits `@RequiredPermission` on generated resolvers if the entity already has `@RequiredPermission` set. This avoids redundant permission declarations.
+
+- 8498a7c: Export `EntityInfoObject`, `EntityInfoFullTextObject` and `PaginatedEntityInfo`
+
+    This allows building custom full-text search resolvers (for example a public, permission-independent site search) that reuse the existing full-text search views and re-use the `entityInfo` relation to return name and secondary information.
+
+### Patch Changes
+
+- 35e9e0d: Fix copying the home page creating a second page with the slug `home`
+
+    Previously, copying the home page produced a second page with the slug `home`, after which none of the home pages could be deleted (deleting a page with the slug `home` is forbidden). The copy now receives a different slug if the target scope already has a home page, and keeps `home` only when there is none yet.
+
+- 91f4a9f: Fix DAM file listing failing for files larger than ~2 GB
+
+    The `size` field of `DamFile` and `FileUpload` was exposed as a GraphQL `Int`, which can only represent 32-bit signed integers (max ~2.1 GB). Files exceeding this size (e.g. large videos) caused the GraphQL response to fail with `Int cannot represent non 32-bit signed integer value`, breaking the DAM file list and the "Select files from DAM" dialog. The field is now exposed as `BigInt`, which represents the full range of file sizes stored in the database (`bigint`).
+
+- affbb11: Load `jsdom` lazily for SVG validation
+
+    `jsdom` (~90 MB resident) was imported and instantiated at module load time, so importing anything from `@comet/cms-api` pulled it into memory even when no SVG was ever validated. It's now loaded on the first SVG validation instead, reducing the package's base memory footprint.
+
+- fad0167: Load `@kubernetes/client-node` lazily in `KubernetesService`
+
+    `@kubernetes/client-node` (~85 MB resident) was statically imported, so importing anything from `@comet/cms-api` pulled it into memory even for projects that don't use the Kubernetes-based builds feature. The runtime parts of the client are now required lazily when `KubernetesService` actually connects to a cluster, reducing the package's base memory footprint.
+
+- 6793853: Load `openai` lazily in `AzureOpenAiContentGenerationService`
+
+    The `openai` client was statically imported, so importing anything from `@comet/cms-api` pulled it into memory even when the content-generation feature was disabled. It's now required lazily when a client is actually created, reducing the package's base memory footprint.
+
+- ac59b62: Validate uploaded SVGs with `DOMPurify` (backed by `jsdom`) instead of the custom XML-based check
+
+    The previous implementation parsed SVGs with `fast-xml-parser` and applied a hand-written allow/deny list to reject scripts, event handlers and unsafe links.
+    SVGs are now sanitized with the vetted `DOMPurify` library and rejected when it has to strip any tags or attributes, providing more robust protection against XSS vectors in uploaded SVGs.
+
+    The `role` attribute and the `<use>` element are allowed, since they're commonly used in valid SVGs. `<use>` is restricted to same-document fragment references (e.g. `href="#id"`); references to external resources are rejected to prevent XSS/SSRF.
+
+## 9.0.0-beta.5
+
+### Minor Changes
+
+- c0cee12: Add `placeholders` option to `createTipTapRichTextBlock` that allows inserting pre-defined placeholder tokens into the rich text editor. Placeholders are rendered as non-editable chips and can only be removed as a whole unit.
+- 9d5f045: Add a `urlTemplate` field resolver to `FileImagesResolver`
+- b0ceb9c: Export `IsLinkTarget` validator
+- 8ad9dd8: Add support for deleting multiple redirects in the grid
+
+### Patch Changes
+
+- 6b7adc7: Fix `damFilesList` returning no files in subfolders when filtering by `ids`
+
+    `damFilesList` implicitly constrains to the scope root when no `folderId` is passed. The constraint already had an escape hatch for `filter.searchText`; the same now applies to `filter.ids`. Resolving a selection via `filter: { ids: ... }` returns all matching files regardless of which folder they live in, which unblocks the admin `FileField` multi-select for files in subfolders.
+
+- a2c2eb5: Log the reason when a permission check denies access
+
+    `AbstractAccessControlService.isEqualOrMorePermissions` now emits a NestJS `Logger.debug` line identifying the missing permission or content scope whenever it returns `false`. The `impersonationAllowed` resolver field additionally logs when a user attempts to impersonate themselves.
+
+## 9.0.0-beta.4
+
+### Minor Changes
+
+- c6703db: Add `ids` filter to `damFilesList`
+
+    `FileFilterInput` now accepts an optional `ids: [ID!]` to restrict the result set to specific files. Useful for batch-loading a known selection (e.g. after a multi-file picker confirms) in a single request.
+
+- 127a492: Add TipTapRichTextBlock as an alternative to RichTextBlock
+- 2fe9d4b: Add support for translating page and document content
+
+    Content translation can now be applied to entire documents at once, in addition to the existing field-level translation.
+
+    **Setup**
+
+    Wrap the application with `AzureAiTranslatorProvider` (supports `batchTranslate` automatically):
+
+    ```tsx
+    <AzureAiTranslatorProvider enabled showApplyTranslationDialog>
+        {children}
+    </AzureAiTranslatorProvider>
+    ```
+
+    **Making a document type translatable**
+
+    Add `createDocumentTranslationMethods` and the `TranslatableInterface` type to the document definition:
+
+    ```tsx
+    import { createDocumentTranslationMethods, type TranslatableInterface } from "@comet/cms-admin";
+
+    const rootBlocks = {
+        content: PageContentBlock,
+        seo: SeoBlock,
+    };
+
+    export const Page: DocumentInterface & TranslatableInterface & DependencyInterface = {
+        // ...existing config
+        ...createDocumentRootBlocksMethods(rootBlocks),
+        ...createDocumentTranslationMethods(rootBlocks),
+    };
+    ```
+
+    **Adding translate action to the edit page**
+
+    `createUsePage` now returns a `translateContent` function. Use it with `TranslateContentMenuItem` inside a `CrudMoreActionsMenu`:
+
+    ```tsx
+    const { translateContent /* ...other fields */ } = usePage({ pageId: id });
+
+    <CrudMoreActionsMenu overallActions={[<TranslateContentMenuItem translateContent={translateContent} />]} />;
+    ```
+
+    **Page tree integration**
+
+    The page tree context menu and bulk action toolbar automatically show a "Translate" action for pages. This translates the page name, slug, and document content.
+
+### Patch Changes
+
+- fa5c7a4: Fix `FileField` breaking image block selection
+
+    The `DamFileFieldFile` fragment lost the image dimensions (`width`, `height`, `cropArea`) needed by `DamImageBlock`/`PixelImageBlock`. Selecting an image inside an image block crashed because those fields were missing. Restored them on the fragment.
+
+    Composing the fragment into a parent collection (e.g. a many-to-many to `DamFile`) exposed a Mikro-ORM gotcha: `Collection.loadItems()` does not honor `eager: true`, so each loaded `DamFile` had an uninitialized `image` Reference and GraphQL threw `Cannot return null for non-nullable field DamFileImage.width`. Added an `image` `@ResolveField` on `FilesResolver` that initializes the Reference if needed, so consumers don't have to remember to populate it.
+
+- 31d9296: Fix duplicate TipTap `'link'` extension warning by explicitly disabling StarterKit's built-in Link extension
+
+    StarterKit (v3+) includes `@tiptap/extension-link` by default. Since we register our own `CmsLink` mark (also named `"link"`), this caused a "Duplicate extension names found: ['link']" warning. Setting `link: false` in `StarterKit.configure()` resolves this.
+
+## 9.0.0-beta.3
+
+### Major Changes
+
+- 0e7d7e9: Import blob storage backends dynamically
+
+    `BlobStorageAzureConfig`, `BlobStorageAzureStorage`, `BlobStorageFileConfig`, and `BlobStorageFileStorage` are no longer exported from `@comet/cms-api` as they are now loaded dynamically based on the configured driver. Only the relevant backend class is imported, which avoids loading unused optional dependencies (e.g., `@azure/storage-blob` or `aws-sdk`).
+
+- 962a320: Remove `importDamFileByDownload` mutation
+- 2ea835c: Rename `RedirectSourceTypeValues` to `RedirectSourceType`
+
+### Minor Changes
+
+- a50793a: Add `listFiles` method to `BlobStorageBackendService`
+- cac2b3b: Add fullText query support for PageTree (pageTreeFullTextSearch query)
+
+    To enable add a fullText column for a PageTree document (Page or others):
+
+    ```ts
+    @Index({ type: "fulltext" })
+    @Property<Page>({ nullable: true, type: new FullTextType(), onUpdate: (page) => blockToMikroOrmFullText(page.content) })
+    searchableContent?: string;
+    ```
+
+    and enable fullText option for PageTreeModule
+
+- dd51208: Update TypeScript compilation target to ES2023 and lib to ES2023 to match the required Node.js v22
+
+### Patch Changes
+
+- f6a2932: Fix `MODULE_NOT_FOUND` errors caused by extensionless deep imports of `@nestjs/graphql` internals. `@nestjs/graphql` 13.3.0 tightened its `exports` map so that the `"./*": "./*"` pattern no longer maps to `.js` automatically. All deep imports of `@nestjs/graphql` internals now use explicit `.js` extensions.
+- 71dce06: Support sorting folders by size (child count) in `FoldersService`
+- 802b0b8: Remove `sharp` dependency by parsing the dominant color directly from the 1x1 PNG produced by imgproxy
+- 8bf0e5b: Remove unused `ts-morph` dependency
+- 8722deb: Upgrade `file-type` dependency from v16 to v21
+
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- 1ad7de3: Return null in `getNodeByPath` when path is `/home` to prevent the home page from being returned for that path (results in 404)
+
+## 9.0.0-beta.1
+
+### Major Changes
+
+- 8c2fdde: Add filtering and sorting to `DependenciesList` and `DependentsList`
+
+    Users can now filter dependencies/dependents by name, type, secondary information, and visibility, and sort by all columns. A default filter shows only visible items. The `GqlFilter` type is now exported from `@comet/admin`.
+
+    **Breaking changes:**
+
+    **`@comet/cms-api`:** `DependencyFilter.targetGraphqlObjectType` and `DependentFilter.rootGraphqlObjectType` changed from `string` to `StringFilter`. Update any code passing a plain string to use `{ equal: "..." }` instead.
+
+    **`@comet/cms-api`:** `DependenciesService.getDependents()` and `getDependencies()` consolidated the `filter`, `paginationArgs`, and `options` parameters into a single `options` object. If you call these methods directly, merge the arguments:
+
+    ```ts
+    // Before
+    service.getDependents(target, filter, { offset, limit }, { forceRefresh, sort });
+
+    // After
+    service.getDependents(target, { filter, offset, limit, forceRefresh, sort });
+    ```
+
+    **`@comet/cms-admin`:** The GQL queries passed to `DependenciesList` and `DependentsList` must now accept `$filter` and `$sort` variables and forward them to the `dependencies`/`dependents` field. Update your queries as follows:
+
+    ```graphql
+    # DependentsList
+    query MyDependents($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependentFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    rootGraphqlObjectType
+                    rootId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+
+    # DependenciesList
+    query MyDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependencyFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    targetGraphqlObjectType
+                    targetId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+    ```
+
+- 3f3da52: Switch to SQL-based entity info system
+
+    The `@EntityInfo` decorator now accepts a field-path-based object or a raw SQL string instead of a TypeScript function or service class.
+    This enables efficient SQL-level filtering and sorting of dependencies and warnings based on entity info.
+
+    **Breaking changes:**
+    - `@EntityInfo` decorator API changed: now accepts `{ name, secondaryInformation?, visible? }` with dot-notation field paths, or a raw SQL string
+    - `EntityInfoServiceInterface` has been removed from exports
+    - `PageTreeNodeDocumentEntityInfoService` has been removed; `@EntityInfo` on `Page`, `Link`, and similar document entities is no longer needed
+    - `block_index_dependencies` view exposes two new columns `blockVisible` and `entityVisible`; `visible` is now their logical AND (previously only reflected block-level visibility)
+    - `block_index_dependencies` view now includes `rootName`, `rootSecondaryInformation`, `targetName`, and `targetSecondaryInformation` columns from `EntityInfo`, removing the need for a runtime JOIN when querying dependencies/dependents
+
+- 171c335: Redirects: add `domain` source type
+
+    To fully support domain redirects, additional handling is required in the site middleware.
+
+### Patch Changes
+
+- 19a0528: Fix `MailerLogStatus` GQL enum name (was incorrectly registered as `WarningStatus`)
+- f162fa5: Fix `AzureOpenAiContentGenerationService` for newer GPT models
+
+    We still used the deprecated `max_tokens` that isn't supported anymore by newer models.
+    Replaced it with the newer `max_completion_tokens`.
+
+## 9.0.0-beta.0
+
+## 8.20.0
+
+### Minor Changes
+
+- ed00704: Add `TableBlock` using the `createTableBlock()` factory
+
+    The passed in `richText` block is used to edit the cell content.
+
+    **Admin:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-admin";
+    import { RichTextBlock } from "./RichTextBlock";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+    **API:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-api";
+    import { RichTextBlock } from "./rich-text.block";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+## 8.19.0
+
+### Patch Changes
+
+- 0eb28a7: Skip block index view creation when no root block entities are found instead of failing with a SQL syntax error
+
+## 8.18.0
+
+### Minor Changes
+
+- 64b70bc: Deduplicate block index refreshes using PostgreSQL advisory locks
+
+    Replace the race-condition-prone `pg_stat_activity` check in `DependenciesService.refreshViews()` with `pg_try_advisory_xact_lock`, ensuring only one refresh runs at a time. This fixes the issue where many parallel requests (e.g., from the DAM Usages column) could trigger multiple concurrent `REFRESH MATERIALIZED VIEW` operations, overloading the database.
+
+- ef98821: Add option `shouldInvokeUserService` to `createJwtAuthService`
+
+    Sometimes it is preferred to load the user from the `UserService` instead of using the data from the ID-Token (e.g. because the `UserService` provides additional data). This options allows to force this behavior.
+
+### Patch Changes
+
+- e9c54bc: Fix `DamFolder.mpath` column type
+
+    Change the column type from `"uuid array"` to `"uuid[]"` to match PostgreSQL's canonical array type notation, preventing a redundant `alter column ... type uuid array` statement from being generated for every new migration.
+
+- b3bfe86: Update `@aws-sdk/` dependencies to fix CVE-2026-25896
+
+## 8.17.1
+
+### Patch Changes
+
+- 91e9a8f: Update fast-xml-parser to 5.3.6 to fix CVE-2026-26278 (entity expansion DoS)
+
+## 8.17.0
+
+## 8.16.0
+
+## 8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- 736e4ae: Add `@AffectedScope` decorator
+
+    See https://docs.comet-dxp.com/docs/core-concepts/content-scope/evaluate-content-scopes#operations-that-require-a-content-scope-independently-of-a-specific-entity
+
+## 8.13.0
+
+### Minor Changes
+
+- 6b0b088: Allow UserService to implement getAccountUrl() which provides a "My Account" link in the UserHeaderItem
+- 05638ed: `MailerService.sendMail()` now automatically creates a plaintext version from the HTML content
+
+    When the params passed to `sendMail()` do not include a `text` property but do include a `html` property, a plaintext version will be automatically generated based on the HTML content.
+
+## 8.12.0
+
+### Minor Changes
+
+- 488da0b: Add `registerAdditionalPermissions` helper
+
+    The helper can be used register additional permissions into the permission enum used for the GraphQL schema.
+    Only use this if you're building a library that requires additional permissions.
+    For application-level permissions, use the `AppPermission` option in the module registration methods.
+
+- 2930556: Send 401 instead 403 when CometAuthGuard cannot authenticate user
+
+    Restores the behavior of Comet v7.
+
+    Before (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "Forbidden resource",
+          "extensions": {
+            "code": "FORBIDDEN",
+            "originalError": {
+              "message": "Forbidden resource",
+              "error": "Forbidden",
+              "statusCode": 403
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
+    After (shortened):
+
+    ```
+    {
+      "errors": [
+        {
+          "message": "No AuthService could authenticate the user",
+          "extensions": {
+            "code": "UNAUTHENTICATED",
+            "originalError": {
+              "message": "No AuthService could authenticate the user",
+              "error": "Unauthorized",
+              "statusCode": 401
+            }
+          }
+        }
+      ],
+      "data": null
+    }
+    ```
+
+## 8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- f34b750: Add Status to CronJob
+
 ## 8.10.0
 
 ### Minor Changes

@@ -1,10 +1,10 @@
 import { type DocumentNode, type OperationVariables, useApolloClient } from "@apollo/client";
-import { type GridValidRowModel } from "@mui/x-data-grid";
-import { saveAs } from "file-saver";
+import type { GridValidRowModel } from "@mui/x-data-grid";
 import { useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 
-import { type GridColDef } from "../GridColDef";
+import { downloadFile } from "../../helpers/downloadFile";
+import type { GridColDef } from "../GridColDef";
 import { type ExcelGenerationOptions, generateExcelFile } from "./generateExcelFile";
 
 export interface ExportApi {
@@ -25,8 +25,9 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
     resolveQueryNodes: (queryData: GQLQuery) => Row[];
     totalCount: number;
     exportOptions?: DataGridExcelExportOptions;
+    hasPaging?: boolean;
 }): ExportApi {
-    const { columns, variables, query, resolveQueryNodes, totalCount, exportOptions } = params;
+    const { columns, variables, query, resolveQueryNodes, totalCount, exportOptions, hasPaging = true } = params;
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
     const client = useApolloClient();
@@ -42,7 +43,7 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
             const workbook = generateExcelFile<Row>(columns, data, { worksheetName, styling });
 
             workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
+                downloadFile(new Blob([buffer]), safeFileNameWithExtension(fileName));
             });
         },
         [intl],
@@ -60,14 +61,18 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
                     query,
                     variables: {
                         ...variables,
-                        offset,
-                        limit: incrementAmount,
+                        ...(hasPaging
+                            ? {
+                                  offset,
+                                  limit: incrementAmount,
+                              }
+                            : {}),
                     },
                 });
                 offset += incrementAmount;
 
                 data.push(...resolveQueryNodes(pageData));
-            } while (data.length < totalCount);
+            } while (hasPaging && data.length < totalCount);
 
             if (data.length > 0) {
                 createExcelExportDownload<Row>(columns, data, exportOptions);
@@ -77,7 +82,7 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
         } finally {
             setLoading(false);
         }
-    }, [client, columns, createExcelExportDownload, exportOptions, query, resolveQueryNodes, totalCount, variables]);
+    }, [client, columns, createExcelExportDownload, exportOptions, query, resolveQueryNodes, totalCount, variables, hasPaging]);
 
     return {
         loading,

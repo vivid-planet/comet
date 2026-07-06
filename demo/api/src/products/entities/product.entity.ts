@@ -3,8 +3,10 @@ import {
     CrudField,
     CrudGenerator,
     DamImageBlock,
+    EntityInfo,
     FileUpload,
     ImportTargetInterface,
+    RequiredPermission,
     RootBlock,
     RootBlockEntity,
     RootBlockType,
@@ -14,6 +16,8 @@ import {
     Collection,
     Entity,
     Enum,
+    FullTextType,
+    Index,
     ManyToMany,
     ManyToOne,
     OneToMany,
@@ -25,11 +29,13 @@ import {
     types,
 } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { DamFile } from "@src/dam/entities/dam-file.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { GraphQLLocalDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
+import { ProductService } from "../product.service";
 import { ProductCategory } from "./product-category.entity";
 import { ProductColor } from "./product-color.entity";
 import { ProductStatistics } from "./product-statistics.entity";
@@ -85,10 +91,17 @@ export class ProductPriceRange {
     max: number;
 }
 
+@EntityInfo<Product>({
+    name: "title",
+    secondaryInformation: "manufacturer.name",
+    visible: { status: { $eq: ProductStatus.Published } },
+    fullText: "fullText",
+})
+@RequiredPermission("products", { skipScopeCheck: true })
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
+@CrudGenerator({ requiredPermission: ["products"], hooksService: ProductService })
 export class Product extends BaseEntity implements ImportTargetInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
@@ -234,4 +247,27 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @ManyToMany(() => FileUpload)
     @Field(() => [FileUpload])
     datasheets = new Collection<FileUpload>(this);
+
+    @ManyToMany(() => DamFile)
+    @Field(() => [DamFile])
+    relatedImages = new Collection<DamFile>(this);
+
+    @Index({ type: "fulltext" })
+    @Property<Product>({
+        nullable: true,
+        type: new FullTextType(),
+        onCreate: (product) => {
+            return {
+                A: product.title,
+                D: product.description,
+            };
+        },
+        onUpdate: (product) => {
+            return {
+                A: product.title,
+                D: product.description,
+            };
+        },
+    })
+    fullText?: string;
 }

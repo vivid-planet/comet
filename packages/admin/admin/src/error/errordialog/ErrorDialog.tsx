@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type JSX, type ReactNode, useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { writeClipboardText } from "../../clipboard/writeClipboardText";
@@ -210,7 +210,7 @@ type CopyToClipboardButtonProps = {
 
 function CopyToClipboardButton({ copyData }: CopyToClipboardButtonProps): JSX.Element {
     const [showSuccess, setShowSuccess] = useState<boolean>(false);
-    const timeoutID = useRef<number>();
+    const timeoutID = useRef<number>(undefined);
 
     useEffect(() => {
         return () => {

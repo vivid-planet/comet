@@ -9,8 +9,9 @@ import { ProductColor } from "../entities/product-color.entity";
 export class ProductColorResolver {
     @ResolveField(() => Product)
     async product(
-    @Parent()
-    productColor: ProductColor): Promise<Product> {
+        @Parent()
+        productColor: ProductColor,
+    ): Promise<Product> {
         return productColor.product.loadOrFail();
     }
 }

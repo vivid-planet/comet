@@ -6,24 +6,25 @@ import { ManufacturerInput, ManufacturerUpdateInput } from "./dto/manufacturer.i
 import { PaginatedManufacturers } from "./dto/paginated-manufacturers";
 import { ManufacturersArgs } from "./dto/manufacturers.args";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { AffectedEntity, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
 @Resolver(() => Manufacturer)
-@RequiredPermission(["manufacturers"], { skipScopeCheck: true })
 export class ManufacturerResolver {
-    constructor(protected readonly entityManager: EntityManager) { }
+    constructor(protected readonly entityManager: EntityManager) {}
     @Query(() => Manufacturer)
     @AffectedEntity(Manufacturer)
     async manufacturer(
-    @Args("id", { type: () => ID })
-    id: string): Promise<Manufacturer> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<Manufacturer> {
         const manufacturer = await this.entityManager.findOneOrFail(Manufacturer, id);
         return manufacturer;
     }
     @Query(() => PaginatedManufacturers)
     async manufacturers(
-    @Args()
-    { search, filter, sort, offset, limit }: ManufacturersArgs): Promise<PaginatedManufacturers> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(Manufacturer));
+        @Args()
+        { search, filter, sort, offset, limit }: ManufacturersArgs,
+    ): Promise<PaginatedManufacturers> {
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(Manufacturer));
         const options: FindOptions<Manufacturer> = { offset, limit };
         if (sort) {
             options.orderBy = gqlSortToMikroOrmOrderBy(sort);
@@ -33,8 +34,9 @@ export class ManufacturerResolver {
     }
     @Mutation(() => Manufacturer)
     async createManufacturer(
-    @Args("input", { type: () => ManufacturerInput })
-    input: ManufacturerInput): Promise<Manufacturer> {
+        @Args("input", { type: () => ManufacturerInput })
+        input: ManufacturerInput,
+    ): Promise<Manufacturer> {
         const manufacturer = this.entityManager.create(Manufacturer, {
             ...input,
         });
@@ -44,10 +46,11 @@ export class ManufacturerResolver {
     @Mutation(() => Manufacturer)
     @AffectedEntity(Manufacturer)
     async updateManufacturer(
-    @Args("id", { type: () => ID })
-    id: string, 
-    @Args("input", { type: () => ManufacturerUpdateInput })
-    input: ManufacturerUpdateInput): Promise<Manufacturer> {
+        @Args("id", { type: () => ID })
+        id: string,
+        @Args("input", { type: () => ManufacturerUpdateInput })
+        input: ManufacturerUpdateInput,
+    ): Promise<Manufacturer> {
         const manufacturer = await this.entityManager.findOneOrFail(Manufacturer, id);
         manufacturer.assign({
             ...input,
@@ -58,8 +61,9 @@ export class ManufacturerResolver {
     @Mutation(() => Boolean)
     @AffectedEntity(Manufacturer)
     async deleteManufacturer(
-    @Args("id", { type: () => ID })
-    id: string): Promise<boolean> {
+        @Args("id", { type: () => ID })
+        id: string,
+    ): Promise<boolean> {
         const manufacturer = await this.entityManager.findOneOrFail(Manufacturer, id);
         this.entityManager.remove(manufacturer);
         await this.entityManager.flush();

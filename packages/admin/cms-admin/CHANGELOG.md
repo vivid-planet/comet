@@ -1,5 +1,619 @@
 # @comet/cms-admin
 
+## 9.0.0-beta.6
+
+### Minor Changes
+
+- 4c1aeb2: Add `noFollow` option to `ExternalLinkBlock`
+
+    Editors can now mark an external link as `nofollow` via a new checkbox in the admin form. When enabled, the rendered `<a>` tag receives `rel="nofollow"`. Existing links are unaffected by an automatic block-data migration that sets `noFollow` to `false`.
+
+- 7fbe2a7: Add `allowPageDelete` option to disable deletion of pages in the PageTree. When set to `false`, the delete option is hidden in the Admin UI and the API blocks deletion attempts.
+- 7ab96c2: Add `SearchHeaderItem` component for full-text search
+
+    The `SearchHeaderItem` component renders a search input (intended for the header) that opens a dropdown with the results of the `myFullTextSearch` query. The search is restricted to the currently selected content scope. Clicking a result opens the corresponding entity using the `entityDependencyMap` from the `DependenciesConfig` (the same mechanism used by warnings and dependencies).
+
+    **Example**
+
+    ```tsx
+    import { Header, SearchHeaderItem } from "@comet/cms-admin";
+
+    <Header>
+        <SearchHeaderItem />
+        <ContentScopeControls />
+        <UserHeaderItem />
+    </Header>;
+    ```
+
+### Patch Changes
+
+- 0e9189b: Export `AnonymousBlockInterface` type
+- c7f80e9: Fix page search not expanding the tree when navigating between matches after "Collapse all"
+
+    Previously, jumping to the next or previous search match only scrolled to the match without expanding its collapsed ancestors. After collapsing the tree via "Collapse all" during an active search, continuing the search revealed nothing. Navigating between matches now re-expands the current match's ancestors before scrolling to it.
+
+- b459ec7: Reduce published package size by keeping non-runtime build artifacts out of the bundle
+- 5e87236: Remove pagination from `StartBuildsDialog` data grid
+
+    The `buildTemplates` query always returns all templates, so the page-based pagination in the dialog grid was misleading. All templates are now displayed at once.
+
+- Updated dependencies [15e771b]
+- Updated dependencies [1a83c01]
+- Updated dependencies [15e771b]
+- Updated dependencies [b4ba869]
+- Updated dependencies [57678d0]
+- Updated dependencies [b459ec7]
+    - @comet/admin@9.0.0-beta.6
+    - @comet/admin-date-time@9.0.0-beta.6
+    - @comet/admin-rte@9.0.0-beta.6
+    - @comet/admin-icons@9.0.0-beta.6
+
+## 9.0.0-beta.5
+
+### Minor Changes
+
+- c0cee12: Add `placeholders` option to `createTipTapRichTextBlock` that allows inserting pre-defined placeholder tokens into the rich text editor. Placeholders are rendered as non-editable chips and can only be removed as a whole unit.
+- 8cb0844: Export `isLinkTarget` and `validateLinkTarget`
+- 8ad9dd8: Add support for deleting multiple redirects in the grid
+
+### Patch Changes
+
+- 3cbf0ff: Show `ArchivedTag` next to the title on the DAM file detail page
+
+    Previously the archived state was only visible in the DAM file list, which could be confusing when opening an archived file's detail page via link.
+
+- 5d006c1: Fix `1-NaN of NaN` pagination footer and `rowCount` warning in DAM `FolderDataGrid`
+
+    The grid now routes `totalCount` through `useBufferedRowCount`, so `rowCount` stays a number across refetches instead of becoming `undefined` while data is loading.
+
+- Updated dependencies [fdabaf1]
+    - @comet/admin@9.0.0-beta.5
+    - @comet/admin-date-time@9.0.0-beta.5
+    - @comet/admin-rte@9.0.0-beta.5
+    - @comet/admin-icons@9.0.0-beta.5
+
+## 9.0.0-beta.4
+
+### Minor Changes
+
+- d7b77af: Add `onError` to `CometConfig` for centralized error reporting from all error boundaries
+
+    `CometConfigProvider` now accepts an optional `onError(error, errorInfo)` callback that is invoked whenever any descendant `ErrorBoundary` catches an error. Use this to forward errors to a reporting service such as Sentry.
+
+    **Example**
+
+    ```tsx
+    <CometConfigProvider
+        {...config}
+        onError={(error, errorInfo) => {
+            // Report the error to your error tracking service
+            console.error(error, errorInfo.componentStack);
+        }}
+    >
+        {children}
+    </CometConfigProvider>
+    ```
+
+- c6703db: Export `ChooseDamFilesDialog`
+
+    Allows building custom multi-file picker UIs on top of the DAM file dialog (e.g. bulk-adding files to a list block).
+
+    ```tsx
+    import { ChooseDamFilesDialog } from "@comet/cms-admin";
+
+    <ChooseDamFilesDialog open={open} onClose={onClose} onConfirm={(fileIds) => ...} initialFileIds={[]} allowedMimetypes={["image/jpeg"]} />
+    ```
+
+- 127a492: Add TipTapRichTextBlock as an alternative to RichTextBlock
+- c6703db: Add `multiple` prop to `FileField` for selecting multiple DAM files
+
+    `FileField` now accepts `multiple={true}` to select a list of DAM files instead of a single file. Multi-file values are typed as `GQLDamFileFieldFileFragment[]` (the same fragment used in single-file mode); the component renders a stacked list of files with per-row menu and remove actions. The picker dialog pre-checks the current selection via `initialFileIds` and returns the picked file ids on confirm. The single-file API is unchanged.
+
+    **Example**
+
+    ```tsx
+    <Field name="files" component={FileField} multiple preview={(file) => <Thumbnail fileId={file.id} />} />
+    ```
+
+- 2fe9d4b: Add support for translating page and document content
+
+    Content translation can now be applied to entire documents at once, in addition to the existing field-level translation.
+
+    **Setup**
+
+    Wrap the application with `AzureAiTranslatorProvider` (supports `batchTranslate` automatically):
+
+    ```tsx
+    <AzureAiTranslatorProvider enabled showApplyTranslationDialog>
+        {children}
+    </AzureAiTranslatorProvider>
+    ```
+
+    **Making a document type translatable**
+
+    Add `createDocumentTranslationMethods` and the `TranslatableInterface` type to the document definition:
+
+    ```tsx
+    import { createDocumentTranslationMethods, type TranslatableInterface } from "@comet/cms-admin";
+
+    const rootBlocks = {
+        content: PageContentBlock,
+        seo: SeoBlock,
+    };
+
+    export const Page: DocumentInterface & TranslatableInterface & DependencyInterface = {
+        // ...existing config
+        ...createDocumentRootBlocksMethods(rootBlocks),
+        ...createDocumentTranslationMethods(rootBlocks),
+    };
+    ```
+
+    **Adding translate action to the edit page**
+
+    `createUsePage` now returns a `translateContent` function. Use it with `TranslateContentMenuItem` inside a `CrudMoreActionsMenu`:
+
+    ```tsx
+    const { translateContent /* ...other fields */ } = usePage({ pageId: id });
+
+    <CrudMoreActionsMenu overallActions={[<TranslateContentMenuItem translateContent={translateContent} />]} />;
+    ```
+
+    **Page tree integration**
+
+    The page tree context menu and bulk action toolbar automatically show a "Translate" action for pages. This translates the page name, slug, and document content.
+
+### Patch Changes
+
+- fa5c7a4: Fix `FileField` breaking image block selection
+
+    The `DamFileFieldFile` fragment lost the image dimensions (`width`, `height`, `cropArea`) needed by `DamImageBlock`/`PixelImageBlock`. Selecting an image inside an image block crashed because those fields were missing. Restored them on the fragment.
+
+    Composing the fragment into a parent collection (e.g. a many-to-many to `DamFile`) exposed a Mikro-ORM gotcha: `Collection.loadItems()` does not honor `eager: true`, so each loaded `DamFile` had an uninitialized `image` Reference and GraphQL threw `Cannot return null for non-nullable field DamFileImage.width`. Added an `image` `@ResolveField` on `FilesResolver` that initializes the Reference if needed, so consumers don't have to remember to populate it.
+
+- 31d9296: Fix duplicate TipTap `'link'` extension warning by explicitly disabling StarterKit's built-in Link extension
+
+    StarterKit (v3+) includes `@tiptap/extension-link` by default. Since we register our own `CmsLink` mark (also named `"link"`), this caused a "Duplicate extension names found: ['link']" warning. Setting `link: false` in `StarterKit.configure()` resolves this.
+
+- ae85ba9: Fix `TipTapRichTextBlock` toolbar colors to match the existing `RichTextBlock` toolbar
+
+    The TipTap toolbar incorrectly used Comet's `greyPalette` (where `greyPalette[100]` is `#D9D9D9`) for the toolbar background, button icon, hover, and disabled states. This made the toolbar look noticeably darker than the existing Draft.js-based `RichTextBlock` toolbar, which uses MUI's lighter `grey` palette (`grey[100]` is `#F5F5F5`). The TipTap toolbar now uses the same MUI grey shades for these states so the two toolbars look consistent.
+
+- ab5e547: Validate the SEO block's structured data field as JSON
+
+    The structured data field in the SEO block now shows a validation error when the entered value is not valid JSON. This matches the existing API-side `@IsJSON()` validation and prevents invalid payloads from being saved.
+
+- Updated dependencies [d7b77af]
+- Updated dependencies [8e40458]
+- Updated dependencies [2fe9d4b]
+- Updated dependencies [460cbfb]
+    - @comet/admin@9.0.0-beta.4
+    - @comet/admin-rte@9.0.0-beta.4
+    - @comet/admin-date-time@9.0.0-beta.4
+    - @comet/admin-icons@9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+### Minor Changes
+
+- dc8f29c: Add `SitePreviewAction` to `DocumentInterface`
+
+    Allows overriding the site preview button in the page tree row actions on a per-document-type basis. When set, the provided component replaces the default preview `RowActionsItem`, enabling custom preview URL construction (e.g., using additional GraphQL queries or scope data).
+
+    **Example**
+
+    ```tsx
+    import { RowActionsItem } from "@comet/admin";
+    import { Preview } from "@comet/admin-icons";
+    import { type DocumentInterface, openSitePreviewWindow, type SitePreviewActionProps } from "@comet/cms-admin";
+
+    function PageSitePreviewAction({ pageTreeNode }: SitePreviewActionProps) {
+        // Use hooks to construct a custom preview URL
+        const previewPath = useCustomPreviewPath(pageTreeNode);
+
+        return (
+            <RowActionsItem
+                icon={<Preview />}
+                disabled={!previewPath}
+                onClick={() => {
+                    if (previewPath) {
+                        openSitePreviewWindow(previewPath, "/custom-root");
+                    }
+                }}
+            >
+                Open preview
+            </RowActionsItem>
+        );
+    }
+
+    export const Page: DocumentInterface = {
+        // ...
+        SitePreviewAction: PageSitePreviewAction,
+    };
+    ```
+
+- 71dce06: Make DataGrid columns in DAM sortable
+
+    Make Name, Type/Format, Info, Creation, and Latest Change columns in the `FolderDataGrid` sortable via column header clicks, using the standard `muiGridSortToGql` pattern from generated grids. Remove the separate Sort dropdown from the toolbar. Sort state is now stored in URL params instead of localStorage.
+
+### Patch Changes
+
+- 1475f4a: Hide selective actions of DAM more actions menu in `ChooseDamFileDialog`
+- 8a93124: Fix `hideContextMenu` not hiding the context menu column in the DAM `DataGrid`
+
+    The visibility flag was applied to a no-longer-existing `contextMenu` column id; the column had been renamed to `actions`. The flag now targets the correct column.
+
+- f29b2d7: Deprecate `ChooseFileDialog` export
+
+    `ChooseFileDialog` was renamed to `ChooseDamFileDialog`
+
+- 4729b3f: Prevent links in the `TableBlock` RTE cell preview from opening when editing a cell
+
+    Double-clicking a cell to edit it would open any link in the preview.
+    Pointer events are now disabled on the preview, while text selection still works.
+
+- Updated dependencies [cabba53]
+- Updated dependencies [3c81ff0]
+    - @comet/admin@9.0.0-beta.3
+    - @comet/admin-date-time@9.0.0-beta.3
+    - @comet/admin-icons@9.0.0-beta.3
+    - @comet/admin-rte@9.0.0-beta.3
+
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Minor Changes
+
+- 25f7342: Export `PageTreeSelect`
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+- Updated dependencies [99140f8]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0-beta.2
+    - @comet/admin-date-time@9.0.0-beta.2
+    - @comet/admin-icons@9.0.0-beta.2
+    - @comet/admin-rte@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Major Changes
+
+- 8c2fdde: Add filtering and sorting to `DependenciesList` and `DependentsList`
+
+    Users can now filter dependencies/dependents by name, type, secondary information, and visibility, and sort by all columns. A default filter shows only visible items. The `GqlFilter` type is now exported from `@comet/admin`.
+
+    **Breaking changes:**
+
+    **`@comet/cms-api`:** `DependencyFilter.targetGraphqlObjectType` and `DependentFilter.rootGraphqlObjectType` changed from `string` to `StringFilter`. Update any code passing a plain string to use `{ equal: "..." }` instead.
+
+    **`@comet/cms-api`:** `DependenciesService.getDependents()` and `getDependencies()` consolidated the `filter`, `paginationArgs`, and `options` parameters into a single `options` object. If you call these methods directly, merge the arguments:
+
+    ```ts
+    // Before
+    service.getDependents(target, filter, { offset, limit }, { forceRefresh, sort });
+
+    // After
+    service.getDependents(target, { filter, offset, limit, forceRefresh, sort });
+    ```
+
+    **`@comet/cms-admin`:** The GQL queries passed to `DependenciesList` and `DependentsList` must now accept `$filter` and `$sort` variables and forward them to the `dependencies`/`dependents` field. Update your queries as follows:
+
+    ```graphql
+    # DependentsList
+    query MyDependents($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependentFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    rootGraphqlObjectType
+                    rootId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+
+    # DependenciesList
+    query MyDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false, $filter: DependencyFilter, $sort: [DependencySort!]) {
+        item: myEntity(id: $id) {
+            id
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                nodes {
+                    targetGraphqlObjectType
+                    targetId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                    visible
+                }
+                totalCount
+            }
+        }
+    }
+    ```
+
+- 85b09a2: Replace `DependencyList` with `DependenciesList` and `DependentsList`
+
+    **Breaking change:** `DependencyList` has been removed. Use `DependenciesList` for queries returning `item.dependencies` and `DependentsList` for queries returning `item.dependents`.
+
+- 171c335: Redirects: add `domain` source type
+
+    To fully support domain redirects, additional handling is required in the site middleware.
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [8e3a074]
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-date-time@9.0.0-beta.1
+    - @comet/admin-rte@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
+## 9.0.0-beta.0
+
+### Major Changes
+
+- ee24125: Remove `createHttpClient` function
+
+    Use native fetch instead.
+
+- 5f1566a: Make packages ESM-only
+- 790e8d0: Remove the `filesInfoText` slot from `FileSelect`
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [3fda20b]
+- Updated dependencies [f066335]
+- Updated dependencies [5f1566a]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [631540c]
+    - @comet/admin-date-time@9.0.0-beta.0
+    - @comet/admin-icons@9.0.0-beta.0
+    - @comet/admin-rte@9.0.0-beta.0
+    - @comet/admin@9.0.0-beta.0
+
+## 8.20.0
+
+### Minor Changes
+
+- ed00704: Add `TableBlock` using the `createTableBlock()` factory
+
+    The passed in `richText` block is used to edit the cell content.
+
+    **Admin:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-admin";
+    import { RichTextBlock } from "./RichTextBlock";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+    **API:**
+
+    ```ts
+    import { createTableBlock } from "@comet/cms-api";
+    import { RichTextBlock } from "./rich-text.block";
+
+    export const TableBlock = createTableBlock({ richText: RichTextBlock });
+    ```
+
+### Patch Changes
+
+- Updated dependencies [412ed19]
+- Updated dependencies [caceff8]
+    - @comet/admin@8.20.0
+    - @comet/admin-icons@8.20.0
+    - @comet/admin-date-time@8.20.0
+    - @comet/admin-rte@8.20.0
+
+## 8.19.0
+
+### Patch Changes
+
+- Updated dependencies [fff2cc2]
+- Updated dependencies [fff2cc2]
+    - @comet/admin@8.19.0
+    - @comet/admin-date-time@8.19.0
+    - @comet/admin-rte@8.19.0
+    - @comet/admin-icons@8.19.0
+
+## 8.18.0
+
+### Minor Changes
+
+- 64b70bc: Re-add "Usages" column to the DAM `FolderDataGrid`, displaying the number of dependents for each file
+
+### Patch Changes
+
+- ed029fb: Export `CurrentUserContext` from `@comet/cms-admin`
+
+    `CurrentUserContext` is now exported so that consumers can directly access the React context. This is needed for use cases such as providing a custom implementation of the context (e.g. in tests or in applications that manage their own user context) and for components that need to consume the context directly rather than through the `useCurrentUser` hook.
+
+- Updated dependencies [0ce431c]
+- Updated dependencies [d344f53]
+    - @comet/admin@8.18.0
+    - @comet/admin-date-time@8.18.0
+    - @comet/admin-rte@8.18.0
+    - @comet/admin-icons@8.18.0
+
+## 8.17.1
+
+### Patch Changes
+
+- Updated dependencies [91e9a8f]
+    - @comet/admin-icons@8.17.1
+    - @comet/admin@8.17.1
+    - @comet/admin-date-time@8.17.1
+    - @comet/admin-rte@8.17.1
+
+## 8.17.0
+
+### Patch Changes
+
+- Updated dependencies [45163f1]
+    - @comet/admin@8.17.0
+    - @comet/admin-date-time@8.17.0
+    - @comet/admin-rte@8.17.0
+    - @comet/admin-icons@8.17.0
+
+## 8.16.0
+
+### Patch Changes
+
+- Updated dependencies [472b496]
+    - @comet/admin@8.16.0
+    - @comet/admin-date-time@8.16.0
+    - @comet/admin-rte@8.16.0
+    - @comet/admin-icons@8.16.0
+
+## 8.15.0
+
+### Minor Changes
+
+- 9333e9c: Readd "Start impersonation" button to UserGrid
+
+### Patch Changes
+
+- 2bbb9c1: Fix scope not switching when impersonating a user
+
+    Previously, the `ContentScopeProvider` blindly restored the scope from localStorage, which could redirect impersonated users to scopes they don't have access to.
+
+    Now, the stored scope is validated against the user's allowed scopes before being applied. If the stored scope is not allowed, it is cleared from localStorage and the default scope is used instead.
+
+    Additionally, the `NODE_ENV` guard on persisting the selected scope to localStorage is removed so scope persistence is also done locally again.
+
+- Updated dependencies [cc96333]
+- Updated dependencies [180d1e3]
+- Updated dependencies [f7b9de9]
+- Updated dependencies [39a9bb0]
+- Updated dependencies [5b52998]
+- Updated dependencies [0c2435a]
+    - @comet/admin@8.15.0
+    - @comet/admin-date-time@8.15.0
+    - @comet/admin-rte@8.15.0
+    - @comet/admin-icons@8.15.0
+
+## 8.14.0
+
+### Minor Changes
+
+- d0a7c96: Automatically hide the `MasterMenu` and `AppHeaderMenuButton` if only one menu item is available
+
+### Patch Changes
+
+- Updated dependencies [f31b52e]
+- Updated dependencies [5075f7a]
+- Updated dependencies [d0a7c96]
+    - @comet/admin@8.14.0
+    - @comet/admin-date-time@8.14.0
+    - @comet/admin-rte@8.14.0
+    - @comet/admin-icons@8.14.0
+
+## 8.13.0
+
+### Minor Changes
+
+- 6b0b088: Allow UserService to implement getAccountUrl() which provides a "My Account" link in the UserHeaderItem
+
+### Patch Changes
+
+- 60ecc0a: Store open state of `MainNavigation` in local storage and restore it on page load
+- 5cfa88d: Fix renaming of DAM folders
+- Updated dependencies [60ecc0a]
+- Updated dependencies [dbf8774]
+    - @comet/admin@8.13.0
+    - @comet/admin-date-time@8.13.0
+    - @comet/admin-rte@8.13.0
+    - @comet/admin-icons@8.13.0
+
+## 8.12.0
+
+### Patch Changes
+
+- 02c25c1: Fix preview url handling in `SvgImageBlock`
+- Updated dependencies [12466e4]
+    - @comet/admin@8.12.0
+    - @comet/admin-date-time@8.12.0
+    - @comet/admin-rte@8.12.0
+    - @comet/admin-icons@8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- Updated dependencies [a498b80]
+    - @comet/admin@8.11.1
+    - @comet/admin-date-time@8.11.1
+    - @comet/admin-rte@8.11.1
+    - @comet/admin-icons@8.11.1
+
+## 8.11.0
+
+### Minor Changes
+
+- 89db54c: Improve `InfoTag` type in `DocumentType`
+
+    Add a new `InfoTagProps` type that can be used to properly type additional page tree node fields:
+
+    ```tsx
+    const Page: DocumentInterface = {
+        InfoTag: ({ page }: InfoTagProps<{ userGroup: GQLUserGroup }>) => {
+            // page now has the userGroup field
+            if (page.userGroup !== "all") {
+                return <Chip size="small" label={page.userGroup} />;
+            }
+            return null;
+        },
+    };
+    ```
+
+- 9d5e331: Enable `@typescript-eslint/consistent-type-exports` in `@comet/eslint-config/future/react.js`
+- f34b750: Add Status to CronJob
+
+### Patch Changes
+
+- 0482cf9: Fix pagination in `DependencyList`
+
+    Additionally:
+    - Add loading state when reloading dependencies
+    - Refactor `DependencyList` DataGrid based on Grid generated by the admin generator to be closer to standard
+
+- 0031d19: Fix display of error message for exceeding max file uploads in `FinalFormFileUpload`
+- Updated dependencies [8d7a90c]
+- Updated dependencies [198da7b]
+- Updated dependencies [2580c61]
+- Updated dependencies [f0b1eb1]
+- Updated dependencies [9c091ec]
+- Updated dependencies [cc727d1]
+- Updated dependencies [f293762]
+- Updated dependencies [9d5e331]
+- Updated dependencies [5337c20]
+- Updated dependencies [7e34c0b]
+- Updated dependencies [ed03e8d]
+    - @comet/admin-rte@8.11.0
+    - @comet/admin@8.11.0
+    - @comet/admin-date-time@8.11.0
+    - @comet/admin-icons@8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

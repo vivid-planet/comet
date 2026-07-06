@@ -1,18 +1,23 @@
-import { type EditorState } from "draft-js";
+import type { EditorState } from "draft-js";
 import { type FunctionComponent, useRef } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { FieldRenderProps } from "react-final-form";
 
 import makeRteApi, { type IMakeRteApiProps, type OnDebouncedContentChangeFn } from "../core/makeRteApi";
 import { type IOptions as RteOptions, Rte, type RteProps } from "../core/Rte";
 import RteReadOnlyBase from "../core/RteReadOnly";
 
-interface IConfig<T = any> {
+export interface IConfig<T = any> {
     rteApiOptions?: IMakeRteApiProps<T>;
     rteOptions?: RteOptions;
 }
 
 const defaultConfig: IConfig = {};
 
+/**
+ * Used to create a Final Form-compatible RTE component.
+ *
+ * @see {@link createRteField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
     const { rteApiOptions, rteOptions } = config;
     const [useRteApi, { createStateFromRawContent }] = makeRteApi(rteApiOptions);
@@ -23,7 +28,7 @@ function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
         value: remove,
         ...rest
     }) => {
-        const ref = useRef<any>();
+        const ref = useRef<any>(undefined);
 
         const onDebouncedContentChange: OnDebouncedContentChangeFn<T> = (debouncedEditorState: EditorState, convertStateToRawContent) => {
             onChange(convertStateToRawContent(debouncedEditorState));

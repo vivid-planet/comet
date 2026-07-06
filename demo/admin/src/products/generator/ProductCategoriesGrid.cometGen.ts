@@ -1,5 +1,5 @@
 import { defineConfig } from "@comet/admin-generator";
-import { type GQLProductCategory } from "@src/graphql.generated";
+import type { GQLProductCategory } from "@src/graphql.generated";
 
 export default defineConfig<GQLProductCategory>({
     type: "grid",
@@ -8,6 +8,9 @@ export default defineConfig<GQLProductCategory>({
     queryParamsPrefix: "productCategories",
     rowReordering: {
         enabled: true,
+    },
+    crudContextMenu: {
+        deleteType: "remove",
     },
     columns: [
         {

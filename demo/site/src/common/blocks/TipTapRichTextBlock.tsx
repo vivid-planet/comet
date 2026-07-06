@@ -1,0 +1,88 @@
+"use client";
+import {
+    hasTipTapRichTextContent,
+    PreviewSkeleton,
+    type PropsWithData,
+    renderTipTapRichText,
+    type TipTapMarkHandler,
+    type TipTapNode,
+    type TipTapNodeHandler,
+    withPreview,
+} from "@comet/site-nextjs";
+import type { LinkBlockData, TipTapRichTextBlockData } from "@src/blocks.generated";
+import { PageLayout } from "@src/layout/PageLayout";
+
+import { Typography, type TypographyProps } from "../components/Typography";
+import { isValidLink } from "../helpers/HiddenIfInvalidLink";
+import { LinkBlock } from "./LinkBlock";
+import styles from "./RichTextBlock.module.scss";
+
+type TypographyVariant = TypographyProps<"p">["variant"];
+
+const headingLevelToVariant: Record<1 | 2 | 3 | 4 | 5 | 6, TypographyVariant> = {
+    1: "headline600",
+    2: "headline550",
+    3: "headline500",
+    4: "headline450",
+    5: "headline400",
+    6: "headline350",
+};
+
+const nodeMapping: Record<string, TipTapNodeHandler> = {
+    paragraph: ({ node, children }) => (
+        <Typography variant={(node.attrs?.textBlockStyle as TypographyVariant | null) ?? undefined} bottomSpacing className={styles.text}>
+            {children}
+        </Typography>
+    ),
+    heading: ({ node, children }) => {
+        const level = (node.attrs?.level as 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
+        return (
+            <Typography variant={headingLevelToVariant[level]} bottomSpacing className={styles.text}>
+                {children}
+            </Typography>
+        );
+    },
+    listItem: ({ node, children }) => {
+        const firstParagraph = node.content?.find((child) => child.type === "paragraph");
+        const textBlockStyle = (firstParagraph?.attrs?.textBlockStyle as TypographyVariant | null) ?? undefined;
+        return (
+            <Typography as="li" variant={textBlockStyle} className={styles.text}>
+                {children}
+            </Typography>
+        );
+    },
+};
+
+const markMapping: Record<string, TipTapMarkHandler> = {
+    link: ({ mark, children }) => {
+        const linkData = mark.attrs?.data as LinkBlockData | undefined;
+        if (!linkData || !isValidLink(linkData)) {
+            return <>{children}</>;
+        }
+        return (
+            <LinkBlock data={linkData} className={styles.inlineLink}>
+                {children}
+            </LinkBlock>
+        );
+    },
+};
+
+const TipTapRichTextBlock = withPreview(
+    ({ data }: PropsWithData<TipTapRichTextBlockData>) => {
+        const content = data.tipTapContent as TipTapNode;
+        return (
+            <PreviewSkeleton title="RichText" type="rows" hasContent={hasTipTapRichTextContent(content)}>
+                {renderTipTapRichText({ content, nodeMapping, markMapping })}
+            </PreviewSkeleton>
+        );
+    },
+    { label: "TipTap Rich Text" },
+);
+
+export const PageContentTipTapRichTextBlock = (props: PropsWithData<TipTapRichTextBlockData>) => (
+    <PageLayout grid>
+        <div className={styles.pageLayoutContent}>
+            <TipTapRichTextBlock {...props} />
+        </div>
+    </PageLayout>
+);

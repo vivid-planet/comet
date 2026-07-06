@@ -1,5 +1,5 @@
 import { defineConfig } from "@comet/admin-generator";
-import { type GQLProductVariant } from "@src/graphql.generated";
+import type { GQLProductVariant } from "@src/graphql.generated";
 
 export default defineConfig<GQLProductVariant>({
     type: "grid",

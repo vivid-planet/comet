@@ -8,8 +8,9 @@ import { Field as ReactFinalFormField, useForm } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type SeoBlockData, type SeoBlockInput } from "../blocks.generated";
+import type { SeoBlockData, SeoBlockInput } from "../blocks.generated";
 import { useContentGenerationConfig } from "../documents/ContentGenerationConfigContext";
+import { validateJson } from "../validation/validateJson";
 import { validateUrl } from "../validation/validateUrl";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
@@ -26,7 +27,7 @@ import { PixelImageBlock } from "./PixelImageBlock";
 import { type SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
-import { type BlockInterface, type BlockState } from "./types";
+import type { BlockInterface, BlockState } from "./types";
 
 interface CreateSeoBlockOptions {
     image?: BlockInterface;
@@ -188,7 +189,7 @@ export function createSeoBlock(
                             <Typography variant="h4" gutterBottom>
                                 <FormattedMessage id="comet.blocks.seo.structuredData.sectionTitle" defaultMessage="Structured Data" />
                             </Typography>
-                            <Field name="structuredData" multiline={true} rows={15} component={FinalFormInput} fullWidth />
+                            <Field name="structuredData" multiline={true} rows={15} component={FinalFormInput} fullWidth validate={validateJson} />
                         </Box>
 
                         {/* Sitemap */}

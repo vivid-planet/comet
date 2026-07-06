@@ -1,10 +1,13 @@
 import { Redirect, Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
-import { fireEvent, render, waitFor } from "test-utils";
+import { cleanup, fireEvent, render, waitFor } from "test-utils";
+import { afterEach, expect, test } from "vitest";
 
 import { ForcePromptRoute } from "./ForcePromptRoute";
 import { RouterPrompt } from "./Prompt";
 import { useSubRoutePrefix } from "./SubRoute";
+
+afterEach(cleanup);
 
 test("Nested route in Prompt", async () => {
     function Story() {

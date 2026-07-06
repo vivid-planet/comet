@@ -27,4 +27,6 @@ export class CurrentUser {
     impersonated?: boolean;
     @Field(() => UserPermissionsUser, { nullable: true })
     authenticatedUser?: UserPermissionsUser;
+    @Field({ nullable: true })
+    accountUrl?: string;
 }

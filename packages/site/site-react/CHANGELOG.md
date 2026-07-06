@@ -1,5 +1,170 @@
 # @comet/site-react
 
+## 9.0.0-beta.6
+
+### Minor Changes
+
+- 4c1aeb2: Add `noFollow` option to `ExternalLinkBlock`
+
+    Editors can now mark an external link as `nofollow` via a new checkbox in the admin form. When enabled, the rendered `<a>` tag receives `rel="nofollow"`. Existing links are unaffected by an automatic block-data migration that sets `noFollow` to `false`.
+
+### Patch Changes
+
+- d870d05: Fix Cookiebot consent initialization
+
+    Fix a race condition where the `CookiebotOnConsentReady` event fires before the `useCookieBotCookieApi` hook is mounted.
+
+## 9.0.0-beta.5
+
+### Patch Changes
+
+- cfa70a2: Fix preview-image to playback transition in video blocks
+    - `DamVideoBlock`: clicking the preview image's play button now starts video playback. Previously, the click dismissed the preview but the browser's autoplay policy blocked playback of videos with sound because the gesture happened on the preview image rather than the `<video>` element. Playback is now triggered explicitly inside the ref callback to stay within the user gesture window.
+    - `YouTubeVideoBlock` / `VimeoVideoBlock`: when the preview image is dismissed, `isPlaying` is now set to `true` so `PlayPauseButton` shows the correct icon, and the playback is flagged as manually handled so the viewport handler does not immediately pause the video.
+
+- 4f018d5: Fix `VimeoVideoBlock` not autoplaying on initial page load when `autoplay` is enabled and no `previewImage` is set
+
+    Without a `previewImage`, the iframe URL was missing `autoplay=1` and playback relied on a `postMessage("play")` fired from the `IntersectionObserver` callback. That message raced against the Vimeo player's initialization inside the iframe — when it arrived first the message was dropped and the video stayed paused, while the `PlayPauseButton` optimistically showed the "Pause" state, requiring two clicks to recover. `autoplay=1` is now appended whenever `autoplay` is enabled so Vimeo handles autoplay natively. The existing `muted=1` param satisfies the browser autoplay policy.
+
+    The iframe is also marked with `loading="lazy"` so blocks far below the fold don't request the Vimeo player upfront.
+
+## 9.0.0-beta.4
+
+### Major Changes
+
+- 8b3932d: Move server-only exports to `/server` subpath
+
+    Server-only exports have been moved to a separate `/server` entry point to prevent server-only code from being pulled into client bundles. While tree-shaking previously removed unused server code, this is an optional optimization — Vite's dev server, for example, does not tree-shake, causing errors when importing these packages in non-server environments (e.g., Storybook).
+
+    **`@comet/site-nextjs`**: `sitePreviewRoute`, `legacyPagesRouterSitePreviewApiHandler`, `previewParams`, `legacyPagesRouterPreviewParams`, and `persistedQueryRoute` must now be imported from `@comet/site-nextjs/server`:
+
+    ```diff
+    - import { sitePreviewRoute } from "@comet/site-nextjs";
+    + import { sitePreviewRoute } from "@comet/site-nextjs/server";
+    ```
+
+    ```diff
+    - import { previewParams } from "@comet/site-nextjs";
+    + import { previewParams } from "@comet/site-nextjs/server";
+    ```
+
+    ```diff
+    - import { persistedQueryRoute } from "@comet/site-nextjs";
+    + import { persistedQueryRoute } from "@comet/site-nextjs/server";
+    ```
+
+    **`@comet/site-react`**: `persistedQueryRoute` must now be imported from `@comet/site-react/server`:
+
+    ```diff
+    - import { persistedQueryRoute } from "@comet/site-react";
+    + import { persistedQueryRoute } from "@comet/site-react/server";
+    ```
+
+### Minor Changes
+
+- ab5e547: Add `JsonLd` component for typed schema.org structured data
+
+    Renders any [`schema-dts`](https://www.npmjs.com/package/schema-dts) entity inside a `<script type="application/ld+json">` tag. The payload is escaped so a `</script>` sequence in user content cannot break out of the script tag.
+
+    ```tsx
+    import { JsonLd } from "@comet/site-react";
+    import type { Organization } from "schema-dts";
+
+    <JsonLd<Organization>
+        data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Acme",
+            url: "https://acme.example",
+            logo: "https://acme.example/logo.png",
+        }}
+    />;
+    ```
+
+    Also re-exported from `@comet/site-nextjs`.
+
+## 9.0.0-beta.3
+
+### Patch Changes
+
+- e125c84: Use `OnetrustActiveGroups` instead of `ConsentIntegrationData` in `useOneTrustCookieApi`
+
+    `ConsentIntegrationData` is used for OneTrust's internal logging and can be `null`, which caused `useOneTrustCookieApi` to crash. As recommended by OneTrust support, `window.OnetrustActiveGroups` is used instead, as it is always available when the consent banner is implemented.
+
+## 9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- 865fcfd: Remove legacy CJS fields (`module`, `types`) from package.json as these packages are ESM-only
+
+## 9.0.0-beta.0
+
+### Minor Changes
+
+- 740dba8: Add support for React 19
+
+## 8.20.0
+
+## 8.19.0
+
+## 8.18.0
+
+### Minor Changes
+
+- 2a9e770: Add HTML anchor props pass-through to `DamFileDownloadLinkBlock`
+
+    These link block component now accept and pass through standard HTML anchor element attributes (such as `id`, `className`, `style`, `target`, `rel`, `aria-*`, `data-*`, `onClick`, etc.) to the rendered `<a>` element.
+
+    **Example**:
+
+    ```tsx
+    <DamFileDownloadLinkBlock data={linkData} className="custom-link">
+        <span>Download file</span>
+    </DamFileDownloadLinkBlock>
+    ```
+
+## 8.17.1
+
+## 8.17.0
+
+### Minor Changes
+
+- 35c338e: Add HTML anchor props pass-through to `ExternalLinkBlock`, `PhoneLinkBlock`, and `EmailLinkBlock`
+
+    These link block components now accept and pass through standard HTML anchor element attributes (such as `id`, `className`, `style`, `target`, `rel`, `aria-*`, `data-*`, `onClick`, etc.) to the rendered `<a>` element.
+
+    **Example**:
+
+    ```tsx
+    <ExternalLinkBlock data={linkData} className="custom-link" aria-label="Opens external site" data-tracking="external-click">
+        <span>External Link</span>
+    </ExternalLinkBlock>
+    ```
+
+## 8.16.0
+
+## 8.15.0
+
+## 8.14.0
+
+## 8.13.0
+
+### Patch Changes
+
+- 9f5c4e6: Fix height of DamVideoBlock when fill prop is set
+
+## 8.12.0
+
+## 8.11.1
+
+### Patch Changes
+
+- 02d2ba8: Fix autoplay behavior of `YouTubeVideoBlock`
+
+## 8.11.0
+
 ## 8.10.0
 
 ### Patch Changes

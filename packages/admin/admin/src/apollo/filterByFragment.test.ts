@@ -1,11 +1,11 @@
 // Copied and adapted from https://github.com/apollographql/apollo-client/blob/release-2.x/packages/graphql-anywhere/src/__tests__/utilities.ts
-
 import { disableFragmentWarnings, gql } from "@apollo/client";
+import { describe, expect, it } from "vitest";
+
+import { filterByFragment } from "./filterByFragment";
 
 // Turn off warnings for repeated fragment names
 disableFragmentWarnings();
-
-import { filterByFragment } from "./filterByFragment";
 
 describe("filterByFragment", () => {
     describe("with a single query", () => {

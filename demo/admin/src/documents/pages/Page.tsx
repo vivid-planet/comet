@@ -1,11 +1,18 @@
 import { gql } from "@apollo/client";
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, type DependencyInterface, type DocumentInterface } from "@comet/cms-admin";
-import { type PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
+import {
+    createDocumentDependencyMethods,
+    createDocumentRootBlocksMethods,
+    createDocumentTranslationMethods,
+    type DependencyInterface,
+    type DocumentInterface,
+    type InfoTagProps,
+    type TranslatableInterface,
+} from "@comet/cms-admin";
 import { Chip } from "@mui/material";
-import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode.generated";
-import { type GQLPage, type GQLPageInput } from "@src/graphql.generated";
+import type { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
+import type { GQLPage, GQLPageInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import { FormattedMessage } from "react-intl";
 
@@ -14,7 +21,15 @@ import { SeoBlock } from "./blocks/SeoBlock";
 import { StageBlock } from "./blocks/StageBlock";
 import { EditPage } from "./EditPage";
 
-export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> & DependencyInterface = {
+const rootBlocks = {
+    content: PageContentBlock,
+    seo: SeoBlock,
+    stage: StageBlock,
+};
+
+export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> &
+    TranslatableInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> &
+    DependencyInterface = {
     displayName: <FormattedMessage {...messages.page} />,
     editComponent: EditPage,
     menuIcon: File,
@@ -51,17 +66,14 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             }
         }
     `,
-    InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
+    InfoTag: ({ page }: InfoTagProps<GQLPageTreeNodeAdditionalFieldsFragment>) => {
         if (page.userGroup !== "all") {
             return <Chip size="small" label={page.userGroup} />;
         }
         return null;
     },
-    ...createDocumentRootBlocksMethods({
-        content: PageContentBlock,
-        seo: SeoBlock,
-        stage: StageBlock,
-    }),
+    ...createDocumentRootBlocksMethods(rootBlocks),
+    ...createDocumentTranslationMethods(rootBlocks),
     ...createDocumentDependencyMethods({
         rootQueryName: "page",
         rootBlocks: {

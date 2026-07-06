@@ -1,6 +1,6 @@
 import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
-import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
+import { faker } from "@src/db/fixtures/faker";
 import { BackgroundColor as ContentGroupBackgroundColor, ContentBlock, ContentGroupBlock } from "@src/documents/pages/blocks/content-group.block";
 
 import { BlockFixture } from "../block-fixture";
@@ -35,7 +35,8 @@ export class ContentGroupBlockFixtureService {
     async generateContentGroupContentBlock(): Promise<ExtractBlockInputFactoryProps<typeof ContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof ContentBlock>["blocks"] = [];
 
-        const blockCfg: Record<(typeof blocks)[number]["type"], BlockFixture> = {
+        // TODO: Add table fixture (https://vivid-planet.atlassian.net/browse/COM-2227)
+        const blockCfg: Record<Exclude<(typeof blocks)[number]["type"], "table">, BlockFixture> = {
             accordion: this.accordionBlockFixtureService,
             anchor: this.anchorBlockFixtureService,
             callToActionList: this.standaloneCallToActionListBlockFixtureService,

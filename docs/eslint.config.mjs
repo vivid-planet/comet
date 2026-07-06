@@ -1,10 +1,8 @@
+import { defineConfig, globalIgnores } from "eslint/config";
 import eslintConfigReact from "@comet/eslint-config/future/react.js";
 
-/** @type {import('eslint')} */
-const config = [
-    {
-        ignores: [".docusaurus", "build"],
-    },
+export default defineConfig([
+    globalIgnores([".docusaurus", "build"]),
     ...eslintConfigReact,
     {
         rules: {
@@ -12,6 +10,4 @@ const config = [
             "react/jsx-no-literals": "off",
         },
     },
-];
-
-export default config;
+]);

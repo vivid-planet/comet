@@ -4,6 +4,6 @@
  */
 export default {
     "src/**/*.{ts,tsx,js,jsx,json,css,scss,md}": () => "pnpm lint:eslint",
-    "src/**/*.{ts,tsx}": () => "pnpm lint:tsc",
-    "*.{js,json,md,yml,yaml}": () => "pnpm lint:prettier",
+    "src/**/*.{ts,tsx}": () => ["pnpm lint:tsc", "pnpm intl:extract"],
+    "*.{ts,js,json,md,yml,yaml}": () => "pnpm lint:prettier",
 };

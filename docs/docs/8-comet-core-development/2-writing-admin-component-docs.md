@@ -25,7 +25,7 @@ It should allow setting all props using `argTypes`. Default values should not be
 
 ```tsx
 import { MyComponent } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";
@@ -124,7 +124,7 @@ _Note that you then need to add `excludeStories: ["argTypes"]` to the meta objec
 
 ```tsx
 import { MyInputComponent } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";
@@ -178,7 +178,7 @@ Additionally, the default story must render a Final Form as a wrapper, as this i
 
 ```tsx
 import { MyInputComponentField } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { argTypes, args } from "./MyInputComponent.stories";
 import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";

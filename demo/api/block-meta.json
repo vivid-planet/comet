@@ -616,6 +616,11 @@
         ]
     },
     {
+        "name": "ContactForm",
+        "fields": [],
+        "inputFields": []
+    },
+    {
         "name": "ContentGroup",
         "fields": [
             {
@@ -691,7 +696,8 @@
                                 "mediaGallery": "MediaGallery",
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "table": "Table"
                             },
                             "nullable": false
                         }
@@ -735,7 +741,8 @@
                                 "mediaGallery": "MediaGallery",
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "table": "Table"
                             },
                             "nullable": false
                         }
@@ -1025,6 +1032,93 @@
         ]
     },
     {
+        "name": "EmailCampaignContent",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "text": "RichText",
+                                "divider": "EmailCampaignDivider",
+                                "salutation": "EmailCampaignSalutation",
+                                "image": "NewsletterImage"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "text": "RichText",
+                                "divider": "EmailCampaignDivider",
+                                "salutation": "EmailCampaignSalutation",
+                                "image": "NewsletterImage"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "EmailCampaignDivider",
+        "fields": [],
+        "inputFields": []
+    },
+    {
+        "name": "EmailCampaignSalutation",
+        "fields": [],
+        "inputFields": []
+    },
+    {
         "name": "EmailLink",
         "fields": [
             {
@@ -1053,6 +1147,11 @@
                 "name": "openInNewWindow",
                 "kind": "Boolean",
                 "nullable": false
+            },
+            {
+                "name": "noFollow",
+                "kind": "Boolean",
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -1063,6 +1162,11 @@
             },
             {
                 "name": "openInNewWindow",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "noFollow",
                 "kind": "Boolean",
                 "nullable": false
             }
@@ -1927,6 +2031,25 @@
         ]
     },
     {
+        "name": "NewsletterImage",
+        "fields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "NewsLink",
         "fields": [
             {
@@ -2105,8 +2228,11 @@
                                 "layout": "Layout",
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
+                                "table": "Table",
+                                "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },
@@ -2170,8 +2296,11 @@
                                 "layout": "Layout",
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
+                                "table": "Table",
+                                "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },
@@ -2553,6 +2682,23 @@
             {
                 "name": "activeType",
                 "kind": "String",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "RichText",
+        "fields": [
+            {
+                "name": "draftContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "draftContent",
+                "kind": "Json",
                 "nullable": false
             }
         ]
@@ -3231,6 +3377,153 @@
         ]
     },
     {
+        "name": "Table",
+        "fields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "cellValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "Block",
+                                        "block": "RichText",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "cellValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "Block",
+                                        "block": "RichText",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Teaser",
         "fields": [
             {
@@ -3450,6 +3743,23 @@
                 "name": "link",
                 "kind": "Block",
                 "block": "Link",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TipTapRichText",
+        "fields": [
+            {
+                "name": "tipTapContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "tipTapContent",
+                "kind": "Json",
                 "nullable": false
             }
         ]
