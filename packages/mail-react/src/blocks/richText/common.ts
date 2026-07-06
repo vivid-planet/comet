@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { TextStyles, VariantName } from "../../theme/themeTypes.js";
 import type { PropsWithData } from "../helpers/PropsWithData.js";
 
@@ -31,6 +33,13 @@ export type RichTextBlockTypeProps = Omit<TextStyles, "bottomSpacing"> & {
  */
 export type RichTextLinkHrefResolver = (props: unknown) => string | undefined;
 
+/**
+ * Renders the text spanned by one draft-js inline style (e.g. `BOLD`).
+ *
+ * `key` must be set on the returned element's root.
+ */
+export type RichTextInlineRenderer = (children: ReactNode, options: { key: string }) => ReactNode;
+
 export interface CreateRichTextBlockOptions {
     /**
      * Maps draft block types (e.g. `"header-one"`, `"paragraph-standard"`) to the
@@ -47,4 +56,14 @@ export interface CreateRichTextBlockOptions {
      * a resolver render their text without a link.
      */
     linkTypes?: Record<string, RichTextLinkHrefResolver>;
+    /**
+     * Maps draft-js inline style names to renderers, keyed by the style name as
+     * it appears in the content's `inlineStyleRanges`.
+     *
+     * Merged on top of the built-in styles (`BOLD`, `ITALIC`, `SUB`, `SUP`,
+     * `STRIKETHROUGH`): use it to override a built-in style, or to render a
+     * custom inline style the application defines in its RTE (e.g. `HIGHLIGHT`),
+     * which has no built-in renderer.
+     */
+    inline?: Record<string, RichTextInlineRenderer>;
 }

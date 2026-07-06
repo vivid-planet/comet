@@ -413,6 +413,20 @@ Key behaviors:
     });
     ```
 
+- **Inline styles**: built-in styles (`BOLD`, `ITALIC`, `SUB`, `SUP`, `STRIKETHROUGH`) render out of the box. The `inline` option maps a draft-js inline style name to a renderer and merges over the built-ins — override one, or render a custom style the app adds to its RTE (`customInlineStyles` on `IRteOptions`). The RTE stores only the style name, so the email defines the appearance. Register under the exact style name, use an inline element known to render across email clients (`<span>`, `<strong>`, `<em>` — not `<mark>`), and set explicit styles (email clients apply little of their own):
+
+    ```tsx
+    const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
+        inline: {
+            HIGHLIGHT: (children, { key }) => (
+                <span key={key} style={{ backgroundColor: "#ff0000", color: "#ffffff" }}>
+                    {children}
+                </span>
+            ),
+        },
+    });
+    ```
+
 - **Lists** render flat (`<ul>` / `<ol>` inside one text component per list); nesting by draft depth isn't supported.
 - Spacing between blocks comes from the theme's `bottomSpacing` (the last block gets none); headings are styled text, not semantic `<h1>` elements.
 - Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, and `richTextBlock__link` class names for targeting with `registerStyles`.

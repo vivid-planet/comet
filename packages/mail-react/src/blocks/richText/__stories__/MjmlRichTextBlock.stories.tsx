@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MjmlSection } from "../../../components/section/MjmlSection.js";
 import { createTheme } from "../../../theme/createTheme.js";
 import { createRichTextBlock } from "../createRichTextBlock.js";
-import { exampleBlockData, headlinesOnlyBlockData } from "./exampleBlockData.js";
+import { exampleBlockData, headlinesOnlyBlockData, highlightBlockData } from "./exampleBlockData.js";
 
 const { MjmlRichTextBlock } = createRichTextBlock();
 
@@ -100,6 +100,27 @@ export const WithCustomLinkType: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlCustomLinkTypeRichTextBlock data={exampleBlockData} />
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const { MjmlRichTextBlock: MjmlCustomInlineStyleRichTextBlock } = createRichTextBlock({
+    inline: {
+        HIGHLIGHT: (children, { key }) => (
+            <span key={key} style={{ backgroundColor: "#ff0000", color: "#ffffff" }}>
+                {children}
+            </span>
+        ),
+    },
+});
+
+/** Rendering a custom inline style via the `inline` option. `HIGHLIGHT` is not a built-in style — the application defines it in its RTE (`customInlineStyles`), and the email decides how it looks. The `inline` option merges over the built-in styles, so any the caller does not override keep their defaults. */
+export const WithCustomInlineStyle: Story = {
+    render: () => (
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlCustomInlineStyleRichTextBlock data={highlightBlockData} />
             </MjmlColumn>
         </MjmlSection>
     ),

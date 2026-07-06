@@ -4,7 +4,13 @@ import redraftImport from "redraft";
 
 import { HtmlText } from "../../components/text/HtmlText.js";
 import { MjmlText } from "../../components/text/MjmlText.js";
-import type { CreateRichTextBlockOptions, RichTextBlockProps, RichTextBlockTypeProps, RichTextLinkHrefResolver } from "./common.js";
+import type {
+    CreateRichTextBlockOptions,
+    RichTextBlockProps,
+    RichTextBlockTypeProps,
+    RichTextInlineRenderer,
+    RichTextLinkHrefResolver,
+} from "./common.js";
 import { type BlockTextProps, builtInLinkTypes, createRichTextRenderers } from "./createRichTextRenderers.js";
 
 // redraft is CommonJS-only: under native ESM the default import is the whole
@@ -64,10 +70,11 @@ interface RenderRichTextContentOptions {
     draftContent: unknown;
     blockTypes: Record<string, RichTextBlockTypeProps>;
     linkTypes: Record<string, RichTextLinkHrefResolver>;
+    inline: Record<string, RichTextInlineRenderer>;
     blockTextComponent: ComponentType<BlockTextProps>;
 }
 
-function renderRichTextContent({ draftContent, blockTypes, linkTypes, blockTextComponent }: RenderRichTextContentOptions): ReactNode {
+function renderRichTextContent({ draftContent, blockTypes, linkTypes, inline, blockTextComponent }: RenderRichTextContentOptions): ReactNode {
     if (!isDraftContent(draftContent)) {
         return null;
     }
@@ -79,7 +86,7 @@ function renderRichTextContent({ draftContent, blockTypes, linkTypes, blockTextC
         return null;
     }
 
-    const renderers = createRichTextRenderers({ blockTypes, linkTypes, blockTextComponent, lastBlockKey });
+    const renderers = createRichTextRenderers({ blockTypes, linkTypes, inline, blockTextComponent, lastBlockKey });
 
     return redraft({ ...draftContent, blocks: blocksWithText }, renderers);
 }
@@ -116,13 +123,14 @@ export function createRichTextBlock(options: CreateRichTextBlockOptions = {}): {
 } {
     const blockTypes = options.blockTypes ?? {};
     const linkTypes = { ...builtInLinkTypes, ...options.linkTypes };
+    const inline = options.inline ?? {};
 
     function MjmlRichTextBlock({ data }: RichTextBlockProps): ReactNode {
-        return renderRichTextContent({ draftContent: data.draftContent, blockTypes, linkTypes, blockTextComponent: MjmlBlockText });
+        return renderRichTextContent({ draftContent: data.draftContent, blockTypes, linkTypes, inline, blockTextComponent: MjmlBlockText });
     }
 
     function HtmlRichTextBlock({ data }: RichTextBlockProps): ReactNode {
-        return renderRichTextContent({ draftContent: data.draftContent, blockTypes, linkTypes, blockTextComponent: HtmlBlockText });
+        return renderRichTextContent({ draftContent: data.draftContent, blockTypes, linkTypes, inline, blockTextComponent: HtmlBlockText });
     }
 
     return { MjmlRichTextBlock, HtmlRichTextBlock };

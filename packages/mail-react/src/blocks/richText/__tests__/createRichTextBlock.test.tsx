@@ -179,6 +179,50 @@ describe("createRichTextBlock — inline styles and line breaks", () => {
 
         expect(markup).toContain("line one<br/>line two");
     });
+
+    it("merges the inline option over the built-in marks: overrides one, keeps the rest", () => {
+        const { HtmlRichTextBlock: HtmlCustomBoldRichTextBlock } = createRichTextBlock({
+            inline: {
+                BOLD: (children, { key }) => (
+                    <span key={key} className="customBold">
+                        {children}
+                    </span>
+                ),
+            },
+        });
+        const data = createBlockData([
+            createDraftBlock({
+                key: "a",
+                text: "bold italic",
+                inlineStyleRanges: [
+                    { offset: 0, length: 4, style: "BOLD" },
+                    { offset: 5, length: 6, style: "ITALIC" },
+                ],
+            }),
+        ]);
+        const markup = renderWithTheme(<HtmlCustomBoldRichTextBlock data={data} />);
+
+        expect(markup).toContain('<span class="customBold">bold</span>');
+        expect(markup).toContain('<em style="font-style:italic">italic</em>');
+    });
+
+    it("renders a custom inline style that has no built-in renderer", () => {
+        const { HtmlRichTextBlock: HtmlHighlightRichTextBlock } = createRichTextBlock({
+            inline: {
+                HIGHLIGHT: (children, { key }) => (
+                    <span key={key} style={{ backgroundColor: "#ff0000" }}>
+                        {children}
+                    </span>
+                ),
+            },
+        });
+        const data = createBlockData([
+            createDraftBlock({ key: "a", text: "highlighted", inlineStyleRanges: [{ offset: 0, length: 11, style: "HIGHLIGHT" }] }),
+        ]);
+        const markup = renderWithTheme(<HtmlHighlightRichTextBlock data={data} />);
+
+        expect(markup).toContain('<span style="background-color:#ff0000">highlighted</span>');
+    });
 });
 
 describe("createRichTextBlock — links", () => {

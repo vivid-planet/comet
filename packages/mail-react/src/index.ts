@@ -13,6 +13,7 @@ export type {
     RichTextBlockData,
     RichTextBlockProps,
     RichTextBlockTypeProps,
+    RichTextInlineRenderer,
     RichTextLinkHrefResolver,
 } from "./blocks/richText/common.js";
 export { createRichTextBlock } from "./blocks/richText/createRichTextBlock.js";

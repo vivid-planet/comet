@@ -4,4 +4,4 @@ Renders CMS RichText block data (draft-js raw content) in emails. Email template
 
 ## Non-goals
 
-- No custom block or entity renderers. The factory configures how block types are styled and how link types resolve to URLs — not the markup itself, which the package controls.
+- No custom block or entity renderers. Block and link markup is controlled by the package; the factory configures only how block types are styled, how link types resolve to URLs, and how inline styles render.

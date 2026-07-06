@@ -142,6 +142,23 @@ export const exampleBlockData: RichTextBlockData = {
     },
 };
 
+export const highlightBlockData: RichTextBlockData = {
+    draftContent: {
+        blocks: [
+            {
+                key: "hlt1",
+                text: "This paragraph contains highlighted text a reader should not miss.",
+                type: "paragraph-standard",
+                depth: 0,
+                inlineStyleRanges: [{ offset: 24, length: 16, style: "HIGHLIGHT" }],
+                entityRanges: [],
+                data: {},
+            },
+        ],
+        entityMap: {},
+    },
+};
+
 export const headlinesOnlyBlockData: RichTextBlockData = {
     draftContent: {
         blocks: [

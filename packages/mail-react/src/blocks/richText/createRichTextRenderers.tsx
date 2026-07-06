@@ -2,7 +2,7 @@ import type { ComponentType, PropsWithChildren, ReactNode } from "react";
 import type { Renderers, TextBlockRenderFn } from "redraft";
 
 import { HtmlInlineLink } from "../../components/inlineLink/HtmlInlineLink.js";
-import type { RichTextBlockTypeProps, RichTextLinkHrefResolver } from "./common.js";
+import type { RichTextBlockTypeProps, RichTextInlineRenderer, RichTextLinkHrefResolver } from "./common.js";
 
 export type BlockTextProps = PropsWithChildren<
     RichTextBlockTypeProps & {
@@ -112,11 +112,18 @@ const listBlockTypes = ["unordered-list-item", "ordered-list-item"];
 interface CreateRichTextRenderersOptions {
     blockTypes: Record<string, RichTextBlockTypeProps>;
     linkTypes: Record<string, RichTextLinkHrefResolver>;
+    inline: Record<string, RichTextInlineRenderer>;
     blockTextComponent: ComponentType<BlockTextProps>;
     lastBlockKey: string;
 }
 
-export function createRichTextRenderers({ blockTypes, linkTypes, blockTextComponent, lastBlockKey }: CreateRichTextRenderersOptions): Renderers {
+export function createRichTextRenderers({
+    blockTypes,
+    linkTypes,
+    inline,
+    blockTextComponent,
+    lastBlockKey,
+}: CreateRichTextRenderersOptions): Renderers {
     const blocks: Renderers["blocks"] = {};
 
     // "unstyled" is redraft's blockFallback: registering it makes every block type the caller did not configure render with base theme styles.
@@ -138,7 +145,7 @@ export function createRichTextRenderers({ blockTypes, linkTypes, blockTextCompon
     }
 
     return {
-        inline: inlineStyleRenderers,
+        inline: { ...inlineStyleRenderers, ...inline },
         blocks,
         entities: {
             LINK: (children, data, { key }) => {

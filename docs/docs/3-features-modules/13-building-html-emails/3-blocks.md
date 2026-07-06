@@ -133,6 +133,40 @@ export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
 
 Link types without a resolver render their text as plain text.
 
+### Inline styles
+
+Inline style ranges (`BOLD`, `ITALIC`, `SUB`, `SUP`, `STRIKETHROUGH`) render with built-in renderers. The `inline` option maps a draft-js inline style name to a renderer and merges over those built-ins, so you can override one while the others keep their defaults:
+
+```tsx
+export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
+    inline: {
+        BOLD: (children, { key }) => (
+            <strong key={key} style={{ fontWeight: "bold", color: "#cc0000" }}>
+                {children}
+            </strong>
+        ),
+    },
+});
+```
+
+The same option renders **custom** inline styles an application adds to its RTE via `customInlineStyles` on `IRteOptions` (see `@comet/admin-rte`). The style name you configure there — for example `HIGHLIGHT` — is stored verbatim in the content's inline style ranges but carries no styling of its own, so the email defines how it looks:
+
+```tsx
+export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
+    inline: {
+        HIGHLIGHT: (children, { key }) => (
+            <span key={key} style={{ backgroundColor: "#ff0000", color: "#ffffff" }}>
+                {children}
+            </span>
+        ),
+    },
+});
+```
+
+:::note
+Register the renderer under the exact style name used in the RTE. Prefer inline HTML elements known to render across email clients — `<span>`, `<strong>`, `<em>` — and set explicit styles rather than relying on a tag's defaults, which email clients apply inconsistently.
+:::
+
 ### Multiple configurations
 
 Each factory call is independent, so an application can create differently-configured pairs and name them by use case:

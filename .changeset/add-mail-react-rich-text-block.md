@@ -4,7 +4,7 @@
 
 Add `createRichTextBlock` for rendering Comet CMS RichText block data in emails
 
-The factory returns an `MjmlRichTextBlock` for the MJML context and an `HtmlRichTextBlock` for raw-HTML contexts (e.g. inside `MjmlRaw`), both driven by the same configuration. The `blockTypes` option maps the application's draft block types to theme text variants or plain style values; without it, every block renders with the base theme text styles. The `linkTypes` option adds href resolvers for the application's link block types on top of the built-in `external` support.
+The factory returns an `MjmlRichTextBlock` for the MJML context and an `HtmlRichTextBlock` for raw-HTML contexts (e.g. inside `MjmlRaw`), both driven by the same configuration. The `blockTypes` option maps the application's draft block types to theme text variants or plain style values; without it, every block renders with the base theme text styles. The `linkTypes` option adds href resolvers for the application's link block types on top of the built-in `external` support. The `inline` option overrides the built-in inline styles (`BOLD`, `ITALIC`, …) or renders custom inline styles the application defines in its RTE (e.g. `HIGHLIGHT`).
 
 Call the factory once — at the top level of a file, not inside a component — and export the returned components:
 
