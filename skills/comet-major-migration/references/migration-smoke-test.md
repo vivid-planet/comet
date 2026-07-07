@@ -62,20 +62,20 @@ For each admin route:
 
 **Skip on admin-only projects** — page tree presence follows site presence.
 
-Otherwise: the page tree exercises the most upstream code paths (block editor, RTE, file picker, page-tree GraphQL, route-tab navigation). Run a full Add → Edit → Delete on at least one category:
+Otherwise: the page tree exercises the most upstream code paths (block editor, RTE, file picker, page-tree GraphQL, route-tab navigation). Run a full Add → Edit → Delete on at least one page-tree category:
 
-1. Navigate to `/at/pages/pagetree/<category>` (e.g. `main-navigation`).
-2. **Add:** click Add, fill Name (slug auto-fills), pick default Document Type, Save. Confirm row appears and URL is clean.
-3. **Edit:** open the row's `/edit`. **Walk all tabs** (Blocks, Stage, Seo, Config). The Config tab embeds the RTE and is where React or MUI majors commonly surface prop-leak and `<div>`-in-`<p>` hydration errors. Capture console after each tab switch. Change one trivial field (e.g. `Menu description`), Save, reload, verify the value persisted.
+1. Navigate to the page tree in the admin (path and scope vary per project — find it in the menu, it typically lives under a `.../pages/pagetree/<category>` route). Pick any category.
+2. **Add:** click Add, fill Name (slug auto-fills), pick a Document Type, Save. Confirm row appears and URL is clean.
+3. **Edit:** open the row's `/edit`. **Walk every tab the page-edit view exposes** (tab set varies per project — e.g. content/blocks, SEO, settings). Whichever tab embeds the RTE is where React or MUI majors commonly surface prop-leak and `<div>`-in-`<p>` hydration errors. Capture console after each tab switch. Change one trivial field, Save, reload, verify the value persisted.
 4. **Delete:** context menu → Delete → confirm. Verify row is gone.
 
 If any step fails, that's a blocker for the PR.
 
 After the run, delete any test records (or note them in `test-report.md`).
 
-### Two errors to expect everywhere
+### Baseline errors
 
-Many projects have one or two errors that fire on _every_ admin page (Sentry init, logo SVG, etc.). Identify these once and call them "baseline" — count per-route errors _above_ baseline rather than reporting baseline N times.
+A project may have a few errors that fire on _every_ admin page (unrelated to the migration). Identify these once and call them "baseline" — count per-route errors _above_ baseline rather than reporting baseline N times.
 
 ## Site pass
 
@@ -84,7 +84,7 @@ Many projects have one or two errors that fire on _every_ admin page (Sentry ini
 **For multi-site projects, run once per site.** Each has its own sitemap, routes, and regression surface. Sites typically expose themselves:
 
 - Different ports on `localhost` (3000, 3001, …) — check `dev-pm status`.
-- Different hostnames via project middleware (`site/src/middleware.ts`) — hit with `Host:` header override or per-site dev URL.
+- Different hostnames via project middleware (`site/src/proxy.ts` or `site/src/middleware.ts`) — hit with `Host:` header override or per-site dev URL.
 
 Write per-site results under their own subheading (e.g. `### Site: <site-name> (port 3001)`).
 
@@ -108,7 +108,7 @@ Webcomponents that bundle their own copy of React (and related libraries) can cr
 
 ### Side effect of 404s
 
-Any URL that falls through to not-found produces _additional_ errors from the not-found page itself (`<a>` nested in `<a>`, hydration mismatch). Don't count these against the per-URL budget — they're a single not-found bug surfacing N times.
+Any URL that falls through to not-found may produce _additional_ errors from the not-found page itself. Don't count these against the per-URL budget — they're a single not-found bug surfacing N times.
 
 ## Triage findings
 
@@ -116,7 +116,7 @@ Apply one of three labels _while_ walking, not after:
 
 1. **Project-fixable** — broken code is under `admin/src`, `site/src`, `api/src`. Belongs in the migration PR or a follow-up.
 2. **Comet upstream** — broken code is under `node_modules/@comet/*`. Surface to the user; don't workaround.
-3. **Pre-existing / out-of-scope** — same warning pre-existed migration (font preload, Swiper loop, etc.). Note once at the bottom; don't itemize per-route.
+3. **Pre-existing / out-of-scope** — same warning pre-existed the migration. Note once at the bottom; don't itemize per-route.
 
 If you can't tell which bucket, grep for the symbol in the project source — if absent, it's upstream or a transitive dep.
 

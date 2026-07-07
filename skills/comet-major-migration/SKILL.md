@@ -1,6 +1,6 @@
 ---
-name: major-migration
-description: Migrates a Comet project across a major version (e.g. v4 → v5, v8 → v9). Use when the user asks to upgrade Comet, follow a Comet migration guide, or bump @comet/* packages to a new major.
+name: comet-major-migration
+description: Migrates a Comet project across a major version (e.g. v4 → v5, v5 → v6). Use when the user asks to upgrade Comet, follow a Comet migration guide, or bump @comet/* packages to a new major.
 ---
 
 # Major Comet Version Migration Skill
@@ -27,7 +27,7 @@ Before starting, figure out what's in this project. Comet projects vary — **an
 
 - **0 sites** — admin-only/headless. **Skip every site step in the guide** (package.json edits, codemods, config, verification). Don't treat the missing site as an error.
 - **1 site** — run the site section once.
-- **2+ sites** — **run the site section once per site.** Each site has its own `package.json`, `next.config.js`, `middleware.ts`, etc. Skipping the duplicates is the most common multi-site migration miss.
+- **2+ sites** — **run the site section once per site.** Each site has its own `package.json`, etc. Skipping the duplicates is the most common multi-site migration miss.
 
 **Page tree presence is tied to site presence.** Admin-only projects have no page tree — skip page-tree-specific steps. If you encounter the rare divergence (site without page tree, or vice versa), surface it before proceeding.
 
