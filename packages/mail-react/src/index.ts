@@ -8,14 +8,7 @@ export type { HtmlPixelImageBlockProps } from "./blocks/pixelImage/HtmlPixelImag
 export { HtmlPixelImageBlock } from "./blocks/pixelImage/HtmlPixelImageBlock.js";
 export type { MjmlPixelImageBlockProps } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
 export { MjmlPixelImageBlock } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
-export type {
-    CreateRichTextBlockOptions,
-    RichTextBlockData,
-    RichTextBlockProps,
-    RichTextBlockTypeProps,
-    RichTextInlineRenderer,
-    RichTextLinkHrefResolver,
-} from "./blocks/richText/common.js";
+export type { CreateRichTextBlockOptions, RichTextBlockProps } from "./blocks/richText/common.js";
 export { createRichTextBlock } from "./blocks/richText/createRichTextBlock.js";
 export type { HtmlButtonProps } from "./components/button/HtmlButton.js";
 export { HtmlButton } from "./components/button/HtmlButton.js";
