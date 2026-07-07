@@ -93,6 +93,8 @@ export function HtmlButton({
     );
 }
 
+HtmlButton.displayName = "HtmlButton";
+
 export function generateHtmlButtonStyles(theme: Theme): string {
     return generateResponsiveButtonCss(theme, {
         styleSelector: (variantName) => `.htmlButton--${variantName} a`,

@@ -16,7 +16,7 @@ const config: Meta<typeof MjmlText> = {
 export default config;
 
 export const Default: Story = {
-    render: () => (
+    render: (args) => (
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlText>Default text with base theme styles</MjmlText>
@@ -37,7 +37,7 @@ export const WithVariants: Story = {
             },
         }),
     },
-    render: () => (
+    render: (args) => (
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlText variant="heading">Heading variant</MjmlText>
