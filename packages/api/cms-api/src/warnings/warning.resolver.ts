@@ -1,5 +1,5 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, type ObjectQuery, raw } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, raw } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
@@ -15,7 +15,7 @@ import { ContentScope } from "../user-permissions/interfaces/content-scope.inter
 import { PaginatedWarnings } from "./dto/paginated-warnings";
 import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";
-import { referencesEntityInfo, remapWarningOrderBy, remapWarningQueryFields } from "./warning-query-fields.helper";
+import { referencesEntityInfo, remapWarningOrderBy, remapWarningQueryFields, type WarningQuery } from "./warning-query-fields.helper";
 
 @Resolver(() => Warning)
 @RequiredPermission(["warnings"], { skipScopeCheck: true })
@@ -54,10 +54,9 @@ export class WarningResolver {
             filter.and = filter.and.filter((item) => item.scope === undefined);
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const where: ObjectQuery<any> = remapWarningQueryFields(
+        const where = remapWarningQueryFields(
             gqlArgsToMikroOrmQuery({ filter: standardFilter }, this.entityManager.getMetadata(Warning)),
-        );
+        ) as WarningQuery;
         where.status = { $in: status };
 
         // Built by hand rather than via `gqlArgsToMikroOrmQuery`'s metadata-derived search, because name /

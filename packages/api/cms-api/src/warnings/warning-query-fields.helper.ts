@@ -1,17 +1,21 @@
+import type { ObjectQuery } from "@mikro-orm/postgresql";
+
 import type { WarningSort } from "./dto/warning.sort";
+import type { Warning } from "./entities/warning.entity";
+
+// Remapped warning query: `entityInfo.*` are join aliases from the EntityInfo view, not Warning columns.
+export type WarningQuery = ObjectQuery<Warning & Record<`entityInfo.${"name" | "secondaryInformation"}`, string>>;
 
 // `type`, `name` and `secondaryInformation` aren't plain Warning columns: `type` lives in the
 // `sourceInfo` JSONB column, `name` / `secondaryInformation` in the joined EntityInfo view. These
 // helpers remap them to the right column / join alias.
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function remapWarningQueryFields(query: any): any {
+export function remapWarningQueryFields(query: unknown): unknown {
     if (Array.isArray(query)) {
         return query.map(remapWarningQueryFields);
     }
     if (query !== null && typeof query === "object") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result: Record<string, any> = {};
+        const result: Record<string, unknown> = {};
         for (const [key, value] of Object.entries(query)) {
             // Recurse into every value so nested fields (inside `$and` / `$or` / `$not`) are remapped too.
             const remappedValue = remapWarningQueryFields(value);
