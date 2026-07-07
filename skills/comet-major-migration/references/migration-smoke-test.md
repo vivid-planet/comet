@@ -79,8 +79,8 @@ A project may have a few errors that fire on _every_ admin page. Identify these 
 
 **For multi-site projects, run once per site.** Each has its own sitemap, routes, and regression surface. Sites typically expose themselves:
 
-- Different ports on `localhost` — check `dev-pm status` for each site's dev URL.
-- Different hostnames via project middleware (`site/src/proxy.ts` or `site/src/middleware.ts`) — hit with `Host:` header override or per-site dev URL.
+- Each site config declares its `domains` (a main domain plus any additional ones). Locally these resolve to `localhost`, usually as distinct subdomains (e.g. `<site>.localhost:<port>`); check the site configs and `dev-pm status` for each site's dev URL.
+- Hit a specific site with its dev URL.
 
 Write per-site results under their own subheading (e.g. `### Site: <site-name> (<dev-url>)`).
 
