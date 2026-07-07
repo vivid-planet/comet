@@ -294,7 +294,7 @@ All components are imported from `@comet/mail-react` — never from `@faire/mjml
 
 ## Blocks
 
-`@comet/mail-react` ships components that render Comet CMS block data — currently `PixelImageBlockData`. Reach for these instead of raw `MjmlImage` / `<img>` whenever the source is a CMS block-data record.
+`@comet/mail-react` ships components that render Comet CMS block data — currently pixel-image and rich-text blocks. Reach for these instead of hand-rolled markup whenever the source is a CMS block-data record.
 
 ### Pixel-image blocks
 
@@ -341,6 +341,94 @@ Without `aspectRatio`, the rendered ratio comes from the DAM crop area. Pass `as
 ```
 
 When `data.damFile?.image` is absent, both blocks render nothing — no element, no error. Render a placeholder at the call site if you need one.
+
+### Rich-text blocks
+
+`createRichTextBlock` renders CMS RichText block data (draft-js raw content). **Call the factory once per configuration — at the top level of a file, never inside a component** — and export the returned pair; one configuration drives both rendering contexts.
+
+```tsx title="src/emails/blocks/richText.ts"
+export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
+    blockTypes: {
+        "header-one": { variant: "heading1" },
+        "header-two": { variant: "heading2" },
+        "paragraph-standard": { variant: "body" },
+    },
+});
+```
+
+| Component           | Renders each draft block as | Use within                                     |
+| ------------------- | --------------------------- | ---------------------------------------------- |
+| `MjmlRichTextBlock` | `MjmlText`                  | an `MjmlColumn` (standard MJML layout)         |
+| `HtmlRichTextBlock` | `HtmlText` (`<div>`)        | raw HTML or MJML ending tags such as `MjmlRaw` |
+
+Usage sites pass only `data`:
+
+```tsx
+<MjmlSection indent>
+    <MjmlColumn>
+        <MjmlRichTextBlock data={richTextData} />
+    </MjmlColumn>
+</MjmlSection>
+```
+
+Key behaviors:
+
+- **Works without variants.** `createRichTextBlock()` with no options renders every draft block with the base `theme.text` styles — map block types to variants later as the theme grows. Unmapped block types also fall back to base styles.
+- **`blockTypes` values are text-component props**: a theme `variant`, plain (non-responsive) style values (`color`, `fontSize`, `fontWeight`, …), and a `className`. For responsive styling without a variant, set a `className` and register CSS via `registerStyles`:
+
+    ```tsx
+    const { MjmlRichTextBlock } = createRichTextBlock({
+        blockTypes: { "header-one": { className: "richTextHeadlineOne" } },
+    });
+
+    registerStyles(
+        (theme) => css`
+            ${theme.breakpoints.default.belowMediaQuery} {
+                .richTextHeadlineOne > div {
+                    font-size: 24px !important;
+                }
+            }
+        `,
+    );
+    ```
+
+- **Multiple configurations per app.** Each factory call is independent — rename the destructured components per use case:
+
+    ```tsx
+    export const { MjmlRichTextBlock: MjmlHeadlineRichTextBlock, HtmlRichTextBlock: HtmlHeadlineRichTextBlock } = createRichTextBlock({
+        blockTypes: { "header-one": { variant: "heading1" }, "header-two": { variant: "heading2" } },
+    });
+    ```
+
+- **Links**: the `external` link type is built in — `LINK` entities with an `external` link block render as `HtmlInlineLink`. Add the application's other link types via `linkTypes`, a resolver per link block type that receives the link block's props and returns the `href` (or `undefined` for no link). Annotate the resolver parameter with the app's generated block-data type so the props are typed without redeclaring their shape. Unconfigured link types render as plain text:
+
+    ```tsx
+    import type { PhoneLinkBlockData } from "@src/blocks.generated";
+
+    const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
+        linkTypes: {
+            phone: (props: PhoneLinkBlockData) => (props.phone ? `tel:${props.phone}` : undefined),
+        },
+    });
+    ```
+
+- **Inline styles**: built-in styles (`BOLD`, `ITALIC`, `SUB`, `SUP`, `STRIKETHROUGH`) render out of the box. The `inline` option maps a draft-js inline style name to a renderer and merges over the built-ins — override one, or render a custom style the app adds to its RTE (`customInlineStyles` on `IRteOptions`). The RTE stores only the style name, so the email defines the appearance. Register under the exact style name, use an inline element known to render across email clients (`<span>`, `<strong>`, `<em>` — not `<mark>`), and set explicit styles (email clients apply little of their own):
+
+    ```tsx
+    const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
+        inline: {
+            HIGHLIGHT: (children, { key }) => (
+                <span key={key} style={{ backgroundColor: "#ff0000", color: "#ffffff" }}>
+                    {children}
+                </span>
+            ),
+        },
+    });
+    ```
+
+- **Lists** render flat (`<ul>` / `<ol>` inside one text component per list); nesting by draft depth isn't supported.
+- Spacing between blocks comes from the theme's `bottomSpacing` (the last block gets none); headings are styled text, not semantic `<h1>` elements.
+- Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, and `richTextBlock__link` class names for targeting with `registerStyles`.
 
 ---
 
