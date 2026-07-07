@@ -1,5 +1,42 @@
 # @comet/admin-color-picker
 
+## 9.0.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+- Updated dependencies [15e771b]
+- Updated dependencies [d7b77af]
+- Updated dependencies [8c2fdde]
+- Updated dependencies [f066335]
+- Updated dependencies [b4ba869]
+- Updated dependencies [57678d0]
+- Updated dependencies [fdabaf1]
+- Updated dependencies [8e40458]
+- Updated dependencies [5f1566a]
+- Updated dependencies [99140f8]
+- Updated dependencies [b459ec7]
+- Updated dependencies [cabba53]
+- Updated dependencies [8e3a074]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [3c81ff0]
+- Updated dependencies [631540c]
+- Updated dependencies [2fe9d4b]
+- Updated dependencies [460cbfb]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0
+    - @comet/admin-icons@9.0.0
+
 ## 9.0.0-beta.6
 
 ### Patch Changes

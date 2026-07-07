@@ -1,5 +1,11 @@
 # @comet/admin-babel-preset
 
+## 9.0.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+
 ## 9.0.0-beta.6
 
 ## 9.0.0-beta.5
