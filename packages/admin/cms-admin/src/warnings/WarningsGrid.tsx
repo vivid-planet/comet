@@ -126,7 +126,6 @@ export function WarningsGrid() {
         {
             field: "name",
             headerName: intl.formatMessage({ id: "warning.name", defaultMessage: "Name" }),
-            sortBy: "name",
             width: 200,
             renderCell: ({ row }) => {
                 return (
