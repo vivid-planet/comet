@@ -193,6 +193,7 @@ export function WarningsGrid() {
         {
             field: "actions",
             headerName: "",
+            filterable: false,
             sortable: false,
             renderCell: ({ row }) => <WarningActions scope={row.scope} sourceInfo={row.sourceInfo} />,
         },
