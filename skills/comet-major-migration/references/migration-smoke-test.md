@@ -2,8 +2,6 @@
 
 Run after a major migration finishes (lint/tsc green, all commits pushed) to catch runtime regressions that lint and tsc can't see.
 
-React majors commonly introduce dev-only warnings (DOM-prop leaks, hydration mismatches), Next.js majors break dynamic route resolution silently (async params, percent-encoding), and MUI X majors enforce previously-soft props at runtime. Embedded third-party webcomponents that bundle their own copy of React can also crash against a new React major. None surface in `tsc --noEmit` or eslint.
-
 ## Project shape
 
 The dispatching prompt should tell you the project shape — the list of sites with their dev URLs/ports. **Use what's in the prompt; don't re-run discovery `grep`.**
