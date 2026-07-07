@@ -102,7 +102,7 @@
             ],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@as-integrations/express5"],
-            "ignore": ["./src/**/generated/**"]
+            "ignore": ["./src/**/generated/**", "**/*.generated.ts"]
         },
         "demo/site": {
             "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "tracing.dev.ts", "tracing.production.ts"],
