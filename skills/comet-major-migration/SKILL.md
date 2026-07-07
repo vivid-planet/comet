@@ -114,7 +114,7 @@ If the user agrees and prerequisites are met, **dispatch the smoke test in a fre
 
 Two things to substitute in the prompt:
 
-- The **absolute path** to `references/migration-smoke-test.md` inside this skill. The skill lives wherever Claude Code installed it (typically `~/.claude/skills/major-migration/` or `<project>/.claude/skills/major-migration/`). Resolve `references/migration-smoke-test.md` relative to the SKILL.md you're reading.
+- The **absolute path** to `references/migration-smoke-test.md` inside this skill. The skill lives wherever Claude Code installed it (typically `~/.claude/skills/comet-major-migration/` or `<project>/.claude/skills/comet-major-migration/`). Resolve `references/migration-smoke-test.md` relative to the SKILL.md you're reading.
 - The **detected site list** with dev URLs. Page-tree presence follows site presence; only pass it separately if the project diverges.
 
 ```

@@ -162,7 +162,7 @@ Scope: <admin route count> admin routes; per site, <URL count> sampled from <tot
 
 #### Per-URL results
 
-<grouped by error class, e.g. "0 errors", "1 error — Received false for non-boolean attribute active">
+<grouped by error class, e.g. "0 errors", "1 error — <error string>">
 
 ## Hand off to Comet upstream
 
@@ -178,7 +178,7 @@ Scope: <admin route count> admin routes; per site, <URL count> sampled from <tot
 - Test records left in DB: <list or "none">.
 ```
 
-Avoid one heading per URL when most look the same — group by failure mode. Five URLs with the same `active={false}` warning are one finding with five examples.
+Avoid one heading per URL when most look the same — group by failure mode. Five URLs with the same console warning are one finding with five examples.
 
 ## Re-verify after fixes
 
