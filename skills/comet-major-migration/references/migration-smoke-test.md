@@ -6,16 +6,15 @@ Run after a major migration finishes (lint/tsc green, all commits pushed) to cat
 
 The dispatching prompt should tell you the project shape — the list of sites with their dev URLs/ports. **Use what's in the prompt; don't re-run discovery `grep`.**
 
-**Sites and the page tree are tied** — both appear together or neither does. Two real shapes:
+The dispatching prompt states the site list and whether a page tree is present. Decide each pass on its own signal:
 
-| Project shape        | Admin pass | Page-tree CRUD | Site pass          |
-| -------------------- | ---------- | -------------- | ------------------ |
-| Admin + 1+ sites     | yes        | yes            | yes, once per site |
-| Admin only (0 sites) | yes        | **skip**       | **skip**           |
+| Pass           | Run it when...                               |
+| -------------- | -------------------------------------------- |
+| Admin pass     | always                                       |
+| Page-tree CRUD | the prompt says a page tree is present       |
+| Site pass      | one or more sites are listed (once per site) |
 
 For multi-site projects, the site pass runs **once per site** — each has its own sitemap and regression surface. A Next.js major can break one site while leaving another working.
-
-If the project is an unusual case (site without page tree, or vice versa), surface that to the user before running.
 
 Note the shape (verbatim from the prompt) at the top of `test-report.md` so the reader knows what was and wasn't covered.
 
@@ -27,7 +26,7 @@ grep -l '"@comet/site-nextjs"' $(find . -name package.json -not -path '*/node_mo
 
 ## Prerequisites
 
-1. **Services running.** `dev-pm status`; admin (8000), api (4000), codegens must be `Running`. Site only matters if `@comet/site-nextjs` exists. Restart any that aren't.
+1. **Services running.** `dev-pm status`; admin, api, and codegens must be `Running`. Site only matters if `@comet/site-nextjs` exists. Restart any that aren't.
 2. **Fixtures loaded.** `npm --prefix api run fixtures` — for projects with a page tree, this seeds the sitemap URLs. Re-run if the migration changed seed/slug logic.
 3. **Drive via Playwright MCP** (`browser_*` tools) so console errors are captured. `curl` is fine for HTTP-status sweeps but won't see hydration/DOM-prop errors.
 4. **Fresh repo-root `test-report.md` ready to write to.** Append findings as you go.
@@ -38,7 +37,7 @@ Skip if the project already has an authoritative inventory file. Otherwise:
 
 - **Admin routes:** read `admin/src/common/MasterMenu.tsx` (or equivalent), list every `path:` entry, group by section.
 - **Admin grids/forms:** for each route, identify writable entities (Add/Edit/Delete) — those need a full CRUD pass.
-- **Site URL buckets** _(skip if no site package)_: fetch `sitemap.xml` (usually `http://localhost:3000/sitemap.xml`, but use the port the resolved site listens on — check `dev-pm status`). Parse `<loc>` entries, classify into buckets by URL pattern.
+- **Site URL buckets** _(skip if no site package)_: fetch the site's `sitemap.xml` (find the dev URL/port it listens on via `dev-pm status`). Parse `<loc>` entries, classify into buckets by URL pattern.
 
 Keep inventory in scratch; don't write to `test-report.md` yet.
 
@@ -56,9 +55,9 @@ For each admin route:
     - **Delete:** remove the record. If no delete control, verify the underlying mutation works via console `fetch('/api/graphql', ...)` before declaring the API broken.
     - If Save fails, capture the error and skip Edit/Delete to avoid half-state.
 
-### Page Tree CRUD is mandatory (on projects with a site)
+### Page Tree CRUD is mandatory (when a page tree is present)
 
-**Skip on admin-only projects** — page tree presence follows site presence.
+**Skip if the project has no page tree** (the dispatching prompt says whether it does).
 
 Otherwise: the page tree exercises the most upstream code paths (block editor, RTE, file picker, page-tree GraphQL, route-tab navigation). Run a full Add → Edit → Delete on at least one page-tree category:
 
@@ -81,10 +80,10 @@ A project may have a few errors that fire on _every_ admin page (unrelated to th
 
 **For multi-site projects, run once per site.** Each has its own sitemap, routes, and regression surface. Sites typically expose themselves:
 
-- Different ports on `localhost` (3000, 3001, …) — check `dev-pm status`.
+- Different ports on `localhost` — check `dev-pm status` for each site's dev URL.
 - Different hostnames via project middleware (`site/src/proxy.ts` or `site/src/middleware.ts`) — hit with `Host:` header override or per-site dev URL.
 
-Write per-site results under their own subheading (e.g. `### Site: <site-name> (port 3001)`).
+Write per-site results under their own subheading (e.g. `### Site: <site-name> (<dev-url>)`).
 
 1. Fetch `sitemap.xml`, parse `<loc>` entries.
 2. **Bucket URLs** by pattern (locale-prefixed, fixture/scaffold, normal pages, ...). Some buckets need sampling; small ones can be exhausted.
@@ -126,8 +125,8 @@ Write findings to `test-report.md` at the repo root as you go. The file is the d
 # Smoke-test findings — <date>
 
 Tool: Playwright MCP (Chromium). Branch: `<branch>`.
-Project shape: <admin + 1+ sites | admin-only>.
 Sites detected: <none | list of site dirs + dev URLs>.
+Page tree: <present | absent>.
 Scope: <admin route count> admin routes; per site, <URL count> sampled from <total>.
 
 ## TL;DR — biggest problems first
@@ -149,7 +148,7 @@ Scope: <admin route count> admin routes; per site, <URL count> sampled from <tot
 
 ## Sites
 
-(One block per site. Skip the section entirely for admin-only.)
+(One block per site. Skip the section entirely if no sites.)
 
 ### Site: <site-name> (<dev-url>)
 

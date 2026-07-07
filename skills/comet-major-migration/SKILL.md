@@ -29,7 +29,7 @@ Before starting, figure out what's in this project. Comet projects vary — **an
 - **1 site** — run the site section once.
 - **2+ sites** — **run the site section once per site.** Each site has its own `package.json`, etc. Skipping the duplicates is the most common multi-site migration miss.
 
-**Page tree presence is tied to site presence.** Admin-only projects have no page tree — skip page-tree-specific steps. If you encounter the rare divergence (site without page tree, or vice versa), surface it before proceeding.
+**Check whether the project has a page tree** (e.g. grep the admin source for its page-tree page like `PagesPage`, or the API for `PageTreeModule`). Skip page-tree-specific steps if it's absent.
 
 Sites can live under `site/`, `sites/<tenant>/`, or any custom path. Discover them by scanning `package.json` files for `@comet/site-nextjs`:
 
@@ -106,7 +106,7 @@ Once committed and audited, **offer the user a smoke test**. Lint/tsc green is n
 Before starting, tell the user:
 
 - The smoke test drives admin and site(s) in a real browser via **Playwright MCP** (`browser_*` tools). Confirm MCP is available.
-- The **app must be running** — admin (8000), api (4000), codegens, and **every site service** all `Running` per `dev-pm status`. Multi-site projects run each site on its own port. Ask them to start whatever isn't running.
+- The **app must be running** — admin, api, codegens, and **every site service** all `Running` per `dev-pm status`. Multi-site projects run each site on its own port. Ask them to start whatever isn't running.
 
 The project shape was already detected (see [Detect the project shape](#detect-the-project-shape)). **Pass it to the subagent** rather than making it re-run discovery.
 
@@ -115,7 +115,7 @@ If the user agrees and prerequisites are met, **dispatch the smoke test in a fre
 Two things to substitute in the prompt:
 
 - The **absolute path** to `references/migration-smoke-test.md` inside this skill. The skill lives wherever Claude Code installed it (typically `~/.claude/skills/comet-major-migration/` or `<project>/.claude/skills/comet-major-migration/`). Resolve `references/migration-smoke-test.md` relative to the SKILL.md you're reading.
-- The **detected site list** with dev URLs. Page-tree presence follows site presence; only pass it separately if the project diverges.
+- The **detected site list** with dev URLs, and **whether the project has a page tree** (see [Detect the project shape](#detect-the-project-shape)).
 
 ```
 Run the smoke-test procedure defined in
@@ -125,13 +125,14 @@ procedure (prerequisites, inventory, admin pass, site pass per site,
 triage).
 
 Sites (already detected — do NOT re-run the discovery grep):
-<e.g. "none — admin-only project, skip site pass and page-tree CRUD" |
+<e.g. "none — no site package, skip site pass" |
 "1 site at site/, dev URL http://localhost:3000" |
 "2 sites: sites/de/ at http://localhost:3000, sites/at/ at http://localhost:3001">
 
+Page tree: <present | not present>.
+
 Apply the site pass once per listed site (or skip if none).
-Page-tree presence follows site presence — run page-tree CRUD if at
-least one site is present, skip otherwise.
+Run page-tree CRUD only if the page tree is present.
 
 Write findings to `test-report.md` at the repo root as you go — that
 file is the deliverable. When done, reply with a <200 word summary:
