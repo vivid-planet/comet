@@ -50,7 +50,6 @@ For each admin route:
 3. `browser_console_messages level=error` and `level=warning`. Record error/warning counts and one-line excerpts (~120 chars).
 4. For writable entities, run CRUD:
     - **Add:** open form, fill required fields with `playwright-smoke-<timestamp>`. Save.
-    - **Check the post-save URL** — a literal `undefined`/`null`/`NaN` segment is a regression (e.g. `…/edit/undefined`).
     - **Edit:** change one field, save.
     - **Delete:** remove the record. If no delete control, verify the underlying mutation works via console `fetch('/api/graphql', ...)` before declaring the API broken.
     - If Save fails, capture the error and skip Edit/Delete to avoid half-state.
@@ -61,10 +60,10 @@ For each admin route:
 
 Otherwise: the page tree exercises the most upstream code paths (block editor, RTE, file picker, page-tree GraphQL, route-tab navigation). Run a full Add → Edit → Delete on at least one page-tree category:
 
-1. Navigate to the page tree in the admin (path and scope vary per project — find it in the menu, it typically lives under a `.../pages/pagetree/<category>` route). Pick any category.
-2. **Add:** click Add, fill Name (slug auto-fills), pick a Document Type, Save. Confirm row appears and URL is clean.
-3. **Edit:** open the row's `/edit`. **Walk every tab the page-edit view exposes** (tab set varies per project — e.g. content/blocks, SEO, settings). Whichever tab embeds the RTE is where React or MUI majors commonly surface prop-leak and `<div>`-in-`<p>` hydration errors. Capture console after each tab switch. Change one trivial field, Save, reload, verify the value persisted.
-4. **Delete:** context menu → Delete → confirm. Verify row is gone.
+1. Open the page tree in the admin (find it via the menu). Pick any category.
+2. **Add:** create a page, fill the required fields, save. Confirm the row appears and the URL is clean.
+3. **Edit:** open the page. **Walk every tab the page-edit view exposes.** Capture console after each tab switch. Change one field, save, reload, verify it persisted.
+4. **Delete:** remove the page and confirm the row is gone.
 
 If any step fails, that's a blocker for the PR.
 
@@ -72,7 +71,7 @@ After the run, delete any test records (or note them in `test-report.md`).
 
 ### Baseline errors
 
-A project may have a few errors that fire on _every_ admin page (unrelated to the migration). Identify these once and call them "baseline" — count per-route errors _above_ baseline rather than reporting baseline N times.
+A project may have a few errors that fire on _every_ admin page. Identify these once and call them "baseline" — count per-route errors _above_ baseline rather than reporting baseline N times.
 
 ## Site pass
 
@@ -94,9 +93,9 @@ Write per-site results under their own subheading (e.g. `### Site: <site-name> (
 
 ### Embedded webcomponents (high-risk)
 
-If the site embeds third-party **webcomponents** / micro-frontends — a block that loads an external `<script>` mounting a widget owned by another team (forms, product sliders, search or booking widgets, etc.) — treat every page that renders one as high-risk and test each webcomponent **individually in the browser**.
+If the site embeds third-party **webcomponents** / micro-frontends — a block that loads an external `<script>` mounting a widget owned by another team — treat every page that renders one as high-risk and test each webcomponent **individually in the browser**.
 
-Webcomponents that bundle their own copy of React (and related libraries) can crash at runtime against a new React major while lint, `tsc`, and the build all pass — often with a cryptic minified error deep inside React. The migration guide documents any known per-version failure mode and workaround; apply that if present.
+Webcomponents can crash at runtime while lint, `tsc`, and the build all pass.
 
 1. **Detect:** `grep -rnE "customElements|next/script|<script" site/src`, plus any block whose job is to embed an external widget.
 2. **Browser-test each webcomponent type** (not just each page): navigate to a page that renders it, confirm it actually **mounts and is interactive** — a 200 status or a rendered page shell is not enough — and capture console errors.
