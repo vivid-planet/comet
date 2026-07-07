@@ -115,12 +115,14 @@ Style values in `blockTypes` don't support responsive values — define a theme 
 
 ### Link types
 
-`LINK` entities reference a link block (`{ type, props }`). The `external` link type is built in and renders as `HtmlInlineLink`. Add the application's other link types via the `linkTypes` option — a resolver per link block type that receives the link block's props and returns the href, or `undefined` to render the text without a link. Declare the props' shape by annotating the resolver parameter to work with them typed rather than as `unknown`:
+`LINK` entities reference a link block (`{ type, props }`). The `external` link type is built in and renders as `HtmlInlineLink`. Add the application's other link types via the `linkTypes` option — a resolver per link block type that receives the link block's props and returns the `href`, or `undefined` to render the text without a link. Annotate each resolver's parameter with the application's generated block-data type so the props are typed without redeclaring their shape:
 
 ```tsx
+import type { PhoneLinkBlockData } from "@src/blocks.generated";
+
 export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
     linkTypes: {
-        phone: (props: { phoneNumber: string }) => `tel:${props.phoneNumber}`,
+        phone: (props: PhoneLinkBlockData) => (props.phone ? `tel:${props.phone}` : undefined),
     },
 });
 ```
