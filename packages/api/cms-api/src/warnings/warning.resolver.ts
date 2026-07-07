@@ -29,16 +29,17 @@ function remapWarningQueryFields(query: any): any {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result: Record<string, any> = {};
         for (const [key, value] of Object.entries(query)) {
+            // Recurse into every value so the fields are remapped no matter how deeply they are nested
+            // (e.g. inside `$and` / `$or` / `$not` produced by the various filter operators).
+            const remappedValue = remapWarningQueryFields(value);
             if (key === "type") {
-                result.sourceInfo = { rootEntityName: value };
+                result.sourceInfo = { rootEntityName: remappedValue };
             } else if (key === "name") {
-                result["entityInfo.name"] = value;
+                result["entityInfo.name"] = remappedValue;
             } else if (key === "secondaryInformation") {
-                result["entityInfo.secondaryInformation"] = value;
-            } else if (key === "$and" || key === "$or") {
-                result[key] = (value as unknown[]).map(remapWarningQueryFields);
+                result["entityInfo.secondaryInformation"] = remappedValue;
             } else {
-                result[key] = value;
+                result[key] = remappedValue;
             }
         }
         return result;
