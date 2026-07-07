@@ -15,7 +15,7 @@ import { ContentScope } from "../user-permissions/interfaces/content-scope.inter
 import { PaginatedWarnings } from "./dto/paginated-warnings";
 import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";
-import { referencesEntityInfo, remapWarningQueryFields } from "./warning-query-fields.helper";
+import { referencesEntityInfo, remapWarningOrderBy, remapWarningQueryFields } from "./warning-query-fields.helper";
 
 @Resolver(() => Warning)
 @RequiredPermission(["warnings"], { skipScopeCheck: true })
@@ -61,7 +61,9 @@ export class WarningResolver {
         where.status = { $in: status };
 
         // Search across the warning message as well as the type and the name / secondary information
-        // of the related entity (the latter two are resolved via the joined EntityInfo view).
+        // of the related entity. This is built by hand (instead of letting `gqlArgsToMikroOrmQuery`
+        // derive the searchable fields from entity metadata) because name / secondary information are
+        // not columns on the Warning entity but come from the joined EntityInfo view.
         if (search) {
             where.$and = where.$and ?? [];
             for (const searchPart of splitSearchString(search)) {
@@ -109,15 +111,7 @@ export class WarningResolver {
             }
         }
 
-        const orderBy = sort?.map((sortItem) => {
-            if (sortItem.field === "type") {
-                return { sourceInfo: { rootEntityName: sortItem.direction } };
-            }
-            if (sortItem.field === "name") {
-                return { "entityInfo.name": sortItem.direction };
-            }
-            return { [sortItem.field]: sortItem.direction };
-        });
+        const orderBy = remapWarningOrderBy(sort);
 
         const queryBuilder = this.entityManager.createQueryBuilder(Warning, "warning").select("warning.*");
 

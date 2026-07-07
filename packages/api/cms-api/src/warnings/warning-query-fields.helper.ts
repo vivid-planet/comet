@@ -1,3 +1,5 @@
+import type { WarningSort } from "./dto/warning.sort";
+
 // `type`, `name` and `secondaryInformation` are not plain columns on the Warning entity:
 // `type` is stored inside the `sourceInfo` JSONB column, while `name` and `secondaryInformation`
 // originate from the joined EntityInfo view. These helpers translate the MikroORM query produced from
@@ -28,6 +30,21 @@ export function remapWarningQueryFields(query: any): any {
         return result;
     }
     return query;
+}
+
+// Translate a WarningSort list into a MikroORM order-by. `type` sorts by the value inside the
+// `sourceInfo` JSONB column, `name` sorts by the joined EntityInfo view; everything else is a plain
+// Warning column.
+export function remapWarningOrderBy(sort?: WarningSort[]) {
+    return sort?.map((sortItem) => {
+        if (sortItem.field === "type") {
+            return { sourceInfo: { rootEntityName: sortItem.direction } };
+        }
+        if (sortItem.field === "name") {
+            return { "entityInfo.name": sortItem.direction };
+        }
+        return { [sortItem.field]: sortItem.direction };
+    });
 }
 
 // Whether a query (where clause or order-by) references the joined EntityInfo view. Used to only add

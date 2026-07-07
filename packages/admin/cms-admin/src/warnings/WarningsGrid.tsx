@@ -140,7 +140,7 @@ export function WarningsGrid() {
         {
             field: "secondaryInformation",
             headerName: intl.formatMessage({ id: "warning.info", defaultMessage: "Info" }),
-            sortBy: "secondaryInformation",
+            sortable: false,
             visible: false,
             valueGetter: (params, row) => row.entityInfo?.secondaryInformation,
         },
