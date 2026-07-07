@@ -60,10 +60,8 @@ export class WarningResolver {
         );
         where.status = { $in: status };
 
-        // Search across the warning message as well as the type and the name / secondary information
-        // of the related entity. This is built by hand (instead of letting `gqlArgsToMikroOrmQuery`
-        // derive the searchable fields from entity metadata) because name / secondary information are
-        // not columns on the Warning entity but come from the joined EntityInfo view.
+        // Built by hand rather than via `gqlArgsToMikroOrmQuery`'s metadata-derived search, because name /
+        // secondary information aren't Warning columns but come from the joined EntityInfo view.
         if (search) {
             where.$and = where.$and ?? [];
             for (const searchPart of splitSearchString(search)) {
@@ -115,10 +113,9 @@ export class WarningResolver {
 
         const queryBuilder = this.entityManager.createQueryBuilder(Warning, "warning").select("warning.*");
 
-        // Only join the EntityInfo view when the query actually filters, searches or sorts by the
-        // related entity's name / secondary information. The view is a union over all entity tables,
-        // so joining it unconditionally would slow down the common case (and count query) needlessly.
-        // The view is keyed by entity name and id, both stored in the warning's `sourceInfo` column.
+        // Join the EntityInfo view only when name / secondary information is used: it's a union over all
+        // entity tables, so an unconditional join would slow the common case (and the count query). It's
+        // keyed by entity name + id from the warning's `sourceInfo`.
         if (referencesEntityInfo(where) || referencesEntityInfo(orderBy)) {
             const entityInfoQueryBuilder = this.entityManager.createQueryBuilder(EntityInfoObject, "entityInfo");
             queryBuilder.leftJoin(entityInfoQueryBuilder, "entityInfo", {

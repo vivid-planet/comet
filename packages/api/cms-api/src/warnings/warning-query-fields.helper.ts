@@ -1,9 +1,8 @@
 import type { WarningSort } from "./dto/warning.sort";
 
-// `type`, `name` and `secondaryInformation` are not plain columns on the Warning entity:
-// `type` is stored inside the `sourceInfo` JSONB column, while `name` and `secondaryInformation`
-// originate from the joined EntityInfo view. These helpers translate the MikroORM query produced from
-// a WarningFilter / WarningSort so those fields resolve to the correct column / join alias.
+// `type`, `name` and `secondaryInformation` aren't plain Warning columns: `type` lives in the
+// `sourceInfo` JSONB column, `name` / `secondaryInformation` in the joined EntityInfo view. These
+// helpers remap them to the right column / join alias.
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function remapWarningQueryFields(query: any): any {
@@ -14,8 +13,7 @@ export function remapWarningQueryFields(query: any): any {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result: Record<string, any> = {};
         for (const [key, value] of Object.entries(query)) {
-            // Recurse into every value so the fields are remapped no matter how deeply they are nested
-            // (e.g. inside `$and` / `$or` / `$not` produced by the various filter operators).
+            // Recurse into every value so nested fields (inside `$and` / `$or` / `$not`) are remapped too.
             const remappedValue = remapWarningQueryFields(value);
             if (key === "type") {
                 result.sourceInfo = { rootEntityName: remappedValue };
@@ -32,9 +30,8 @@ export function remapWarningQueryFields(query: any): any {
     return query;
 }
 
-// Translate a WarningSort list into a MikroORM order-by. `type` sorts by the value inside the
-// `sourceInfo` JSONB column, `name` sorts by the joined EntityInfo view; everything else is a plain
-// Warning column.
+// Translate WarningSort into a MikroORM order-by: `type` → `sourceInfo` JSONB, `name` → EntityInfo
+// view, everything else → plain Warning column.
 export function remapWarningOrderBy(sort?: WarningSort[]) {
     return sort?.map((sortItem) => {
         if (sortItem.field === "type") {
@@ -47,9 +44,8 @@ export function remapWarningOrderBy(sort?: WarningSort[]) {
     });
 }
 
-// Whether a query (where clause or order-by) references the joined EntityInfo view. Used to only add
-// the (potentially expensive) join when filtering, searching or sorting by name / secondary information
-// actually requires it. Filtering / sorting by type reads from `sourceInfo` and needs no join.
+// Whether a where clause or order-by references the EntityInfo view, so the join is only added when
+// name / secondary information require it (type reads from `sourceInfo` and needs no join).
 export function referencesEntityInfo(value: unknown): boolean {
     if (Array.isArray(value)) {
         return value.some(referencesEntityInfo);

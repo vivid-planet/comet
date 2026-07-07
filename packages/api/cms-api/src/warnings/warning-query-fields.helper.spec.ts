@@ -43,8 +43,8 @@ describe("remapWarningQueryFields", () => {
         });
     });
 
-    // Regression: "does not contain" produces a `$not` wrapper. The field nested inside it must be
-    // remapped too, otherwise MikroORM throws "Trying to query by not existing property Warning.name".
+    // Regression: "does not contain" produces a `$not`; the nested field must be remapped too, else
+    // MikroORM throws "Trying to query by not existing property Warning.name".
     it("remaps fields nested inside $not", () => {
         expect(remapWarningQueryFields({ $not: { name: { $ilike: "%foo%" } } })).toEqual({
             $not: { "entityInfo.name": { $ilike: "%foo%" } },
