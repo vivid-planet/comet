@@ -12,7 +12,7 @@ It offers several advantages over the old block:
 
 - **Built on a maintained library.** TipTap is actively developed, while Draft.js is no longer maintained.
 - **Schema-based validation.** TipTap defines the allowed content as a schema, which enables full server-side validation of the content in the API — the old block stored its content unvalidated.
-- **Easier to extend.** New features can be added as TipTap extensions, making it simpler to implement functionality that was hard or impossible with Draft.js — for example, embedding other blocks (child blocks) directly into the rich text.
+- **Easier to extend.** New features can be added as TipTap extensions, making it simpler to implement new functionality.
 - **Standardized, portable content format.** Content is stored as a nested ProseMirror JSON tree that mirrors the document structure, which is far easier to work with than Draft.js's flat list of blocks with separate offset-based ranges and a detached `entityMap`. The well-structured format is straightforward to render, transform, and reason about — and paves the way for AI-assisted workflows such as generating, editing, or analyzing rich text content.
 
 :::caution Experimental
