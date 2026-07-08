@@ -3,7 +3,7 @@ import isEqual from "lodash.isequal";
 
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { ContentScope } from "./interfaces/content-scope.interface";
-import { AccessControlServiceInterface, Permission } from "./user-permissions.types";
+import { AccessControlServiceInterface, Permission, UserPermissions } from "./user-permissions.types";
 
 @Injectable()
 export abstract class AbstractAccessControlService implements AccessControlServiceInterface {
@@ -13,6 +13,11 @@ export abstract class AbstractAccessControlService implements AccessControlServi
         return userContentScopes.some((userContentScope) =>
             Object.entries(targetContentScope).every(([dimension, targetContentScopeValue]) => {
                 const userContentScopeValue = (userContentScope as Record<string, unknown>)[dimension];
+
+                // A wildcard dimension allows any value for it
+                if (userContentScopeValue === UserPermissions.allValues) {
+                    return true;
+                }
 
                 // Treat null and undefined the same
                 if (userContentScopeValue == null && targetContentScopeValue == null) {
