@@ -1,5 +1,7 @@
 # @comet/site-react
 
+## 8.25.1
+
 ## 8.25.0
 
 ### Minor Changes
