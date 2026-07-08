@@ -55,13 +55,13 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
             ...rules,
             validate: {
                 ...(rules?.validate ? (typeof rules.validate === "function" ? { custom: rules.validate } : rules.validate) : {}),
-                attachmentsHaveErrors: () =>
-                    attachmentsRef.current.some((attachment) => attachment.status === "error")
-                        ? intl.formatMessage({
+                allAttachmentsValid: () =>
+                    attachmentsRef.current.every((attachment) => attachment.status !== "error")
+                        ? true
+                        : intl.formatMessage({
                               id: "fileUploadField.hasErrors",
                               defaultMessage: "Please remove attachments that failed to upload.",
-                          })
-                        : true,
+                          }),
             },
         },
     });
