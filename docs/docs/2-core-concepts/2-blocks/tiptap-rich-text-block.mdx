@@ -8,8 +8,6 @@ sidebar_position: 4.5
 The `TipTapRichTextBlock` is a rich text block based on [TipTap](https://tiptap.dev/) (a headless editor built on top of [ProseMirror](https://prosemirror.net/)).
 It is the successor to the [Draft.js-based `RichTextBlock`](./4-factories.mdx#richtextblock) and is created with the `createTipTapRichTextBlock` factory.
 
-Its content is stored as TipTap/ProseMirror JSON in a field named `tipTapContent` (the old block stores Draft.js `RawDraftContentState` in `draftContent`).
-
 :::caution Experimental
 
 The TipTap Rich Text Block is **experimental**.
@@ -52,7 +50,7 @@ Most features of the Draft.js `RichTextBlock` have a direct equivalent in the Ti
 | `rte.customInlineStyles`                                                | [`inlineStyles`](#text-block-type-and-styling-selects) + the inline style select                     |
 | `rte.listLevelMax`                                                      | `listLevelMax`                                                                                       |
 | `rte.maxBlocks`                                                         | `maxTextBlocks`                                                                                      |
-| _no server-side content validation_                                     | [full API validation](#validation-in-the-api)                                                        |
+| _no server-side content validation_                                     | full API validation                                                                                  |
 | —                                                                       | [`childBlocks`](#child-blocks)                                                                       |
 | —                                                                       | `placeholders`                                                                                       |
 | Site rendering with `redraft` + `Renderers`                             | Site rendering with `renderTipTapRichText` + `nodeMapping`/`markMapping`                             |
@@ -60,27 +58,6 @@ Most features of the Draft.js `RichTextBlock` have a direct equivalent in the Ti
 ### Setup
 
 Like the old block, the TipTap Rich Text Block is configured on the API and in the Admin, and rendered on the site. The factory is available from `@comet/cms-api` and `@comet/cms-admin` under the same name.
-
-#### API
-
-```ts title="tip-tap-rich-text.block.ts"
-import { createTipTapRichTextBlock } from "@comet/cms-api";
-
-import { LinkBlock } from "./link.block";
-
-export const TipTapRichTextBlock = createTipTapRichTextBlock({ link: LinkBlock });
-```
-
-Unlike `createRichTextBlock`, the `link` block is **optional**. Pass it to enable inline links.
-
-The factory accepts an optional second argument for the block name (defaults to `"TipTapRichText"`) and block migrations:
-
-```ts title="tip-tap-rich-text.block.ts"
-export const TipTapRichTextBlock = createTipTapRichTextBlock(
-    { link: LinkBlock },
-    { name: "TipTapRichText" },
-);
-```
 
 #### Admin
 
@@ -92,7 +69,28 @@ import { LinkBlock } from "./LinkBlock";
 export const TipTapRichTextBlock = createTipTapRichTextBlock({ link: LinkBlock });
 ```
 
-The Admin factory takes the same option names as the API. Style and placeholder options additionally carry rendering information (`label` and `element`) that is used to preview them in the editor — see [Text block type and styling selects](#text-block-type-and-styling-selects).
+In the Admin, the style and placeholder options additionally carry rendering information (`label` and `element`) that is used to preview them in the editor — see [Text block type and styling selects](#text-block-type-and-styling-selects).
+
+#### API
+
+Unlike the old block, the API now validates the entire block content against the schema derived from your configuration. As a result, the API factory takes more configuration options than the old block did. These options are named exactly like their Admin counterparts, and it is important to keep the two configurations in sync: the API schema must allow everything the Admin editor can produce, otherwise content that looks valid in the editor is rejected when saved.
+
+```ts title="tip-tap-rich-text.block.ts"
+import { createTipTapRichTextBlock } from "@comet/cms-api";
+
+import { LinkBlock } from "./link.block";
+
+export const TipTapRichTextBlock = createTipTapRichTextBlock({ link: LinkBlock });
+```
+
+The factory accepts additional Block Options such as the block name, like the old one:
+
+```ts title="tip-tap-rich-text.block.ts"
+export const TipTapRichTextBlock = createTipTapRichTextBlock(
+    { link: LinkBlock },
+    { name: "TipTapRichText" },
+);
+```
 
 #### Site
 
@@ -171,6 +169,12 @@ The migration converts:
 
 It uses the block's `supports`, `textBlockStyles`, `link`, and `maxTextBlocks` options to build the target schema and validates the result. The conversion is **best effort**: if validation fails, it falls back to a stripped-down plain-text document in production (logging a warning) and throws in development so you can catch problems early.
 
+:::caution Test with production content
+
+Because the API never validated the old block's content and the TipTap block performs a complete re-validation, the migration must be tested very carefully against real production content before going live. Content that was accepted by the old block may now fail validation and be stripped down. Run the migration on a copy of your production data and review the result before deploying.
+
+:::
+
 #### Mapping custom Draft.js styles
 
 If the old block used custom block types (via `blocktypeMap`) or custom inline styles (via `customInlineStyles`), map them to their TipTap equivalents by passing an object instead of `true`:
@@ -214,35 +218,9 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock(
 );
 ```
 
-A migration using `toVersion = 1` (or `version = 1`) together with `migrateFromDraftJs` throws an error.
-
 ## New features
 
 Beyond replacing the old block, the TipTap Rich Text Block adds capabilities the Draft.js block did not have.
-
-### Validation in the API
-
-The old `RichTextBlock` stored its content as an unvalidated `json` field. The TipTap Rich Text Block validates `tipTapContent` on the API against the schema derived from your configuration (via the `IsTipTapContent` decorator on the block input). Validation rejects content that:
-
-- uses marks or nodes not present in the configured schema (e.g. a feature not in `supports`),
-- violates an inline style's `appliesTo` constraint,
-- exceeds `maxTextBlocks` (number of top-level text blocks),
-- exceeds `listLevelMax` (list nesting depth),
-- contains a link, child block, or placeholder that isn't valid for the configuration (link/child-block data is validated against the respective block's input, unknown child-block types and unknown placeholder names are rejected).
-
-This narrows the blast radius of malformed or malicious content, in line with the [security guidelines](../10-validation/index.md) — validation is enforced server-side, not just in the editor.
-
-```ts title="tip-tap-rich-text.block.ts"
-export const TipTapRichTextBlock = createTipTapRichTextBlock({
-    link: LinkBlock,
-    // Only these features are allowed; anything else is rejected during validation.
-    supports: ["bold", "italic", "heading", "unordered-list", "link"],
-    // Reject content with more than 10 top-level text blocks.
-    maxTextBlocks: 10,
-    // Only allow flat lists (no nested sub-lists).
-    listLevelMax: 1,
-});
-```
 
 ### Text block type and styling selects
 
@@ -380,24 +358,3 @@ const nodeMapping: Record<string, TipTapNodeHandler> = {
     cmsInlineBlock: renderCmsBlock, // inline child blocks
 };
 ```
-
-## Options reference
-
-The API factory `createTipTapRichTextBlock(options, nameOrOptions?)` accepts the following options:
-
-| Option               | Type                                                      | Description                                                                                              |
-| -------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `supports`           | `TipTapSupports[]`                                        | Enabled features. Defaults to all except `link` (`link` is enabled by passing a `link` block).           |
-| `link`               | `Block`                                                   | Block used for inline links. Optional.                                                                   |
-| `textBlockStyles`    | `{ name; appliesTo? }[]`                                  | Named block-level styles (the "styling" select). `appliesTo` limits a style to certain text block types. |
-| `inlineStyles`       | `{ name; appliesTo? }[]`                                  | Named inline styles (the inline style select).                                                           |
-| `placeholders`       | `{ name }[]`                                              | Named placeholders that can be inserted into the text.                                                   |
-| `childBlocks`        | `Record<string, { block; display: "block" \| "inline" }>` | Blocks that can be embedded into the rich text.                                                          |
-| `maxTextBlocks`      | `number`                                                  | Maximum number of top-level text blocks. Enforced in the editor and during validation.                   |
-| `listLevelMax`       | `number`                                                  | Maximum list nesting depth (`1` = flat list).                                                            |
-| `indexSearchText`    | `boolean`                                                 | Whether the text content is indexed for search. Defaults to `true`.                                      |
-| `migrateFromDraftJs` | `boolean \| { textBlockStyleMap?; inlineStyleMap? }`      | Enables [migration from the Draft.js block](#migrating-existing-content).                                |
-
-The Admin factory accepts the same options, except `indexSearchText` and `migrateFromDraftJs` (which are API concerns). Its `textBlockStyles`, `inlineStyles`, and `placeholders` additionally require a `label`, and the style options require an `element` for rendering the preview in the editor. `supports` additionally allows `"history"` (undo/redo).
-
-`TipTapSupports` (API): `"bold" | "italic" | "strike" | "sub" | "sup" | "heading" | "ordered-list" | "unordered-list" | "non-breaking-space" | "soft-hyphen" | "link"`.
