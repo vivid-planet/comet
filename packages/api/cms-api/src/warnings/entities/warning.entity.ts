@@ -1,8 +1,9 @@
-import { BaseEntity, Entity, Enum, Index, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, Enum, Index, ManyToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
+import { EntityInfoObject } from "../../entity-info/entity-info.object";
 import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 import { WarningSourceInfo } from "../dto/warning-source-info";
 import { WarningSeverity } from "./warning-severity.enum";
@@ -15,8 +16,8 @@ import { WarningStatus } from "./warning-status.enum";
 @Index({
     properties: ["updatedAt", "sourceInfo.rootEntityName", "sourceInfo.rootColumnName", "sourceInfo.targetId", "sourceInfo.rootPrimaryKey"],
 })
-// Join keys for the EntityInfo view (warnings grid filter/sort by name/info)
-@Index({ properties: ["sourceInfo.rootEntityName", "sourceInfo.targetId"] })
+// Join keys for the EntityInfo relation (warnings grid filter/sort by name/info)
+@Index({ properties: ["rootEntityName", "targetId"] })
 export class Warning extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
@@ -43,6 +44,23 @@ export class Warning extends BaseEntity {
     @Property({ type: "jsonb" })
     @Field()
     sourceInfo: WarningSourceInfo;
+
+    // Columns generated from `sourceInfo` so the EntityInfo relation can join on them without a QueryBuilder.
+    @Property({ columnType: "text", nullable: true, generated: `("sourceInfo"->>'rootEntityName') stored` })
+    rootEntityName?: string;
+
+    @Property({ columnType: "text", nullable: true, generated: `("sourceInfo"->>'targetId') stored` })
+    targetId?: string;
+
+    // Read-only join to the EntityInfo view, keyed by the generated columns. Lets the warnings grid
+    // filter/sort/search by name and secondary information natively via `populate`.
+    @ManyToOne(() => EntityInfoObject, {
+        joinColumns: ["targetId", "rootEntityName"],
+        referencedColumnNames: ["id", "entityName"],
+        nullable: true,
+    })
+    @Field(() => EntityInfoObject, { nullable: true })
+    entityInfo?: EntityInfoObject;
 
     @Enum({ items: () => WarningStatus })
     @Field(() => WarningStatus)

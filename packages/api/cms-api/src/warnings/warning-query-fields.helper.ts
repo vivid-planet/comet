@@ -3,59 +3,46 @@ import type { ObjectQuery } from "@mikro-orm/postgresql";
 import type { WarningSort } from "./dto/warning.sort";
 import type { Warning } from "./entities/warning.entity";
 
-// Remapped warning query: `entityInfo.*` are join aliases from the EntityInfo view, not Warning columns.
-export type WarningQuery = ObjectQuery<Warning & Record<`entityInfo.${"name" | "secondaryInformation"}`, string>>;
+// `type`, `name` and `secondaryInformation` are the grid's filter/sort fields, not Warning columns:
+// `type` maps to the generated `rootEntityName` column, `name` / `secondaryInformation` to the joined
+// `entityInfo` relation. These helpers translate them to the corresponding MikroORM query paths.
 
-// `type`, `name` and `secondaryInformation` aren't plain Warning columns: `type` lives in the
-// `sourceInfo` JSONB column, `name` / `secondaryInformation` in the joined EntityInfo view. These
-// helpers remap them to the right column / join alias.
+const entityInfoFields = new Set(["name", "secondaryInformation"]);
 
-export function remapWarningQueryFields(query: unknown): unknown {
+// Rewrite the query produced by `gqlArgsToMikroOrmQuery`. Recurses so fields nested inside `$and` /
+// `$or` / `$not` are mapped too. `name` / `secondaryInformation` are nested under `entityInfo` (and
+// merged when both appear in the same object) so MikroORM joins the relation.
+export function mapWarningQueryFields(query: unknown): ObjectQuery<Warning> {
     if (Array.isArray(query)) {
-        return query.map(remapWarningQueryFields);
+        return query.map(mapWarningQueryFields) as ObjectQuery<Warning>;
     }
     if (query !== null && typeof query === "object") {
         const result: Record<string, unknown> = {};
         for (const [key, value] of Object.entries(query)) {
-            // Recurse into every value so nested fields (inside `$and` / `$or` / `$not`) are remapped too.
-            const remappedValue = remapWarningQueryFields(value);
+            const mappedValue = mapWarningQueryFields(value);
             if (key === "type") {
-                result.sourceInfo = { rootEntityName: remappedValue };
-            } else if (key === "name") {
-                result["entityInfo.name"] = remappedValue;
-            } else if (key === "secondaryInformation") {
-                result["entityInfo.secondaryInformation"] = remappedValue;
+                result.rootEntityName = mappedValue;
+            } else if (entityInfoFields.has(key)) {
+                result.entityInfo = { ...(result.entityInfo as object | undefined), [key]: mappedValue };
             } else {
-                result[key] = remappedValue;
+                result[key] = mappedValue;
             }
         }
-        return result;
+        return result as ObjectQuery<Warning>;
     }
-    return query;
+    return query as ObjectQuery<Warning>;
 }
 
-// Translate WarningSort into a MikroORM order-by: `type` → `sourceInfo` JSONB, `name` → EntityInfo
-// view, everything else → plain Warning column.
-export function remapWarningOrderBy(sort?: WarningSort[]) {
+// Translate WarningSort into a MikroORM order-by: `type` → generated `rootEntityName` column, `name` →
+// `entityInfo` relation, everything else → plain Warning column.
+export function mapWarningOrderBy(sort?: WarningSort[]) {
     return sort?.map((sortItem) => {
         if (sortItem.field === "type") {
-            return { sourceInfo: { rootEntityName: sortItem.direction } };
+            return { rootEntityName: sortItem.direction };
         }
         if (sortItem.field === "name") {
-            return { "entityInfo.name": sortItem.direction };
+            return { entityInfo: { name: sortItem.direction } };
         }
         return { [sortItem.field]: sortItem.direction };
     });
-}
-
-// Whether a where clause or order-by references the EntityInfo view, so the join is only added when
-// name / secondary information require it (type reads from `sourceInfo` and needs no join).
-export function referencesEntityInfo(value: unknown): boolean {
-    if (Array.isArray(value)) {
-        return value.some(referencesEntityInfo);
-    }
-    if (value !== null && typeof value === "object") {
-        return Object.entries(value).some(([key, nestedValue]) => key.startsWith("entityInfo.") || referencesEntityInfo(nestedValue));
-    }
-    return false;
 }
