@@ -20,7 +20,6 @@ import {
     Typography,
 } from "@mui/material";
 import type { GridToolbarProps } from "@mui/x-data-grid";
-import isEqual from "lodash.isequal";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -33,6 +32,12 @@ import type { GQLAvailableContentScopesQuery } from "./selectScopesDialogContent
 type ContentScope = {
     [key: string]: string;
 };
+
+/**
+ * Wildcard value a content scope dimension can have when `getContentScopesForUser` grants access to any value for it.
+ * Must match `UserPermissions.allValues` in `@comet/cms-api`.
+ */
+const contentScopeAllValues = "all-values";
 
 interface ToolbarProps extends GridToolbarProps {
     toolbarAction?: ReactNode;
@@ -140,9 +145,19 @@ export function generateGridColumnsFromContentScopeProperties(
             filterable: true,
             headerName: camelCaseToHumanReadable(propertyName),
             renderCell: ({ row }: { row: ContentScope }) => {
-                const contentScopeWithLabel = availableContentScopes.find((availableContentScope) => isEqual(availableContentScope.scope, row));
-                if (contentScopeWithLabel) {
-                    return <Typography variant={index === 0 ? "subtitle2" : "body2"}>{contentScopeWithLabel.label[propertyName]}</Typography>;
+                if (row[propertyName] === contentScopeAllValues) {
+                    return (
+                        <Typography variant={index === 0 ? "subtitle2" : "body2"}>
+                            <FormattedMessage id="comet.userPermissions.allContentScopeValues" defaultMessage="All" />
+                        </Typography>
+                    );
+                }
+
+                // A wildcard dimension prevents the whole scope from matching an available scope, so labels are resolved per dimension
+                const label = availableContentScopes.find((availableContentScope) => availableContentScope.scope[propertyName] === row[propertyName])
+                    ?.label[propertyName];
+                if (label) {
+                    return <Typography variant={index === 0 ? "subtitle2" : "body2"}>{label}</Typography>;
                 } else {
                     return "-";
                 }
