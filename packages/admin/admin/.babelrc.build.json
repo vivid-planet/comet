@@ -1,3 +1,3 @@
 {
-    "ignore": ["**/__stories__/**", "**/*.stories.ts", "**/*.stories.tsx"]
+    "ignore": ["**/__stories__/**", "**/*.stories.ts", "**/*.stories.tsx", "src/future-ui/cli/**", "src/future-ui/storybook/**"]
 }
