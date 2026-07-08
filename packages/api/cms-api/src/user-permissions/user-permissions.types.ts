@@ -18,7 +18,7 @@ export enum UserPermissions {
      * during the content scope check, e.g. `{ domain: "main", language: UserPermissions.allValues }` grants access to every
      * language within the `main` domain. The wildcard does not need to be part of `availableContentScopes`.
      */
-    allValues = "all-values",
+    allValues = "*",
 }
 
 export type Users = [User[], number];
