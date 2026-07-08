@@ -1,5 +1,17 @@
 # @comet/cms-api
 
+## 8.26.0
+
+### Minor Changes
+
+- 7f8313b: Allow `AffectedScope` to return multiple scopes
+
+    The `argsToScope` function can now return `ContentScope[]` in addition to a single `ContentScope`. When multiple scopes are returned, the user must have access to all of them (AND relationship).
+
+    ```ts
+    @AffectedScope((args: MyArgs) => [{ domain: args.fromDomain }, { domain: args.toDomain }])
+    ```
+
 ## 8.25.1
 
 ### Patch Changes
