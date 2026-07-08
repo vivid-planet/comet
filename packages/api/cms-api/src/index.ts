@@ -209,6 +209,7 @@ export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
+export { EntityInfoFilter } from "./entity-info/dto/entity-info.filter";
 export { EntityInfo, EntityInfoSql } from "./entity-info/entity-info.decorator";
 export { EntityInfoObject } from "./entity-info/entity-info.object";
 export { FileUpload } from "./file-uploads/entities/file-upload.entity";

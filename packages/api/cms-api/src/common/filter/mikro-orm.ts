@@ -250,8 +250,21 @@ export function filtersToMikroOrmQuery(
             } else {
                 const filterProperty = filter[filterPropertyName];
                 if (filterProperty) {
+                    const relationProperty = metadata?.props?.find(
+                        (prop) => prop.name === filterPropertyName && ["1:1", "m:1", "1:m", "m:n"].includes(prop.kind),
+                    );
+                    const isFlatRelationFilter =
+                        filterProperty instanceof ManyToOneFilter ||
+                        filterProperty instanceof OneToManyFilter ||
+                        filterProperty instanceof ManyToManyFilter;
+
                     if (applyFilter) {
                         applyFilter(acc, filterProperty, filterPropertyName);
+                    } else if (relationProperty && !isFlatRelationFilter) {
+                        // Nested relation sub-filter, e.g. `{ entityInfo: { name: {...} } }`. Convert it against
+                        // the relation's target metadata and keep it nested — MikroORM joins the relation to apply
+                        // the condition (unlike the flat ManyToOneFilter, which only matches by foreign key).
+                        acc[filterPropertyName] = filtersToMikroOrmQuery(filterProperty, { metadata: relationProperty.targetMeta });
                     } else {
                         const query = filterToMikroOrmQuery(filterProperty, filterPropertyName, metadata);
 

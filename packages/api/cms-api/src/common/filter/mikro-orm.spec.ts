@@ -1,8 +1,9 @@
-import { raw } from "@mikro-orm/postgresql";
+import { type EntityMetadata, raw } from "@mikro-orm/postgresql";
 import { describe, expect, it, vi } from "vitest";
 
 import { BooleanFilter } from "./boolean.filter";
 import { DateTimeFilter } from "./date-time.filter";
+import { ManyToOneFilter } from "./many-to-one.filter";
 import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery, splitSearchString } from "./mikro-orm";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
@@ -355,5 +356,73 @@ describe("filtersToMikroOrmQuery", () => {
         f.foo = new StringFilter();
 
         expect(filtersToMikroOrmQuery(f)).toStrictEqual({});
+    });
+});
+
+class EntityInfoSubFilter {
+    name?: StringFilter;
+    secondaryInformation?: StringFilter;
+}
+class RelationFilter {
+    and?: RelationFilter[];
+    or?: RelationFilter[];
+    entityInfo?: EntityInfoSubFilter;
+}
+class FlatRelationFilter {
+    manufacturer?: ManyToOneFilter;
+}
+
+describe("filtersToMikroOrmQuery nested relation sub-filter", () => {
+    const relationMetadata = {
+        props: [{ name: "entityInfo", kind: "m:1", targetMeta: undefined }],
+    } as unknown as EntityMetadata;
+
+    function relationFilter(sub: EntityInfoSubFilter): RelationFilter {
+        const f = new RelationFilter();
+        f.entityInfo = sub;
+        return f;
+    }
+
+    function nameFilter(values: Partial<StringFilter>): EntityInfoSubFilter {
+        const sub = new EntityInfoSubFilter();
+        sub.name = Object.assign(new StringFilter(), values);
+        return sub;
+    }
+
+    it("nests a relation sub-filter under the relation property", () => {
+        expect(filtersToMikroOrmQuery(relationFilter(nameFilter({ contains: "abc" })), { metadata: relationMetadata })).toStrictEqual({
+            entityInfo: { name: { $ilike: "%abc%" } },
+        });
+    });
+
+    it("keeps a $not condition wrapping the relation object (notContains)", () => {
+        expect(filtersToMikroOrmQuery(relationFilter(nameFilter({ notContains: "abc" })), { metadata: relationMetadata })).toStrictEqual({
+            entityInfo: { $not: { name: { $ilike: "%abc%" } } },
+        });
+    });
+
+    it("keeps a $or condition inside the relation object (isEmpty)", () => {
+        const sub = new EntityInfoSubFilter();
+        sub.secondaryInformation = Object.assign(new StringFilter(), { isEmpty: true });
+        expect(filtersToMikroOrmQuery(relationFilter(sub), { metadata: relationMetadata })).toStrictEqual({
+            entityInfo: { $or: [{ secondaryInformation: { $eq: null } }, { secondaryInformation: { $eq: "" } }] },
+        });
+    });
+
+    it("nests relation sub-filters inside $and", () => {
+        const f = new RelationFilter();
+        f.and = [relationFilter(nameFilter({ contains: "abc" }))];
+        expect(filtersToMikroOrmQuery(f, { metadata: relationMetadata })).toStrictEqual({
+            $and: [{ entityInfo: { name: { $ilike: "%abc%" } } }],
+        });
+    });
+
+    it("does not nest a flat ManyToOneFilter on a relation property", () => {
+        const flatMetadata = { props: [{ name: "manufacturer", kind: "m:1", targetMeta: undefined }] } as unknown as EntityMetadata;
+        const f = new FlatRelationFilter();
+        f.manufacturer = Object.assign(new ManyToOneFilter(), { equal: "id-1" });
+        expect(filtersToMikroOrmQuery(f, { metadata: flatMetadata })).toStrictEqual({
+            manufacturer: { $eq: "id-1" },
+        });
     });
 });

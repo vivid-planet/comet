@@ -7,6 +7,7 @@ import { ContentScope } from "src/user-permissions/interfaces/content-scope.inte
 import { DateTimeFilter } from "../../common/filter/date-time.filter";
 import { createEnumFilter } from "../../common/filter/enum.filter.factory";
 import { StringFilter } from "../../common/filter/string.filter";
+import { EntityInfoFilter } from "../../entity-info/dto/entity-info.filter";
 import { WarningSeverity } from "../entities/warning-severity.enum";
 import { WarningStatus } from "../entities/warning-status.enum";
 
@@ -56,17 +57,11 @@ export class WarningFilter {
     @Type(() => StringFilter)
     type?: StringFilter;
 
-    @Field(() => StringFilter, { nullable: true })
+    @Field(() => EntityInfoFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => StringFilter)
-    name?: StringFilter;
-
-    @Field(() => StringFilter, { nullable: true })
-    @ValidateNested()
-    @IsOptional()
-    @Type(() => StringFilter)
-    secondaryInformation?: StringFilter;
+    @Type(() => EntityInfoFilter)
+    entityInfo?: EntityInfoFilter;
 
     @Field(() => WarningSeverityEnumFilter, { nullable: true })
     @ValidateNested()
