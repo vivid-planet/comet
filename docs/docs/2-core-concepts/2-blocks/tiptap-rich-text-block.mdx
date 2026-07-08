@@ -30,9 +30,15 @@ The TipTap Rich Text Block will replace the Draft.js-based `RichTextBlock` over 
 
 1. **Experimental (current).** The block is available and functional, but its public API is not yet stable and may still change.
 2. **Stable.** Once the API has settled, the `@experimental` markers are removed and the block follows the regular semantic-versioning guarantees. This is the point at which we recommend it for all projects.
-3. **Removal of the old block.** In a future (major) COMET version, the Draft.js-based `RichTextBlock` (`createRichTextBlock`, together with `@comet/admin-rte`) will be deprecated and eventually removed.
+3. **Removal of the old block.** In a future (major) COMET version, the Draft.js-based `RichTextBlock` (`createRichTextBlock`) will be deprecated and eventually removed.
 
 We recommend planning the switch to the TipTap Rich Text Block early. New content should use the new block, and existing content can be migrated with the [built-in Draft.js migration](#migrating-existing-content).
+
+:::note
+
+The TipTap Rich Text Block only replaces the Draft.js-based `RichTextBlock`. It does **not** replace `@comet/admin-rte`, which remains available for using the rich text editor directly (non-block usage), for instance as a standalone form field.
+
+:::
 
 ## Replacing the `RichTextBlock`
 
