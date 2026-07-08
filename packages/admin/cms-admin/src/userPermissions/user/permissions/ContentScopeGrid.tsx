@@ -80,7 +80,10 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         return <Loading />;
     }
 
-    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
+    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(
+        data.availableContentScopes,
+        data.userContentScopes as ContentScope[],
+    );
 
     const toolbarSlotProps: ToolbarProps = {
         toolbarAction: (
@@ -134,8 +137,12 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
 
 export function generateGridColumnsFromContentScopeProperties(
     availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
+    contentScopes: ContentScope[] = [],
 ): GridColDef[] {
-    const uniquePropertyNames = Array.from(new Set(availableContentScopes.flatMap((item) => Object.keys(item.scope))));
+    // Wildcard dimensions may not appear in the available content scopes, so the displayed scopes are also considered
+    const uniquePropertyNames = Array.from(
+        new Set([...availableContentScopes.flatMap((item) => Object.keys(item.scope)), ...contentScopes.flatMap((scope) => Object.keys(scope))]),
+    );
     return uniquePropertyNames.map((propertyName, index) => {
         return {
             field: propertyName,
