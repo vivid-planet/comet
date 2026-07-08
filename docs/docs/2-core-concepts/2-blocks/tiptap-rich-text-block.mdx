@@ -46,27 +46,21 @@ The TipTap Rich Text Block only replaces the Draft.js-based `RichTextBlock`. It 
 
 Most features of the Draft.js `RichTextBlock` have a direct equivalent in the TipTap Rich Text Block.
 
-| Draft.js `RichTextBlock`                                                | TipTap Rich Text Block                                                                               |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `createRichTextBlock`                                                   | `createTipTapRichTextBlock`                                                                          |
-| Content field `draftContent` (`RawDraftContentState`, stored as `json`) | Content field `tipTapContent` (TipTap `JSONContent`, dedicated block-meta kind)                      |
-| Links stored as Draft.js `LINK` entities in `entityMap`                 | Links stored as TipTap `link` marks (`attrs.data`)                                                   |
-| `rte.supports` (`SupportedThings[]`)                                    | `supports` (`TipTapSupports[]`)                                                                      |
-| `bold`, `italic`, `strikethrough`, `sub`, `sup`                         | `bold`, `italic`, `strike`, `sub`, `sup`                                                             |
-| `header-one` … `header-six`                                             | `heading` support + the [text-block-type select](#text-block-type-and-styling-selects) (Heading 1–6) |
-| `ordered-list`, `unordered-list`                                        | `ordered-list`, `unordered-list`                                                                     |
-| `history`                                                               | `history` (Admin only)                                                                               |
-| `link`, `links-remove`                                                  | pass a `link` block (automatically enables `link` support)                                           |
-| `non-breaking-space`, `soft-hyphen`                                     | `non-breaking-space`, `soft-hyphen`                                                                  |
-| `underline`, `blockquote`                                               | _not supported_                                                                                      |
-| `rte.blocktypeMap` (custom block types)                                 | [`textBlockStyles`](#text-block-type-and-styling-selects) + the styling select                       |
-| `rte.customInlineStyles`                                                | [`inlineStyles`](#text-block-type-and-styling-selects) + the inline style select                     |
-| `rte.listLevelMax`                                                      | `listLevelMax`                                                                                       |
-| `rte.maxBlocks`                                                         | `maxTextBlocks`                                                                                      |
-| _no server-side content validation_                                     | full API validation                                                                                  |
-| —                                                                       | [`childBlocks`](#child-blocks)                                                                       |
-| —                                                                       | `placeholders`                                                                                       |
-| Site rendering with `redraft` + `Renderers`                             | Site rendering with `renderTipTapRichText` + `nodeMapping`/`markMapping`                             |
+| Draft.js `RichTextBlock`                        | TipTap Rich Text Block                                                                               |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `createRichTextBlock`                           | `createTipTapRichTextBlock`                                                                          |
+| `rte.supports` (`SupportedThings[]`)            | `supports` (`TipTapSupports[]`)                                                                      |
+| `bold`, `italic`, `strikethrough`, `sub`, `sup` | `bold`, `italic`, `strike`, `sub`, `sup`                                                             |
+| `header-one` … `header-six`                     | `heading` support + the [text-block-type select](#text-block-type-and-styling-selects) (Heading 1–6) |
+| `ordered-list`, `unordered-list`                | `ordered-list`, `unordered-list`                                                                     |
+| `history`                                       | `history` (Admin only)                                                                               |
+| `link`, `links-remove`                          | pass a `link` block (automatically enables `link` support)                                           |
+| `non-breaking-space`, `soft-hyphen`             | `non-breaking-space`, `soft-hyphen`                                                                  |
+| `rte.blocktypeMap` (custom block types)         | [`textBlockStyles`](#text-block-type-and-styling-selects) + the styling select                       |
+| `rte.customInlineStyles`                        | [`inlineStyles`](#text-block-type-and-styling-selects) + the inline style select                     |
+| `rte.listLevelMax`                              | `listLevelMax`                                                                                       |
+| `rte.maxBlocks`                                 | `maxTextBlocks`                                                                                      |
+| Site rendering with `redraft` + `Renderers`     | Site rendering with `renderTipTapRichText` + `nodeMapping`/`markMapping`                             |
 
 ### Setup
 
