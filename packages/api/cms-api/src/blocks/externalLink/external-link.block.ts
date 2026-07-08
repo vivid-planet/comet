@@ -13,8 +13,8 @@ class ExternalLinkBlockData extends BlockData {
     @BlockField()
     openInNewWindow: boolean;
 
-    @BlockField()
-    noFollow: boolean;
+    @BlockField({ nullable: true })
+    noFollow?: boolean;
 }
 
 class ExternalLinkBlockInput extends BlockInput {
@@ -27,9 +27,10 @@ class ExternalLinkBlockInput extends BlockInput {
     @BlockField()
     openInNewWindow: boolean;
 
+    @IsOptional()
     @IsBoolean()
-    @BlockField()
-    noFollow: boolean;
+    @BlockField({ nullable: true })
+    noFollow?: boolean;
 
     transformToBlockData(): ExternalLinkBlockData {
         return blockInputToData(ExternalLinkBlockData, this);
