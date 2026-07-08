@@ -37,7 +37,7 @@ type ContentScope = {
  * Wildcard value a content scope dimension can have when `getContentScopesForUser` grants access to any value for it.
  * Must match `UserPermissions.allValues` in `@comet/cms-api`.
  */
-const contentScopeAllValues = "all-values";
+const contentScopeAllValues = "*";
 
 interface ToolbarProps extends GridToolbarProps {
     toolbarAction?: ReactNode;
