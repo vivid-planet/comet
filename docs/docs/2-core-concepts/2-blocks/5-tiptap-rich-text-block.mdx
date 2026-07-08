@@ -1,0 +1,318 @@
+---
+title: TipTapRichTextBlock
+---
+
+# TipTapRichTextBlock
+
+The `TipTapRichTextBlock` is a rich text block based on [TipTap](https://tiptap.dev/) (a headless wrapper around [ProseMirror](https://prosemirror.net/)).
+It is the successor to the [DraftJS-based `RichTextBlock`](factories#richtextblock) and stores its content as a structured ProseMirror JSON document in the `tipTapContent` field.
+
+:::warning Experimental
+
+The `TipTapRichTextBlock` is **experimental**.
+Both `createTipTapRichTextBlock` (API and admin) and `renderTipTapRichText` (site) are marked with `@experimental`.
+Its API may still change in breaking ways in minor releases.
+
+:::
+
+## Future plans
+
+The `TipTapRichTextBlock` is being introduced to eventually replace the DraftJS-based `RichTextBlock`.
+The rollout happens in three stages:
+
+1. **Experimental (current)** — the block is available and usable, but its API may change without a major version bump. Use it for new projects that can tolerate follow-up adjustments, or to try out the migration path.
+2. **Stable** — once the API has settled, the `@experimental` markers are removed and the block follows the regular semantic-versioning guarantees. It becomes the recommended rich text block for new projects.
+3. **Removal of the old block** — in a future major COMET version, the DraftJS-based `RichTextBlock` (`@comet/admin-rte`) will be removed. Projects still using it will have to migrate to the `TipTapRichTextBlock` before upgrading to that version.
+
+We recommend migrating existing projects to the `TipTapRichTextBlock` early to smooth out the eventual mandatory migration.
+
+## Basic usage
+
+Like the `RichTextBlock`, the `TipTapRichTextBlock` is created with a factory in both the API and the admin, and rendered with a helper on the site.
+
+### API
+
+Use the `createTipTapRichTextBlock` factory:
+
+```ts title="tip-tap-rich-text.block.ts"
+import { createTipTapRichTextBlock } from "@comet/cms-api";
+
+import { LinkBlock } from "./link.block";
+
+export const TipTapRichTextBlock = createTipTapRichTextBlock({ link: LinkBlock });
+```
+
+### Admin
+
+Use the `createTipTapRichTextBlock` factory:
+
+```tsx title="TipTapRichTextBlock.tsx"
+import { createTipTapRichTextBlock } from "@comet/cms-admin";
+
+import { LinkBlock } from "./LinkBlock";
+
+export const TipTapRichTextBlock = createTipTapRichTextBlock({ link: LinkBlock });
+```
+
+### Site
+
+Render the content with the `renderTipTapRichText` helper.
+Provide a `nodeMapping` (for block-level nodes and marks) to map the stored nodes to your own components:
+
+```tsx title="TipTapRichTextBlock.tsx"
+"use client";
+import {
+    hasTipTapRichTextContent,
+    PreviewSkeleton,
+    type PropsWithData,
+    renderTipTapRichText,
+    type TipTapMarkHandler,
+    type TipTapNode,
+    type TipTapNodeHandler,
+} from "@comet/site-nextjs";
+import { type LinkBlockData, type TipTapRichTextBlockData } from "@src/blocks.generated";
+
+import { LinkBlock } from "./LinkBlock";
+
+const nodeMapping: Record<string, TipTapNodeHandler> = {
+    paragraph: ({ children }) => <p>{children}</p>,
+    heading: ({ node, children }) => {
+        const level = (node.attrs?.level as 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
+        const Tag = `h${level}` as const;
+        return <Tag>{children}</Tag>;
+    },
+};
+
+const markMapping: Record<string, TipTapMarkHandler> = {
+    link: ({ mark, children }) => {
+        const linkData = mark.attrs?.data as LinkBlockData | undefined;
+        return linkData ? <LinkBlock data={linkData}>{children}</LinkBlock> : <>{children}</>;
+    },
+};
+
+export function TipTapRichTextBlock({ data }: PropsWithData<TipTapRichTextBlockData>) {
+    const content = data.tipTapContent as TipTapNode;
+    return (
+        <PreviewSkeleton title="RichText" type="rows" hasContent={hasTipTapRichTextContent(content)}>
+            {renderTipTapRichText({ content, nodeMapping, markMapping })}
+        </PreviewSkeleton>
+    );
+}
+```
+
+The helper provides default handlers for `paragraph`, `heading`, `bulletList`, `orderedList`, `listItem`, `hardBreak`, `nonBreakingSpace` and `softHyphen` nodes, and for the `bold`, `italic`, `strike`, `superscript` and `subscript` marks.
+Your `nodeMapping`/`markMapping` are merged on top of these defaults, so you only need to override the nodes and marks you want to render differently (or provide handlers for `link`, `inlineStyle`, `cmsBlock`, etc.).
+
+## Replacing the old RichTextBlock
+
+### Feature comparison
+
+The following table maps the DraftJS-based `RichTextBlock` options (mostly configured via the `rte: IRteOptions` option) to their `TipTapRichTextBlock` equivalents.
+
+| DraftJS `RichTextBlock`                                         | `TipTapRichTextBlock`                                            | Notes                                                                                                          |
+| -------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `supports: "bold" / "italic" / "sub" / "sup"`                  | `supports: "bold" / "italic" / "sub" / "sup"`                   | Unchanged.                                                                                                     |
+| `supports: "strikethrough"`                                    | `supports: "strike"`                                            | Renamed.                                                                                                       |
+| `supports: "header-one" … "header-six"`                        | `supports: "heading"`                                           | A single `heading` support. The concrete level is chosen in the text block type select (see below).           |
+| `supports: "ordered-list" / "unordered-list"`                  | `supports: "ordered-list" / "unordered-list"`                   | Unchanged.                                                                                                     |
+| `supports: "non-breaking-space" / "soft-hyphen"`               | `supports: "non-breaking-space" / "soft-hyphen"`                | Unchanged.                                                                                                     |
+| `supports: "history"`                                          | `supports: "history"` (admin only, enabled by default)          | Undo/redo.                                                                                                     |
+| `supports: "link" / "links-remove"` + `link` option           | `supports: "link"` + `link` option                              | A single `link` support. Passing a `link` block auto-enables `link` support.                                  |
+| `supports: "underline"`                                        | –                                                               | Not supported.                                                                                                |
+| `supports: "blockquote"`                                       | –                                                               | Not supported.                                                                                                |
+| `rte.blocktypeMap` / `rte.customBlockMap` (custom paragraphs)  | `textBlockStyles`                                               | Styling is now a dedicated select, separate from the text block type. See [Text block type and styling](#text-block-type-and-styling). |
+| `rte.customInlineStyles`                                       | `inlineStyles`                                                  | Now a dedicated inline style select.                                                                          |
+| `rte.maxBlocks`                                                | `maxTextBlocks`                                                 | Renamed. Now also enforced by [API validation](#api-validation).                                              |
+| `rte.listLevelMax`                                             | `listLevelMax`                                                  | Now also enforced by API validation.                                                                          |
+| `rte.standardBlockType`                                        | –                                                               | No direct equivalent; the text block type select covers this.                                                 |
+| stored in `draftContent`                                       | stored in `tipTapContent`                                       | The data shape changes completely (ProseMirror JSON instead of DraftJS raw state).                            |
+
+### Migrating existing content
+
+Existing content is stored as DraftJS raw state (`{ draftContent: { blocks, entityMap } }`).
+To convert it to TipTap content automatically, enable `migrateFromDraftJs` on the **API** factory:
+
+```ts title="tip-tap-rich-text.block.ts"
+import { createTipTapRichTextBlock } from "@comet/cms-api";
+
+import { LinkBlock } from "./link.block";
+
+export const TipTapRichTextBlock = createTipTapRichTextBlock({
+    link: LinkBlock,
+    migrateFromDraftJs: true,
+});
+```
+
+This prepends a best-effort DraftJS → TipTap [block migration](migrations) that runs automatically when existing content is read.
+The migration uses the block's `supports`, `textBlockStyles`, `link` and `maxTextBlocks` options to build the target schema, validates the converted document, and falls back to a stripped-down plain-text document if validation fails.
+
+If you configured custom paragraph styles or inline styles on the old block, map them to their new equivalents:
+
+```ts
+createTipTapRichTextBlock({
+    link: LinkBlock,
+    textBlockStyles: [{ name: "paragraph200", appliesTo: ["paragraph"] }],
+    inlineStyles: [{ name: "highlight" }],
+    migrateFromDraftJs: {
+        // Map DraftJS `blocktypeMap` keys to TipTap `textBlockStyle` values …
+        textBlockStyleMap: { "paragraph-small": "paragraph200" },
+        // … and DraftJS `customInlineStyles` keys to TipTap `inlineStyle` types.
+        inlineStyleMap: { HIGHLIGHT: "highlight" },
+    },
+});
+```
+
+:::note Migration versioning
+
+`migrateFromDraftJs` reserves migration version `1` for the DraftJS → TipTap conversion.
+If you add your own migrations on top, they must start at version `2`:
+
+```ts
+createTipTapRichTextBlock(
+    { link: LinkBlock, migrateFromDraftJs: true },
+    {
+        name: "TipTapRichText",
+        migrate: {
+            migrations: typeSafeBlockMigrationPipe([Heading1ToHeading2Migration]), // toVersion = 2
+            version: 2,
+        },
+    },
+);
+```
+
+:::
+
+Replacing the block in the parent (e.g. swapping the `richText` entry of a `BlocksBlock` for the TipTap block) is enough — the stored `draftContent` is picked up and converted by the migration on read.
+On the **site**, replace the `redraft`-based rendering with `renderTipTapRichText` as shown in [Site](#site).
+
+## New features
+
+Compared to the DraftJS-based `RichTextBlock`, the `TipTapRichTextBlock` adds the following.
+
+### API validation
+
+The old `RichTextBlock` accepted essentially any `draftContent` JSON — constraints such as the supported marks, `maxBlocks` or `listLevelMax` were only enforced in the admin editor, not in the API.
+
+The `TipTapRichTextBlock` validates `tipTapContent` in the API (via an `@IsTipTapContent` class-validator decorator built from the configured schema). Content is rejected when it:
+
+- contains marks or nodes that are not part of the configured schema (e.g. a `strike` mark when `strike` is not in `supports`),
+- exceeds `maxTextBlocks` (the maximum number of top-level text blocks),
+- exceeds `listLevelMax` (the maximum list nesting depth),
+- uses an `inlineStyle` that is not allowed for the surrounding text block type (via `appliesTo`),
+- uses a `placeholder` that is not configured,
+- contains a `link` or child block whose data fails that block's own validation.
+
+This narrows the blast radius of malformed or malicious input (e.g. XSS) and keeps the stored content consistent with the editor configuration.
+
+### Text block type and styling
+
+The DraftJS `RichTextBlock` combined the block type (paragraph, headings) and any custom paragraph variants into a single dropdown (`blocktypeMap`).
+
+The `TipTapRichTextBlock` splits this into **two selects** in the toolbar:
+
+- a **text block type** select — `Paragraph` and the enabled heading levels (`Heading 1` … `Heading 6`), plus lists,
+- a **styling** select — the configured `textBlockStyles`, filtered by the current text block type via `appliesTo`.
+
+`textBlockStyles` set a `textBlockStyle` attribute on the node (they do not change the node type), so a "Paragraph Small" style stays a paragraph. `inlineStyles` add a separate inline style select for span-level styling (e.g. a highlight).
+
+```tsx title="TipTapRichTextBlock.tsx (admin)"
+import { createTipTapRichTextBlock } from "@comet/cms-admin";
+import type { HTMLAttributes } from "react";
+import { FormattedMessage } from "react-intl";
+
+import { LinkBlock } from "./LinkBlock";
+
+export const TipTapRichTextBlock = createTipTapRichTextBlock({
+    link: LinkBlock,
+    textBlockStyles: [
+        {
+            name: "paragraph300",
+            label: <FormattedMessage id="richText.paragraph300" defaultMessage="Paragraph" />,
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 18 }} {...props} />,
+        },
+        {
+            name: "paragraph200",
+            label: <FormattedMessage id="richText.paragraph200" defaultMessage="Paragraph Small" />,
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 15 }} {...props} />,
+        },
+    ],
+    inlineStyles: [
+        {
+            name: "highlight",
+            label: <FormattedMessage id="richText.highlight" defaultMessage="Highlight" />,
+            element: (props: HTMLAttributes<HTMLElement>) => <span style={{ backgroundColor: "#fff3cd" }} {...props} />,
+        },
+    ],
+});
+```
+
+On the API, `textBlockStyles` and `inlineStyles` are configured with just their `name` (and optional `appliesTo`) so they become part of the validation schema:
+
+```ts title="tip-tap-rich-text.block.ts (api)"
+export const TipTapRichTextBlock = createTipTapRichTextBlock({
+    link: LinkBlock,
+    textBlockStyles: [
+        { name: "paragraph300", appliesTo: ["paragraph"] },
+        { name: "paragraph200", appliesTo: ["paragraph"] },
+    ],
+    inlineStyles: [{ name: "highlight" }],
+});
+```
+
+On the site, read the `textBlockStyle` node attribute (and the `inlineStyle` mark) in your `nodeMapping`/`markMapping` to apply the corresponding styling.
+
+### Child blocks
+
+The DraftJS `RichTextBlock` could only embed links. The `TipTapRichTextBlock` can embed **arbitrary child blocks** into the rich text, similar to a `BlocksBlock`.
+
+Configure them via the `childBlocks` option: a record keyed by a **stable key** (the key — not the block's name — is stored in the content, so blocks can be renamed or swapped without invalidating existing content). Each entry is `{ block, display }`, where `display` is either:
+
+- `"block"` — a standalone block element on its own line, or
+- `"inline"` — rendered inline within the surrounding text.
+
+In the editor, a "+" button in the toolbar opens a menu of the configured child blocks; selecting one opens a dialog with the block's admin component and inserts it as a non-editable preview that can be edited or removed. Child block data is validated in the API and loaded via the block loader like any other nested block.
+
+```ts title="tip-tap-rich-text.block.ts (api)"
+import { createTipTapRichTextBlock } from "@comet/cms-api";
+import { ProductPriceBlock } from "@src/products/blocks/product-price.block";
+import { ProductTeaserBlock } from "@src/products/blocks/product-teaser.block";
+
+import { LinkBlock } from "./link.block";
+
+export const TipTapRichTextBlock = createTipTapRichTextBlock({
+    link: LinkBlock,
+    childBlocks: {
+        productPrice: { block: ProductPriceBlock, display: "inline" },
+        productTeaser: { block: ProductTeaserBlock, display: "block" },
+    },
+});
+```
+
+The admin factory takes the same `childBlocks` configuration.
+
+On the site, embedded child blocks are stored as `cmsBlock` (block display) and `cmsInlineBlock` (inline display) nodes carrying `blockType` (the stable key) and `data` attributes. Render them via `nodeMapping`:
+
+```tsx title="TipTapRichTextBlock.tsx (site)"
+import type { ProductPriceBlockData, ProductTeaserBlockData } from "@src/blocks.generated";
+
+import { ProductPriceBlock } from "@src/products/blocks/ProductPriceBlock";
+import { ProductTeaserBlock } from "@src/products/blocks/ProductTeaserBlock";
+
+const renderCmsBlock: TipTapNodeHandler = ({ node }) => {
+    if (node.attrs?.blockType === "productPrice") {
+        return <ProductPriceBlock data={node.attrs?.data as ProductPriceBlockData} />;
+    }
+    if (node.attrs?.blockType === "productTeaser") {
+        return <ProductTeaserBlock data={node.attrs?.data as ProductTeaserBlockData} />;
+    }
+    return null;
+};
+
+const nodeMapping: Record<string, TipTapNodeHandler> = {
+    // …
+    cmsBlock: renderCmsBlock,
+    cmsInlineBlock: renderCmsBlock,
+};
+```
