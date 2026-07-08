@@ -95,13 +95,11 @@ export const ContactFormBlock = withPreview(
             }
 
             try {
-                const { attachments: attachmentIds, ...rest } = formValues;
                 const response = await fetch(`/${language}/api/contact-form`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        ...rest,
-                        attachmentIds,
+                        ...formValues,
                         recaptchaToken,
                     }),
                 });
