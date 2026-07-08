@@ -8,6 +8,13 @@ sidebar_position: 4.5
 The `TipTapRichTextBlock` is a rich text block based on [TipTap](https://tiptap.dev/) (a headless editor built on top of [ProseMirror](https://prosemirror.net/)).
 It is the successor to the [Draft.js-based `RichTextBlock`](./4-factories.mdx#richtextblock) and is created with the `createTipTapRichTextBlock` factory.
 
+It offers several advantages over the old block:
+
+- **Built on a maintained library.** TipTap is actively developed, while Draft.js is no longer maintained.
+- **Schema-based validation.** TipTap defines the allowed content as a schema, which enables full server-side validation of the content in the API — the old block stored its content unvalidated.
+- **Easier to extend.** New features can be added as TipTap extensions, making it simpler to implement functionality that was hard or impossible with Draft.js — for example, embedding other blocks (child blocks) directly into the rich text.
+- **Standardized, portable content format.** Content is stored as plain ProseMirror JSON, a well-documented format that is straightforward to render, transform, and reason about.
+
 :::caution Experimental
 
 The TipTap Rich Text Block is **experimental**.
