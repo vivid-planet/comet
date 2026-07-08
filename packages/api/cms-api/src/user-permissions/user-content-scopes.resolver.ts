@@ -11,6 +11,7 @@ import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionsService } from "./user-permissions.service";
+import { UserPermissions } from "./user-permissions.types";
 
 @Resolver()
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
@@ -44,9 +45,14 @@ export class UserContentScopesResolver {
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
         const contentScopes = await this.userService.getContentScopes(await this.userService.findUserOrThrow(userId), !skipManual);
-        return (await this.userService.getAvailableContentScopes())
+        const contentScopesFromAvailable = (await this.userService.getAvailableContentScopes())
             .filter((availableContentScope) => contentScopes.some((contentScope) => isEqual(contentScope, availableContentScope.scope)))
             .map((availableContentScope) => availableContentScope.scope);
+        // Wildcard scopes are valid grants that are not part of the available content scopes, so they are kept as-is
+        const wildcardContentScopes = contentScopes.filter((contentScope) =>
+            Object.values(contentScope as Record<string, unknown>).includes(UserPermissions.allValues),
+        );
+        return [...contentScopesFromAvailable, ...wildcardContentScopes];
     }
 
     @Query(() => [ContentScopeWithLabel])
