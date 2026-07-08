@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import {
     dataGridDateTimeColumn,
     DataGridToolbar,
-    type GqlFilter,
     GridCellContent,
     type GridColDef,
     GridFilterButton,
@@ -24,6 +23,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../contentScope/Provider";
 import { DataGrid } from "../dataGrid/DataGrid";
+import { nestEntityInfoFilterFields } from "../dataGrid/nestEntityInfoFilterFields";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { getDisplayNameString } from "../dependencies/getDisplayNameString";
 import { WarningActions } from "./WarningActions";
@@ -64,24 +64,6 @@ const warningsQuery = gql`
     }
     ${warningsFragment}
 `;
-
-// The `name` and `secondaryInformation` grid columns live on the related entity, exposed through the
-// `entityInfo` relation. Nest their filter conditions accordingly so they match `WarningFilter`.
-const entityInfoFilterFields = new Set(["name", "secondaryInformation"]);
-
-function nestEntityInfoFilterFields(filter: GqlFilter): GqlFilter {
-    const result: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(filter)) {
-        if ((key === "and" || key === "or") && Array.isArray(value)) {
-            result[key] = value.map((item) => nestEntityInfoFilterFields(item));
-        } else if (entityInfoFilterFields.has(key)) {
-            result.entityInfo = { ...(result.entityInfo as Record<string, unknown> | undefined), [key]: value };
-        } else {
-            result[key] = value;
-        }
-    }
-    return result as GqlFilter;
-}
 
 function WarningsGridToolbar() {
     return (

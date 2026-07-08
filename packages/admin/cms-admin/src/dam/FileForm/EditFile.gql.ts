@@ -75,8 +75,10 @@ export const damFileDependentsQuery = gql`
                     rootId
                     rootColumnName
                     jsonPath
-                    name
-                    secondaryInformation
+                    entityInfo {
+                        name
+                        secondaryInformation
+                    }
                     visible
                 }
                 totalCount

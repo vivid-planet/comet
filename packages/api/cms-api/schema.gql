@@ -89,8 +89,7 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
-  name: String
-  secondaryInformation: String
+  entityInfo: EntityInfo
 }
 
 type PaginatedDependencies {
@@ -353,8 +352,7 @@ input DependentFilter {
   rootGraphqlObjectType: StringFilter
   rootId: String
   rootColumnName: String
-  name: StringFilter
-  secondaryInformation: StringFilter
+  entityInfo: EntityInfoFilter
   visible: BooleanFilter
   and: [DependentFilter!]
   or: [DependentFilter!]
@@ -370,6 +368,11 @@ input StringFilter {
   isAnyOf: [String!]
   isEmpty: Boolean
   isNotEmpty: Boolean
+}
+
+input EntityInfoFilter {
+  name: StringFilter
+  secondaryInformation: StringFilter
 }
 
 input BooleanFilter {
@@ -421,8 +424,7 @@ input DependencyFilter {
   targetGraphqlObjectType: StringFilter
   targetId: String
   rootColumnName: String
-  name: StringFilter
-  secondaryInformation: StringFilter
+  entityInfo: EntityInfoFilter
   visible: BooleanFilter
   and: [DependencyFilter!]
   or: [DependencyFilter!]
@@ -729,11 +731,6 @@ input WarningFilter {
   scope: ScopeFilter
   and: [WarningFilter!]
   or: [WarningFilter!]
-}
-
-input EntityInfoFilter {
-  name: StringFilter
-  secondaryInformation: StringFilter
 }
 
 input WarningSeverityEnumFilter {

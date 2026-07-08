@@ -5,6 +5,7 @@ import { IsString, ValidateNested } from "class-validator";
 import { BooleanFilter } from "../../common/filter/boolean.filter";
 import { StringFilter } from "../../common/filter/string.filter";
 import { IsUndefinable } from "../../common/validators/is-undefinable";
+import { EntityInfoFilter } from "../../entity-info/dto/entity-info.filter";
 
 @InputType()
 export class DependencyFilter {
@@ -24,17 +25,11 @@ export class DependencyFilter {
     @IsUndefinable()
     rootColumnName?: string;
 
-    @Field(() => StringFilter, { nullable: true })
+    @Field(() => EntityInfoFilter, { nullable: true })
     @ValidateNested()
-    @Type(() => StringFilter)
+    @Type(() => EntityInfoFilter)
     @IsUndefinable()
-    name?: StringFilter;
-
-    @Field(() => StringFilter, { nullable: true })
-    @ValidateNested()
-    @Type(() => StringFilter)
-    @IsUndefinable()
-    secondaryInformation?: StringFilter;
+    entityInfo?: EntityInfoFilter;
 
     @Field(() => BooleanFilter, { nullable: true })
     @ValidateNested()
@@ -73,17 +68,11 @@ export class DependentFilter {
     @IsUndefinable()
     rootColumnName?: string;
 
-    @Field(() => StringFilter, { nullable: true })
+    @Field(() => EntityInfoFilter, { nullable: true })
     @ValidateNested()
-    @Type(() => StringFilter)
+    @Type(() => EntityInfoFilter)
     @IsUndefinable()
-    name?: StringFilter;
-
-    @Field(() => StringFilter, { nullable: true })
-    @ValidateNested()
-    @Type(() => StringFilter)
-    @IsUndefinable()
-    secondaryInformation?: StringFilter;
+    entityInfo?: EntityInfoFilter;
 
     @Field(() => BooleanFilter, { nullable: true })
     @ValidateNested()

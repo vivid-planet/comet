@@ -536,12 +536,11 @@ input DateTimeFilter {
 }
 
 type Dependency {
+  entityInfo: EntityInfo
   jsonPath: String!
-  name: String
   rootColumnName: String!
   rootGraphqlObjectType: String!
   rootId: String!
-  secondaryInformation: String
   targetGraphqlObjectType: String!
   targetId: String!
   visible: Boolean!
@@ -549,10 +548,9 @@ type Dependency {
 
 input DependencyFilter {
   and: [DependencyFilter!]
-  name: StringFilter
+  entityInfo: EntityInfoFilter
   or: [DependencyFilter!]
   rootColumnName: String
-  secondaryInformation: StringFilter
   targetGraphqlObjectType: StringFilter
   targetId: String
   visible: BooleanFilter
@@ -572,12 +570,11 @@ enum DependencySortField {
 
 input DependentFilter {
   and: [DependentFilter!]
-  name: StringFilter
+  entityInfo: EntityInfoFilter
   or: [DependentFilter!]
   rootColumnName: String
   rootGraphqlObjectType: StringFilter
   rootId: String
-  secondaryInformation: StringFilter
   visible: BooleanFilter
 }
 
@@ -647,6 +644,11 @@ type EntityInfo {
   id: String!
   name: String!
   secondaryInformation: String
+}
+
+input EntityInfoFilter {
+  name: StringFilter
+  secondaryInformation: StringFilter
 }
 
 input FileFilterInput {
@@ -2343,11 +2345,10 @@ type Warning {
 input WarningFilter {
   and: [WarningFilter!]
   createdAt: DateTimeFilter
+  entityInfo: EntityInfoFilter
   message: StringFilter
-  name: StringFilter
   or: [WarningFilter!]
   scope: ScopeFilter
-  secondaryInformation: StringFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
   type: StringFilter

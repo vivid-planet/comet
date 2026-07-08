@@ -93,19 +93,13 @@ export class DependenciesService {
                             targetTableData->>'graphqlObjectType'                               "targetGraphqlObjectType",
                             targetTableData->>'tableName'                                       "targetTableName",
                             targetTableData->>'primary'                                         "targetPrimaryKey",
-                            dependenciesObj->>'id'                                              "targetId",
-                            ei_root."name"                                                      "rootName",
-                            ei_root."secondaryInformation"                                      "rootSecondaryInformation",
-                            ei_target."name"                                                    "targetName",
-                            ei_target."secondaryInformation"                                    "targetSecondaryInformation"
+                            dependenciesObj->>'id'                                              "targetId"
                         FROM "${metadata.tableName}"
                         CROSS JOIN LATERAL json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj
                         CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
                         CROSS JOIN LATERAL json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData
                         LEFT JOIN "EntityInfo" as ei_root ON ei_root."id" = "${metadata.tableName}"."${primary}"::text
-                            AND ei_root."entityName" = '${metadata.name}'
-                        LEFT JOIN "EntityInfo" as ei_target ON ei_target."id" = dependenciesObj->>'id'
-                            AND ei_target."entityName" = dependenciesObj->>'targetEntityName'`;
+                            AND ei_root."entityName" = '${metadata.name}'`;
 
             indexSelects.push(select);
         }
@@ -305,14 +299,20 @@ export class DependenciesService {
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
-        const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependents")) as ObjectQuery<BlockIndexDependencyObject>;
+        const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependents"), {
+            metadata: this.entityManager.getMetadata(BlockIndexDependencyObject),
+        }) as ObjectQuery<BlockIndexDependencyObject>;
         where.targetEntityName = entityName;
         where.targetId = target.id;
         if (rootEntityName) {
             where.rootEntityName = rootEntityName;
         }
 
-        const findOptions: FindOptions<BlockIndexDependencyObject> = { offset: options?.offset, limit: options?.limit };
+        const findOptions: FindOptions<BlockIndexDependencyObject, "rootEntityInfo"> = {
+            offset: options?.offset,
+            limit: options?.limit,
+            populate: ["rootEntityInfo"],
+        };
         if (options?.sort) {
             findOptions.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependents"));
         }
@@ -338,14 +338,20 @@ export class DependenciesService {
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 
-        const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependencies")) as ObjectQuery<BlockIndexDependencyObject>;
+        const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependencies"), {
+            metadata: this.entityManager.getMetadata(BlockIndexDependencyObject),
+        }) as ObjectQuery<BlockIndexDependencyObject>;
         where.rootEntityName = entityName;
         where.rootId = root.id;
         if (targetEntityName) {
             where.targetEntityName = targetEntityName;
         }
 
-        const findOptions: FindOptions<BlockIndexDependencyObject> = { offset: options?.offset, limit: options?.limit };
+        const findOptions: FindOptions<BlockIndexDependencyObject, "targetEntityInfo"> = {
+            offset: options?.offset,
+            limit: options?.limit,
+            populate: ["targetEntityInfo"],
+        };
         if (options?.sort) {
             findOptions.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependencies"));
         }
@@ -354,6 +360,12 @@ export class DependenciesService {
 
         const results = entities.map((entity) => this.mapToResult(entity, "dependencies"));
         return new PaginatedDependencies(results, totalCount);
+    }
+
+    // The displayed entity is the target for a dependency and the root for a dependent, so its EntityInfo
+    // comes from the corresponding relation.
+    private entityInfoRelation(context: "dependencies" | "dependents"): "targetEntityInfo" | "rootEntityInfo" {
+        return context === "dependents" ? "rootEntityInfo" : "targetEntityInfo";
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -371,44 +383,48 @@ export class DependenciesService {
                 continue;
             }
 
-            const mappedKey = this.remapColumnName(key, context);
+            // `entityInfo` maps to the target's or the root's relation; the nested sub-filter is kept as is
+            // and converted against the relation by `filtersToMikroOrmQuery`.
+            if (key === "entityInfo") {
+                remapped[this.entityInfoRelation(context)] = value;
+                continue;
+            }
 
             // Convert plain string values to StringFilter so filtersToMikroOrmQuery can handle them
             if (typeof value === "string") {
                 const stringFilter = new StringFilter();
                 stringFilter.equal = value;
-                remapped[mappedKey] = stringFilter;
+                remapped[key] = stringFilter;
             } else {
-                remapped[mappedKey] = value;
+                remapped[key] = value;
             }
         }
 
         return remapped;
     }
 
-    private remapColumnName(key: string, context: "dependencies" | "dependents"): string {
-        const prefix = context === "dependents" ? "root" : "target";
-        switch (key) {
-            case "name":
-                return `${prefix}Name`;
-            case "secondaryInformation":
-                return `${prefix}SecondaryInformation`;
-            case "graphqlObjectType":
-                return `${prefix}GraphqlObjectType`;
-            default:
-                return key;
-        }
-    }
-
     private remapSort(sort: DependencySort[], context: "dependencies" | "dependents") {
-        return sort.map(({ field, direction }) => ({ field: this.remapColumnName(field, context), direction }));
+        const prefix = context === "dependents" ? "root" : "target";
+        const relation = this.entityInfoRelation(context);
+        return sort.map(({ field, direction }) => {
+            switch (field) {
+                // `_` becomes a nested path in `gqlSortToMikroOrmOrderBy`, so this sorts by the relation's column.
+                case "name":
+                    return { field: `${relation}_name`, direction };
+                case "secondaryInformation":
+                    return { field: `${relation}_secondaryInformation`, direction };
+                case "graphqlObjectType":
+                    return { field: `${prefix}GraphqlObjectType`, direction };
+                default:
+                    return { field, direction };
+            }
+        });
     }
 
     private mapToResult(entity: BlockIndexDependencyObject, context: "dependencies" | "dependents"): Dependency {
         const result = new Dependency();
         Object.assign(result, entity);
-        result.name = context === "dependents" ? entity.rootName : entity.targetName;
-        result.secondaryInformation = context === "dependents" ? entity.rootSecondaryInformation : entity.targetSecondaryInformation;
+        result.entityInfo = entity[this.entityInfoRelation(context)];
         return result;
     }
 }

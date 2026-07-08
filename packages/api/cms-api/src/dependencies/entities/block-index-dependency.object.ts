@@ -1,4 +1,6 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+
+import { EntityInfoObject } from "../../entity-info/entity-info.object";
 
 // Note: This file is intentionally not named *.entity.ts to exclude it from MikroORM's CLI migration glob pattern.
 // The "block_index_dependencies" materialized view is created dynamically at startup by DependenciesService, not via migrations.
@@ -53,15 +55,19 @@ export class BlockIndexDependencyObject {
     @PrimaryKey({ type: "text" })
     targetId: string;
 
-    @Property({ type: "text", nullable: true })
-    rootName?: string;
+    // Read-only joins to the EntityInfo view for the entity displayed in the grid: the target for a
+    // dependency, the root for a dependent. Keyed by the id + entityName columns the view already carries.
+    @ManyToOne(() => EntityInfoObject, {
+        joinColumns: ["targetId", "targetEntityName"],
+        referencedColumnNames: ["id", "entityName"],
+        nullable: true,
+    })
+    targetEntityInfo?: EntityInfoObject;
 
-    @Property({ type: "text", nullable: true })
-    rootSecondaryInformation?: string;
-
-    @Property({ type: "text", nullable: true })
-    targetName?: string;
-
-    @Property({ type: "text", nullable: true })
-    targetSecondaryInformation?: string;
+    @ManyToOne(() => EntityInfoObject, {
+        joinColumns: ["rootId", "rootEntityName"],
+        referencedColumnNames: ["id", "entityName"],
+        nullable: true,
+    })
+    rootEntityInfo?: EntityInfoObject;
 }

@@ -48,8 +48,10 @@ const pageTreeNodeDependentsQuery = gql`
                     rootId
                     rootColumnName
                     jsonPath
-                    name
-                    secondaryInformation
+                    entityInfo {
+                        name
+                        secondaryInformation
+                    }
                     visible
                 }
                 totalCount
@@ -75,8 +77,10 @@ const pageTreeNodeDependenciesQuery = gql`
                     targetId
                     rootColumnName
                     jsonPath
-                    name
-                    secondaryInformation
+                    entityInfo {
+                        name
+                        secondaryInformation
+                    }
                     visible
                 }
                 totalCount

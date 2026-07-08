@@ -24,20 +24,18 @@ import { useHistory } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
 import { DataGrid } from "../dataGrid/DataGrid";
+import { nestEntityInfoFilterFields } from "../dataGrid/nestEntityInfoFilterFields";
 import type { GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
 import { getDisplayNameString } from "./getDisplayNameString";
 import type { DependencyInterface } from "./types";
 
-type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "visible" | "rootColumnName" | "jsonPath"> & {
+type DependencyItem = Pick<GQLDependency, "entityInfo" | "visible" | "rootColumnName" | "jsonPath"> & {
     id: string;
     rootGraphqlObjectType: string;
 };
 
-type Dependent = Pick<
-    GQLDependency,
-    "rootGraphqlObjectType" | "rootId" | "rootColumnName" | "jsonPath" | "name" | "secondaryInformation" | "visible"
->;
+type Dependent = Pick<GQLDependency, "rootGraphqlObjectType" | "rootId" | "rootColumnName" | "jsonPath" | "entityInfo" | "visible">;
 
 interface DependentsListQuery {
     item: {
@@ -116,7 +114,10 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
                 flex: 1,
                 sortBy: "name",
                 renderCell: ({ row }) => (
-                    <GridCellContent primaryText={row.name ?? <FormattedMessage {...messages.unknown} />} secondaryText={row.secondaryInformation} />
+                    <GridCellContent
+                        primaryText={row.entityInfo?.name ?? <FormattedMessage {...messages.unknown} />}
+                        secondaryText={row.entityInfo?.secondaryInformation}
+                    />
                 ),
             },
             {
@@ -124,6 +125,7 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
                 headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.secondaryInformation", defaultMessage: "Secondary information" }),
                 sortBy: "secondaryInformation",
                 visible: false,
+                valueGetter: (params, row) => row.entityInfo?.secondaryInformation,
             },
             {
                 field: "rootGraphqlObjectType",
@@ -198,7 +200,8 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
         [intl, entityDependencyMap, apolloClient, contentScope, history],
     );
 
-    const { filter: gqlFilter } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+    const { filter: rawFilter } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+    const gqlFilter = nestEntityInfoFilterFields(rawFilter);
     const sort = muiGridSortToGql(dataGridProps.sortModel, columns);
 
     const { data, loading, error, refetch } = useQuery<DependentsListQuery, QueryVariables>(query, {
