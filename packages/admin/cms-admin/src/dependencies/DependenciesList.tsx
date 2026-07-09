@@ -102,6 +102,9 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
         ...useDataGridRemote({
             queryParamsPrefix: "dependencies",
             pageSize,
+            initialFilter: {
+                items: [{ field: "visible", operator: "is", value: "true" }],
+            },
         }),
         ...usePersistentColumnState("DependenciesList"),
     };
