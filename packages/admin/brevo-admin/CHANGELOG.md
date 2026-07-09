@@ -1,5 +1,16 @@
 # @comet/brevo-admin
 
+## 9.1.0
+
+### Patch Changes
+
+- 5628cb4: Fix typo in the contact import error message ("occured" → "occurred")
+- Updated dependencies [319f5b8]
+    - @comet/cms-admin@9.1.0
+    - @comet/admin@9.1.0
+    - @comet/admin-date-time@9.1.0
+    - @comet/admin-icons@9.1.0
+
 ## 9.0.1
 
 ### Patch Changes
