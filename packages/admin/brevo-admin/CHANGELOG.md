@@ -1,5 +1,15 @@
 # @comet/brevo-admin
 
+## 9.1.1
+
+### Patch Changes
+
+- Updated dependencies [097f85a]
+    - @comet/cms-admin@9.1.1
+    - @comet/admin@9.1.1
+    - @comet/admin-date-time@9.1.1
+    - @comet/admin-icons@9.1.1
+
 ## 9.1.0
 
 ### Patch Changes
