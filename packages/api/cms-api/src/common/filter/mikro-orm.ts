@@ -219,6 +219,50 @@ export function filterToMikroOrmQuery(
     return ret;
 }
 
+// Applies a single leaf filter (StringFilter, NumberFilter, …) onto the accumulated MikroORM query under
+// `propertyName`, hoisting `$and` / `$or` / `$not` to the query root where MikroORM expects them. Exposed so
+// resolvers with a custom `applyFilter` can map a field onto a different property path (e.g. a nested relation)
+// while reusing the default behaviour for everything else.
+export function applyDefaultFilter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    acc: ObjectQuery<any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filterProperty: any,
+    propertyName: string,
+    metadata?: EntityMetadata,
+): void {
+    const query = filterToMikroOrmQuery(filterProperty, propertyName, metadata);
+
+    // $and can't be applied like { field: { $and: [{ ... }] } }.
+    // It has to be applied like { $and: [{ field: { ... } }] }.
+    if (query.$and) {
+        acc.$and ??= [];
+        acc.$and.push(...query.$and);
+        delete query.$and;
+    }
+
+    // $or can't be applied like { field: { $or: [{ ... }] } }.
+    // It has to be applied like { $or: [{ field: { ... } }] }.
+    if (query.$or) {
+        acc.$or ??= [];
+        acc.$or.push(...query.$or);
+        delete query.$or;
+    }
+
+    // $not can't be applied like { field: { $not: { ... } } }.
+    // It has to be applied like { $not: { field: { ... } } }.
+    if (query.$not) {
+        acc.$not ??= {};
+        acc.$not[propertyName] = query.$not;
+        delete query.$not;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (Object.keys(query as any).length > 0) {
+        acc[propertyName] = query;
+    }
+}
+
 export function filtersToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filter: any,
@@ -253,36 +297,7 @@ export function filtersToMikroOrmQuery(
                     if (applyFilter) {
                         applyFilter(acc, filterProperty, filterPropertyName);
                     } else {
-                        const query = filterToMikroOrmQuery(filterProperty, filterPropertyName, metadata);
-
-                        // $and can't be applied like { field: { $and: [{ ... }] } }.
-                        // It has to be applied like { $and: [{ field: { ... } }] }.
-                        if (query.$and) {
-                            acc.$and ??= [];
-                            acc.$and.push(...query.$and);
-                            delete query.$and;
-                        }
-
-                        // $or can't be applied like { field: { $or: [{ ... }] } }.
-                        // It has to be applied like { $or: [{ field: { ... } }] }.
-                        if (query.$or) {
-                            acc.$or ??= [];
-                            acc.$or.push(...query.$or);
-                            delete query.$or;
-                        }
-
-                        // $not can't be applied like { field: { $not: { ... } } }.
-                        // It has to be applied like { $not: { field: { ... } } }.
-                        if (query.$not) {
-                            acc.$not ??= {};
-                            acc.$not[filterPropertyName] = query.$not;
-                            delete query.$not;
-                        }
-
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        if (Object.keys(query as any).length > 0) {
-                            acc[filterPropertyName] = query;
-                        }
+                        applyDefaultFilter(acc, filterProperty, filterPropertyName, metadata);
                     }
                 }
             }

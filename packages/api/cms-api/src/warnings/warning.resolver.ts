@@ -1,13 +1,10 @@
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, raw } from "@mikro-orm/postgresql";
+import { EntityManager, type ObjectQuery } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
-import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { gqlArgsToMikroOrmQuery, splitSearchString } from "../common/filter/mikro-orm";
-import { EntityInfoObject } from "../entity-info/entity-info.object";
-import { EntityInfoService } from "../entity-info/entity-info.service";
+import { applyDefaultFilter, filtersToMikroOrmQuery, splitSearchString } from "../common/filter/mikro-orm";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
@@ -15,22 +12,16 @@ import { ContentScope } from "../user-permissions/interfaces/content-scope.inter
 import { PaginatedWarnings } from "./dto/paginated-warnings";
 import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";
-import { referencesEntityInfo, remapWarningOrderBy, remapWarningQueryFields, type WarningQuery } from "./warning-query-fields.helper";
 
 @Resolver(() => Warning)
 @RequiredPermission(["warnings"], { skipScopeCheck: true })
 export class WarningResolver {
-    constructor(
-        private readonly entityManager: EntityManager,
-        private readonly entityInfoService: EntityInfoService,
-        @InjectRepository(Warning) private readonly repository: EntityRepository<Warning>,
-    ) {}
+    constructor(private readonly entityManager: EntityManager) {}
 
     @Query(() => Warning)
     @AffectedEntity(Warning)
     async warning(@Args("id", { type: () => ID }) id: string): Promise<Warning> {
-        const warning = await this.repository.findOneOrFail(id);
-        return warning;
+        return this.entityManager.findOneOrFail(Warning, id, { populate: ["entityInfo"] });
     }
 
     @Query(() => PaginatedWarnings)
@@ -47,29 +38,46 @@ export class WarningResolver {
             }
         }
 
-        const standardFilter = filter;
         const scope = filter?.and?.find((item) => item.scope !== undefined)?.scope;
 
         if (filter?.and) {
             filter.and = filter.and.filter((item) => item.scope === undefined);
         }
 
-        const where = remapWarningQueryFields(
-            gqlArgsToMikroOrmQuery({ filter: standardFilter }, this.entityManager.getMetadata(Warning)),
-        ) as WarningQuery;
+        const metadata = this.entityManager.getMetadata(Warning);
+        const where: ObjectQuery<Warning> = {};
+
+        if (filter) {
+            // `type` isn't a Warning column: it lives in the `sourceInfo` JSONB and is mirrored by the generated
+            // `rootEntityName` column. `entityInfo` is a relation to the EntityInfo view (name / secondary information),
+            // so its nested filter is converted on its own. Everything else maps 1:1 to a Warning column.
+            where.$and = [
+                filtersToMikroOrmQuery(filter, {
+                    metadata,
+                    applyFilter: (acc, filterProperty, filterKey) => {
+                        if (filterKey === "entityInfo") {
+                            acc.entityInfo = filtersToMikroOrmQuery(filterProperty);
+                        } else if (filterKey === "type") {
+                            applyDefaultFilter(acc, filterProperty, "rootEntityName");
+                        } else {
+                            applyDefaultFilter(acc, filterProperty, filterKey, metadata);
+                        }
+                    },
+                }),
+            ];
+        }
+
         where.status = { $in: status };
 
-        // Built by hand rather than via `gqlArgsToMikroOrmQuery`'s metadata-derived search, because name /
-        // secondary information aren't Warning columns but come from the joined EntityInfo view.
         if (search) {
             where.$and = where.$and ?? [];
             for (const searchPart of splitSearchString(search)) {
                 where.$and.push({
                     $or: [
                         { message: { $ilike: searchPart } },
-                        { sourceInfo: { rootEntityName: { $ilike: searchPart } } },
-                        { "entityInfo.name": { $ilike: searchPart } },
-                        { "entityInfo.secondaryInformation": { $ilike: searchPart } },
+                        { rootEntityName: { $ilike: searchPart } },
+                        { entityInfo: { name: { $ilike: searchPart } } },
+                        { entityInfo: { secondaryInformation: { $ilike: searchPart } } },
                     ],
                 });
             }
@@ -108,33 +116,25 @@ export class WarningResolver {
             }
         }
 
-        const orderBy = remapWarningOrderBy(sort);
+        // `name` sorts by the joined EntityInfo view, `type` by the generated `rootEntityName` column; the join is
+        // added automatically by MikroORM when the order-by references the relation.
+        const orderBy = sort?.map((sortItem) => {
+            if (sortItem.field === "name") {
+                return { entityInfo: { name: sortItem.direction } };
+            }
+            if (sortItem.field === "type") {
+                return { rootEntityName: sortItem.direction };
+            }
+            return { [sortItem.field]: sortItem.direction };
+        });
 
-        const queryBuilder = this.entityManager.createQueryBuilder(Warning, "warning").select("warning.*");
+        const [entities, totalCount] = await this.entityManager.findAndCount(Warning, where, {
+            offset,
+            limit,
+            orderBy: orderBy?.length ? orderBy : undefined,
+            populate: ["entityInfo"],
+        });
 
-        // Join the EntityInfo view only when name / secondary information is used: it's a union over all
-        // entity tables, so an unconditional join would slow the common case (and the count query). It's
-        // keyed by entity name + id from the warning's `sourceInfo`.
-        if (referencesEntityInfo(where) || referencesEntityInfo(orderBy)) {
-            const entityInfoQueryBuilder = this.entityManager.createQueryBuilder(EntityInfoObject, "entityInfo");
-            queryBuilder.leftJoin(entityInfoQueryBuilder, "entityInfo", {
-                "entityInfo.entityName": raw(`"warning"."sourceInfo"->>'rootEntityName'`),
-                "entityInfo.id": raw(`"warning"."sourceInfo"->>'targetId'`),
-            });
-        }
-
-        queryBuilder.where(where).limit(limit).offset(offset);
-
-        if (orderBy) {
-            queryBuilder.orderBy(orderBy);
-        }
-
-        const [entities, totalCount] = await queryBuilder.getResultAndCount();
         return new PaginatedWarnings(entities, totalCount);
-    }
-
-    @ResolveField(() => EntityInfoObject, { nullable: true })
-    async entityInfo(@Parent() warning: Warning): Promise<EntityInfoObject | undefined> {
-        return this.entityInfoService.getEntityInfo(warning.sourceInfo.rootEntityName, warning.sourceInfo.targetId);
     }
 }

@@ -9,6 +9,7 @@ import { createEnumFilter } from "../../common/filter/enum.filter.factory";
 import { StringFilter } from "../../common/filter/string.filter";
 import { WarningSeverity } from "../entities/warning-severity.enum";
 import { WarningStatus } from "../entities/warning-status.enum";
+import { EntityInfoFilter } from "./entity-info.filter";
 
 @InputType()
 class WarningSeverityEnumFilter extends createEnumFilter(WarningSeverity) {}
@@ -56,17 +57,11 @@ export class WarningFilter {
     @Type(() => StringFilter)
     type?: StringFilter;
 
-    @Field(() => StringFilter, { nullable: true })
+    @Field(() => EntityInfoFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => StringFilter)
-    name?: StringFilter;
-
-    @Field(() => StringFilter, { nullable: true })
-    @ValidateNested()
-    @IsOptional()
-    @Type(() => StringFilter)
-    secondaryInformation?: StringFilter;
+    @Type(() => EntityInfoFilter)
+    entityInfo?: EntityInfoFilter;
 
     @Field(() => WarningSeverityEnumFilter, { nullable: true })
     @ValidateNested()

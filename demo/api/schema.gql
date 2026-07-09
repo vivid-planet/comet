@@ -649,6 +649,11 @@ type EntityInfo {
   secondaryInformation: String
 }
 
+input EntityInfoFilter {
+  name: StringFilter
+  secondaryInformation: StringFilter
+}
+
 input FileFilterInput {
   """
   Restrict the result to files with these IDs. When a non-empty list is provided, the folder constraint is bypassed and matches are returned regardless of which folder they live in.
@@ -2343,11 +2348,10 @@ type Warning {
 input WarningFilter {
   and: [WarningFilter!]
   createdAt: DateTimeFilter
+  entityInfo: EntityInfoFilter
   message: StringFilter
-  name: StringFilter
   or: [WarningFilter!]
   scope: ScopeFilter
-  secondaryInformation: StringFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
   type: StringFilter

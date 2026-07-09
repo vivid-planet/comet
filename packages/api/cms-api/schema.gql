@@ -723,13 +723,17 @@ input WarningFilter {
   updatedAt: DateTimeFilter
   message: StringFilter
   type: StringFilter
-  name: StringFilter
-  secondaryInformation: StringFilter
+  entityInfo: EntityInfoFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
   scope: ScopeFilter
   and: [WarningFilter!]
   or: [WarningFilter!]
+}
+
+input EntityInfoFilter {
+  name: StringFilter
+  secondaryInformation: StringFilter
 }
 
 input WarningSeverityEnumFilter {

@@ -16,7 +16,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Chip } from "@mui/material";
-import type { GridFilterModel } from "@mui/x-data-grid";
+import type { GridFilterItem, GridFilterModel } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -63,6 +63,28 @@ const warningsQuery = gql`
     }
     ${warningsFragment}
 `;
+
+// `name` and `secondaryInformation` are nested under `entityInfo` in the API, so the grid's flat column filters
+// have to be translated into the nested `EntityInfoFilter` shape.
+const stringOperatorToGqlField: Record<string, string> = {
+    contains: "contains",
+    doesNotContain: "notContains",
+    equals: "equal",
+    doesNotEqual: "notEqual",
+    startsWith: "startsWith",
+    endsWith: "endsWith",
+    isEmpty: "isEmpty",
+    isNotEmpty: "isNotEmpty",
+    isAnyOf: "isAnyOf",
+    is: "equal",
+    not: "notEqual",
+};
+
+function entityInfoStringFilter(field: "name" | "secondaryInformation", filterItem: GridFilterItem) {
+    const gqlOperator = stringOperatorToGqlField[filterItem.operator] ?? filterItem.operator;
+    const value = ["isEmpty", "isNotEmpty"].includes(gqlOperator) ? true : filterItem.value;
+    return { entityInfo: { [field]: { [gqlOperator]: value } } };
+}
 
 function WarningsGridToolbar() {
     return (
@@ -127,6 +149,7 @@ export function WarningsGrid() {
             field: "name",
             headerName: intl.formatMessage({ id: "warning.name", defaultMessage: "Name" }),
             width: 200,
+            toGqlFilter: (filterItem) => entityInfoStringFilter("name", filterItem),
             renderCell: ({ row }) => {
                 return (
                     <GridCellContent
@@ -141,6 +164,7 @@ export function WarningsGrid() {
             headerName: intl.formatMessage({ id: "warning.info", defaultMessage: "Info" }),
             sortable: false,
             visible: false,
+            toGqlFilter: (filterItem) => entityInfoStringFilter("secondaryInformation", filterItem),
             valueGetter: (params, row) => row.entityInfo?.secondaryInformation,
         },
         {
