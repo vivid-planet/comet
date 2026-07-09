@@ -226,3 +226,142 @@ hand-built format.
 <FormattedDate value={date} year="numeric" month="long" day="numeric" />;
 <FormattedTime value={date} />;
 ```
+
+## Layout
+
+### Arranging elements: `Stack` and `Grid`, not `Box` with margins
+
+To arrange children and the space between them, use MUI's `Stack` (one-dimensional flow with a
+`spacing` prop) and `Grid` (responsive columns with `spacing` and `size`), imported from
+`@mui/material`. Both apply spacing from the theme through props, so you never hand-write the
+gaps. Use `Box` with manual `margin` only when neither fits.
+
+Pure layout — arranging children and the gaps between them — is fine inline through these props
+and needs no `styled()`. Anything beyond that (padding inside an element, background, borders,
+and other visual styling) goes through the theme and `styled()`, as in the styling section
+above.
+
+```tsx
+// Avoid — Box with hand-written margins between children
+<Box>
+    <Widget />
+    <Box sx={{ marginTop: 16 }}>
+        <Widget />
+    </Box>
+    <Box sx={{ marginTop: 16 }}>
+        <Widget />
+    </Box>
+</Box>;
+
+// Prefer — Stack with spacing from the theme
+<Stack spacing={4}>
+    <Widget />
+    <Widget />
+    <Widget />
+</Stack>;
+```
+
+```tsx
+// Avoid — manual flex and width math for a responsive two-column layout
+<Box sx={{ display: "flex", flexWrap: "wrap" }}>
+    <Box sx={{ width: "50%" }}>
+        <Widget />
+    </Box>
+    <Box sx={{ width: "50%" }}>
+        <Widget />
+    </Box>
+</Box>;
+
+// Prefer — Grid with responsive size and spacing from the theme
+<Grid container spacing={4}>
+    <Grid size={{ xs: 12, md: 6 }}>
+        <Widget />
+    </Grid>
+    <Grid size={{ xs: 12, md: 6 }}>
+        <Widget />
+    </Grid>
+</Grid>;
+```
+
+For responsive behaviour, pass a per-breakpoint object to these props (`size` on `Grid`,
+`direction` on `Stack`); inside a `styled()` component, use `theme.breakpoints` for media
+queries.
+
+Don't use `Grid` or `Stack` to lay out form fields: Comet stacks them vertically at full width,
+grouped with `FieldSet` or `FormSection`.
+
+`sx` is fine for an occasional layout property that no `Stack` or `Grid` prop covers, such as
+`flexGrow`. It is not for visual styling — that goes through `styled()`.
+
+### Page structure: `MainContent`, `Toolbar`, and their parts
+
+Wrap a page's body in `MainContent` rather than a hand-padded `Box` — it applies the standard
+page padding and can fill the height with `fullHeight`. Build the action bar from `Toolbar` and
+its parts instead of assembling one from a flex row:
+
+- `ToolbarTitleItem` holds the page title, `ToolbarActions` the action buttons; `ToolbarItem` is
+  the generic slot for anything else.
+- `FillSpace` is a flexbox spacer that fills the free space, moving the elements after it to the
+  end.
+
+```tsx
+// Avoid — hand-built toolbar and padded container
+<Box sx={{ display: "flex", padding: 16 }}>
+    <Typography variant="h4">{title}</Typography>
+    <Box sx={{ marginLeft: "auto" }}>
+        <Button>{addLabel}</Button>
+    </Box>
+</Box>;
+
+// Prefer — Toolbar parts and MainContent
+<Toolbar>
+    <ToolbarTitleItem>{title}</ToolbarTitleItem>
+    <FillSpace />
+    <ToolbarActions>
+        <Button>{addLabel}</Button>
+    </ToolbarActions>
+</Toolbar>;
+<MainContent>{children}</MainContent>;
+```
+
+When a page is rendered inside a Comet navigation `Stack` (nested master–detail views), use the
+`StackMainContent` and `StackToolbar` variants instead: they render only for the active stack
+level, so nested pages don't show duplicate toolbars.
+
+### Full-height content: `fullHeight` and `FullHeightContent`
+
+Content that should fill the viewport and scroll inside itself — most often a `DataGrid` — needs
+a height-bounded parent, or it grows the whole page instead of scrolling. Set that height through
+the page structure, not a hand-written `height` that has to track the header and toolbar offset:
+
+- When the grid is the page's direct content, add `fullHeight` to `MainContent` or
+  `StackMainContent`.
+- When the grid is nested inside `RouterTabs` or other content rather than placed directly in
+  `MainContent`, wrap it in `FullHeightContent`, which bounds the height at that level.
+- When the grid holds few rows, give the `DataGrid` the `autoHeight` prop instead and skip
+  `fullHeight`.
+
+```tsx
+// Avoid — a hand-set height that has to track the header and toolbar offset
+<MainContent>
+    <Box sx={{ height: "calc(100vh - 200px)" }}>
+        <DataGrid />
+    </Box>
+</MainContent>;
+
+// Prefer — fullHeight for a grid that is the page's direct content
+<StackMainContent fullHeight>
+    <DataGrid />
+</StackMainContent>;
+
+// Prefer — FullHeightContent for a grid nested inside tabs
+<MainContent>
+    <RouterTabs>
+        <RouterTab path="" label={label}>
+            <FullHeightContent>
+                <DataGrid />
+            </FullHeightContent>
+        </RouterTab>
+    </RouterTabs>
+</MainContent>;
+```
