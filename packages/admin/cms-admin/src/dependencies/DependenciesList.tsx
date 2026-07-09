@@ -26,6 +26,7 @@ import { useContentScope } from "../contentScope/Provider";
 import { DataGrid } from "../dataGrid/DataGrid";
 import type { GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./dependenciesConfig";
+import { DependencyVisibilityIndicator } from "./DependencyVisibilityIndicator";
 import { getDisplayNameString } from "./getDisplayNameString";
 import type { DependencyInterface } from "./types";
 
@@ -101,9 +102,6 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
         ...useDataGridRemote({
             queryParamsPrefix: "dependencies",
             pageSize,
-            initialFilter: {
-                items: [{ field: "visible", operator: "is", value: "true" }],
-            },
         }),
         ...usePersistentColumnState("DependenciesList"),
     };
@@ -116,7 +114,11 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
                 flex: 1,
                 sortBy: "name",
                 renderCell: ({ row }) => (
-                    <GridCellContent primaryText={row.name ?? <FormattedMessage {...messages.unknown} />} secondaryText={row.secondaryInformation} />
+                    <GridCellContent
+                        icon={<DependencyVisibilityIndicator visible={row.visible} />}
+                        primaryText={row.name ?? <FormattedMessage {...messages.unknown} />}
+                        secondaryText={row.secondaryInformation}
+                    />
                 ),
             },
             {
