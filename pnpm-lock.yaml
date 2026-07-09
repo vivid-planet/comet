@@ -419,6 +419,9 @@ importers:
       '@comet/api-generator':
         specifier: workspace:*
         version: link:../../packages/api/api-generator
+      '@comet/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
       '@comet/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
