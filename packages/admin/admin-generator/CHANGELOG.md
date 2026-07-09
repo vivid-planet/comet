@@ -1,5 +1,14 @@
 # @comet/admin-generator
 
+## 9.1.0
+
+### Patch Changes
+
+- Updated dependencies [319f5b8]
+    - @comet/cms-admin@9.1.0
+    - @comet/admin@9.1.0
+    - @comet/admin-icons@9.1.0
+
 ## 9.0.1
 
 ### Patch Changes

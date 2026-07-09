@@ -1,5 +1,22 @@
 # @comet/cms-admin
 
+## 9.1.0
+
+### Minor Changes
+
+- 319f5b8: Allow filtering, searching and sorting warnings by name, info and type
+
+    The warnings data grid now supports filtering and full-text searching by the related entity's name and secondary information, filtering by type, and sorting by name and type.
+
+    On the API, the `WarningFilter` gains `name` and `secondaryInformation` fields and `WarningSortField` gains a `name` value. The related entity's name and secondary information are resolved by joining the `EntityInfo` view, while the type is read from the warning's `sourceInfo`. The view is only joined when a query actually references name or info. A migration adds an index on the `EntityInfo` join keys to keep that join fast.
+
+### Patch Changes
+
+- @comet/admin@9.1.0
+- @comet/admin-date-time@9.1.0
+- @comet/admin-icons@9.1.0
+- @comet/admin-rte@9.1.0
+
 ## 9.0.1
 
 ### Patch Changes
