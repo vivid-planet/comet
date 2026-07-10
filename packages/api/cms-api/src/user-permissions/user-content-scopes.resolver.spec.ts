@@ -16,11 +16,17 @@ const availableContentScopes: ContentScopeWithLabel[] = [
     { scope: { domain: "secondary", language: "en" }, label: { domain: "Secondary", language: "English" } },
 ];
 
-function createResolver(contentScopes: ContentScope[]): UserContentScopesResolver {
+function createResolver(
+    contentScopes: ContentScope[],
+    options: { hasAllContentScopes?: boolean; availableContentScopeDimensions?: Array<{ name: string; label: string }> } = {},
+): UserContentScopesResolver {
+    const { hasAllContentScopes = false, availableContentScopeDimensions = [] } = options;
     const userService = createMock<UserPermissionsService>({
         findUserOrThrow: async () => ({ id: "1", name: "User", email: "user@example.com" }) satisfies User,
         getContentScopes: async () => contentScopes,
         getAvailableContentScopes: async () => availableContentScopes,
+        hasAllContentScopes: async () => hasAllContentScopes,
+        getAvailableContentScopeDimensions: async () => availableContentScopeDimensions,
     });
 
     return new UserContentScopesResolver(createMock<EntityRepository<UserContentScopes>>(), userService, createMock<EntityManager>());
@@ -56,6 +62,36 @@ describe("UserContentScopesResolver", () => {
                 { domain: "secondary", language: "en" },
                 { domain: "main", language: UserPermissions.allValues },
             ]);
+        });
+
+        it("fills dimensions outside the available content scopes with the wildcard for a user with all content scopes", async () => {
+            const resolver = createResolver([{ domain: "main", language: "en" }], {
+                hasAllContentScopes: true,
+                availableContentScopeDimensions: [
+                    { name: "domain", label: "Domain" },
+                    { name: "language", label: "Language" },
+                    { name: "product", label: "Product" },
+                ],
+            });
+
+            const contentScopes = await resolver.userPermissionsContentScopes("1");
+
+            expect(contentScopes).toEqual([{ domain: "main", language: "en", product: UserPermissions.allValues }]);
+        });
+
+        it("does not fill dimensions for a user with all content scopes when reading rule-based scopes (skipManual)", async () => {
+            const resolver = createResolver([{ domain: "main", language: "en" }], {
+                hasAllContentScopes: true,
+                availableContentScopeDimensions: [
+                    { name: "domain", label: "Domain" },
+                    { name: "language", label: "Language" },
+                    { name: "product", label: "Product" },
+                ],
+            });
+
+            const contentScopes = await resolver.userPermissionsContentScopes("1", true);
+
+            expect(contentScopes).toEqual([{ domain: "main", language: "en" }]);
         });
     });
 
