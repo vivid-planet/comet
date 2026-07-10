@@ -3,6 +3,10 @@
         "module": "CommonJS",
         "declaration": true,
         "skipLibCheck": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "strict": false,
+        "types": ["*"],
+        "noUncheckedSideEffectImports": false,
+        "stableTypeOrdering": true
     }
 }

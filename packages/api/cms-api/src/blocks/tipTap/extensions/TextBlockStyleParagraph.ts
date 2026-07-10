@@ -1,6 +1,6 @@
 import Paragraph from "@tiptap/extension-paragraph";
 
-export const TextBlockStyleParagraph = Paragraph.extend({
+export const TextBlockStyleParagraph: typeof Paragraph = Paragraph.extend({
     addAttributes() {
         return {
             ...this.parent?.(),

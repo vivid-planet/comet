@@ -73,7 +73,7 @@
         "open-cli": "^8.0.0",
         "prettier": "^3.6.2",
         "rimraf": "^6.1.2",
-        "typescript": "^5.9.3"
+        "typescript": "^6.0.3"
     },
     "packageManager": "pnpm@10.33.4",
     "engines": {
@@ -84,7 +84,12 @@
         "peerDependencyRules": {
             "allowedVersions": {
                 "react-final-form>react": "19",
-                "react-final-form-arrays>react": "19"
+                "react-final-form-arrays>react": "19",
+                "react-intl>typescript": "6",
+                "@formatjs/intl>typescript": "6",
+                "tsconfck>typescript": "6",
+                "tsdown>typescript": "6",
+                "rolldown-plugin-dts>typescript": "6"
             }
         },
         "overrides": {

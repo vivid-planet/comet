@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "baseUrl": "./",
         "emitDecoratorMetadata": true,
         "esModuleInterop": true,
         "experimentalDecorators": true,
@@ -11,7 +10,7 @@
         "moduleResolution": "nodenext",
         "outDir": "./dist",
         "paths": {
-            "@src/*": ["src/*"]
+            "@src/*": ["./src/*"]
         },
         "removeComments": true,
         "resolveJsonModule": true,
@@ -21,6 +20,7 @@
         "strictNullChecks": true,
         "strictPropertyInitialization": false,
         "target": "ES2023",
+        "types": ["*"],
         "useDefineForClassFields": false
     }
 }
