@@ -172,7 +172,7 @@ export function ProductHighlightForm({ id }: FormProps) {
                                             }
                                         }
                                     `,
-                                    variables: { filter: { category: { equal: values.productCategory?.id } } },
+                                    variables: { filter: { category: { id: { equal: values.productCategory?.id } } } },
                                 });
                                 return data.products.nodes;
                             }}

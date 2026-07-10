@@ -59,11 +59,20 @@ export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassD
     };
 }
 
+export interface CrudFieldFilterOptions {
+    /**
+     * Only for ManyToOne relations: generate a nested filter that exposes the related entity's
+     * own filter (e.g. `category: { type: { title: { contains } } }`) instead of the id-based
+     * `ManyToOneFilter`. The related entity must have a generated filter (`@CrudGenerator`).
+     */
+    nested?: boolean;
+}
+
 export interface CrudFieldOptions {
     resolveField?: boolean; //only for relations, for others customize using @Field
     dedicatedResolverArg?: boolean; //only for ManyToOne relations
     search?: boolean;
-    filter?: boolean;
+    filter?: boolean | CrudFieldFilterOptions;
     sort?: boolean;
     input?: boolean;
 }

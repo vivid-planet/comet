@@ -210,7 +210,7 @@ export class Product extends BaseEntity implements ImportTargetInterface {
     @CrudField({
         resolveField: true, //default is true
         search: true, //default is true
-        filter: true, //default is true
+        filter: { nested: true }, // expose the related ProductCategory filter for nested filtering (e.g. category.type.title)
         sort: true, //default is true
         input: true, //default is true
     })

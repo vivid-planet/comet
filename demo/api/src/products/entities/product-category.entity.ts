@@ -41,6 +41,9 @@ export class ProductCategory extends BaseEntity {
     products = new Collection<Product>(this);
 
     @ManyToOne(() => ProductCategoryType, { nullable: true, ref: true })
+    @CrudField({
+        filter: { nested: true }, // expose the related ProductCategoryType filter for nested filtering (e.g. category.type.title)
+    })
     type?: Ref<ProductCategoryType> = undefined;
 
     @Property()

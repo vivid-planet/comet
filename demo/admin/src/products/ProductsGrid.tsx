@@ -56,6 +56,14 @@ type ProductsGridToolbarProps = {
     selectionModel: GridRowSelectionModel;
 };
 
+// Maps the MUI string filter operators to the GraphQL StringFilter fields for server-side filtering.
+const stringFilterOperatorToGqlField: { [operator: string]: string } = {
+    contains: "contains",
+    equals: "equal",
+    startsWith: "startsWith",
+    endsWith: "endsWith",
+};
+
 function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarProps) {
     const client = useApolloClient();
     const theme = useTheme();
@@ -241,6 +249,23 @@ export function ProductsGrid() {
                 minWidth: 100,
                 renderCell: (params) => <>{params.row.category?.title}</>,
                 filterOperators: ProductCategoryFilterOperators,
+                // category is a nested ProductCategoryFilter, so the id filter has to be nested as well
+                toGqlFilter: (filterItem) => ({ category: { id: { equal: filterItem.value } } }),
+                visible: theme.breakpoints.up("md"),
+                disableExport: true,
+            },
+            {
+                field: "categoryType",
+                headerName: "Category Type",
+                flex: 1,
+                minWidth: 100,
+                sortable: false,
+                renderCell: (params) => <>{params.row.category?.type?.title}</>,
+                // Filter the nested category.type.title field with a server-side String filter
+                filterOperators: getGridStringOperators().filter((operator) => operator.value in stringFilterOperatorToGqlField),
+                toGqlFilter: (filterItem) => ({
+                    category: { type: { title: { [stringFilterOperatorToGqlField[filterItem.operator]]: filterItem.value } } },
+                }),
                 visible: theme.breakpoints.up("md"),
                 disableExport: true,
             },
@@ -413,6 +438,10 @@ const productsFragment = gql`
         category {
             id
             title
+            type {
+                id
+                title
+            }
         }
         tags {
             id

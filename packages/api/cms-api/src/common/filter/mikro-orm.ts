@@ -219,6 +219,22 @@ export function filterToMikroOrmQuery(
     return ret;
 }
 
+function isLeafFilter(filterProperty: unknown): boolean {
+    return (
+        filterProperty instanceof StringFilter ||
+        filterProperty instanceof NumberFilter ||
+        filterProperty instanceof DateFilter ||
+        filterProperty instanceof DateTimeFilter ||
+        filterProperty instanceof BooleanFilter ||
+        filterProperty instanceof IdFilter ||
+        filterProperty instanceof ManyToOneFilter ||
+        filterProperty instanceof OneToManyFilter ||
+        filterProperty instanceof ManyToManyFilter ||
+        isEnumFilter(filterProperty) ||
+        isEnumsFilter(filterProperty)
+    );
+}
+
 export function filtersToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filter: any,
@@ -252,7 +268,7 @@ export function filtersToMikroOrmQuery(
                 if (filterProperty) {
                     if (applyFilter) {
                         applyFilter(acc, filterProperty, filterPropertyName);
-                    } else {
+                    } else if (isLeafFilter(filterProperty)) {
                         const query = filterToMikroOrmQuery(filterProperty, filterPropertyName, metadata);
 
                         // $and can't be applied like { field: { $and: [{ ... }] } }.
@@ -282,6 +298,14 @@ export function filtersToMikroOrmQuery(
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         if (Object.keys(query as any).length > 0) {
                             acc[filterPropertyName] = query;
+                        }
+                    } else {
+                        // Nested relation filter, e.g. { category: { type: { title: { contains: "..." } } } }.
+                        // Recurse into the related entity's filter; MikroORM auto-joins the relation.
+                        const relationProperty = metadata?.props.find((prop) => prop.name === filterPropertyName);
+                        const nestedQuery = filtersToMikroOrmQuery(filterProperty, { metadata: relationProperty?.targetMeta });
+                        if (Object.keys(nestedQuery).length > 0) {
+                            acc[filterPropertyName] = nestedQuery;
                         }
                     }
                 }

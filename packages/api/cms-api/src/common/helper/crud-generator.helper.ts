@@ -9,6 +9,12 @@ export function hasCrudFieldFeature(metadataClass: any, propName: string, option
     return !!(crudField[option] ?? defaultValue);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isCrudFieldNestedFilter(metadataClass: any, propName: string): boolean {
+    const crudField = (Reflect.getMetadata(CRUD_FIELD_METADATA_KEY, metadataClass, propName) ?? {}) as CrudFieldOptions;
+    return typeof crudField.filter === "object" && !!crudField.filter.nested;
+}
+
 export type CrudSearchField = {
     /**
      * The name of the field, which can be a simple property name or a nested property in the format "relation.property".

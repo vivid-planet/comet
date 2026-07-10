@@ -290,7 +290,6 @@ export function generateAsyncSelect({
                   filterType = rootArgFilter ? buildTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
                   if (filterType) {
                       filterVarName = "filter";
-                      filterVarValue = `{ ${rootQueryArg}: { equal: ${filterVar} } }`;
                       // get type of field.equal in filter-arg used for filtering
                       if (filterType.inputType?.kind !== "INPUT_OBJECT") {
                           throw new Error(`Field ${String(config.name)}: Type of filter is no object-type.`);
@@ -305,14 +304,32 @@ export function generateAsyncSelect({
                               `Field ${String(config.name)}: Type of filter.${rootQueryArg} is no object-type, but needs to be e.g. StringFilter-type.`,
                           );
                       }
-                      const gqlFilterEqualInputType = gqlFilterInputType.inputType.inputFields.find((inputField) => inputField.name === "equal");
+
+                      // A relation can be filtered either by the id-based ManyToOneFilter (which has `equal` directly)
+                      // or by a nested relation filter, which carries the id in an `id` IdFilter sub-field.
+                      let equalFilterInputFields = gqlFilterInputType.inputType.inputFields;
+                      let equalFilterPath = rootQueryArg;
+                      if (equalFilterInputFields.some((inputField) => inputField.name === "equal")) {
+                          filterVarValue = `{ ${rootQueryArg}: { equal: ${filterVar} } }`;
+                      } else {
+                          const idFilterInput = equalFilterInputFields.find((inputField) => inputField.name === "id");
+                          const idFilterInputType = idFilterInput ? buildTypeInfo(idFilterInput, gqlIntrospection) : undefined;
+                          if (!idFilterInputType?.inputType || idFilterInputType.inputType.kind !== "INPUT_OBJECT") {
+                              throw new Error(`Field ${String(config.name)}: Field filter.${rootQueryArg}.equal does not exist`);
+                          }
+                          equalFilterInputFields = idFilterInputType.inputType.inputFields;
+                          equalFilterPath = `${rootQueryArg}.id`;
+                          filterVarValue = `{ ${rootQueryArg}: { id: { equal: ${filterVar} } } }`;
+                      }
+
+                      const gqlFilterEqualInputType = equalFilterInputFields.find((inputField) => inputField.name === "equal");
                       if (!gqlFilterEqualInputType) {
-                          throw new Error(`Field ${String(config.name)}: Field filter.${rootQueryArg}.equal does not exist`);
+                          throw new Error(`Field ${String(config.name)}: Field filter.${equalFilterPath}.equal does not exist`);
                       }
                       const equalFieldType = buildTypeInfo(gqlFilterEqualInputType, gqlIntrospection);
                       if (!equalFieldType) {
                           throw new Error(
-                              `Field ${String(config.name)}: Field filter.${rootQueryArg}.equal does not exist but is required for filtering.`,
+                              `Field ${String(config.name)}: Field filter.${equalFilterPath}.equal does not exist but is required for filtering.`,
                           );
                       }
                       if (equalFieldType.typeKind === "INPUT_OBJECT" || equalFieldType.typeKind === "ENUM") {

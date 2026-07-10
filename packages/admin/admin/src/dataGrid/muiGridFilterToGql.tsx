@@ -45,7 +45,7 @@ interface GqlBooleanFilter {
     equal?: boolean | null;
 }
 export type GqlFilter = {
-    [key: string]: GqlStringFilter | GqlNumberFilter | GqlBooleanFilter | undefined; //TODO add Date, DateTime(?), SingleSelect(??)
+    [key: string]: GqlStringFilter | GqlNumberFilter | GqlBooleanFilter | GqlFilter | undefined; //TODO add Date, DateTime(?), SingleSelect(??)
 } & {
     and?: GqlFilter[] | null;
     or?: GqlFilter[] | null;

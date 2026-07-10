@@ -8,7 +8,7 @@ export interface EnumsFilterInterface<TEnum> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isEnumsFilter(filter: any): filter is EnumsFilterInterface<unknown> {
-    return filter.type && filter.type() === "EnumsFilter";
+    return typeof filter.type === "function" && filter.type() === "EnumsFilter";
 }
 
 export function createEnumsFilter<TEnum extends { [key: string]: string }>(Enum: TEnum): Type {

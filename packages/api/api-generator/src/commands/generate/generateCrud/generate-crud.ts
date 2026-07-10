@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CRUD_GENERATOR_METADATA_KEY, type CrudGeneratorOptions, hasCrudFieldFeature, REQUIRED_PERMISSION_METADATA_KEY } from "@comet/cms-api";
+import {
+    CRUD_GENERATOR_METADATA_KEY,
+    type CrudGeneratorOptions,
+    hasCrudFieldFeature,
+    isCrudFieldNestedFilter,
+    REQUIRED_PERMISSION_METADATA_KEY,
+} from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
@@ -116,6 +122,26 @@ function generateFilterDto({
                     ${prop.name}?: DateTimeFilter;
                     `;
                 } else if (prop.kind === "m:1") {
+                    if (isCrudFieldNestedFilter(metadata.class, prop.name)) {
+                        if (!prop.targetMeta) {
+                            throw new Error(`Relation ${prop.name} has no targetMeta`);
+                        }
+                        const { classNameSingular: targetClassNameSingular, fileNameSingular: targetFileNameSingular } = buildNameVariants(
+                            prop.targetMeta,
+                        );
+                        const nestedFilterName = `${targetClassNameSingular}Filter`;
+                        const targetDtoDirectory = `${path.dirname(prop.targetMeta.path).replace(/\/entities$/, "")}/generated/dto`;
+                        imports.push({
+                            name: nestedFilterName,
+                            importPath: `./${path.relative(`${targetDirectory}/dto`, `${targetDtoDirectory}/${targetFileNameSingular}.filter`)}`,
+                        });
+                        return `@Field(() => ${nestedFilterName}, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => ${nestedFilterName})
+                    ${prop.name}?: ${nestedFilterName};
+                    `;
+                    }
                     imports.push({ name: "ManyToOneFilter", importPath: "@comet/cms-api" });
                     return `@Field(() => ManyToOneFilter, { nullable: true })
                     @ValidateNested()

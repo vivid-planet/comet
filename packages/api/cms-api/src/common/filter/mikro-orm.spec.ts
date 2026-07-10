@@ -245,6 +245,17 @@ class Foo2Filter {
     foo?: Equals42;
     str?: StringFilter;
 }
+class ProductCategoryTypeFilter {
+    title?: StringFilter;
+}
+class ProductCategoryFilter {
+    title?: StringFilter;
+    type?: ProductCategoryTypeFilter;
+}
+class ProductFilter {
+    title?: StringFilter;
+    category?: ProductCategoryFilter;
+}
 describe("filtersToMikroOrmQuery", () => {
     it("string equal", async () => {
         const f = new FooFilter();
@@ -353,6 +364,44 @@ describe("filtersToMikroOrmQuery", () => {
     it("empty filter", async () => {
         const f = new FooFilter();
         f.foo = new StringFilter();
+
+        expect(filtersToMikroOrmQuery(f)).toStrictEqual({});
+    });
+    it("nested relation filter", async () => {
+        const f = new ProductFilter();
+        f.category = new ProductCategoryFilter();
+        f.category.title = new StringFilter();
+        f.category.title.contains = "abc";
+
+        expect(filtersToMikroOrmQuery(f)).toStrictEqual({
+            category: {
+                title: {
+                    $ilike: "%abc%",
+                },
+            },
+        });
+    });
+    it("deeply nested relation filter", async () => {
+        const f = new ProductFilter();
+        f.category = new ProductCategoryFilter();
+        f.category.type = new ProductCategoryTypeFilter();
+        f.category.type.title = new StringFilter();
+        f.category.type.title.contains = "abc";
+
+        expect(filtersToMikroOrmQuery(f)).toStrictEqual({
+            category: {
+                type: {
+                    title: {
+                        $ilike: "%abc%",
+                    },
+                },
+            },
+        });
+    });
+    it("ignores empty nested relation filter", async () => {
+        const f = new ProductFilter();
+        f.category = new ProductCategoryFilter();
+        f.category.type = new ProductCategoryTypeFilter();
 
         expect(filtersToMikroOrmQuery(f)).toStrictEqual({});
     });
