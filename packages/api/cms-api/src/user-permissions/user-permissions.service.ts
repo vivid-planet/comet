@@ -245,6 +245,13 @@ export class UserPermissionsService {
         return uniqWith(contentScopes, isEqual);
     }
 
+    async hasAllContentScopes(user: User): Promise<boolean> {
+        if (!this.accessControlService.getContentScopesForUser) {
+            return false;
+        }
+        return (await this.accessControlService.getContentScopesForUser(user)) === UserPermissions.allContentScopes;
+    }
+
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
         if (request?.cookies["comet-impersonate-user-id"]) {
             const permissions = await this.getPermissions(authenticatedUser);
