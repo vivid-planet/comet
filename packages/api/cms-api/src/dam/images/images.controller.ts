@@ -16,6 +16,7 @@ import { OutgoingHttpHeaders } from "http";
 import mime from "mime";
 import { PassThrough, Readable } from "stream";
 
+import { DisableAccessLog } from "../../access-log/disable-access-log.decorator";
 import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
@@ -54,6 +55,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
             @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
         ) {}
 
+        @DisableAccessLog()
         @Get(`/preview{/:contentHash}/${focusImageUrl}`)
         async previewFocusCroppedImage(
             @Param() params: ImageParams,
@@ -83,6 +85,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
             });
         }
 
+        @DisableAccessLog()
         @Get(`/preview{/:contentHash}/${smartImageUrl}`)
         async previewSmartCroppedImage(
             @Param() params: ImageParams,
@@ -113,6 +116,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
             });
         }
 
+        @DisableAccessLog()
         @DisableCometGuards()
         @Get(`/:hash{/:contentHash}/${focusImageUrl}`)
         async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
@@ -134,6 +138,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
             });
         }
 
+        @DisableAccessLog()
         @DisableCometGuards()
         @Get(`/:hash{/:contentHash}/${smartImageUrl}`)
         async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {

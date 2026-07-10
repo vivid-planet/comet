@@ -1,32 +1,33 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestInterceptor, Optional } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { Request } from "express";
 import { GraphQLResolveInfo } from "graphql";
 import { getClientIp } from "request-ip";
 
-import { DamConfig } from "../dam/dam.config";
-import { DAM_CONFIG } from "../dam/dam.constants";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogConfig } from "./access-log.module";
+import { DISABLE_ACCESS_LOG_METADATA_KEY } from "./disable-access-log.decorator";
 
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
-    private ignoredPaths: string[];
 
     constructor(
+        private readonly reflector: Reflector,
         @Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig,
-        @Optional() @Inject(DAM_CONFIG) private readonly damConfig?: DamConfig,
-    ) {
-        const damBasePath = this.damConfig?.basePath ?? "dam";
-
-        this.ignoredPaths = this.damConfig
-            ? [`/${damBasePath}/images/`, `/${damBasePath}/files/preview`, `/${damBasePath}/files/download`, `/${damBasePath}/files/:hash/`]
-            : [];
-    }
+    ) {}
     intercept(context: ExecutionContext, next: CallHandler) {
+        const disableAccessLog = this.reflector.getAllAndOverride<boolean>(DISABLE_ACCESS_LOG_METADATA_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+        if (disableAccessLog) {
+            return next.handle();
+        }
+
         const requestType = context.getType().toString();
 
         const requestData: string[] = [];
@@ -76,13 +77,12 @@ export class AccessLogInterceptor implements NestInterceptor {
             const user = (httpRequest as any).user as CurrentUser;
 
             if (
-                this.ignoredPaths.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
-                (this.config &&
-                    this.config.shouldLogRequest &&
-                    !this.config.shouldLogRequest({
-                        user: user,
-                        req: httpRequest,
-                    }))
+                this.config &&
+                this.config.shouldLogRequest &&
+                !this.config.shouldLogRequest({
+                    user: user,
+                    req: httpRequest,
+                })
             ) {
                 ignored = true;
             }

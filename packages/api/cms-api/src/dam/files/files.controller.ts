@@ -23,6 +23,7 @@ import { OutgoingHttpHeaders } from "http";
 import { basename, extname } from "path";
 import { Readable } from "stream";
 
+import { DisableAccessLog } from "../../access-log/disable-access-log.decorator";
 import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
@@ -196,6 +197,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             return { ...replacedFile, fileUrl };
         }
 
+        @DisableAccessLog()
         @Get(`/preview{/:contentHash}/${fileUrl}`)
         async previewFileUrl(
             @Param() { fileId, contentHash }: FileParams,
@@ -220,6 +222,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, private" } }); // Local caches only (1 year)
         }
 
+        @DisableAccessLog()
         @Get(`/download/preview{/:contentHash}/${fileUrl}`)
         async previewDownloadFile(
             @Param() { fileId, contentHash }: FileParams,
@@ -245,6 +248,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, private" } }); // Local caches only (1 year)
         }
 
+        @DisableAccessLog()
         @DisableCometGuards()
         @Get(`/download/:hash{/:contentHash}/${fileUrl}`)
         async downloadFile(
@@ -270,6 +274,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, s-maxage=86400, public" } }); // Public cache, 1 year for browsers, 1 day for proxies/cdn's
         }
 
+        @DisableAccessLog()
         @DisableCometGuards()
         @Get(`/:hash{/:contentHash}/${fileUrl}`)
         async hashedFileUrl(
