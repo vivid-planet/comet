@@ -10,7 +10,7 @@ import getUuid from "uuid-by-string";
 
 import { AbstractAccessControlService } from "./access-control.service";
 import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
-import { ContentScopeWithLabel } from "./dto/content-scope";
+import { ContentScopeDimension, ContentScopeWithLabel } from "./dto/content-scope";
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
@@ -26,6 +26,11 @@ import {
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
 } from "./user-permissions.types";
+
+function camelCaseToHumanReadable(s: string | number) {
+    const words = s.toString().match(/[A-Za-z0-9][a-z0-9]*/g) || [];
+    return words.map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(" ");
+}
 
 @Injectable()
 export class UserPermissionsService {
@@ -51,11 +56,6 @@ export class UserPermissionsService {
             }
         }
 
-        function camelCaseToHumanReadable(s: string | number) {
-            const words = s.toString().match(/[A-Za-z0-9][a-z0-9]*/g) || [];
-            return words.map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(" ");
-        }
-
         const contentScopesWithLabel = contentScopes
             .map((contentScope) =>
                 "scope" in contentScope
@@ -76,6 +76,23 @@ export class UserPermissionsService {
                 ),
             }));
         return uniqWith(contentScopesWithLabel, (value: ContentScopeWithLabel, other: ContentScopeWithLabel) => isEqual(value.scope, other.scope));
+    }
+
+    async getAvailableContentScopeDimensions(): Promise<ContentScopeDimension[]> {
+        if (this.options.availableContentScopeDimensions) {
+            const dimensions =
+                typeof this.options.availableContentScopeDimensions === "function"
+                    ? await this.options.availableContentScopeDimensions()
+                    : this.options.availableContentScopeDimensions;
+            return dimensions.map((dimension) => ({
+                name: dimension.name,
+                label: dimension.label ?? camelCaseToHumanReadable(dimension.name),
+            }));
+        }
+
+        // Derive the dimensions from the keys of the available content scopes when not explicitly configured
+        const dimensionNames = new Set((await this.getAvailableContentScopes()).flatMap((contentScope) => Object.keys(contentScope.scope)));
+        return [...dimensionNames].map((name) => ({ name, label: camelCaseToHumanReadable(name) }));
     }
 
     async getAvailablePermissions(): Promise<Permission[]> {
