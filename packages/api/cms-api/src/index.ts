@@ -183,6 +183,11 @@ export { damDefaultAcceptedMimetypes } from "./dam/common/mimeTypes/dam-default-
 export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
+export { DamBlocksModule } from "./dam/dam-blocks.module";
+export { DamFilesModule } from "./dam/dam-files.module";
+export { DamImagesModule } from "./dam/dam-images.module";
+export { DamFileCopyService } from "./dam/files/dam-file-copy.service";
+export { DamFolderZipService } from "./dam/files/dam-folder-zip.service";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
 export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
@@ -191,6 +196,7 @@ export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder
 export { FileImagesResolver } from "./dam/files/file-image.resolver";
 export { FilesService } from "./dam/files/files.service";
 export { FoldersService } from "./dam/files/folders.service";
+export { DamDominantColorService } from "./dam/images/dam-dominant-color.service";
 export { ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
 export { ImageCropAreaInput } from "./dam/images/dto/image-crop-area.input";

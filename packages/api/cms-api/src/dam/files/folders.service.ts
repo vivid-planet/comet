@@ -1,16 +1,12 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
-import JSZip from "jszip";
 import isEqual from "lodash.isequal";
 
-import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
-import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { DamConfig } from "../dam.config";
-import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
+import { DamFolderZipService } from "./dam-folder-zip.service";
 import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
 import { UpdateFolderInput } from "./dto/folder.input";
 import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
@@ -85,10 +81,9 @@ export class FoldersService {
     constructor(
         @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
-        @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
-        @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly orm: MikroORM,
         private readonly entityManager: EntityManager,
+        @Inject(forwardRef(() => DamFolderZipService)) private readonly folderZipService: DamFolderZipService,
     ) {}
 
     async findAllByParentId(
@@ -365,51 +360,11 @@ export class FoldersService {
         return mpath.map((id) => folders.find((folder) => folder.id === id) as FolderInterface);
     }
 
+    /**
+     * @deprecated Use `DamFolderZipService.createZipStreamFromFolder` instead.
+     */
     async createZipStreamFromFolder(folderId: string): Promise<NodeJS.ReadableStream> {
-        const zip = new JSZip();
-
-        await this.addFolderToZip(folderId, zip);
-
-        return zip.generateNodeStream({ streamFiles: true });
-    }
-
-    private async addFolderToZip(folderId: string, zip: JSZip): Promise<void> {
-        const files = await this.filesService.findAll({ folderId: folderId });
-        const subfolders = await this.findAllByParentId({ parentId: folderId });
-
-        for (const file of files) {
-            const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
-
-            zip.file(file.name, fileStream);
-        }
-        const countedSubfolderNames: Record<string, number> = {};
-
-        for (const subfolder of subfolders) {
-            const subfolderName = subfolder.name;
-            const updatedSubfolderName = this.getUniqueFolderName(subfolderName, countedSubfolderNames);
-
-            const subfolderZip = zip.folder(updatedSubfolderName);
-            if (!subfolderZip) {
-                throw new Error(`Error while creating zip from folder with id ${folderId}`);
-            }
-            await this.addFolderToZip(subfolder.id, subfolderZip);
-        }
-    }
-
-    private getUniqueFolderName(folderName: string, countedFolderNames: Record<string, number>) {
-        if (!countedFolderNames[folderName]) {
-            countedFolderNames[folderName] = 1;
-        } else {
-            countedFolderNames[folderName]++;
-        }
-
-        const duplicateCount = countedFolderNames[folderName];
-
-        let updatedFolderName = folderName;
-        if (duplicateCount > 1) {
-            updatedFolderName = `${folderName} ${duplicateCount}`;
-        }
-        return updatedFolderName;
+        return this.folderZipService.createZipStreamFromFolder(folderId);
     }
 
     private selectQueryBuilder(): QueryBuilder<FolderInterface> {
