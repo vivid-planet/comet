@@ -46,6 +46,7 @@ import { LinksModule } from "@src/documents/links/links.module";
 import { PagesModule } from "@src/documents/pages/pages.module";
 import { TranslationModule } from "@src/translation/translation.module";
 import { Request } from "express";
+import { OperationTypeNode } from "graphql";
 
 import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
@@ -221,9 +222,9 @@ export class AppModule {
                 ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({
-                    shouldLogRequest: ({ user }) => {
-                        // Ignore system user
-                        if (user === "system-user") {
+                    shouldLogRequest: ({ user, operationType }) => {
+                        // Ignore requests by the system user, but keep logging its mutations
+                        if (user === SYSTEM_USER_NAME && operationType !== OperationTypeNode.MUTATION) {
                             return false;
                         }
                         return true;

@@ -47,6 +47,7 @@ export class AccessLogInterceptor implements NestInterceptor {
                 !this.config.shouldLogRequest({
                     user: graphqlContext.req.user,
                     req: graphqlContext.req,
+                    operationType: gqlInfo.operation.operation,
                 })
             ) {
                 ignored = true;
