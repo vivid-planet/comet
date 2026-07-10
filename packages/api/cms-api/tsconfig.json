@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        "baseUrl": "./",
-        "outDir": "./lib"
+        "incremental": false,
+        "outDir": "./lib",
+        "rootDir": "./src"
     },
     "exclude": ["node_modules", "lib"],
     "extends": "../tsconfig.base.json",
