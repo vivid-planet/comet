@@ -150,12 +150,38 @@ export class UserPermissionsService {
     }
 
     async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
-        const availableContentScopes = await this.getAvailableContentScopes();
-        contentScopes.forEach((scope) => {
-            if (!availableContentScopes.some((cs) => isEqual(cs.scope, scope))) {
+        const availableContentScopes = (await this.getAvailableContentScopes()).map((cs) => cs.scope);
+        const enumerableDimensions = this.getEnumerableDimensions(availableContentScopes);
+        const allowedDimensions = new Set([
+            ...enumerableDimensions,
+            ...(await this.getAvailableContentScopeDimensions()).map((dimension) => dimension.name),
+        ]);
+        for (const scope of contentScopes) {
+            for (const dimension of Object.keys(scope)) {
+                if (!allowedDimensions.has(dimension)) {
+                    throw new Error(`ContentScope has unknown dimension "${dimension}": ${JSON.stringify(scope)}.`);
+                }
+            }
+            if (!this.matchesAvailableContentScope(scope, availableContentScopes, enumerableDimensions)) {
                 throw new Error(`ContentScope does not exist: ${JSON.stringify(scope)}.`);
             }
-        });
+        }
+    }
+
+    private getEnumerableDimensions(availableContentScopes: ContentScope[]): Set<string> {
+        return new Set(availableContentScopes.flatMap((scope) => Object.keys(scope)));
+    }
+
+    /**
+     * A content scope is valid if the part built from the enumerable dimensions (the dimensions present in the available content
+     * scopes) matches an available content scope. Dimensions that are not part of the available content scopes (e.g. an optional
+     * dimension with too many values to enumerate) may hold any value.
+     */
+    private matchesAvailableContentScope(scope: ContentScope, availableContentScopes: ContentScope[], enumerableDimensions: Set<string>): boolean {
+        const enumerableScope = Object.fromEntries(
+            Object.entries(scope as Record<string, unknown>).filter(([dimension]) => enumerableDimensions.has(dimension)),
+        );
+        return availableContentScopes.some((availableContentScope) => isEqual(availableContentScope, enumerableScope));
     }
 
     async warmupHasPermissionCache() {
@@ -225,6 +251,7 @@ export class UserPermissionsService {
     async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[]> {
         const contentScopes: ContentScope[] = [];
         const availableContentScopes = (await this.getAvailableContentScopes()).map((cs) => cs.scope);
+        const enumerableDimensions = this.getEnumerableDimensions(availableContentScopes);
 
         if (this.accessControlService.getContentScopesForUser) {
             const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
@@ -238,18 +265,13 @@ export class UserPermissionsService {
         if (includeContentScopesManual) {
             const entity = await this.contentScopeRepository.findOne({ userId: user.id });
             if (entity) {
-                contentScopes.push(...entity.contentScopes.filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))));
+                contentScopes.push(
+                    ...entity.contentScopes.filter((value) => this.matchesAvailableContentScope(value, availableContentScopes, enumerableDimensions)),
+                );
             }
         }
 
         return uniqWith(contentScopes, isEqual);
-    }
-
-    async hasAllContentScopes(user: User): Promise<boolean> {
-        if (!this.accessControlService.getContentScopesForUser) {
-            return false;
-        }
-        return (await this.accessControlService.getContentScopesForUser(user)) === UserPermissions.allContentScopes;
     }
 
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {

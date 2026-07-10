@@ -20,6 +20,7 @@ import {
     Typography,
 } from "@mui/material";
 import type { GridToolbarProps } from "@mui/x-data-grid";
+import isEqual from "lodash.isequal";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -84,11 +85,19 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         return <Loading />;
     }
 
-    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(
-        data.availableContentScopes,
-        data.userContentScopes as ContentScope[],
-        data.availableContentScopeDimensions,
-    );
+    // A user has all content scopes (e.g. an admin) when the rule-based scopes cover every available content scope. Such a
+    // user also has all values for dimensions that are not part of the available content scopes (e.g. an optional dimension).
+    const hasAllContentScopes =
+        data.availableContentScopes.length > 0 &&
+        data.availableContentScopes.every((availableContentScope) =>
+            data.userContentScopesSkipManual.some((scope) => isEqual(scope, availableContentScope.scope)),
+        );
+
+    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes, {
+        contentScopes: data.userContentScopes as ContentScope[],
+        dimensions: data.availableContentScopeDimensions,
+        hasAllContentScopes,
+    });
 
     const toolbarSlotProps: ToolbarProps = {
         toolbarAction: (
@@ -142,8 +151,15 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
 
 export function generateGridColumnsFromContentScopeProperties(
     availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
-    contentScopes: ContentScope[] = [],
-    dimensions: Array<{ name: string; label: string }> = [],
+    {
+        contentScopes = [],
+        dimensions = [],
+        hasAllContentScopes = false,
+    }: {
+        contentScopes?: ContentScope[];
+        dimensions?: Array<{ name: string; label: string }>;
+        hasAllContentScopes?: boolean;
+    } = {},
 ): GridColDef[] {
     const dimensionLabelsByName = new Map(dimensions.map((dimension) => [dimension.name, dimension.label]));
     // Declared dimensions are the primary source so that dimensions not present in any value (e.g. an optional wildcard-only
@@ -164,7 +180,13 @@ export function generateGridColumnsFromContentScopeProperties(
             filterable: true,
             headerName: dimensionLabelsByName.get(propertyName) ?? camelCaseToHumanReadable(propertyName),
             renderCell: ({ row }: { row: ContentScope }) => {
-                if (row[propertyName] === contentScopeAllValues) {
+                const value = row[propertyName];
+                const isAllValues =
+                    value === contentScopeAllValues ||
+                    // A user with all content scopes also has all values for dimensions that are not part of the available
+                    // content scopes (e.g. an optional dimension), which are therefore not set on the scope.
+                    (value === undefined && hasAllContentScopes);
+                if (isAllValues) {
                     return (
                         <Typography variant={index === 0 ? "subtitle2" : "body2"}>
                             <FormattedMessage id="comet.userPermissions.allContentScopeValues" defaultMessage="All" />
@@ -173,13 +195,17 @@ export function generateGridColumnsFromContentScopeProperties(
                 }
 
                 // A wildcard dimension prevents the whole scope from matching an available scope, so labels are resolved per dimension
-                const label = availableContentScopes.find((availableContentScope) => availableContentScope.scope[propertyName] === row[propertyName])
-                    ?.label[propertyName];
+                const label = availableContentScopes.find((availableContentScope) => availableContentScope.scope[propertyName] === value)?.label[
+                    propertyName
+                ];
                 if (label) {
                     return <Typography variant={index === 0 ? "subtitle2" : "body2"}>{label}</Typography>;
-                } else {
-                    return "-";
                 }
+                // A value without a label is a free value of a dimension that is not part of the available content scopes
+                if (value !== undefined) {
+                    return <Typography variant={index === 0 ? "subtitle2" : "body2"}>{String(value)}</Typography>;
+                }
+                return "-";
             },
         };
     });

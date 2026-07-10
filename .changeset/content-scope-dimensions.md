@@ -21,3 +21,5 @@ UserPermissionsModule.forRootAsync({
     // ...
 });
 ```
+
+Content scopes for such a dimension can now also be assigned manually: in the "Assign scopes" dialog, dimensions that are not part of `availableContentScopes` are entered as a free text value (`*` grants all values). A user with all content scopes is shown as having all values for these dimensions.
