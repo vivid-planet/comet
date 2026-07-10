@@ -58,4 +58,24 @@ describe("UserContentScopesResolver", () => {
             ]);
         });
     });
+
+    describe("userPermissionsAvailableContentScopeDimensions", () => {
+        it("returns the dimensions from the service", async () => {
+            const dimensions = [
+                { name: "domain", label: "Domain" },
+                { name: "language", label: "Language" },
+                { name: "product", label: "Product" },
+            ];
+            const userService = createMock<UserPermissionsService>({
+                getAvailableContentScopeDimensions: async () => dimensions,
+            });
+            const resolver = new UserContentScopesResolver(
+                createMock<EntityRepository<UserContentScopes>>(),
+                userService,
+                createMock<EntityManager>(),
+            );
+
+            expect(await resolver.userPermissionsAvailableContentScopeDimensions()).toEqual(dimensions);
+        });
+    });
 });

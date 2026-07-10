@@ -65,6 +65,10 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     scope
                     label
                 }
+                availableContentScopeDimensions: userPermissionsAvailableContentScopeDimensions {
+                    name
+                    label
+                }
             }
         `,
         {
@@ -83,6 +87,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(
         data.availableContentScopes,
         data.userContentScopes as ContentScope[],
+        data.availableContentScopeDimensions,
     );
 
     const toolbarSlotProps: ToolbarProps = {
@@ -138,10 +143,17 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
 export function generateGridColumnsFromContentScopeProperties(
     availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
     contentScopes: ContentScope[] = [],
+    dimensions: Array<{ name: string; label: string }> = [],
 ): GridColDef[] {
-    // Wildcard dimensions may not appear in the available content scopes, so the displayed scopes are also considered
+    const dimensionLabelsByName = new Map(dimensions.map((dimension) => [dimension.name, dimension.label]));
+    // Declared dimensions are the primary source so that dimensions not present in any value (e.g. an optional wildcard-only
+    // dimension) still get a column; keys of the available and displayed scopes are unioned in as a fallback.
     const uniquePropertyNames = Array.from(
-        new Set([...availableContentScopes.flatMap((item) => Object.keys(item.scope)), ...contentScopes.flatMap((scope) => Object.keys(scope))]),
+        new Set([
+            ...dimensions.map((dimension) => dimension.name),
+            ...availableContentScopes.flatMap((item) => Object.keys(item.scope)),
+            ...contentScopes.flatMap((scope) => Object.keys(scope)),
+        ]),
     );
     return uniquePropertyNames.map((propertyName, index) => {
         return {
@@ -150,7 +162,7 @@ export function generateGridColumnsFromContentScopeProperties(
             pinnable: false,
             sortable: false,
             filterable: true,
-            headerName: camelCaseToHumanReadable(propertyName),
+            headerName: dimensionLabelsByName.get(propertyName) ?? camelCaseToHumanReadable(propertyName),
             renderCell: ({ row }: { row: ContentScope }) => {
                 if (row[propertyName] === contentScopeAllValues) {
                     return (
