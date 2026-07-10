@@ -17,6 +17,7 @@ import {
     OneToManyFilter,
     StringFilter,
 } from "@comet/cms-api";
+import { ProductCategoryFilter } from "./product-category.filter";
 @InputType()
 export class ProductFilter {
     @Field(() => IdFilter, { nullable: true })
@@ -89,11 +90,11 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => OneToManyFilter)
     variants?: OneToManyFilter;
-    @Field(() => ManyToOneFilter, { nullable: true })
+    @Field(() => ProductCategoryFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => ManyToOneFilter)
-    category?: ManyToOneFilter;
+    @Type(() => ProductCategoryFilter)
+    category?: ProductCategoryFilter;
     @Field(() => ManyToManyFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

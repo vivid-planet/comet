@@ -3,7 +3,8 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
-import { DateTimeFilter, IdFilter, ManyToOneFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
+import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
+import { ProductCategoryTypeFilter } from "./product-category-type.filter";
 @InputType()
 export class ProductCategoryFilter {
     @Field(() => IdFilter, { nullable: true })
@@ -26,11 +27,11 @@ export class ProductCategoryFilter {
     @IsOptional()
     @Type(() => OneToManyFilter)
     products?: OneToManyFilter;
-    @Field(() => ManyToOneFilter, { nullable: true })
+    @Field(() => ProductCategoryTypeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => ManyToOneFilter)
-    type?: ManyToOneFilter;
+    @Type(() => ProductCategoryTypeFilter)
+    type?: ProductCategoryTypeFilter;
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

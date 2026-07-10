@@ -181,7 +181,7 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
                                         }
                                     `,
                                     variables: {
-                                        filter: { type: { equal: values.productCategoryType?.id } },
+                                        filter: { type: { id: { equal: values.productCategoryType?.id } } },
                                         search,
                                     },
                                 });
@@ -216,7 +216,7 @@ export function ProductHighlightForm({ onCreate, id }: FormProps) {
                                         }
                                     `,
                                     variables: {
-                                        filter: { category: { equal: values.productCategory?.id } },
+                                        filter: { category: { id: { equal: values.productCategory?.id } } },
                                         search,
                                     },
                                 });

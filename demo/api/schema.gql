@@ -1475,7 +1475,7 @@ input ProductCategoryFilter {
   products: OneToManyFilter
   slug: StringFilter
   title: StringFilter
-  type: ManyToOneFilter
+  type: ProductCategoryTypeFilter
   updatedAt: DateTimeFilter
 }
 
@@ -1580,7 +1580,7 @@ input ProductFilter {
   additionalTypes: ProductTypeEnumsFilter
   and: [ProductFilter!]
   availableSince: DateFilter
-  category: ManyToOneFilter
+  category: ProductCategoryFilter
   colors: OneToManyFilter
   createdAt: DateTimeFilter
   datasheets: ManyToManyFilter
