@@ -1,7 +1,7 @@
 import { getRecaptchaToken } from "@src/util/recaptcha/getRecaptchaToken";
 import { useSiteConfig } from "@src/util/SiteConfigProvider";
 import { useParams } from "next/navigation";
-import { type ChangeEvent, type ReactNode, useId, useRef, useState } from "react";
+import { type ChangeEvent, type ReactNode, useId, useRef } from "react";
 import { type ControllerProps, type FieldValues, useController } from "react-hook-form";
 import { useIntl } from "react-intl";
 
@@ -10,8 +10,10 @@ import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer"
 import { type Attachment, FileList } from "./FileList";
 import styles from "./FileUploadField.module.scss";
 
-const getUploadedIds = (attachments: Attachment[]): string[] =>
+export const getUploadedAttachmentIds = (attachments: Attachment[]): string[] =>
     attachments.flatMap((attachment) => (attachment.status === "uploaded" && attachment.id ? [attachment.id] : []));
+
+export const areAttachmentsSettled = (attachments: Attachment[]): boolean => attachments.every((attachment) => attachment.status !== "uploading");
 
 type FileUploadFieldProps<TFieldValues extends FieldValues> = Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
     FieldContainerFieldProps & {
@@ -19,7 +21,6 @@ type FileUploadFieldProps<TFieldValues extends FieldValues> = Pick<ControllerPro
         disableMultiple?: boolean;
         buttonLabel?: ReactNode;
         validateFile?: (file: File) => string | undefined;
-        onUploadingChange?: (isUploading: boolean) => void;
     };
 
 export const FileUploadField = <TFieldValues extends FieldValues>({
@@ -32,7 +33,6 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
     disableMultiple,
     buttonLabel,
     validateFile,
-    onUploadingChange,
 }: FileUploadFieldProps<TFieldValues>) => {
     const id = useId();
     const intl = useIntl();
@@ -44,10 +44,6 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
     const params = useParams<{ language: string }>();
     const language = params?.language;
 
-    const [attachments, setAttachments] = useState<Attachment[]>([]);
-    const attachmentsRef = useRef<Attachment[]>(attachments);
-    attachmentsRef.current = attachments;
-
     const { field, fieldState } = useController({
         name,
         control,
@@ -55,8 +51,8 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
             ...rules,
             validate: {
                 ...(rules?.validate ? (typeof rules.validate === "function" ? { custom: rules.validate } : rules.validate) : {}),
-                allAttachmentsValid: () =>
-                    attachmentsRef.current.every((attachment) => attachment.status !== "error")
+                allAttachmentsValid: (value) =>
+                    ((value ?? []) as Attachment[]).every((attachment) => attachment.status !== "error")
                         ? true
                         : intl.formatMessage({
                               id: "fileUploadField.hasErrors",
@@ -66,14 +62,14 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
         },
     });
 
-    const updateAttachments = (next: Attachment[]) => {
-        attachmentsRef.current = next;
-        setAttachments(next);
-        field.onChange(getUploadedIds(next));
-    };
+    const attachments = (field.value ?? []) as Attachment[];
+
+    // Mirror the field value so the async upload loop below can read the latest attachments across awaits.
+    const attachmentsRef = useRef(attachments);
+    attachmentsRef.current = attachments;
 
     const patchAttachment = (attachmentKey: string, patch: Partial<Attachment>) => {
-        updateAttachments(attachmentsRef.current.map((attachment) => (attachment.key === attachmentKey ? { ...attachment, ...patch } : attachment)));
+        field.onChange(attachmentsRef.current.map((attachment) => (attachment.key === attachmentKey ? { ...attachment, ...patch } : attachment)));
     };
 
     const uploadFile = async (file: File): Promise<{ id: string }> => {
@@ -112,37 +108,28 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
             };
         });
 
-        updateAttachments(multiple ? [...attachmentsRef.current, ...added] : added);
+        field.onChange(multiple ? [...attachments, ...added] : added);
 
         const toUpload = added.filter((attachment) => attachment.status === "uploading");
-        if (toUpload.length === 0) {
-            return;
-        }
-
-        onUploadingChange?.(true);
-        try {
-            for (const attachment of toUpload) {
-                try {
-                    const { id: uploadedId } = await uploadFile(attachment.file);
-                    patchAttachment(attachment.key, { status: "uploaded", id: uploadedId });
-                } catch (error) {
-                    console.error(error);
-                    patchAttachment(attachment.key, {
-                        status: "error",
-                        errorMessage: intl.formatMessage({
-                            id: "fileUploadField.uploadFailed",
-                            defaultMessage: "Upload failed. Please try again.",
-                        }),
-                    });
-                }
+        for (const attachment of toUpload) {
+            try {
+                const { id: uploadedId } = await uploadFile(attachment.file);
+                patchAttachment(attachment.key, { status: "uploaded", id: uploadedId });
+            } catch (error) {
+                console.error(error);
+                patchAttachment(attachment.key, {
+                    status: "error",
+                    errorMessage: intl.formatMessage({
+                        id: "fileUploadField.uploadFailed",
+                        defaultMessage: "Upload failed. Please try again.",
+                    }),
+                });
             }
-        } finally {
-            onUploadingChange?.(false);
         }
     };
 
     const handleRemove = (attachmentKey: string) => {
-        updateAttachments(attachmentsRef.current.filter((attachment) => attachment.key !== attachmentKey));
+        field.onChange(attachments.filter((attachment) => attachment.key !== attachmentKey));
     };
 
     const erroredAttachment = attachments.find((attachment) => attachment.status === "error");
