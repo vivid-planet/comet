@@ -21,6 +21,21 @@ Do NOT use for minor or patch upgrades, or for ongoing feature work on a project
     ```
 4. **If no guide exists** for the target version, stop and tell the user. Don't migrate without an official guide.
 
+## Choose the target version
+
+When bumping the `@comet/*` packages, **do not pin to `{N+1}.0.0`.** The `.0.0` release is rarely what you want — the new major accumulates bug fixes and patches after release. Bump to the **newest minor/patch release within the new major** instead.
+
+Find it with `npm view` (filter to the new major, drop pre-releases like `-canary`/`-beta`/`-rc`):
+
+```bash
+npm view @comet/cms-api versions --json | \
+  python3 -c "import json,sys; v=json.load(sys.stdin); \
+    stable=[x for x in v if x.startswith('{N+1}.') and '-' not in x]; \
+    print(stable[-1])"
+```
+
+Substitute `{N+1}.` with the target major (e.g. `9.`). Pin every core `@comet/*` package to that exact version — no caret or tilde. The migration guide's own examples may show `{N+1}.0.0`; treat those as illustrative and use the newest release instead.
+
 ## Detect the project shape
 
 Before starting, figure out what's in this project. Comet projects vary — **anywhere between 0 and N sites is possible**:
