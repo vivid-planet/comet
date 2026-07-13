@@ -8,7 +8,7 @@ import {
     type ValidFileSelectItem,
 } from "@comet/admin";
 import { useMemo, useState } from "react";
-import type { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { useCometConfig } from "../../config/CometConfigContext";
@@ -84,19 +84,23 @@ export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Mu
          * If both the default configuration and expiresIn are undefined, the file will never be deleted.
          */
         expiresIn?: number;
+        /** Called with `true` when an upload starts and `false` when all uploads are done. Used internally by `FileUploadField` to block form submission. */
+        onUploadingChange?: (isUploading: boolean) => void;
     };
 
 export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
-    input: { onChange, value: fieldValue, multiple },
+    input: { onChange, value: fieldValue, multiple, name: fieldName },
     expiresIn,
     maxFiles,
     uploadEndpoint,
+    onUploadingChange,
     ...restProps
 }: FinalFormFileUploadProps<Multiple> & FinalFormFileUploadInternalProps<Multiple>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = useState<ErrorFileSelectItem[]>([]);
     const { apiUrl } = useCometConfig();
+    const form = useForm();
 
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
     const inputValue = useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>[]>(() => {
@@ -152,8 +156,12 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                     setFailedUploads((existing) => [...existing, failedFile]);
                 });
 
+                onUploadingChange?.(true);
+
                 if (singleFile) {
                     onChange(undefined);
+                } else {
+                    form.change(fieldName, fieldValue);
                 }
 
                 setUploadingFiles(acceptedFiles.map((file) => ({ name: file.name, loading: true })));
@@ -208,6 +216,8 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                         ]);
                     }
                 }
+
+                onUploadingChange?.(false);
             }}
             onRemove={(fileToRemove) => {
                 setTooManyFilesSelected(false);
