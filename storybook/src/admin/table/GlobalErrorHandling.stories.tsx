@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Table, TableQuery, useTableQuery } from "@comet/admin";
+import { Table, TableQuery, useTableQuery } from "@comet/admin-legacy";
 
 import { apolloSwapiStoryDecorator } from "../../apollo-story.decorator";
 import { errorDialogStoryProviderDecorator } from "../../docs/components/ErrorHandling/ErrorDialog/error-dialog-provider.decorator";

@@ -1,8 +1,7 @@
+import { Loading, SaveButton } from "@comet/admin";
 import { Toolbar } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { SaveButton } from "../common/buttons/SaveButton";
-import { Loading } from "../common/Loading";
 import type { ITableLocalChangesApi } from "./TableLocalChanges";
 
 interface Props {

@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
-import { createPagePagingActions, MainContent, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
+import { MainContent } from "@comet/admin";
+import { createPagePagingActions, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin-legacy";
 
 import type { LaunchesPastPagePagingResult } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";

@@ -1,5 +1,5 @@
-import { FilterBarButton } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
+import { FilterBarButton } from "@comet/admin-legacy";
 import { List, ListItem } from "@mui/material";
 
 function Story() {

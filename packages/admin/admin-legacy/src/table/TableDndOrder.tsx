@@ -1,3 +1,4 @@
+import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
 import { DragHandle } from "@comet/admin-icons";
 import type { ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
@@ -6,8 +7,6 @@ import TableRow from "@mui/material/TableRow";
 import { type ReactNode, useCallback, useRef } from "react";
 import { type DropTargetMonitor, useDrag, useDrop, type XYCoord } from "react-dnd";
 
-import { createComponentSlot } from "../helpers/createComponentSlot";
-import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { type IRow, type ITableProps, type ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
 import { TableBodyRow } from "./TableBodyRow";
 

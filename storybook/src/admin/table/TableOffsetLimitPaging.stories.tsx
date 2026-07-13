@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
-import { createOffsetLimitPagingAction, MainContent, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
+import { MainContent } from "@comet/admin";
+import { createOffsetLimitPagingAction, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin-legacy";
 
 import type { LaunchesPastResult } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";

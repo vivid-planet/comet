@@ -1,12 +1,10 @@
 import type { ApolloError } from "@apollo/client";
+import { createComponentSlot, Loading, type ThemedComponentBaseProps } from "@comet/admin";
 import { type ComponentsOverrides, Paper } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { Loading } from "../common/Loading";
-import { createComponentSlot } from "../helpers/createComponentSlot";
-import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { type ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
 /**

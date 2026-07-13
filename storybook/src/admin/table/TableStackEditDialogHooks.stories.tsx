@@ -9,13 +9,13 @@ import {
     Stack,
     StackPage,
     StackSwitch,
-    Table,
     Toolbar,
     ToolbarActions,
     ToolbarItem,
     useEditDialog,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
+import { Table } from "@comet/admin-legacy";
 import { DialogContent, IconButton, Typography } from "@mui/material";
 
 import { storyRouterDecorator } from "../../story-router.decorator";

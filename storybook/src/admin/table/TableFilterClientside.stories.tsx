@@ -1,4 +1,5 @@
-import { Field, FinalFormInput, MainContent, Table, TableFilterFinalForm, Toolbar, ToolbarItem, useTableQueryFilter } from "@comet/admin";
+import { Field, FinalFormInput, MainContent, Toolbar, ToolbarItem } from "@comet/admin";
+import { Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin-legacy";
 import { Typography } from "@mui/material";
 
 interface IExampleRow {

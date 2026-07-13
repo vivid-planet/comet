@@ -9,13 +9,13 @@ import {
     FinalFormSelect,
     type IEditDialogApi,
     type ISelectionApi,
-    Table,
     Toolbar,
     ToolbarItem,
     useEditDialog,
     useEditDialogApi,
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
+import { Table } from "@comet/admin-legacy";
 import { DialogContent, IconButton, MenuItem, Typography } from "@mui/material";
 import { type FunctionComponent, useRef, useState } from "react";
 import { useLocation } from "react-router";

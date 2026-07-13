@@ -6,7 +6,6 @@ import {
     FillSpace,
     GridCellContent,
     type GridColDef,
-    type IFilterApi,
     muiGridSortToGql,
     PrettyBytes,
     ToolbarActions,
@@ -19,6 +18,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Info as InfoIcon } from "@comet/admin-icons";
+import type { IFilterApi } from "@comet/admin-legacy";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
 import {
     GridColumnHeaderTitle,

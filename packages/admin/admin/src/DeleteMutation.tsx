@@ -3,12 +3,11 @@ import { type PureQueryOptions, useApolloClient } from "@apollo/client";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Fragment, type ReactNode, useContext, useState } from "react";
+import { Fragment, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { DeleteButton } from "./common/buttons/delete/DeleteButton";
-import { TableQueryContext } from "./table/TableQueryContext";
 
 interface IProps {
     mutation: any;
@@ -20,7 +19,6 @@ export function DeleteMutation(props: IProps) {
     const [loading, setLoading] = useState(false);
     const [pendingVariables, setPendingVariables] = useState<object | undefined>(undefined);
     const client = useApolloClient();
-    const tableQuery = useContext(TableQueryContext);
     const { refetchQueries = [] } = props;
 
     return (
@@ -51,12 +49,6 @@ export function DeleteMutation(props: IProps) {
     function handleYesClick() {
         setDialogOpen(false);
         setLoading(true);
-        if (tableQuery) {
-            refetchQueries.push({
-                query: tableQuery.api.getQuery(),
-                variables: tableQuery.api.getVariables(),
-            });
-        }
         client
             .mutate({
                 mutation: props.mutation,
@@ -65,11 +57,6 @@ export function DeleteMutation(props: IProps) {
             })
             .then(() => {
                 setLoading(false);
-                if (pendingVariables) {
-                    if (tableQuery) {
-                        tableQuery.api.onRowDeleted();
-                    }
-                }
             });
     }
 
