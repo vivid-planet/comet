@@ -160,7 +160,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
 
                     return (
                         <>
-                            <Box sx={{ display: "flex", gap: 4, alignItems: "flex-start", marginBottom: 4 }}>
+                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "flex-end", marginBottom: 4 }}>
                                 {data.availableContentScopeDimensions.map((dimension) =>
                                     isEnumerableDimension(dimension.name) ? (
                                         <TextField
