@@ -3,8 +3,7 @@ import { Time } from "@comet/admin-icons";
 import { type PropsWithChildren, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { ActionLogDialog } from "../actionLogDialog/ActionLogDialog";
-import type { ActionLogQueryName } from "../actionLogsQuery";
+import { ActionLogDialog, type ActionLogQueryName } from "../actionLogDialog/ActionLogDialog";
 
 type ActionLogButtonProps<TQuery> = PropsWithChildren<
     Omit<ButtonProps, "onClick" | "children"> & {
