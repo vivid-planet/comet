@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
-import { CheckboxField, Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
+import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
 import { IconButton, InputAdornment } from "@mui/material";
@@ -23,6 +23,7 @@ import type {
     GQLGenerateImageTitleMutation,
     GQLGenerateImageTitleMutationVariables,
 } from "./FileSettingsFields.gql.generated";
+import { type AiGenerationType, aiGenerationTypeArray, aiGenerationTypeLabels } from "./aiGenerationType";
 import { type LicenseType, licenseTypeArray, licenseTypeLabels } from "./licenseType";
 
 interface SettingsFormProps {
@@ -179,13 +180,17 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                 />
             </FormSection>
             <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
-                <CheckboxField
-                    name="isAiGenerated"
-                    label={<FormattedMessage id="comet.dam.file.isAiGenerated" defaultMessage="This file is AI-generated" />}
+                <Field
+                    component={FinalFormSelect}
+                    options={aiGenerationTypeArray}
+                    getOptionLabel={(option: AiGenerationType) => aiGenerationTypeLabels[option]}
+                    getOptionSelected={(option: AiGenerationType, selectedOption: AiGenerationType) => option === selectedOption}
+                    name="aiGeneration"
+                    label={<FormattedMessage id="comet.dam.file.aiGeneration" defaultMessage="AI generation" />}
                     helperText={
                         <FormattedMessage
-                            id="comet.dam.file.isAiGenerated.helperText"
-                            defaultMessage="Marking AI-generated or AI-manipulated content is mandatory under the EU AI Act (Art. 50). Enable this so the file can be labelled as artificial on the website."
+                            id="comet.dam.file.aiGeneration.helperText"
+                            defaultMessage="Disclosing AI-generated or AI-manipulated content is mandatory under the EU AI Act (Art. 50). The selected type is shown as a label on the website."
                         />
                     }
                     fullWidth

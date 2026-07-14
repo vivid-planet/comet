@@ -5,6 +5,7 @@ import {
     Collection,
     Embedded,
     Entity,
+    Enum,
     Index,
     ManyToOne,
     OneToMany,
@@ -24,12 +25,13 @@ import { CreateWarnings } from "../../../warnings/decorators/create-warnings.dec
 import { DamScopeInterface } from "../../types";
 import { DamMediaAlternative } from "../dam-media-alternatives/entities/dam-media-alternative.entity";
 import { FileWarningService } from "../file-warning.service";
+import { DamFileAiGeneration } from "./dam-file-ai-generation.enum";
 import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
 export interface FileInterface extends BaseEntity {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "isAiGenerated" | "copies" | "alternativesForThisFile" | "thisFileIsAlternativeFor";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies" | "alternativesForThisFile" | "thisFileIsAlternativeFor";
     id: string;
     folder?: FolderInterface;
     name: string;
@@ -39,7 +41,7 @@ export interface FileInterface extends BaseEntity {
     title?: string;
     altText?: string;
     archived: boolean;
-    isAiGenerated: boolean;
+    aiGeneration?: DamFileAiGeneration;
     copyOf?: FileInterface;
     copies: FileInterface[];
     image?: DamFileImage;
@@ -119,11 +121,9 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         })
         archived: boolean = false;
 
-        @Field()
-        @Property({
-            columnType: "boolean",
-        })
-        isAiGenerated: boolean = false;
+        @Enum({ items: () => DamFileAiGeneration, nullable: true })
+        @Field(() => DamFileAiGeneration, { nullable: true })
+        aiGeneration?: DamFileAiGeneration;
 
         @Field(() => DamFileImage, { nullable: true })
         @OneToOne({

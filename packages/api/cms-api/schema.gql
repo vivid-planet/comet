@@ -462,7 +462,7 @@ type DamFile {
   title: String
   altText: String
   archived: Boolean!
-  isAiGenerated: Boolean!
+  aiGeneration: DamFileAiGeneration
   image: DamFileImage
   license: DamFileLicense
   createdAt: DateTime!
@@ -475,6 +475,12 @@ type DamFile {
   alternativesForThisFile: [DamMediaAlternative!]!
   thisFileIsAlternativeFor: [DamMediaAlternative!]!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, sort: [DependencySort!], forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+enum DamFileAiGeneration {
+  AiGenerated
+  FullyAiGenerated
+  PartiallyAiModified
 }
 
 type PaginatedDamItems {
@@ -842,7 +848,7 @@ input UpdateDamFileInput {
   name: String
   title: String
   altText: String
-  isAiGenerated: Boolean
+  aiGeneration: DamFileAiGeneration
   image: UpdateImageFileInput
   folderId: ID
   license: LicenseInput

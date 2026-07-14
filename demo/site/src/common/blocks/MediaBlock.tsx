@@ -18,7 +18,7 @@ const getSupportedBlocks = (sizes: string, aspectRatio: string, fill?: boolean):
     return {
         image: (data) => <DamImageBlock data={data} sizes={sizes} aspectRatio={aspectRatio} fill={fill} />,
         damVideo: (data) => (
-            <AiGeneratedBadge isAiGenerated={data.damFile?.isAiGenerated} fill={fill}>
+            <AiGeneratedBadge aiGeneration={data.damFile?.aiGeneration} fill={fill}>
                 <DamVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} playPauseButton={PlayPauseButton} />
             </AiGeneratedBadge>
         ),

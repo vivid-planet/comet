@@ -2,6 +2,7 @@ import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 import { BlockData, BlockIndexData, BlockInput, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../blocks/block";
 import { AnnotationBlockMeta } from "../../blocks/decorators/field";
+import { DamFileAiGeneration } from "../files/entities/dam-file-ai-generation.enum";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { SvgImageBlockTransformerService } from "./svg-image-block-transformer.service";
 
@@ -89,9 +90,10 @@ class Meta extends AnnotationBlockMeta {
                         nullable: false,
                     },
                     {
-                        name: "isAiGenerated",
-                        kind: BlockMetaFieldKind.Boolean,
-                        nullable: false,
+                        name: "aiGeneration",
+                        kind: BlockMetaFieldKind.Enum,
+                        enum: Object.values(DamFileAiGeneration),
+                        nullable: true,
                     },
                     {
                         name: "scope",

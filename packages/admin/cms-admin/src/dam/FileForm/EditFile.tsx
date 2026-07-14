@@ -33,6 +33,7 @@ import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { ArchivedTag } from "../DataGrid/tags/ArchivedTag";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import { MediaAlternativesGrid } from "../mediaAlternatives/MediaAlternativesGrid";
+import type { AiGenerationType } from "./aiGenerationType";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import type { GQLDamFileDetailFragment, GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
@@ -55,7 +56,7 @@ export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
-    isAiGenerated?: boolean;
+    aiGeneration: AiGenerationType;
     license?: Omit<GQLLicenseInput, "type"> & {
         type: LicenseType;
     };
@@ -149,7 +150,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                         name: values.name,
                         altText: values.altText ?? null,
                         title: values.title ?? null,
-                        isAiGenerated: values.isAiGenerated ?? false,
+                        aiGeneration: values.aiGeneration === "NotAiGenerated" ? null : values.aiGeneration,
                         image: {
                             cropArea,
                         },
@@ -180,7 +181,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                 },
                 altText: file.altText,
                 title: file.title,
-                isAiGenerated: file.isAiGenerated,
+                aiGeneration: file.aiGeneration ?? "NotAiGenerated",
                 license: {
                     type: file.license?.type ?? "NO_LICENSE",
                     details: file.license?.details,

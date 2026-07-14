@@ -964,9 +964,14 @@
                             "nullable": false
                         },
                         {
-                            "name": "isAiGenerated",
-                            "kind": "Boolean",
-                            "nullable": false
+                            "name": "aiGeneration",
+                            "kind": "Enum",
+                            "enum": [
+                                "AiGenerated",
+                                "FullyAiGenerated",
+                                "PartiallyAiModified"
+                            ],
+                            "nullable": true
                         },
                         {
                             "name": "scope",
@@ -2396,9 +2401,14 @@
                             "nullable": false
                         },
                         {
-                            "name": "isAiGenerated",
-                            "kind": "Boolean",
-                            "nullable": false
+                            "name": "aiGeneration",
+                            "kind": "Enum",
+                            "enum": [
+                                "AiGenerated",
+                                "FullyAiGenerated",
+                                "PartiallyAiModified"
+                            ],
+                            "nullable": true
                         },
                         {
                             "name": "scope",
@@ -3422,9 +3432,14 @@
                             "nullable": false
                         },
                         {
-                            "name": "isAiGenerated",
-                            "kind": "Boolean",
-                            "nullable": false
+                            "name": "aiGeneration",
+                            "kind": "Enum",
+                            "enum": [
+                                "AiGenerated",
+                                "FullyAiGenerated",
+                                "PartiallyAiModified"
+                            ],
+                            "nullable": true
                         },
                         {
                             "name": "scope",

@@ -13,7 +13,7 @@ const damFileDetailFragment = gql`
         contentHash
         title
         altText
-        isAiGenerated
+        aiGeneration
         image {
             width
             height

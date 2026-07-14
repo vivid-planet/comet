@@ -380,6 +380,7 @@ type CurrentUserPermission {
 }
 
 type DamFile {
+  aiGeneration: DamFileAiGeneration
   altText: String
   alternativesForThisFile: [DamMediaAlternative!]!
   archived: Boolean!
@@ -394,7 +395,6 @@ type DamFile {
   image: DamFileImage
   importSourceId: String
   importSourceType: String
-  isAiGenerated: Boolean!
   license: DamFileLicense
   mimetype: String!
   name: String!
@@ -403,6 +403,12 @@ type DamFile {
   thisFileIsAlternativeFor: [DamMediaAlternative!]!
   title: String
   updatedAt: DateTime!
+}
+
+enum DamFileAiGeneration {
+  AiGenerated
+  FullyAiGenerated
+  PartiallyAiModified
 }
 
 type DamFileImage {
@@ -2229,10 +2235,10 @@ input TargetGroupUpdateInput {
 }
 
 input UpdateDamFileInput {
+  aiGeneration: DamFileAiGeneration
   altText: String
   folderId: ID
   image: UpdateImageFileInput
-  isAiGenerated: Boolean
   license: LicenseInput
   name: String
   title: String

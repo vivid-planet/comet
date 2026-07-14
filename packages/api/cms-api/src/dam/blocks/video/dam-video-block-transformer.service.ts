@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
 import { BlockContext, BlockTransformerServiceInterface, TraversableTransformBlockResponse } from "../../../blocks/block";
+import { DamFileAiGeneration } from "../../files/entities/dam-file-ai-generation.enum";
 import { FilesService } from "../../files/files.service";
 import { DamScopeInterface } from "../../types";
 import { DamVideoBlockData } from "./dam-video.block";
@@ -15,7 +16,7 @@ type TransformResponse = {
         title?: string;
         altText?: string;
         archived: boolean;
-        isAiGenerated: boolean;
+        aiGeneration?: DamFileAiGeneration;
         scope?: DamScopeInterface;
         fileUrl: string;
     };
@@ -61,7 +62,7 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
                 title: file.title,
                 altText: file.altText,
                 archived: file.archived,
-                isAiGenerated: file.isAiGenerated,
+                aiGeneration: file.aiGeneration,
                 scope: file.scope,
                 fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls }),
                 captions: captions,

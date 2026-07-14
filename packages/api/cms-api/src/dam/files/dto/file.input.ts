@@ -1,7 +1,6 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import {
-    IsBoolean,
     IsDate,
     IsEnum,
     IsHash,
@@ -20,6 +19,7 @@ import { IsNullable } from "../../../common/validators/is-nullable";
 import { IsUndefinable } from "../../../common/validators/is-undefinable";
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
 import { DamScopeInterface } from "../../types";
+import { DamFileAiGeneration } from "../entities/dam-file-ai-generation.enum";
 import { LicenseType } from "../entities/license.embeddable";
 
 export class ImageFileInput {
@@ -143,10 +143,10 @@ export class UpdateFileInput {
     @IsOptional()
     altText?: string;
 
-    @Field({ nullable: true })
-    @IsBoolean()
+    @Field(() => DamFileAiGeneration, { nullable: true })
+    @IsEnum(DamFileAiGeneration)
     @IsOptional()
-    isAiGenerated?: boolean;
+    aiGeneration?: DamFileAiGeneration;
 
     @Field(() => UpdateImageFileInput, { nullable: true })
     @Type(() => UpdateImageFileInput)

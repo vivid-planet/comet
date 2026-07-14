@@ -4,6 +4,7 @@ import { BaseVideoBlockData, BaseVideoBlockInput } from "../../../blocks/base-vi
 import { BlockDataInterface, BlockIndexData, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../../blocks/block";
 import { AnnotationBlockMeta, BlockField } from "../../../blocks/decorators/field";
 import { typeSafeBlockMigrationPipe } from "../../../blocks/migrations/typeSafeBlockMigrationPipe";
+import { DamFileAiGeneration } from "../../files/entities/dam-file-ai-generation.enum";
 import { FILE_ENTITY } from "../../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
 import { AddPreviewImageMigration } from "./migrations/1-add-preview-image.migration";
@@ -93,9 +94,10 @@ class Meta extends AnnotationBlockMeta {
                             nullable: false,
                         },
                         {
-                            name: "isAiGenerated",
-                            kind: BlockMetaFieldKind.Boolean,
-                            nullable: false,
+                            name: "aiGeneration",
+                            kind: BlockMetaFieldKind.Enum,
+                            enum: Object.values(DamFileAiGeneration),
+                            nullable: true,
                         },
                         {
                             name: "scope",

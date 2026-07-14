@@ -21,14 +21,14 @@ export const DamImageBlock = withPreview(
         if (block.type === "pixelImage") {
             const pixelImageData = block.props as PixelImageBlockData;
             return (
-                <AiGeneratedBadge isAiGenerated={pixelImageData.damFile?.isAiGenerated} fill={imageProps.fill}>
+                <AiGeneratedBadge aiGeneration={pixelImageData.damFile?.aiGeneration} fill={imageProps.fill}>
                     <PixelImageBlock data={pixelImageData} aspectRatio={aspectRatio} {...imageProps} />
                 </AiGeneratedBadge>
             );
         } else if (block.type === "svgImage") {
             const svgImageData = block.props as SvgImageBlockData;
             return (
-                <AiGeneratedBadge isAiGenerated={svgImageData.damFile?.isAiGenerated}>
+                <AiGeneratedBadge aiGeneration={svgImageData.damFile?.aiGeneration}>
                     <SvgImageBlock data={svgImageData} />
                 </AiGeneratedBadge>
             );
