@@ -16,6 +16,7 @@ import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
+    DialogContent,
     DialogTitle,
     Typography,
 } from "@mui/material";
@@ -132,11 +133,13 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     <DialogTitle>
                         <FormattedMessage id="comet.userScopes.dialog.title" defaultMessage="Select scopes" />
                     </DialogTitle>
-                    <SelectScopesDialogContent
-                        userId={userId}
-                        userContentScopes={data.userContentScopes}
-                        userContentScopesSkipManual={data.userContentScopesSkipManual}
-                    />
+                    <DialogContent>
+                        <SelectScopesDialogContent
+                            userId={userId}
+                            userContentScopes={data.userContentScopes}
+                            userContentScopesSkipManual={data.userContentScopesSkipManual}
+                        />
+                    </DialogContent>
                     <DialogActions>
                         <CancelButton onClick={() => setOpen(false)}>
                             <FormattedMessage {...messages.close} />
