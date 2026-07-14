@@ -13,6 +13,9 @@ export const actionLogRowFragment = gql`
         createdAt
         scope
         snapshot
+        previousVersion {
+            id
+        }
         user {
             id
             name
