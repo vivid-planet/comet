@@ -430,6 +430,19 @@ Key behaviors:
 - Spacing between blocks comes from the theme's `bottomSpacing` (the last block gets none); headings are styled text, not semantic `<h1>` elements.
 - Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, and `richTextBlock__link` class names for targeting with `registerStyles`.
 
+### Tip-Tap rich-text blocks
+
+`createTipTapRichTextBlock` is the Tip-Tap sibling of `createRichTextBlock`, rendering `TipTapRichTextBlockData` (Tip-Tap/ProseMirror JSON from the CMS `TipTapRichTextBlock`). Same factory shape (`MjmlTipTapRichTextBlock`/`HtmlTipTapRichTextBlock` pair, call once per configuration), same `linkTypes` convention. `@experimental`, like its CMS/site-react counterparts.
+
+What's different from the draft-js block, because Tip-Tap's data model differs:
+
+- **Two block-styling options, not one.** `blockTypes` keys by the structural type (`paragraph`, `heading-1`…`heading-6`, `unordered-list`, `ordered-list`); `textBlockStyles` keys by the app-defined `textBlockStyle` name (set via the CMS block's own `textBlockStyles` option) and wins over `blockTypes` when both apply. `textBlockStyle` is ignored on paragraphs nested inside list items.
+- **Two mark options, not one.** `marks` keys by the mark's `type` (merged over built-ins `bold`/`italic`/`strike`/`superscript`/`subscript`); `inlineStyles` keys by the `inlineStyle` mark's `attrs.type` (the app-defined inline styles from the CMS block's `inlineStyles` option) and has **no built-ins** — an unconfigured inline style renders unchanged.
+- **`placeholder` nodes render literal `{{name}}` text**, unconditionally — this block does not substitute recipient data; that happens downstream (e.g. in the ESP).
+- **`cmsBlock`/`cmsInlineBlock` nodes are skipped silently** — rendering the CMS block's embedded child blocks in email is out of scope.
+- **Lists still render flat**, same rationale as the draft-js block (Outlook breaks nested list padding/margin-left); recommend `listLevelMax: 1` on the CMS block feeding this renderer.
+- Rendered elements carry `tipTapRichTextBlock__text`/`__list`/`__listItem`/`__link` classes — distinct from the draft-js block's classes.
+
 ---
 
 ## Custom Components
