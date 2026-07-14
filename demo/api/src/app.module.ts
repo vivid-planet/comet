@@ -70,6 +70,7 @@ import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
 import { StatusModule } from "./status/status.module";
+import { WelcomeEmailModule } from "./welcome-email/welcome-email.module";
 
 @Module({})
 export class AppModule {
@@ -214,6 +215,7 @@ export class AppModule {
                 NewsModule,
                 MenusModule,
                 FooterModule,
+                WelcomeEmailModule,
                 PredefinedPagesModule,
                 CronJobsModule,
                 MailerModule.register(config.mailer),
