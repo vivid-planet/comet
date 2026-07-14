@@ -29,7 +29,7 @@ import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
 export interface FileInterface extends BaseEntity {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies" | "alternativesForThisFile" | "thisFileIsAlternativeFor";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "isAiGenerated" | "copies" | "alternativesForThisFile" | "thisFileIsAlternativeFor";
     id: string;
     folder?: FolderInterface;
     name: string;
@@ -39,6 +39,7 @@ export interface FileInterface extends BaseEntity {
     title?: string;
     altText?: string;
     archived: boolean;
+    isAiGenerated: boolean;
     copyOf?: FileInterface;
     copies: FileInterface[];
     image?: DamFileImage;
@@ -117,6 +118,12 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
             columnType: "boolean",
         })
         archived: boolean = false;
+
+        @Field()
+        @Property({
+            columnType: "boolean",
+        })
+        isAiGenerated: boolean = false;
 
         @Field(() => DamFileImage, { nullable: true })
         @OneToOne({

@@ -462,6 +462,7 @@ type DamFile {
   title: String
   altText: String
   archived: Boolean!
+  isAiGenerated: Boolean!
   image: DamFileImage
   license: DamFileLicense
   createdAt: DateTime!
@@ -841,6 +842,7 @@ input UpdateDamFileInput {
   name: String
   title: String
   altText: String
+  isAiGenerated: Boolean
   image: UpdateImageFileInput
   folderId: ID
   license: LicenseInput

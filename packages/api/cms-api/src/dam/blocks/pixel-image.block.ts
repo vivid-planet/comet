@@ -131,6 +131,11 @@ class Meta extends AnnotationBlockMeta {
                             nullable: false,
                         },
                         {
+                            name: "isAiGenerated",
+                            kind: BlockMetaFieldKind.Boolean,
+                            nullable: false,
+                        },
+                        {
                             name: "scope",
                             kind: BlockMetaFieldKind.Json,
                             nullable: true,

@@ -17,6 +17,7 @@ type TransformResponse = {
         title?: string;
         altText?: string;
         archived: boolean;
+        isAiGenerated: boolean;
         scope?: DamScopeInterface;
         importSourceId?: string;
         importSourceType?: string;
@@ -62,6 +63,7 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
                 title: file.title,
                 altText: file.altText,
                 archived: file.archived,
+                isAiGenerated: file.isAiGenerated,
                 scope: file.scope,
                 importSourceId: file.importSourceId,
                 importSourceType: file.importSourceType,

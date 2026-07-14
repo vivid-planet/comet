@@ -8,6 +8,7 @@ import {
     withPreview,
 } from "@comet/site-nextjs";
 import type { MediaBlockData } from "@src/blocks.generated";
+import { AiGeneratedBadge } from "@src/common/blocks/AiGeneratedBadge";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 
 import { PlayPauseButton } from "../helpers/PlayPauseButton";
@@ -17,7 +18,9 @@ const getSupportedBlocks = (sizes: string, aspectRatio: string, fill?: boolean):
     return {
         image: (data) => <DamImageBlock data={data} sizes={sizes} aspectRatio={aspectRatio} fill={fill} />,
         damVideo: (data) => (
-            <DamVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} playPauseButton={PlayPauseButton} />
+            <AiGeneratedBadge isAiGenerated={data.damFile?.isAiGenerated} fill={fill}>
+                <DamVideoBlock data={data} previewImageSizes={sizes} aspectRatio={aspectRatio} fill={fill} playPauseButton={PlayPauseButton} />
+            </AiGeneratedBadge>
         ),
         youTubeVideo: (data) => (
             <CookieSafeYouTubeVideoBlock

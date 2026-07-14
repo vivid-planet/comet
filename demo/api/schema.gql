@@ -394,6 +394,7 @@ type DamFile {
   image: DamFileImage
   importSourceId: String
   importSourceType: String
+  isAiGenerated: Boolean!
   license: DamFileLicense
   mimetype: String!
   name: String!
@@ -2231,6 +2232,7 @@ input UpdateDamFileInput {
   altText: String
   folderId: ID
   image: UpdateImageFileInput
+  isAiGenerated: Boolean
   license: LicenseInput
   name: String
   title: String

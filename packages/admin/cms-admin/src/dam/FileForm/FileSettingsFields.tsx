@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
-import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
+import { CheckboxField, Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
 import { IconButton, InputAdornment } from "@mui/material";
@@ -176,6 +176,19 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                             </IconButton>
                         )
                     }
+                />
+            </FormSection>
+            <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
+                <CheckboxField
+                    name="isAiGenerated"
+                    label={<FormattedMessage id="comet.dam.file.isAiGenerated" defaultMessage="This file is AI-generated" />}
+                    helperText={
+                        <FormattedMessage
+                            id="comet.dam.file.isAiGenerated.helperText"
+                            defaultMessage="Marking AI-generated or AI-manipulated content is mandatory under the EU AI Act (Art. 50). Enable this so the file can be labelled as artificial on the website."
+                        />
+                    }
+                    fullWidth
                 />
             </FormSection>
             {damConfig.enableLicenseFeature && (

@@ -1,6 +1,7 @@
 "use client";
 import { PixelImageBlock, PreviewSkeleton, type PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
 import type { DamImageBlockData, PixelImageBlockData, SvgImageBlockData } from "@src/blocks.generated";
+import { AiGeneratedBadge } from "@src/common/blocks/AiGeneratedBadge";
 import type { ImageProps as NextImageProps } from "next/image";
 
 type DamImageProps = Omit<NextImageProps, "src" | "width" | "height" | "alt"> & {
@@ -18,9 +19,19 @@ export const DamImageBlock = withPreview(
         }
 
         if (block.type === "pixelImage") {
-            return <PixelImageBlock data={block.props as PixelImageBlockData} aspectRatio={aspectRatio} {...imageProps} />;
+            const pixelImageData = block.props as PixelImageBlockData;
+            return (
+                <AiGeneratedBadge isAiGenerated={pixelImageData.damFile?.isAiGenerated} fill={imageProps.fill}>
+                    <PixelImageBlock data={pixelImageData} aspectRatio={aspectRatio} {...imageProps} />
+                </AiGeneratedBadge>
+            );
         } else if (block.type === "svgImage") {
-            return <SvgImageBlock data={block.props as SvgImageBlockData} />;
+            const svgImageData = block.props as SvgImageBlockData;
+            return (
+                <AiGeneratedBadge isAiGenerated={svgImageData.damFile?.isAiGenerated}>
+                    <SvgImageBlock data={svgImageData} />
+                </AiGeneratedBadge>
+            );
         } else {
             return (
                 <>

@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import {
+    IsBoolean,
     IsDate,
     IsEnum,
     IsHash,
@@ -141,6 +142,11 @@ export class UpdateFileInput {
     @IsString()
     @IsOptional()
     altText?: string;
+
+    @Field({ nullable: true })
+    @IsBoolean()
+    @IsOptional()
+    isAiGenerated?: boolean;
 
     @Field(() => UpdateImageFileInput, { nullable: true })
     @Type(() => UpdateImageFileInput)

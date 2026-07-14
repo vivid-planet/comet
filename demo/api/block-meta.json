@@ -964,6 +964,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "isAiGenerated",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
                             "name": "scope",
                             "kind": "Json",
                             "nullable": true
@@ -2391,6 +2396,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "isAiGenerated",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
                             "name": "scope",
                             "kind": "Json",
                             "nullable": true
@@ -3408,6 +3418,11 @@
                         },
                         {
                             "name": "archived",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "isAiGenerated",
                             "kind": "Boolean",
                             "nullable": false
                         },

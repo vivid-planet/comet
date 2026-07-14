@@ -15,6 +15,7 @@ type TransformResponse = {
         title?: string;
         altText?: string;
         archived: boolean;
+        isAiGenerated: boolean;
         scope?: DamScopeInterface;
         fileUrl: string;
     };
@@ -60,6 +61,7 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
                 title: file.title,
                 altText: file.altText,
                 archived: file.archived,
+                isAiGenerated: file.isAiGenerated,
                 scope: file.scope,
                 fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls }),
                 captions: captions,

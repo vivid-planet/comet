@@ -55,6 +55,7 @@ export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
+    isAiGenerated?: boolean;
     license?: Omit<GQLLicenseInput, "type"> & {
         type: LicenseType;
     };
@@ -148,6 +149,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                         name: values.name,
                         altText: values.altText ?? null,
                         title: values.title ?? null,
+                        isAiGenerated: values.isAiGenerated ?? false,
                         image: {
                             cropArea,
                         },
@@ -178,6 +180,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                 },
                 altText: file.altText,
                 title: file.title,
+                isAiGenerated: file.isAiGenerated,
                 license: {
                     type: file.license?.type ?? "NO_LICENSE",
                     details: file.license?.details,
