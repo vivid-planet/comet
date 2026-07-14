@@ -1,6 +1,7 @@
 import { ChevronDown, Error } from "@comet/admin-icons";
 import {
     Autocomplete,
+    autocompleteClasses,
     type AutocompleteProps,
     type AutocompleteRenderInputParams,
     CircularProgress,
@@ -8,12 +9,57 @@ import {
     InputBase,
     Typography,
 } from "@mui/material";
-import type { ReactNode } from "react";
+import { css, styled } from "@mui/material/styles";
+import { type ReactNode, useCallback, useRef, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import type { AsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
+
+// In multi-select mode the chips and the input wrap onto multiple lines. The end adornment must never wrap below
+// the chips, so it is removed from the flex flow (`MultipleEndAdornmentContainer` is absolutely positioned) and its
+// measured width is reserved as padding instead, so the chips never render underneath it.
+const MultipleInputBase = styled(InputBase, {
+    shouldForwardProp: (prop) => prop !== "endAdornmentWidth",
+})<{ endAdornmentWidth: number }>(
+    ({ endAdornmentWidth }) => css`
+        /* Quadruple specificity to override the "hasPopupIcon" padding-right from the MuiAutocomplete theme
+           (three classes: hash + root + inputRoot). */
+        &&&& {
+            position: relative;
+            flex-wrap: wrap;
+            padding-right: ${endAdornmentWidth}px;
+        }
+    `,
+);
+
+const MultipleEndAdornmentContainer = styled("div")(
+    ({ theme }) => css`
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        padding-left: ${theme.spacing(1)};
+        padding-right: ${theme.spacing(2)};
+        /* Clicks next to the icons must fall through to the input root, where MUI Autocomplete handles them by
+           focusing the input and opening the dropdown. */
+        pointer-events: none;
+
+        & > * {
+            pointer-events: auto;
+        }
+
+        .${autocompleteClasses.endAdornment} {
+            /* Reset MUI's absolute positioning (relative to the input root) so the popup icon stays in the
+               container's flex flow next to the other adornments. */
+            position: static;
+            transform: none;
+        }
+    `,
+);
 
 export type FinalFormAutocompleteProps<
     T extends Record<string, any>,
@@ -55,7 +101,25 @@ export const FinalFormAutocomplete = <
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {
     const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
+    const hasValue = Array.isArray(value) ? value.length > 0 : Boolean(value);
     const clearable = !required && !disabled && !readOnly;
+
+    const [endAdornmentWidth, setEndAdornmentWidth] = useState(0);
+    const endAdornmentResizeObserver = useRef<ResizeObserver | undefined>(undefined);
+    // The rendered adornments (loading, clear, error, popup icon) change at runtime, e.g. the clear button only
+    // renders once a value is selected, so the reserved width must be measured, not hardcoded.
+    const endAdornmentRef = useCallback((node: HTMLDivElement | null) => {
+        endAdornmentResizeObserver.current?.disconnect();
+        endAdornmentResizeObserver.current = undefined;
+
+        if (node) {
+            setEndAdornmentWidth(node.offsetWidth);
+            endAdornmentResizeObserver.current = new ResizeObserver(() => {
+                setEndAdornmentWidth(node.offsetWidth);
+            });
+            endAdornmentResizeObserver.current.observe(node);
+        }
+    }, []);
 
     return (
         <Autocomplete
@@ -92,23 +156,40 @@ export const FinalFormAutocomplete = <
             disabled={disabled}
             readOnly={readOnly}
             multiple={multiple as Multiple}
-            renderInput={(params: AutocompleteRenderInputParams) => (
-                <InputBase
-                    {...restInput}
-                    {...params}
-                    {...params.InputProps}
-                    // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
-                    required={multiple ? false : required}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            {loading && <CircularProgress color="inherit" size={16} />}
-                            {clearable && value && <ClearInputAdornment position="end" onClick={() => onChange("")} />}
-                            {loadingError && <Error color="error" />}
-                            {params.InputProps.endAdornment}
-                        </InputAdornment>
-                    }
-                />
-            )}
+            renderInput={(params: AutocompleteRenderInputParams) => {
+                const endAdornment = (
+                    <>
+                        {loading && <CircularProgress color="inherit" size={16} />}
+                        {clearable && hasValue && <ClearInputAdornment position="end" onClick={() => onChange(multiple ? [] : "")} />}
+                        {loadingError && <Error color="error" />}
+                        {params.InputProps.endAdornment}
+                    </>
+                );
+
+                if (multiple) {
+                    return (
+                        <MultipleInputBase
+                            {...restInput}
+                            {...params}
+                            {...params.InputProps}
+                            // Disable HTML required for multiple select as the input stays empty (values are shown for example as chips) and the input is used for the autocomplete input
+                            required={false}
+                            endAdornmentWidth={endAdornmentWidth}
+                            endAdornment={<MultipleEndAdornmentContainer ref={endAdornmentRef}>{endAdornment}</MultipleEndAdornmentContainer>}
+                        />
+                    );
+                }
+
+                return (
+                    <InputBase
+                        {...restInput}
+                        {...params}
+                        {...params.InputProps}
+                        required={required}
+                        endAdornment={<InputAdornment position="end">{endAdornment}</InputAdornment>}
+                    />
+                );
+            }}
         />
     );
 };
