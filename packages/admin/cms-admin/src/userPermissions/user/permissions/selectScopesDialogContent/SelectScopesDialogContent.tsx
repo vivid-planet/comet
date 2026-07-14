@@ -35,8 +35,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
     userContentScopesSkipManual,
 }) => {
     const client = useApolloClient();
-    const [selectedScope, setSelectedScope] = useState<string>("");
-    const [freeValues, setFreeValues] = useState<Record<string, string>>({});
+    const [draftScope, setDraftScope] = useState<ContentScope>({});
 
     // Memoized so that re-renders caused by the builder inputs don't recreate the initial values and reinitialize the form
     // (which would discard added scopes). Only the rule-based scopes are excluded; the rest are the manually assigned scopes.
@@ -89,19 +88,29 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
         return <Loading />;
     }
 
-    // Dimensions whose values are enumerable are chosen from the available content scopes; the remaining declared dimensions
-    // (e.g. one with too many values to enumerate) are entered as free text.
-    const enumerableDimensions = new Set(data.availableContentScopes.flatMap((availableContentScope) => Object.keys(availableContentScope.scope)));
-    const freeDimensions = data.availableContentScopeDimensions.filter((dimension) => !enumerableDimensions.has(dimension.name));
-
-    const scopeOptions = data.availableContentScopes.map((availableContentScope) => ({
-        value: JSON.stringify(availableContentScope.scope),
-        label: Object.values(availableContentScope.label).join(" / "),
-    }));
+    // Dimensions whose values are enumerable get a dropdown built from the available content scopes; the remaining declared
+    // dimensions (e.g. one with too many values to enumerate) are entered as free text.
+    const enumerableValuesByDimension: Record<string, Array<{ value: string; label: string }>> = {};
+    for (const availableContentScope of data.availableContentScopes) {
+        for (const [dimension, value] of Object.entries(availableContentScope.scope)) {
+            const options = (enumerableValuesByDimension[dimension] ??= []);
+            if (!options.some((option) => option.value === value)) {
+                options.push({ value: String(value), label: availableContentScope.label?.[dimension] ?? String(value) });
+            }
+        }
+    }
+    const isEnumerableDimension = (dimension: string) => enumerableValuesByDimension[dimension] !== undefined;
+    const enumerableDimensionNames = data.availableContentScopeDimensions.map((dimension) => dimension.name).filter(isEnumerableDimension);
 
     const scopeColumns = generateGridColumnsFromContentScopeProperties(data.availableContentScopes, {
         dimensions: data.availableContentScopeDimensions,
     });
+
+    const enumerablePartOfDraft = Object.fromEntries(enumerableDimensionNames.map((dimension) => [dimension, draftScope[dimension]]));
+    // Only a combination of enumerable values that exists in the available content scopes can be assigned
+    const canAddScope =
+        enumerableDimensionNames.every((dimension) => draftScope[dimension]) &&
+        data.availableContentScopes.some((availableContentScope) => isEqual(availableContentScope.scope, enumerablePartOfDraft));
 
     return (
         <FinalForm<FormValues> subscription={{ values: true }} mode="edit" onSubmit={submit} onAfterSubmit={() => null} initialValues={initialValues}>
@@ -110,12 +119,12 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                     const contentScopes = props.input.value;
 
                     const addScope = () => {
-                        if (!selectedScope) {
+                        if (!canAddScope) {
                             return;
                         }
-                        const scope: ContentScope = { ...JSON.parse(selectedScope) };
-                        for (const dimension of freeDimensions) {
-                            const value = freeValues[dimension.name]?.trim();
+                        const scope: ContentScope = {};
+                        for (const dimension of data.availableContentScopeDimensions) {
+                            const value = draftScope[dimension.name]?.trim();
                             if (value) {
                                 scope[dimension.name] = value;
                             }
@@ -124,8 +133,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                         if (!contentScopes.includes(serializedScope)) {
                             props.input.onChange([...contentScopes, serializedScope]);
                         }
-                        setSelectedScope("");
-                        setFreeValues({});
+                        setDraftScope({});
                     };
 
                     const removeScope = (scope: ContentScope) => {
@@ -153,29 +161,33 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                     return (
                         <>
                             <Box sx={{ display: "flex", gap: 4, alignItems: "flex-start", marginBottom: 4 }}>
-                                <TextField
-                                    select
-                                    label={<FormattedMessage id="comet.userPermissions.scope" defaultMessage="Scope" />}
-                                    value={selectedScope}
-                                    onChange={(event) => setSelectedScope(event.target.value)}
-                                    sx={{ minWidth: 200 }}
-                                >
-                                    {scopeOptions.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                                {freeDimensions.map((dimension) => (
-                                    <TextField
-                                        key={dimension.name}
-                                        label={dimension.label}
-                                        value={freeValues[dimension.name] ?? ""}
-                                        onChange={(event) => setFreeValues((values) => ({ ...values, [dimension.name]: event.target.value }))}
-                                        sx={{ minWidth: 200 }}
-                                    />
-                                ))}
-                                <Button variant="outlined" disabled={!selectedScope} onClick={addScope}>
+                                {data.availableContentScopeDimensions.map((dimension) =>
+                                    isEnumerableDimension(dimension.name) ? (
+                                        <TextField
+                                            key={dimension.name}
+                                            select
+                                            label={dimension.label}
+                                            value={draftScope[dimension.name] ?? ""}
+                                            onChange={(event) => setDraftScope((scope) => ({ ...scope, [dimension.name]: event.target.value }))}
+                                            sx={{ minWidth: 200 }}
+                                        >
+                                            {enumerableValuesByDimension[dimension.name].map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    ) : (
+                                        <TextField
+                                            key={dimension.name}
+                                            label={dimension.label}
+                                            value={draftScope[dimension.name] ?? ""}
+                                            onChange={(event) => setDraftScope((scope) => ({ ...scope, [dimension.name]: event.target.value }))}
+                                            sx={{ minWidth: 200 }}
+                                        />
+                                    ),
+                                )}
+                                <Button variant="outlined" disabled={!canAddScope} onClick={addScope}>
                                     <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
                                 </Button>
                             </Box>
