@@ -1240,6 +1240,12 @@ Note: the new `RedirectFilter.sourceType: RedirectSourceTypeEnumFilter` input an
 
 Domain redirects are hit on every non-resolving request, so cache them in memory. Using `cache-manager` with a `keyv` store:
 
+:::note
+
+This only works on Next.js 16, where the proxy/middleware runs in the Node.js runtime by default. On Next.js 14/15 the middleware runs in the Edge runtime, where `cache-manager`/`keyv` are not supported.
+
+:::
+
 ```sh
 npm install cache-manager keyv
 ```
