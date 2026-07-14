@@ -407,8 +407,7 @@ type DamFile {
 
 enum DamFileAiGeneration {
   AiGenerated
-  FullyAiGenerated
-  PartiallyAiModified
+  AiModified
 }
 
 type DamFileImage {

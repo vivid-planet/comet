@@ -479,8 +479,7 @@ type DamFile {
 
 enum DamFileAiGeneration {
   AiGenerated
-  FullyAiGenerated
-  PartiallyAiModified
+  AiModified
 }
 
 type PaginatedDamItems {

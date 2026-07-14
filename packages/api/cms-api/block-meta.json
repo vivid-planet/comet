@@ -232,8 +232,7 @@
                             "kind": "Enum",
                             "enum": [
                                 "AiGenerated",
-                                "FullyAiGenerated",
-                                "PartiallyAiModified"
+                                "AiModified"
                             ],
                             "nullable": true
                         },
@@ -591,8 +590,7 @@
                             "kind": "Enum",
                             "enum": [
                                 "AiGenerated",
-                                "FullyAiGenerated",
-                                "PartiallyAiModified"
+                                "AiModified"
                             ],
                             "nullable": true
                         },
@@ -1052,8 +1050,7 @@
                             "kind": "Enum",
                             "enum": [
                                 "AiGenerated",
-                                "FullyAiGenerated",
-                                "PartiallyAiModified"
+                                "AiModified"
                             ],
                             "nullable": true
                         },
