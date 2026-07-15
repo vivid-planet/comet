@@ -9,8 +9,6 @@ import { User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogConfig } from "./access-log.module";
 
-const IGNORED_ROUTES = ["/dam/images/", "/dam/files/preview", "/dam/files/download", "/dam/files/:hash/"];
-
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
@@ -32,14 +30,7 @@ export class AccessLogInterceptor implements NestInterceptor {
                 return next.handle();
             }
 
-            if (
-                this.config &&
-                this.config.shouldLogRequest &&
-                !this.config.shouldLogRequest({
-                    user: graphqlContext.req.user,
-                    req: graphqlContext.req,
-                })
-            ) {
+            if (this.config?.shouldLogRequest?.({ user: graphqlContext.req.user, req: graphqlContext.req }) === false) {
                 ignored = true;
             }
 
@@ -63,15 +54,7 @@ export class AccessLogInterceptor implements NestInterceptor {
             const httpRequest = httpContext.getRequest<Request>();
             const user = httpRequest.user as CurrentUser;
 
-            if (
-                IGNORED_ROUTES.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
-                (this.config &&
-                    this.config.shouldLogRequest &&
-                    !this.config.shouldLogRequest({
-                        user: user,
-                        req: httpRequest,
-                    }))
-            ) {
+            if (this.config?.shouldLogRequest?.({ user, req: httpRequest }) === false) {
                 ignored = true;
             }
 
