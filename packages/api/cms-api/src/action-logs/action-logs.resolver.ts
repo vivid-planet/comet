@@ -4,10 +4,11 @@ import { Args, ID, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql
 import isEqual from "lodash.isequal";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
+import { gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { UserPermissionsService } from "../user-permissions/user-permissions.service";
+import { actionLogFilterToWhere } from "./action-logs-filter.utils";
 import { ActionLogType } from "./dto/action-log-type.enum";
 import { ActionLogsUser } from "./dto/action-logs-user";
 import { GlobalActionLogsArgs } from "./dto/global-action-logs.args";
@@ -45,7 +46,7 @@ export class ActionLogsResolver {
         }
 
         if (filter) {
-            andFilters.push(filtersToMikroOrmQuery(filter));
+            andFilters.push(actionLogFilterToWhere(filter));
         }
 
         // Use $contained (<@) so a row's scope must be a subset of one of the user's allowed scopes.
