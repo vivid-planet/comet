@@ -10,7 +10,7 @@ import {
     DialogTitle,
     IconButton,
 } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { AddContentScopeDialog } from "./AddContentScopeDialog";
@@ -81,6 +81,15 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
         },
     );
 
+    // Memoized so that re-renders (e.g. opening the add-scope dialog) don't reinitialize the form and discard the changes.
+    const initialValues = useMemo<FormSubmitData>(
+        () => ({
+            overrideContentScopes: data?.permission.overrideContentScopes ?? false,
+            contentScopes: data?.permission.contentScopes.map((contentScope) => JSON.stringify(contentScope)) ?? [],
+        }),
+        [data],
+    );
+
     if (error) {
         throw new Error(error.message);
     }
@@ -89,10 +98,6 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
         return <CircularProgress />;
     }
 
-    const initialValues: FormSubmitData = {
-        overrideContentScopes: data.permission.overrideContentScopes,
-        contentScopes: data.permission.contentScopes.map((v) => JSON.stringify(v)),
-    };
     const disabled = data.permission.source === "BY_RULE";
 
     return (
