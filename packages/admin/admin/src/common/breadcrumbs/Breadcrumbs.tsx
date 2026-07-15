@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { ButtonBase, type ComponentsOverrides, IconButton, Typography, useMediaQuery } from "@mui/material";
 import { alpha, css, type Theme, useThemeProps } from "@mui/material/styles";
-import { Fragment, type ReactNode, useState } from "react";
+import { Fragment, type MouseEvent, type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -61,6 +61,7 @@ const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
         justify-content: space-between;
         height: 40px;
         padding: 0 ${theme.spacing(2)};
+        cursor: pointer;
 
         &::after {
             content: "";
@@ -74,6 +75,7 @@ const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
 
         ${theme.breakpoints.up("sm")} {
             height: 50px;
+            cursor: default;
 
             &::after {
                 content: none;
@@ -293,8 +295,13 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
         setIsMenuOpen((prev) => !prev);
     };
 
+    const handleButtonToggle = (event: MouseEvent) => {
+        event.stopPropagation();
+        toggleMenu();
+    };
+
     return (
-        <Root {...slotProps?.root} {...restProps}>
+        <Root onClick={isMobile ? toggleMenu : undefined} {...slotProps?.root} {...restProps}>
             <ToolbarContainer {...slotProps?.toolbarContainer}>
                 {items.map((item, index) => {
                     const isCurrentPage = index === items.length - 1;
@@ -305,7 +312,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                             <Fragment key={item.url}>
                                 {hasMultipleItems && isMobile && (
                                     <>
-                                        <EllipsisButton onClick={toggleMenu} {...slotProps?.ellipsisButton}>
+                                        <EllipsisButton onClick={handleButtonToggle} {...slotProps?.ellipsisButton}>
                                             <Ellipsis {...slotProps?.ellipsis}>{ellipsis}</Ellipsis>
                                         </EllipsisButton>
                                         <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
@@ -354,7 +361,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
             </ToolbarContainer>
 
             {isMobile && (
-                <MobileOpenMenuButton onClick={toggleMenu} {...slotProps?.mobileOpenMenuButton}>
+                <MobileOpenMenuButton onClick={handleButtonToggle} {...slotProps?.mobileOpenMenuButton}>
                     {isMenuOpen ? closeMenuIcon : openMenuIcon}
                 </MobileOpenMenuButton>
             )}
