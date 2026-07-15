@@ -81,6 +81,10 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                     scope
                     label
                 }
+                availableContentScopeDimensions: userPermissionsAvailableContentScopeDimensions {
+                    name
+                    label
+                }
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
@@ -107,7 +111,9 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     };
     const disabled = data && data.permission.source === "BY_RULE";
 
-    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
+    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes, {
+        dimensions: data.availableContentScopeDimensions,
+    });
 
     return (
         <Dialog maxWidth="lg" open={true}>
@@ -142,7 +148,6 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                     ) ?? []
                                                 ).map((obj) => obj.scope)}
                                                 columns={columns}
-                                                rowCount={data.availableContentScopes.length}
                                                 loading={false}
                                                 getRowHeight={() => "auto"}
                                                 getRowId={(row) => JSON.stringify(row)}
@@ -155,7 +160,9 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 slots={{
                                                     toolbar: OverrideContentScopesDialogGridToolbar,
                                                 }}
-                                                initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
+                                                pagination
+                                                pageSizeOptions={[10, 25, 50]}
+                                                initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
                                                 showToolbar
                                             />
                                         );
