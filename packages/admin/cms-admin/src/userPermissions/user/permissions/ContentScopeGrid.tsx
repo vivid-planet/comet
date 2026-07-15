@@ -175,6 +175,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                 columns={columns}
                 loading={false}
                 getRowId={(row) => JSON.stringify(row)}
+                pagination
                 pageSizeOptions={[10, 25, 50]}
                 initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
                 slots={{
