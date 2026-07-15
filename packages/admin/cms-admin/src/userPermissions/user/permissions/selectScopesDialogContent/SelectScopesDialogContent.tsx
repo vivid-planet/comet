@@ -1,46 +1,24 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, FinalFormSelect, Loading } from "@comet/admin";
 import isEqual from "lodash.isequal";
-import { type FunctionComponent, type PropsWithChildren, useMemo } from "react";
+import { type FunctionComponent, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import type { GQLContentScopesQuery } from "../ContentScopeGrid.generated";
-import type {
-    GQLAvailableContentScopesQuery,
-    GQLUpdateContentScopesMutation,
-    GQLUpdateContentScopesMutationVariables,
-} from "./SelectScopesDialogContent.generated";
+import type { ContentScope } from "../ContentScopeDataGrid";
+import type { GQLAvailableContentScopesQuery } from "./SelectScopesDialogContent.generated";
 
 interface SelectScopesDialogContentProps {
-    userId: string;
-    userContentScopes: GQLContentScopesQuery["userContentScopes"];
-    userContentScopesSkipManual: GQLContentScopesQuery["userContentScopesSkipManual"];
+    /** Called with the built scope when the form is submitted. The caller is responsible for persisting it. */
+    onSubmit: (scope: ContentScope) => Promise<void> | void;
 }
-
-type ContentScope = {
-    [key: string]: string;
-};
 
 type FormValues = {
     scope: ContentScope;
 };
 
-export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<SelectScopesDialogContentProps>> = ({
-    userId,
-    userContentScopes,
-    userContentScopesSkipManual,
-}) => {
+export const SelectScopesDialogContent: FunctionComponent<SelectScopesDialogContentProps> = ({ onSubmit }) => {
     const intl = useIntl();
-    const client = useApolloClient();
 
-    // The dialog only selects a single new scope; existing manually assigned scopes are kept and are shown/deleted in the grid.
-    const existingManualContentScopes = useMemo(
-        () =>
-            userContentScopes.filter(
-                (contentScope) => !userContentScopesSkipManual.some((ruleContentScope: ContentScope) => isEqual(ruleContentScope, contentScope)),
-            ),
-        [userContentScopes, userContentScopesSkipManual],
-    );
     // Memoized so that re-renders don't reinitialize the form and discard the selection.
     const initialValues = useMemo<FormValues>(() => ({ scope: {} }), []);
 
@@ -63,21 +41,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                 .filter(([, value]) => value != null && String(value).trim() !== "")
                 .map(([dimension, value]) => [dimension, String(value).trim()]),
         );
-        const contentScopes = existingManualContentScopes.some((existing) => isEqual(existing, scope))
-            ? existingManualContentScopes
-            : [...existingManualContentScopes, scope];
-        await client.mutate<GQLUpdateContentScopesMutation, GQLUpdateContentScopesMutationVariables>({
-            mutation: gql`
-                mutation UpdateContentScopes($userId: String!, $input: UserContentScopesInput!) {
-                    userPermissionsUpdateContentScopes(userId: $userId, input: $input)
-                }
-            `,
-            variables: {
-                userId,
-                input: { contentScopes },
-            },
-            refetchQueries: ["ContentScopes"],
-        });
+        await onSubmit(scope);
     };
 
     if (error) {
