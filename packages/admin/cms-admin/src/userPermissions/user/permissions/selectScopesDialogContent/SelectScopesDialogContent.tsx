@@ -1,13 +1,10 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Button, Field, FinalForm, type GridColDef, Loading } from "@comet/admin";
-import { Delete } from "@comet/admin-icons";
-import { Box, IconButton, MenuItem, TextField } from "@mui/material";
+import { Field, FinalForm, Loading } from "@comet/admin";
+import { Box, MenuItem, TextField } from "@mui/material";
 import isEqual from "lodash.isequal";
-import { type FunctionComponent, type PropsWithChildren, useMemo, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { type FunctionComponent, type PropsWithChildren, useMemo } from "react";
+import { useIntl } from "react-intl";
 
-import { DataGrid } from "../../../../dataGrid/DataGrid";
-import { generateGridColumnsFromContentScopeProperties } from "../ContentScopeGrid";
 import type { GQLContentScopesQuery } from "../ContentScopeGrid.generated";
 import type {
     GQLAvailableContentScopesQuery,
@@ -21,12 +18,12 @@ interface SelectScopesDialogContentProps {
     userContentScopesSkipManual: GQLContentScopesQuery["userContentScopesSkipManual"];
 }
 
-type FormValues = {
-    contentScopes: string[];
-};
-
 type ContentScope = {
     [key: string]: string;
+};
+
+type FormValues = {
+    scope: ContentScope;
 };
 
 export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<SelectScopesDialogContentProps>> = ({
@@ -34,10 +31,10 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
     userContentScopes,
     userContentScopesSkipManual,
 }) => {
+    const intl = useIntl();
     const client = useApolloClient();
-    const [draftScope, setDraftScope] = useState<ContentScope>({});
 
-    // The dialog only collects new scopes to add; existing manually assigned scopes are kept and are shown/deleted in the grid.
+    // The dialog only selects a single new scope; existing manually assigned scopes are kept and are shown/deleted in the grid.
     const existingManualContentScopes = useMemo(
         () =>
             userContentScopes.filter(
@@ -45,8 +42,8 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
             ),
         [userContentScopes, userContentScopesSkipManual],
     );
-    // Memoized so that re-renders caused by the builder inputs don't reinitialize the form and discard the added scopes.
-    const initialValues = useMemo<FormValues>(() => ({ contentScopes: [] }), []);
+    // Memoized so that re-renders don't reinitialize the form and discard the selection.
+    const initialValues = useMemo<FormValues>(() => ({ scope: {} }), []);
 
     const { data, error } = useQuery<GQLAvailableContentScopesQuery>(gql`
         query AvailableContentScopes {
@@ -62,6 +59,14 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
     `);
 
     const submit = async (values: FormValues) => {
+        const scope: ContentScope = Object.fromEntries(
+            Object.entries(values.scope)
+                .filter(([, value]) => value != null && String(value).trim() !== "")
+                .map(([dimension, value]) => [dimension, String(value).trim()]),
+        );
+        const contentScopes = existingManualContentScopes.some((existing) => isEqual(existing, scope))
+            ? existingManualContentScopes
+            : [...existingManualContentScopes, scope];
         await client.mutate<GQLUpdateContentScopesMutation, GQLUpdateContentScopesMutationVariables>({
             mutation: gql`
                 mutation UpdateContentScopes($userId: String!, $input: UserContentScopesInput!) {
@@ -70,14 +75,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
             `,
             variables: {
                 userId,
-                input: {
-                    contentScopes: [
-                        ...existingManualContentScopes,
-                        ...values.contentScopes
-                            .map((contentScope) => JSON.parse(contentScope))
-                            .filter((newContentScope) => !existingManualContentScopes.some((existing) => isEqual(existing, newContentScope))),
-                    ],
-                },
+                input: { contentScopes },
             },
             refetchQueries: ["ContentScopes"],
         });
@@ -105,106 +103,68 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
     const isEnumerableDimension = (dimension: string) => enumerableValuesByDimension[dimension] !== undefined;
     const enumerableDimensionNames = data.availableContentScopeDimensions.map((dimension) => dimension.name).filter(isEnumerableDimension);
 
-    const scopeColumns = generateGridColumnsFromContentScopeProperties(data.availableContentScopes, {
-        dimensions: data.availableContentScopeDimensions,
-    });
-
-    const enumerablePartOfDraft = Object.fromEntries(enumerableDimensionNames.map((dimension) => [dimension, draftScope[dimension]]));
-    // Only a combination of enumerable values that exists in the available content scopes can be assigned
-    const canAddScope =
-        enumerableDimensionNames.every((dimension) => draftScope[dimension]) &&
-        data.availableContentScopes.some((availableContentScope) => isEqual(availableContentScope.scope, enumerablePartOfDraft));
+    const validate = ({ scope }: FormValues) => {
+        if (!enumerableDimensionNames.every((dimension) => scope[dimension])) {
+            return {
+                scope: intl.formatMessage({ id: "comet.userPermissions.selectAllDimensions", defaultMessage: "Select a value for each dimension." }),
+            };
+        }
+        // Only a combination of enumerable values that exists in the available content scopes can be assigned
+        const enumerablePartOfScope = Object.fromEntries(enumerableDimensionNames.map((dimension) => [dimension, scope[dimension]]));
+        if (!data.availableContentScopes.some((availableContentScope) => isEqual(availableContentScope.scope, enumerablePartOfScope))) {
+            return {
+                scope: intl.formatMessage({
+                    id: "comet.userPermissions.contentScopeDoesNotExist",
+                    defaultMessage: "This combination of scopes does not exist.",
+                }),
+            };
+        }
+        return {};
+    };
 
     return (
-        <FinalForm<FormValues> subscription={{ values: true }} mode="edit" onSubmit={submit} onAfterSubmit={() => null} initialValues={initialValues}>
-            <Field<string[]> name="contentScopes" fullWidth>
+        <FinalForm<FormValues>
+            subscription={{ values: true }}
+            mode="edit"
+            onSubmit={submit}
+            onAfterSubmit={() => null}
+            initialValues={initialValues}
+            validate={validate}
+        >
+            <Field<ContentScope> name="scope" fullWidth>
                 {(props) => {
-                    const contentScopes = props.input.value;
-
-                    const addScope = () => {
-                        if (!canAddScope) {
-                            return;
-                        }
-                        const scope: ContentScope = {};
-                        for (const dimension of data.availableContentScopeDimensions) {
-                            const value = draftScope[dimension.name]?.trim();
-                            if (value) {
-                                scope[dimension.name] = value;
-                            }
-                        }
-                        const serializedScope = JSON.stringify(scope);
-                        if (!contentScopes.includes(serializedScope)) {
-                            props.input.onChange([...contentScopes, serializedScope]);
-                        }
-                        setDraftScope({});
-                    };
-
-                    const removeScope = (scope: ContentScope) => {
-                        props.input.onChange(contentScopes.filter((contentScope) => contentScope !== JSON.stringify(scope)));
-                    };
-
-                    const columns: GridColDef<ContentScope>[] = [
-                        ...scopeColumns,
-                        {
-                            field: "actions",
-                            headerName: "",
-                            width: 52,
-                            pinnable: false,
-                            sortable: false,
-                            filterable: true,
-                            align: "right",
-                            renderCell: ({ row }) => (
-                                <IconButton onClick={() => removeScope(row)}>
-                                    <Delete />
-                                </IconButton>
-                            ),
-                        },
-                    ];
+                    const scope = props.input.value;
+                    const setDimensionValue = (dimension: string, value: string) => props.input.onChange({ ...scope, [dimension]: value });
 
                     return (
-                        <>
-                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "flex-end", marginBottom: 4 }}>
-                                {data.availableContentScopeDimensions.map((dimension) =>
-                                    isEnumerableDimension(dimension.name) ? (
-                                        <TextField
-                                            key={dimension.name}
-                                            select
-                                            label={dimension.label}
-                                            value={draftScope[dimension.name] ?? ""}
-                                            onChange={(event) => setDraftScope((scope) => ({ ...scope, [dimension.name]: event.target.value }))}
-                                            sx={{ minWidth: 200 }}
-                                        >
-                                            {enumerableValuesByDimension[dimension.name].map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    ) : (
-                                        <TextField
-                                            key={dimension.name}
-                                            label={dimension.label}
-                                            value={draftScope[dimension.name] ?? ""}
-                                            onChange={(event) => setDraftScope((scope) => ({ ...scope, [dimension.name]: event.target.value }))}
-                                            sx={{ minWidth: 200 }}
-                                        />
-                                    ),
-                                )}
-                                <Button variant="outlined" disabled={!canAddScope} onClick={addScope}>
-                                    <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
-                                </Button>
-                            </Box>
-                            <DataGrid
-                                autoHeight
-                                rows={contentScopes.map((contentScope) => JSON.parse(contentScope))}
-                                columns={columns}
-                                rowCount={contentScopes.length}
-                                loading={false}
-                                getRowHeight={() => "auto"}
-                                getRowId={(row) => JSON.stringify(row)}
-                                initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
-                            />
-                        </>
+                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "flex-start" }}>
+                            {data.availableContentScopeDimensions.map((dimension) =>
+                                isEnumerableDimension(dimension.name) ? (
+                                    <TextField
+                                        key={dimension.name}
+                                        select
+                                        label={dimension.label}
+                                        value={scope[dimension.name] ?? ""}
+                                        onChange={(event) => setDimensionValue(dimension.name, event.target.value)}
+                                        sx={{ minWidth: 200 }}
+                                    >
+                                        {enumerableValuesByDimension[dimension.name].map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                ) : (
+                                    <TextField
+                                        key={dimension.name}
+                                        label={dimension.label}
+                                        value={scope[dimension.name] ?? ""}
+                                        onChange={(event) => setDimensionValue(dimension.name, event.target.value)}
+                                        sx={{ minWidth: 200 }}
+                                    />
+                                ),
+                            )}
+                        </Box>
                     );
                 }}
             </Field>
