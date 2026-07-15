@@ -11,7 +11,7 @@ import {
     SaveBoundary,
     SaveBoundarySaveButton,
 } from "@comet/admin";
-import { Delete, Select } from "@comet/admin-icons";
+import { Add, Delete, Select } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
@@ -202,7 +202,9 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                         <CancelButton onClick={() => setOpen(false)}>
                             <FormattedMessage {...messages.close} />
                         </CancelButton>
-                        <SaveBoundarySaveButton />
+                        <SaveBoundarySaveButton startIcon={<Add />}>
+                            <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
+                        </SaveBoundarySaveButton>
                     </DialogActions>
                 </Dialog>
             </SaveBoundary>
