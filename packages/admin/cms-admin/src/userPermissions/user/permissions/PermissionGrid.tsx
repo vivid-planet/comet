@@ -101,12 +101,6 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
             ),
         },
         {
-            field: "source",
-            width: 200,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.source", defaultMessage: "Assignment type" }),
-        },
-        {
             field: "validityPeriod",
             width: 200,
             pinnable: false,
@@ -128,6 +122,18 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                     <Button onClick={() => setOverrideContentScopesId(row.id)}>
                         <FormattedMessage id="comet.userPermissions.overrideContentScopes" defaultMessage="Permission-specific Content-Scopes" />
                     </Button>
+                ),
+        },
+        {
+            field: "source",
+            width: 200,
+            pinnable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.source", defaultMessage: "Assignment type" }),
+            renderCell: ({ row }) =>
+                row.source === "BY_RULE" ? (
+                    <FormattedMessage id="comet.userPermissions.assignmentType.byRule" defaultMessage="By rule" />
+                ) : (
+                    <FormattedMessage id="comet.userPermissions.assignmentType.manual" defaultMessage="Manual" />
                 ),
         },
         {
