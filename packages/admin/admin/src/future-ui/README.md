@@ -109,6 +109,56 @@ Future UI's styling contract is its class names. Components built on `@base-ui/r
 - A component with no single dominant element names no class `root`.
 - Modifiers nest under `.root` with `&` (`&--disabled` → `cometButton--disabled`).
 
+### Stories
+
+Stories live under the "Future UI" section. Each consumer-facing component has its own story file in an `__stories__/` directory next to its source; story-only helpers (decorators, the Figma-link builder) live in [`storybook/`](storybook). The component's TSDoc and prop table (see [TSDoc](#tsdoc)) drive its autodocs page, so stories don't restate it.
+
+#### Main story
+
+`__stories__/<ComponentName>.stories.tsx`, included in autodocs, is the component's consumer-facing documentation: a new variant, feature, or state gets a story in the same change, keeping the docs page current.
+
+Stories use [Component Story Format 3](https://storybook.js.org/docs/api/csf), typed with `satisfies` so `meta` is checked against the component's props and each story inherits its args:
+
+```tsx
+const meta = {
+    component: Button,
+    args: { children: "Button", onClick: fn() },
+} satisfies Meta<typeof Button>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+```
+
+`meta.args` holds only what a practical example needs: required content such as `children`, and the event handlers that make it interactive. It omits any prop that has a component default — a defaulted prop is set in the story that demonstrates it instead.
+
+The first story is `Default`, the autodocs example: it sets no args of its own, showing that smallest practical example. Each prop that changes the component visibly then gets one story per option; a prop that changes only semantics, such as `Typography`'s `element`, stays a control, since a story per value would look the same.
+
+Each declared prop is exposed as a control through `argTypes`, by kind:
+
+- **Boolean** — a toggle.
+- **Enum** — `radio` for three options or fewer, `select` for more.
+- **`ReactNode`** — a `select` whose `options` are labels and whose `mapping` resolves each to the node. The built-in empty choice covers the unset case.
+- **Override-API props** (`className`, `slots`, `slotProps`, `ref`, `render`) — `control: false`, keeping the prop-table row without an unusable control.
+- **Event handlers** — `fn()` from `storybook/test`, so calls show in the Actions panel and an interaction test can verify the handler ran.
+
+#### Dev story
+
+`__stories__/<name>.dev.stories.tsx`, optional, nests its title under a `Dev` segment (`Future UI/<Component>/Dev/<Name>`) and sets `tags: ["!autodocs"]` in its meta, keeping these out of the consumer docs. A dev story serves any development, testing, or debugging need, so add them freely — e.g. reproduce a bug in a dev story and use it to confirm the fix, rather than reaching for the Comet demo or a consuming project.
+
+#### Figma
+
+Linking the Figma design is strongly recommended: the main story's `meta` links it through [`@storybook/addon-designs`](https://storybook.js.org/addons/@storybook/addon-designs), so the design panel shows the frame across the component's stories. Every component lives in the same DDS Figma file and differs only by frame, so a story passes only its node id — the `node-id` from the frame's Figma link — to a shared helper:
+
+```tsx
+const meta = {
+    // …
+    parameters: {
+        design: figmaDesign({ nodeId: "25-2" }),
+    },
+} satisfies Meta<typeof Button>;
+```
+
 ## Theme
 
 Components read their colors and metrics from CSS custom properties (`var(--comet-button-…)`, `var(--comet-color-…)`, `var(--comet-typography-…)`) with **no fallback** — an unthemed component renders visibly unstyled rather than silently drifting to a default. There is no runtime JS theme object.

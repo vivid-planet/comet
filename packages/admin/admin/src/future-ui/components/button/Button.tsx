@@ -48,6 +48,12 @@ export interface ButtonProps<StartIcon extends ElementType = "span", EndIcon ext
      * @defaultValue `"primary"`
      */
     variant?: ButtonVariant;
+    /**
+     * Prevents interaction with the button.
+     *
+     * @defaultValue `false`
+     */
+    disabled?: boolean;
     /** Added alongside the component's own classes. */
     className?: string;
     /** Sets which element a named inner part renders as. */
