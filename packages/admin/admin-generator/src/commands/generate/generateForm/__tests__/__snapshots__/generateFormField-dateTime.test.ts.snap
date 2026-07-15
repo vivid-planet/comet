@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`generateFormField - dateTime should generate simple dateTime field  with DateTime scalar 1`] = `
+exports[`generateFormField - dateTime > should generate simple dateTime field  with DateTime scalar 1`] = `
 "<DateTimePickerField
                 
                 

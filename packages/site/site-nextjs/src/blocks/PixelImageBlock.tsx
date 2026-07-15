@@ -10,10 +10,16 @@ import {
     withPreview,
 } from "@comet/site-react";
 // eslint-disable-next-line no-restricted-imports
-import NextImage, { type ImageProps } from "next/image";
+import NextImageImport, { type ImageProps } from "next/image";
 
-import { type PixelImageBlockData } from "../blocks.generated";
+import type { PixelImageBlockData } from "../blocks.generated";
 import styles from "./PixelImageBlock.module.scss";
+
+// `next/image` is a CJS module; under Next.js Pages Router its default import
+// from this ESM package yields the module-namespace object instead of the
+// component (Node-style ESM↔CJS interop). Unwrap so the component works under
+// both bundler-style and Node-style interop.
+const NextImage: typeof NextImageImport = (NextImageImport as unknown as { default?: typeof NextImageImport }).default ?? NextImageImport;
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
     aspectRatio: string | number | "inherit";
@@ -25,7 +31,9 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
 
 export const PixelImageBlock = withPreview(
     ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
-        if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} fill={fill} />;
+        if (!damFile || !damFile.image) {
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} fill={fill} />;
+        }
 
         // If we have a crop area set, DAM setting are overwritten, so we use that
         const usedCropArea = cropArea ?? damFile.image.cropArea;

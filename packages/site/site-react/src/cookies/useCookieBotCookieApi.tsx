@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { type CookieApiHook } from "./CookieApiContext";
+import type { CookieApiHook } from "./CookieApiContext";
 
 type WindowWithCookiebot = Window & {
     Cookiebot: {
@@ -30,6 +30,9 @@ export const useCookieBotCookieApi: CookieApiHook = () => {
         };
 
         window.addEventListener("CookiebotOnConsentReady", handleCookieUpdated);
+
+        // Initial consent
+        handleCookieUpdated();
 
         return () => {
             window.removeEventListener("CookiebotOnConsentReady", handleCookieUpdated);

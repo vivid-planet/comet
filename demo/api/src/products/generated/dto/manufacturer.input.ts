@@ -2,10 +2,11 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested } from "class-validator";
 import { IsNullable, PartialType } from "@comet/cms-api";
+import { IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 import { Address, AddressAsEmbeddable } from "../../entities/manufacturer.entity";
 import { Coordinates } from "../../coordinates.type";
+import { ProductType } from "../../entities/product-type.enum";
 @InputType()
 export class ManufacturerInput {
     @IsNotEmpty()
@@ -27,7 +28,10 @@ export class ManufacturerInput {
     @Type(() => Coordinates)
     @Field(() => Coordinates, { nullable: true })
     coordinates?: Coordinates;
+    @IsNullable()
+    @IsEnum(ProductType)
+    @Field(() => ProductType, { nullable: true, defaultValue: null })
+    productType?: ProductType;
 }
 @InputType()
-export class ManufacturerUpdateInput extends PartialType(ManufacturerInput) {
-}
+export class ManufacturerUpdateInput extends PartialType(ManufacturerInput) {}

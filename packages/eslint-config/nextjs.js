@@ -1,26 +1,32 @@
-import coreConfig from "./core.js";
+import coreConfig, { restrictedImportPatterns } from "./core.js";
+import graphqlPlugin from "@graphql-eslint/eslint-plugin";
 import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
-import { FlatCompat } from "@eslint/eslintrc";
+import nextPlugin from "@next/eslint-plugin-next";
 
-const compat = new FlatCompat({
-    // import.meta.dirname is available after Node.js v20.11.0
-    baseDirectory: import.meta.dirname,
-});
-
-const nextCoreWebVitals = compat
-    .config({
-        extends: ["next/core-web-vitals"],
-    })
-    // We need to filter out configurations from nextCoreWebVitals which define plugin.import. It is conflicting
-    // because it gets redefined
-    .filter((config) => !config.plugins || !config.plugins.import);
+export const restrictedImportPaths = [
+    {
+        name: "react",
+        importNames: ["default"],
+    },
+    {
+        name: "next/image",
+        importNames: ["default"],
+        message: "Don't use next/image. See https://docs.comet-dxp.com/docs/faqs/next-image-import-restriction",
+    },
+    {
+        name: "node-cache",
+        message: "node-cache is abandonware. Use cache-manager or @cacheable/node-cache instead",
+    },
+];
 
 /** @type {import('eslint')} */
 const config = [
     ...coreConfig,
-    // Next.js does not support ESLint v9 flat config yet - an opt-in to compatibility mode is required
-    ...nextCoreWebVitals,
+    // Extend config from plugin instead of using eslint-config-next to prevent issues with duplicate plugins, e.g., import.
+    // See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config.
+    nextPlugin.configs["core-web-vitals"],
     {
         rules: {
             "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
@@ -28,17 +34,8 @@ const config = [
             "no-restricted-imports": [
                 "error",
                 {
-                    paths: [
-                        {
-                            name: "react",
-                            importNames: ["default"],
-                        },
-                        {
-                            name: "next/image",
-                            importNames: ["default"],
-                            message: "Please use Image from @comet/site-nextjs instead",
-                        },
-                    ],
+                    paths: restrictedImportPaths,
+                    patterns: restrictedImportPatterns,
                 },
             ],
         },
@@ -56,6 +53,7 @@ const config = [
         },
         plugins: {
             react: react,
+            "react-hooks": reactHooks,
         },
         settings: {
             react: {
@@ -63,6 +61,8 @@ const config = [
             },
         },
         rules: {
+            ...react.configs.recommended.rules,
+            ...reactHooks.configs.recommended.rules,
             "react/display-name": "off",
             "react/jsx-curly-brace-presence": "error",
             "react/prop-types": "off",
@@ -70,6 +70,35 @@ const config = [
             "react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
             "react/react-in-jsx-scope": "off",
             "@next/next/no-img-element": "off",
+        },
+    },
+    {
+        files: ["**/*.{ts,tsx,js,jsx}"],
+        processor: graphqlPlugin.processor,
+    },
+    {
+        files: ["**/*.graphql"],
+        languageOptions: {
+            parser: graphqlPlugin.parser,
+        },
+        plugins: {
+            "@graphql-eslint": graphqlPlugin,
+        },
+        rules: {
+            // Type-info rules from typescript-eslint cannot run on virtual GraphQL blocks extracted by the processor.
+            "@typescript-eslint/consistent-type-imports": "off",
+            "@typescript-eslint/consistent-type-exports": "off",
+            "@graphql-eslint/naming-convention": [
+                "error",
+                {
+                    OperationDefinition: {
+                        forbiddenSuffixes: ["Query", "Mutation", "Subscription"],
+                    },
+                    FragmentDefinition: {
+                        forbiddenSuffixes: ["Fragment"],
+                    },
+                },
+            ],
         },
     },
 ];

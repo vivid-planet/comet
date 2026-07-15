@@ -12,6 +12,7 @@ export enum ProductSortField {
     additionalTypes = "additionalTypes",
     price = "price",
     inStock = "inStock",
+    soldCount = "soldCount",
     availableSince = "availableSince",
     lastCheckedAt = "lastCheckedAt",
     category = "category",
@@ -38,13 +39,14 @@ export enum ProductSortField {
     manufacturer_addressAsEmbeddable_alternativeAddress_streetNumber = "manufacturer_addressAsEmbeddable_alternativeAddress_streetNumber",
     manufacturer_addressAsEmbeddable_alternativeAddress_zip = "manufacturer_addressAsEmbeddable_alternativeAddress_zip",
     manufacturer_addressAsEmbeddable_alternativeAddress_country = "manufacturer_addressAsEmbeddable_alternativeAddress_country",
+    manufacturer_productType = "manufacturer_productType",
     manufacturer_updatedAt = "manufacturer_updatedAt",
     priceList_name = "priceList_name",
     priceList_mimetype = "priceList_mimetype",
     priceList_contentHash = "priceList_contentHash",
     priceList_createdAt = "priceList_createdAt",
     priceList_updatedAt = "priceList_updatedAt",
-    priceList_expiresAt = "priceList_expiresAt"
+    priceList_expiresAt = "priceList_expiresAt",
 }
 registerEnumType(ProductSortField, {
     name: "ProductSortField",

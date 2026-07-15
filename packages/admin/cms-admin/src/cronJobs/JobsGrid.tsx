@@ -2,17 +2,17 @@ import { gql, useQuery } from "@apollo/client";
 import { FillSpace, MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarTitleItem, Tooltip } from "@comet/admin";
 import { List } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
+import { DataGrid } from "../dataGrid/DataGrid";
 import { JobRuntime } from "./JobRuntime";
-import {
-    type GQLKubernetesCronJobQuery,
-    type GQLKubernetesCronJobQueryVariables,
-    type GQLKubernetesJobsQuery,
-    type GQLKubernetesJobsQueryVariables,
+import type {
+    GQLKubernetesCronJobQuery,
+    GQLKubernetesCronJobQueryVariables,
+    GQLKubernetesJobsQuery,
+    GQLKubernetesJobsQueryVariables,
 } from "./JobsGrid.generated";
 import { JobStatus } from "./JobStatus";
 

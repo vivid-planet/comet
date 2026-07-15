@@ -2,11 +2,12 @@ import { gql, useQuery } from "@apollo/client";
 import { Button, DataGridToolbar, FieldSet, FillSpace, GridCellContent, type GridColDef, TableDeleteButton } from "@comet/admin";
 import { Add, Delete, Edit, StateFilled } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
-import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import type { GridToolbarProps } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { DataGrid } from "../../../dataGrid/DataGrid";
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
@@ -169,7 +170,9 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
         },
     ];
 
-    if (error) throw new Error(error.message);
+    if (error) {
+        throw new Error(error.message);
+    }
 
     const toolbarSlotProps: ToolbarProps = {
         toolbarAction: (
@@ -200,6 +203,7 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 slotProps={{
                     toolbar: toolbarSlotProps,
                 }}
+                showToolbar
             />
             {overrideContentScopesId && (
                 <OverrideContentScopesDialog

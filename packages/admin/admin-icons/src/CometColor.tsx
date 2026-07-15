@@ -25,7 +25,7 @@ export default function Comet(props: SvgIconProps) {
             </defs>
             <g fill="none" fillRule="evenodd">
                 <mask id={uniqueIdC} fill="#fff">
-                    <use xlinkHref={`#${uniqueIdA}`} />
+                    <use href={`#${uniqueIdA}`} />
                 </mask>
                 <rect width="200" height="200" fill={`url(#${uniqueIdB})`} fillRule="nonzero" mask={`url(#${uniqueIdC})`} />
                 <path

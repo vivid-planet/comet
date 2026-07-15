@@ -3,14 +3,14 @@
 import clsx from "clsx";
 import { type ComponentType, type ReactElement, type ReactNode, useCallback, useState } from "react";
 
-import { type DamVideoBlockData } from "../blocks.generated";
+import type { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import styles from "./DamVideoBlock.module.scss";
 import { PlayPauseButton, type PlayPauseButtonProps } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
-import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
-import { type PropsWithData } from "./PropsWithData";
+import type { VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import type { PropsWithData } from "./PropsWithData";
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;
@@ -45,7 +45,25 @@ export const DamVideoBlock = withPreview(
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
         const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
-        const videoRef = setVideoElement;
+
+        const videoRef = useCallback(
+            (element: HTMLVideoElement | null) => {
+                setVideoElement(element);
+                // The user gesture from clicking the preview image's play button does not extend to the
+                // freshly-mounted <video> element, so the browser blocks autoplay for unmuted videos.
+                // Call play() explicitly during the ref-callback to keep playback in the user gesture window.
+                if (element && hasPreviewImage && !showPreviewImage && element.paused) {
+                    element.play();
+                }
+            },
+            [hasPreviewImage, showPreviewImage],
+        );
+
+        const handlePreviewPlay = () => {
+            setShowPreviewImage(false);
+            setIsPlaying(true);
+            setIsHandledManually(true);
+        };
 
         const handleInView = useCallback(
             (inView: boolean) => {
@@ -79,7 +97,7 @@ export const DamVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage({
-                        onPlay: () => setShowPreviewImage(false),
+                        onPlay: handlePreviewPlay,
                         image: previewImage,
                         aspectRatio,
                         sizes: previewImageSizes,
@@ -90,7 +108,7 @@ export const DamVideoBlock = withPreview(
                 ) : (
                     <div className={styles.root}>
                         <video
-                            autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
+                            autoPlay={autoplay}
                             controls={showControls}
                             loop={loop}
                             playsInline

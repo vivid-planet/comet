@@ -5,7 +5,7 @@ import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
 export enum ProductCategoryTypeSortField {
     title = "title",
-    id = "id"
+    id = "id",
 }
 registerEnumType(ProductCategoryTypeSortField, {
     name: "ProductCategoryTypeSortField",

@@ -5,7 +5,7 @@ import { css, useThemeProps } from "@mui/material/styles";
 import { forwardRef, type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface AlertProps
     extends ThemedComponentBaseProps<{

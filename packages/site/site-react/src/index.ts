@@ -10,6 +10,17 @@ export { OptionalBlock } from "./blocks/factories/OptionalBlock";
 export type { SupportedBlocks } from "./blocks/factories/types";
 export { type PlayPauseButtonProps } from "./blocks/helpers/PlayPauseButton";
 export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
+export {
+    hasTipTapRichTextContent,
+    renderTipTapRichText,
+    type RenderTipTapRichTextOptions,
+    type TipTapMark,
+    type TipTapMarkHandler,
+    type TipTapMarkHandlerProps,
+    type TipTapNode,
+    type TipTapNodeHandler,
+    type TipTapNodeHandlerProps,
+} from "./blocks/helpers/TipTapRichTextRenderer";
 export { useIsElementInViewport } from "./blocks/helpers/useIsElementInViewport";
 export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
 export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
@@ -56,9 +67,8 @@ export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 export { isWithPreviewPropsData, withPreview, type WithPreviewProps } from "./iframebridge/withPreview";
 export { Image } from "./image/Image";
 export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, type ImageDimensions, parseAspectRatio } from "./image/image.utils";
+export { JsonLd, type JsonLdProps } from "./jsonLd/JsonLd";
 export { createPersistedQueryGraphQLFetch } from "./persistedQueries/createPersistedQueryGraphQLFetch";
-export { persistedQueryRoute } from "./persistedQueries/persistedQueryRoute";
-export { default as webpackPersistedQueriesLoader } from "./persistedQueries/webpackPersistedQueriesLoader";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { PreviewContext } from "./preview/PreviewContext";
 export { usePreview } from "./preview/usePreview";

@@ -83,7 +83,9 @@ function Story() {
 
     const location = useLocation();
 
-    if (!tableData) return null;
+    if (!tableData) {
+        return null;
+    }
 
     return (
         <Selection>

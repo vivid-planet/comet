@@ -1,4 +1,4 @@
-import { type Breakpoint } from "@mui/material";
+import type { Breakpoint } from "@mui/material";
 
 type BreakpointKey = `'${Breakpoint}'` | number;
 
@@ -7,4 +7,5 @@ type MultiValueBrakpointTypes = "between";
 
 export type ColumnVisibleOption =
     | `${SingleValueBrakpointTypes}(${BreakpointKey})`
-    | `${MultiValueBrakpointTypes}(${BreakpointKey}, ${BreakpointKey})`;
+    | `${MultiValueBrakpointTypes}(${BreakpointKey}, ${BreakpointKey})`
+    | false;

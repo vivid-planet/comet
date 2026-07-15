@@ -14,17 +14,17 @@ import {
 import { ArrowLeft } from "@comet/admin-icons";
 import { ContentScopeIndicator, PageName, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { type GQLPredefinedPageType } from "@src/graphql.generated";
+import type { GQLPredefinedPageType } from "@src/graphql.generated";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { predefinedPageQuery, savePredefinedPageMutation } from "./EditPredefinedPage.gql";
-import {
-    type GQLPredefinedPageQuery,
-    type GQLPredefinedPageQueryVariables,
-    type GQLSavePredefinedPageMutation,
-    type GQLSavePredefinedPageMutationVariables,
+import type {
+    GQLPredefinedPageQuery,
+    GQLPredefinedPageQueryVariables,
+    GQLSavePredefinedPageMutation,
+    GQLSavePredefinedPageMutationVariables,
 } from "./EditPredefinedPage.gql.generated";
 import { predefinedPageLabels } from "./predefinedPageLabels";
 

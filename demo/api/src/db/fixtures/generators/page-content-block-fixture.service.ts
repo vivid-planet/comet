@@ -1,6 +1,6 @@
 import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
-import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
+import { faker } from "@src/db/fixtures/faker";
 import { StandaloneRichTextBlockFixtureService } from "@src/db/fixtures/generators/blocks/text-and-content/standalone-rich-text-block-fixture.service";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import { UserGroup } from "@src/user-groups/user-group";
@@ -16,6 +16,7 @@ import { FullWidthImageBlockFixtureService } from "./blocks/media/full-width-ima
 import { MediaGalleryBlockFixtureService } from "./blocks/media/media-gallery-block-fixture.service";
 import { StandaloneMediaBlockFixtureService } from "./blocks/media/standalone-media-block-fixture.service";
 import { AnchorBlockFixtureService } from "./blocks/navigation/anchor-block-fixture.service";
+import { ContactFormBlockFixtureService } from "./blocks/navigation/contact-form-block-fixture.service";
 import { LinkListBlockFixtureService } from "./blocks/navigation/link-list-block-fixture.service";
 import { PageTreeIndexBlockFixtureService } from "./blocks/navigation/page-tree-index-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./blocks/navigation/standalone-call-to-action-list-block-fixture.service";
@@ -25,9 +26,11 @@ import { TeaserBlockFixtureService } from "./blocks/teaser/teaser-block-fixture.
 import { KeyFactsBlockFixtureService } from "./blocks/text-and-content/key-facts-block-fixture.service";
 import { ProductListBlockFixtureService } from "./blocks/text-and-content/product-list-block.fixture";
 import { StandaloneHeadingBlockFixtureService } from "./blocks/text-and-content/standalone-heading-block-fixture.service";
+import { TableBlockFixtureService } from "./blocks/text-and-content/table-block-fixture.service";
 import { TextImageBlockFixtureService } from "./blocks/text-and-content/text-image-block-fixture.service";
+import { TipTapRichTextBlockFixtureService } from "./blocks/text-and-content/tip-tap-rich-text-block-fixture.service";
 
-export type BlockCategory = "layout" | "media" | "navigation" | "teaser" | "textAndContent";
+export type BlockCategory = "layout" | "media" | "navigation" | "teaser" | "textAndContent" | "form";
 
 @Injectable()
 export class PageContentBlockFixtureService {
@@ -53,6 +56,9 @@ export class PageContentBlockFixtureService {
         private readonly standaloneRichTextBlockFixtureService: StandaloneRichTextBlockFixtureService,
         private readonly productListBlockFixtureService: ProductListBlockFixtureService,
         private readonly pageTreeIndexBlockFixtureService: PageTreeIndexBlockFixtureService,
+        private readonly contactFormBlockFixtureService: ContactFormBlockFixtureService,
+        private readonly tableBlockFixtureService: TableBlockFixtureService,
+        private readonly tipTapRichTextBlockFixtureService: TipTapRichTextBlockFixtureService,
     ) {}
 
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
@@ -82,6 +88,9 @@ export class PageContentBlockFixtureService {
             richtext: ["textAndContent", this.standaloneRichTextBlockFixtureService],
             textImage: ["textAndContent", this.textImageBlockFixtureService],
             productList: ["textAndContent", this.productListBlockFixtureService],
+            contactForm: ["form", this.contactFormBlockFixtureService],
+            table: ["textAndContent", this.tableBlockFixtureService],
+            tipTapRichText: ["textAndContent", this.tipTapRichTextBlockFixtureService],
         };
 
         const supportedBlocksFixtureGenerators = Object.entries(fixtures)

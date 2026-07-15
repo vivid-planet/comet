@@ -20,6 +20,7 @@ export { createLinkBlock } from "./blocks/createLinkBlock";
 export type { RichTextBlockFactoryOptions } from "./blocks/createRichTextBlock";
 export { createRichTextBlock, isRichTextEmpty, isRichTextEqual } from "./blocks/createRichTextBlock";
 export { createSeoBlock } from "./blocks/createSeoBlock";
+export { createTableBlock, type TableBlockFactoryOptions } from "./blocks/createTableBlock";
 export type { TextImageBlockFactoryOptions } from "./blocks/createTextImageBlock";
 export { createTextImageBlock } from "./blocks/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
@@ -80,6 +81,15 @@ export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export type {
+    TipTapInlineStyle,
+    TipTapPlaceholder,
+    TipTapRichTextBlockContent,
+    TipTapTextBlockStyle,
+    TipTapTextBlockType,
+} from "./blocks/tipTap/createTipTapRichTextBlock";
+export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
+export type {
+    AnonymousBlockInterface,
     BlockAdminComponent,
     BlockAdminComponentPart,
     BlockDependency,
@@ -153,7 +163,8 @@ export {
 } from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
 export { createDependencyMethods } from "./dependencies/createDependencyMethods";
 export { createDocumentDependencyMethods } from "./dependencies/createDocumentDependencyMethods";
-export { DependencyList } from "./dependencies/DependencyList";
+export { DependenciesList, type DependenciesListProps } from "./dependencies/DependenciesList";
+export { DependentsList, type DependentsListProps } from "./dependencies/DependentsList";
 export type { DependencyInterface } from "./dependencies/types";
 export {
     type ContentGenerationConfig,
@@ -161,9 +172,14 @@ export {
     useContentGenerationConfig,
 } from "./documents/ContentGenerationConfigContext";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
-export type { DocumentInterface, DocumentType } from "./documents/types";
-export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
-export { FileField } from "./form/file/FileField";
+export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionProps } from "./documents/types";
+export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+export { SearchHeaderItem } from "./fullTextSearch/SearchHeaderItem";
+/** @deprecated Use `ChooseDamFileDialog` instead. */
+export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+export { ChooseDamFilesDialog } from "./form/file/chooseFile/ChooseDamFilesDialog";
+export { FileField, type GQLDamFileFieldFileFragment } from "./form/file/FileField";
+export { damFileFieldFragment } from "./form/file/FileField.gql";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {
     FinalFormFileUpload,
@@ -176,12 +192,12 @@ export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
 export { useFormSaveConflict } from "./form/useFormSaveConflict";
-export { createHttpClient } from "./http/createHttpClient";
 export { createEditPageNode } from "./pages/createEditPageNode";
 export { createUsePage } from "./pages/createUsePage";
 export { PagesPage } from "./pages/pagesPage/PagesPage";
 export type { AllCategories } from "./pages/pageTree/PageTreeContext";
 export { useCopyPastePages } from "./pages/pageTree/useCopyPastePages";
+export { PageTreeSelect } from "./pages/pageTreeSelect/PageTreeSelect";
 export { resolveHasSaveConflict } from "./pages/resolveHasSaveConflict";
 export { useSaveConflict } from "./pages/useSaveConflict";
 export { useSaveConflictQuery } from "./pages/useSaveConflictQuery";
@@ -197,7 +213,11 @@ export type { SiteConfig } from "./siteConfigs/siteConfigsConfig";
 export { useSiteConfig } from "./siteConfigs/useSiteConfig";
 export { useSiteConfigs } from "./siteConfigs/useSiteConfigs";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
+export { createDocumentTranslationMethods } from "./translation/createDocumentTranslationMethods";
+export type { TranslatableInterface } from "./translation/TranslatableInterface";
+export { TranslateContentMenuItem } from "./translation/TranslateContentMenuItem";
 export {
+    CurrentUserContext,
     type CurrentUserInterface,
     CurrentUserProvider,
     type Permission,
@@ -211,11 +231,10 @@ export { UserPermissionsUserPagePermissionsPanel } from "./userPermissions/user/
 export { UserPermissionsUserPageToolbar } from "./userPermissions/user/UserPageToolbar";
 export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
+export { isLinkTarget } from "./validation/isLinkTarget";
+export { validateLinkTarget } from "./validation/validateLinkTarget";
 export { LatestWarningsDashboardWidget } from "./warnings/LatestWarningsDashboardWidget";
 export { WarningsPage } from "./warnings/WarningsPage";
+import packageJson from "../package.json";
 
-// import can not be used here as this file is outside of rootDir
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const version: string = require("../package.json").version;
-
-export { version };
+export const version = packageJson.version;

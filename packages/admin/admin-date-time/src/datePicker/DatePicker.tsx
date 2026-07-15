@@ -3,7 +3,7 @@ import "react-date-range/dist/theme/default.css";
 
 import { ClearInputAdornment, type InputWithPopperProps } from "@comet/admin";
 import { Calendar as CalendarIcon } from "@comet/admin-icons";
-import { type ComponentsOverrides } from "@mui/material";
+import type { ComponentsOverrides } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
 import { type FormatDateOptions, useIntl } from "react-intl";
 
@@ -24,7 +24,7 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
 }
 
 /**
- * @deprecated `DatePicker` from `@comet/admin-date-time` will be replaced by `DatePicker` (currently `Future_DatePicker`) from `@comet/admin` in a future major release.
+ * @deprecated Use `DatePicker` from `@comet/admin` instead.
  */
 export const DatePicker = (inProps: DatePickerProps) => {
     const {
@@ -39,7 +39,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
         slotProps,
         endAdornment,
         ...inputWithPopperProps
-    } = useThemeProps({ props: inProps, name: "CometAdminDatePicker" });
+    } = useThemeProps({ props: inProps, name: "CometAdminLegacyDatePicker" });
     const intl = useIntl();
     const dateFnsLocale = useDateFnsLocale();
     const dateValue = value ? new Date(value) : undefined;
@@ -58,9 +58,9 @@ export const DatePicker = (inProps: DatePickerProps) => {
             readOnly
             required={required}
             endAdornment={
-                !required && !inputWithPopperProps.disabled ? (
+                !required && !inputWithPopperProps.disabled && value ? (
                     <>
-                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
+                        <ClearInputAdornment position="end" onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}
                     </>
                 ) : (
@@ -94,17 +94,17 @@ export const DatePicker = (inProps: DatePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminDatePicker: DatePickerClassKey;
+        CometAdminLegacyDatePicker: DatePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminDatePicker: DatePickerProps;
+        CometAdminLegacyDatePicker: DatePickerProps;
     }
 
     interface Components {
-        CometAdminDatePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDatePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDatePicker"];
+        CometAdminLegacyDatePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminLegacyDatePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminLegacyDatePicker"];
         };
     }
 }

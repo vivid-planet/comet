@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`generateGridToolbar generates empty toolbar when no features are enabled 1`] = `
+exports[`generateGridToolbar > generates empty toolbar when no features are enabled 1`] = `
 "
     function BooksGridToolbar() {
         return (
@@ -11,7 +11,7 @@ exports[`generateGridToolbar generates empty toolbar when no features are enable
     }"
 `;
 
-exports[`generateGridToolbar generates toolbar with all features enabled 1`] = `
+exports[`generateGridToolbar > generates toolbar with all features enabled 1`] = `
 "interface BooksGridToolbarToolbarProps extends GridToolbarProps {
          toolbarAction: ReactNode;
          exportApi: ExportApi;
@@ -45,35 +45,35 @@ exports[`generateGridToolbar generates toolbar with all features enabled 1`] = `
     }"
 `;
 
-exports[`generateGridToolbar generates toolbar with custom newEntryText 1`] = `
+exports[`generateGridToolbar > generates toolbar with custom newEntryText 1`] = `
 "
     function BooksGridToolbar() {
         return (
             <DataGridToolbar>
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="booksMessages.bookFragment.newEntry" defaultMessage={\`Create new book\`}  />
+        <FormattedMessage id="booksMessages.bookFragment.newEntry" defaultMessage="Create new book" />
     </Button>
             </DataGridToolbar>
         );
     }"
 `;
 
-exports[`generateGridToolbar generates toolbar with minimal features 1`] = `
+exports[`generateGridToolbar > generates toolbar with minimal features 1`] = `
 "
     function BooksGridToolbar() {
         return (
             <DataGridToolbar>
                 <FillSpace />
         <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-        <FormattedMessage id="booksMessages.bookFragment.newEntry" defaultMessage={\`New Book\`}  />
+        <FormattedMessage id="booksMessages.bookFragment.newEntry" defaultMessage="New Book" />
     </Button>
             </DataGridToolbar>
         );
     }"
 `;
 
-exports[`generateGridToolbar generates valid Toolbar props for only excelExport enabled 1`] = `
+exports[`generateGridToolbar > generates valid Toolbar props for only excelExport enabled 1`] = `
 "interface BooksGridToolbarToolbarProps extends GridToolbarProps {
          exportApi: ExportApi;
 }

@@ -1,11 +1,12 @@
-import { type IntrospectionQuery } from "graphql";
+import type { IntrospectionQuery } from "graphql";
 
-import { type FormConfig, type FormLayoutConfig, type GQLDocumentConfigMap } from "../generate-command";
+import type { FormConfig, FormLayoutConfig, GQLDocumentConfigMap } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
-import { type Imports } from "../utils/generateImportsCode";
-import { findIntrospectionFieldType } from "./formField/findIntrospectionFieldType";
+import { findIntrospectionFieldType } from "../utils/findIntrospectionFieldType";
+import type { Imports } from "../utils/generateImportsCode";
+import { generateFormattedMessage } from "../utils/intl";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
-import { type Prop } from "./generateForm";
+import type { Prop } from "./generateForm";
 
 export function generateFormLayout({
     gqlIntrospection,
@@ -40,8 +41,6 @@ export function generateFormLayout({
     const finalFormConfig = { subscription: {}, renderProps: {} };
 
     if (config.type === "fieldSet") {
-        const title = config.title ?? camelCaseToHumanReadable(config.name);
-
         const generatedFields = generateFields({
             gqlIntrospection,
             baseOutputFilename,
@@ -73,7 +72,12 @@ export function generateFormLayout({
         <FieldSet
             ${config.collapsible === undefined || config.collapsible ? `collapsible` : ``}
             ${config.initiallyExpanded != null ? `initiallyExpanded={${config.initiallyExpanded}}` : ``}
-            title={<FormattedMessage id="${formattedMessageRootId}.${config.name}.title" defaultMessage="${title}" />}
+            title={${generateFormattedMessage({
+                config: config.title,
+                id: `${formattedMessageRootId}.${config.name}.title`,
+                defaultMessage: camelCaseToHumanReadable(config.name),
+                type: "jsx",
+            })}}
             ${
                 config.supportText
                     ? `supportText={
@@ -94,10 +98,12 @@ export function generateFormLayout({
         const name = String(config.name);
 
         const introspectionFieldType = findIntrospectionFieldType({ name, gqlType, gqlIntrospection });
-        if (!introspectionFieldType) throw new Error(`field ${name} in gql introspection type ${gqlType} not found`);
-        if (introspectionFieldType.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
-
-        const checkboxLabel = config.checkboxLabel ?? `Enable ${camelCaseToHumanReadable(String(config.name))}`;
+        if (!introspectionFieldType) {
+            throw new Error(`field ${name} in gql introspection type ${gqlType} not found`);
+        }
+        if (introspectionFieldType.kind !== "OBJECT") {
+            throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
+        }
 
         const generatedFields = generateFields({
             gqlIntrospection,
@@ -142,9 +148,12 @@ export function generateFormLayout({
                     fullWidth
                     name="${String(config.name)}Enabled"
                     type="checkbox"
-                    label={<FormattedMessage id="${formattedMessageRootId}.${String(config.name)}.${String(
-                        config.name,
-                    )}Enabled" defaultMessage="${checkboxLabel}" />}
+                    label={${generateFormattedMessage({
+                        config: config.checkboxLabel,
+                        id: `${formattedMessageRootId}.${String(config.name)}.${String(config.name)}Enabled`,
+                        defaultMessage: `Enable ${camelCaseToHumanReadable(String(config.name))}`,
+                        type: "jsx",
+                    })}}
                 >
                     {(props) => (
                         <FormControlLabel

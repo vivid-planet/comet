@@ -1,9 +1,9 @@
 import { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData as cometRecursivelyLoadBlockData } from "@comet/site-nextjs";
-import { type AllBlockNames } from "@src/blocks.generated";
+import type { AllBlockNames } from "@src/blocks.generated";
 import { loader as pageTreeIndexLoader } from "@src/common/blocks/PageTreeIndexBlock.loader";
 import { loader as newsDetailLoader } from "@src/news/blocks/NewsDetailBlock.loader";
 import { loader as newsListLoader } from "@src/news/blocks/NewsListBlock.loader";
-import { type ContentScope } from "@src/site-configs";
+import type { ContentScope } from "@src/site-configs";
 
 declare module "@comet/site-nextjs" {
     export interface BlockLoaderDependencies {

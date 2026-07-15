@@ -1,5 +1,5 @@
 import { hasCrudFieldFeature, type Permission } from "@comet/cms-api";
-import { type EntityMetadata } from "@mikro-orm/postgresql";
+import type { EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 import { SyntaxKind } from "ts-morph";
 
@@ -18,11 +18,13 @@ import {
     getFieldDecoratorClassName,
     morphTsProperty,
 } from "../utils/ts-morph-helper";
-import { type GeneratedFile } from "../utils/write-generated-files";
+import type { GeneratedFile } from "../utils/write-generated-files";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);
-    if (filteredEntries.length == 0) return "";
+    if (filteredEntries.length == 0) {
+        return "";
+    }
     return `{${filteredEntries.map(([key, value]) => `${key}: ${value},`).join("\n")}}`;
 }
 
@@ -31,7 +33,9 @@ function findReferenceTargetType(
     referencedColumnName: string,
 ): "uuid" | "string" | "integer" | null {
     const referencedColumnProp = targetMeta?.props.find((p) => p.name == referencedColumnName);
-    if (!referencedColumnProp) throw new Error("referencedColumnProp not found");
+    if (!referencedColumnProp) {
+        throw new Error("referencedColumnProp not found");
+    }
     if (referencedColumnProp.type == "uuid") {
         return "uuid";
     } else if (referencedColumnProp.type == "text") {
@@ -46,7 +50,7 @@ function findReferenceTargetType(
 }
 
 export async function generateCrudInput(
-    generatorOptions: { targetDirectory: string; requiredPermission: Permission | Permission[] },
+    generatorOptions: { requiredPermission: Permission | Permission[] },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>,
     options: { nested: boolean; fileName?: string; className?: string; excludeFields: string[]; generateUpdateInput?: boolean } = {
@@ -57,7 +61,7 @@ export async function generateCrudInput(
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
 
-    const { dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
+    const { dedicatedResolverArgProps, targetDirectory } = buildOptions(metadata, generatorOptions);
 
     const props = metadata.props
         .filter((prop) => {
@@ -80,6 +84,18 @@ export async function generateCrudInput(
         { name: "PartialType", importPath: "@comet/cms-api" },
         { name: "BlockInputInterface", importPath: "@comet/cms-api" },
         { name: "isBlockInputInterface", importPath: "@comet/cms-api" },
+        { name: "IsString", importPath: "class-validator" },
+        { name: "IsNotEmpty", importPath: "class-validator" },
+        { name: "ValidateNested", importPath: "class-validator" },
+        { name: "IsNumber", importPath: "class-validator" },
+        { name: "IsBoolean", importPath: "class-validator" },
+        { name: "IsDate", importPath: "class-validator" },
+        { name: "IsDateString", importPath: "class-validator" },
+        { name: "IsOptional", importPath: "class-validator" },
+        { name: "IsEnum", importPath: "class-validator" },
+        { name: "IsUUID", importPath: "class-validator" },
+        { name: "IsArray", importPath: "class-validator" },
+        { name: "IsInt", importPath: "class-validator" },
     ];
     for (const prop of props) {
         let type = prop.type;
@@ -116,7 +132,7 @@ export async function generateCrudInput(
                 prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
+            const importPath = findEnumImportPath(enumName, `${targetDirectory}/dto`, metadata);
             imports.push({ name: enumName, importPath });
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}, ${fieldOptions})`);
@@ -129,7 +145,7 @@ export async function generateCrudInput(
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const fieldOptions = tsCodeRecordToString({ defaultValue: initializer });
             const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
+            const importPath = findEnumImportPath(enumName, `${targetDirectory}/dto`, metadata);
             imports.push({ name: enumName, importPath });
             decorators.push(`@IsEnum(${enumName}, { each: true })`);
             decorators.push(`@Field(() => [${enumName}], ${fieldOptions})`);
@@ -189,7 +205,7 @@ export async function generateCrudInput(
             type = "boolean";
         } else if (prop.type === "RootBlockType") {
             const blockName = findBlockName(prop.name, metadata);
-            const importPath = findBlockImportPath(blockName, `${generatorOptions.targetDirectory}/dto`, metadata);
+            const importPath = findBlockImportPath(blockName, `${targetDirectory}/dto`, metadata);
             imports.push({ name: blockName, importPath });
 
             decorators.push(`@Field(() => RootBlockInputScalar(${blockName})${prop.nullable ? ", { nullable: true }" : ""})`);
@@ -224,12 +240,15 @@ export async function generateCrudInput(
                 decorators.push("@IsInt()");
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
+                continue;
             }
         } else if (prop.kind == "1:m") {
             if (prop.orphanRemoval) {
                 //if orphanRemoval is enabled, we need to generate a nested input type
                 decorators.length = 0;
-                if (!prop.targetMeta) throw new Error("No targetMeta");
+                if (!prop.targetMeta) {
+                    throw new Error("No targetMeta");
+                }
                 const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
                 {
                     const excludeFields = prop.targetMeta.props.filter((p) => p.kind == "m:1" && p.targetMeta == metadata).map((p) => p.name);
@@ -247,7 +266,7 @@ export async function generateCrudInput(
                     generatedFiles.push(...nestedInputFiles);
                     imports.push({
                         name: inputNameClassName,
-                        importPath: nestedInputFiles[0].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
+                        importPath: nestedInputFiles[nestedInputFiles.length - 1].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
                     });
                 }
                 decorators.push(`@Field(() => [${inputNameClassName}], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
@@ -302,7 +321,9 @@ export async function generateCrudInput(
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }
         } else if (prop.kind == "1:1") {
-            if (!prop.targetMeta) throw new Error("No targetMeta");
+            if (!prop.targetMeta) {
+                throw new Error("No targetMeta");
+            }
             const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
             {
                 const excludeFields = prop.targetMeta.props.filter((p) => p.kind == "1:1" && p.targetMeta == metadata).map((p) => p.name);
@@ -359,7 +380,7 @@ export async function generateCrudInput(
                     decorators.push("@IsBoolean({ each: true })");
                 } else if (tsType.getArrayElementTypeOrThrow().isClass()) {
                     const nestedClassName = tsType.getArrayElementTypeOrThrow().getText(tsProp);
-                    const importPath = findInputClassImportPath(nestedClassName, `${generatorOptions.targetDirectory}/dto`, metadata);
+                    const importPath = findInputClassImportPath(nestedClassName, `${targetDirectory}/dto`, metadata);
                     imports.push({ name: nestedClassName, importPath });
                     decorators.push(`@ValidateNested()`);
                     decorators.push(`@Type(() => ${nestedClassName})`);
@@ -369,7 +390,7 @@ export async function generateCrudInput(
                     const elementTypeNode = typeNode.getElementTypeNode();
                     if (elementTypeNode.isKind(SyntaxKind.TypeReference)) {
                         // if the element type is a type reference, we need to find the import path
-                        const { importPath } = findImportPath(elementTypeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
+                        const { importPath } = findImportPath(elementTypeNode.getText(), `${targetDirectory}/dto`, metadata);
                         if (importPath) {
                             imports.push({ name: elementTypeNode.getText(), importPath });
                         }
@@ -378,7 +399,7 @@ export async function generateCrudInput(
                 }
             } else if (tsType.isClass()) {
                 const nestedClassName = tsType.getText(tsProp);
-                const importPath = findInputClassImportPath(nestedClassName, `${generatorOptions.targetDirectory}/dto`, metadata);
+                const importPath = findInputClassImportPath(nestedClassName, `${targetDirectory}/dto`, metadata);
                 imports.push({ name: nestedClassName, importPath });
                 decorators.push(`@ValidateNested()`);
                 decorators.push(`@Type(() => ${nestedClassName})`);
@@ -387,7 +408,7 @@ export async function generateCrudInput(
                 const typeNode = tsProp.getTypeNodeOrThrow();
                 if (typeNode.isKind(SyntaxKind.TypeReference)) {
                     // if the element type is a type reference, we need to find the import path
-                    const { importPath } = findImportPath(typeNode.getText(), `${generatorOptions.targetDirectory}/dto`, metadata);
+                    const { importPath } = findImportPath(typeNode.getText(), `${targetDirectory}/dto`, metadata);
                     if (importPath) {
                         imports.push({ name: typeNode.getText(), importPath });
                     }
@@ -409,7 +430,7 @@ export async function generateCrudInput(
         } else if (getFieldDecoratorClassName(prop.name, metadata)) {
             //for custom mikro-orm type
             const className = getFieldDecoratorClassName(prop.name, metadata) as string;
-            const importPath = findInputClassImportPath(className, `${generatorOptions.targetDirectory}/dto`, metadata);
+            const importPath = findInputClassImportPath(className, `${targetDirectory}/dto`, metadata);
             imports.push({ name: className, importPath });
             decorators.push(`@ValidateNested()`);
             decorators.push(`@Type(() => ${className})`);
@@ -422,7 +443,9 @@ export async function generateCrudInput(
 
         const classValidatorValidators = getMetadataStorage().getTargetValidationMetadatas(metadata.class, prop.name, false, false, undefined);
         for (const validator of classValidatorValidators) {
-            if (validator.propertyName !== prop.name) continue;
+            if (validator.propertyName !== prop.name) {
+                continue;
+            }
             const constraints = getMetadataStorage().getTargetValidatorConstraints(validator.constraintCls);
             for (const constraint of constraints) {
                 const decorator = definedDecorators.find((decorator) => {
@@ -434,7 +457,7 @@ export async function generateCrudInput(
                     );
                 });
                 if (decorator) {
-                    const importPath = findValidatorImportPath(decorator.getName(), generatorOptions, metadata);
+                    const importPath = findValidatorImportPath(decorator.getName(), targetDirectory, metadata);
                     if (importPath) {
                         imports.push({ name: decorator.getName(), importPath });
                         if (!decorators.includes(decorator.getText())) {
@@ -455,7 +478,6 @@ export async function generateCrudInput(
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsDateString, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
 import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
 
