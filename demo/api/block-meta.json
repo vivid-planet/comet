@@ -959,6 +959,15 @@
                             "nullable": true
                         },
                         {
+                            "name": "aiContentType",
+                            "kind": "Enum",
+                            "enum": [
+                                "Generated",
+                                "Modified"
+                            ],
+                            "nullable": true
+                        },
+                        {
                             "name": "archived",
                             "kind": "Boolean",
                             "nullable": false
@@ -2386,6 +2395,15 @@
                             "nullable": true
                         },
                         {
+                            "name": "aiContentType",
+                            "kind": "Enum",
+                            "enum": [
+                                "Generated",
+                                "Modified"
+                            ],
+                            "nullable": true
+                        },
+                        {
                             "name": "archived",
                             "kind": "Boolean",
                             "nullable": false
@@ -3404,6 +3422,15 @@
                         {
                             "name": "altText",
                             "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "aiContentType",
+                            "kind": "Enum",
+                            "enum": [
+                                "Generated",
+                                "Modified"
+                            ],
                             "nullable": true
                         },
                         {
