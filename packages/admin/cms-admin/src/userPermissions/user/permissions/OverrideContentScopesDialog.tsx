@@ -1,15 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import {
-    CancelButton,
-    DataGridToolbar,
-    Field,
-    FillSpace,
-    FinalForm,
-    FinalFormSwitch,
-    type GridColDef,
-    GridToolbarQuickFilter,
-    SaveButton,
-} from "@comet/admin";
+import { CancelButton, Field, FinalForm, FinalFormSwitch, SaveButton } from "@comet/admin";
 import {
     CircularProgress,
     // eslint-disable-next-line no-restricted-imports
@@ -20,9 +10,7 @@ import {
 } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import type { ContentScope } from "../../../contentScope/Provider";
-import { DataGrid } from "../../../dataGrid/DataGrid";
-import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
+import { ContentScopeDataGrid } from "./ContentScopeDataGrid";
 import {
     type GQLOverrideContentScopesMutation,
     type GQLOverrideContentScopesMutationVariables,
@@ -39,15 +27,6 @@ interface FormProps {
     permissionId: string;
     userId: string;
     handleDialogClose: () => void;
-}
-
-function OverrideContentScopesDialogGridToolbar() {
-    return (
-        <DataGridToolbar>
-            <GridToolbarQuickFilter />
-            <FillSpace />
-        </DataGridToolbar>
-    );
 }
 
 export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialogClose }: FormProps) => {
@@ -109,11 +88,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
         overrideContentScopes: data.permission.overrideContentScopes,
         contentScopes: data.permission.contentScopes.map((v) => JSON.stringify(v)),
     };
-    const disabled = data && data.permission.source === "BY_RULE";
-
-    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes, {
-        dimensions: data.availableContentScopeDimensions,
-    });
+    const disabled = data.permission.source === "BY_RULE";
 
     return (
         <Dialog maxWidth="lg" open={true}>
@@ -138,35 +113,18 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                             />
                             {values.overrideContentScopes && (
                                 <Field<string[]> name="contentScopes" fullWidth>
-                                    {(props) => {
-                                        return (
-                                            <DataGrid
-                                                autoHeight={true}
-                                                rows={(
-                                                    data.availableContentScopes.filter(
-                                                        (obj) => !Object.values(obj).every((value) => value === undefined),
-                                                    ) ?? []
-                                                ).map((obj) => obj.scope)}
-                                                columns={columns}
-                                                loading={false}
-                                                getRowHeight={() => "auto"}
-                                                getRowId={(row) => JSON.stringify(row)}
-                                                checkboxSelection={!disabled}
-                                                rowSelectionModel={{ type: "include", ids: new Set(props.input.value) }}
-                                                onRowSelectionModelChange={(selectionModel) => {
-                                                    props.input.onChange(Array.from(selectionModel.ids).map((id) => String(id)));
-                                                }}
-                                                disableRowSelectionExcludeModel
-                                                slots={{
-                                                    toolbar: OverrideContentScopesDialogGridToolbar,
-                                                }}
-                                                pagination
-                                                pageSizeOptions={[10, 25, 50]}
-                                                initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
-                                                showToolbar
-                                            />
-                                        );
-                                    }}
+                                    {(props) => (
+                                        <ContentScopeDataGrid
+                                            rows={data.availableContentScopes.map((availableContentScope) => availableContentScope.scope)}
+                                            availableContentScopes={data.availableContentScopes}
+                                            availableContentScopeDimensions={data.availableContentScopeDimensions}
+                                            selection={{
+                                                selectedRowIds: props.input.value,
+                                                onSelectedRowIdsChange: props.input.onChange,
+                                                disabled,
+                                            }}
+                                        />
+                                    )}
                                 </Field>
                             )}
                         </DialogContent>

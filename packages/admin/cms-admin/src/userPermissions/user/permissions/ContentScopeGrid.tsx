@@ -1,17 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import {
-    Button,
-    CancelButton,
-    DataGridToolbar,
-    DeleteDialog,
-    FieldSet,
-    FillSpace,
-    type GridColDef,
-    Loading,
-    messages,
-    SaveBoundary,
-    SaveBoundarySaveButton,
-} from "@comet/admin";
+import { Button, CancelButton, DeleteDialog, FieldSet, type GridColDef, Loading, messages, SaveBoundary, SaveBoundarySaveButton } from "@comet/admin";
 import { Add, Delete } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
@@ -20,15 +8,12 @@ import {
     DialogContent,
     DialogTitle,
     IconButton,
-    Typography,
 } from "@mui/material";
-import type { GridToolbarProps } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
-import { type ReactNode, useState } from "react";
+import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { DataGrid } from "../../../dataGrid/DataGrid";
-import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
+import { type ContentScope, ContentScopeDataGrid } from "./ContentScopeDataGrid";
 import type {
     GQLContentScopesQuery,
     GQLContentScopesQueryVariables,
@@ -36,30 +21,6 @@ import type {
     GQLDeleteContentScopeMutationVariables,
 } from "./ContentScopeGrid.generated";
 import { SelectScopesDialogContent } from "./selectScopesDialogContent/SelectScopesDialogContent";
-import type { GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
-
-type ContentScope = {
-    [key: string]: string;
-};
-
-/**
- * Wildcard value a content scope dimension can have when `getContentScopesForUser` grants access to any value for it.
- * Must match `UserPermissions.allValues` in `@comet/cms-api`.
- */
-const contentScopeAllValues = "*";
-
-interface ToolbarProps extends GridToolbarProps {
-    toolbarAction?: ReactNode;
-}
-
-function ContentScopeGridToolbar({ toolbarAction }: ToolbarProps) {
-    return (
-        <DataGridToolbar>
-            <FillSpace />
-            {toolbarAction}
-        </DataGridToolbar>
-    );
-}
 
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
@@ -126,12 +87,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         });
     };
 
-    const columns: GridColDef<ContentScope>[] = [
-        ...generateGridColumnsFromContentScopeProperties(data.availableContentScopes, {
-            contentScopes: data.userContentScopes as ContentScope[],
-            dimensions: data.availableContentScopeDimensions,
-            hasAllContentScopes,
-        }),
+    const additionalColumns: GridColDef<ContentScope>[] = [
         {
             field: "source",
             width: 200,
@@ -163,31 +119,19 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         },
     ];
 
-    const toolbarSlotProps: ToolbarProps = {
-        toolbarAction: (
-            <Button startIcon={<Add />} onClick={() => setOpen(true)} variant="primary">
-                <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
-            </Button>
-        ),
-    };
-
     return (
         <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })} disablePadding>
-            <DataGrid
+            <ContentScopeDataGrid
                 rows={sortedContentScopes}
-                columns={columns}
-                loading={false}
-                getRowId={(row) => JSON.stringify(row)}
-                pagination
-                pageSizeOptions={[10, 25, 50]}
-                initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
-                slots={{
-                    toolbar: ContentScopeGridToolbar,
-                }}
-                slotProps={{
-                    toolbar: toolbarSlotProps,
-                }}
-                showToolbar
+                availableContentScopes={data.availableContentScopes}
+                availableContentScopeDimensions={data.availableContentScopeDimensions}
+                hasAllContentScopes={hasAllContentScopes}
+                additionalColumns={additionalColumns}
+                toolbarAction={
+                    <Button startIcon={<Add />} onClick={() => setOpen(true)} variant="primary">
+                        <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
+                    </Button>
+                }
             />
             <SaveBoundary
                 onAfterSave={() => {
@@ -229,65 +173,3 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         </FieldSet>
     );
 };
-
-export function generateGridColumnsFromContentScopeProperties(
-    availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
-    {
-        contentScopes = [],
-        dimensions = [],
-        hasAllContentScopes = false,
-    }: {
-        contentScopes?: ContentScope[];
-        dimensions?: Array<{ name: string; label: string }>;
-        hasAllContentScopes?: boolean;
-    } = {},
-): GridColDef[] {
-    const dimensionLabelsByName = new Map(dimensions.map((dimension) => [dimension.name, dimension.label]));
-    // Declared dimensions are the primary source so that dimensions not present in any value (e.g. an optional wildcard-only
-    // dimension) still get a column; keys of the available and displayed scopes are unioned in as a fallback.
-    const uniquePropertyNames = Array.from(
-        new Set([
-            ...dimensions.map((dimension) => dimension.name),
-            ...availableContentScopes.flatMap((item) => Object.keys(item.scope)),
-            ...contentScopes.flatMap((scope) => Object.keys(scope)),
-        ]),
-    );
-    return uniquePropertyNames.map((propertyName) => {
-        return {
-            field: propertyName,
-            flex: 1,
-            pinnable: false,
-            sortable: false,
-            filterable: true,
-            headerName: dimensionLabelsByName.get(propertyName) ?? camelCaseToHumanReadable(propertyName),
-            renderCell: ({ row }: { row: ContentScope }) => {
-                const value = row[propertyName];
-                const isAllValues =
-                    value === contentScopeAllValues ||
-                    // A user with all content scopes also has all values for dimensions that are not part of the available
-                    // content scopes (e.g. an optional dimension), which are therefore not set on the scope.
-                    (value === undefined && hasAllContentScopes);
-                if (isAllValues) {
-                    return (
-                        <Typography variant="body2">
-                            <FormattedMessage id="comet.userPermissions.allContentScopeValues" defaultMessage="All" />
-                        </Typography>
-                    );
-                }
-
-                // A wildcard dimension prevents the whole scope from matching an available scope, so labels are resolved per dimension
-                const label = availableContentScopes.find((availableContentScope) => availableContentScope.scope[propertyName] === value)?.label[
-                    propertyName
-                ];
-                if (label) {
-                    return <Typography variant="body2">{label}</Typography>;
-                }
-                // A value without a label is a free value of a dimension that is not part of the available content scopes
-                if (value !== undefined) {
-                    return <Typography variant="body2">{String(value)}</Typography>;
-                }
-                return "-";
-            },
-        };
-    });
-}
