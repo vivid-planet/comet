@@ -1,17 +1,11 @@
-import type { Meta } from "@storybook/react-webpack5";
+import type { Meta } from "@storybook/react-vite";
 
 import { type Breadcrumb, Breadcrumbs } from "../Breadcrumbs";
 
 const config: Meta<typeof Breadcrumbs> = {
     component: Breadcrumbs,
     title: "components/breadcrumbs/Breadcrumbs",
-    decorators: [
-        (Story) => (
-            <div style={{ height: "400px", display: "flex", flexDirection: "column" }}>
-                <Story />
-            </div>
-        ),
-    ],
+    decorators: [(story) => <div style={{ height: "400px", display: "flex", flexDirection: "column" }}>{story()}</div>],
 };
 
 export default config;
