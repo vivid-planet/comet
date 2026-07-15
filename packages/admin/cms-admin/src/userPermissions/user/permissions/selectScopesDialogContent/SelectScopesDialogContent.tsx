@@ -37,18 +37,16 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
     const client = useApolloClient();
     const [draftScope, setDraftScope] = useState<ContentScope>({});
 
-    // Memoized so that re-renders caused by the builder inputs don't recreate the initial values and reinitialize the form
-    // (which would discard added scopes). Only the rule-based scopes are excluded; the rest are the manually assigned scopes.
-    const initialValues = useMemo<FormValues>(
-        () => ({
-            contentScopes: userContentScopes
-                .filter(
-                    (contentScope) => !userContentScopesSkipManual.some((ruleContentScope: ContentScope) => isEqual(ruleContentScope, contentScope)),
-                )
-                .map((contentScope) => JSON.stringify(contentScope)),
-        }),
+    // The dialog only collects new scopes to add; existing manually assigned scopes are kept and are shown/deleted in the grid.
+    const existingManualContentScopes = useMemo(
+        () =>
+            userContentScopes.filter(
+                (contentScope) => !userContentScopesSkipManual.some((ruleContentScope: ContentScope) => isEqual(ruleContentScope, contentScope)),
+            ),
         [userContentScopes, userContentScopesSkipManual],
     );
+    // Memoized so that re-renders caused by the builder inputs don't reinitialize the form and discard the added scopes.
+    const initialValues = useMemo<FormValues>(() => ({ contentScopes: [] }), []);
 
     const { data, error } = useQuery<GQLAvailableContentScopesQuery>(gql`
         query AvailableContentScopes {
@@ -73,7 +71,12 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
             variables: {
                 userId,
                 input: {
-                    contentScopes: values.contentScopes.map((contentScope) => JSON.parse(contentScope)),
+                    contentScopes: [
+                        ...existingManualContentScopes,
+                        ...values.contentScopes
+                            .map((contentScope) => JSON.parse(contentScope))
+                            .filter((newContentScope) => !existingManualContentScopes.some((existing) => isEqual(existing, newContentScope))),
+                    ],
                 },
             },
             refetchQueries: ["ContentScopes"],
