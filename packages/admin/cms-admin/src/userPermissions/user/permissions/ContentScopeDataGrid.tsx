@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DataGrid } from "../../../dataGrid/DataGrid";
-import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import type { GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
 
 export type ContentScope = {
@@ -66,7 +65,6 @@ export function ContentScopeDataGrid({
 }: ContentScopeDataGridProps) {
     const columns: GridColDef<ContentScope>[] = [
         ...generateGridColumnsFromContentScopeProperties(availableContentScopes, {
-            contentScopes: rows,
             dimensions: availableContentScopeDimensions,
             hasAllContentScopes,
         }),
@@ -101,33 +99,24 @@ export function ContentScopeDataGrid({
 export function generateGridColumnsFromContentScopeProperties(
     availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
     {
-        contentScopes = [],
         dimensions = [],
         hasAllContentScopes = false,
     }: {
-        contentScopes?: ContentScope[];
         dimensions?: Array<{ name: string; label: string }>;
         hasAllContentScopes?: boolean;
     } = {},
 ): GridColDef[] {
-    const dimensionLabelsByName = new Map(dimensions.map((dimension) => [dimension.name, dimension.label]));
-    // Declared dimensions are the primary source so that dimensions not present in any value (e.g. an optional wildcard-only
-    // dimension) still get a column; keys of the available and displayed scopes are unioned in as a fallback.
-    const uniquePropertyNames = Array.from(
-        new Set([
-            ...dimensions.map((dimension) => dimension.name),
-            ...availableContentScopes.flatMap((item) => Object.keys(item.scope)),
-            ...contentScopes.flatMap((scope) => Object.keys(scope)),
-        ]),
-    );
-    return uniquePropertyNames.map((propertyName) => {
+    // The declared content scope dimensions are the sole source of columns, so every user shows a consistent set of columns
+    // regardless of which values happen to be present in the scopes.
+    return dimensions.map((dimension) => {
+        const propertyName = dimension.name;
         return {
             field: propertyName,
             flex: 1,
             pinnable: false,
             sortable: false,
             filterable: true,
-            headerName: dimensionLabelsByName.get(propertyName) ?? camelCaseToHumanReadable(propertyName),
+            headerName: dimension.label,
             renderCell: ({ row }: { row: ContentScope }) => {
                 const value = row[propertyName];
                 const isAllValues =
