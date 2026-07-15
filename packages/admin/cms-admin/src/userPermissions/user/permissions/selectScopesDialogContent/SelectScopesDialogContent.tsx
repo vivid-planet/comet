@@ -1,6 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Field, FinalForm, Loading } from "@comet/admin";
-import { Box, MenuItem, TextField } from "@mui/material";
+import { Field, FinalForm, FinalFormInput, FinalFormSelect, Loading } from "@comet/admin";
 import isEqual from "lodash.isequal";
 import { type FunctionComponent, type PropsWithChildren, useMemo } from "react";
 import { useIntl } from "react-intl";
@@ -91,35 +90,39 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
 
     // Dimensions whose values are enumerable get a dropdown built from the available content scopes; the remaining declared
     // dimensions (e.g. one with too many values to enumerate) are entered as free text.
-    const enumerableValuesByDimension: Record<string, Array<{ value: string; label: string }>> = {};
+    const enumerableOptionsByDimension: Record<string, Array<{ value: string; label: string }>> = {};
     for (const availableContentScope of data.availableContentScopes) {
         for (const [dimension, value] of Object.entries(availableContentScope.scope)) {
-            const options = (enumerableValuesByDimension[dimension] ??= []);
+            const options = (enumerableOptionsByDimension[dimension] ??= []);
             if (!options.some((option) => option.value === value)) {
                 options.push({ value: String(value), label: availableContentScope.label?.[dimension] ?? String(value) });
             }
         }
     }
-    const isEnumerableDimension = (dimension: string) => enumerableValuesByDimension[dimension] !== undefined;
+    const isEnumerableDimension = (dimension: string) => enumerableOptionsByDimension[dimension] !== undefined;
     const enumerableDimensionNames = data.availableContentScopeDimensions.map((dimension) => dimension.name).filter(isEnumerableDimension);
 
-    const validate = ({ scope }: FormValues) => {
-        if (!enumerableDimensionNames.every((dimension) => scope[dimension])) {
-            return {
-                scope: intl.formatMessage({ id: "comet.userPermissions.selectAllDimensions", defaultMessage: "Select a value for each dimension." }),
-            };
+    const validate = ({ scope = {} }: FormValues) => {
+        const scopeErrors: Record<string, string> = {};
+        for (const dimension of enumerableDimensionNames) {
+            if (!scope[dimension]) {
+                scopeErrors[dimension] = intl.formatMessage({ id: "comet.userPermissions.selectValue", defaultMessage: "Select a value." });
+            }
         }
         // Only a combination of enumerable values that exists in the available content scopes can be assigned
-        const enumerablePartOfScope = Object.fromEntries(enumerableDimensionNames.map((dimension) => [dimension, scope[dimension]]));
-        if (!data.availableContentScopes.some((availableContentScope) => isEqual(availableContentScope.scope, enumerablePartOfScope))) {
-            return {
-                scope: intl.formatMessage({
+        if (Object.keys(scopeErrors).length === 0) {
+            const enumerablePartOfScope = Object.fromEntries(enumerableDimensionNames.map((dimension) => [dimension, scope[dimension]]));
+            if (!data.availableContentScopes.some((availableContentScope) => isEqual(availableContentScope.scope, enumerablePartOfScope))) {
+                const message = intl.formatMessage({
                     id: "comet.userPermissions.contentScopeDoesNotExist",
                     defaultMessage: "This combination of scopes does not exist.",
-                }),
-            };
+                });
+                for (const dimension of enumerableDimensionNames) {
+                    scopeErrors[dimension] = message;
+                }
+            }
         }
-        return {};
+        return Object.keys(scopeErrors).length > 0 ? { scope: scopeErrors } : {};
     };
 
     return (
@@ -131,43 +134,24 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
             initialValues={initialValues}
             validate={validate}
         >
-            <Field<ContentScope> name="scope" fullWidth>
-                {(props) => {
-                    const scope = props.input.value;
-                    const setDimensionValue = (dimension: string, value: string) => props.input.onChange({ ...scope, [dimension]: value });
-
+            {data.availableContentScopeDimensions.map((dimension) => {
+                if (isEnumerableDimension(dimension.name)) {
+                    const options = enumerableOptionsByDimension[dimension.name];
                     return (
-                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "flex-start" }}>
-                            {data.availableContentScopeDimensions.map((dimension) =>
-                                isEnumerableDimension(dimension.name) ? (
-                                    <TextField
-                                        key={dimension.name}
-                                        select
-                                        label={dimension.label}
-                                        value={scope[dimension.name] ?? ""}
-                                        onChange={(event) => setDimensionValue(dimension.name, event.target.value)}
-                                        sx={{ minWidth: 200 }}
-                                    >
-                                        {enumerableValuesByDimension[dimension.name].map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                ) : (
-                                    <TextField
-                                        key={dimension.name}
-                                        label={dimension.label}
-                                        value={scope[dimension.name] ?? ""}
-                                        onChange={(event) => setDimensionValue(dimension.name, event.target.value)}
-                                        sx={{ minWidth: 200 }}
-                                    />
-                                ),
-                            )}
-                        </Box>
+                        <Field
+                            key={dimension.name}
+                            name={`scope.${dimension.name}`}
+                            label={dimension.label}
+                            fullWidth
+                            required
+                            component={FinalFormSelect}
+                            options={options.map((option) => option.value)}
+                            getOptionLabel={(value: string) => options.find((option) => option.value === value)?.label ?? value}
+                        />
                     );
-                }}
-            </Field>
+                }
+                return <Field key={dimension.name} name={`scope.${dimension.name}`} label={dimension.label} fullWidth component={FinalFormInput} />;
+            })}
         </FinalForm>
     );
 };
