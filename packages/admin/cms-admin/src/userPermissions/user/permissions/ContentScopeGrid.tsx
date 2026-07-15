@@ -112,6 +112,9 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     // assigned scopes can be deleted here.
     const isRuleBasedScope = (scope: ContentScope) => data.userContentScopesSkipManual.some((ruleBasedScope) => isEqual(ruleBasedScope, scope));
 
+    // Show manually assigned scopes before rule-based ones (sort is stable, so the order within each group is preserved).
+    const sortedContentScopes = [...data.userContentScopes].sort((a, b) => Number(isRuleBasedScope(a)) - Number(isRuleBasedScope(b)));
+
     const handleDeleteScope = async (scope: ContentScope) => {
         const remainingManualContentScopes = data.userContentScopes.filter(
             (contentScope) => !isRuleBasedScope(contentScope) && !isEqual(contentScope, scope),
@@ -171,7 +174,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     return (
         <FieldSet title={intl.formatMessage({ id: "comet.userPermissions.assignedScopes", defaultMessage: "Assigned Scopes" })} disablePadding>
             <DataGrid
-                rows={data.userContentScopes}
+                rows={sortedContentScopes}
                 columns={columns}
                 loading={false}
                 getRowId={(row) => JSON.stringify(row)}
