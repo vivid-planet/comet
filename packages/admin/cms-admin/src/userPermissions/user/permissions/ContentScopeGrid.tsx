@@ -173,9 +173,10 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
             <DataGrid
                 rows={data.userContentScopes}
                 columns={columns}
-                rowCount={data?.userContentScopes.length ?? 0}
                 loading={false}
                 getRowId={(row) => JSON.stringify(row)}
+                pageSizeOptions={[10, 25, 50]}
+                initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
                 slots={{
                     toolbar: ContentScopeGridToolbar,
                 }}
