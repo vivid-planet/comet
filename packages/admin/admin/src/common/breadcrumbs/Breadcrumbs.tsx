@@ -338,11 +338,11 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                                 <Wrapper key={item.url} ownerState={{ indentation: index }} {...wrapperSlotProps}>
                                     {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
                                     {isActive ? (
-                                        <ExpandedMenuActiveItem {...slotProps?.expandedMenuActiveItem} variant="subtitle2">
+                                        <ExpandedMenuActiveItem variant="subtitle2" {...slotProps?.expandedMenuActiveItem}>
                                             {item.title}
                                         </ExpandedMenuActiveItem>
                                     ) : (
-                                        <ExpandedMenuItem {...slotProps?.expandedMenuItem} variant="body2">
+                                        <ExpandedMenuItem variant="body2" {...slotProps?.expandedMenuItem}>
                                             {item.title}
                                         </ExpandedMenuItem>
                                     )}
