@@ -38,6 +38,52 @@ export class WelcomeEmailFixtureService {
         this.logger.log("Generating welcome email...");
 
         const titleContent = richTextDraftContent([{ text: "Welcome to our newsletter", type: "title" }]);
+        const tipTapContent = {
+            type: "doc",
+            content: [
+                { type: "paragraph", attrs: { textBlockStyle: "title" }, content: [{ type: "text", text: "Now authored with TipTap" }] },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "This section is written with the new " },
+                        { type: "text", text: "TipTap", marks: [{ type: "bold" }] },
+                        { type: "text", text: " rich-text editor. Reach us by " },
+                        {
+                            type: "text",
+                            text: "phone",
+                            marks: [
+                                {
+                                    type: "link",
+                                    attrs: { data: { attachedBlocks: [{ type: "phone", props: { phone: "+431234567" } }], activeType: "phone" } },
+                                },
+                            ],
+                        },
+                        { type: "text", text: " or read the " },
+                        {
+                            type: "text",
+                            text: "FAQ",
+                            marks: [
+                                {
+                                    type: "link",
+                                    attrs: {
+                                        data: {
+                                            attachedBlocks: [
+                                                {
+                                                    type: "external",
+                                                    props: { targetUrl: "https://example.com/faq", openInNewWindow: true, noFollow: false },
+                                                },
+                                            ],
+                                            activeType: "external",
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                        { type: "text", text: "." },
+                    ],
+                },
+            ],
+        };
         const imageProps = await this.pixelImageBlockFixtureService.generateBlockInput();
         const bodyContent = richTextDraftContent([
             { text: "Hi there, and thanks for subscribing — we're glad to have you on board.", type: "copy" },
@@ -55,6 +101,8 @@ export class WelcomeEmailFixtureService {
                 { key: faker.string.uuid(), visible: true, type: "image", props: { image: imageProps, fullWidth: true } },
                 { key: faker.string.uuid(), visible: true, type: "spacer", props: { spacing: MailSpacing.small } },
                 { key: faker.string.uuid(), visible: true, type: "richText", props: { draftContent: bodyContent } },
+                { key: faker.string.uuid(), visible: true, type: "spacer", props: { spacing: MailSpacing.medium } },
+                { key: faker.string.uuid(), visible: true, type: "tipTapRichText", props: { tipTapContent } },
                 { key: faker.string.uuid(), visible: true, type: "spacer", props: { spacing: MailSpacing.large } },
                 {
                     key: faker.string.uuid(),

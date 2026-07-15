@@ -6,9 +6,11 @@ import { MailDividerBlock } from "./MailDividerBlock";
 import { MailImageBlock } from "./MailImageBlock";
 import { MailRichTextBlock } from "./MailRichTextBlock";
 import { MailSpacerBlock } from "./MailSpacerBlock";
+import { MailTipTapRichTextBlock } from "./MailTipTapRichTextBlock";
 
 const supportedBlocks: SupportedBlocks = {
     richText: (data) => <MailRichTextBlock data={data} />,
+    tipTapRichText: (data) => <MailTipTapRichTextBlock data={data} />,
     image: (data) => <MailImageBlock data={data} />,
     button: (data) => <MailButtonBlock data={data} />,
     divider: () => <MailDividerBlock />,
