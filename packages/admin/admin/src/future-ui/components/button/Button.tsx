@@ -96,13 +96,8 @@ export function Button<StartIcon extends ElementType = "span", EndIcon extends E
             {...restProps}
             type={type}
             disabled={ownerState.disabled}
-            className={clsx(
-                styles.root,
-                ownerState.variant === "primary" && styles["root--variantPrimary"],
-                ownerState.variant === "secondary" && styles["root--variantSecondary"],
-                ownerState.disabled && styles["root--disabled"],
-                className,
-            )}
+            data-variant={ownerState.variant}
+            className={clsx(styles.root, className)}
         >
             {startIcon != null && <StartIconSlot {...startIconProps}>{startIcon}</StartIconSlot>}
             {children}

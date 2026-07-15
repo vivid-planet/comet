@@ -3,13 +3,13 @@
     color: var(--comet-color-foreground-default);
     font-family: inherit;
 
-    &--variantHeadline {
+    &[data-variant="headline"] {
         font-size: var(--comet-typography-h1-size);
         font-weight: var(--comet-font-weight-semibold);
         line-height: var(--comet-typography-h1-line-height);
     }
 
-    &--variantBody {
+    &[data-variant="body"] {
         font-size: var(--comet-typography-body-md-size);
         font-weight: var(--comet-font-weight-regular);
         line-height: var(--comet-typography-body-md-line-height);
