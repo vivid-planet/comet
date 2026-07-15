@@ -1,34 +1,27 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { Button, CancelButton, DeleteDialog, FieldSet, type GridColDef, Loading, messages, SaveBoundary, SaveBoundarySaveButton } from "@comet/admin";
+import { Button, DeleteDialog, FieldSet, type GridColDef, Loading } from "@comet/admin";
 import { Add, Delete } from "@comet/admin-icons";
-import {
-    // eslint-disable-next-line no-restricted-imports
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-} from "@mui/material";
+import { IconButton } from "@mui/material";
 import isEqual from "lodash.isequal";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { AddContentScopeDialog } from "./AddContentScopeDialog";
 import { type ContentScope, ContentScopeDataGrid } from "./ContentScopeDataGrid";
 import type {
     GQLContentScopesQuery,
     GQLContentScopesQueryVariables,
-    GQLDeleteContentScopeMutation,
-    GQLDeleteContentScopeMutationVariables,
+    GQLUpdateContentScopesMutation,
+    GQLUpdateContentScopesMutationVariables,
 } from "./ContentScopeGrid.generated";
-import { SelectScopesDialogContent } from "./selectScopesDialogContent/SelectScopesDialogContent";
 
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
     const [open, setOpen] = useState(false);
     const [scopeToDelete, setScopeToDelete] = useState<ContentScope | null>(null);
 
-    const [deleteContentScope] = useMutation<GQLDeleteContentScopeMutation, GQLDeleteContentScopeMutationVariables>(gql`
-        mutation DeleteContentScope($userId: String!, $input: UserContentScopesInput!) {
+    const [updateContentScopes] = useMutation<GQLUpdateContentScopesMutation, GQLUpdateContentScopesMutationVariables>(gql`
+        mutation UpdateContentScopes($userId: String!, $input: UserContentScopesInput!) {
             userPermissionsUpdateContentScopes(userId: $userId, input: $input)
         }
     `);
@@ -76,15 +69,24 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     // Show manually assigned scopes before rule-based ones (sort is stable, so the order within each group is preserved).
     const sortedContentScopes = [...data.userContentScopes].sort((a, b) => Number(isRuleBasedScope(a)) - Number(isRuleBasedScope(b)));
 
-    const handleDeleteScope = async (scope: ContentScope) => {
-        const remainingManualContentScopes = data.userContentScopes.filter(
-            (contentScope) => !isRuleBasedScope(contentScope) && !isEqual(contentScope, scope),
-        );
-        await deleteContentScope({
-            variables: { userId, input: { contentScopes: remainingManualContentScopes } },
+    const manualContentScopes = data.userContentScopes.filter((contentScope) => !isRuleBasedScope(contentScope));
+
+    const setManualContentScopes = async (contentScopes: ContentScope[]) => {
+        await updateContentScopes({
+            variables: { userId, input: { contentScopes } },
             refetchQueries: ["ContentScopes"],
             awaitRefetchQueries: true,
         });
+    };
+
+    const handleAddScope = async (scope: ContentScope) => {
+        if (!manualContentScopes.some((contentScope) => isEqual(contentScope, scope))) {
+            await setManualContentScopes([...manualContentScopes, scope]);
+        }
+    };
+
+    const handleDeleteScope = async (scope: ContentScope) => {
+        await setManualContentScopes(manualContentScopes.filter((contentScope) => !isEqual(contentScope, scope)));
     };
 
     const additionalColumns: GridColDef<ContentScope>[] = [
@@ -133,32 +135,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     </Button>
                 }
             />
-            <SaveBoundary
-                onAfterSave={() => {
-                    setOpen(false);
-                }}
-            >
-                <Dialog open={open} maxWidth="sm" fullWidth>
-                    <DialogTitle>
-                        <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
-                    </DialogTitle>
-                    <DialogContent>
-                        <SelectScopesDialogContent
-                            userId={userId}
-                            userContentScopes={data.userContentScopes}
-                            userContentScopesSkipManual={data.userContentScopesSkipManual}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <CancelButton onClick={() => setOpen(false)}>
-                            <FormattedMessage {...messages.close} />
-                        </CancelButton>
-                        <SaveBoundarySaveButton startIcon={<Add />}>
-                            <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
-                        </SaveBoundarySaveButton>
-                    </DialogActions>
-                </Dialog>
-            </SaveBoundary>
+            <AddContentScopeDialog open={open} onClose={() => setOpen(false)} onAdd={handleAddScope} />
             <DeleteDialog
                 dialogOpen={scopeToDelete !== null}
                 deleteType="remove"
