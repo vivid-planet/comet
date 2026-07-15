@@ -247,7 +247,7 @@ export function generateGridColumnsFromContentScopeProperties(
             ...contentScopes.flatMap((scope) => Object.keys(scope)),
         ]),
     );
-    return uniquePropertyNames.map((propertyName, index) => {
+    return uniquePropertyNames.map((propertyName) => {
         return {
             field: propertyName,
             flex: 1,
@@ -264,7 +264,7 @@ export function generateGridColumnsFromContentScopeProperties(
                     (value === undefined && hasAllContentScopes);
                 if (isAllValues) {
                     return (
-                        <Typography variant={index === 0 ? "subtitle2" : "body2"}>
+                        <Typography variant="body2">
                             <FormattedMessage id="comet.userPermissions.allContentScopeValues" defaultMessage="All" />
                         </Typography>
                     );
@@ -275,11 +275,11 @@ export function generateGridColumnsFromContentScopeProperties(
                     propertyName
                 ];
                 if (label) {
-                    return <Typography variant={index === 0 ? "subtitle2" : "body2"}>{label}</Typography>;
+                    return <Typography variant="body2">{label}</Typography>;
                 }
                 // A value without a label is a free value of a dimension that is not part of the available content scopes
                 if (value !== undefined) {
-                    return <Typography variant={index === 0 ? "subtitle2" : "body2"}>{String(value)}</Typography>;
+                    return <Typography variant="body2">{String(value)}</Typography>;
                 }
                 return "-";
             },

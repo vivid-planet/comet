@@ -155,13 +155,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                         key={dimension.name}
                         name={`scope.${dimension.name}`}
                         label={dimension.label}
-                        helperText={
-                            <FormattedMessage
-                                id="comet.userPermissions.allValuesHint"
-                                defaultMessage="* for all {dimension}"
-                                values={{ dimension: dimension.label }}
-                            />
-                        }
+                        helperText={<FormattedMessage id="comet.userPermissions.allValuesHint" defaultMessage="* for All" />}
                         fullWidth
                         component={FinalFormInput}
                     />
