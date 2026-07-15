@@ -5,7 +5,7 @@ import { actionLogCompareFragment } from "../../components/actionLogCompare/Acti
 import { actionLogShowVersionFragment } from "../../components/actionLogShowVersion/ActionLogShowVersion";
 import { actionLogVersionGridFragment } from "../actionLogVersionGrid/ActionLogVersionGrid";
 
-export const actionLogDialogFragment = gql`
+const actionLogDialogFragment = gql`
     fragment ActionLogDialog on ActionLog {
         ...ActionLogVersionGrid
         ...ActionLogShowVersion
