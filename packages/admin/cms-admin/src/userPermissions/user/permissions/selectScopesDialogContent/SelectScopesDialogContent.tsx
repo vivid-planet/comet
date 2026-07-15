@@ -2,7 +2,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, FinalFormSelect, Loading } from "@comet/admin";
 import isEqual from "lodash.isequal";
 import { type FunctionComponent, type PropsWithChildren, useMemo } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import type { GQLContentScopesQuery } from "../ContentScopeGrid.generated";
 import type {
@@ -150,7 +150,22 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                         />
                     );
                 }
-                return <Field key={dimension.name} name={`scope.${dimension.name}`} label={dimension.label} fullWidth component={FinalFormInput} />;
+                return (
+                    <Field
+                        key={dimension.name}
+                        name={`scope.${dimension.name}`}
+                        label={dimension.label}
+                        helperText={
+                            <FormattedMessage
+                                id="comet.userPermissions.allValuesHint"
+                                defaultMessage="* for all {dimension}"
+                                values={{ dimension: dimension.label }}
+                            />
+                        }
+                        fullWidth
+                        component={FinalFormInput}
+                    />
+                );
             })}
         </FinalForm>
     );

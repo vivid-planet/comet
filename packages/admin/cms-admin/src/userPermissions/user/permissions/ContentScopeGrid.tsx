@@ -3,6 +3,7 @@ import {
     Button,
     CancelButton,
     DataGridToolbar,
+    DeleteDialog,
     FieldSet,
     FillSpace,
     type GridColDef,
@@ -11,7 +12,7 @@ import {
     SaveBoundary,
     SaveBoundarySaveButton,
 } from "@comet/admin";
-import { Add, Delete, Select } from "@comet/admin-icons";
+import { Add, Delete } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
@@ -63,6 +64,7 @@ function ContentScopeGridToolbar({ toolbarAction }: ToolbarProps) {
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
     const [open, setOpen] = useState(false);
+    const [scopeToDelete, setScopeToDelete] = useState<ContentScope | null>(null);
 
     const [deleteContentScope] = useMutation<GQLDeleteContentScopeMutation, GQLDeleteContentScopeMutationVariables>(gql`
         mutation DeleteContentScope($userId: String!, $input: UserContentScopesInput!) {
@@ -151,7 +153,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
             filterable: false,
             renderCell: ({ row }) =>
                 isRuleBasedScope(row) ? null : (
-                    <IconButton onClick={() => handleDeleteScope(row)}>
+                    <IconButton onClick={() => setScopeToDelete(row)}>
                         <Delete />
                     </IconButton>
                 ),
@@ -160,8 +162,8 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
 
     const toolbarSlotProps: ToolbarProps = {
         toolbarAction: (
-            <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="primary">
-                <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Assign scopes" />
+            <Button startIcon={<Add />} onClick={() => setOpen(true)} variant="primary">
+                <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
             </Button>
         ),
     };
@@ -208,6 +210,17 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     </DialogActions>
                 </Dialog>
             </SaveBoundary>
+            <DeleteDialog
+                dialogOpen={scopeToDelete !== null}
+                deleteType="remove"
+                onCancel={() => setScopeToDelete(null)}
+                onDelete={async () => {
+                    if (scopeToDelete !== null) {
+                        await handleDeleteScope(scopeToDelete);
+                    }
+                    setScopeToDelete(null);
+                }}
+            />
         </FieldSet>
     );
 };
