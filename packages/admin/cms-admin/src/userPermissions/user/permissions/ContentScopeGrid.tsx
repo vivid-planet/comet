@@ -187,9 +187,9 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     setOpen(false);
                 }}
             >
-                <Dialog open={open} maxWidth="lg">
+                <Dialog open={open} maxWidth="sm" fullWidth>
                     <DialogTitle>
-                        <FormattedMessage id="comet.userScopes.dialog.title" defaultMessage="Select scopes" />
+                        <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
                     </DialogTitle>
                     <DialogContent>
                         <SelectScopesDialogContent
