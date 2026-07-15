@@ -1,5 +1,17 @@
 # @comet/cms-api
 
+## 7.26.0
+
+### Minor Changes
+
+-   7b639b1d09: Remove special handling that excluded DAM URLs from the access log
+
+    Previously, requests to DAM routes were excluded from the access log. They are now logged like any other HTTP request.
+
+### Patch Changes
+
+-   @comet/blocks-api@7.26.0
+
 ## 7.25.15
 
 ### Patch Changes
