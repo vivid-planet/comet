@@ -1,5 +1,5 @@
-import { gql, useQuery } from "@apollo/client";
-import { Button, DataGridToolbar, FieldSet, FillSpace, GridCellContent, type GridColDef, TableDeleteButton } from "@comet/admin";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { Button, DataGridToolbar, DeleteDialog, FieldSet, FillSpace, GridCellContent, type GridColDef } from "@comet/admin";
 import { Add, Delete, Edit, StateFilled } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import type { GridToolbarProps } from "@mui/x-data-grid";
@@ -12,6 +12,8 @@ import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
 import {
+    type GQLDeletePermissionMutation,
+    type GQLDeletePermissionMutationVariables,
     type GQLPermissionForGridFragment,
     type GQLPermissionsQuery,
     type GQLPermissionsQueryVariables,
@@ -35,6 +37,13 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
     const [permissionId, setPermissionId] = useState<string | "add" | null>(null);
     const [overrideContentScopesId, setOverrideContentScopesId] = useState<string | null>(null);
+    const [permissionToDelete, setPermissionToDelete] = useState<string | null>(null);
+
+    const [deletePermission] = useMutation<GQLDeletePermissionMutation, GQLDeletePermissionMutationVariables>(gql`
+        mutation DeletePermission($id: ID!) {
+            userPermissionsDeletePermission(id: $id)
+        }
+    `);
 
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`
@@ -158,17 +167,9 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                         </IconButton>
 
                         {row.source !== "BY_RULE" && (
-                            <TableDeleteButton
-                                icon={<Delete />}
-                                mutation={gql`
-                                    mutation DeletePermission($id: ID!) {
-                                        userPermissionsDeletePermission(id: $id)
-                                    }
-                                `}
-                                selectedId={`${row.id}`}
-                                text=""
-                                refetchQueries={[namedOperations.Query.Permissions]}
-                            />
+                            <IconButton onClick={() => setPermissionToDelete(row.id)}>
+                                <Delete />
+                            </IconButton>
                         )}
                     </>
                 );
@@ -219,6 +220,21 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 />
             )}
             {permissionId && <PermissionDialog userId={userId} permissionId={permissionId} handleDialogClose={() => setPermissionId(null)} />}
+            <DeleteDialog
+                dialogOpen={permissionToDelete !== null}
+                deleteType="remove"
+                onCancel={() => setPermissionToDelete(null)}
+                onDelete={async () => {
+                    if (permissionToDelete !== null) {
+                        await deletePermission({
+                            variables: { id: permissionToDelete },
+                            refetchQueries: [namedOperations.Query.Permissions],
+                            awaitRefetchQueries: true,
+                        });
+                    }
+                    setPermissionToDelete(null);
+                }}
+            />
         </FieldSet>
     );
 };
