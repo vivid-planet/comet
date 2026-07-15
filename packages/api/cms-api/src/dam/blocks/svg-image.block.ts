@@ -2,6 +2,7 @@ import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 import { BlockData, BlockIndexData, BlockInput, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../blocks/block";
 import { AnnotationBlockMeta } from "../../blocks/decorators/field";
+import { DamFileAiContentType } from "../files/entities/ai-content-type.enum";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { SvgImageBlockTransformerService } from "./svg-image-block-transformer.service";
 
@@ -81,6 +82,12 @@ class Meta extends AnnotationBlockMeta {
                     {
                         name: "altText",
                         kind: BlockMetaFieldKind.String,
+                        nullable: true,
+                    },
+                    {
+                        name: "aiContentType",
+                        kind: BlockMetaFieldKind.Enum,
+                        enum: Object.values(DamFileAiContentType),
                         nullable: true,
                     },
                     {

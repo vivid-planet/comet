@@ -2,7 +2,7 @@ import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
-import { IconButton, InputAdornment } from "@mui/material";
+import { IconButton, InputAdornment, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useCallback } from "react";
 import { useForm } from "react-final-form";
@@ -177,6 +177,29 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                         )
                     }
                 />
+            </FormSection>
+            <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
+                <Field
+                    name="aiContentType"
+                    label={
+                        <FormattedMessage
+                            id="comet.dam.file.aiContentType"
+                            defaultMessage="Content generated or modified using artificial intelligence"
+                        />
+                    }
+                    fullWidth
+                >
+                    {(props) => (
+                        <FinalFormSelect {...props}>
+                            <MenuItem value="Generated">
+                                <FormattedMessage id="comet.dam.file.aiContentType.generated" defaultMessage="AI generated" />
+                            </MenuItem>
+                            <MenuItem value="Modified">
+                                <FormattedMessage id="comet.dam.file.aiContentType.modified" defaultMessage="AI modified" />
+                            </MenuItem>
+                        </FinalFormSelect>
+                    )}
+                </Field>
             </FormSection>
             {damConfig.enableLicenseFeature && (
                 <FormSection title={<FormattedMessage id="comet.dam.file.licenseInformation" defaultMessage="License information" />}>

@@ -1,7 +1,9 @@
 "use client";
 import {
+    AiContentDisclosure,
     calculateInheritAspectRatio,
     generateImageUrl,
+    getAiContentAltText,
     getMaxDimensionsFromArea,
     type ImageDimensions,
     parseAspectRatio,
@@ -31,6 +33,8 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
 
 export const PixelImageBlock = withPreview(
     ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
+        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, mediaType: "image", description: damFile?.altText });
+
         if (!damFile || !damFile.image) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} fill={fill} />;
         }
@@ -79,20 +83,28 @@ export const PixelImageBlock = withPreview(
                 style={{ objectFit: "cover" }}
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
-                alt={damFile.altText ?? ""}
+                alt={altText}
                 title={damFile.title ?? ""}
                 {...nextImageProps}
             />
         );
 
+        const disclosure = damFile.aiContentType ? <AiContentDisclosure type={damFile.aiContentType} /> : null;
+
         // default behavior when fill is set to true: do not wrap in container -> an own container must be used
         if (fill) {
-            return nextImage;
+            return (
+                <>
+                    {nextImage}
+                    {disclosure}
+                </>
+            );
         }
 
         return (
             <div className={styles.imageContainer} style={{ "--aspect-ratio": usedAspectRatio }}>
                 {nextImage}
+                {disclosure}
             </div>
         );
     },

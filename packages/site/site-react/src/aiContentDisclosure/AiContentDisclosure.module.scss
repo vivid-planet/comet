@@ -1,0 +1,36 @@
+.root {
+    display: inline-flex;
+    pointer-events: none;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    z-index: 1;
+}
+
+.icon {
+    display: block;
+
+    // Minimum height so the label stays clearly perceivable and readable (EU Article 50 guidance).
+    height: 24px;
+    width: auto;
+
+    // Slight backdrop so the label keeps sufficient contrast over arbitrary imagery.
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.35));
+}
+
+.iconDark {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .iconLight {
+        display: none;
+    }
+
+    .iconDark {
+        display: block;
+    }
+}

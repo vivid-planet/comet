@@ -3,6 +3,8 @@
 import clsx from "clsx";
 import { type ComponentType, type ReactElement, type ReactNode, useCallback, useState } from "react";
 
+import { AiContentDisclosure } from "../aiContentDisclosure/AiContentDisclosure";
+import { getAiContentAltText } from "../aiContentDisclosure/getAiContentAltText";
 import type { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
@@ -38,6 +40,8 @@ export const DamVideoBlock = withPreview(
         if (damFile === undefined) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
+
+        const ariaLabel = getAiContentAltText({ aiContentType: damFile?.aiContentType, mediaType: "video", description: damFile?.altText });
 
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
@@ -114,6 +118,7 @@ export const DamVideoBlock = withPreview(
                             playsInline
                             muted={autoplay}
                             ref={videoRef}
+                            aria-label={damFile.aiContentType ? ariaLabel : undefined}
                             className={clsx(styles.video, fill && styles.fill)}
                             style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", " / ") } : undefined}
                         >
@@ -133,6 +138,7 @@ export const DamVideoBlock = withPreview(
                                     ariaLabelPause={pauseButtonAriaLabel}
                                 />
                             ))}
+                        {damFile.aiContentType && <AiContentDisclosure type={damFile.aiContentType} />}
                     </div>
                 )}
             </>
