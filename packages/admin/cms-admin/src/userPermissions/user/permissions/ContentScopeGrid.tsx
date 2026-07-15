@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import {
     Button,
     CancelButton,
@@ -11,13 +11,14 @@ import {
     SaveBoundary,
     SaveBoundarySaveButton,
 } from "@comet/admin";
-import { Select } from "@comet/admin-icons";
+import { Delete, Select } from "@comet/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
+    IconButton,
     Typography,
 } from "@mui/material";
 import type { GridToolbarProps } from "@mui/x-data-grid";
@@ -27,7 +28,12 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { DataGrid } from "../../../dataGrid/DataGrid";
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-import type { GQLContentScopesQuery, GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
+import type {
+    GQLContentScopesQuery,
+    GQLContentScopesQueryVariables,
+    GQLDeleteContentScopeMutation,
+    GQLDeleteContentScopeMutationVariables,
+} from "./ContentScopeGrid.generated";
 import { SelectScopesDialogContent } from "./selectScopesDialogContent/SelectScopesDialogContent";
 import type { GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
 
@@ -57,6 +63,12 @@ function ContentScopeGridToolbar({ toolbarAction }: ToolbarProps) {
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
     const [open, setOpen] = useState(false);
+
+    const [deleteContentScope] = useMutation<GQLDeleteContentScopeMutation, GQLDeleteContentScopeMutationVariables>(gql`
+        mutation DeleteContentScope($userId: String!, $input: UserContentScopesInput!) {
+            userPermissionsUpdateContentScopes(userId: $userId, input: $input)
+        }
+    `);
 
     const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
         gql`
@@ -94,11 +106,57 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
             data.userContentScopesSkipManual.some((scope) => isEqual(scope, availableContentScope.scope)),
         );
 
-    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes, {
-        contentScopes: data.userContentScopes as ContentScope[],
-        dimensions: data.availableContentScopeDimensions,
-        hasAllContentScopes,
-    });
+    // A scope is rule-based (as opposed to manually assigned) when it is part of the scopes granted by rule. Only manually
+    // assigned scopes can be deleted here.
+    const isRuleBasedScope = (scope: ContentScope) => data.userContentScopesSkipManual.some((ruleBasedScope) => isEqual(ruleBasedScope, scope));
+
+    const handleDeleteScope = async (scope: ContentScope) => {
+        const remainingManualContentScopes = data.userContentScopes.filter(
+            (contentScope) => !isRuleBasedScope(contentScope) && !isEqual(contentScope, scope),
+        );
+        await deleteContentScope({
+            variables: { userId, input: { contentScopes: remainingManualContentScopes } },
+            refetchQueries: ["ContentScopes"],
+            awaitRefetchQueries: true,
+        });
+    };
+
+    const columns: GridColDef<ContentScope>[] = [
+        ...generateGridColumnsFromContentScopeProperties(data.availableContentScopes, {
+            contentScopes: data.userContentScopes as ContentScope[],
+            dimensions: data.availableContentScopeDimensions,
+            hasAllContentScopes,
+        }),
+        {
+            field: "source",
+            width: 200,
+            pinnable: false,
+            sortable: false,
+            filterable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.source", defaultMessage: "Assignment type" }),
+            renderCell: ({ row }) =>
+                isRuleBasedScope(row) ? (
+                    <FormattedMessage id="comet.userPermissions.assignmentType.byRule" defaultMessage="By rule" />
+                ) : (
+                    <FormattedMessage id="comet.userPermissions.assignmentType.manual" defaultMessage="Manual" />
+                ),
+        },
+        {
+            field: "actions",
+            headerName: "",
+            width: 52,
+            align: "right",
+            pinnable: false,
+            sortable: false,
+            filterable: false,
+            renderCell: ({ row }) =>
+                isRuleBasedScope(row) ? null : (
+                    <IconButton onClick={() => handleDeleteScope(row)}>
+                        <Delete />
+                    </IconButton>
+                ),
+        },
+    ];
 
     const toolbarSlotProps: ToolbarProps = {
         toolbarAction: (
