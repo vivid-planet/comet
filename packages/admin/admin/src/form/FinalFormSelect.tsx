@@ -1,12 +1,38 @@
 import { Error } from "@comet/admin-icons";
-import { InputAdornment, LinearProgress, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
-import type { ReactNode } from "react";
+import { InputAdornment, inputBaseClasses, LinearProgress, MenuItem, Select, selectClasses, type SelectProps, Typography } from "@mui/material";
+import { css, styled } from "@mui/material/styles";
+import { type ReactNode, useCallback, useRef, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import type { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
+
+// The rendered adornments (clear button, error icon) change at runtime, so the space the select's text must leave
+// for them cannot be a fixed value (the theme's default only fits the clear button). The adornment is absolutely
+// positioned by the theme; the measured distance between its left edge and the right edge of the input is reserved
+// as padding, so the text can never render underneath the adornment.
+const AdornedSelect = styled(Select, {
+    shouldForwardProp: (prop) => prop !== "endAdornmentWidth",
+})<{ endAdornmentWidth?: number }>(
+    ({ endAdornmentWidth }) => css`
+        ${endAdornmentWidth !== undefined &&
+        endAdornmentWidth > 0 &&
+        css`
+            /* Overrides the fixed "inputAdornedEnd" padding-right from the MuiSelect theme. */
+            & .${selectClasses.select}.${inputBaseClasses.inputAdornedEnd} {
+                padding-right: ${endAdornmentWidth}px;
+            }
+        `}
+    `,
+);
+
+const EndAdornmentContainer = styled(InputAdornment)(
+    ({ theme }) => css`
+        padding-left: ${theme.spacing(2)};
+    `,
+);
 
 export interface FinalFormSelectProps<T> {
     noOptionsText?: ReactNode;
@@ -76,14 +102,34 @@ export const FinalFormSelect = <T,>({
 
     const hasClearableContent = !disabled && (multiple && Array.isArray(value) ? value.length > 0 : value !== undefined && value !== "");
 
-    const endAdornment =
+    const clearAdornment =
         !required && hasClearableContent ? <ClearInputAdornment position="end" onClick={() => onChange(multiple ? [] : undefined)} /> : null;
+
+    const [endAdornmentWidth, setEndAdornmentWidth] = useState<number>();
+    const endAdornmentResizeObserver = useRef<ResizeObserver | undefined>(undefined);
+    const endAdornmentRef = useCallback((node: HTMLDivElement | null) => {
+        endAdornmentResizeObserver.current?.disconnect();
+        endAdornmentResizeObserver.current = undefined;
+
+        if (node) {
+            const measureReservedSpace = () => {
+                const inputRoot = node.closest(`.${inputBaseClasses.root}`);
+                if (inputRoot) {
+                    setEndAdornmentWidth(Math.ceil(inputRoot.getBoundingClientRect().right - node.getBoundingClientRect().left));
+                }
+            };
+            measureReservedSpace();
+            endAdornmentResizeObserver.current = new ResizeObserver(measureReservedSpace);
+            endAdornmentResizeObserver.current.observe(node);
+        } else {
+            setEndAdornmentWidth(undefined);
+        }
+    }, []);
 
     const selectProps = {
         ...rest,
         multiple,
         disabled,
-        endAdornment,
         name,
         onChange,
         onFocus,
@@ -93,9 +139,20 @@ export const FinalFormSelect = <T,>({
 
     if (children) {
         return (
-            <Select {...selectProps} value={value}>
+            <AdornedSelect
+                {...selectProps}
+                endAdornment={
+                    clearAdornment && (
+                        <EndAdornmentContainer position="end" ref={endAdornmentRef}>
+                            {clearAdornment}
+                        </EndAdornmentContainer>
+                    )
+                }
+                endAdornmentWidth={endAdornmentWidth}
+                value={value}
+            >
                 {children}
-            </Select>
+            </AdornedSelect>
         );
     }
 
@@ -106,14 +163,17 @@ export const FinalFormSelect = <T,>({
     const showNoOptions = loading === false && loadingError == null && options.length === 0;
 
     return (
-        <Select
+        <AdornedSelect
             {...selectProps}
+            endAdornmentWidth={endAdornmentWidth}
             endAdornment={
-                <InputAdornment position="end">
-                    {loadingError && <Error color="error" />}
+                (loadingError || clearAdornment) && (
+                    <EndAdornmentContainer position="end" ref={endAdornmentRef}>
+                        {loadingError && <Error color="error" />}
 
-                    {endAdornment}
-                </InputAdornment>
+                        {clearAdornment}
+                    </EndAdornmentContainer>
+                )
             }
             onChange={(event) => {
                 const value = event.target.value;
@@ -170,6 +230,6 @@ export const FinalFormSelect = <T,>({
                         {getOptionLabel(option)}
                     </MenuItem>
                 ))}
-        </Select>
+        </AdornedSelect>
     );
 };
