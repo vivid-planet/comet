@@ -15,7 +15,7 @@ A new `aiContentType` field (`Generated` | `Modified`) is available on DAM files
 
 **Admin**
 
-The DAM file form has a new "AI content" field to set the disclosure. It is shown for image and video assets only, as other file types (e.g. SVGs, documents) cannot constitute a deep fake.
+The DAM file form has a new "AI content" field to set the disclosure. It is shown for image, video and audio assets only, as other file types (e.g. SVGs, documents) cannot constitute a deep fake.
 
 **Site**
 

@@ -39,6 +39,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
     const folderId = file.folder?.id ?? null;
     const isImage = !!file.image;
     const isVideo = file.mimetype.startsWith("video/");
+    const isAudio = file.mimetype.startsWith("audio/");
     const intl = useIntl();
     const apollo = useApolloClient();
     const scope = useDamScope();
@@ -179,7 +180,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                     }
                 />
             </FormSection>
-            {(isImage || isVideo) && (
+            {(isImage || isVideo || isAudio) && (
                 <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
                     <SelectField
                         name="aiContentType"
