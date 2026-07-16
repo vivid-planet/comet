@@ -11,7 +11,7 @@ Editors can now mark a DAM asset as **AI generated** or **AI modified** in the f
 
 **API**
 
-A new `aiContentType` field (`Generated` | `Modified`) is available on DAM files and is exposed through the `PixelImage`, `SvgImage` and `DamVideo` blocks.
+A new `aiContentType` field (`Generated` | `Modified`) is available on DAM files and is exposed through the `PixelImage` and `DamVideo` blocks.
 
 **Admin**
 
@@ -19,6 +19,6 @@ The DAM file form has a new "AI content" field to set the disclosure.
 
 **Site**
 
-`@comet/site-react` exports the `AiContentDisclosure` badge component and the `getAiContentAltText` helper. The `PixelImageBlock`, `SvgImageBlock` and `DamVideoBlock` render the disclosure automatically when the asset is marked as AI content.
+`@comet/site-react` exports the `AiContentDisclosure` badge component and the `getAiContentAltText` helper. The `PixelImageBlock` and `DamVideoBlock` render the disclosure automatically when the asset is marked as AI content. SVG images are not covered, as vector graphics cannot constitute a deep fake.
 
-The badge uses the official EU AI-content labels. Each of the three blocks accepts props to customize the disclosure: `aiContentDisclosureProps` to override the badge, `hideAiContentDisclosure` to render your own, and `aiContentAltTextLabels` to localize the AI content prefix added to the accessible name (defaults to English).
+The badge uses the official EU AI-content labels. Both blocks accept props to customize the disclosure: `aiContentDisclosureProps` to override the badge, `hideAiContentDisclosure` to render your own, and `aiContentAltTextLabels` to localize the AI content prefix added to the accessible name (defaults to English).

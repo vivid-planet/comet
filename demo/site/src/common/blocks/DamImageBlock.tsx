@@ -30,7 +30,7 @@ export const DamImageBlock = withPreview(
                 />
             );
         } else if (block.type === "svgImage") {
-            return <SvgImageBlock data={block.props as SvgImageBlockData} aiContentAltTextLabels={aiContentAltTextLabels} />;
+            return <SvgImageBlock data={block.props as SvgImageBlockData} />;
         } else {
             return (
                 <>
