@@ -274,6 +274,22 @@ export class UserPermissionsService {
         return uniqWith(contentScopes, isEqual);
     }
 
+    // The available content scopes the user has access to, resolving wildcard dimensions. Used to count how many of the
+    // available content scopes a user can access (a single wildcard scope can grant access to many available content scopes).
+    async getGrantedAvailableContentScopes(user: User): Promise<ContentScope[]> {
+        const availableContentScopes = (await this.getAvailableContentScopes()).map((contentScope) => contentScope.scope);
+        const userContentScopes = await this.getContentScopes(user);
+        return availableContentScopes.filter((availableContentScope) =>
+            userContentScopes.some((userContentScope) =>
+                Object.entries(availableContentScope).every(([dimension, value]) => {
+                    const userContentScopeValue = (userContentScope as Record<string, unknown>)[dimension];
+                    // A wildcard dimension grants access to any value for it
+                    return userContentScopeValue === UserPermissions.allValues || userContentScopeValue === value;
+                }),
+            ),
+        );
+    }
+
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
         if (request?.cookies["comet-impersonate-user-id"]) {
             const permissions = await this.getPermissions(authenticatedUser);
