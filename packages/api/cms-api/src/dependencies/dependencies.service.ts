@@ -21,8 +21,11 @@ interface PGStatActivity {
     query: string;
 }
 
-// Advisory lock key for block_index_dependencies refresh deduplication.
-const BLOCK_INDEX_REFRESH_LOCK_KEY = 4201;
+// An in-progress refresh (a BlockIndexRefresh row with finishedAt = null) whose startedAt is older
+// than this is considered abandoned (e.g. the process crashed before it could finish). It no longer
+// blocks new refreshes from starting. Advisory locks used to auto-release on connection loss, so
+// this timeout replicates that crash resilience for the lock-free coordination.
+const ABANDONED_REFRESH_TIMEOUT_IN_MINUTES = 15;
 
 @Injectable()
 export class DependenciesService {
@@ -171,7 +174,13 @@ export class DependenciesService {
      * based on data staleness and options.
      *
      * @remarks
-     * This method uses PostgreSQL advisory locks to prevent duplicate concurrent refreshes.
+     * Duplicate concurrent refreshes are prevented via the `BlockIndexRefresh` tracking table
+     * instead of PostgreSQL advisory locks. Advisory locks kept an open transaction blocked on the
+     * lock for every caller, which flooded the database when `refreshViews` was called from a field
+     * resolver (e.g. the DAM "Usages" column, once per row). A caller now atomically claims the
+     * refresh with a single conditional insert and skips immediately when a refresh is already
+     * running or was completed recently — no waiting, no lock queue.
+     *
      * The refresh strategy depends on the age of the last completed refresh:
      * - Fresh (< 5 minutes): Skip refresh
      * - Moderately stale (5–15 minutes): Concurrent background refresh
@@ -188,50 +197,49 @@ export class DependenciesService {
         const knex = this.entityManager.getKnex("write");
 
         const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<void> => {
-            await knex.transaction(async (trx) => {
-                if (refreshOptions?.concurrently) {
-                    // Non-blocking lock: Try to acquire the lock. Only acquire if available.
-                    const lockResult = await trx.raw(`SELECT pg_try_advisory_xact_lock(?) AS locked`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
+            const id = uuid();
 
-                    if (!lockResult.rows[0]?.locked) {
-                        // If another refresh already holds the lock (= a refresh is already in
-                        // progress), skip this refresh entirely
-                        return;
-                    }
-                } else {
-                    // Blocking lock: Wait until the lock is available (= the currently running
-                    // refresh completes). Then acquire the lock.
-                    await trx.raw(`SELECT pg_advisory_xact_lock(?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
+            // Atomically claim the refresh: insert an in-progress row only if no refresh is currently
+            // running (a non-abandoned row with finishedAt = null) and none completed within the last
+            // 5 minutes. This single statement replaces the advisory lock and its post-lock recency
+            // recheck. If no row is inserted, another caller is already handling the refresh (or just
+            // did), so we skip without opening a blocking transaction.
+            const claim = await knex.raw(
+                `INSERT INTO "BlockIndexRefresh" ("id", "startedAt", "finishedAt")
+                    SELECT ?, ?, NULL
+                    WHERE NOT EXISTS (
+                        SELECT 1 FROM "BlockIndexRefresh" WHERE "finishedAt" IS NULL AND "startedAt" > ?
+                    )
+                    AND NOT EXISTS (
+                        SELECT 1 FROM "BlockIndexRefresh" WHERE "finishedAt" > ?
+                    )
+                    RETURNING "id"`,
+                [id, new Date(), subMinutes(new Date(), ABANDONED_REFRESH_TIMEOUT_IN_MINUTES), subMinutes(new Date(), 5)],
+            );
 
-                    // After acquiring the lock, check if the previous holder already completed a fresh
-                    // refresh. This prevents redundant work when multiple callers were blocked waiting.
-                    const recentRefresh = await trx("BlockIndexRefresh").whereNotNull("finishedAt").orderBy("finishedAt", "desc").first();
+            if (claim.rows.length === 0) {
+                // A refresh is already running or was completed recently. Skip.
+                return;
+            }
 
-                    if (recentRefresh && new Date(recentRefresh.finishedAt) > subMinutes(new Date(), 5)) {
-                        // A refresh was completed within the last 5 minutes, which is fresh enough.
-                        // Skip this refresh.
-                        return;
-                    }
-                }
+            this.logger.log(`Starting block index refresh ${id}`);
 
-                const id = uuid();
-                this.logger.log(`Starting block index refresh ${id}`);
+            try {
+                await knex.raw(`REFRESH MATERIALIZED VIEW ${refreshOptions?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+                await knex("BlockIndexRefresh").where({ id }).update({ finishedAt: new Date() });
+            } catch (error) {
+                // Remove the in-progress marker so a failed refresh doesn't block subsequent refreshes.
+                await knex("BlockIndexRefresh").where({ id }).delete();
+                throw error;
+            }
 
-                await trx("BlockIndexRefresh").insert({ id, startedAt: new Date(), finishedAt: null });
-
-                await trx.raw(`REFRESH MATERIALIZED VIEW ${refreshOptions?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
-
-                await trx("BlockIndexRefresh").where({ id }).update({ finishedAt: new Date() });
-
-                this.logger.log(`Completed block index refresh ${id}`);
-            });
+            this.logger.log(`Completed block index refresh ${id}`);
         };
 
         if (options?.force) {
             // Force refresh: cancel any currently running refresh query so we can start clean.
             // We look up active backends running the REFRESH MATERIALIZED VIEW statement and
-            // send pg_cancel_backend to each. After cancellation, we still need to acquire the
-            // advisory lock (blocking) to wait for the cancelled query to actually release it.
+            // send pg_cancel_backend to each.
             const activeRefreshes: PGStatActivity[] = await this.entityManager
                 .getKnex("read")
                 .select("pid", "state", "query")
@@ -244,14 +252,12 @@ export class DependenciesService {
                 await knex.raw(`SELECT pg_cancel_backend(?)`, [activeRefresh.pid]);
             }
 
-            // Acquire the lock (waits for cancelled queries to finish rolling back), then
-            // truncate the tracking table and perform a full non-concurrent refresh.
-            await knex.transaction(async (trx) => {
-                await trx.raw(`SELECT pg_advisory_xact_lock(?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
-                await trx("BlockIndexRefresh").truncate();
-                await trx.raw(`REFRESH MATERIALIZED VIEW block_index_dependencies`);
-                await trx("BlockIndexRefresh").insert({ id: uuid(), startedAt: new Date(), finishedAt: new Date() });
-            });
+            // Clear the tracking table (dropping any in-progress markers from the cancelled refreshes),
+            // then perform a full non-concurrent refresh. The non-concurrent REFRESH takes an ACCESS
+            // EXCLUSIVE lock on the view, so it serialises against any refresh that slipped through.
+            await knex("BlockIndexRefresh").truncate();
+            await knex.raw(`REFRESH MATERIALIZED VIEW block_index_dependencies`);
+            await knex("BlockIndexRefresh").insert({ id: uuid(), startedAt: new Date(), finishedAt: new Date() });
 
             return;
         }
