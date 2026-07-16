@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 
 import styles from "./FileList.module.scss";
 
-export type Attachment = {
+export type FileUpload = {
     key: string;
     file: File;
     status: "uploading" | "uploaded" | "error";
@@ -13,33 +13,33 @@ export type Attachment = {
 };
 
 type FileListProps = {
-    attachments: Attachment[];
+    fileUploads: FileUpload[];
     onRemove: (key: string) => void;
 };
 
-export const FileList = ({ attachments, onRemove }: FileListProps) => {
+export const FileList = ({ fileUploads, onRemove }: FileListProps) => {
     const intl = useIntl();
 
     return (
         <ul className={styles.fileList}>
-            {attachments.map((attachment) => (
-                <li key={attachment.key} className={clsx(styles.fileItem, attachment.status === "error" && styles["fileItem--error"])}>
+            {fileUploads.map((fileUpload) => (
+                <li key={fileUpload.key} className={clsx(styles.fileItem, fileUpload.status === "error" && styles["fileItem--error"])}>
                     <SvgUse
-                        href={`/assets/icons/${attachment.status === "error" ? "file-error" : "file"}.svg#root`}
+                        href={`/assets/icons/${fileUpload.status === "error" ? "file-error" : "file"}.svg#root`}
                         width={16}
                         height={16}
                         className={styles.fileIcon}
                     />
-                    <span className={styles.fileName} title={attachment.errorMessage ?? attachment.file.name}>
-                        {attachment.file.name}
+                    <span className={styles.fileName} title={fileUpload.errorMessage ?? fileUpload.file.name}>
+                        {fileUpload.file.name}
                     </span>
                     <button
                         type="button"
                         className={styles.removeButton}
-                        onClick={() => onRemove(attachment.key)}
+                        onClick={() => onRemove(fileUpload.key)}
                         aria-label={intl.formatMessage(
                             { id: "fileUploadField.removeFile", defaultMessage: "Remove {fileName}" },
-                            { fileName: attachment.file.name },
+                            { fileName: fileUpload.file.name },
                         )}
                     >
                         <SvgUse href="/assets/icons/delete.svg#root" width={16} height={16} />

@@ -12,8 +12,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { Button } from "../components/Button";
 import { CheckboxField } from "../components/form/CheckboxField";
-import type { Attachment } from "../components/form/FileList";
-import { areAttachmentsUploaded, FileUploadField, getUploadedAttachmentIds } from "../components/form/FileUploadField";
+import type { FileUpload } from "../components/form/FileList";
+import { areAllFileUploadsFinished, FileUploadField, getUploadedFileUploadIds } from "../components/form/FileUploadField";
 import { SelectField } from "../components/form/SelectField";
 import { TextareaField } from "../components/form/TextareaField";
 import { TextField } from "../components/form/TextField";
@@ -33,7 +33,7 @@ interface ContactFormValues {
     phoneNumber?: string;
     subject: string;
     message: string;
-    attachments: Attachment[];
+    attachments: FileUpload[];
     privacyConsent: boolean;
 }
 
@@ -64,7 +64,7 @@ export const ContactFormBlock = withPreview(
         });
 
         const attachments = useWatch({ control, name: "attachments" });
-        const isUploading = !areAttachmentsUploaded(attachments ?? []);
+        const isUploading = !areAllFileUploadsFinished(attachments ?? []);
 
         const onSubmit = async (formValues: ContactFormValues) => {
             let recaptchaToken: string;
@@ -101,7 +101,7 @@ export const ContactFormBlock = withPreview(
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         ...formValues,
-                        attachments: getUploadedAttachmentIds(formValues.attachments),
+                        attachments: getUploadedFileUploadIds(formValues.attachments),
                         recaptchaToken,
                     }),
                 });

@@ -7,13 +7,13 @@ import { useIntl } from "react-intl";
 
 import { ChooseFilesButton } from "./ChooseFilesButton";
 import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
-import { type Attachment, FileList } from "./FileList";
+import { FileList, type FileUpload } from "./FileList";
 import styles from "./FileUploadField.module.scss";
 
-export const getUploadedAttachmentIds = (attachments: Attachment[]): string[] =>
-    attachments.flatMap((attachment) => (attachment.status === "uploaded" && attachment.id ? [attachment.id] : []));
+export const getUploadedFileUploadIds = (fileUploads: FileUpload[]): string[] =>
+    fileUploads.flatMap((fileUpload) => (fileUpload.status === "uploaded" && fileUpload.id ? [fileUpload.id] : []));
 
-export const areAttachmentsUploaded = (attachments: Attachment[]): boolean => attachments.every((attachment) => attachment.status !== "uploading");
+export const areAllFileUploadsFinished = (fileUploads: FileUpload[]): boolean => fileUploads.every((fileUpload) => fileUpload.status !== "uploading");
 
 type FileUploadFieldProps<TFieldValues extends FieldValues> = Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
     FieldContainerFieldProps & {
@@ -51,25 +51,25 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
             ...rules,
             validate: {
                 ...(rules?.validate ? (typeof rules.validate === "function" ? { custom: rules.validate } : rules.validate) : {}),
-                allAttachmentsValid: (value) =>
-                    ((value ?? []) as Attachment[]).every((attachment) => attachment.status !== "error")
+                allFileUploadsValid: (value) =>
+                    ((value ?? []) as FileUpload[]).every((fileUpload) => fileUpload.status !== "error")
                         ? true
                         : intl.formatMessage({
-                              id: "fileUploadField.hasFailedAttachments",
-                              defaultMessage: "Please remove attachments that failed to upload.",
+                              id: "fileUploadField.hasFailedFileUploads",
+                              defaultMessage: "Please remove files that failed to upload.",
                           }),
             },
         },
     });
 
-    const attachments = (field.value ?? []) as Attachment[];
+    const fileUploads = (field.value ?? []) as FileUpload[];
 
-    // Mirror the field value so the async upload loop below can read the latest attachments across awaits.
-    const attachmentsRef = useRef(attachments);
-    attachmentsRef.current = attachments;
+    // Mirror the field value so the async upload loop below can read the latest file uploads across awaits.
+    const fileUploadsRef = useRef(fileUploads);
+    fileUploadsRef.current = fileUploads;
 
-    const patchAttachment = (attachmentKey: string, patch: Partial<Attachment>) => {
-        field.onChange(attachmentsRef.current.map((attachment) => (attachment.key === attachmentKey ? { ...attachment, ...patch } : attachment)));
+    const patchFileUpload = (fileUploadKey: string, patch: Partial<FileUpload>) => {
+        field.onChange(fileUploadsRef.current.map((fileUpload) => (fileUpload.key === fileUploadKey ? { ...fileUpload, ...patch } : fileUpload)));
     };
 
     const uploadFile = async (file: File): Promise<{ id: string }> => {
@@ -98,7 +98,7 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
         const selected = event.target.files ? Array.from(event.target.files) : [];
         event.target.value = "";
 
-        const added: Attachment[] = selected.map((file) => {
+        const added: FileUpload[] = selected.map((file) => {
             const validationError = validateFile?.(file);
             return {
                 key: crypto.randomUUID(),
@@ -108,16 +108,16 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
             };
         });
 
-        field.onChange(multiple ? [...attachments, ...added] : added);
+        field.onChange(multiple ? [...fileUploads, ...added] : added);
 
-        const toUpload = added.filter((attachment) => attachment.status === "uploading");
-        for (const attachment of toUpload) {
+        const toUpload = added.filter((fileUpload) => fileUpload.status === "uploading");
+        for (const fileUpload of toUpload) {
             try {
-                const { id: uploadedId } = await uploadFile(attachment.file);
-                patchAttachment(attachment.key, { status: "uploaded", id: uploadedId });
+                const { id: uploadedId } = await uploadFile(fileUpload.file);
+                patchFileUpload(fileUpload.key, { status: "uploaded", id: uploadedId });
             } catch (error) {
                 console.error(error);
-                patchAttachment(attachment.key, {
+                patchFileUpload(fileUpload.key, {
                     status: "error",
                     errorMessage: intl.formatMessage({
                         id: "fileUploadField.uploadFailed",
@@ -128,12 +128,12 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
         }
     };
 
-    const handleRemove = (attachmentKey: string) => {
-        field.onChange(attachments.filter((attachment) => attachment.key !== attachmentKey));
+    const handleRemove = (fileUploadKey: string) => {
+        field.onChange(fileUploads.filter((fileUpload) => fileUpload.key !== fileUploadKey));
     };
 
-    const erroredAttachment = attachments.find((attachment) => attachment.status === "error");
-    const errorText = fieldState.error?.message ?? erroredAttachment?.errorMessage;
+    const erroredFileUpload = fileUploads.find((fileUpload) => fileUpload.status === "error");
+    const errorText = fieldState.error?.message ?? erroredFileUpload?.errorMessage;
     const hasError = Boolean(errorText);
 
     return (
@@ -155,7 +155,7 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
                     className={styles.hiddenInput}
                 />
                 <ChooseFilesButton label={buttonLabel} onClick={() => inputRef.current?.click()} />
-                {attachments.length > 0 && <FileList attachments={attachments} onRemove={handleRemove} />}
+                {fileUploads.length > 0 && <FileList fileUploads={fileUploads} onRemove={handleRemove} />}
             </div>
         </FieldContainer>
     );
