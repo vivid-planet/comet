@@ -53,9 +53,9 @@ export const Default: Story = {
                 { timeout: 5000 },
             );
 
-            // Heading select shows "Default"
+            // Block type select shows "Paragraph"
             expect(canvas.getByRole("combobox")).toBeInTheDocument();
-            expect(canvas.getByText("Default")).toBeInTheDocument();
+            expect(canvas.getByText("Paragraph")).toBeInTheDocument();
 
             // Toolbar has buttons (undo, redo, bold, italic, strike, more, ol, ul, indent, dedent, nbsp, shy)
             const buttons = canvas.getAllByRole("button");
@@ -141,7 +141,7 @@ export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
     render: () => <TextBlockStylesStory />,
     play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready with text block style dropdown", async () => {
-            // Both heading select and text block style select show "Default"
+            // Block type select shows "Paragraph", text block style select shows "Default"
             await waitFor(
                 () => {
                     const comboboxes = canvas.getAllByRole("combobox");
@@ -150,8 +150,9 @@ export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
                 { timeout: 5000 },
             );
 
-            const defaults = canvas.getAllByText("Default");
-            expect(defaults.length).toBeGreaterThanOrEqual(2);
+            const comboboxes = canvas.getAllByRole("combobox");
+            expect(comboboxes[0]).toHaveTextContent("Paragraph");
+            expect(comboboxes[1]).toHaveTextContent("Default");
         });
 
         await step("Select text block style 'Intro Text'", async () => {
