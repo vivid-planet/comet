@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { ButtonBase, type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
 import { alpha, css, type Theme, useThemeProps } from "@mui/material/styles";
-import { Fragment, type MouseEvent, type ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -11,7 +11,6 @@ type BreadcrumbsClassKey =
     | "item"
     | "activeItem"
     | "separator"
-    | "ellipsisButton"
     | "ellipsis"
     | "menuContainer"
     | "toolbarContainer"
@@ -21,7 +20,8 @@ type BreadcrumbsClassKey =
     | "expandedMenuActiveItemWrapper"
     | "pageTreeVerticalLine"
     | "expandedMenuSubitemWrapper"
-    | "mobileMenuIcon";
+    | "mobileMenuIcon"
+    | "mobileRootButton";
 
 export interface Breadcrumb {
     url: string;
@@ -34,7 +34,6 @@ interface BreadcrumbsProps
         item: typeof Typography;
         activeItem: typeof Typography;
         separator: "div";
-        ellipsisButton: typeof ButtonBase;
         ellipsis: typeof Typography;
         menuContainer: "div";
         toolbarContainer: "div";
@@ -45,6 +44,7 @@ interface BreadcrumbsProps
         pageTreeVerticalLine: "div";
         expandedMenuSubitemWrapper: "div";
         mobileMenuIcon: "div";
+        mobileRootButton: typeof ButtonBase;
     }> {
     items: Breadcrumb[];
     iconMapping?: { separator?: ReactNode; openMenu?: ReactNode; closeMenu?: ReactNode };
@@ -131,13 +131,6 @@ const Separator = createComponentSlot("div")<BreadcrumbsClassKey>({
     margin: 0 5px;
     display: flex;
     align-items: flex-end;
-`);
-
-const EllipsisButton = createComponentSlot(ButtonBase)<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "ellipsisButton",
-})(css`
-    cursor: pointer;
 `);
 
 const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
@@ -267,6 +260,15 @@ const MobileMenuIcon = createComponentSlot("div")<BreadcrumbsClassKey>({
     align-items: center;
 `);
 
+const MobileRootButton = createComponentSlot(ButtonBase)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "mobileRootButton",
+})(css`
+    display: block;
+    width: 100%;
+    text-align: left;
+`);
+
 const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "pageTreeVerticalLine",
@@ -296,13 +298,8 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
         setIsMenuOpen((prev) => !prev);
     };
 
-    const handleButtonToggle = (event: MouseEvent) => {
-        event.stopPropagation();
-        toggleMenu();
-    };
-
-    return (
-        <Root onClick={isMobile ? toggleMenu : undefined} {...slotProps?.root} {...restProps}>
+    const coreNode = (
+        <Root {...slotProps?.root} {...restProps}>
             <ToolbarContainer {...slotProps?.toolbarContainer}>
                 {items.map((item, index) => {
                     const isCurrentPage = index === items.length - 1;
@@ -313,9 +310,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                             <Fragment key={item.url}>
                                 {hasMultipleItems && isMobile && (
                                     <>
-                                        <EllipsisButton onClick={handleButtonToggle} {...slotProps?.ellipsisButton}>
-                                            <Ellipsis {...slotProps?.ellipsis}>{ellipsis}</Ellipsis>
-                                        </EllipsisButton>
+                                        <Ellipsis {...slotProps?.ellipsis}>{ellipsis}</Ellipsis>
                                         <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
                                     </>
                                 )}
@@ -324,6 +319,10 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                                 </ActiveItem>
                             </Fragment>
                         );
+                    }
+
+                    if (isMobile) {
+                        return null;
                     }
 
                     return (
@@ -364,6 +363,16 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
             {isMobile && <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{isMenuOpen ? closeMenuIcon : openMenuIcon}</MobileMenuIcon>}
         </Root>
     );
+
+    if (isMobile) {
+        return (
+            <MobileRootButton onClick={toggleMenu} {...slotProps?.mobileRootButton}>
+                {coreNode}
+            </MobileRootButton>
+        );
+    }
+
+    return coreNode;
 };
 
 declare module "@mui/material/styles" {
