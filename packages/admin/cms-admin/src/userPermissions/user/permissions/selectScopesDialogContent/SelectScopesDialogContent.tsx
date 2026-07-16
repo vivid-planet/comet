@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, FinalFormSelect, Loading } from "@comet/admin";
+import type { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { type FunctionComponent, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -52,19 +53,58 @@ export const SelectScopesDialogContent: FunctionComponent<SelectScopesDialogCont
         return <Loading />;
     }
 
-    // Dimensions whose values are enumerable get a dropdown built from the available content scopes; the remaining declared
-    // dimensions (e.g. one with too many values to enumerate) are entered as free text.
-    const enumerableOptionsByDimension: Record<string, Array<{ value: string; label: string }>> = {};
-    for (const availableContentScope of data.availableContentScopes) {
-        for (const [dimension, value] of Object.entries(availableContentScope.scope)) {
-            const options = (enumerableOptionsByDimension[dimension] ??= []);
-            if (!options.some((option) => option.value === value)) {
+    // A dimension is enumerable when it appears in the available content scopes; its values then come from there. The remaining
+    // declared dimensions (e.g. one with too many values to enumerate) are entered as free text.
+    const enumerableDimensionNames = Array.from(new Set(data.availableContentScopes.flatMap((contentScope) => Object.keys(contentScope.scope))));
+    const isEnumerableDimension = (dimension: string) => enumerableDimensionNames.includes(dimension);
+
+    const availableContentScopeMatchesSelection = (availableContentScope: ContentScope, selection: ContentScope) =>
+        Object.entries(selection).every(([dimension, value]) => availableContentScope[dimension] === value);
+
+    // The selectable values of a dimension depend on the values already selected for the other enumerable dimensions, so that
+    // only combinations that exist in the available content scopes can be built.
+    const optionsForDimension = (dimension: string, scope: ContentScope): Array<{ value: string; label: string }> => {
+        const otherSelection = Object.fromEntries(
+            enumerableDimensionNames
+                .filter((otherDimension) => otherDimension !== dimension && scope[otherDimension])
+                .map((otherDimension) => [otherDimension, scope[otherDimension]]),
+        );
+        const options: Array<{ value: string; label: string }> = [];
+        for (const availableContentScope of data.availableContentScopes) {
+            if (!availableContentScopeMatchesSelection(availableContentScope.scope, otherSelection)) {
+                continue;
+            }
+            const value = availableContentScope.scope[dimension];
+            if (value != null && !options.some((option) => option.value === String(value))) {
                 options.push({ value: String(value), label: availableContentScope.label?.[dimension] ?? String(value) });
             }
         }
-    }
-    const isEnumerableDimension = (dimension: string) => enumerableOptionsByDimension[dimension] !== undefined;
-    const enumerableDimensionNames = data.availableContentScopeDimensions.map((dimension) => dimension.name).filter(isEnumerableDimension);
+        return options;
+    };
+
+    // Changing a dimension keeps the other selections only while they still form a valid combination; the rest is cleared.
+    const changeEnumerableValue = (form: FormApi<FormValues>, scope: ContentScope, dimension: string, value: string) => {
+        const enumerableSelection: ContentScope = { [dimension]: value };
+        for (const otherDimension of enumerableDimensionNames) {
+            if (otherDimension === dimension || !scope[otherDimension]) {
+                continue;
+            }
+            const candidate = { ...enumerableSelection, [otherDimension]: scope[otherDimension] };
+            if (
+                data.availableContentScopes.some((availableContentScope) =>
+                    availableContentScopeMatchesSelection(availableContentScope.scope, candidate),
+                )
+            ) {
+                enumerableSelection[otherDimension] = scope[otherDimension];
+            }
+        }
+        const freeSelection = Object.fromEntries(
+            data.availableContentScopeDimensions
+                .filter((declaredDimension) => !isEnumerableDimension(declaredDimension.name) && scope[declaredDimension.name])
+                .map((declaredDimension) => [declaredDimension.name, scope[declaredDimension.name]]),
+        );
+        form.change("scope", { ...freeSelection, ...enumerableSelection });
+    };
 
     const validate = ({ scope = {} }: FormValues) => {
         const scopeErrors: Record<string, string> = {};
@@ -98,33 +138,44 @@ export const SelectScopesDialogContent: FunctionComponent<SelectScopesDialogCont
             initialValues={initialValues}
             validate={validate}
         >
-            {data.availableContentScopeDimensions.map((dimension) => {
-                if (isEnumerableDimension(dimension.name)) {
-                    const options = enumerableOptionsByDimension[dimension.name];
-                    return (
-                        <Field
-                            key={dimension.name}
-                            name={`scope.${dimension.name}`}
-                            label={dimension.label}
-                            fullWidth
-                            required
-                            component={FinalFormSelect}
-                            options={options.map((option) => option.value)}
-                            getOptionLabel={(value: string) => options.find((option) => option.value === value)?.label ?? value}
-                        />
-                    );
-                }
+            {({ values, form }: { values: FormValues; form: FormApi<FormValues> }) => {
+                const scope = values.scope ?? {};
                 return (
-                    <Field
-                        key={dimension.name}
-                        name={`scope.${dimension.name}`}
-                        label={dimension.label}
-                        helperText={<FormattedMessage id="comet.userPermissions.allValuesHint" defaultMessage="* for All" />}
-                        fullWidth
-                        component={FinalFormInput}
-                    />
+                    <>
+                        {data.availableContentScopeDimensions.map((dimension) => {
+                            if (isEnumerableDimension(dimension.name)) {
+                                const options = optionsForDimension(dimension.name, scope);
+                                return (
+                                    <Field<string> key={dimension.name} name={`scope.${dimension.name}`} label={dimension.label} fullWidth required>
+                                        {({ input, meta }) => (
+                                            <FinalFormSelect
+                                                input={{
+                                                    ...input,
+                                                    onChange: (value: string) => changeEnumerableValue(form, scope, dimension.name, value),
+                                                }}
+                                                meta={meta}
+                                                fullWidth
+                                                options={options.map((option) => option.value)}
+                                                getOptionLabel={(value: string) => options.find((option) => option.value === value)?.label ?? value}
+                                            />
+                                        )}
+                                    </Field>
+                                );
+                            }
+                            return (
+                                <Field
+                                    key={dimension.name}
+                                    name={`scope.${dimension.name}`}
+                                    label={dimension.label}
+                                    helperText={<FormattedMessage id="comet.userPermissions.allValuesHint" defaultMessage="* for All" />}
+                                    fullWidth
+                                    component={FinalFormInput}
+                                />
+                            );
+                        })}
+                    </>
                 );
-            })}
+            }}
         </FinalForm>
     );
 };
