@@ -24,8 +24,13 @@ interface PGStatActivity {
 // An in-progress refresh (a BlockIndexRefresh row with finishedAt = null) whose startedAt is older
 // than this is considered abandoned (e.g. the process crashed before it could finish). It no longer
 // blocks new refreshes from starting. Advisory locks used to auto-release on connection loss, so
-// this timeout replicates that crash resilience for the lock-free coordination.
+// this timeout replicates that crash resilience for the lock-free coordination. It also bounds how
+// long a caller waits for another caller's in-progress refresh (see refreshViews).
 const ABANDONED_REFRESH_TIMEOUT_IN_MINUTES = 15;
+
+// How often a caller polls the BlockIndexRefresh tracking table while waiting for another caller's
+// in-progress refresh to finish. Between polls no database connection is held.
+const REFRESH_POLL_INTERVAL_IN_MS = 500;
 
 @Injectable()
 export class DependenciesService {
@@ -178,14 +183,18 @@ export class DependenciesService {
      * instead of PostgreSQL advisory locks. Advisory locks kept an open transaction blocked on the
      * lock for every caller, which flooded the database when `refreshViews` was called from a field
      * resolver (e.g. the DAM "Usages" column, once per row). A caller now atomically claims the
-     * refresh with a single conditional insert and skips immediately when a refresh is already
-     * running or was completed recently — no waiting, no lock queue.
+     * refresh with a single conditional insert instead of holding a lock queue.
      *
      * The refresh strategy depends on the age of the last completed refresh:
      * - Fresh (< 5 minutes): Skip refresh
-     * - Moderately stale (5–15 minutes): Concurrent background refresh
-     * - Very stale (> 15 minutes): Synchronous refresh (caller waits)
-     * - No prior refresh: Synchronous refresh (initialization)
+     * - Moderately stale (5–15 minutes): Concurrent background refresh (caller does not wait)
+     * - Very stale (> 15 minutes): Synchronous refresh (caller waits for fresh data)
+     * - No prior refresh: Synchronous refresh (initialization, caller waits)
+     *
+     * For the synchronous strategies, if another caller is already refreshing, this caller does not
+     * start a duplicate. Instead it polls the tracking table until that refresh finishes and then
+     * returns, so it still observes fresh data. Polling holds no database connection between polls,
+     * unlike the previous advisory-lock wait. The concurrent (background) strategy never waits.
      *
      * @param options - Configuration options for the refresh operation
      * @param options.force - If true, cancels any running refresh and performs a full synchronous refresh
@@ -196,14 +205,13 @@ export class DependenciesService {
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
         const knex = this.entityManager.getKnex("write");
 
-        const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<void> => {
+        // Atomically claim the refresh: insert an in-progress row only if no refresh is currently
+        // running (a non-abandoned row with finishedAt = null) and none completed within the last
+        // 5 minutes. This single statement replaces the advisory lock and its post-lock recency
+        // recheck. Returns the new row's id if this caller claimed the refresh, otherwise null
+        // (another caller is already handling it, or one just completed).
+        const tryClaimRefresh = async (): Promise<string | null> => {
             const id = uuid();
-
-            // Atomically claim the refresh: insert an in-progress row only if no refresh is currently
-            // running (a non-abandoned row with finishedAt = null) and none completed within the last
-            // 5 minutes. This single statement replaces the advisory lock and its post-lock recency
-            // recheck. If no row is inserted, another caller is already handling the refresh (or just
-            // did), so we skip without opening a blocking transaction.
             const claim = await knex.raw(
                 `INSERT INTO "BlockIndexRefresh" ("id", "startedAt", "finishedAt")
                     SELECT ?, ?, NULL
@@ -216,24 +224,67 @@ export class DependenciesService {
                     RETURNING "id"`,
                 [id, new Date(), subMinutes(new Date(), ABANDONED_REFRESH_TIMEOUT_IN_MINUTES), subMinutes(new Date(), 5)],
             );
+            return claim.rows.length > 0 ? id : null;
+        };
 
-            if (claim.rows.length === 0) {
-                // A refresh is already running or was completed recently. Skip.
-                return;
-            }
+        // The in-progress refresh (a non-abandoned row with finishedAt = null), or undefined if none.
+        const getRunningRefresh = async () =>
+            knex("BlockIndexRefresh")
+                .whereNull("finishedAt")
+                .where("startedAt", ">", subMinutes(new Date(), ABANDONED_REFRESH_TIMEOUT_IN_MINUTES))
+                .first();
 
+        const runRefresh = async (id: string, concurrently: boolean): Promise<void> => {
             this.logger.log(`Starting block index refresh ${id}`);
-
             try {
-                await knex.raw(`REFRESH MATERIALIZED VIEW ${refreshOptions?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+                await knex.raw(`REFRESH MATERIALIZED VIEW ${concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
                 await knex("BlockIndexRefresh").where({ id }).update({ finishedAt: new Date() });
             } catch (error) {
                 // Remove the in-progress marker so a failed refresh doesn't block subsequent refreshes.
                 await knex("BlockIndexRefresh").where({ id }).delete();
                 throw error;
             }
-
             this.logger.log(`Completed block index refresh ${id}`);
+        };
+
+        // Poll the tracking table until the in-progress refresh finishes (or is abandoned).
+        // Returns true if a refresh was running and we waited for it, false if none was running.
+        // Bounded by ABANDONED_REFRESH_TIMEOUT_IN_MINUTES: once the running refresh's startedAt
+        // crosses that age, getRunningRefresh no longer sees it and the loop ends.
+        const waitForRunningRefresh = async (): Promise<boolean> => {
+            let running = await getRunningRefresh();
+            const didWait = Boolean(running);
+            while (running) {
+                await new Promise((resolve) => setTimeout(resolve, REFRESH_POLL_INTERVAL_IN_MS));
+                running = await getRunningRefresh();
+            }
+            return didWait;
+        };
+
+        const refresh = async (refreshOptions?: { concurrently?: boolean; waitForRunningRefresh?: boolean }): Promise<void> => {
+            while (true) {
+                const claimedId = await tryClaimRefresh();
+                if (claimedId) {
+                    await runRefresh(claimedId, refreshOptions?.concurrently ?? false);
+                    return;
+                }
+
+                if (!refreshOptions?.waitForRunningRefresh) {
+                    // Background/skip mode: another refresh is running or one completed recently.
+                    // Don't block the caller.
+                    return;
+                }
+
+                // Synchronous mode: the caller needs fresh data. If a refresh is running, wait for it
+                // to finish, then re-evaluate. If nothing is running, the claim failed because a recent
+                // refresh already made the data fresh, so we're done.
+                const didWait = await waitForRunningRefresh();
+                if (!didWait) {
+                    return;
+                }
+                // The refresh we waited for either produced fresh data (next claim skips on recency
+                // and returns) or failed and left no fresh row (next claim succeeds and we refresh).
+            }
         };
 
         if (options?.force) {
@@ -273,7 +324,7 @@ export class DependenciesService {
 
         if (!lastRefresh) {
             // No prior refresh exists — first-time initialization, must refresh synchronously
-            await refresh();
+            await refresh({ waitForRunningRefresh: true });
             return;
         }
 
@@ -291,8 +342,10 @@ export class DependenciesService {
                 await refreshPromise;
             }
         } else {
-            // Very stale (> 15 minutes) — refresh synchronously, caller waits for fresh data
-            await refresh();
+            // Very stale (> 15 minutes) — refresh synchronously, caller waits for fresh data.
+            // If another caller is already refreshing, wait for that refresh instead of starting
+            // a duplicate, then return once it has completed.
+            await refresh({ waitForRunningRefresh: true });
         }
     }
 
