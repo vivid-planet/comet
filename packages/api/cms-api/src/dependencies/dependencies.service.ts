@@ -275,12 +275,12 @@ export class DependenciesService {
 
         // Moderately stale (5–15 min): background concurrent refresh, caller doesn't wait.
         // Very stale (> 15 min) or uninitialized: synchronous refresh, caller waits for fresh data.
-        const concurrently = lastRefresh != null && new Date(lastRefresh.finishedAt) > subMinutes(now, 15);
+        const runRefreshInBackground = lastRefresh != null && new Date(lastRefresh.finishedAt) > subMinutes(now, 15);
 
         // Deduplicate parallel refreshes within this instance (e.g. one per DAM "Usages" row): share a
         // single in-flight refresh so they don't each open a transaction and pile up on the advisory lock.
         if (!this.runningRefresh) {
-            const runningRefresh = refresh({ concurrently }).finally(() => {
+            const runningRefresh = refresh({ concurrently: runRefreshInBackground }).finally(() => {
                 this.runningRefresh = undefined;
             });
             this.runningRefresh = runningRefresh;
@@ -290,7 +290,7 @@ export class DependenciesService {
             });
         }
 
-        if (!concurrently || options?.awaitRefresh) {
+        if (!runRefreshInBackground || options?.awaitRefresh) {
             // Wait when synchronous (very stale/uninitialized) or when explicitly requested (CLI awaitRefresh).
             await this.runningRefresh;
         }
