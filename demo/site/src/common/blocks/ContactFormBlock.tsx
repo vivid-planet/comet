@@ -13,7 +13,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { Button } from "../components/Button";
 import { CheckboxField } from "../components/form/CheckboxField";
 import type { Attachment } from "../components/form/FileList";
-import { areAttachmentsSettled, FileUploadField, getUploadedAttachmentIds } from "../components/form/FileUploadField";
+import { areAttachmentsUploaded, FileUploadField, getUploadedAttachmentIds } from "../components/form/FileUploadField";
 import { SelectField } from "../components/form/SelectField";
 import { TextareaField } from "../components/form/TextareaField";
 import { TextField } from "../components/form/TextField";
@@ -64,7 +64,7 @@ export const ContactFormBlock = withPreview(
         });
 
         const attachments = useWatch({ control, name: "attachments" });
-        const isUploading = !areAttachmentsSettled(attachments ?? []);
+        const isUploading = !areAttachmentsUploaded(attachments ?? []);
 
         const onSubmit = async (formValues: ContactFormValues) => {
             let recaptchaToken: string;
