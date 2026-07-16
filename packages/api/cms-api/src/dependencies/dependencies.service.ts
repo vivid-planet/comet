@@ -28,6 +28,7 @@ const BLOCK_INDEX_REFRESH_LOCK_KEY = 4201;
 export class DependenciesService {
     private connection: Connection;
     private readonly logger = new Logger(DependenciesService.name);
+    private runningRefresh?: Promise<void>;
 
     constructor(
         private readonly discoverService: DiscoverService,
@@ -265,28 +266,37 @@ export class DependenciesService {
             .orderBy("finishedAt", "desc")
             .first();
 
-        if (!lastRefresh) {
-            // No prior refresh exists — first-time initialization, must refresh synchronously
-            await refresh();
+        const now = new Date();
+
+        if (lastRefresh && new Date(lastRefresh.finishedAt) > subMinutes(now, 5)) {
+            // Fresh enough (< 5 minutes) — skip refresh entirely
             return;
         }
 
-        const finishedAt = new Date(lastRefresh.finishedAt);
-        const now = new Date();
+        // Moderately stale (5–15 minutes) — refresh concurrently in the background, caller does not wait.
+        // Very stale (> 15 minutes) or uninitialized — refresh synchronously, caller waits for fresh data.
+        const concurrently = lastRefresh != null && new Date(lastRefresh.finishedAt) > subMinutes(now, 15);
 
-        if (finishedAt > subMinutes(now, 5)) {
-            // Fresh enough (< 5 minutes) — skip refresh entirely
-            return;
-        } else if (finishedAt > subMinutes(now, 15)) {
-            // Moderately stale (5–15 minutes) — refresh concurrently in the background
-            const refreshPromise = refresh({ concurrently: true });
-            if (options?.awaitRefresh) {
-                // Caller wants to wait for the refresh to complete, even if it's concurrent. Only used by CLI command.
-                await refreshPromise;
-            }
-        } else {
-            // Very stale (> 15 minutes) — refresh synchronously, caller waits for fresh data
-            await refresh();
+        // Deduplicate refreshes within this process: many parallel requests (e.g. one per row of the
+        // DAM "Usages" column) would otherwise each open a transaction and pile up waiting on the
+        // advisory lock. Sharing a single in-flight refresh collapses them, so at most one advisory
+        // lock is taken per instance.
+        if (!this.runningRefresh) {
+            const runningRefresh = refresh({ concurrently }).finally(() => {
+                this.runningRefresh = undefined;
+            });
+            this.runningRefresh = runningRefresh;
+            // A backgrounded refresh has no awaiter — make sure a failure is logged instead of
+            // becoming an unhandled promise rejection.
+            runningRefresh.catch((error) => {
+                this.logger.error(`Block index refresh failed: ${error instanceof Error ? error.message : error}`);
+            });
+        }
+
+        if (!concurrently || options?.awaitRefresh) {
+            // Caller waits for fresh data (very stale/uninitialized), or explicitly requested to wait
+            // (CLI command via awaitRefresh).
+            await this.runningRefresh;
         }
     }
 
