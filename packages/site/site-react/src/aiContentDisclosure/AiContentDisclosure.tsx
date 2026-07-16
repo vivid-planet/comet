@@ -16,6 +16,8 @@ const icons = {
 export interface AiContentDisclosureProps {
     /** Which EU label to show: fully AI-generated or partially AI-modified content. */
     type: AiContentType;
+    /** Icon height in pixels. Defaults to 28. */
+    size?: number;
     /**
      * Icon color. "black" (default) shows the black EU label on a light scrim; "white" shows the white
      * EU label on a dark scrim. The scrim keeps the label legible against arbitrary imagery either way.
@@ -42,11 +44,22 @@ export interface AiContentDisclosureProps {
  * accessible name of the associated media element (see `getAiContentAltText`), so screen-reader
  * users learn which asset is AI-generated.
  */
-export function AiContentDisclosure({ type, variant = "black", overlay = true, position = "topRight", className }: AiContentDisclosureProps) {
+export function AiContentDisclosure({
+    type,
+    size = 28,
+    variant = "black",
+    overlay = true,
+    position = "topRight",
+    className,
+}: AiContentDisclosureProps) {
     const Icon = icons[type][variant];
 
     return (
-        <span className={clsx(styles.root, styles[variant], overlay && styles.overlay, overlay && styles[position], className)} aria-hidden="true">
+        <span
+            className={clsx(styles.root, styles[variant], overlay && styles.overlay, overlay && styles[position], className)}
+            style={{ "--ai-content-disclosure-icon-size": `${size}px` }}
+            aria-hidden="true"
+        >
             <Icon className={styles.icon} />
         </span>
     );

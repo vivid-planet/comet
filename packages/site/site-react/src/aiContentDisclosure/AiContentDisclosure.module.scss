@@ -22,7 +22,7 @@
     display: block;
 
     // Height so the label stays clearly visible and perceivable (EU Article 50 guidance).
-    height: 28px;
+    height: var(--ai-content-disclosure-icon-size, 28px);
     width: auto;
 }
 
