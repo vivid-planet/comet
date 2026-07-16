@@ -55,7 +55,7 @@ export const FileUploadField = <TFieldValues extends FieldValues>({
                     ((value ?? []) as Attachment[]).every((attachment) => attachment.status !== "error")
                         ? true
                         : intl.formatMessage({
-                              id: "fileUploadField.hasErrors",
+                              id: "fileUploadField.hasFailedAttachments",
                               defaultMessage: "Please remove attachments that failed to upload.",
                           }),
             },
