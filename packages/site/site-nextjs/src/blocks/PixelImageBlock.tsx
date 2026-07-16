@@ -15,6 +15,7 @@ import {
 } from "@comet/site-react";
 // eslint-disable-next-line no-restricted-imports
 import NextImageImport, { type ImageProps } from "next/image";
+import type { ReactNode } from "react";
 
 import type { PixelImageBlockData } from "../blocks.generated";
 import styles from "./PixelImageBlock.module.scss";
@@ -33,8 +34,8 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
     alt?: never;
     /** Override props passed to the AI content disclosure badge. */
     aiContentDisclosureProps?: Partial<AiContentDisclosureProps>;
-    /** Hide the AI content disclosure badge, e.g. when the project renders its own. */
-    hideAiContentDisclosure?: boolean;
+    /** Render a custom AI content disclosure instead of the built-in badge. Pass `null` to render none, e.g. when the project renders its own. */
+    customAiContentDisclosure?: ReactNode;
     /** AI content prefix prepended to the alt text. Defaults to English; ideally pass a translated string here. */
     aiContentAltTextLabels?: Partial<AiContentAltTextLabels>;
 }
@@ -45,7 +46,7 @@ export const PixelImageBlock = withPreview(
         data: { damFile, cropArea, urlTemplate },
         fill,
         aiContentDisclosureProps,
-        hideAiContentDisclosure,
+        customAiContentDisclosure,
         aiContentAltTextLabels,
         ...nextImageProps
     }: PixelImageBlockProps) => {
@@ -105,10 +106,13 @@ export const PixelImageBlock = withPreview(
             />
         );
 
-        const disclosure =
-            damFile.aiContentType && !hideAiContentDisclosure ? (
+        const disclosure = damFile.aiContentType ? (
+            customAiContentDisclosure !== undefined ? (
+                customAiContentDisclosure
+            ) : (
                 <AiContentDisclosure type={damFile.aiContentType} {...aiContentDisclosureProps} />
-            ) : null;
+            )
+        ) : null;
 
         // default behavior when fill is set to true: do not wrap in container -> an own container must be used
         if (fill) {

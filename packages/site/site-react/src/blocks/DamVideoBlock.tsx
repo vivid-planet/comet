@@ -25,8 +25,8 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     playPauseButton?: ComponentType<PlayPauseButtonProps>;
     /** Override props passed to the AI content disclosure badge. */
     aiContentDisclosureProps?: Partial<AiContentDisclosureProps>;
-    /** Hide the AI content disclosure badge, e.g. when the project renders its own. */
-    hideAiContentDisclosure?: boolean;
+    /** Render a custom AI content disclosure instead of the built-in badge. Pass `null` to render none, e.g. when the project renders its own. */
+    customAiContentDisclosure?: ReactNode;
     /** AI content prefix prepended to the accessible name. Defaults to English; ideally pass a translated string here. */
     aiContentAltTextLabels?: Partial<AiContentAltTextLabels>;
 }
@@ -43,7 +43,7 @@ export const DamVideoBlock = withPreview(
         pauseButtonAriaLabel,
         playPauseButton: PlayPauseButtonComponent,
         aiContentDisclosureProps,
-        hideAiContentDisclosure,
+        customAiContentDisclosure,
         aiContentAltTextLabels,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
@@ -151,9 +151,12 @@ export const DamVideoBlock = withPreview(
                                     ariaLabelPause={pauseButtonAriaLabel}
                                 />
                             ))}
-                        {damFile.aiContentType && !hideAiContentDisclosure && (
-                            <AiContentDisclosure type={damFile.aiContentType} {...aiContentDisclosureProps} />
-                        )}
+                        {damFile.aiContentType &&
+                            (customAiContentDisclosure !== undefined ? (
+                                customAiContentDisclosure
+                            ) : (
+                                <AiContentDisclosure type={damFile.aiContentType} {...aiContentDisclosureProps} />
+                            ))}
                     </div>
                 )}
             </>
