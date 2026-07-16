@@ -1,4 +1,4 @@
-import { type CrudSingleGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
+import { type CrudSingleGeneratorOptions, hasCrudFieldFeature, REQUIRED_PERMISSION_METADATA_KEY } from "@comet/cms-api";
 import type { EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
@@ -18,6 +18,8 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         const generatedFiles: GeneratedFile[] = [];
+
+        const entityHasRequiredPermission = !!Reflect.getMetadata(REQUIRED_PERMISSION_METADATA_KEY, metadata.class);
 
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
         if (scopeProp && !scopeProp.targetMeta) {
@@ -40,7 +42,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
 
         const resolverOut = `import { FindOptions, EntityManager } from "@mikro-orm/postgresql";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-    import { RequiredPermission, SortDirection, validateNotModified } from "@comet/cms-api";
+    import { ${entityHasRequiredPermission ? "" : "RequiredPermission, "}SortDirection, validateNotModified } from "@comet/cms-api";
     
     import { ${metadata.className} } from "${path.relative(targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     ${
@@ -52,7 +54,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { ${classNameSingular}Input } from "./dto/${fileNameSingular}.input";
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${entityHasRequiredPermission ? "" : `@RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})`}
     export class ${classNameSingular}Resolver {
         constructor(
             protected readonly entityManager: EntityManager,

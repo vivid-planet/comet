@@ -1,5 +1,121 @@
 # @comet/site-nextjs
 
+## 9.1.1
+
+### Patch Changes
+
+- @comet/site-react@9.1.1
+
+## 9.1.0
+
+### Patch Changes
+
+- @comet/site-react@9.1.0
+
+## 9.0.1
+
+### Patch Changes
+
+- @comet/site-react@9.0.1
+
+## 9.0.0
+
+### Major Changes
+
+- 8b3932d: Move server-only exports to `/server` subpath
+
+    Server-only exports have been moved to a separate `/server` entry point to prevent server-only code from being pulled into client bundles. While tree-shaking previously removed unused server code, this is an optional optimization — Vite's dev server, for example, does not tree-shake, causing errors when importing these packages in non-server environments (e.g., Storybook).
+
+    **`@comet/site-nextjs`**: `sitePreviewRoute`, `legacyPagesRouterSitePreviewApiHandler`, `previewParams`, `legacyPagesRouterPreviewParams`, and `persistedQueryRoute` must now be imported from `@comet/site-nextjs/server`:
+
+    ```diff
+    - import { sitePreviewRoute } from "@comet/site-nextjs";
+    + import { sitePreviewRoute } from "@comet/site-nextjs/server";
+    ```
+
+    ```diff
+    - import { previewParams } from "@comet/site-nextjs";
+    + import { previewParams } from "@comet/site-nextjs/server";
+    ```
+
+    ```diff
+    - import { persistedQueryRoute } from "@comet/site-nextjs";
+    + import { persistedQueryRoute } from "@comet/site-nextjs/server";
+    ```
+
+    **`@comet/site-react`**: `persistedQueryRoute` must now be imported from `@comet/site-react/server`:
+
+    ```diff
+    - import { persistedQueryRoute } from "@comet/site-react";
+    + import { persistedQueryRoute } from "@comet/site-react/server";
+    ```
+
+### Minor Changes
+
+- ab5e547: Add `JsonLd` component for typed schema.org structured data
+
+    Renders any [`schema-dts`](https://www.npmjs.com/package/schema-dts) entity inside a `<script type="application/ld+json">` tag. The payload is escaped so a `</script>` sequence in user content cannot break out of the script tag.
+
+    ```tsx
+    import { JsonLd } from "@comet/site-react";
+    import type { Organization } from "schema-dts";
+
+    <JsonLd<Organization>
+        data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Acme",
+            url: "https://acme.example",
+            logo: "https://acme.example/logo.png",
+        }}
+    />;
+    ```
+
+    Also re-exported from `@comet/site-nextjs`.
+
+- 54f57dd: Support loading data for child blocks embedded in rich text content in `recursivelyLoadBlockData`
+
+    Child blocks embedded in a `createTipTapRichTextBlock` rich text block (stored as `cmsBlock`/`cmsInlineBlock` nodes) are now traversed by `recursivelyLoadBlockData`, so their registered block loaders run just like for any other nested block. This allows rich text child blocks to load additional data (e.g. via a GraphQL query) without relying on a `BlockTransformerService` on the API side.
+
+    To support this, the `tipTapContent` field of a `createTipTapRichTextBlock` block is now declared with a dedicated `TipTapRichTextBlock` block meta kind (instead of `Json`) that carries the configured child blocks. The block loader uses this kind to detect rich text content instead of inspecting arbitrary `Json` fields.
+
+    Also re-exported from `@comet/site-nextjs`.
+
+- 740dba8: Add support for Next.js 15 and 16
+
+    `@comet/site-nextjs` now supports Next.js 14, 15, and 16. We recommend using Next.js 16.
+
+- 740dba8: Add support for React 19
+
+    `@comet/site-nextjs` now supports React 18 and React 19.
+
+### Patch Changes
+
+- b7daf28: Fix `PixelImageBlock` and `Image` failing to render in Next.js Pages Router with `Error: Element type is invalid ... but got: object`
+
+    `@comet/site-nextjs` is published as ESM (`"type": "module"`) and the components used a default import of `next/image` (CJS). Under Next.js Pages Router the server bundler keeps node_modules ESM packages as Node-style externals, which applies Node-style ESM↔CJS interop: `import NextImage from "next/image"` yields the entire module-namespace object (`{ default, getImageProps, __esModule: true }`) instead of the component. The default import is now unwrapped at module evaluation time so the components work under both bundler-style and Node-style interop.
+
+- 865fcfd: Remove legacy CJS fields (`module`, `types`) from package.json as these packages are ESM-only
+- Updated dependencies [ab5e547]
+- Updated dependencies [4c1aeb2]
+- Updated dependencies [54f57dd]
+- Updated dependencies [cfa70a2]
+- Updated dependencies [4f018d5]
+- Updated dependencies [d870d05]
+- Updated dependencies [740dba8]
+- Updated dependencies [8b3932d]
+- Updated dependencies [e125c84]
+- Updated dependencies [865fcfd]
+    - @comet/site-react@9.0.0
+
+## 9.0.0-beta.6
+
+### Patch Changes
+
+- Updated dependencies [4c1aeb2]
+- Updated dependencies [d870d05]
+    - @comet/site-react@9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ### Patch Changes

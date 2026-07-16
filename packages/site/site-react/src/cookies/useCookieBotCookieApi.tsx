@@ -31,6 +31,9 @@ export const useCookieBotCookieApi: CookieApiHook = () => {
 
         window.addEventListener("CookiebotOnConsentReady", handleCookieUpdated);
 
+        // Initial consent
+        handleCookieUpdated();
+
         return () => {
             window.removeEventListener("CookiebotOnConsentReady", handleCookieUpdated);
         };

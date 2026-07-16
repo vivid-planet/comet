@@ -2622,6 +2622,64 @@
         ]
     },
     {
+        "name": "ProductPrice",
+        "fields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "product",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "price",
+                            "kind": "Number",
+                            "nullable": true
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "ProductTeaser",
+        "fields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "RedirectsLink",
         "fields": [
             {
@@ -3752,15 +3810,23 @@
         "fields": [
             {
                 "name": "tipTapContent",
-                "kind": "Json",
-                "nullable": false
+                "kind": "TipTapRichTextBlock",
+                "nullable": false,
+                "childBlocks": {
+                    "productPrice": "ProductPrice",
+                    "productTeaser": "ProductTeaser"
+                }
             }
         ],
         "inputFields": [
             {
                 "name": "tipTapContent",
-                "kind": "Json",
-                "nullable": false
+                "kind": "TipTapRichTextBlock",
+                "nullable": false,
+                "childBlocks": {
+                    "productPrice": "ProductPrice",
+                    "productTeaser": "ProductTeaser"
+                }
             }
         ]
     },

@@ -1,6 +1,6 @@
 {
     "name": "@comet/mail-react",
-    "version": "9.0.0-beta.5",
+    "version": "9.1.1",
     "description": "Utilities for building HTML emails with React",
     "license": "BSD-2-Clause",
     "type": "module",
@@ -20,7 +20,7 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "pnpm run clean && pnpm run generate-block-types && tsc",
+        "build": "pnpm run clean && pnpm run generate-block-types && tsc -p tsconfig.build.json",
         "build-storybook": "storybook build",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
         "dev": "pnpm run clean && pnpm generate-block-types && tsc --watch",
@@ -44,7 +44,8 @@
         "@faire/mjml-react": "^3.5.4",
         "clsx": "^2.1.1",
         "mjml": "^4.18.0",
-        "mjml-browser": "^4.18.0"
+        "mjml-browser": "^4.18.0",
+        "redraft": "^0.10.2"
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",

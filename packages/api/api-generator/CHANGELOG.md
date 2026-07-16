@@ -1,5 +1,126 @@
 # @comet/api-generator
 
+## 9.1.1
+
+### Patch Changes
+
+- @comet/cms-api@9.1.1
+
+## 9.1.0
+
+### Patch Changes
+
+- Updated dependencies [319f5b8]
+    - @comet/cms-api@9.1.0
+
+## 9.0.1
+
+### Patch Changes
+
+- @comet/cms-api@9.0.1
+
+## 9.0.0
+
+### Major Changes
+
+- 18748d1: Stop generating GraphQL selection-set based `populate` handling in generated CRUD list resolvers.
+
+    MikroORM dataloader must now be enabled in API projects (for example with `dataloader: DataloaderType.ALL` in your MikroORM config) to efficiently resolve relation fields.
+
+- 10dda8c: Remove `targetDirectory` config from `@CrudGenerator` decorator and always generate files to `${__dirname}/../generated/`
+
+### Minor Changes
+
+- 623111e: Support re-using an enum (for filters) in multiple models by using a shared generated filter type
+- 70a77db: Reuse `@RequiredPermission` from entity in resolver permissions
+
+    The `UserPermissionsGuard` now falls back to the entity's `@RequiredPermission` decorator when no permission is explicitly set on the resolver. The entity is resolved from the `@Resolver(() => Entity)` decorator.
+
+    Additionally, the CRUD generator no longer emits `@RequiredPermission` on generated resolvers if the entity already has `@RequiredPermission` set. This avoids redundant permission declarations.
+
+- dd51208: Update TypeScript compilation target to ES2023 and lib to ES2023 to match the required Node.js v22
+
+### Patch Changes
+
+- 8642996: Fix `MODULE_NOT_FOUND` errors caused by extensionless deep imports of `@nestjs/graphql` internals. `@nestjs/graphql` 13.3.0 tightened its `exports` map so that the `"./*": "./*"` pattern no longer maps to `.js` automatically. All deep imports of `@nestjs/graphql` internals now use explicit `.js` extensions.
+- 16c0e64: Fix missing import for nested `ManyToOne` resolver target entities
+
+    `@comet/api-generator` now imports nested `ManyToOne` target entities in generated resolvers so generated code compiles without unresolved symbol errors.
+
+- Updated dependencies [f1a473a]
+- Updated dependencies [8954d64]
+- Updated dependencies [4c1aeb2]
+- Updated dependencies [67938b2]
+- Updated dependencies [c0cee12]
+- Updated dependencies [7fbe2a7]
+- Updated dependencies [54f57dd]
+- Updated dependencies [a50793a]
+- Updated dependencies [cac2b3b]
+- Updated dependencies [9d5f045]
+- Updated dependencies [c6703db]
+- Updated dependencies [8c2fdde]
+- Updated dependencies [b0ceb9c]
+- Updated dependencies [127a492]
+- Updated dependencies [fa5c7a4]
+- Updated dependencies [f6a2932]
+- Updated dependencies [35e9e0d]
+- Updated dependencies [91f4a9f]
+- Updated dependencies [6b7adc7]
+- Updated dependencies [31d9296]
+- Updated dependencies [19a0528]
+- Updated dependencies [71dce06]
+- Updated dependencies [1b37655]
+- Updated dependencies [f162fa5]
+- Updated dependencies [1ad7de3]
+- Updated dependencies [0e7d7e9]
+- Updated dependencies [3f3da52]
+- Updated dependencies [affbb11]
+- Updated dependencies [fad0167]
+- Updated dependencies [6793853]
+- Updated dependencies [a2c2eb5]
+- Updated dependencies [962a320]
+- Updated dependencies [802b0b8]
+- Updated dependencies [8bf0e5b]
+- Updated dependencies [70a77db]
+- Updated dependencies [2ea835c]
+- Updated dependencies [8498a7c]
+- Updated dependencies [ac59b62]
+- Updated dependencies [171c335]
+- Updated dependencies [8ad9dd8]
+- Updated dependencies [bc57b4a]
+- Updated dependencies [2fe9d4b]
+- Updated dependencies [dd51208]
+- Updated dependencies [8722deb]
+    - @comet/cms-api@9.0.0
+
+## 9.0.0-beta.6
+
+### Minor Changes
+
+- 70a77db: Reuse `@RequiredPermission` from entity in resolver permissions
+
+    The `UserPermissionsGuard` now falls back to the entity's `@RequiredPermission` decorator when no permission is explicitly set on the resolver. The entity is resolved from the `@Resolver(() => Entity)` decorator.
+
+    Additionally, the CRUD generator no longer emits `@RequiredPermission` on generated resolvers if the entity already has `@RequiredPermission` set. This avoids redundant permission declarations.
+
+### Patch Changes
+
+- Updated dependencies [f1a473a]
+- Updated dependencies [8954d64]
+- Updated dependencies [4c1aeb2]
+- Updated dependencies [67938b2]
+- Updated dependencies [7fbe2a7]
+- Updated dependencies [35e9e0d]
+- Updated dependencies [91f4a9f]
+- Updated dependencies [1b37655]
+- Updated dependencies [affbb11]
+- Updated dependencies [fad0167]
+- Updated dependencies [6793853]
+- Updated dependencies [70a77db]
+- Updated dependencies [8498a7c]
+- Updated dependencies [ac59b62]
+    - @comet/cms-api@9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ### Patch Changes

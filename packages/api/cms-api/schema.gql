@@ -244,7 +244,7 @@ type FilenameResponse {
 type FileUpload {
   id: ID!
   name: String!
-  size: Int!
+  size: BigInt!
   mimetype: String!
   contentHash: String!
   createdAt: DateTime!
@@ -258,6 +258,11 @@ type FileUpload {
   previewUrl: String!
   imageUrl(resizeWidth: Int!): String
 }
+
+"""
+The `BigInt` scalar type represents non-fractional signed whole numeric values.
+"""
+scalar BigInt
 
 type PaginatedEntityInfo {
   nodes: [EntityInfo!]!
@@ -451,7 +456,7 @@ type DamFile {
   id: ID!
   folder: DamFolder
   name: String!
-  size: Int!
+  size: BigInt!
   mimetype: String!
   contentHash: String!
   title: String
@@ -565,7 +570,7 @@ type Query {
   warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
   damMediaAlternative(id: ID!): DamMediaAlternative!
   damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
-  fullTextSearch(search: String!, offset: Int! = 0, limit: Int! = 25): PaginatedEntityInfo!
+  myFullTextSearch(search: String!, offset: Int! = 0, limit: Int! = 25, scope: JSONObject): PaginatedEntityInfo!
 }
 
 input RedirectScopeInput {
@@ -718,6 +723,8 @@ input WarningFilter {
   updatedAt: DateTimeFilter
   message: StringFilter
   type: StringFilter
+  name: StringFilter
+  secondaryInformation: StringFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
   scope: ScopeFilter
@@ -753,6 +760,7 @@ enum WarningSortField {
   updatedAt
   message
   type
+  name
   severity
   status
 }

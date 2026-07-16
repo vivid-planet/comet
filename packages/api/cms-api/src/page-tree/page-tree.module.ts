@@ -35,6 +35,11 @@ import { PageExistsConstraint } from "./validators/page-exists.validator";
 
 export interface PageTreeConfig {
     reservedPaths: string[];
+    /**
+     * Controls whether deleting pages is allowed.
+     * If set to `false`, delete mutations are blocked and pages can only be archived.
+     */
+    allowPageDelete: boolean;
 }
 
 interface PageTreeModuleOptions {
@@ -44,6 +49,11 @@ interface PageTreeModuleOptions {
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
     reservedPaths?: string[];
+    /**
+     * Controls whether deleting pages is allowed.
+     * Defaults to `true`.
+     */
+    allowPageDelete?: boolean;
     sitePreviewSecret: string | ((scope: ContentScope) => string);
     fullText?: boolean;
 }
@@ -90,6 +100,7 @@ export class PageTreeModule {
             provide: PAGE_TREE_CONFIG,
             useValue: {
                 reservedPaths: [...defaultReservedPaths, ...(reservedPaths ?? [])],
+                allowPageDelete: options.allowPageDelete ?? true,
             },
         };
 

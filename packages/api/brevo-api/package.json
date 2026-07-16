@@ -1,6 +1,6 @@
 {
     "name": "@comet/brevo-api",
-    "version": "9.0.0-beta.5",
+    "version": "9.1.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet/",
@@ -37,7 +37,7 @@
     "dependencies": {
         "@comet/cms-api": "workspace:*",
         "@fast-csv/parse": "^5.0.7",
-        "@getbrevo/brevo": "^3.0.4",
+        "@getbrevo/brevo": "^5.0.4",
         "@nestjs/axios": "^4.0.1",
         "@nestjs/cache-manager": "^3.1.2",
         "@nestjs/jwt": "^11.0.2",
@@ -63,18 +63,21 @@
         "@nestjs/core": "^11.1.21",
         "@nestjs/graphql": "^13.4.0",
         "@nestjs/platform-express": "^11.1.21",
+        "@nestjs/testing": "^11.1.21",
+        "@swc/core": "^1.15.40",
         "@types/inquirer": "^8.2.12",
         "@types/lodash.isequal": "^4.5.8",
         "chokidar-cli": "^2.1.0",
         "eslint": "^9.39.4",
         "express": "^5.2.1",
-        "graphql": "^16.14.0",
+        "graphql": "^16.14.2",
         "prettier": "^3.4.2",
         "reflect-metadata": "^0.2.2",
         "rimraf": "^3.0.2",
         "rxjs": "^7.8.2",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",
+        "unplugin-swc": "^1.5.9",
         "vitest": "^4.1.8"
     },
     "peerDependencies": {

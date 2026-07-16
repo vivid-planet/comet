@@ -126,7 +126,7 @@ export const FinalFormSelect = <T,>({
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
             renderValue={() => {
                 if (Array.isArray(value)) {
-                    return value.map((i) => getOptionLabel(i));
+                    return value.map((i) => getOptionLabel(i)).join(", ");
                 } else {
                     return getOptionLabel(value);
                 }

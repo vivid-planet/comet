@@ -134,6 +134,7 @@ export class News extends BaseEntity {
     @Property<News>({
         nullable: true,
         type: new FullTextType(),
+        onCreate: (news) => entityToMikroOrmFullText({ A: news.title, D: news.slug }, news.content),
         onUpdate: (news) => entityToMikroOrmFullText({ A: news.title, D: news.slug }, news.content),
     })
     fullText?: string;

@@ -3,6 +3,7 @@ import type { AllBlockNames } from "@src/blocks.generated";
 import { loader as pageTreeIndexLoader } from "@src/common/blocks/PageTreeIndexBlock.loader";
 import { loader as newsDetailLoader } from "@src/news/blocks/NewsDetailBlock.loader";
 import { loader as newsListLoader } from "@src/news/blocks/NewsListBlock.loader";
+import { loader as productTeaserLoader } from "@src/products/blocks/ProductTeaserBlock.loader";
 import type { ContentScope } from "@src/site-configs";
 
 declare module "@comet/site-nextjs" {
@@ -16,6 +17,7 @@ const blockLoaders: Partial<Record<AllBlockNames, BlockLoader>> = {
     NewsDetail: newsDetailLoader,
     NewsList: newsListLoader,
     PageTreeIndex: pageTreeIndexLoader,
+    ProductTeaser: productTeaserLoader,
 };
 
 //small wrapper for @comet/site-nextjs recursivelyLoadBlockData that injects blockMeta from block-meta.json

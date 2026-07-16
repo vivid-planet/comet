@@ -182,7 +182,7 @@ const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDouble
                 intl.formatMessage({
                     id: "cometBrevoModule.useContactImport.error.defaultMessage",
                     defaultMessage:
-                        "An error occured during the import. Please try again in a while or contact your administrator if the error persists.",
+                        "An error occurred during the import. Please try again in a while or contact your administrator if the error persists.",
                 }),
             );
         }
@@ -278,7 +278,7 @@ const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDouble
                 const userMessage = (
                     <FormattedMessage
                         id="cometBrevoModule.useContactImport.error.defaultMessage"
-                        defaultMessage="An error occured during the import. Please try again in a while or contact your administrator if the error persists."
+                        defaultMessage="An error occurred during the import. Please try again in a while or contact your administrator if the error persists."
                     />
                 );
 

@@ -71,11 +71,17 @@ For block type decision guidance, see [block-types.md](references/block-types.md
 
 Before generating any code:
 
-1. **Locate `api`, `admin`, `site` directories.** The `site` directory is optional.
-2. **Find existing blocks directories** — typically `src/documents/pages/blocks/`. Some shared blocks live in `common/blocks/` or similar. Check both.
-3. **Verify referenced blocks exist** — search for any blocks named in the prompt (e.g., `HeadingBlock`, `LinkBlock`) in all layers and note their import paths.
-4. **Find registration targets** — search for `createBlocksBlock` usages to locate `PageContentBlock`, `ContentGroupBlock`, or other targets. Note file paths in all layers.
-5. **Confirm site directory** — if absent, skip all site steps.
+1. **Locate the `api` and `admin` directories.**
+2. **Locate the site package or packages by their dependencies, not the folder name.** `site` is only the conventional name — a project may name the package differently or have several. A `package.json` (outside `node_modules`) that depends on `@comet/site-nextjs` or `@comet/site-react` is certainly a site package, since site blocks render through these (`withPreview`, `PropsWithData`):
+    ```bash
+    grep -rl --include='package.json' --exclude-dir=node_modules -E '"@comet/site-(nextjs|react)"' . | xargs -n1 dirname
+    ```
+    A frontend package can also exist without those dependencies — for example one that renders blocks for email with `@comet/mail-react`. Skip the site steps only if you find neither a site package nor another frontend package.
+3. **Find existing blocks directories** — typically `src/documents/pages/blocks/`. Some shared blocks live in `common/blocks/` or similar. Check both.
+4. **Verify referenced blocks exist** — search for any blocks named in the prompt (e.g., `HeadingBlock`, `LinkBlock`) in all layers and note their import paths.
+5. **Find registration targets** — search for `createBlocksBlock` usages to locate `PageContentBlock`, `ContentGroupBlock`, or other targets. Note file paths in all layers.
+
+In the later steps and the reference files, example paths written as `site/…` mean the site package's root and `@src/…` means its `src/` directory. They show the conventional layout — substitute the actual package folder found here.
 
 ---
 

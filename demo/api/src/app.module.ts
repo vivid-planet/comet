@@ -220,15 +220,13 @@ export class AppModule {
                 MailTemplatesModule,
                 ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
-                AccessLogModule.forRoot({
-                    shouldLogRequest: ({ user }) => {
-                        // Ignore system user
-                        if (user === "system-user") {
-                            return false;
-                        }
-                        return true;
-                    },
-                }),
+                ...(!config.debug
+                    ? [
+                          AccessLogModule.forRoot({
+                              shouldLogRequest: ({ req }) => !req.route.path.startsWith("/api/healthcheck/"),
+                          }),
+                      ]
+                    : []),
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
                 WarningsModule,

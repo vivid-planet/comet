@@ -1,5 +1,27 @@
 # @comet/admin-icons
 
+## 9.1.1
+
+## 9.1.0
+
+## 9.0.1
+
+## 9.0.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+
+## 9.0.0-beta.6
+
 ## 9.0.0-beta.5
 
 ## 9.0.0-beta.4
