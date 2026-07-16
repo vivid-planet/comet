@@ -80,11 +80,13 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     const contentScopes = data.permission.contentScopes as ContentScope[];
     const overrideContentScopesEnabled = overrideContentScopesToggle ?? data.permission.overrideContentScopes;
 
-    // Adding/removing a scope is persisted immediately (like the assigned scopes grid), keeping the saved override flag untouched.
+    // Adding/removing a scope is persisted immediately (like the assigned scopes grid). Scopes can only be edited while the
+    // toggle is enabled, so the current toggle value is persisted along with them (otherwise added scopes would be hidden
+    // again on reopen because the permission still had the override disabled).
     const persistContentScopes = async (newContentScopes: ContentScope[]) => {
         await updateOverrideContentScopes({
             variables: {
-                input: { permissionId, overrideContentScopes: data.permission.overrideContentScopes, contentScopes: newContentScopes },
+                input: { permissionId, overrideContentScopes: overrideContentScopesEnabled, contentScopes: newContentScopes },
             },
             refetchQueries: [namedOperations.Query.PermissionContentScopes, "Permissions"],
             awaitRefetchQueries: true,
