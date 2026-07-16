@@ -1,5 +1,6 @@
 "use client";
 import {
+    type AiContentAltTextLabels,
     AiContentDisclosure,
     type AiContentDisclosureProps,
     calculateInheritAspectRatio,
@@ -34,6 +35,8 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
     aiContentDisclosureProps?: Partial<AiContentDisclosureProps>;
     /** Hide the AI content disclosure badge, e.g. when the project renders its own. */
     hideAiContentDisclosure?: boolean;
+    /** AI content prefix prepended to the alt text. Defaults to English; ideally pass a translated string here. */
+    aiContentAltTextLabels?: Partial<AiContentAltTextLabels>;
 }
 
 export const PixelImageBlock = withPreview(
@@ -43,9 +46,10 @@ export const PixelImageBlock = withPreview(
         fill,
         aiContentDisclosureProps,
         hideAiContentDisclosure,
+        aiContentAltTextLabels,
         ...nextImageProps
     }: PixelImageBlockProps) => {
-        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText });
+        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText, labels: aiContentAltTextLabels });
 
         if (!damFile || !damFile.image) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} fill={fill} />;

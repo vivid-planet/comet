@@ -3,7 +3,7 @@
 import type { HTMLAttributes } from "react";
 
 import { AiContentDisclosure, type AiContentDisclosureProps } from "../aiContentDisclosure/AiContentDisclosure";
-import { getAiContentAltText } from "../aiContentDisclosure/getAiContentAltText";
+import { type AiContentAltTextLabels, getAiContentAltText } from "../aiContentDisclosure/getAiContentAltText";
 import type { SvgImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
@@ -17,6 +17,8 @@ interface SvgImageBlockProps extends PropsWithData<SvgImageBlockData> {
     aiContentDisclosureProps?: Partial<AiContentDisclosureProps>;
     /** Hide the AI content disclosure badge, e.g. when the project renders its own. */
     hideAiContentDisclosure?: boolean;
+    /** AI content prefix prepended to the alt text. Defaults to English; ideally pass a translated string here. */
+    aiContentAltTextLabels?: Partial<AiContentAltTextLabels>;
 }
 
 export const SvgImageBlock = withPreview(
@@ -26,9 +28,10 @@ export const SvgImageBlock = withPreview(
         height = "auto",
         aiContentDisclosureProps,
         hideAiContentDisclosure,
+        aiContentAltTextLabels,
         ...restProps
     }: SvgImageBlockProps & Omit<HTMLAttributes<HTMLImageElement>, "width" | "height">) => {
-        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText });
+        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText, labels: aiContentAltTextLabels });
 
         if (!damFile) {
             return <PreviewSkeleton type="media" hasContent={false} height={height === "auto" ? undefined : height} />;

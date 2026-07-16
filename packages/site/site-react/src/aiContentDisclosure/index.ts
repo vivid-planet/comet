@@ -1,2 +1,2 @@
 export { AiContentDisclosure, type AiContentDisclosureProps, type AiContentType } from "./AiContentDisclosure";
-export { getAiContentAltText } from "./getAiContentAltText";
+export { type AiContentAltTextLabels, getAiContentAltText } from "./getAiContentAltText";

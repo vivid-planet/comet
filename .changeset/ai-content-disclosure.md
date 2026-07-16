@@ -21,4 +21,4 @@ The DAM file form has a new "AI content" field to set the disclosure.
 
 `@comet/site-react` exports the `AiContentDisclosure` badge component and the `getAiContentAltText` helper. The `PixelImageBlock`, `SvgImageBlock` and `DamVideoBlock` render the disclosure automatically when the asset is marked as AI content.
 
-The badge uses the official EU AI-content labels.
+The badge uses the official EU AI-content labels. Each of the three blocks accepts props to customize the disclosure: `aiContentDisclosureProps` to override the badge, `hideAiContentDisclosure` to render your own, and `aiContentAltTextLabels` to localize the AI content prefix added to the accessible name (defaults to English).

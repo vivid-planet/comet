@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { type ComponentType, type ReactElement, type ReactNode, useCallback, useState } from "react";
 
 import { AiContentDisclosure, type AiContentDisclosureProps } from "../aiContentDisclosure/AiContentDisclosure";
-import { getAiContentAltText } from "../aiContentDisclosure/getAiContentAltText";
+import { type AiContentAltTextLabels, getAiContentAltText } from "../aiContentDisclosure/getAiContentAltText";
 import type { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
@@ -27,6 +27,8 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aiContentDisclosureProps?: Partial<AiContentDisclosureProps>;
     /** Hide the AI content disclosure badge, e.g. when the project renders its own. */
     hideAiContentDisclosure?: boolean;
+    /** AI content prefix prepended to the accessible name. Defaults to English; ideally pass a translated string here. */
+    aiContentAltTextLabels?: Partial<AiContentAltTextLabels>;
 }
 
 export const DamVideoBlock = withPreview(
@@ -42,12 +44,17 @@ export const DamVideoBlock = withPreview(
         playPauseButton: PlayPauseButtonComponent,
         aiContentDisclosureProps,
         hideAiContentDisclosure,
+        aiContentAltTextLabels,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
-        const ariaLabel = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText });
+        const ariaLabel = getAiContentAltText({
+            aiContentType: damFile?.aiContentType,
+            description: damFile?.altText,
+            labels: aiContentAltTextLabels,
+        });
 
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const [isPlaying, setIsPlaying] = useState(autoplay ?? false);
