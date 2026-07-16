@@ -169,14 +169,18 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             disableExport: true,
             renderCell: (params) => (
                 <>
-                    <IconButton
-                        onClick={() => {
-                            stackApi.activatePage("edit", params.id.toString());
-                        }}
-                        color="primary"
-                    >
-                        <Edit />
-                    </IconButton>
+                    {rowAction ? (
+                        rowAction(params)
+                    ) : (
+                        <IconButton
+                            onClick={() => {
+                                stackApi.activatePage("edit", params.id.toString());
+                            }}
+                            color="primary"
+                        >
+                            <Edit />
+                        </IconButton>
+                    )}
                     {isAllowed("impersonation") && (
                         <CrudContextMenu>
                             <ImpersonateMenuItem userId={params.row.id} />
@@ -186,7 +190,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             ),
         });
         return columns;
-    }, [intl, isAllowed, availablePermissions, stackApi]);
+    }, [intl, isAllowed, availablePermissions, stackApi, rowAction]);
 
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
