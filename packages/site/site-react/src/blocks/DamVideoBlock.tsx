@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import { type ComponentType, type ReactElement, type ReactNode, useCallback, useState } from "react";
 
-import { AiContentDisclosure } from "../aiContentDisclosure/AiContentDisclosure";
+import { AiContentDisclosure, type AiContentDisclosureProps } from "../aiContentDisclosure/AiContentDisclosure";
 import { getAiContentAltText } from "../aiContentDisclosure/getAiContentAltText";
 import type { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
@@ -23,6 +23,10 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     playButtonAriaLabel?: string;
     pauseButtonAriaLabel?: string;
     playPauseButton?: ComponentType<PlayPauseButtonProps>;
+    /** Override props passed to the AI content disclosure badge. */
+    aiContentDisclosureProps?: Partial<AiContentDisclosureProps>;
+    /** Hide the AI content disclosure badge, e.g. when the project renders its own. */
+    hideAiContentDisclosure?: boolean;
 }
 
 export const DamVideoBlock = withPreview(
@@ -36,6 +40,8 @@ export const DamVideoBlock = withPreview(
         playButtonAriaLabel,
         pauseButtonAriaLabel,
         playPauseButton: PlayPauseButtonComponent,
+        aiContentDisclosureProps,
+        hideAiContentDisclosure,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -138,7 +144,9 @@ export const DamVideoBlock = withPreview(
                                     ariaLabelPause={pauseButtonAriaLabel}
                                 />
                             ))}
-                        {damFile.aiContentType && <AiContentDisclosure type={damFile.aiContentType} />}
+                        {damFile.aiContentType && !hideAiContentDisclosure && (
+                            <AiContentDisclosure type={damFile.aiContentType} {...aiContentDisclosureProps} />
+                        )}
                     </div>
                 )}
             </>

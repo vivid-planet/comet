@@ -19,8 +19,8 @@ export interface AiContentDisclosureProps {
     /** Icon height in pixels. Defaults to 28. */
     size?: number;
     /**
-     * Icon color. "black" (default) shows the black EU label on a light scrim; "white" shows the white
-     * EU label on a dark scrim. The scrim keeps the label legible against arbitrary imagery either way.
+     * Icon color. "black" (default) shows the black EU label with a light halo; "white" shows the white
+     * EU label with a dark halo. The halo keeps the label legible against arbitrary imagery either way.
      */
     variant?: "black" | "white";
     /** Absolutely position the badge in a corner of a positioned ancestor. Default: true. */

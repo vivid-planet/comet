@@ -2,7 +2,7 @@
 
 import type { HTMLAttributes } from "react";
 
-import { AiContentDisclosure } from "../aiContentDisclosure/AiContentDisclosure";
+import { AiContentDisclosure, type AiContentDisclosureProps } from "../aiContentDisclosure/AiContentDisclosure";
 import { getAiContentAltText } from "../aiContentDisclosure/getAiContentAltText";
 import type { SvgImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
@@ -13,6 +13,10 @@ import styles from "./SvgImageBlock.module.scss";
 interface SvgImageBlockProps extends PropsWithData<SvgImageBlockData> {
     width?: string | number | "auto";
     height?: string | number | "auto";
+    /** Override props passed to the AI content disclosure badge. */
+    aiContentDisclosureProps?: Partial<AiContentDisclosureProps>;
+    /** Hide the AI content disclosure badge, e.g. when the project renders its own. */
+    hideAiContentDisclosure?: boolean;
 }
 
 export const SvgImageBlock = withPreview(
@@ -20,6 +24,8 @@ export const SvgImageBlock = withPreview(
         data: { damFile },
         width = "100%",
         height = "auto",
+        aiContentDisclosureProps,
+        hideAiContentDisclosure,
         ...restProps
     }: SvgImageBlockProps & Omit<HTMLAttributes<HTMLImageElement>, "width" | "height">) => {
         const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText });
@@ -39,14 +45,14 @@ export const SvgImageBlock = withPreview(
             />
         );
 
-        if (!damFile.aiContentType) {
+        if (!damFile.aiContentType || hideAiContentDisclosure) {
             return image;
         }
 
         return (
             <span className={styles.root}>
                 {image}
-                <AiContentDisclosure type={damFile.aiContentType} />
+                <AiContentDisclosure type={damFile.aiContentType} {...aiContentDisclosureProps} />
             </span>
         );
     },

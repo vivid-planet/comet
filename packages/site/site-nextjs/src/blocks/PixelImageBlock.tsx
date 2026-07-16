@@ -1,6 +1,7 @@
 "use client";
 import {
     AiContentDisclosure,
+    type AiContentDisclosureProps,
     calculateInheritAspectRatio,
     generateImageUrl,
     getAiContentAltText,
@@ -29,10 +30,21 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
      * Do not set an `alt` attribute. The alt text is set in the DAM.
      */
     alt?: never;
+    /** Override props passed to the AI content disclosure badge. */
+    aiContentDisclosureProps?: Partial<AiContentDisclosureProps>;
+    /** Hide the AI content disclosure badge, e.g. when the project renders its own. */
+    hideAiContentDisclosure?: boolean;
 }
 
 export const PixelImageBlock = withPreview(
-    ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
+    ({
+        aspectRatio,
+        data: { damFile, cropArea, urlTemplate },
+        fill,
+        aiContentDisclosureProps,
+        hideAiContentDisclosure,
+        ...nextImageProps
+    }: PixelImageBlockProps) => {
         const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText });
 
         if (!damFile || !damFile.image) {
@@ -89,7 +101,10 @@ export const PixelImageBlock = withPreview(
             />
         );
 
-        const disclosure = damFile.aiContentType ? <AiContentDisclosure type={damFile.aiContentType} /> : null;
+        const disclosure =
+            damFile.aiContentType && !hideAiContentDisclosure ? (
+                <AiContentDisclosure type={damFile.aiContentType} {...aiContentDisclosureProps} />
+            ) : null;
 
         // default behavior when fill is set to true: do not wrap in container -> an own container must be used
         if (fill) {
