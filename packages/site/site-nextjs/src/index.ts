@@ -12,6 +12,7 @@ export { Image } from "./image/Image";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export {
     AdminMessageType,
+    type AiContentAltTextLabels,
     type BlockLoader,
     type BlockLoaderDependencies,
     type BlockLoaderOptions,
