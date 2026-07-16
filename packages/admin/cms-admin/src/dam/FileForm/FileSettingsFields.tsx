@@ -38,6 +38,7 @@ const damIsFilenameOccupiedQuery = gql`
 export const FileSettingsFields = ({ file }: SettingsFormProps) => {
     const folderId = file.folder?.id ?? null;
     const isImage = !!file.image;
+    const isVideo = file.mimetype.startsWith("video/");
     const intl = useIntl();
     const apollo = useApolloClient();
     const scope = useDamScope();
@@ -178,36 +179,38 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                     }
                 />
             </FormSection>
-            <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
-                <SelectField
-                    name="aiContentType"
-                    label={<FormattedMessage id="comet.dam.file.aiContentType" defaultMessage="Was this asset generated or modified using AI?" />}
-                    helperText={
-                        <FormattedMessage
-                            id="comet.dam.file.aiContentType.helperText"
-                            defaultMessage="The EU AI Act (Article 50) requires AI-generated or AI-modified content to be marked as such. Set this for any asset that was generated or edited using artificial intelligence."
-                        />
-                    }
-                    fullWidth
-                    format={(value: string | null) => value ?? ""}
-                    parse={(value: string) => value || null}
-                    componentsProps={{ finalFormSelect: { displayEmpty: true } }}
-                    options={[
-                        {
-                            value: "",
-                            label: <FormattedMessage id="comet.dam.file.aiContentType.no" defaultMessage="No" />,
-                        },
-                        {
-                            value: "Generated",
-                            label: <FormattedMessage id="comet.dam.file.aiContentType.generated" defaultMessage="AI generated" />,
-                        },
-                        {
-                            value: "Modified",
-                            label: <FormattedMessage id="comet.dam.file.aiContentType.modified" defaultMessage="AI modified" />,
-                        },
-                    ]}
-                />
-            </FormSection>
+            {(isImage || isVideo) && (
+                <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
+                    <SelectField
+                        name="aiContentType"
+                        label={<FormattedMessage id="comet.dam.file.aiContentType" defaultMessage="Was this asset generated or modified using AI?" />}
+                        helperText={
+                            <FormattedMessage
+                                id="comet.dam.file.aiContentType.helperText"
+                                defaultMessage="The EU AI Act (Article 50) requires AI-generated or AI-modified content to be marked as such. Set this for any asset that was generated or edited using artificial intelligence."
+                            />
+                        }
+                        fullWidth
+                        format={(value: string | null) => value ?? ""}
+                        parse={(value: string) => value || null}
+                        componentsProps={{ finalFormSelect: { displayEmpty: true } }}
+                        options={[
+                            {
+                                value: "",
+                                label: <FormattedMessage id="comet.dam.file.aiContentType.no" defaultMessage="No" />,
+                            },
+                            {
+                                value: "Generated",
+                                label: <FormattedMessage id="comet.dam.file.aiContentType.generated" defaultMessage="AI generated" />,
+                            },
+                            {
+                                value: "Modified",
+                                label: <FormattedMessage id="comet.dam.file.aiContentType.modified" defaultMessage="AI modified" />,
+                            },
+                        ]}
+                    />
+                </FormSection>
+            )}
             {damConfig.enableLicenseFeature && (
                 <FormSection title={<FormattedMessage id="comet.dam.file.licenseInformation" defaultMessage="License information" />}>
                     <Field
