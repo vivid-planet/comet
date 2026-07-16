@@ -273,29 +273,25 @@ export class DependenciesService {
             return;
         }
 
-        // Moderately stale (5–15 minutes) — refresh concurrently in the background, caller does not wait.
-        // Very stale (> 15 minutes) or uninitialized — refresh synchronously, caller waits for fresh data.
+        // Moderately stale (5–15 min): background concurrent refresh, caller doesn't wait.
+        // Very stale (> 15 min) or uninitialized: synchronous refresh, caller waits for fresh data.
         const concurrently = lastRefresh != null && new Date(lastRefresh.finishedAt) > subMinutes(now, 15);
 
-        // Deduplicate refreshes within this process: many parallel requests (e.g. one per row of the
-        // DAM "Usages" column) would otherwise each open a transaction and pile up waiting on the
-        // advisory lock. Sharing a single in-flight refresh collapses them, so at most one advisory
-        // lock is taken per instance.
+        // Deduplicate parallel refreshes within this instance (e.g. one per DAM "Usages" row): share a
+        // single in-flight refresh so they don't each open a transaction and pile up on the advisory lock.
         if (!this.runningRefresh) {
             const runningRefresh = refresh({ concurrently }).finally(() => {
                 this.runningRefresh = undefined;
             });
             this.runningRefresh = runningRefresh;
-            // A backgrounded refresh has no awaiter — make sure a failure is logged instead of
-            // becoming an unhandled promise rejection.
+            // A backgrounded refresh has no awaiter — log failures instead of leaving an unhandled rejection.
             runningRefresh.catch((error) => {
                 this.logger.error(`Block index refresh failed: ${error instanceof Error ? error.message : error}`);
             });
         }
 
         if (!concurrently || options?.awaitRefresh) {
-            // Caller waits for fresh data (very stale/uninitialized), or explicitly requested to wait
-            // (CLI command via awaitRefresh).
+            // Wait when synchronous (very stale/uninitialized) or when explicitly requested (CLI awaitRefresh).
             await this.runningRefresh;
         }
     }
