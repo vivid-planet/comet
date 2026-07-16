@@ -1,5 +1,5 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Button, CancelButton, Field, FinalForm, FinalFormSwitch, type GridColDef, SaveButton } from "@comet/admin";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { Button, CancelButton, type GridColDef, SaveButton } from "@comet/admin";
 import { Add, Delete } from "@comet/admin-icons";
 import {
     CircularProgress,
@@ -8,9 +8,12 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    FormControlLabel,
     IconButton,
+    Switch,
 } from "@mui/material";
-import { useMemo, useState } from "react";
+import isEqual from "lodash.isequal";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { AddContentScopeDialog } from "./AddContentScopeDialog";
@@ -23,10 +26,6 @@ import {
     namedOperations,
 } from "./OverrideContentScopesDialog.generated";
 
-interface FormSubmitData {
-    overrideContentScopes: boolean;
-    contentScopes: string[];
-}
 interface FormProps {
     permissionId: string;
     userId: string;
@@ -34,29 +33,17 @@ interface FormProps {
 }
 
 export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialogClose }: FormProps) => {
-    const client = useApolloClient();
     const [addScopeOpen, setAddScopeOpen] = useState(false);
+    // Local override toggle state; only persisted when clicking save. `null` means "not yet changed, use the persisted value".
+    const [overrideContentScopesToggle, setOverrideContentScopesToggle] = useState<boolean | null>(null);
 
-    const submit = async (data: FormSubmitData) => {
-        await client.mutate<GQLOverrideContentScopesMutation, GQLOverrideContentScopesMutationVariables>({
-            mutation: gql`
-                mutation OverrideContentScopes($input: UserPermissionOverrideContentScopesInput!) {
-                    userPermissionsUpdateOverrideContentScopes(input: $input) {
-                        id
-                    }
-                }
-            `,
-            variables: {
-                input: {
-                    permissionId,
-                    overrideContentScopes: data.overrideContentScopes,
-                    contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
-                },
-            },
-            refetchQueries: [namedOperations.Query.PermissionContentScopes, "Permissions"],
-        });
-        handleDialogClose();
-    };
+    const [updateOverrideContentScopes] = useMutation<GQLOverrideContentScopesMutation, GQLOverrideContentScopesMutationVariables>(gql`
+        mutation OverrideContentScopes($input: UserPermissionOverrideContentScopesInput!) {
+            userPermissionsUpdateOverrideContentScopes(input: $input) {
+                id
+            }
+        }
+    `);
 
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
@@ -81,15 +68,6 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
         },
     );
 
-    // Memoized so that re-renders (e.g. opening the add-scope dialog) don't reinitialize the form and discard the changes.
-    const initialValues = useMemo<FormSubmitData>(
-        () => ({
-            overrideContentScopes: data?.permission.overrideContentScopes ?? false,
-            contentScopes: data?.permission.contentScopes.map((contentScope) => JSON.stringify(contentScope)) ?? [],
-        }),
-        [data],
-    );
-
     if (error) {
         throw new Error(error.message);
     }
@@ -99,95 +77,102 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     }
 
     const disabled = data.permission.source === "BY_RULE";
+    const contentScopes = data.permission.contentScopes as ContentScope[];
+    const overrideContentScopesEnabled = overrideContentScopesToggle ?? data.permission.overrideContentScopes;
+
+    // Adding/removing a scope is persisted immediately (like the assigned scopes grid), keeping the saved override flag untouched.
+    const persistContentScopes = async (newContentScopes: ContentScope[]) => {
+        await updateOverrideContentScopes({
+            variables: {
+                input: { permissionId, overrideContentScopes: data.permission.overrideContentScopes, contentScopes: newContentScopes },
+            },
+            refetchQueries: [namedOperations.Query.PermissionContentScopes, "Permissions"],
+            awaitRefetchQueries: true,
+        });
+    };
+
+    const handleAddScope = async (scope: ContentScope) => {
+        if (!contentScopes.some((contentScope) => isEqual(contentScope, scope))) {
+            await persistContentScopes([...contentScopes, scope]);
+        }
+    };
+
+    const handleDeleteScope = async (scope: ContentScope) => {
+        await persistContentScopes(contentScopes.filter((contentScope) => !isEqual(contentScope, scope)));
+    };
+
+    // The save button only persists the "permission-specific content scopes" toggle; the scopes are persisted on add/remove.
+    const handleSave = async () => {
+        await updateOverrideContentScopes({
+            variables: {
+                input: { permissionId, overrideContentScopes: overrideContentScopesEnabled, contentScopes },
+            },
+            refetchQueries: [namedOperations.Query.PermissionContentScopes, "Permissions"],
+        });
+        handleDialogClose();
+    };
+
+    const additionalColumns: GridColDef<ContentScope>[] = disabled
+        ? []
+        : [
+              {
+                  field: "actions",
+                  headerName: "",
+                  width: 52,
+                  align: "right",
+                  pinnable: false,
+                  sortable: false,
+                  filterable: false,
+                  renderCell: ({ row }) => (
+                      <IconButton onClick={() => handleDeleteScope(row)}>
+                          <Delete />
+                      </IconButton>
+                  ),
+              },
+          ];
 
     return (
         <Dialog maxWidth="lg" open={true}>
-            <FinalForm<FormSubmitData>
-                mode="edit"
-                onSubmit={submit}
-                initialValues={initialValues}
-                render={({ values, form }) => {
-                    const contentScopeStrings = values.contentScopes ?? [];
-
-                    const addScope = (scope: ContentScope) => {
-                        const scopeString = JSON.stringify(scope);
-                        if (!contentScopeStrings.includes(scopeString)) {
-                            form.change("contentScopes", [...contentScopeStrings, scopeString]);
-                        }
-                    };
-                    const deleteScope = (scope: ContentScope) => {
-                        form.change(
-                            "contentScopes",
-                            contentScopeStrings.filter((contentScopeString) => contentScopeString !== JSON.stringify(scope)),
-                        );
-                    };
-
-                    const additionalColumns: GridColDef<ContentScope>[] = disabled
-                        ? []
-                        : [
-                              {
-                                  field: "actions",
-                                  headerName: "",
-                                  width: 52,
-                                  align: "right",
-                                  pinnable: false,
-                                  sortable: false,
-                                  filterable: false,
-                                  renderCell: ({ row }) => (
-                                      <IconButton onClick={() => deleteScope(row)}>
-                                          <Delete />
-                                      </IconButton>
-                                  ),
-                              },
-                          ];
-
-                    return (
-                        <>
-                            <DialogTitle>
-                                <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
-                            </DialogTitle>
-                            <DialogContent>
-                                <Field
-                                    name="overrideContentScopes"
-                                    label={
-                                        <FormattedMessage
-                                            id="comet.userPermissions.overrideScopes"
-                                            defaultMessage="Permission-specific Content-Scopes"
-                                        />
-                                    }
-                                    component={FinalFormSwitch}
-                                    type="checkbox"
-                                    disabled={disabled}
-                                />
-                                {values.overrideContentScopes && (
-                                    <>
-                                        <ContentScopeDataGrid
-                                            rows={contentScopeStrings.map((contentScopeString) => JSON.parse(contentScopeString))}
-                                            availableContentScopes={data.availableContentScopes}
-                                            availableContentScopeDimensions={data.availableContentScopeDimensions}
-                                            additionalColumns={additionalColumns}
-                                            toolbarAction={
-                                                disabled ? undefined : (
-                                                    <Button startIcon={<Add />} onClick={() => setAddScopeOpen(true)} variant="primary">
-                                                        <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
-                                                    </Button>
-                                                )
-                                            }
-                                        />
-                                        <AddContentScopeDialog open={addScopeOpen} onClose={() => setAddScopeOpen(false)} onAdd={addScope} />
-                                    </>
-                                )}
-                            </DialogContent>
-                            <DialogActions>
-                                <CancelButton onClick={() => handleDialogClose()}>
-                                    <FormattedMessage id="comet.userPermissions.close" defaultMessage="Close" />
-                                </CancelButton>
-                                {!disabled && <SaveButton type="submit" />}
-                            </DialogActions>
-                        </>
-                    );
-                }}
-            />
+            <DialogTitle>
+                <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
+            </DialogTitle>
+            <DialogContent>
+                <FormControlLabel
+                    labelPlacement="start"
+                    control={
+                        <Switch
+                            checked={overrideContentScopesEnabled}
+                            onChange={(event) => setOverrideContentScopesToggle(event.target.checked)}
+                            disabled={disabled}
+                        />
+                    }
+                    label={<FormattedMessage id="comet.userPermissions.overrideScopes" defaultMessage="Permission-specific Content-Scopes" />}
+                />
+                {overrideContentScopesEnabled && (
+                    <>
+                        <ContentScopeDataGrid
+                            rows={contentScopes}
+                            availableContentScopes={data.availableContentScopes}
+                            availableContentScopeDimensions={data.availableContentScopeDimensions}
+                            additionalColumns={additionalColumns}
+                            toolbarAction={
+                                disabled ? undefined : (
+                                    <Button startIcon={<Add />} onClick={() => setAddScopeOpen(true)} variant="primary">
+                                        <FormattedMessage id="comet.userPermissions.addScope" defaultMessage="Add scope" />
+                                    </Button>
+                                )
+                            }
+                        />
+                        <AddContentScopeDialog open={addScopeOpen} onClose={() => setAddScopeOpen(false)} onAdd={handleAddScope} />
+                    </>
+                )}
+            </DialogContent>
+            <DialogActions>
+                <CancelButton onClick={() => handleDialogClose()}>
+                    <FormattedMessage id="comet.userPermissions.close" defaultMessage="Close" />
+                </CancelButton>
+                {!disabled && <SaveButton onClick={handleSave} />}
+            </DialogActions>
         </Dialog>
     );
 };
