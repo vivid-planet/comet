@@ -63,7 +63,11 @@ Art. 50(2)'s machine-readable marking is the generating tool's responsibility. C
 `@comet/site-react` also exports the `AiContentDisclosure` badge component and the `getAiContentAltText` helper for custom rendering.
 
 ```tsx
-<PixelImageBlock data={data} aspectRatio="16x9" aiContentAltTextLabels={{ generated: "KI-generiert", modified: "KI-bearbeitet" }} />
+<PixelImageBlock
+    data={data}
+    aspectRatio="16x9"
+    aiContentAltTextLabels={{ generated: "KI-generiert", modified: "KI-bearbeitet" }}
+/>
 ```
 
 ## Further reading
