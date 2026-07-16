@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import { ButtonBase, type ComponentsOverrides, IconButton, Typography, useMediaQuery } from "@mui/material";
+import { ButtonBase, type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
 import { alpha, css, type Theme, useThemeProps } from "@mui/material/styles";
 import { Fragment, type MouseEvent, type ReactNode, useState } from "react";
 
@@ -21,7 +21,7 @@ type BreadcrumbsClassKey =
     | "expandedMenuActiveItemWrapper"
     | "pageTreeVerticalLine"
     | "expandedMenuSubitemWrapper"
-    | "mobileOpenMenuButton";
+    | "mobileMenuIcon";
 
 export interface Breadcrumb {
     url: string;
@@ -44,7 +44,7 @@ interface BreadcrumbsProps
         expandedMenuActiveItemWrapper: "div";
         pageTreeVerticalLine: "div";
         expandedMenuSubitemWrapper: "div";
-        mobileOpenMenuButton: typeof IconButton;
+        mobileMenuIcon: "div";
     }> {
     items: Breadcrumb[];
     iconMapping?: { separator?: ReactNode; openMenu?: ReactNode; closeMenu?: ReactNode };
@@ -259,11 +259,12 @@ const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKe
     `,
 );
 
-const MobileOpenMenuButton = createComponentSlot(IconButton)<BreadcrumbsClassKey>({
+const MobileMenuIcon = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
-    slotName: "mobileOpenMenuButton",
+    slotName: "mobileMenuIcon",
 })(css`
-    padding: 0;
+    display: flex;
+    align-items: center;
 `);
 
 const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
@@ -360,11 +361,7 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
                 )}
             </ToolbarContainer>
 
-            {isMobile && (
-                <MobileOpenMenuButton onClick={handleButtonToggle} {...slotProps?.mobileOpenMenuButton}>
-                    {isMenuOpen ? closeMenuIcon : openMenuIcon}
-                </MobileOpenMenuButton>
-            )}
+            {isMobile && <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{isMenuOpen ? closeMenuIcon : openMenuIcon}</MobileMenuIcon>}
         </Root>
     );
 };
