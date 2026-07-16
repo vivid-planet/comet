@@ -24,11 +24,11 @@ const MultipleInputBase = styled(InputBase, {
     shouldForwardProp: (prop) => prop !== "endAdornmentWidth",
 })<{ endAdornmentWidth: number }>(
     ({ endAdornmentWidth }) => css`
-        /* Quadruple specificity to override the "hasPopupIcon" padding-right from the MuiAutocomplete theme
-           (three classes: hash + root + inputRoot). */
-        &&&& {
-            position: relative;
-            flex-wrap: wrap;
+        /* The second selector overrides the "hasPopupIcon" padding-right from the MuiAutocomplete theme. */
+        .${autocompleteClasses.root}
+            &.${autocompleteClasses.inputRoot},
+            .${autocompleteClasses.root}.${autocompleteClasses.hasPopupIcon}
+            &.${autocompleteClasses.inputRoot} {
             padding-right: ${endAdornmentWidth}px;
         }
     `,
@@ -44,13 +44,6 @@ const MultipleEndAdornmentContainer = styled("div")(
         align-items: center;
         padding-left: ${theme.spacing(1)};
         padding-right: ${theme.spacing(2)};
-        /* Clicks next to the icons must fall through to the input root, where MUI Autocomplete handles them by
-           focusing the input and opening the dropdown. */
-        pointer-events: none;
-
-        & > * {
-            pointer-events: auto;
-        }
 
         .${autocompleteClasses.endAdornment} {
             /* Reset MUI's absolute positioning (relative to the input root) so the popup icon stays in the
@@ -125,6 +118,9 @@ export const FinalFormAutocomplete = <
         <Autocomplete
             popupIcon={popupIcon}
             disableClearable
+            // Opens the dropdown when the (multiple) end adornment container is clicked, which focuses the input
+            // but swallows the click before it reaches the input root.
+            openOnFocus
             noOptionsText={
                 loadingError ? (
                     <Typography variant="body2" component="span">
