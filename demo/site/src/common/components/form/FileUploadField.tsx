@@ -13,7 +13,7 @@ import styles from "./FileUploadField.module.scss";
 export const getUploadedAttachmentIds = (attachments: Attachment[]): string[] =>
     attachments.flatMap((attachment) => (attachment.status === "uploaded" && attachment.id ? [attachment.id] : []));
 
-export const areAttachmentsSettled = (attachments: Attachment[]): boolean => attachments.every((attachment) => attachment.status !== "uploading");
+export const areAttachmentsUploaded = (attachments: Attachment[]): boolean => attachments.every((attachment) => attachment.status !== "uploading");
 
 type FileUploadFieldProps<TFieldValues extends FieldValues> = Pick<ControllerProps<TFieldValues>, "name" | "control" | "rules"> &
     FieldContainerFieldProps & {
