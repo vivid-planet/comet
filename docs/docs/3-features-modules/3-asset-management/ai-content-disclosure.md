@@ -46,6 +46,12 @@ When a marked asset is rendered, `PixelImageBlock` (`@comet/site-nextjs`) and `D
 - the **official EU AI-content label** as a badge in the top-right corner, using the artwork from the [EU labelling icons](https://digital-strategy.ec.europa.eu/en/policies/eu-icons-labelling-ai-generated-content), and
 - a prefix on the media element's **accessible name** (e.g. _"AI-generated"_), so screen-reader users learn about the disclosure at first exposure.
 
+:::warning You must disclose custom-rendered assets yourself
+
+The disclosure is only rendered automatically by the library's `PixelImageBlock` and `DamVideoBlock`. Any asset rendered another way — a custom image or video component, an audio player (COMET ships no audio block), or an asset served directly — will **not** be disclosed automatically. In those cases you are responsible for the disclosure yourself: read the asset's `aiContentType` and surface it (e.g. via `getAiContentAltText` and the `AiContentDisclosure` badge).
+
+:::
+
 :::note Why a rendered overlay instead of embedded metadata
 
 Art. 50(2)'s machine-readable marking is the generating tool's responsibility. COMET serves images through imgproxy, which strips provenance metadata (e.g. C2PA) during transformation. COMET therefore satisfies the **deployer's Art. 50(4) disclosure** with a rendered, human-visible label and an accessible-name prefix, rather than embedded metadata.
@@ -62,12 +68,25 @@ Art. 50(2)'s machine-readable marking is the generating tool's responsibility. C
 
 `@comet/site-react` also exports the `AiContentDisclosure` badge component and the `getAiContentAltText` helper for custom rendering.
 
+The alt-text prefix defaults to English, so pass a translated string via `aiContentAltTextLabels` — for example using `react-intl`:
+
 ```tsx
+const intl = useIntl();
+
 <PixelImageBlock
     data={data}
     aspectRatio="16x9"
-    aiContentAltTextLabels={{ generated: "KI-generiert", modified: "KI-bearbeitet" }}
-/>
+    aiContentAltTextLabels={{
+        generated: intl.formatMessage({
+            id: "aiContentDisclosure.altText.generated",
+            defaultMessage: "AI-generated",
+        }),
+        modified: intl.formatMessage({
+            id: "aiContentDisclosure.altText.modified",
+            defaultMessage: "AI-modified",
+        }),
+    }}
+/>;
 ```
 
 ## Further reading
