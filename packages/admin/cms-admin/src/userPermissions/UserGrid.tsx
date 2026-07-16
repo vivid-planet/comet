@@ -156,17 +156,15 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                                 />
                             );
                         } else {
+                            // No "of X" total: with wildcard dimensions the number of accessible scopes can't be counted meaningfully.
                             return (
                                 <Chip
                                     color="default"
                                     label={
                                         <FormattedMessage
                                             id="comet.userPermissions.contentScopesCount"
-                                            defaultMessage="{contentScopesCount} of {availableContentScopesCount} scopes"
-                                            values={{
-                                                contentScopesCount: row.contentScopesCount,
-                                                availableContentScopesCount: availablePermissionsAndContentScopes?.contentScopes.length,
-                                            }}
+                                            defaultMessage="{contentScopesCount, plural, one {# scope} other {# scopes}}"
+                                            values={{ contentScopesCount: row.contentScopesCount }}
                                         />
                                     }
                                 />
