@@ -33,7 +33,7 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
 
 export const PixelImageBlock = withPreview(
     ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
-        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, mediaType: "image", description: damFile?.altText });
+        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText });
 
         if (!damFile || !damFile.image) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} fill={fill} />;

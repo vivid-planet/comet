@@ -41,7 +41,7 @@ export const DamVideoBlock = withPreview(
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
-        const ariaLabel = getAiContentAltText({ aiContentType: damFile?.aiContentType, mediaType: "video", description: damFile?.altText });
+        const ariaLabel = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText });
 
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const [isPlaying, setIsPlaying] = useState(autoplay ?? false);

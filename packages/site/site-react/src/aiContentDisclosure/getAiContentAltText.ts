@@ -1,7 +1,5 @@
 import type { AiContentType } from "./AiContentDisclosure";
 
-const mediaNoun = { image: "image", video: "video" } as const;
-
 /**
  * Composes the accessible name for an AI-disclosed media element.
  *
@@ -12,20 +10,12 @@ const mediaNoun = { image: "image", video: "video" } as const;
  * The prefix is in English (matching the wording baked into the official EU labels). Pass an already
  * localized `description` (e.g. the DAM alt text in the content language) for the descriptive part.
  */
-export function getAiContentAltText({
-    aiContentType,
-    mediaType,
-    description,
-}: {
-    aiContentType?: AiContentType | null;
-    mediaType: "image" | "video";
-    description?: string | null;
-}): string {
+export function getAiContentAltText({ aiContentType, description }: { aiContentType?: AiContentType | null; description?: string | null }): string {
     if (!aiContentType) {
         return description ?? "";
     }
 
-    const prefix = aiContentType === "Generated" ? `AI-generated ${mediaNoun[mediaType]}` : `AI-modified ${mediaNoun[mediaType]}`;
+    const prefix = aiContentType === "Generated" ? `[AI-generated]` : `[AI-modified]`;
 
     return description ? `${prefix} – ${description}` : prefix;
 }

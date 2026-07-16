@@ -22,7 +22,7 @@ export const SvgImageBlock = withPreview(
         height = "auto",
         ...restProps
     }: SvgImageBlockProps & Omit<HTMLAttributes<HTMLImageElement>, "width" | "height">) => {
-        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, mediaType: "image", description: damFile?.altText });
+        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText });
 
         if (!damFile) {
             return <PreviewSkeleton type="media" hasContent={false} height={height === "auto" ? undefined : height} />;

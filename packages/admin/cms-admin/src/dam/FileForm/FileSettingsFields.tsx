@@ -1,8 +1,8 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
-import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
+import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading, SelectField } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
-import { IconButton, InputAdornment, MenuItem } from "@mui/material";
+import { IconButton, InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useCallback } from "react";
 import { useForm } from "react-final-form";
@@ -179,27 +179,34 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                 />
             </FormSection>
             <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
-                <Field
+                <SelectField
                     name="aiContentType"
-                    label={
+                    label={<FormattedMessage id="comet.dam.file.aiContentType" defaultMessage="Was this asset generated or modified using AI?" />}
+                    helperText={
                         <FormattedMessage
-                            id="comet.dam.file.aiContentType"
-                            defaultMessage="Content generated or modified using artificial intelligence"
+                            id="comet.dam.file.aiContentType.helperText"
+                            defaultMessage="The EU AI Act (Article 50) requires AI-generated or AI-modified content to be marked as such. Set this for any asset that was generated or edited using artificial intelligence."
                         />
                     }
                     fullWidth
-                >
-                    {(props) => (
-                        <FinalFormSelect {...props}>
-                            <MenuItem value="Generated">
-                                <FormattedMessage id="comet.dam.file.aiContentType.generated" defaultMessage="AI generated" />
-                            </MenuItem>
-                            <MenuItem value="Modified">
-                                <FormattedMessage id="comet.dam.file.aiContentType.modified" defaultMessage="AI modified" />
-                            </MenuItem>
-                        </FinalFormSelect>
-                    )}
-                </Field>
+                    format={(value: string | null) => value ?? ""}
+                    parse={(value: string) => value || null}
+                    componentsProps={{ finalFormSelect: { displayEmpty: true } }}
+                    options={[
+                        {
+                            value: "",
+                            label: <FormattedMessage id="comet.dam.file.aiContentType.no" defaultMessage="No" />,
+                        },
+                        {
+                            value: "Generated",
+                            label: <FormattedMessage id="comet.dam.file.aiContentType.generated" defaultMessage="AI generated" />,
+                        },
+                        {
+                            value: "Modified",
+                            label: <FormattedMessage id="comet.dam.file.aiContentType.modified" defaultMessage="AI modified" />,
+                        },
+                    ]}
+                />
             </FormSection>
             {damConfig.enableLicenseFeature && (
                 <FormSection title={<FormattedMessage id="comet.dam.file.licenseInformation" defaultMessage="License information" />}>

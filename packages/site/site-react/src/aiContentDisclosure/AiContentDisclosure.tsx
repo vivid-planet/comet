@@ -17,30 +17,37 @@ export interface AiContentDisclosureProps {
     /** Which EU label to show: fully AI-generated or partially AI-modified content. */
     type: AiContentType;
     /**
-     * Pill color. "auto" (default) picks the black pill on light backgrounds and the white pill on
-     * dark ones via `prefers-color-scheme`. Use "light"/"dark" to force one.
+     * Icon color. "black" (default) shows the black EU label on a light scrim; "white" shows the white
+     * EU label on a dark scrim. The scrim keeps the label legible against arbitrary imagery either way.
      */
-    variant?: "auto" | "light" | "dark";
-    /** Absolutely position the badge in the bottom-left corner of a positioned ancestor. Default: true. */
+    variant?: "black" | "white";
+    /** Absolutely position the badge in a corner of a positioned ancestor. Default: true. */
     overlay?: boolean;
+    /**
+     * Corner to place the badge in when `overlay` is set. Defaults to "topRight" so the badge doesn't
+     * overlap video playback controls (which sit at the bottom).
+     */
+    position?: "bottomLeft" | "topRight";
     className?: string;
 }
 
 /**
  * Visual AI-content disclosure badge using the official EU AI-content labels (Article 50 AI Act).
  *
+ * The EU label sits on a scrim (light behind the black label, dark behind the white one) so it stays
+ * legible against arbitrary imagery, as required by the Code of Practice ("remain visible against any
+ * background").
+ *
  * The badge is decorative (`aria-hidden`): the machine-readable disclosure must be carried by the
- * accessible name of the associated media element (see `aiContentDisclosureAltText`), so screen-reader
+ * accessible name of the associated media element (see `getAiContentAltText`), so screen-reader
  * users learn which asset is AI-generated.
  */
-export function AiContentDisclosure({ type, variant = "auto", overlay = true, className }: AiContentDisclosureProps) {
-    const BlackIcon = icons[type].black;
-    const WhiteIcon = icons[type].white;
+export function AiContentDisclosure({ type, variant = "black", overlay = true, position = "topRight", className }: AiContentDisclosureProps) {
+    const Icon = icons[type][variant];
 
     return (
-        <span className={clsx(styles.root, overlay && styles.overlay, className)} aria-hidden="true">
-            {variant !== "dark" && <BlackIcon className={clsx(styles.icon, variant === "auto" && styles.iconLight)} />}
-            {variant !== "light" && <WhiteIcon className={clsx(styles.icon, variant === "auto" && styles.iconDark)} />}
+        <span className={clsx(styles.root, styles[variant], overlay && styles.overlay, overlay && styles[position], className)} aria-hidden="true">
+            <Icon className={styles.icon} />
         </span>
     );
 }
