@@ -1,12 +1,27 @@
-import { ChevronRight } from "@comet/admin-icons";
-import { type ComponentsOverrides, Typography } from "@mui/material";
-import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { Fragment, type ReactNode } from "react";
+import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
+import { ButtonBase, type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
+import { alpha, css, type Theme, useThemeProps } from "@mui/material/styles";
+import { Fragment, type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
-type BreadcrumbsClassKey = "root" | "item" | "separator";
+type BreadcrumbsClassKey =
+    | "root"
+    | "item"
+    | "activeItem"
+    | "separator"
+    | "ellipsis"
+    | "menuContainer"
+    | "toolbarContainer"
+    | "expandedMenu"
+    | "expandedMenuItem"
+    | "expandedMenuActiveItem"
+    | "expandedMenuActiveItemWrapper"
+    | "pageTreeVerticalLine"
+    | "expandedMenuSubitemWrapper"
+    | "mobileMenuIcon"
+    | "mobileRootButton";
 
 export interface Breadcrumb {
     url: string;
@@ -17,9 +32,22 @@ interface BreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
         item: typeof Typography;
-        separator: typeof ChevronRight;
+        activeItem: typeof Typography;
+        separator: "div";
+        ellipsis: typeof Typography;
+        menuContainer: "div";
+        toolbarContainer: "div";
+        expandedMenu: "div";
+        expandedMenuItem: typeof Typography;
+        expandedMenuActiveItem: typeof Typography;
+        expandedMenuActiveItemWrapper: "div";
+        pageTreeVerticalLine: "div";
+        expandedMenuSubitemWrapper: "div";
+        mobileMenuIcon: "div";
+        mobileRootButton: typeof ButtonBase;
     }> {
     items: Breadcrumb[];
+    iconMapping?: { separator?: ReactNode; openMenu?: ReactNode; closeMenu?: ReactNode };
 }
 
 const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
@@ -27,10 +55,32 @@ const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
     slotName: "root",
 })(
     ({ theme }) => css`
+        position: relative;
         display: flex;
         align-items: center;
-        height: 50px;
+        justify-content: space-between;
+        height: 40px;
         padding: 0 ${theme.spacing(2)};
+        cursor: pointer;
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: ${theme.spacing(2)};
+            right: ${theme.spacing(2)};
+            bottom: 0;
+            height: 1px;
+            background-color: ${theme.palette.grey[100]};
+        }
+
+        ${theme.breakpoints.up("sm")} {
+            height: 50px;
+            cursor: default;
+
+            &::after {
+                content: none;
+            }
+        }
     `,
 );
 
@@ -47,47 +97,282 @@ const Item = createComponentSlot(Typography)<BreadcrumbsClassKey>({
         }
 
         &:last-child {
-            font-weight: bold;
             overflow: hidden;
             text-overflow: ellipsis;
         }
     `,
 ) as typeof Typography;
 
-const Separator = createComponentSlot(ChevronRight)<BreadcrumbsClassKey>({
+const ActiveItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "activeItem",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[900]};
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        line-height: 16px;
+        font-weight: 600;
+
+        ${theme.breakpoints.up("sm")} {
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: bold;
+        }
+    `,
+) as typeof Typography;
+
+const Separator = createComponentSlot("div")<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "separator",
 })(css`
     margin: 0 5px;
+    display: flex;
+    align-items: flex-end;
 `);
 
+const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "ellipsis",
+})(
+    ({ theme }) => css`
+        margin-right: 5px;
+        color: inherit;
+        font-size: 14px;
+        line-height: 16px;
+
+        ${theme.breakpoints.up("sm")} {
+            font-size: 16px;
+            line-height: 20px;
+        }
+    `,
+);
+
+const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "menuContainer",
+})(
+    ({ theme }) => css`
+        display: none;
+
+        ${theme.breakpoints.up("sm")} {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+    `,
+);
+
+const ToolbarContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "toolbarContainer",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 40px;
+        padding: 0;
+
+        ${theme.breakpoints.up("sm")} {
+            height: 50px;
+            padding: 0 ${theme.spacing(2)};
+        }
+    `,
+);
+
+const ExpandedMenu = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "expandedMenu",
+})(
+    ({ theme }) => css`
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        display: flex;
+        flex-direction: column;
+        background-color: ${theme.palette.background.paper};
+        z-index: 1;
+    `,
+);
+
+const ExpandedMenuItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "expandedMenuItem",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[900]};
+    `,
+) as typeof Typography;
+
+const ExpandedMenuActiveItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "expandedMenuActiveItem",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[900]};
+    `,
+) as typeof Typography;
+
+type WrapperOwnerState = { indentation: number };
+
+const wrapperPaddingLeft = (theme: Theme, indentation: number) =>
+    indentation === 0 ? theme.spacing(3) : `calc(${theme.spacing(1)} + 17px * ${indentation})`;
+
+const ExpandedMenuActiveItemWrapper = createComponentSlot("div")<BreadcrumbsClassKey, WrapperOwnerState>({
+    componentName: "Breadcrumbs",
+    slotName: "expandedMenuActiveItemWrapper",
+})(
+    ({ theme, ownerState }) => css`
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        height: 45px;
+        padding-left: ${wrapperPaddingLeft(theme, ownerState.indentation)};
+        padding-right: ${theme.spacing(3)};
+        background-color: ${alpha(theme.palette.primary.main, 0.1)};
+    `,
+);
+
+const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKey, WrapperOwnerState>({
+    componentName: "Breadcrumbs",
+    slotName: "expandedMenuSubitemWrapper",
+})(
+    ({ theme, ownerState }) => css`
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        height: 45px;
+        padding-left: ${wrapperPaddingLeft(theme, ownerState.indentation)};
+        padding-right: ${theme.spacing(3)};
+    `,
+);
+
+const MobileMenuIcon = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "mobileMenuIcon",
+})(css`
+    display: flex;
+    align-items: center;
+`);
+
+const MobileRootButton = createComponentSlot(ButtonBase)<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "mobileRootButton",
+})(css`
+    display: block;
+    width: 100%;
+    text-align: left;
+`);
+
+const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "pageTreeVerticalLine",
+})(
+    ({ theme }) => css`
+        width: 4px;
+        height: 25px;
+        border-left: 1px solid ${theme.palette.grey[100]};
+        border-bottom: 1px solid ${theme.palette.grey[100]};
+        align-self: flex-start;
+    `,
+);
+
 export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
-    const { items, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
-    return (
+    const { iconMapping = {}, items, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+    const ellipsis = ". . .";
+
+    const {
+        separator: separatorIcon = <ChevronRight />,
+        openMenu: openMenuIcon = <ChevronDown />,
+        closeMenu: closeMenuIcon = <ChevronUp />,
+    } = iconMapping;
+
+    const toggleMenu = () => {
+        setIsMenuOpen((prev) => !prev);
+    };
+
+    const coreNode = (
         <Root {...slotProps?.root} {...restProps}>
-            {items.map((item, index) => {
-                const isCurrentPage = index === items.length - 1;
+            <ToolbarContainer {...slotProps?.toolbarContainer}>
+                {items.map((item, index) => {
+                    const isCurrentPage = index === items.length - 1;
+                    const hasMultipleItems = items.length > 1;
 
-                if (isCurrentPage) {
+                    if (isCurrentPage) {
+                        return (
+                            <Fragment key={item.url}>
+                                {hasMultipleItems && isMobile && (
+                                    <>
+                                        <Ellipsis {...slotProps?.ellipsis}>{ellipsis}</Ellipsis>
+                                        <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
+                                    </>
+                                )}
+                                <ActiveItem key={item.url} {...slotProps?.activeItem}>
+                                    {item.title}
+                                </ActiveItem>
+                            </Fragment>
+                        );
+                    }
+
+                    if (isMobile) {
+                        return null;
+                    }
+
                     return (
-                        <Item key={item.url} {...slotProps?.item}>
-                            {item.title}
-                        </Item>
+                        <MenuContainer key={item.url} {...slotProps?.menuContainer}>
+                            {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
+                            <Item component="a" href={item.url} {...slotProps?.item}>
+                                {item.title}
+                            </Item>
+                            <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
+                        </MenuContainer>
                     );
-                }
+                })}
+                {isMenuOpen && (
+                    <ExpandedMenu {...slotProps?.expandedMenu}>
+                        {items.map((item, index) => {
+                            const isActive = index === items.length - 1;
+                            const Wrapper = isActive ? ExpandedMenuActiveItemWrapper : ExpandedMenuSubitemWrapper;
+                            const wrapperSlotProps = isActive ? slotProps?.expandedMenuActiveItemWrapper : slotProps?.expandedMenuSubitemWrapper;
+                            return (
+                                <Wrapper key={item.url} ownerState={{ indentation: index }} {...wrapperSlotProps}>
+                                    {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
+                                    {isActive ? (
+                                        <ExpandedMenuActiveItem variant="subtitle2" {...slotProps?.expandedMenuActiveItem}>
+                                            {item.title}
+                                        </ExpandedMenuActiveItem>
+                                    ) : (
+                                        <ExpandedMenuItem variant="body2" {...slotProps?.expandedMenuItem}>
+                                            {item.title}
+                                        </ExpandedMenuItem>
+                                    )}
+                                </Wrapper>
+                            );
+                        })}
+                    </ExpandedMenu>
+                )}
+            </ToolbarContainer>
 
-                return (
-                    <Fragment key={item.url}>
-                        {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
-                        <Item component="a" href={item.url} {...slotProps?.item}>
-                            {item.title}
-                        </Item>
-                        <Separator {...slotProps?.separator} />
-                    </Fragment>
-                );
-            })}
+            {isMobile && <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{isMenuOpen ? closeMenuIcon : openMenuIcon}</MobileMenuIcon>}
         </Root>
     );
+
+    if (isMobile) {
+        return (
+            <MobileRootButton onClick={toggleMenu} {...slotProps?.mobileRootButton}>
+                {coreNode}
+            </MobileRootButton>
+        );
+    }
+
+    return coreNode;
 };
 
 declare module "@mui/material/styles" {
