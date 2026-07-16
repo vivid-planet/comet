@@ -24,7 +24,6 @@ const MultipleInputBase = styled(InputBase, {
     shouldForwardProp: (prop) => prop !== "endAdornmentWidth",
 })<{ endAdornmentWidth: number }>(
     ({ endAdornmentWidth }) => css`
-        /* The second selector overrides the "hasPopupIcon" padding-right from the MuiAutocomplete theme. */
         .${autocompleteClasses.root}
             &.${autocompleteClasses.inputRoot},
             .${autocompleteClasses.root}.${autocompleteClasses.hasPopupIcon}
