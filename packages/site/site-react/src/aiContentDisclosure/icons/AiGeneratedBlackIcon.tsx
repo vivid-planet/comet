@@ -1,6 +1,6 @@
 import type { SVGProps } from "react";
 
-// EU AI-content label — generated from icons/ai-generated-black.svg (do not alter the artwork).
+// Official EU AI-content label (do not alter the artwork).
 // Source: https://digital-strategy.ec.europa.eu/en/policies/eu-icons-labelling-ai-generated-content
 export const AiGeneratedBlackIcon = (props: SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 1789.84 566.93" xmlns="http://www.w3.org/2000/svg" {...props}>
