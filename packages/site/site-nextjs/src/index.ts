@@ -13,6 +13,9 @@ export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export {
     AdminMessageType,
     type AiContentAltTextLabels,
+    AiContentDisclosure,
+    type AiContentDisclosureProps,
+    type AiContentType,
     type BlockLoader,
     type BlockLoaderDependencies,
     type BlockLoaderOptions,
@@ -33,6 +36,7 @@ export {
     ErrorHandlerProvider,
     ExternalLinkBlock,
     generateImageUrl,
+    getAiContentAltText,
     getMaxDimensionsFromArea,
     gql,
     type GraphQLFetch,
@@ -61,6 +65,7 @@ export {
     PhoneLinkBlock,
     type PlayPauseButtonProps,
     Preview,
+    PreviewContext,
     type PreviewData,
     PreviewSkeleton,
     type PropsWithData,
@@ -70,6 +75,7 @@ export {
     sendSitePreviewIFrameMessage,
     /** @deprecated Use PreviewData instead. */
     type PreviewData as SitePreviewData,
+    type SitePreviewIFrameLocationMessage,
     SitePreviewIFrameMessageType,
     type SupportedBlocks,
     SvgImageBlock,
