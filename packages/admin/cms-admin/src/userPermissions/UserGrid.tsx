@@ -23,12 +23,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { DataGrid } from "../dataGrid/DataGrid";
 import { useUserPermissionCheck } from "./hooks/currentUser";
 import { ImpersonateMenuItem } from "./ImpersonateMenuItem";
-import type {
-    GQLUserAvailablePermissionsAndContentScopesQuery,
-    GQLUserForGridFragment,
-    GQLUserGridQuery,
-    GQLUserGridQueryVariables,
-} from "./UserGrid.generated";
+import type { GQLUserAvailablePermissionsQuery, GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
     toolbarAction?: ReactNode;
@@ -56,14 +51,10 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     const stackApi = useContext(StackSwitchApiContext);
     const isAllowed = useUserPermissionCheck();
 
-    const { data: availablePermissionsAndContentScopes } = useQuery<GQLUserAvailablePermissionsAndContentScopesQuery>(
+    const { data: availablePermissions } = useQuery<GQLUserAvailablePermissionsQuery>(
         gql`
-            query UserAvailablePermissionsAndContentScopes {
+            query UserAvailablePermissions {
                 permissions: userPermissionsAvailablePermissions
-                contentScopes: userPermissionsAvailableContentScopes {
-                    scope
-                    label
-                }
             }
         `,
         { skip: !isAllowed("userPermissions") },
@@ -97,10 +88,10 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                     pinnable: false,
                     sortable: false,
                     type: "singleSelect",
-                    valueOptions: availablePermissionsAndContentScopes?.permissions,
+                    valueOptions: availablePermissions?.permissions,
                     headerName: intl.formatMessage({ id: "comet.userPermissions.permissionsInfo", defaultMessage: "Permissions" }),
                     renderCell: ({ row }) => {
-                        if (row.permissionsCount === availablePermissionsAndContentScopes?.permissions.length) {
+                        if (row.permissionsCount === availablePermissions?.permissions.length) {
                             return (
                                 <Chip
                                     color="primary"
@@ -124,7 +115,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                                             defaultMessage="{permissionsCount} of {availablePermissionsCount} permissions"
                                             values={{
                                                 permissionsCount: row.permissionsCount,
-                                                availablePermissionsCount: availablePermissionsAndContentScopes?.permissions.length,
+                                                availablePermissionsCount: availablePermissions?.permissions.length,
                                             }}
                                         />
                                     }
@@ -141,35 +132,28 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                     filterable: false,
                     headerName: intl.formatMessage({ id: "comet.userPermissions.contentScopesInfo", defaultMessage: "Scopes" }),
                     renderCell: ({ row }) => {
-                        if (row.contentScopesCount === availablePermissionsAndContentScopes?.contentScopes.length) {
-                            return (
-                                <Chip
-                                    color="primary"
-                                    label={<FormattedMessage id="comet.userPermissions.allContentScopes" defaultMessage="All scopes" />}
-                                />
-                            );
-                        } else if (row.contentScopesCount === 0) {
+                        // No total and no "All scopes": with wildcard dimensions the number of accessible scopes can't be
+                        // counted meaningfully against a total, so just show the number of accessible scopes.
+                        if (row.contentScopesCount === 0) {
                             return (
                                 <Chip
                                     color="secondary"
                                     label={<FormattedMessage id="comet.userPermissions.noContentScopes" defaultMessage="No scopes" />}
                                 />
                             );
-                        } else {
-                            // No "of X" total: with wildcard dimensions the number of accessible scopes can't be counted meaningfully.
-                            return (
-                                <Chip
-                                    color="default"
-                                    label={
-                                        <FormattedMessage
-                                            id="comet.userPermissions.contentScopesCount"
-                                            defaultMessage="{contentScopesCount, plural, one {# scope} other {# scopes}}"
-                                            values={{ contentScopesCount: row.contentScopesCount }}
-                                        />
-                                    }
-                                />
-                            );
                         }
+                        return (
+                            <Chip
+                                color="default"
+                                label={
+                                    <FormattedMessage
+                                        id="comet.userPermissions.contentScopesCount"
+                                        defaultMessage="{contentScopesCount, plural, one {# scope} other {# scopes}}"
+                                        values={{ contentScopesCount: row.contentScopesCount }}
+                                    />
+                                }
+                            />
+                        );
                     },
                 },
             );
@@ -202,7 +186,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             ),
         });
         return columns;
-    }, [intl, isAllowed, availablePermissionsAndContentScopes, stackApi]);
+    }, [intl, isAllowed, availablePermissions, stackApi]);
 
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
