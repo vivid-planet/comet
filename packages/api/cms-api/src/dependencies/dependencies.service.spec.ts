@@ -8,13 +8,14 @@ import { DependenciesService } from "./dependencies.service";
 // without a real database. These tests spy on those methods; the raw SQL they contain is left to
 // integration testing.
 type RefreshInternals = {
-    refresh: (options?: { concurrently?: boolean; waitForRunningRefresh?: boolean }) => Promise<void>;
+    refresh: (options?: { concurrently?: boolean }) => Promise<void>;
     tryClaimRefresh: () => Promise<string | null>;
     getRunningRefresh: () => Promise<{ id: string } | undefined>;
     runRefresh: (args: { id: string; concurrently: boolean }) => Promise<void>;
     waitForRunningRefreshToComplete: () => Promise<boolean>;
     getLastFinishedRefresh: () => Promise<{ finishedAt: Date } | undefined>;
     forceRefresh: () => Promise<void>;
+    runningRefresh?: Promise<void>;
 };
 
 const internals = (service: DependenciesService) => service as unknown as RefreshInternals;
@@ -82,7 +83,7 @@ describe("DependenciesService.refreshViews", () => {
 
         await service.refreshViews();
 
-        expect(refresh).toHaveBeenCalledWith({ waitForRunningRefresh: true });
+        expect(refresh).toHaveBeenCalledWith({ concurrently: false });
     });
 
     it("refreshes synchronously and waits on first-time initialization", async () => {
@@ -92,7 +93,38 @@ describe("DependenciesService.refreshViews", () => {
 
         await service.refreshViews();
 
-        expect(refresh).toHaveBeenCalledWith({ waitForRunningRefresh: true });
+        expect(refresh).toHaveBeenCalledWith({ concurrently: false });
+    });
+
+    it("deduplicates parallel refreshes into a single in-flight refresh per pod", async () => {
+        const service = createService();
+        vi.spyOn(internals(service), "getLastFinishedRefresh").mockResolvedValue(undefined);
+        let resolveRefresh: () => void = () => undefined;
+        const refresh = vi.spyOn(internals(service), "refresh").mockReturnValue(
+            new Promise<void>((resolve) => {
+                resolveRefresh = resolve;
+            }),
+        );
+
+        // Many callers (e.g. one refreshViews() per DAM "Usages" row) start at the same time.
+        const callers = Promise.all(Array.from({ length: 10 }, () => service.refreshViews()));
+        // Let the microtask queue settle so every caller has run up to the shared await.
+        await Promise.resolve();
+        resolveRefresh();
+        await callers;
+
+        expect(refresh).toHaveBeenCalledOnce();
+    });
+
+    it("clears the in-flight refresh once it settles, allowing a later refresh", async () => {
+        const service = createService();
+        vi.spyOn(internals(service), "getLastFinishedRefresh").mockResolvedValue(undefined);
+        const refresh = vi.spyOn(internals(service), "refresh").mockResolvedValue(undefined);
+
+        await service.refreshViews();
+        await service.refreshViews();
+
+        expect(refresh).toHaveBeenCalledTimes(2);
     });
 });
 
@@ -103,7 +135,7 @@ describe("DependenciesService refresh coordination", () => {
         const runRefresh = vi.spyOn(internals(service), "runRefresh").mockResolvedValue(undefined);
         const wait = vi.spyOn(internals(service), "waitForRunningRefreshToComplete").mockResolvedValue(false);
 
-        await internals(service).refresh({ waitForRunningRefresh: true });
+        await internals(service).refresh();
 
         expect(runRefresh).toHaveBeenCalledWith({ id: "refresh-1", concurrently: false });
         expect(wait).not.toHaveBeenCalled();
@@ -119,7 +151,7 @@ describe("DependenciesService refresh coordination", () => {
         expect(runRefresh).toHaveBeenCalledWith({ id: "refresh-1", concurrently: true });
     });
 
-    it("skips immediately without waiting when a refresh is running and waiting is disabled", async () => {
+    it("skips immediately without waiting when a refresh is running and it is a background refresh", async () => {
         const service = createService();
         const tryClaim = vi.spyOn(internals(service), "tryClaimRefresh").mockResolvedValue(null);
         const runRefresh = vi.spyOn(internals(service), "runRefresh").mockResolvedValue(undefined);
@@ -136,7 +168,7 @@ describe("DependenciesService refresh coordination", () => {
         const service = createService();
         const tryClaim = vi
             .spyOn(internals(service), "tryClaimRefresh")
-            .mockResolvedValueOnce(null) // a refresh is already running
+            .mockResolvedValueOnce(null) // a refresh is already running on another pod
             .mockResolvedValueOnce(null); // after waiting, the completed refresh is fresh -> claim skips on recency
         const runRefresh = vi.spyOn(internals(service), "runRefresh").mockResolvedValue(undefined);
         const wait = vi
@@ -144,7 +176,7 @@ describe("DependenciesService refresh coordination", () => {
             .mockResolvedValueOnce(true) // the in-progress refresh was running; wait for it
             .mockResolvedValueOnce(false); // it finished with fresh data; nothing left to wait for
 
-        await internals(service).refresh({ waitForRunningRefresh: true });
+        await internals(service).refresh();
 
         expect(tryClaim).toHaveBeenCalledTimes(2);
         expect(wait).toHaveBeenCalledTimes(2);
@@ -160,7 +192,7 @@ describe("DependenciesService refresh coordination", () => {
         const runRefresh = vi.spyOn(internals(service), "runRefresh").mockResolvedValue(undefined);
         const wait = vi.spyOn(internals(service), "waitForRunningRefreshToComplete").mockResolvedValue(true);
 
-        await internals(service).refresh({ waitForRunningRefresh: true });
+        await internals(service).refresh();
 
         expect(tryClaim).toHaveBeenCalledTimes(2);
         expect(wait).toHaveBeenCalledOnce();
@@ -173,7 +205,7 @@ describe("DependenciesService refresh coordination", () => {
         const runRefresh = vi.spyOn(internals(service), "runRefresh").mockResolvedValue(undefined);
         const wait = vi.spyOn(internals(service), "waitForRunningRefreshToComplete").mockResolvedValue(false); // nothing running
 
-        await internals(service).refresh({ waitForRunningRefresh: true });
+        await internals(service).refresh();
 
         expect(tryClaim).toHaveBeenCalledOnce();
         expect(wait).toHaveBeenCalledOnce();
@@ -217,20 +249,28 @@ describe("DependenciesService.waitForRunningRefreshToComplete", () => {
 });
 
 describe("DependenciesService.tryClaimRefresh", () => {
+    function createKnexMock({ rawRows }: { rawRows: unknown[] }) {
+        const del = vi.fn().mockResolvedValue(undefined);
+        const where = vi.fn().mockReturnValue({ delete: del });
+        const whereNull = vi.fn().mockReturnValue({ where });
+        const raw = vi.fn().mockResolvedValue({ rows: rawRows });
+        const knex = Object.assign(vi.fn().mockReturnValue({ whereNull }), { raw });
+        return { knex, raw, whereNull, where, del };
+    }
+
     it("returns an id when the conditional insert claims the refresh", async () => {
-        const raw = vi.fn().mockResolvedValue({ rows: [{ id: "inserted" }] });
-        const knex = Object.assign(vi.fn(), { raw });
+        const { knex, raw, del } = createKnexMock({ rawRows: [{ id: "inserted" }] });
         const service = createService(knex);
 
         const result = await internals(service).tryClaimRefresh();
 
         expect(result).toBeTypeOf("string");
+        expect(del).toHaveBeenCalledOnce(); // abandoned-marker cleanup
         expect(raw).toHaveBeenCalledOnce();
     });
 
-    it("returns null when another caller already holds the claim", async () => {
-        const raw = vi.fn().mockResolvedValue({ rows: [] });
-        const knex = Object.assign(vi.fn(), { raw });
+    it("returns null when another caller already holds the claim (ON CONFLICT DO NOTHING)", async () => {
+        const { knex } = createKnexMock({ rawRows: [] });
         const service = createService(knex);
 
         expect(await internals(service).tryClaimRefresh()).toBeNull();
