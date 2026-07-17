@@ -93,4 +93,47 @@ describe("FileValidationService", () => {
             });
         });
     });
+
+    describe("getMimetype", () => {
+        it("resolves the specific mime type for an allow-listed extension uploaded as application/octet-stream", () => {
+            const service = new FileValidationService({
+                maxFileSize: 10,
+                acceptedMimeTypes: ["application/vnd.ms-outlook", "message/rfc822"],
+                acceptedFileExtensionsForOctetStream: ["msg", "eml"],
+            });
+
+            expect(service.getMimetype(createFile("mail.msg", "application/octet-stream"))).toBe("application/vnd.ms-outlook");
+            expect(service.getMimetype(createFile("mail.eml", "application/octet-stream"))).toBe("message/rfc822");
+        });
+
+        it("keeps the mime type the browser sent when it is not application/octet-stream", () => {
+            const service = new FileValidationService({
+                maxFileSize: 10,
+                acceptedMimeTypes: ["application/vnd.ms-outlook"],
+                acceptedFileExtensionsForOctetStream: ["msg"],
+            });
+
+            expect(service.getMimetype(createFile("mail.msg", "application/vnd.ms-outlook"))).toBe("application/vnd.ms-outlook");
+        });
+
+        it("keeps application/octet-stream for extensions that are not allow-listed", () => {
+            const service = new FileValidationService({
+                maxFileSize: 10,
+                acceptedMimeTypes: ["application/vnd.ms-outlook"],
+                acceptedFileExtensionsForOctetStream: ["msg"],
+            });
+
+            expect(service.getMimetype(createFile("malware.exe", "application/octet-stream"))).toBe("application/octet-stream");
+        });
+
+        it("keeps application/octet-stream when the extension does not map to an accepted mime type", () => {
+            const service = new FileValidationService({
+                maxFileSize: 10,
+                acceptedMimeTypes: ["application/pdf"],
+                acceptedFileExtensionsForOctetStream: ["msg"],
+            });
+
+            expect(service.getMimetype(createFile("mail.msg", "application/octet-stream"))).toBe("application/octet-stream");
+        });
+    });
 });

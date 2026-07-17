@@ -29,7 +29,7 @@ export class FileValidationService {
             return "Invalid file name: Missing file extension";
         }
 
-        const mimetype = this.resolveMimetype(file.mimetype, extension);
+        const mimetype = this.getMimetype(file);
 
         //mime type in an accepted mime type
         if (!this.config.acceptedMimeTypes.includes(mimetype)) {
@@ -46,25 +46,29 @@ export class FileValidationService {
     }
 
     /**
+     * Returns the mime type the file should be treated and stored as.
+     *
      * Some browsers upload certain files (e.g. .msg, .eml) with the generic `application/octet-stream`
-     * mime type instead of their specific one. For the explicitly allow-listed extensions, resolve the
-     * specific mime type from the extension so the upload can be validated like any other file. Only the
-     * configured extensions are considered - arbitrary octet-stream uploads (e.g. executables) keep the
-     * generic mime type and remain subject to the regular checks.
+     * mime type instead of their specific one. For the explicitly allow-listed extensions, the specific
+     * mime type is resolved from the extension so the file is validated and persisted with its correct
+     * mime type. Only the configured extensions are considered - arbitrary octet-stream uploads
+     * (e.g. executables) keep the generic mime type.
      */
-    private resolveMimetype(mimetype: string, extension: string): string {
-        if (mimetype !== GENERIC_MIME_TYPE || !this.config.acceptedFileExtensionsForOctetStream?.includes(extension)) {
-            return mimetype;
+    getMimetype(file: Pick<FileUploadInput, "originalname" | "mimetype">): string {
+        const extension = file.originalname.split(".").pop()?.toLowerCase();
+        if (
+            file.mimetype !== GENERIC_MIME_TYPE ||
+            extension === undefined ||
+            !this.config.acceptedFileExtensionsForOctetStream?.includes(extension)
+        ) {
+            return file.mimetype;
         }
 
-        return getAcceptedMimetypeForExtension(extension, this.config.acceptedMimeTypes) ?? mimetype;
+        return getAcceptedMimetypeForExtension(extension, this.config.acceptedMimeTypes) ?? file.mimetype;
     }
 
     async validateFileContents(file: FileUploadInput): Promise<undefined | string> {
-        const extension = file.originalname.split(".").pop()?.toLowerCase();
-        const mimetype = extension !== undefined ? this.resolveMimetype(file.mimetype, extension) : file.mimetype;
-
-        if (mimetype === "image/svg+xml") {
+        if (this.getMimetype(file) === "image/svg+xml") {
             const fileContent = await readFile(file.path, { encoding: "utf-8" });
 
             if (!(await isValidSvg(fileContent))) {

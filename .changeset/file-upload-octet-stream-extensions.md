@@ -8,6 +8,8 @@ Some browsers upload certain files (e.g. `.msg`, `.eml`) with the generic `appli
 
 Add the new `acceptedFileExtensionsForOctetStream` option (available for both the DAM and file uploads config) to accept such files based on their file extension. The extension's specific mime type must still be included in `acceptedMimeTypes`; arbitrary `application/octet-stream` uploads (e.g. executables) remain rejected.
 
+Such files are stored with their resolved specific mime type (e.g. `application/vnd.ms-outlook`) instead of `application/octet-stream`.
+
 **Example**
 
 ```ts

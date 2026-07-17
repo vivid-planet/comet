@@ -62,6 +62,10 @@ export function FileUploadsFileInterceptor(fieldName: string = FILE_UPLOAD_FIELD
             const ctx = context.switchToHttp();
             const file = ctx.getRequest().file;
 
+            // Persist the resolved mime type (e.g. .msg/.eml files that browsers upload as
+            // application/octet-stream) instead of the generic one the browser sent.
+            file.mimetype = this.fileValidationService.getMimetype(file);
+
             const error = await this.fileValidationService.validateFileContents(file);
 
             if (error) {
