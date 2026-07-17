@@ -19,15 +19,15 @@ export interface AiContentDisclosureProps {
     /** Icon height in pixels. Defaults to 28. */
     size?: number;
     /**
-     * Icon color. "black" (default) shows the black EU label with a light halo; "white" shows the white
+     * "black" (default) shows the black EU label with a light halo; "white" shows the white
      * EU label with a dark halo. The halo keeps the label legible against arbitrary imagery either way.
      */
-    variant?: "black" | "white";
-    /** Absolutely position the badge in a corner of a positioned ancestor. Default: true. */
-    overlay?: boolean;
+    iconColor?: "black" | "white";
+    /** Prevent the badge from being positioned absolutely in relation to its parent. Default: false. */
+    disableAbsolutePositioning?: boolean;
     /**
-     * Corner to place the badge in when `overlay` is set. Defaults to "topRight" so the badge doesn't
-     * overlap video playback controls (which sit at the bottom).
+     * Corner to place the badge in when it is positioned absolutely. Defaults to "topRight" so the badge
+     * doesn't overlap video playback controls (which sit at the bottom).
      */
     position?: "bottomLeft" | "topRight";
     className?: string;
@@ -47,16 +47,22 @@ export interface AiContentDisclosureProps {
 export function AiContentDisclosure({
     type,
     size = 28,
-    variant = "black",
-    overlay = true,
+    iconColor = "black",
+    disableAbsolutePositioning = false,
     position = "topRight",
     className,
 }: AiContentDisclosureProps) {
-    const Icon = icons[type][variant];
+    const Icon = icons[type][iconColor];
 
     return (
         <span
-            className={clsx(styles.root, styles[variant], overlay && styles.overlay, overlay && styles[position], className)}
+            className={clsx(
+                styles.root,
+                styles[iconColor],
+                !disableAbsolutePositioning && styles.overlay,
+                !disableAbsolutePositioning && styles[position],
+                className,
+            )}
             style={{ "--ai-content-disclosure-icon-size": `${size}px` }}
             aria-hidden="true"
         >
