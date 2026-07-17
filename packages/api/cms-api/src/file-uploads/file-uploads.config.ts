@@ -3,6 +3,16 @@ export interface FileUploadsConfig {
     maxFileSize: number;
     acceptedMimeTypes: string[];
     /**
+     * Some browsers upload certain files (e.g. `.msg`, `.eml`) with the generic `application/octet-stream`
+     * mime type instead of their specific one, which causes them to be rejected. List the affected file
+     * extensions here to accept them despite the generic mime type. The extension's specific mime type
+     * must still be included in `acceptedMimeTypes`; arbitrary `application/octet-stream` uploads
+     * (e.g. executables) remain rejected.
+     *
+     * @default undefined
+     */
+    acceptedFileExtensionsForOctetStream?: string[];
+    /**
      * Allows setting an expiration duration, after this duration the file will be deleted.
      * The duration is in seconds.
      * Leaving it undefined means the file will never be deleted.

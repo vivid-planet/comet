@@ -107,6 +107,10 @@ export const getValidExtensionsForMimetype = (mimetype: string) => {
     return supportedExtensions;
 };
 
+export const getAcceptedMimetypeForExtension = (extension: string, acceptedMimeTypes: string[]): string | undefined => {
+    return acceptedMimeTypes.find((mimetype) => getValidExtensionsForMimetype(mimetype)?.includes(extension));
+};
+
 export async function createFileUploadInputFromUrl(url: string): Promise<FileUploadInput> {
     const tempDir = fs.mkdtempSync(`${os.tmpdir()}/download`);
     const fakeName = uuid();

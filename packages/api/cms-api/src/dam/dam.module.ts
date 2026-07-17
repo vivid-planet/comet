@@ -72,6 +72,7 @@ export class DamModule {
             useValue: new FileValidationService({
                 maxFileSize: damConfig.maxFileSize,
                 acceptedMimeTypes: damConfig.acceptedMimeTypes ?? damDefaultAcceptedMimetypes,
+                acceptedFileExtensionsForOctetStream: damConfig.acceptedFileExtensionsForOctetStream,
             }),
         };
 

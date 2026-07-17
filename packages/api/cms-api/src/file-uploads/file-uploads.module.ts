@@ -27,6 +27,7 @@ export class FileUploadsModule {
             useValue: new FileValidationService({
                 maxFileSize: options.maxFileSize,
                 acceptedMimeTypes: options.acceptedMimeTypes,
+                acceptedFileExtensionsForOctetStream: options.acceptedFileExtensionsForOctetStream,
             }),
         };
 
