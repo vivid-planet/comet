@@ -11,6 +11,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useContentLanguage } from "../../contentLanguage/useContentLanguage";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDamConfig } from "../config/damConfig";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
@@ -38,8 +39,13 @@ const damIsFilenameOccupiedQuery = gql`
 export const FileSettingsFields = ({ file }: SettingsFormProps) => {
     const folderId = file.folder?.id ?? null;
     const isImage = !!file.image;
-    const isVideo = file.mimetype.startsWith("video/");
-    const isAudio = file.mimetype.startsWith("audio/");
+    const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+    // A deep fake can only be image, audio or video content, so the AI content disclosure is limited to those types.
+    // Vector images (SVG) are excluded because they cannot appear photorealistic.
+    const supportsAiContentType =
+        filteredAcceptedMimeTypes.pixelImage.includes(file.mimetype) ||
+        filteredAcceptedMimeTypes.video.includes(file.mimetype) ||
+        filteredAcceptedMimeTypes.audio.includes(file.mimetype);
     const intl = useIntl();
     const apollo = useApolloClient();
     const scope = useDamScope();
@@ -180,7 +186,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                     }
                 />
             </FormSection>
-            {(isImage || isVideo || isAudio) && (
+            {supportsAiContentType && (
                 <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
                     <SelectField
                         name="aiContentType"
