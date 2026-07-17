@@ -34,10 +34,10 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
     alt?: never;
     /** Override props passed to the AI content disclosure badge. */
     aiContentDisclosureProps?: Partial<AiContentDisclosureProps>;
-    /** Render a custom AI content disclosure instead of the built-in badge. Pass `null` to render none, e.g. when the project renders its own. */
-    customAiContentDisclosure?: ReactNode;
+    /** Render your own AI content disclosure instead of the built-in badge. Pass `null` to render none, e.g. when the project renders its own. */
+    aiContentDisclosure?: ReactNode;
     /** AI content prefix prepended to the alt text. Defaults to English; ideally pass a translated string here. */
-    aiContentAltTextLabels?: Partial<AiContentAltTextLabels>;
+    aiContentAltTextPrefixLabels?: Partial<AiContentAltTextLabels>;
 }
 
 export const PixelImageBlock = withPreview(
@@ -46,11 +46,15 @@ export const PixelImageBlock = withPreview(
         data: { damFile, cropArea, urlTemplate },
         fill,
         aiContentDisclosureProps,
-        customAiContentDisclosure,
-        aiContentAltTextLabels,
+        aiContentDisclosure,
+        aiContentAltTextPrefixLabels,
         ...nextImageProps
     }: PixelImageBlockProps) => {
-        const altText = getAiContentAltText({ aiContentType: damFile?.aiContentType, description: damFile?.altText, labels: aiContentAltTextLabels });
+        const altText = getAiContentAltText({
+            aiContentType: damFile?.aiContentType,
+            description: damFile?.altText,
+            labels: aiContentAltTextPrefixLabels,
+        });
 
         if (!damFile || !damFile.image) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} fill={fill} />;
@@ -107,8 +111,8 @@ export const PixelImageBlock = withPreview(
         );
 
         const disclosure = damFile.aiContentType ? (
-            customAiContentDisclosure !== undefined ? (
-                customAiContentDisclosure
+            aiContentDisclosure !== undefined ? (
+                aiContentDisclosure
             ) : (
                 <AiContentDisclosure type={damFile.aiContentType} {...aiContentDisclosureProps} />
             )

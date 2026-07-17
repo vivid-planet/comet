@@ -62,13 +62,13 @@ Art. 50(2)'s machine-readable marking is the generating tool's responsibility. C
 
 `PixelImageBlock` and `DamVideoBlock` accept the following optional props:
 
-- `aiContentDisclosureProps` — override the badge (e.g. `size`, `variant`, `position`).
-- `customAiContentDisclosure` — render a custom disclosure instead of the built-in badge (pass `null` to render none, e.g. when the project renders its own).
-- `aiContentAltTextLabels` — localize the AI content prefix added to the accessible name (defaults to English).
+- `aiContentDisclosureProps` — override the badge (e.g. `size`, `iconColor`, `position`).
+- `aiContentDisclosure` — render your own disclosure instead of the built-in badge (pass `null` to render none, e.g. when the project renders its own).
+- `aiContentAltTextPrefixLabels` — localize the AI content prefix added to the accessible name (defaults to English).
 
 `@comet/site-react` also exports the `AiContentDisclosure` badge component and the `getAiContentAltText` helper for custom rendering.
 
-The alt-text prefix defaults to English, so pass a translated string via `aiContentAltTextLabels` — for example using `react-intl`:
+The alt-text prefix defaults to English, so pass a translated string via `aiContentAltTextPrefixLabels` — for example using `react-intl`:
 
 ```tsx
 const intl = useIntl();
@@ -76,7 +76,7 @@ const intl = useIntl();
 <PixelImageBlock
     data={data}
     aspectRatio="16x9"
-    aiContentAltTextLabels={{
+    aiContentAltTextPrefixLabels={{
         generated: intl.formatMessage({
             id: "aiContentDisclosure.altText.generated",
             defaultMessage: "AI-generated",

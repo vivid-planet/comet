@@ -25,7 +25,7 @@ const getSupportedBlocks = (sizes: string, aspectRatio: string, aiContentAltText
                 aspectRatio={aspectRatio}
                 fill={fill}
                 playPauseButton={PlayPauseButton}
-                aiContentAltTextLabels={aiContentAltTextLabels}
+                aiContentAltTextPrefixLabels={aiContentAltTextLabels}
             />
         ),
         youTubeVideo: (data) => (

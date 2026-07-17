@@ -25,7 +25,7 @@ export const DamImageBlock = withPreview(
                 <PixelImageBlock
                     data={block.props as PixelImageBlockData}
                     aspectRatio={aspectRatio}
-                    aiContentAltTextLabels={aiContentAltTextLabels}
+                    aiContentAltTextPrefixLabels={aiContentAltTextLabels}
                     {...imageProps}
                 />
             );
