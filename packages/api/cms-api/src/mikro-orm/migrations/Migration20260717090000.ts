@@ -11,7 +11,5 @@ export class Migration20260717090000 extends Migration {
         );
     }
 
-    async down(): Promise<void> {
-        throw new Error("Unsupported");
-    }
+    async down(): Promise<void> {}
 }
