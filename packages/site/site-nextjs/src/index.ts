@@ -65,7 +65,6 @@ export {
     PhoneLinkBlock,
     type PlayPauseButtonProps,
     Preview,
-    PreviewContext,
     type PreviewData,
     PreviewSkeleton,
     type PropsWithData,
@@ -75,7 +74,6 @@ export {
     sendSitePreviewIFrameMessage,
     /** @deprecated Use PreviewData instead. */
     type PreviewData as SitePreviewData,
-    type SitePreviewIFrameLocationMessage,
     SitePreviewIFrameMessageType,
     type SupportedBlocks,
     SvgImageBlock,
