@@ -1,5 +1,19 @@
 # @comet/cms-admin
 
+## 8.27.1
+
+### Patch Changes
+
+- dacbe99: Fix hard-to-read text color in the DAM drag & drop upload overlay
+
+    The upload overlay (shown when dragging files over a DAM folder) used a dark grey text color on its near-black background, making the text hard to read. It now uses white text for proper contrast.
+
+- Updated dependencies [c9346d7]
+    - @comet/admin@8.27.1
+    - @comet/admin-date-time@8.27.1
+    - @comet/admin-rte@8.27.1
+    - @comet/admin-icons@8.27.1
+
 ## 8.27.0
 
 ### Patch Changes
