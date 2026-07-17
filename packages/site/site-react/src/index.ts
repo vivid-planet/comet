@@ -1,10 +1,5 @@
-export {
-    type AiContentAltTextLabels,
-    AiContentDisclosure,
-    type AiContentDisclosureProps,
-    type AiContentType,
-    getAiContentAltText,
-} from "./aiContentDisclosure";
+export { AiContentDisclosure, type AiContentDisclosureProps, type AiContentType } from "./aiContentDisclosure/AiContentDisclosure";
+export { type AiContentAltTextLabels, getAiContentAltText } from "./aiContentDisclosure/getAiContentAltText";
 export { type BlockLoader, type BlockLoaderDependencies, type BlockLoaderOptions, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
