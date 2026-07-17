@@ -37,6 +37,9 @@ const REFRESH_POLL_INTERVAL_IN_MS = 500;
 export class DependenciesService {
     private connection: Connection;
     private readonly logger = new Logger(DependenciesService.name);
+    // In-flight refresh shared by all parallel refreshViews() calls in this pod (e.g. one per DAM
+    // "Usages" row). Ensures a single claim + single poll loop per pod instead of one per call.
+    private runningRefresh?: Promise<void>;
 
     constructor(
         private readonly discoverService: DiscoverService,
@@ -180,11 +183,15 @@ export class DependenciesService {
      * based on data staleness and options.
      *
      * @remarks
-     * Duplicate concurrent refreshes are prevented via the `BlockIndexRefresh` tracking table
-     * instead of PostgreSQL advisory locks. Advisory locks kept an open transaction blocked on the
-     * lock for every caller, which flooded the database when `refreshViews` was called from a field
-     * resolver (e.g. the DAM "Usages" column, once per row). A caller now atomically claims the
-     * refresh with a single conditional insert instead of holding a lock queue.
+     * Duplicate refreshes are prevented on two levels, both lock-free (no PostgreSQL advisory locks):
+     *
+     * 1. **One shared refresh per pod.** `refreshViews` runs once per resolved `dependents`/
+     *    `dependencies` field, so the DAM "Usages" column starts many parallel calls in one API
+     *    process. They share a single in-flight `runningRefresh`, so only one claim and (at most) one
+     *    poll loop runs per pod — not one per call, which previously flooded the connection pool.
+     * 2. **One refresh per database.** The `BlockIndexRefresh` table has a partial unique index
+     *    permitting only one in-progress row, so across all pods exactly one caller wins the claim
+     *    (the rest hit `ON CONFLICT DO NOTHING`) and runs a single `REFRESH MATERIALIZED VIEW`.
      *
      * The refresh strategy depends on the age of the last completed refresh:
      * - Fresh (< 5 minutes): Skip refresh
@@ -192,10 +199,10 @@ export class DependenciesService {
      * - Very stale (> 15 minutes): Synchronous refresh (caller waits for fresh data)
      * - No prior refresh: Synchronous refresh (initialization, caller waits)
      *
-     * For the synchronous strategies, if another caller is already refreshing, this caller does not
-     * start a duplicate. Instead it polls the tracking table until that refresh finishes and then
-     * returns, so it still observes fresh data. Polling holds no database connection between polls,
-     * unlike the previous advisory-lock wait. The concurrent (background) strategy never waits.
+     * For the synchronous strategies, a caller that does not win the claim (another pod is already
+     * refreshing) polls the tracking table until that refresh finishes and then returns, so it still
+     * observes fresh data. Polling holds no database connection between polls. The concurrent
+     * (background) strategy never waits.
      *
      * @param options - Configuration options for the refresh operation
      * @param options.force - If true, cancels any running refresh and performs a full synchronous refresh
@@ -219,22 +226,30 @@ export class DependenciesService {
             return;
         }
 
-        if (strategy === "concurrent") {
-            // Moderately stale — refresh in the background. Don't block the caller unless awaitRefresh
-            // is set (only used by the CLI command).
-            const refreshPromise = this.refresh({ concurrently: true });
-            if (options?.awaitRefresh) {
-                await refreshPromise;
-            }
-            return;
+        // Deduplicate parallel refreshes within this pod: share a single in-flight refresh so they
+        // don't each claim, poll, or open a connection.
+        if (!this.runningRefresh) {
+            const runningRefresh = this.refresh({ concurrently: strategy === "concurrent" }).finally(() => {
+                this.runningRefresh = undefined;
+            });
+            this.runningRefresh = runningRefresh;
+            // A backgrounded refresh has no awaiter — log failures instead of leaving an unhandled rejection.
+            runningRefresh.catch((error) => {
+                this.logger.error(`Block index refresh failed: ${error instanceof Error ? error.message : error}`);
+            });
         }
 
-        // Very stale or first-time initialization — the caller needs fresh data. If another caller is
-        // already refreshing, wait for that refresh instead of starting a duplicate, then return.
-        await this.refresh({ waitForRunningRefresh: true });
+        // Wait when synchronous (very stale / uninitialized) or when explicitly requested (CLI awaitRefresh).
+        // The moderately-stale strategy refreshes in the background without blocking the caller.
+        if (strategy === "synchronous" || options?.awaitRefresh) {
+            await this.runningRefresh;
+        }
     }
 
-    private async refresh({ concurrently = false, waitForRunningRefresh = false } = {}): Promise<void> {
+    private async refresh({ concurrently = false } = {}): Promise<void> {
+        // A background (concurrent) refresh never blocks the caller; a synchronous refresh must return
+        // fresh data, so it waits for another pod's in-progress refresh instead of skipping.
+        const waitForRunningRefresh = !concurrently;
         while (true) {
             const claimedId = await this.tryClaimRefresh();
             if (claimedId) {
@@ -243,14 +258,13 @@ export class DependenciesService {
             }
 
             if (!waitForRunningRefresh) {
-                // Background/skip mode: another refresh is running or one completed recently.
-                // Don't block the caller.
+                // Background mode: another pod is refreshing or one completed recently. Don't block.
                 return;
             }
 
-            // Synchronous mode: the caller needs fresh data. If a refresh is running, wait for it to
-            // finish, then re-evaluate. If nothing is running, the claim failed because a recent
-            // refresh already made the data fresh, so we're done.
+            // Synchronous mode: the caller needs fresh data. If a refresh is running (on another pod),
+            // wait for it to finish, then re-evaluate. If nothing is running, the claim failed because
+            // a recent refresh already made the data fresh, so we're done.
             const didWait = await this.waitForRunningRefreshToComplete();
             if (!didWait) {
                 return;
@@ -260,25 +274,32 @@ export class DependenciesService {
         }
     }
 
-    // Atomically claim the refresh: insert an in-progress row only if no refresh is currently running
-    // (a non-abandoned row with finishedAt = null) and none completed within the fresh threshold. This
-    // single statement replaces the advisory lock and its post-lock recency recheck. Returns the new
-    // row's id if this caller claimed the refresh, otherwise null (another caller is already handling
-    // it, or one just completed).
+    // Atomically claim the refresh across all pods. The partial unique index
+    // "BlockIndexRefresh_single_running" allows only one in-progress row (finishedAt = null), so when
+    // several callers race, exactly one INSERT succeeds and the rest hit ON CONFLICT DO NOTHING. The
+    // recency guard additionally skips when a refresh completed within the fresh threshold. Returns
+    // the new row's id if this caller claimed the refresh, otherwise null.
     private async tryClaimRefresh(): Promise<string | null> {
         const knex = this.entityManager.getKnex("write");
+
+        // Remove an abandoned in-progress marker (from a crashed refresh) so it neither blocks the
+        // unique index nor makes waiters poll forever. Advisory locks used to auto-release on
+        // connection loss; this replicates that crash resilience.
+        await knex("BlockIndexRefresh")
+            .whereNull("finishedAt")
+            .where("startedAt", "<=", subMinutes(new Date(), ABANDONED_REFRESH_TIMEOUT_IN_MINUTES))
+            .delete();
+
         const id = uuid();
         const claim = await knex.raw(
             `INSERT INTO "BlockIndexRefresh" ("id", "startedAt", "finishedAt")
                 SELECT ?, ?, NULL
                 WHERE NOT EXISTS (
-                    SELECT 1 FROM "BlockIndexRefresh" WHERE "finishedAt" IS NULL AND "startedAt" > ?
-                )
-                AND NOT EXISTS (
                     SELECT 1 FROM "BlockIndexRefresh" WHERE "finishedAt" > ?
                 )
+                ON CONFLICT DO NOTHING
                 RETURNING "id"`,
-            [id, new Date(), subMinutes(new Date(), ABANDONED_REFRESH_TIMEOUT_IN_MINUTES), subMinutes(new Date(), FRESH_THRESHOLD_IN_MINUTES)],
+            [id, new Date(), subMinutes(new Date(), FRESH_THRESHOLD_IN_MINUTES)],
         );
         return claim.rows.length > 0 ? id : null;
     }
