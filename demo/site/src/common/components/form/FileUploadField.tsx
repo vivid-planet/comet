@@ -7,8 +7,16 @@ import { useIntl } from "react-intl";
 
 import { ChooseFilesButton } from "./ChooseFilesButton";
 import { FieldContainer, type FieldContainerFieldProps } from "./FieldContainer";
-import { FileList, type FileUpload } from "./FileList";
+import { FileList } from "./FileList";
 import styles from "./FileUploadField.module.scss";
+
+export type FileUpload = {
+    key: string;
+    file: File;
+    status: "uploading" | "uploaded" | "error";
+    id?: string;
+    errorMessage?: string;
+};
 
 export const getUploadedFileUploadIds = (fileUploads: FileUpload[]): string[] =>
     fileUploads.flatMap((fileUpload) => (fileUpload.status === "uploaded" && fileUpload.id ? [fileUpload.id] : []));

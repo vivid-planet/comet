@@ -12,8 +12,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { Button } from "../components/Button";
 import { CheckboxField } from "../components/form/CheckboxField";
-import type { FileUpload } from "../components/form/FileList";
-import { areAllFileUploadsFinished, FileUploadField, getUploadedFileUploadIds } from "../components/form/FileUploadField";
+import { areAllFileUploadsFinished, type FileUpload, FileUploadField, getUploadedFileUploadIds } from "../components/form/FileUploadField";
 import { SelectField } from "../components/form/SelectField";
 import { TextareaField } from "../components/form/TextareaField";
 import { TextField } from "../components/form/TextField";
