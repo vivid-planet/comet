@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "9.0.0-beta.5",
+    "version": "9.1.1",
     "description": "Comet CMS API package",
     "repository": {
         "directory": "packages/api/cms-api",
@@ -37,8 +37,8 @@
         "test:watch": "vitest --watch"
     },
     "dependencies": {
-        "@aws-sdk/client-s3": "^3.1053.0",
-        "@aws-sdk/lib-storage": "^3.1053.0",
+        "@aws-sdk/client-s3": "^3.1079.0",
+        "@aws-sdk/lib-storage": "^3.1079.0",
         "@azure-rest/ai-translation-text": "^1.0.1",
         "@azure/storage-blob": "^12.31.0",
         "@fast-csv/parse": "^5.0.7",
@@ -83,7 +83,7 @@
         "uuid-by-string": "^4.0.0"
     },
     "devDependencies": {
-        "@aws-sdk/types": "^3.973.9",
+        "@aws-sdk/types": "^3.973.15",
         "@comet/eslint-config": "workspace:*",
         "@golevelup/ts-vitest": "^4.0.0",
         "@kubernetes/client-node": "^1.4.0",
@@ -119,7 +119,7 @@
         "class-validator": "^0.14.3",
         "eslint": "^9.39.4",
         "express": "^5.2.1",
-        "graphql": "^16.14.0",
+        "graphql": "^16.14.2",
         "nest-commander": "^3.20.1",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",

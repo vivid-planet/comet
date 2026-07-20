@@ -1,6 +1,6 @@
 {
     "name": "comet-demo-admin-server",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "private": true,
     "description": "Comet Admin Demo Server Application",
     "type": "commonjs",
@@ -8,7 +8,7 @@
         "express": "^5.2.1",
         "express-static-gzip": "^3.0.1",
         "helmet": "^7.2.0",
-        "http-proxy-middleware": "^3.0.5"
+        "http-proxy-middleware": "^3.0.7"
     },
     "engines": {
         "node": "24"
