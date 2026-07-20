@@ -123,6 +123,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
                 <BlocksFinalForm onSubmit={updateState} initialValues={state}>
+                    {state.damFile && isVideoTooLarge(state.damFile) && <VideoPerformanceWarningAlert sx={{ marginBottom: 2 }} />}
                     <Field
                         name="damFile"
                         component={FileField}
@@ -130,7 +131,6 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                         allowedMimetypes={["video/mp4", "video/webm"]}
                         preview={<Video fontSize="large" color="primary" />}
                     />
-                    {state.damFile && isVideoTooLarge(state.damFile) && <VideoPerformanceWarningAlert sx={{ marginTop: 4 }} />}
                     <VideoOptionsFields />
                     <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
                         <PixelImageBlock.AdminComponent
