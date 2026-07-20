@@ -21,10 +21,12 @@ import { Info as InfoIcon } from "@comet/admin-icons";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
 import {
     DataGrid,
+    type DataGridProps,
     GridColumnHeaderTitle,
     type GridRowClassNameParams,
     type GridRowSelectionModel,
     type GridSlotsComponent,
+    type GridSortModel,
     useGridApiRef,
 } from "@mui/x-data-grid";
 import { type ReactNode, useEffect, useState } from "react";
@@ -177,7 +179,14 @@ const FolderDataGrid = ({
         setUploadTargetFolderName(undefined);
     };
 
-    const dataGridProps = useDataGridRemote({ pageSize: 20, initialSort: [{ field: "name", sort: "asc" }] });
+    const [persistedSortModel, setPersistedSortModel] = useStoredState<GridSortModel>("DamFolderDataGrid-sort", [{ field: "name", sort: "asc" }]);
+
+    const dataGridProps = useDataGridRemote({ pageSize: 20, initialSort: [...persistedSortModel] });
+
+    const handleSortModelChange: NonNullable<DataGridProps["onSortModelChange"]> = (sortModel, details) => {
+        setPersistedSortModel(sortModel);
+        dataGridProps.onSortModelChange?.(sortModel, details);
+    };
 
     const { data: currentFolderData } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
@@ -656,6 +665,7 @@ const FolderDataGrid = ({
                 <DataGrid
                     apiRef={apiRef}
                     {...dataGridProps}
+                    onSortModelChange={handleSortModelChange}
                     rowHeight={58}
                     rows={dataGridData?.damItemsList.nodes ?? []}
                     rowCount={dataGridData?.damItemsList.totalCount ?? undefined}
