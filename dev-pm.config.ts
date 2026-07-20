@@ -231,6 +231,11 @@ export default defineConfig({
             waitOn: [...waitOnPackages("@comet/cms-api", "@comet/brevo-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
         {
+            name: "demo-api-block-codegen",
+            script: "pnpm --filter comet-demo-api run generate-block-types:watch",
+            group: ["demo-api", "demo"],
+        },
+        {
             name: "demo-api-storybook",
             script: "pnpm --filter comet-demo-api run storybook",
         },

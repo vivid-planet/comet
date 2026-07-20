@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "9.0.0-beta.5",
+    "version": "9.1.1",
     "description": "Comet API Generator CLI tool",
     "repository": {
         "directory": "packages/api/api-generator",

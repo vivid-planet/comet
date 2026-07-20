@@ -9,8 +9,11 @@ import {
     type TipTapNodeHandler,
     withPreview,
 } from "@comet/site-nextjs";
-import type { LinkBlockData, TipTapRichTextBlockData } from "@src/blocks.generated";
+import type { LinkBlockData, ProductPriceBlockData, ProductTeaserBlockData, TipTapRichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import { ProductPriceBlock } from "@src/products/blocks/ProductPriceBlock";
+import { ProductTeaserBlock } from "@src/products/blocks/ProductTeaserBlock";
+import type { LoadedData as ProductTeaserLoadedData } from "@src/products/blocks/ProductTeaserBlock.loader";
 
 import { Typography, type TypographyProps } from "../components/Typography";
 import { isValidLink } from "../helpers/HiddenIfInvalidLink";
@@ -26,6 +29,16 @@ const headingLevelToVariant: Record<1 | 2 | 3 | 4 | 5 | 6, TypographyVariant> = 
     4: "headline450",
     5: "headline400",
     6: "headline350",
+};
+
+const renderCmsBlock: TipTapNodeHandler = ({ node }) => {
+    if (node.attrs?.blockType === "productPrice") {
+        return <ProductPriceBlock data={node.attrs?.data as ProductPriceBlockData} />;
+    }
+    if (node.attrs?.blockType === "productTeaser") {
+        return <ProductTeaserBlock data={node.attrs?.data as ProductTeaserBlockData & { loaded: ProductTeaserLoadedData }} />;
+    }
+    return null;
 };
 
 const nodeMapping: Record<string, TipTapNodeHandler> = {
@@ -51,6 +64,8 @@ const nodeMapping: Record<string, TipTapNodeHandler> = {
             </Typography>
         );
     },
+    cmsBlock: renderCmsBlock,
+    cmsInlineBlock: renderCmsBlock,
 };
 
 const markMapping: Record<string, TipTapMarkHandler> = {

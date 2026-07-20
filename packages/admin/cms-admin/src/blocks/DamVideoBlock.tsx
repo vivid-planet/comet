@@ -6,6 +6,8 @@ import { deepClone } from "@mui/x-data-grid/internals";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import type { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
+import { useVideoPerformanceWarning } from "../dam/config/damConfig";
+import { VideoPerformanceWarningAlert } from "../dam/VideoPerformanceWarningAlert";
 import { FileField } from "../form/file/FileField";
 import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
@@ -116,10 +118,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     AdminComponent: ({ state, updateState }) => {
         const isInPaper = useBlockAdminComponentPaper();
+        const { isVideoTooLarge } = useVideoPerformanceWarning();
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
                 <BlocksFinalForm onSubmit={updateState} initialValues={state}>
+                    {state.damFile && isVideoTooLarge(state.damFile) && <VideoPerformanceWarningAlert sx={{ marginBottom: 2 }} />}
                     <Field
                         name="damFile"
                         component={FileField}

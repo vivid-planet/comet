@@ -10,6 +10,8 @@ import { FormattedMessage } from "react-intl";
 
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
+import { ChildBlocksContext } from "./ChildBlocksContext";
+import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
 import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
@@ -102,12 +104,31 @@ export interface TipTapPlaceholder {
     label: ReactNode;
 }
 
+export interface TipTapChildBlock {
+    block: BlockInterface;
+    /**
+     * How the child block is displayed in the editor (and rendered output): as a standalone block
+     * element on its own line (`"block"`) or inline within the surrounding text (`"inline"`).
+     */
+    display: "block" | "inline";
+}
+
 interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     textBlockStyles?: TipTapTextBlockStyle[];
     inlineStyles?: TipTapInlineStyle[];
     placeholders?: TipTapPlaceholder[];
     link?: BlockInterface & LinkBlockInterface;
+    /**
+     * Child blocks that can be inserted into the editor via the toolbar's "+" menu, keyed by a
+     * stable key. The key (not the block's name) is stored in the content, so blocks can be
+     * renamed or swapped without invalidating existing content.
+     * Each block is rendered as a non-editable preview that can be edited (dialog) or removed.
+     *
+     * Pass `{ block, display }` for each child block, where `display` is `"block"` (standalone
+     * block element) or `"inline"` (inline within the surrounding text).
+     */
+    childBlocks?: Record<string, TipTapChildBlock>;
     /**
      * Limits the maximum number of top-level text blocks (paragraphs, headings, lists)
      * that can be created in the editor.
@@ -134,6 +155,8 @@ function getPlainTextFromContent(content: JSONContent): string {
 }
 
 const emptyContent: JSONContent = { type: "doc", content: [{ type: "paragraph" }] };
+
+const isCmsBlockNode = (content: JSONContent): boolean => content.type === "cmsBlock" || content.type === "cmsInlineBlock";
 
 const createMaxTextBlocksExtension = (maxTextBlocks: number) =>
     Extension.create({
@@ -205,6 +228,95 @@ async function mapLinkMarksDataAsync(content: JSONContent, fn: (data: any) => Pr
     return result;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapCmsBlockNodesData(content: JSONContent, fn: (blockType: string, data: any) => any): JSONContent {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (isCmsBlockNode(result) && result.attrs?.blockType) {
+        result.attrs = { ...result.attrs, data: fn(result.attrs.blockType, result.attrs.data) };
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = result.content.map((child) => mapCmsBlockNodesData(child, fn));
+    }
+
+    return result;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function mapCmsBlockNodesDataAsync(content: JSONContent, fn: (blockType: string, data: any) => Promise<any>): Promise<JSONContent> {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (isCmsBlockNode(result) && result.attrs?.blockType) {
+        result.attrs = { ...result.attrs, data: await fn(result.attrs.blockType, result.attrs.data) };
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = await Promise.all(result.content.map((child) => mapCmsBlockNodesDataAsync(child, fn)));
+    }
+
+    return result;
+}
+
+function collectCmsBlockNodes(content: JSONContent): Array<{ blockType: string; data: unknown }> {
+    const results: Array<{ blockType: string; data: unknown }> = [];
+
+    if (isCmsBlockNode(content) && content.attrs?.blockType) {
+        results.push({ blockType: content.attrs.blockType, data: content.attrs.data });
+    }
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            results.push(...collectCmsBlockNodes(child));
+        }
+    }
+
+    return results;
+}
+
+function collectLinkMarksData(content: JSONContent): unknown[] {
+    const results: unknown[] = [];
+
+    if (Array.isArray(content.marks)) {
+        for (const mark of content.marks) {
+            if (mark.type === "link" && mark.attrs?.data) {
+                results.push(mark.attrs.data);
+            }
+        }
+    }
+
+    if (Array.isArray(content.content)) {
+        for (const child of content.content) {
+            results.push(...collectLinkMarksData(child));
+        }
+    }
+
+    return results;
+}
+
+async function translateTextNodesAsync(content: JSONContent, translate: (text: string) => Promise<string>): Promise<JSONContent> {
+    if (!content || typeof content !== "object") {
+        return content;
+    }
+    const result = { ...content };
+
+    if (typeof result.text === "string" && result.text.trim().length > 0) {
+        result.text = await translate(result.text);
+    }
+
+    if (Array.isArray(result.content)) {
+        result.content = await Promise.all(result.content.map((child) => translateTextNodesAsync(child, translate)));
+    }
+
+    return result;
+}
+
 const TipTapEditor = ({
     state,
     updateState,
@@ -213,6 +325,7 @@ const TipTapEditor = ({
     inlineStyles,
     placeholders,
     linkBlock,
+    childBlocks,
     maxTextBlocks,
     listLevelMax,
 }: {
@@ -223,6 +336,7 @@ const TipTapEditor = ({
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
+    childBlocks: Record<string, TipTapChildBlock>;
     maxTextBlocks?: number;
     listLevelMax?: number;
 }) => {
@@ -230,6 +344,10 @@ const TipTapEditor = ({
     const hasInlineStyles = inlineStyles.length > 0;
     const hasLink = supports.includes("link") && !!linkBlock;
     const hasPlaceholders = placeholders.length > 0;
+    const childBlockEntries = Object.values(childBlocks);
+    const hasBlockChildBlocks = childBlockEntries.some((childBlock) => childBlock.display === "block");
+    const hasInlineChildBlocks = childBlockEntries.some((childBlock) => childBlock.display === "inline");
+    const childBlocksByKey: Record<string, BlockInterface> = Object.fromEntries(Object.entries(childBlocks).map(([key, { block }]) => [key, block]));
 
     const editor = useEditor({
         extensions: [
@@ -255,6 +373,8 @@ const TipTapEditor = ({
             ...(supports.includes("soft-hyphen") ? [SoftHyphen] : []),
             ...(hasPlaceholders ? [Placeholder] : []),
             ...(hasLink ? [CmsLink] : []),
+            ...(hasBlockChildBlocks ? [CmsBlock] : []),
+            ...(hasInlineChildBlocks ? [CmsInlineBlock] : []),
             ...(maxTextBlocks !== undefined ? [createMaxTextBlocksExtension(maxTextBlocks)] : []),
             ...(listLevelMax !== undefined ? [createListLevelMaxExtension(listLevelMax)] : []),
         ],
@@ -298,20 +418,23 @@ const TipTapEditor = ({
     return (
         <TextBlockStyleContext.Provider value={textBlockStyles}>
             <InlineStyleContext.Provider value={inlineStyles}>
-                <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                    <TipTapToolbar
-                        editor={editor}
-                        supports={supports}
-                        textBlockStyles={textBlockStyles}
-                        inlineStyles={inlineStyles}
-                        placeholders={placeholders}
-                        linkBlock={linkBlock}
-                        listLevelMax={listLevelMax}
-                    />
-                    <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
-                        <EditorContent editor={editor} />
+                <ChildBlocksContext.Provider value={childBlocksByKey}>
+                    <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
+                        <TipTapToolbar
+                            editor={editor}
+                            supports={supports}
+                            textBlockStyles={textBlockStyles}
+                            inlineStyles={inlineStyles}
+                            placeholders={placeholders}
+                            linkBlock={linkBlock}
+                            childBlocks={childBlocks}
+                            listLevelMax={listLevelMax}
+                        />
+                        <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
+                            <EditorContent editor={editor} />
+                        </Box>
                     </Box>
-                </Box>
+                </ChildBlocksContext.Provider>
             </InlineStyleContext.Provider>
         </TextBlockStyleContext.Provider>
     );
@@ -328,6 +451,9 @@ export const createTipTapRichTextBlock = (
     const inlineStyles = options?.inlineStyles ?? [];
     const placeholders = options?.placeholders ?? [];
     const linkBlock = options?.link;
+    const childBlocks = options?.childBlocks ?? {};
+    const childBlocksByKey: Record<string, BlockInterface> = Object.fromEntries(Object.entries(childBlocks).map(([key, { block }]) => [key, block]));
+    const hasChildBlocks = Object.keys(childBlocks).length > 0;
     const maxTextBlocks = options?.maxTextBlocks;
     const listLevelMax = options?.listLevelMax;
 
@@ -352,6 +478,9 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.input2State(data));
             }
+            if (hasChildBlocks) {
+                content = mapCmsBlockNodesData(content, (blockType, data) => childBlocksByKey[blockType]?.input2State(data) ?? data);
+            }
             return { tipTapContent: content };
         },
 
@@ -359,6 +488,9 @@ export const createTipTapRichTextBlock = (
             let content = tipTapContent;
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.state2Output(data));
+            }
+            if (hasChildBlocks) {
+                content = mapCmsBlockNodesData(content, (blockType, data) => childBlocksByKey[blockType]?.state2Output(data) ?? data);
             }
             return { tipTapContent: content };
         },
@@ -368,6 +500,11 @@ export const createTipTapRichTextBlock = (
             if (linkBlock) {
                 content = await mapLinkMarksDataAsync(content, (data) => linkBlock.output2State(data, context));
             }
+            if (hasChildBlocks) {
+                content = await mapCmsBlockNodesDataAsync(content, async (blockType, data) =>
+                    childBlocksByKey[blockType] ? childBlocksByKey[blockType].output2State(data, context) : data,
+                );
+            }
             return { tipTapContent: content };
         },
 
@@ -375,6 +512,12 @@ export const createTipTapRichTextBlock = (
             let content = tipTapContent;
             if (linkBlock) {
                 content = mapLinkMarksData(content, (data) => linkBlock.createPreviewState(data, previewCtx));
+            }
+            if (hasChildBlocks) {
+                content = mapCmsBlockNodesData(
+                    content,
+                    (blockType, data) => childBlocksByKey[blockType]?.createPreviewState(data, previewCtx) ?? data,
+                );
             }
             return {
                 tipTapContent: content,
@@ -392,6 +535,7 @@ export const createTipTapRichTextBlock = (
                     inlineStyles={inlineStyles}
                     placeholders={placeholders}
                     linkBlock={linkBlock}
+                    childBlocks={childBlocks}
                     maxTextBlocks={maxTextBlocks}
                     listLevelMax={listLevelMax}
                 />
@@ -404,9 +548,41 @@ export const createTipTapRichTextBlock = (
             return text.length > 0 ? [{ type: "text", content: text.slice(0, MAX_CHARS) }] : [];
         },
 
-        extractTextContents: (state) => {
+        extractTextContents: (state, options) => {
+            const texts: string[] = [];
             const text = getPlainTextFromContent(state.tipTapContent);
-            return text.length > 0 ? [text] : [];
+            if (text.length > 0) {
+                texts.push(text);
+            }
+            if (linkBlock?.extractTextContents) {
+                for (const data of collectLinkMarksData(state.tipTapContent)) {
+                    texts.push(...linkBlock.extractTextContents(data, options));
+                }
+            }
+            if (hasChildBlocks) {
+                for (const { blockType, data } of collectCmsBlockNodes(state.tipTapContent)) {
+                    const childBlock = childBlocksByKey[blockType];
+                    if (childBlock?.extractTextContents) {
+                        texts.push(...childBlock.extractTextContents(data, options));
+                    }
+                }
+            }
+            return texts;
+        },
+
+        translateContent: async (state, translate) => {
+            let content = await translateTextNodesAsync(state.tipTapContent, translate);
+            if (linkBlock?.translateContent) {
+                const translateLinkContent = linkBlock.translateContent;
+                content = await mapLinkMarksDataAsync(content, (data) => translateLinkContent(data, translate));
+            }
+            if (hasChildBlocks) {
+                content = await mapCmsBlockNodesDataAsync(content, async (blockType, data) => {
+                    const childBlock = childBlocksByKey[blockType];
+                    return childBlock?.translateContent ? childBlock.translateContent(data, translate) : data;
+                });
+            }
+            return { tipTapContent: content };
         },
     };
 

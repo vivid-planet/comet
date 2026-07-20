@@ -102,7 +102,7 @@ export const DependentsList = ({ query, variables }: DependentsListProps) => {
             queryParamsPrefix: "dependents",
             pageSize,
             initialFilter: {
-                items: [{ field: "visible", operator: "is", value: "true" }],
+                items: [{ field: "visible", operator: "is", value: true }],
             },
         }),
         ...usePersistentColumnState("DependentsList"),
