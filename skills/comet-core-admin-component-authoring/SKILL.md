@@ -1,6 +1,6 @@
 ---
 name: comet-core-admin-component-authoring
-description: Authoring or changing a component in the @comet/admin core packages (packages/admin/* — admin, admin-color-picker, admin-date-time, admin-rte) so it supports MUI-style customization: per-instance sx/className overrides, theme styleOverrides, and defaultProps. Use whenever adding a new component or editing an existing one's slots, props, class keys, overridable icons, or theme-type registration — even for small changes.
+description: Authoring or changing a component in @comet/admin or a sibling package that uses its slot and theme machinery (admin-color-picker, admin-date-time, admin-rte) so it supports MUI-style customization: per-instance sx/className overrides, theme styleOverrides, and defaultProps. Use whenever adding a new component or editing an existing one's slots, props, class keys, overridable icons, or theme-type registration — even for small changes.
 metadata:
     internal: true
 ---
@@ -16,9 +16,11 @@ that hardcodes its markup and styling looks fine in isolation but silently break
 three customization paths, and the gap is only found later, once someone tries to
 customize it. Add the customization from the start.
 
-This applies when you author or change a component in `packages/admin/*` — `admin`
-(`@comet/admin`), `admin-color-picker`, `admin-date-time`, `admin-rte`. The
-`createComponentSlot` / `ThemedComponentBaseProps` machinery lives in `@comet/admin`.
+This applies to any component built with the slot and theme machinery —
+`createComponentSlot` and `ThemedComponentBaseProps`, both from `@comet/admin`. Today
+that means components in `@comet/admin` and the sibling packages that use it:
+`admin-color-picker`, `admin-date-time`, `admin-rte`. Other packages under
+`packages/admin/`, such as `cms-admin`, don't use this pattern and are out of scope.
 
 ## How to use this skill
 
