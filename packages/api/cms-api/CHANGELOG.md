@@ -1,5 +1,42 @@
 # @comet/cms-api
 
+## 9.2.0
+
+### Minor Changes
+
+- ee0bf93: Add AI content disclosure for DAM assets (EU AI Act, Article 50)
+
+    Editors can mark a DAM asset as **AI generated** or **AI modified** in the file settings. When such an asset is published, the site renders the official EU AI-content label and merges the disclosure into the media element's accessible name, so screen-reader users learn which asset is AI.
+
+    **API**
+
+    New `aiContentType` field (`Generated` | `Modified`) on DAM files, exposed through the `PixelImage` and `DamVideo` blocks.
+
+    **Admin**
+
+    New "AI content" field in the DAM file settings, shown for image, video and audio assets only (other file types cannot constitute a deep fake).
+
+    **Site**
+
+    `PixelImageBlock` and `DamVideoBlock` render the disclosure automatically for marked assets. Both accept props to customize it:
+    - `aiContentDisclosureProps` — override the badge.
+    - `customAiContentDisclosure` — render your own disclosure, or `null` for none.
+    - `aiContentAltTextPrefixLabels` — localize the accessible-name prefix (defaults to English).
+
+    `@comet/site-react` also exports the `AiContentDisclosure` badge and the `getAiContentAltTextWithPrefix` helper.
+
+- 8d46a98: Remove special handling that excluded DAM URLs from the access log
+
+    Previously, requests to DAM routes were excluded from the access log. They are now logged like any other HTTP request.
+
+### Patch Changes
+
+- 3c28742: Prevent `pg_advisory_xact_lock` query spam when refreshing block index dependencies
+
+    `DependenciesService.refreshViews()` runs once per resolved `dependents`/`dependencies` field, so a single view (e.g. the DAM "Usages" column) triggers many parallel refreshes. When the last refresh was older than 15 minutes (or none existed), each took the blocking lock path and piled up waiting, each holding a database connection. This could exhaust the connection pool and surface as `Knex: Timeout acquiring a connection` errors.
+
+    Parallel refreshes within a process are now deduplicated into a single in-flight refresh, so at most one advisory lock is taken per instance, while the cross-instance advisory lock still prevents concurrent `REFRESH MATERIALIZED VIEW` runs.
+
 ## 9.1.1
 
 ## 9.1.0
