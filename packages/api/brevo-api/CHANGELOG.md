@@ -1,5 +1,14 @@
 # @comet/brevo-api
 
+## 9.2.0
+
+### Patch Changes
+
+- Updated dependencies [ee0bf93]
+- Updated dependencies [3c28742]
+- Updated dependencies [8d46a98]
+    - @comet/cms-api@9.2.0
+
 ## 9.1.1
 
 ### Patch Changes
