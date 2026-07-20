@@ -1,4 +1,14 @@
 {
     "collection": "@nestjs/schematics",
+    "compilerOptions": {
+        "assets": ["comet-config.json"],
+        "builder": {
+            "options": {
+                "extensions": [".js", ".ts", ".tsx"]
+            },
+            "type": "swc"
+        },
+        "watchAssets": true
+    },
     "sourceRoot": "src"
 }
