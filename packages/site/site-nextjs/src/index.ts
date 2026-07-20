@@ -12,7 +12,7 @@ export { Image } from "./image/Image";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export {
     AdminMessageType,
-    type AiContentAltTextLabels,
+    type AiContentAltTextPrefixLabels,
     AiContentDisclosure,
     type AiContentDisclosureProps,
     type AiContentType,
@@ -36,7 +36,7 @@ export {
     ErrorHandlerProvider,
     ExternalLinkBlock,
     generateImageUrl,
-    getAiContentAltText,
+    getAiContentAltTextWithPrefix,
     getMaxDimensionsFromArea,
     gql,
     type GraphQLFetch,

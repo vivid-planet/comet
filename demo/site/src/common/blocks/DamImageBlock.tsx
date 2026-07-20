@@ -1,7 +1,7 @@
 "use client";
 import { PixelImageBlock, PreviewSkeleton, type PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
 import type { DamImageBlockData, PixelImageBlockData, SvgImageBlockData } from "@src/blocks.generated";
-import { useAiContentAltTextLabels } from "@src/common/helpers/useAiContentAltTextLabels";
+import { useAiContentAltTextPrefixLabels } from "@src/common/helpers/useAiContentAltTextPrefixLabels";
 import type { ImageProps as NextImageProps } from "next/image";
 
 type DamImageProps = Omit<NextImageProps, "src" | "width" | "height" | "alt"> & {
@@ -14,7 +14,7 @@ type DamImageProps = Omit<NextImageProps, "src" | "width" | "height" | "alt"> & 
 
 export const DamImageBlock = withPreview(
     ({ data: { block }, aspectRatio, ...imageProps }: PropsWithData<DamImageBlockData> & DamImageProps) => {
-        const aiContentAltTextLabels = useAiContentAltTextLabels();
+        const aiContentAltTextPrefixLabels = useAiContentAltTextPrefixLabels();
 
         if (!block) {
             return <PreviewSkeleton type="media" hasContent={false} />;
@@ -25,7 +25,7 @@ export const DamImageBlock = withPreview(
                 <PixelImageBlock
                     data={block.props as PixelImageBlockData}
                     aspectRatio={aspectRatio}
-                    aiContentAltTextPrefixLabels={aiContentAltTextLabels}
+                    aiContentAltTextPrefixLabels={aiContentAltTextPrefixLabels}
                     {...imageProps}
                 />
             );

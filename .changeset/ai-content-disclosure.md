@@ -23,6 +23,6 @@ New "AI content" field in the DAM file settings, shown for image, video and audi
 
 - `aiContentDisclosureProps` — override the badge.
 - `customAiContentDisclosure` — render your own disclosure, or `null` for none.
-- `aiContentAltTextLabels` — localize the accessible-name prefix (defaults to English).
+- `aiContentAltTextPrefixLabels` — localize the accessible-name prefix (defaults to English).
 
-`@comet/site-react` also exports the `AiContentDisclosure` badge and the `getAiContentAltText` helper.
+`@comet/site-react` also exports the `AiContentDisclosure` badge and the `getAiContentAltTextWithPrefix` helper.

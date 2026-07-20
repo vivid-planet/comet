@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { type ComponentType, type ReactElement, type ReactNode, useCallback, useState } from "react";
 
 import { AiContentDisclosure, type AiContentDisclosureProps } from "../aiContentDisclosure/AiContentDisclosure";
-import { type AiContentAltTextLabels, getAiContentAltText } from "../aiContentDisclosure/getAiContentAltText";
+import { type AiContentAltTextPrefixLabels, getAiContentAltTextWithPrefix } from "../aiContentDisclosure/getAiContentAltTextWithPrefix";
 import type { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
@@ -28,7 +28,7 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     /** Render your own AI content disclosure instead of the built-in badge. Pass `null` to render none, e.g. when the project renders its own. */
     aiContentDisclosure?: ReactNode;
     /** AI content prefix prepended to the accessible name. Defaults to English; ideally pass a translated string here. */
-    aiContentAltTextPrefixLabels?: Partial<AiContentAltTextLabels>;
+    aiContentAltTextPrefixLabels?: Partial<AiContentAltTextPrefixLabels>;
 }
 
 export const DamVideoBlock = withPreview(
@@ -50,10 +50,10 @@ export const DamVideoBlock = withPreview(
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
-        const ariaLabel = getAiContentAltText({
+        const ariaLabel = getAiContentAltTextWithPrefix({
             aiContentType: damFile?.aiContentType,
             description: damFile?.altText,
-            labels: aiContentAltTextPrefixLabels,
+            prefixLabels: aiContentAltTextPrefixLabels,
         });
 
         const [showPreviewImage, setShowPreviewImage] = useState(true);

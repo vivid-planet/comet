@@ -1,11 +1,11 @@
 "use client";
 import {
-    type AiContentAltTextLabels,
+    type AiContentAltTextPrefixLabels,
     AiContentDisclosure,
     type AiContentDisclosureProps,
     calculateInheritAspectRatio,
     generateImageUrl,
-    getAiContentAltText,
+    getAiContentAltTextWithPrefix,
     getMaxDimensionsFromArea,
     type ImageDimensions,
     parseAspectRatio,
@@ -37,7 +37,7 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
     /** Render your own AI content disclosure instead of the built-in badge. Pass `null` to render none, e.g. when the project renders its own. */
     aiContentDisclosure?: ReactNode;
     /** AI content prefix prepended to the alt text. Defaults to English; ideally pass a translated string here. */
-    aiContentAltTextPrefixLabels?: Partial<AiContentAltTextLabels>;
+    aiContentAltTextPrefixLabels?: Partial<AiContentAltTextPrefixLabels>;
 }
 
 export const PixelImageBlock = withPreview(
@@ -50,10 +50,10 @@ export const PixelImageBlock = withPreview(
         aiContentAltTextPrefixLabels,
         ...nextImageProps
     }: PixelImageBlockProps) => {
-        const altText = getAiContentAltText({
+        const altText = getAiContentAltTextWithPrefix({
             aiContentType: damFile?.aiContentType,
             description: damFile?.altText,
-            labels: aiContentAltTextPrefixLabels,
+            prefixLabels: aiContentAltTextPrefixLabels,
         });
 
         if (!damFile || !damFile.image) {

@@ -48,7 +48,7 @@ When a marked asset is rendered, `PixelImageBlock` (`@comet/site-nextjs`) and `D
 
 :::warning You must disclose custom-rendered assets yourself
 
-The disclosure is only rendered automatically by the library's `PixelImageBlock` and `DamVideoBlock`. Any asset rendered another way — a custom image or video component, an audio player (COMET ships no audio block), or an asset served directly — will **not** be disclosed automatically. In those cases you are responsible for the disclosure yourself: read the asset's `aiContentType` and surface it (e.g. via `getAiContentAltText` and the `AiContentDisclosure` badge).
+The disclosure is only rendered automatically by the library's `PixelImageBlock` and `DamVideoBlock`. Any asset rendered another way — a custom image or video component, an audio player (COMET ships no audio block), or an asset served directly — will **not** be disclosed automatically. In those cases you are responsible for the disclosure yourself: read the asset's `aiContentType` and surface it (e.g. via `getAiContentAltTextWithPrefix` and the `AiContentDisclosure` badge).
 
 :::
 
@@ -66,7 +66,7 @@ Art. 50(2)'s machine-readable marking is the generating tool's responsibility. C
 - `aiContentDisclosure` — render your own disclosure instead of the built-in badge (pass `null` to render none, e.g. when the project renders its own).
 - `aiContentAltTextPrefixLabels` — localize the AI content prefix added to the accessible name (defaults to English).
 
-`@comet/site-react` also exports the `AiContentDisclosure` badge component and the `getAiContentAltText` helper for custom rendering.
+`@comet/site-react` also exports the `AiContentDisclosure` badge component and the `getAiContentAltTextWithPrefix` helper for custom rendering.
 
 The alt-text prefix defaults to English, so pass a translated string via `aiContentAltTextPrefixLabels` — for example using `react-intl`:
 
@@ -78,11 +78,11 @@ const intl = useIntl();
     aspectRatio="16x9"
     aiContentAltTextPrefixLabels={{
         generated: intl.formatMessage({
-            id: "aiContentDisclosure.altText.generated",
+            id: "aiContentDisclosure.altTextPrefix.generated",
             defaultMessage: "AI-generated",
         }),
         modified: intl.formatMessage({
-            id: "aiContentDisclosure.altText.modified",
+            id: "aiContentDisclosure.altTextPrefix.modified",
             defaultMessage: "AI-modified",
         }),
     }}

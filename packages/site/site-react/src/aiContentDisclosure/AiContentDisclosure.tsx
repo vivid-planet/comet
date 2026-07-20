@@ -41,7 +41,7 @@ export interface AiContentDisclosureProps {
  * background").
  *
  * The badge is decorative (`aria-hidden`): the machine-readable disclosure must be carried by the
- * accessible name of the associated media element (see `getAiContentAltText`), so screen-reader
+ * accessible name of the associated media element (see `getAiContentAltTextWithPrefix`), so screen-reader
  * users learn which asset is AI-generated.
  */
 export function AiContentDisclosure({
