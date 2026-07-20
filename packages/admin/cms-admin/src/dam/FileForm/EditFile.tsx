@@ -26,7 +26,7 @@ import ReactSplit from "react-split";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
-import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
+import { type GQLDamFileAiContentType, type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
 import { useDamConfig, useVideoPerformanceWarning } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
@@ -54,6 +54,7 @@ export interface EditImageFormValues {
 export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
+    aiContentType?: GQLDamFileAiContentType | null;
     title?: string | null;
     license?: Omit<GQLLicenseInput, "type"> & {
         type: LicenseType;
@@ -148,6 +149,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     input: {
                         name: values.name,
                         altText: values.altText ?? null,
+                        aiContentType: values.aiContentType ?? null,
                         title: values.title ?? null,
                         image: {
                             cropArea,
@@ -178,6 +180,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     y: file.image?.cropArea.y ?? 0,
                 },
                 altText: file.altText,
+                aiContentType: file.aiContentType,
                 title: file.title,
                 license: {
                     type: file.license?.type ?? "NO_LICENSE",

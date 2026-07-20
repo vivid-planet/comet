@@ -15,6 +15,10 @@ export { legacyPagesRouterPreviewParams, previewParams, type SitePreviewParams }
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export {
     AdminMessageType,
+    type AiContentAltTextPrefixLabels,
+    AiContentDisclosure,
+    type AiContentDisclosureProps,
+    type AiContentType,
     type BlockLoader,
     type BlockLoaderDependencies,
     type BlockLoaderOptions,
@@ -35,6 +39,7 @@ export {
     ErrorHandlerProvider,
     ExternalLinkBlock,
     generateImageUrl,
+    getAiContentAltTextWithPrefix,
     getMaxDimensionsFromArea,
     gql,
     type GraphQLFetch,
