@@ -39,3 +39,15 @@ export const Five = () => {
 export const Seven = () => {
     return <Breadcrumbs items={sevenItems} />;
 };
+
+export const ResponsiveDesktop = () => {
+    return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {[760, 560, 400, 280].map((width) => (
+                <div key={width} style={{ width }}>
+                    <Breadcrumbs items={sevenItems} />
+                </div>
+            ))}
+        </div>
+    );
+};
