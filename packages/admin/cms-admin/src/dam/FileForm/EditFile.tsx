@@ -28,10 +28,11 @@ import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
-import { useDamConfig } from "../config/damConfig";
+import { useDamConfig, useVideoPerformanceWarning } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import { MediaAlternativesGrid } from "../mediaAlternatives/MediaAlternativesGrid";
+import { VideoPerformanceWarningAlert } from "../VideoPerformanceWarningAlert";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { type GQLDamFileDetailFragment, type GQLDamFileDetailQuery, type GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
@@ -114,6 +115,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
     const acceptedMimeTypes = useDamAcceptedMimeTypes();
     const intl = useIntl();
     const damConfig = useDamConfig();
+    const { isVideoTooLarge } = useVideoPerformanceWarning();
     const apolloClient = useApolloClient();
     const isAllowed = useUserPermissionCheck();
 
@@ -209,6 +211,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
+                        {isVideoTooLarge(file) && <VideoPerformanceWarningAlert sx={{ marginBottom: 4 }} />}
                         <ReactSplit sizes={[initialPreviewWidth, initialBlockListWidth]} minSize={360} gutterSize={40} style={{ display: "flex" }}>
                             <StickyScrollWrapper>
                                 <FilePreview file={file} />
