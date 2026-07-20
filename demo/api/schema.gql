@@ -380,6 +380,7 @@ type CurrentUserPermission {
 }
 
 type DamFile {
+  aiContentType: DamFileAiContentType
   altText: String
   alternativesForThisFile: [DamMediaAlternative!]!
   archived: Boolean!
@@ -402,6 +403,11 @@ type DamFile {
   thisFileIsAlternativeFor: [DamMediaAlternative!]!
   title: String
   updatedAt: DateTime!
+}
+
+enum DamFileAiContentType {
+  Generated
+  Modified
 }
 
 type DamFileImage {
@@ -2228,6 +2234,7 @@ input TargetGroupUpdateInput {
 }
 
 input UpdateDamFileInput {
+  aiContentType: DamFileAiContentType
   altText: String
   folderId: ID
   image: UpdateImageFileInput

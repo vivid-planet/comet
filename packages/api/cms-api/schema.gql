@@ -461,6 +461,7 @@ type DamFile {
   contentHash: String!
   title: String
   altText: String
+  aiContentType: DamFileAiContentType
   archived: Boolean!
   image: DamFileImage
   license: DamFileLicense
@@ -474,6 +475,11 @@ type DamFile {
   alternativesForThisFile: [DamMediaAlternative!]!
   thisFileIsAlternativeFor: [DamMediaAlternative!]!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, sort: [DependencySort!], forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+enum DamFileAiContentType {
+  Generated
+  Modified
 }
 
 type PaginatedDamItems {
@@ -841,6 +847,7 @@ input UpdateDamFileInput {
   name: String
   title: String
   altText: String
+  aiContentType: DamFileAiContentType
   image: UpdateImageFileInput
   folderId: ID
   license: LicenseInput
