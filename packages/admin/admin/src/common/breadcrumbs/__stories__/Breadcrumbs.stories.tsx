@@ -1,8 +1,14 @@
+import type { Meta } from "@storybook/react-vite";
+
 import { type Breadcrumb, Breadcrumbs } from "../Breadcrumbs";
 
-export default {
+const config: Meta<typeof Breadcrumbs> = {
+    component: Breadcrumbs,
     title: "components/breadcrumbs/Breadcrumbs",
+    decorators: [(story) => <div style={{ height: "400px", display: "flex", flexDirection: "column" }}>{story()}</div>],
 };
+
+export default config;
 
 const singleItem: Breadcrumb[] = [{ url: "/one", title: "Breadcrumb One" }];
 const twoItems: Breadcrumb[] = [...singleItem, { url: "/two", title: "BC 2" }];
@@ -32,4 +38,16 @@ export const Five = () => {
 
 export const Seven = () => {
     return <Breadcrumbs items={sevenItems} />;
+};
+
+export const ResponsiveDesktop = () => {
+    return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {[760, 560, 400, 280].map((width) => (
+                <div key={width} style={{ width }}>
+                    <Breadcrumbs items={sevenItems} />
+                </div>
+            ))}
+        </div>
+    );
 };
