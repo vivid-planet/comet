@@ -365,3 +365,128 @@ the page structure, not a hand-written `height` that has to track the header and
     </RouterTabs>
 </MainContent>;
 ```
+
+## Components
+
+### Containers and widgets: `FieldSet`, `FormSection`, and themed `Card`, not `Box`
+
+To group related content, use a container component instead of a `Box` with hand-set padding,
+borders, and a title. `FieldSet` (from `@comet/admin`) is a collapsible titled panel — wrap a page
+form's fields in it. Inside a dialog or sidebar, group fields with `FormSection` instead, a lighter
+titled section with a divider. For a dashboard widget, if the project uses `@comet/cms-admin` (most
+do), use its ready-made `DashboardWidgetRoot` rather than building one by hand; when you compose a
+container yourself, build it from MUI's `Card` (with `CardHeader` and `CardContent`) or `Paper`, with
+`Typography` for text and `Grid` for layout — Comet themes `Card`, `Paper`, and `Typography`, so they
+carry the right elevation, radius, and type scale without custom CSS, while `Grid` takes its spacing
+from the theme. `Card`, `CardHeader`, `CardContent`, `Paper`, `Typography`, and `Grid` come from
+`@mui/material`; `FieldSet` and `FormSection` from `@comet/admin`.
+
+```tsx
+// Avoid — a Box hand-styled into a titled, bordered panel
+<Box sx={{ border: "1px solid #e0e0e0", borderRadius: 1, padding: 2 }}>
+    <Typography variant="h4">{title}</Typography>
+    {children}
+</Box>;
+
+// Prefer — FieldSet groups content under a title (collapsible by default)
+<FieldSet title={title} supportText={supportText}>
+    {children}
+</FieldSet>;
+
+// Prefer — a dashboard widget from @comet/cms-admin's ready-made container
+<DashboardWidgetRoot header={title}>{children}</DashboardWidgetRoot>;
+```
+
+### Buttons: `Button` variants and action buttons, not hand-styled buttons
+
+Give `Button` a `variant` rather than styling a button by hand or setting MUI's `color` directly.
+The variants are `primary`, `secondary`, `outlined`, `destructive`, `success`, `textLight`, and
+`textDark`. For common actions, prefer the specialized buttons: `SaveButton`, `CancelButton`,
+`DeleteButton`, and `OkayButton` each carry a suitable variant, an icon, and a translated label.
+`SaveButton` also has built-in loading, success, and error feedback (it is a `FeedbackButton`), so
+you don't hand-build that; use `FeedbackButton` for other async actions, and `CopyToClipboardButton`
+to copy text with a confirmation.
+
+```tsx
+// Avoid — a hand-styled button, and a Save button rebuilt from a plain Button
+<button style={{ background: "#c00", color: "#fff" }} onClick={onDelete}>
+    Delete
+</button>;
+<Button variant="primary" startIcon={<Save />}>
+    Save
+</Button>;
+
+// Prefer — specialized buttons carry variant, icon, and label (SaveButton adds save feedback)
+<DeleteButton onClick={onDelete} />;
+<SaveButton onClick={onSave} />;
+```
+
+### Date and time: pickers from `@comet/admin`, not raw inputs
+
+Enter dates and times through the picker components rather than a plain text input or an MUI picker
+configured by hand. `@comet/admin` exports `DatePicker`, `DateTimePicker`, and `TimePicker` (with
+`DateRangePicker` and `DateTimeRangePicker` for ranges), plus `DatePickerField` and siblings for use
+as Final Form fields. Each picker
+manages its own value format — `DatePicker`, for example, reads and writes an ISO `YYYY-MM-DD`
+string — so you don't parse or format dates by hand. The pickers need MUI X's `LocalizationProvider`
+at the app root, set up once with `AdapterDateFns`; pass `adapterLocale` to localize.
+
+```tsx
+// Avoid — a plain text input used as a date field
+<input type="text" value={value} onChange={(event) => onChange(event.target.value)} />;
+
+// Prefer — a DatePicker working with ISO date strings
+<DatePicker value={value} onChange={onChange} />;
+
+// The pickers need a LocalizationProvider at the app root, set up once
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+
+<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
+    {children}
+</LocalizationProvider>;
+```
+
+### Feedback and overlays: `Alert`, `Loading`, `Dialog`, `Tooltip`, not hand-built ones
+
+Show status, loading, dialogs, and tooltips through the components rather than assembling them from
+`div`s and state. `Alert` takes a `severity` (`info`, `warning`, `error`, `success`), a `title`, an
+`action`, and an `onClose`. `Loading` renders the standard spinner; its `behavior` prop (`auto`,
+`fillParent`, `fillParentAbsolute`, `fillPageHeight`) sets whether it renders inline, fills its
+parent, or fills the page. Use `Dialog` and `Tooltip` from `@comet/admin` — Comet's own wrappers, not
+MUI's directly. For a transient confirmation, call `showSnackbar()` from `useSnackbarApi()` with a
+snackbar element — Comet's `UndoSnackbar`, or a MUI `Snackbar` wrapping an `Alert` — and mount
+`SnackbarProvider` near the app root.
+
+```tsx
+// Avoid — a hand-built alert box and a hand-built spinner
+<div style={{ background: "#fdecea", padding: 12 }}>{errorMessage}</div>;
+{
+    loading && <div className="spinner" />;
+}
+
+// Prefer — Alert shows severity; Loading renders the standard spinner
+<Alert severity="error">{errorMessage}</Alert>;
+{
+    loading && <Loading />;
+}
+```
+
+### Icons: `@comet/admin-icons`, not ad-hoc SVGs
+
+Take icons from `@comet/admin-icons` rather than importing SVG files or an arbitrary
+icon from another set, so they match the design system and stay consistent. Each icon is a named
+export built on MUI's `SvgIcon`, so size it with the `fontSize` prop (`small`, `medium`, `large`) and
+color it with the `color` prop — the icons use `currentColor`.
+
+```tsx
+// Avoid — an imported SVG file, or an arbitrary icon from another set
+import deleteIcon from "./delete.svg";
+
+<img src={deleteIcon} width={16} alt="" />;
+
+// Prefer — a named icon from the Comet set, sized and colored through props
+import { Delete } from "@comet/admin-icons";
+
+<Delete fontSize="small" color="error" />;
+```
