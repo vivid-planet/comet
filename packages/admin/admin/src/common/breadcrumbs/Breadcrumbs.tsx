@@ -1,27 +1,32 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import { ButtonBase, type ComponentsOverrides, Typography, useMediaQuery } from "@mui/material";
-import { alpha, css, type Theme, useThemeProps } from "@mui/material/styles";
-import { Fragment, type ReactNode, useState } from "react";
+import { type ButtonBase, type ComponentsOverrides, type Popover as MuiPopover, Typography, useMediaQuery } from "@mui/material";
+import { type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode, type Ref, useRef, useState } from "react";
 
-import { createComponentSlot } from "../../helpers/createComponentSlot";
 import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-
-type BreadcrumbsClassKey =
-    | "root"
-    | "item"
-    | "activeItem"
-    | "separator"
-    | "ellipsis"
-    | "menuContainer"
-    | "toolbarContainer"
-    | "expandedMenu"
-    | "expandedMenuItem"
-    | "expandedMenuActiveItem"
-    | "expandedMenuActiveItemWrapper"
-    | "pageTreeVerticalLine"
-    | "expandedMenuSubitemWrapper"
-    | "mobileMenuIcon"
-    | "mobileRootButton";
+import {
+    ActiveItem,
+    type BreadcrumbsClassKey,
+    Ellipsis,
+    EllipsisMeasureLayer,
+    ExpandedMenu,
+    ExpandedMenuActiveItem,
+    ExpandedMenuActiveItemWrapper,
+    ExpandedMenuItem,
+    ExpandedMenuSubitemWrapper,
+    Item,
+    MenuContainer,
+    MobileMenuIcon,
+    MobileRootButton,
+    OverflowButton,
+    OverflowMenu,
+    OverflowMenuItem,
+    PageTreeVerticalLine,
+    Root,
+    Separator,
+    ToolbarContainer,
+} from "./Breadcrumbs.styles";
+import { useBreadcrumbsOverflow } from "./useBreadcrumbsOverflow";
 
 export interface Breadcrumb {
     url: string;
@@ -35,6 +40,9 @@ interface BreadcrumbsProps
         activeItem: typeof Typography;
         separator: "div";
         ellipsis: typeof Typography;
+        overflowButton: typeof ButtonBase;
+        overflowMenu: typeof MuiPopover;
+        overflowMenuItem: "a";
         menuContainer: "div";
         toolbarContainer: "div";
         expandedMenu: "div";
@@ -50,243 +58,190 @@ interface BreadcrumbsProps
     iconMapping?: { separator?: ReactNode; openMenu?: ReactNode; closeMenu?: ReactNode };
 }
 
-const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "root",
-})(
-    ({ theme }) => css`
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 40px;
-        padding: 0 ${theme.spacing(2)};
-        cursor: pointer;
+type BreadcrumbsSlotProps = BreadcrumbsProps["slotProps"];
 
-        &::after {
-            content: "";
-            position: absolute;
-            left: ${theme.spacing(2)};
-            right: ${theme.spacing(2)};
-            bottom: 0;
-            height: 1px;
-            background-color: ${theme.palette.grey[100]};
-        }
+const ellipsisLabel = ". . .";
 
-        ${theme.breakpoints.up("sm")} {
-            height: 50px;
-            cursor: default;
-
-            &::after {
-                content: none;
-            }
-        }
-    `,
+const BreadcrumbItemLink = ({ item, separatorIcon, slotProps }: { item: Breadcrumb; separatorIcon: ReactNode; slotProps?: BreadcrumbsSlotProps }) => (
+    <MenuContainer ownerState={{ isCurrentItem: false }} {...slotProps?.menuContainer}>
+        {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
+        <Item component="a" href={item.url} {...slotProps?.item}>
+            {item.title}
+        </Item>
+        <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
+    </MenuContainer>
 );
 
-const Item = createComponentSlot(Typography)<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "item",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.grey[900]};
-        white-space: nowrap;
-
-        &:not(:last-child):hover {
-            color: ${theme.palette.primary.main};
-        }
-
-        &:last-child {
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    `,
-) as typeof Typography;
-
-const ActiveItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "activeItem",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.grey[900]};
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-size: 14px;
-        line-height: 16px;
-        font-weight: 600;
-
-        ${theme.breakpoints.up("sm")} {
-            font-size: 16px;
-            line-height: 20px;
-            font-weight: bold;
-        }
-    `,
-) as typeof Typography;
-
-const Separator = createComponentSlot("div")<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "separator",
-})(css`
-    margin: 0 5px;
-    display: flex;
-    align-items: flex-end;
-`);
-
-const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "ellipsis",
-})(
-    ({ theme }) => css`
-        margin-right: 5px;
-        color: inherit;
-        font-size: 14px;
-        line-height: 16px;
-
-        ${theme.breakpoints.up("sm")} {
-            font-size: 16px;
-            line-height: 20px;
-        }
-    `,
+const CurrentBreadcrumbItem = ({ item, slotProps }: { item: Breadcrumb; slotProps?: BreadcrumbsSlotProps }) => (
+    <MenuContainer ownerState={{ isCurrentItem: true }} {...slotProps?.menuContainer}>
+        <ActiveItem {...slotProps?.activeItem}>{item.title}</ActiveItem>
+    </MenuContainer>
 );
 
-const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "menuContainer",
-})(
-    ({ theme }) => css`
-        display: none;
-
-        ${theme.breakpoints.up("sm")} {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-        }
-    `,
+const OverflowEllipsis = ({
+    separatorIcon,
+    slotProps,
+    onClick,
+    buttonRef,
+}: {
+    separatorIcon: ReactNode;
+    slotProps?: BreadcrumbsSlotProps;
+    onClick?: () => void;
+    buttonRef?: Ref<HTMLButtonElement>;
+}) => (
+    <MenuContainer ownerState={{ isCurrentItem: false }} {...slotProps?.menuContainer}>
+        <OverflowButton ref={buttonRef} onClick={onClick} {...slotProps?.overflowButton}>
+            <Ellipsis {...slotProps?.ellipsis}>{ellipsisLabel}</Ellipsis>
+        </OverflowButton>
+        <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
+    </MenuContainer>
 );
 
-const ToolbarContainer = createComponentSlot("div")<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "toolbarContainer",
-})(
-    ({ theme }) => css`
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 40px;
-        padding: 0;
+const ExpandedMenuEntry = ({
+    item,
+    indentation,
+    isCurrentItem,
+    slotProps,
+}: {
+    item: Breadcrumb;
+    indentation: number;
+    isCurrentItem: boolean;
+    slotProps?: BreadcrumbsSlotProps;
+}) => {
+    const Wrapper = isCurrentItem ? ExpandedMenuActiveItemWrapper : ExpandedMenuSubitemWrapper;
+    const wrapperSlotProps = isCurrentItem ? slotProps?.expandedMenuActiveItemWrapper : slotProps?.expandedMenuSubitemWrapper;
 
-        ${theme.breakpoints.up("sm")} {
-            height: 50px;
-            padding: 0 ${theme.spacing(2)};
-        }
-    `,
-);
+    return (
+        <Wrapper ownerState={{ indentation }} {...wrapperSlotProps}>
+            {indentation > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
+            {isCurrentItem ? (
+                <ExpandedMenuActiveItem variant="subtitle2" {...slotProps?.expandedMenuActiveItem}>
+                    {item.title}
+                </ExpandedMenuActiveItem>
+            ) : (
+                <ExpandedMenuItem variant="body2" {...slotProps?.expandedMenuItem}>
+                    {item.title}
+                </ExpandedMenuItem>
+            )}
+        </Wrapper>
+    );
+};
 
-const ExpandedMenu = createComponentSlot("div")<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "expandedMenu",
-})(
-    ({ theme }) => css`
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 100%;
-        display: flex;
-        flex-direction: column;
-        background-color: ${theme.palette.background.paper};
-        z-index: 1;
-    `,
-);
+interface DesktopBreadcrumbsProps extends Omit<BreadcrumbsProps, "iconMapping"> {
+    separatorIcon: ReactNode;
+}
 
-const ExpandedMenuItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "expandedMenuItem",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.grey[900]};
-    `,
-) as typeof Typography;
+const DesktopBreadcrumbs = ({ items, separatorIcon, slotProps, ...restProps }: DesktopBreadcrumbsProps) => {
+    const [isOverflowMenuOpen, setIsOverflowMenuOpen] = useState(false);
+    const toolbarRef = useRef<HTMLDivElement>(null);
+    const ellipsisMeasureRef = useRef<HTMLDivElement>(null);
+    const overflowButtonRef = useRef<HTMLButtonElement>(null);
 
-const ExpandedMenuActiveItem = createComponentSlot(Typography)<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "expandedMenuActiveItem",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.grey[900]};
-    `,
-) as typeof Typography;
+    const { isMeasuring, numberOfHiddenItems } = useBreadcrumbsOverflow({ items, itemsRef: toolbarRef, ellipsisRef: ellipsisMeasureRef });
+    const hasHiddenItems = !isMeasuring && numberOfHiddenItems > 0;
+    const hiddenItems = hasHiddenItems ? items.slice(1, 1 + numberOfHiddenItems) : [];
 
-type WrapperOwnerState = { indentation: number };
+    // While measuring, all items are rendered so that `useBreadcrumbsOverflow` can determine their widths.
+    const itemsAfterFirst = items.slice(1);
+    const visibleTrailingItems = isMeasuring ? itemsAfterFirst : itemsAfterFirst.slice(numberOfHiddenItems);
 
-const wrapperPaddingLeft = (theme: Theme, indentation: number) =>
-    indentation === 0 ? theme.spacing(3) : `calc(${theme.spacing(1)} + 17px * ${indentation})`;
+    return (
+        <Root {...slotProps?.root} {...restProps}>
+            <ToolbarContainer ref={toolbarRef} {...slotProps?.toolbarContainer}>
+                {items.length <= 1 ? (
+                    items.map((item) => <CurrentBreadcrumbItem key={item.url} item={item} slotProps={slotProps} />)
+                ) : (
+                    <>
+                        <BreadcrumbItemLink item={items[0]} separatorIcon={separatorIcon} slotProps={slotProps} />
+                        {hasHiddenItems && (
+                            <OverflowEllipsis
+                                separatorIcon={separatorIcon}
+                                slotProps={slotProps}
+                                onClick={() => setIsOverflowMenuOpen((prev) => !prev)}
+                                buttonRef={overflowButtonRef}
+                            />
+                        )}
+                        {visibleTrailingItems.map((item, index) =>
+                            index === visibleTrailingItems.length - 1 ? (
+                                <CurrentBreadcrumbItem key={item.url} item={item} slotProps={slotProps} />
+                            ) : (
+                                <BreadcrumbItemLink key={item.url} item={item} separatorIcon={separatorIcon} slotProps={slotProps} />
+                            ),
+                        )}
+                    </>
+                )}
+            </ToolbarContainer>
 
-const ExpandedMenuActiveItemWrapper = createComponentSlot("div")<BreadcrumbsClassKey, WrapperOwnerState>({
-    componentName: "Breadcrumbs",
-    slotName: "expandedMenuActiveItemWrapper",
-})(
-    ({ theme, ownerState }) => css`
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        height: 45px;
-        padding-left: ${wrapperPaddingLeft(theme, ownerState.indentation)};
-        padding-right: ${theme.spacing(3)};
-        background-color: ${alpha(theme.palette.primary.main, 0.1)};
-    `,
-);
+            <EllipsisMeasureLayer ref={ellipsisMeasureRef} aria-hidden>
+                <OverflowEllipsis separatorIcon={separatorIcon} slotProps={slotProps} />
+            </EllipsisMeasureLayer>
 
-const ExpandedMenuSubitemWrapper = createComponentSlot("div")<BreadcrumbsClassKey, WrapperOwnerState>({
-    componentName: "Breadcrumbs",
-    slotName: "expandedMenuSubitemWrapper",
-})(
-    ({ theme, ownerState }) => css`
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        height: 45px;
-        padding-left: ${wrapperPaddingLeft(theme, ownerState.indentation)};
-        padding-right: ${theme.spacing(3)};
-    `,
-);
+            <OverflowMenu
+                open={isOverflowMenuOpen && hiddenItems.length > 0}
+                anchorEl={overflowButtonRef.current}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                transformOrigin={{ vertical: "top", horizontal: "left" }}
+                marginThreshold={0}
+                onClose={() => setIsOverflowMenuOpen(false)}
+                {...slotProps?.overflowMenu}
+            >
+                {hiddenItems.map((item) => (
+                    <OverflowMenuItem key={item.url} href={item.url} {...slotProps?.overflowMenuItem}>
+                        <ChevronRight />
+                        <Typography variant="body2">{item.title}</Typography>
+                    </OverflowMenuItem>
+                ))}
+            </OverflowMenu>
+        </Root>
+    );
+};
 
-const MobileMenuIcon = createComponentSlot("div")<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "mobileMenuIcon",
-})(css`
-    display: flex;
-    align-items: center;
-`);
+interface MobileBreadcrumbsProps extends Omit<BreadcrumbsProps, "iconMapping"> {
+    separatorIcon: ReactNode;
+    openMenuIcon: ReactNode;
+    closeMenuIcon: ReactNode;
+}
 
-const MobileRootButton = createComponentSlot(ButtonBase)<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "mobileRootButton",
-})(css`
-    display: block;
-    width: 100%;
-    text-align: left;
-`);
+const MobileBreadcrumbs = ({ items, separatorIcon, openMenuIcon, closeMenuIcon, slotProps, ...restProps }: MobileBreadcrumbsProps) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const currentItem = items[items.length - 1];
 
-const PageTreeVerticalLine = createComponentSlot("div")<BreadcrumbsClassKey>({
-    componentName: "Breadcrumbs",
-    slotName: "pageTreeVerticalLine",
-})(
-    ({ theme }) => css`
-        width: 4px;
-        height: 25px;
-        border-left: 1px solid ${theme.palette.grey[100]};
-        border-bottom: 1px solid ${theme.palette.grey[100]};
-        align-self: flex-start;
-    `,
-);
+    return (
+        <MobileRootButton onClick={() => setIsMenuOpen((prev) => !prev)} {...slotProps?.mobileRootButton}>
+            <Root {...slotProps?.root} {...restProps}>
+                <ToolbarContainer {...slotProps?.toolbarContainer}>
+                    {items.length > 1 && (
+                        <>
+                            <Ellipsis {...slotProps?.ellipsis}>{ellipsisLabel}</Ellipsis>
+                            <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
+                        </>
+                    )}
+                    <ActiveItem {...slotProps?.activeItem}>{currentItem.title}</ActiveItem>
+                </ToolbarContainer>
+
+                {isMenuOpen && (
+                    <ExpandedMenu {...slotProps?.expandedMenu}>
+                        {items.map((item, index) => (
+                            <ExpandedMenuEntry
+                                key={item.url}
+                                item={item}
+                                indentation={index}
+                                isCurrentItem={index === items.length - 1}
+                                slotProps={slotProps}
+                            />
+                        ))}
+                    </ExpandedMenu>
+                )}
+
+                <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{isMenuOpen ? closeMenuIcon : openMenuIcon}</MobileMenuIcon>
+            </Root>
+        </MobileRootButton>
+    );
+};
 
 export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
-    const { iconMapping = {}, items, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { iconMapping = {}, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbs" });
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
-    const ellipsis = ". . .";
 
     const {
         separator: separatorIcon = <ChevronRight />,
@@ -294,85 +249,11 @@ export const Breadcrumbs = (inProps: BreadcrumbsProps) => {
         closeMenu: closeMenuIcon = <ChevronUp />,
     } = iconMapping;
 
-    const toggleMenu = () => {
-        setIsMenuOpen((prev) => !prev);
-    };
-
-    const coreNode = (
-        <Root {...slotProps?.root} {...restProps}>
-            <ToolbarContainer {...slotProps?.toolbarContainer}>
-                {items.map((item, index) => {
-                    const isCurrentPage = index === items.length - 1;
-                    const hasMultipleItems = items.length > 1;
-
-                    if (isCurrentPage) {
-                        return (
-                            <Fragment key={item.url}>
-                                {hasMultipleItems && isMobile && (
-                                    <>
-                                        <Ellipsis {...slotProps?.ellipsis}>{ellipsis}</Ellipsis>
-                                        <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
-                                    </>
-                                )}
-                                <ActiveItem key={item.url} {...slotProps?.activeItem}>
-                                    {item.title}
-                                </ActiveItem>
-                            </Fragment>
-                        );
-                    }
-
-                    if (isMobile) {
-                        return null;
-                    }
-
-                    return (
-                        <MenuContainer key={item.url} {...slotProps?.menuContainer}>
-                            {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
-                            <Item component="a" href={item.url} {...slotProps?.item}>
-                                {item.title}
-                            </Item>
-                            <Separator {...slotProps?.separator}>{separatorIcon}</Separator>
-                        </MenuContainer>
-                    );
-                })}
-                {isMenuOpen && (
-                    <ExpandedMenu {...slotProps?.expandedMenu}>
-                        {items.map((item, index) => {
-                            const isActive = index === items.length - 1;
-                            const Wrapper = isActive ? ExpandedMenuActiveItemWrapper : ExpandedMenuSubitemWrapper;
-                            const wrapperSlotProps = isActive ? slotProps?.expandedMenuActiveItemWrapper : slotProps?.expandedMenuSubitemWrapper;
-                            return (
-                                <Wrapper key={item.url} ownerState={{ indentation: index }} {...wrapperSlotProps}>
-                                    {index > 0 && <PageTreeVerticalLine {...slotProps?.pageTreeVerticalLine} />}
-                                    {isActive ? (
-                                        <ExpandedMenuActiveItem variant="subtitle2" {...slotProps?.expandedMenuActiveItem}>
-                                            {item.title}
-                                        </ExpandedMenuActiveItem>
-                                    ) : (
-                                        <ExpandedMenuItem variant="body2" {...slotProps?.expandedMenuItem}>
-                                            {item.title}
-                                        </ExpandedMenuItem>
-                                    )}
-                                </Wrapper>
-                            );
-                        })}
-                    </ExpandedMenu>
-                )}
-            </ToolbarContainer>
-
-            {isMobile && <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{isMenuOpen ? closeMenuIcon : openMenuIcon}</MobileMenuIcon>}
-        </Root>
-    );
-
     if (isMobile) {
-        return (
-            <MobileRootButton onClick={toggleMenu} {...slotProps?.mobileRootButton}>
-                {coreNode}
-            </MobileRootButton>
-        );
+        return <MobileBreadcrumbs separatorIcon={separatorIcon} openMenuIcon={openMenuIcon} closeMenuIcon={closeMenuIcon} {...restProps} />;
     }
 
-    return coreNode;
+    return <DesktopBreadcrumbs separatorIcon={separatorIcon} {...restProps} />;
 };
 
 declare module "@mui/material/styles" {
