@@ -1,5 +1,59 @@
 # @comet/cms-admin
 
+## 8.28.0
+
+### Minor Changes
+
+- 17bdce0: Add AI content disclosure for DAM assets (EU AI Act, Article 50)
+
+    Editors can mark a DAM asset as **AI generated** or **AI modified** in the file settings. When such an asset is published, the site renders the official EU AI-content label and merges the disclosure into the media element's accessible name, so screen-reader users learn which asset is AI.
+
+    **API**
+
+    New `aiContentType` field (`Generated` | `Modified`) on DAM files, exposed through the `PixelImage` and `DamVideo` blocks.
+
+    **Admin**
+
+    New "AI content" field in the DAM file settings, shown for image, video and audio assets only (other file types cannot constitute a deep fake).
+
+    **Site**
+
+    `PixelImageBlock` and `DamVideoBlock` render the disclosure automatically for marked assets. Both accept props to customize it:
+    - `aiContentDisclosureProps` — override the badge.
+    - `customAiContentDisclosure` — render your own disclosure, or `null` for none.
+    - `aiContentAltTextPrefixLabels` — localize the accessible-name prefix (defaults to English).
+
+    `@comet/site-react` also exports the `AiContentDisclosure` badge and the `getAiContentAltTextWithPrefix` helper.
+
+- b8e0b19: Warn editors when videos that are too large for performant delivery are used
+
+    Videos are delivered without optimization, so large videos can lead to poor loading performance. A warning is now shown when a video exceeds a configurable file size:
+    - as a snackbar after uploading it to the DAM
+    - as an alert on the DAM asset detail page
+    - as an alert in the `DamVideoBlock` when such a video is selected
+
+    The threshold defaults to 10 MB and can be configured (or the warning disabled entirely) via the new `videoPerformanceWarningFileSize` option in the `dam` config:
+
+    ```tsx
+    <CometConfigProvider
+        dam={{
+            // ...
+            videoPerformanceWarningFileSize: 25, // warn for videos larger than 25 MB
+            // or set to `false` to disable the warning globally
+        }}
+    >
+    ```
+
+### Patch Changes
+
+- e08b7de: Persist the DAM sorting preference across sessions
+
+    The Digital Asset Management asset list now remembers the selected sorting (column and direction) in `localStorage` instead of resetting to alphabetical (`name` ascending) on every visit.
+    - @comet/admin@8.28.0
+    - @comet/admin-date-time@8.28.0
+    - @comet/admin-icons@8.28.0
+    - @comet/admin-rte@8.28.0
+
 ## 8.27.1
 
 ### Patch Changes
