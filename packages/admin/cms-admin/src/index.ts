@@ -101,6 +101,7 @@ export type {
     BlockPreviewStateInterface,
     BlockState,
     LinkBlockInterface,
+    ReadOnlyBlockRenderInterface,
     ReplaceDependencyObject,
     RootBlockInterface,
 } from "./blocks/types";
