@@ -5,11 +5,11 @@ import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import type { ComponentType, HTMLAttributes, ReactNode } from "react";
+import { type ComponentType, type HTMLAttributes, type ReactNode, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
+import { BlockCategory, type BlockInterface, type LinkBlockInterface, type ReadOnlyBlockRenderInterface } from "../types";
 import { ChildBlocksContext } from "./ChildBlocksContext";
 import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
@@ -328,6 +328,7 @@ const TipTapEditor = ({
     childBlocks,
     maxTextBlocks,
     listLevelMax,
+    editable = true,
 }: {
     state: TipTapRichTextBlockState;
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
@@ -339,6 +340,7 @@ const TipTapEditor = ({
     childBlocks: Record<string, TipTapChildBlock>;
     maxTextBlocks?: number;
     listLevelMax?: number;
+    editable?: boolean;
 }) => {
     const hasTextBlockStyles = textBlockStyles.length > 0;
     const hasInlineStyles = inlineStyles.length > 0;
@@ -379,6 +381,7 @@ const TipTapEditor = ({
             ...(listLevelMax !== undefined ? [createListLevelMaxExtension(listLevelMax)] : []),
         ],
         content: state.tipTapContent,
+        editable,
         onUpdate: ({ editor }) => {
             if (maxTextBlocks !== undefined && editor.state.doc.childCount > maxTextBlocks) {
                 // Remove excess text blocks (e.g. from paste)
@@ -411,30 +414,42 @@ const TipTapEditor = ({
         },
     });
 
+    useEffect(() => {
+        // useEditor initializes its content only on mount. In read-only mode the grid reuses the
+        // same editor instance across cells, so sync the content whenever the state changes.
+        if (!editable && editor) {
+            editor.commands.setContent(state.tipTapContent, { emitUpdate: false });
+        }
+    }, [editable, editor, state.tipTapContent]);
+
     if (!editor) {
         return null;
     }
 
+    const content = editable ? (
+        <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
+            <TipTapToolbar
+                editor={editor}
+                supports={supports}
+                textBlockStyles={textBlockStyles}
+                inlineStyles={inlineStyles}
+                placeholders={placeholders}
+                linkBlock={linkBlock}
+                childBlocks={childBlocks}
+                listLevelMax={listLevelMax}
+            />
+            <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
+                <EditorContent editor={editor} />
+            </Box>
+        </Box>
+    ) : (
+        <EditorContent editor={editor} />
+    );
+
     return (
         <TextBlockStyleContext.Provider value={textBlockStyles}>
             <InlineStyleContext.Provider value={inlineStyles}>
-                <ChildBlocksContext.Provider value={childBlocksByKey}>
-                    <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
-                        <TipTapToolbar
-                            editor={editor}
-                            supports={supports}
-                            textBlockStyles={textBlockStyles}
-                            inlineStyles={inlineStyles}
-                            placeholders={placeholders}
-                            linkBlock={linkBlock}
-                            childBlocks={childBlocks}
-                            listLevelMax={listLevelMax}
-                        />
-                        <Box sx={{ "& .tiptap": { minHeight: 200, p: "20px", outline: "none" } }}>
-                            <EditorContent editor={editor} />
-                        </Box>
-                    </Box>
-                </ChildBlocksContext.Provider>
+                <ChildBlocksContext.Provider value={childBlocksByKey}>{content}</ChildBlocksContext.Provider>
             </InlineStyleContext.Provider>
         </TextBlockStyleContext.Provider>
     );
@@ -445,7 +460,8 @@ const TipTapEditor = ({
  */
 export const createTipTapRichTextBlock = (
     options?: TipTapRichTextBlockFactoryOptions,
-): BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> => {
+): BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> &
+    ReadOnlyBlockRenderInterface<TipTapRichTextBlockState> => {
     let supports = options?.supports ?? defaultSupports;
     const textBlockStyles = options?.textBlockStyles ?? [];
     const inlineStyles = options?.inlineStyles ?? [];
@@ -462,7 +478,8 @@ export const createTipTapRichTextBlock = (
         supports = [...supports, "link"];
     }
 
-    const TipTapRichTextBlock: BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> = {
+    const TipTapRichTextBlock: BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> &
+        ReadOnlyBlockRenderInterface<TipTapRichTextBlockState> = {
         ...createBlockSkeleton(),
 
         name: "TipTapRichText",
@@ -541,6 +558,22 @@ export const createTipTapRichTextBlock = (
                 />
             );
         },
+
+        RenderReadOnly: ({ state }) => (
+            <TipTapEditor
+                state={state}
+                updateState={() => {}}
+                supports={supports}
+                textBlockStyles={textBlockStyles}
+                inlineStyles={inlineStyles}
+                placeholders={placeholders}
+                linkBlock={linkBlock}
+                childBlocks={childBlocks}
+                maxTextBlocks={maxTextBlocks}
+                listLevelMax={listLevelMax}
+                editable={false}
+            />
+        ),
 
         previewContent: (state) => {
             const text = getPlainTextFromContent(state.tipTapContent);
