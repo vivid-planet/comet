@@ -16,7 +16,7 @@
         "stableTypeOrdering": true,
         "strict": false,
         "strictNullChecks": true,
-        "target": "ESNext",
+        "target": "ES2023",
         "types": ["*"]
     },
     "include": ["./src", ".storybook/**/*.ts", ".storybook/**/*.tsx"]
