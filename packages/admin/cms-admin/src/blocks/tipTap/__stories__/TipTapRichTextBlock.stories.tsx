@@ -71,6 +71,48 @@ export const Default: Story = {
     },
 };
 
+const readOnlyState: TipTapRichTextBlockState = {
+    tipTapContent: {
+        type: "doc",
+        content: [
+            {
+                type: "paragraph",
+                content: [
+                    { type: "text", text: "This content is rendered " },
+                    { type: "text", marks: [{ type: "bold" }], text: "read-only" },
+                    { type: "text", text: "." },
+                ],
+            },
+        ],
+    },
+};
+
+export const ReadOnly: Story = {
+    render: () => <TipTapRichTextBlock.RenderReadOnly state={readOnlyState} />,
+    play: async ({ canvas, canvasElement, step }) => {
+        await step("Saved content renders", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByText("read-only")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("The editor is not editable", async () => {
+            const editor = canvasElement.querySelector("[contenteditable]");
+            expect(editor).not.toBeNull();
+            expect(editor).toHaveAttribute("contenteditable", "false");
+        });
+
+        await step("No editing toolbar is rendered", async () => {
+            // The editor keeps its textbox role when read-only, so the toolbar's absence is the tell.
+            expect(canvas.queryByRole("combobox")).not.toBeInTheDocument();
+            expect(canvas.queryAllByRole("button")).toHaveLength(0);
+        });
+    },
+};
+
 const BoldOnlyBlock = createTipTapRichTextBlock({ supports: ["bold"] });
 
 function BoldOnlyStory() {

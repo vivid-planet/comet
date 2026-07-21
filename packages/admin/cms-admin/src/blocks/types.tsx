@@ -187,3 +187,11 @@ export interface LinkBlockInterface<
 > {
     url2State?: (url: string) => State | false;
 }
+
+export interface ReadOnlyBlockRenderInterface<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    State = any,
+> {
+    /** Renders the block's saved state read-only, without an editing UI. */
+    RenderReadOnly: ComponentType<{ state: State }>;
+}
