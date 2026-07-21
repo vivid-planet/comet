@@ -9,7 +9,6 @@ import { v4 as uuid } from "uuid";
 
 import type { TableBlockData } from "../../blocks.generated";
 import { useBlockContext } from "../context/useBlockContext";
-import type { RichTextBlockState } from "../createRichTextBlock";
 import type { TableBlockState } from "../createTableBlock";
 import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
 import { useTableBlockContext } from "./TableBlockContext";
@@ -121,7 +120,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
             return;
         }
 
-        let cellValuesToInsert: RichTextBlockState[] = [];
+        let cellValuesToInsert: unknown[] = [];
 
         try {
             cellValuesToInsert = await Promise.all(clipboardData.cellValues.map((cellValue) => RichTextBlock.output2State(cellValue, blockContext)));
