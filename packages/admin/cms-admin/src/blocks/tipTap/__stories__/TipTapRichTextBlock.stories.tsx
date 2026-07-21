@@ -71,6 +71,58 @@ export const Default: Story = {
     },
 };
 
+const readOnlyState: TipTapRichTextBlockState = {
+    tipTapContent: {
+        type: "doc",
+        content: [
+            {
+                type: "heading",
+                attrs: { level: 1 },
+                content: [{ type: "text", text: "Read-only content" }],
+            },
+            {
+                type: "paragraph",
+                content: [
+                    { type: "text", text: "This content is rendered " },
+                    { type: "text", marks: [{ type: "bold" }], text: "read-only" },
+                    { type: "text", text: "." },
+                ],
+            },
+        ],
+    },
+};
+
+export const ReadOnly: Story = {
+    render: () => (
+        <StoryWrapper state={readOnlyState}>
+            <TipTapRichTextBlock.RenderReadOnly state={readOnlyState} />
+        </StoryWrapper>
+    ),
+    play: async ({ canvas, canvasElement, step }) => {
+        await step("Saved content renders", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("heading", { level: 1, name: "Read-only content" })).toBeInTheDocument();
+                    expect(canvas.getByText("read-only")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("No element is editable", async () => {
+            for (const element of Array.from(canvasElement.querySelectorAll("[contenteditable]"))) {
+                expect(element).toHaveAttribute("contenteditable", "false");
+            }
+        });
+
+        await step("No editing toolbar is rendered", async () => {
+            // The editor keeps its textbox role when read-only, so the toolbar's absence is the tell.
+            expect(canvas.queryByRole("combobox")).not.toBeInTheDocument();
+            expect(canvas.queryAllByRole("button")).toHaveLength(0);
+        });
+    },
+};
+
 const BoldOnlyBlock = createTipTapRichTextBlock({ supports: ["bold"] });
 
 function BoldOnlyStory() {
