@@ -23,12 +23,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { DataGrid } from "../dataGrid/DataGrid";
 import { useUserPermissionCheck } from "./hooks/currentUser";
 import { ImpersonateMenuItem } from "./ImpersonateMenuItem";
-import type {
-    GQLUserAvailablePermissionsAndContentScopesQuery,
-    GQLUserForGridFragment,
-    GQLUserGridQuery,
-    GQLUserGridQueryVariables,
-} from "./UserGrid.generated";
+import type { GQLUserAvailablePermissionsQuery, GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
     toolbarAction?: ReactNode;
@@ -56,21 +51,17 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     const stackApi = useContext(StackSwitchApiContext);
     const isAllowed = useUserPermissionCheck();
 
-    const { data: availablePermissionsAndContentScopes } = useQuery<GQLUserAvailablePermissionsAndContentScopesQuery>(
+    const { data: availablePermissions } = useQuery<GQLUserAvailablePermissionsQuery>(
         gql`
-            query UserAvailablePermissionsAndContentScopes {
+            query UserAvailablePermissions {
                 permissions: userPermissionsAvailablePermissions
-                contentScopes: userPermissionsAvailableContentScopes {
-                    scope
-                    label
-                }
             }
         `,
         { skip: !isAllowed("userPermissions") },
     );
 
     const columns: GridColDef<GQLUserForGridFragment>[] = useMemo(() => {
-        return [
+        const columns: GridColDef<GQLUserForGridFragment>[] = [
             {
                 field: "name",
                 flex: 1,
@@ -89,121 +80,117 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                 headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
             },
         ];
-    }, [intl]);
-    if (isAllowed("userPermissions")) {
-        columns.push(
-            {
-                field: "permission",
-                flex: 1,
-                pinnable: false,
-                sortable: false,
-                type: "singleSelect",
-                valueOptions: availablePermissionsAndContentScopes?.permissions,
-                headerName: intl.formatMessage({ id: "comet.userPermissions.permissionsInfo", defaultMessage: "Permissions" }),
-                renderCell: ({ row }) => {
-                    if (row.permissionsCount === availablePermissionsAndContentScopes?.permissions.length) {
-                        return (
-                            <Chip
-                                color="primary"
-                                label={<FormattedMessage id="comet.userPermissions.allPermissions" defaultMessage="All permissions" />}
-                            />
-                        );
-                    } else if (row.permissionsCount === 0) {
-                        return (
-                            <Chip
-                                color="secondary"
-                                label={<FormattedMessage id="comet.userPermissions.noPermissions" defaultMessage="No permissions" />}
-                            />
-                        );
-                    } else {
-                        return (
-                            <Chip
-                                color="default"
-                                label={
-                                    <FormattedMessage
-                                        id="comet.userPermissions.permissionsCount"
-                                        defaultMessage="{permissionsCount} of {availablePermissionsCount} permissions"
-                                        values={{
-                                            permissionsCount: row.permissionsCount,
-                                            availablePermissionsCount: availablePermissionsAndContentScopes?.permissions.length,
-                                        }}
-                                    />
-                                }
-                            />
-                        );
-                    }
+        if (isAllowed("userPermissions")) {
+            columns.push(
+                {
+                    field: "permission",
+                    flex: 1,
+                    pinnable: false,
+                    sortable: false,
+                    type: "singleSelect",
+                    valueOptions: availablePermissions?.permissions,
+                    headerName: intl.formatMessage({ id: "comet.userPermissions.permissionsInfo", defaultMessage: "Permissions" }),
+                    renderCell: ({ row }) => {
+                        if (row.permissionsCount === availablePermissions?.permissions.length) {
+                            return (
+                                <Chip
+                                    color="primary"
+                                    label={<FormattedMessage id="comet.userPermissions.allPermissions" defaultMessage="All permissions" />}
+                                />
+                            );
+                        } else if (row.permissionsCount === 0) {
+                            return (
+                                <Chip
+                                    color="secondary"
+                                    label={<FormattedMessage id="comet.userPermissions.noPermissions" defaultMessage="No permissions" />}
+                                />
+                            );
+                        } else {
+                            return (
+                                <Chip
+                                    color="default"
+                                    label={
+                                        <FormattedMessage
+                                            id="comet.userPermissions.permissionsCount"
+                                            defaultMessage="{permissionsCount} of {availablePermissionsCount} permissions"
+                                            values={{
+                                                permissionsCount: row.permissionsCount,
+                                                availablePermissionsCount: availablePermissions?.permissions.length,
+                                            }}
+                                        />
+                                    }
+                                />
+                            );
+                        }
+                    },
                 },
-            },
-            {
-                field: "scopesInfo",
-                flex: 1,
-                pinnable: false,
-                sortable: false,
-                filterable: false,
-                headerName: intl.formatMessage({ id: "comet.userPermissions.contentScopesInfo", defaultMessage: "Scopes" }),
-                renderCell: ({ row }) => {
-                    if (row.contentScopesCount === availablePermissionsAndContentScopes?.contentScopes.length) {
-                        return (
-                            <Chip
-                                color="primary"
-                                label={<FormattedMessage id="comet.userPermissions.allContentScopes" defaultMessage="All scopes" />}
-                            />
-                        );
-                    } else if (row.contentScopesCount === 0) {
-                        return (
-                            <Chip
-                                color="secondary"
-                                label={<FormattedMessage id="comet.userPermissions.noContentScopes" defaultMessage="No scopes" />}
-                            />
-                        );
-                    } else {
+                {
+                    field: "scopesInfo",
+                    flex: 1,
+                    pinnable: false,
+                    sortable: false,
+                    filterable: false,
+                    headerName: intl.formatMessage({ id: "comet.userPermissions.contentScopesInfo", defaultMessage: "Scopes" }),
+                    renderCell: ({ row }) => {
+                        // No total and no "All scopes": with wildcard dimensions the number of accessible scopes can't be
+                        // counted meaningfully against a total, so just show the number of accessible scopes.
+                        if (row.contentScopesCount === 0) {
+                            return (
+                                <Chip
+                                    color="secondary"
+                                    label={<FormattedMessage id="comet.userPermissions.noContentScopes" defaultMessage="No scopes" />}
+                                />
+                            );
+                        }
                         return (
                             <Chip
                                 color="default"
                                 label={
                                     <FormattedMessage
                                         id="comet.userPermissions.contentScopesCount"
-                                        defaultMessage="{contentScopesCount} of {availableContentScopesCount} scopes"
-                                        values={{
-                                            contentScopesCount: row.contentScopesCount,
-                                            availableContentScopesCount: availablePermissionsAndContentScopes?.contentScopes.length,
-                                        }}
+                                        defaultMessage="{contentScopesCount, plural, one {# scope} other {# scopes}}"
+                                        values={{ contentScopesCount: row.contentScopesCount }}
                                     />
                                 }
                             />
                         );
-                    }
+                    },
                 },
-            },
-        );
-    }
-    columns.push({
-        field: "actions",
-        headerName: "",
-        sortable: false,
-        filterable: false,
-        type: "actions",
-        align: "right",
-        pinned: "right",
-        disableExport: true,
-        renderCell: (params) => (
-            <>
-                <IconButton
-                    onClick={() => {
-                        stackApi.activatePage("edit", params.id.toString());
-                    }}
-                    color="primary"
-                >
-                    <Edit />
-                </IconButton>
-                {isAllowed("impersonation") && (
-                    <CrudContextMenu>
-                        <ImpersonateMenuItem userId={params.row.id} />
-                    </CrudContextMenu>
-                )}
-            </>
-        ),
-    });
+            );
+        }
+        columns.push({
+            field: "actions",
+            headerName: "",
+            sortable: false,
+            filterable: false,
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            disableExport: true,
+            renderCell: (params) => (
+                <>
+                    {rowAction ? (
+                        rowAction(params)
+                    ) : (
+                        <IconButton
+                            onClick={() => {
+                                stackApi.activatePage("edit", params.id.toString());
+                            }}
+                            color="primary"
+                        >
+                            <Edit />
+                        </IconButton>
+                    )}
+                    {isAllowed("impersonation") && (
+                        <CrudContextMenu>
+                            <ImpersonateMenuItem userId={params.row.id} />
+                        </CrudContextMenu>
+                    )}
+                </>
+            ),
+        });
+        return columns;
+    }, [intl, isAllowed, availablePermissions, stackApi, rowAction]);
 
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`

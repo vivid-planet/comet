@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { AbstractAccessControlService } from "./access-control.service";
 import type { CurrentUser } from "./dto/current-user";
-import type { Permission } from "./user-permissions.types";
+import { type Permission, UserPermissions } from "./user-permissions.types";
 
 const permissions = {
     p1: "p1" as Permission,
@@ -37,6 +37,22 @@ describe("AbstractAccessControlService", () => {
             expect(service.isAllowed(user, "pageTree", { domain: "main", language: null })).toBe(true);
 
             expect(service.isAllowed(user, "pageTree", { domain: "main", language: undefined })).toBe(true);
+        });
+
+        it("should allow any value for a wildcard scope dimension", () => {
+            const user: CurrentUser = {
+                id: "b26d86a7-32bb-4c84-ab9d-d167dddd40ff",
+                name: "User",
+                email: "user@example.com",
+                permissions: [{ permission: "pageTree", contentScopes: [{ domain: "main", language: UserPermissions.allValues }] }],
+            };
+
+            expect(service.isAllowed(user, "pageTree", { domain: "main", language: "en" })).toBe(true);
+            expect(service.isAllowed(user, "pageTree", { domain: "main", language: "de" })).toBe(true);
+            expect(service.isAllowed(user, "pageTree", { domain: "main" })).toBe(true);
+
+            // The wildcard only applies to its dimension, other dimensions must still match
+            expect(service.isAllowed(user, "pageTree", { domain: "secondary", language: "en" })).toBe(false);
         });
     });
 

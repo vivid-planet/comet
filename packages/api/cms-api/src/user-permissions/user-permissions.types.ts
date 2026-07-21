@@ -13,6 +13,12 @@ export type Permission = `${CorePermission}` | `${PermissionOverrides[keyof Perm
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
     allPermissions = "all-permissions",
+    /**
+     * Wildcard value for a single content scope dimension in `getContentScopesForUser`. Matches any value for that dimension
+     * during the content scope check, e.g. `{ domain: "main", language: UserPermissions.allValues }` grants access to every
+     * language within the `main` domain. The wildcard does not need to be part of `availableContentScopes`.
+     */
+    allValues = "*",
 }
 
 export type Users = [User[], number];
@@ -62,8 +68,20 @@ export type ContentScopeWithLabel = {
 };
 export type AvailableContentScope = ContentScope | ContentScopeWithLabel;
 
+export type ContentScopeDimension = {
+    name: string;
+    label?: string;
+};
+
 export interface UserPermissionsOptions {
     availableContentScopes?: AvailableContentScope[] | (() => Promise<AvailableContentScope[]> | AvailableContentScope[]);
+    /**
+     * Declares the content scope dimensions (e.g. `domain`, `language`) available in the system. Use this to make dimensions
+     * that are not part of `availableContentScopes` (e.g. an optional dimension with too many values to enumerate) known at
+     * runtime, so they are shown in the user permissions admin panel. When omitted, the dimensions are derived from the keys
+     * of `availableContentScopes`.
+     */
+    availableContentScopeDimensions?: ContentScopeDimension[] | (() => Promise<ContentScopeDimension[]> | ContentScopeDimension[]);
     systemUsers?: string[];
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {

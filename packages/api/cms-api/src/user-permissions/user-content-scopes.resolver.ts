@@ -2,11 +2,10 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
-import isEqual from "lodash.isequal";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
-import { ContentScopeWithLabel } from "./dto/content-scope";
+import { ContentScopeDimension, ContentScopeWithLabel } from "./dto/content-scope";
 import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
@@ -43,14 +42,16 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        const contentScopes = await this.userService.getContentScopes(await this.userService.findUserOrThrow(userId), !skipManual);
-        return (await this.userService.getAvailableContentScopes())
-            .filter((availableContentScope) => contentScopes.some((contentScope) => isEqual(contentScope, availableContentScope.scope)))
-            .map((availableContentScope) => availableContentScope.scope);
+        return this.userService.getContentScopes(await this.userService.findUserOrThrow(userId), !skipManual);
     }
 
     @Query(() => [ContentScopeWithLabel])
     async userPermissionsAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
         return this.userService.getAvailableContentScopes();
+    }
+
+    @Query(() => [ContentScopeDimension])
+    async userPermissionsAvailableContentScopeDimensions(): Promise<ContentScopeDimension[]> {
+        return this.userService.getAvailableContentScopeDimensions();
     }
 }

@@ -1,0 +1,17 @@
+---
+"@comet/cms-api": minor
+"@comet/cms-admin": minor
+---
+
+Support wildcard values for content scope dimensions in `getContentScopesForUser`
+
+`getContentScopesForUser` can now return `UserPermissions.allValues` as the value of a content scope dimension to grant access to any value for that dimension. The wildcard is matched during the content scope check, so it does not need to be part of `availableContentScopes`. In the user permissions admin panel, such a dimension is displayed as "All".
+
+**Example**
+
+```ts
+getContentScopesForUser(user: User): ContentScopesForUser {
+    // Grant access to every language within the "main" domain
+    return [{ domain: "main", language: UserPermissions.allValues }];
+}
+```
