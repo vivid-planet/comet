@@ -5,7 +5,6 @@ import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
 import { Request } from "express";
 import isEqual from "lodash.isequal";
-import uniqWith from "lodash.uniqwith";
 import getUuid from "uuid-by-string";
 
 import { AbstractAccessControlService } from "./access-control.service";
@@ -27,6 +26,19 @@ import {
     UserPermissionsUserServiceInterface,
 } from "./user-permissions.types";
 
+// Dedupes by scope content without lodash's deep-equal uniqWith, which is O(n^2) and too slow for large scope lists.
+// Scopes are flat objects of primitive values, so a sorted-entries string key is a safe stand-in for deep equality.
+function dedupeByContentScope<T>(items: T[], getScope: (item: T) => ContentScope): T[] {
+    const seen = new Map<string, T>();
+    for (const item of items) {
+        const key = JSON.stringify(Object.entries(getScope(item)).sort(([a], [b]) => a.localeCompare(b)));
+        if (!seen.has(key)) {
+            seen.set(key, item);
+        }
+    }
+    return [...seen.values()];
+}
+
 @Injectable()
 export class UserPermissionsService {
     constructor(
@@ -40,8 +52,26 @@ export class UserPermissionsService {
 
     private manualPermissions: { userId: string; permission: Permission }[] | undefined;
     private availablePermissions: Permission[] | undefined;
+    private availableContentScopesCache: ContentScopeWithLabel[] | undefined;
+
+    // Populates the cache used by getAvailableContentScopes() for the duration of one operation (e.g. resolving a list of users).
+    // Must be paired with clearAvailableContentScopesCache() so later, unrelated requests don't see a stale snapshot.
+    async warmupAvailableContentScopesCache(): Promise<void> {
+        this.availableContentScopesCache = await this.computeAvailableContentScopes();
+    }
+
+    clearAvailableContentScopesCache(): void {
+        this.availableContentScopesCache = undefined;
+    }
 
     async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
+        if (this.availableContentScopesCache !== undefined) {
+            return this.availableContentScopesCache;
+        }
+        return this.computeAvailableContentScopes();
+    }
+
+    private async computeAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
         let contentScopes: AvailableContentScope[] = [];
         if (this.options.availableContentScopes) {
             if (typeof this.options.availableContentScopes === "function") {
@@ -75,7 +105,7 @@ export class UserPermissionsService {
                     ]),
                 ),
             }));
-        return uniqWith(contentScopesWithLabel, (value: ContentScopeWithLabel, other: ContentScopeWithLabel) => isEqual(value.scope, other.scope));
+        return dedupeByContentScope(contentScopesWithLabel, (cs) => cs.scope);
     }
 
     async getAvailablePermissions(): Promise<Permission[]> {
@@ -225,7 +255,7 @@ export class UserPermissionsService {
             }
         }
 
-        return uniqWith(contentScopes, isEqual);
+        return dedupeByContentScope(contentScopes, (scope) => scope);
     }
 
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
@@ -270,7 +300,10 @@ export class UserPermissionsService {
                 const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
                 const existingPermission = acc.find((p) => p.permission === userPermission.permission);
                 if (existingPermission) {
-                    existingPermission.contentScopes = uniqWith([...existingPermission.contentScopes, ...contentScopes], isEqual);
+                    existingPermission.contentScopes = dedupeByContentScope(
+                        [...existingPermission.contentScopes, ...contentScopes],
+                        (scope) => scope,
+                    );
                 } else {
                     acc.push({
                         permission: userPermission.permission,
