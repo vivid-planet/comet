@@ -16,6 +16,7 @@
         "resolveJsonModule": true,
         "skipLibCheck": true,
         "sourceMap": true,
+        "stableTypeOrdering": true,
         "strict": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": false,

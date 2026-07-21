@@ -2,6 +2,7 @@
     "compilerOptions": {
         "ignoreDeprecations": "6.0",
         "noUncheckedSideEffectImports": false,
+        "stableTypeOrdering": true,
         "strict": false,
         "types": ["*"]
     },
