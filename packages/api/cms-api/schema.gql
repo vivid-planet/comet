@@ -292,6 +292,7 @@ type Warning {
   status: WarningStatus!
   scope: JSONObject
   entityInfo: EntityInfo
+  visible: Boolean!
 }
 
 enum WarningSeverity {
@@ -731,6 +732,7 @@ input WarningFilter {
   type: StringFilter
   name: StringFilter
   secondaryInformation: StringFilter
+  visible: BooleanFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
   scope: ScopeFilter

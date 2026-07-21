@@ -6,6 +6,7 @@ import isEqual from "lodash.isequal";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { gqlArgsToMikroOrmQuery, splitSearchString } from "../common/filter/mikro-orm";
+import { DiscoverService } from "../dependencies/discover.service";
 import { EntityInfoObject } from "../entity-info/entity-info.object";
 import { EntityInfoService } from "../entity-info/entity-info.service";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
@@ -23,6 +24,7 @@ export class WarningResolver {
     constructor(
         private readonly entityManager: EntityManager,
         private readonly entityInfoService: EntityInfoService,
+        private readonly discoverService: DiscoverService,
         @InjectRepository(Warning) private readonly repository: EntityRepository<Warning>,
     ) {}
 
@@ -50,8 +52,12 @@ export class WarningResolver {
         const standardFilter = filter;
         const scope = filter?.and?.find((item) => item.scope !== undefined)?.scope;
 
+        // `visible` is not a Warning column: it's the effective visibility of the warning's source (the
+        // referenced entity and, for block warnings, the block itself). It's handled separately below.
+        const visible = filter?.and?.find((item) => item.visible !== undefined)?.visible;
+
         if (filter?.and) {
-            filter.and = filter.and.filter((item) => item.scope === undefined);
+            filter.and = filter.and.filter((item) => item.scope === undefined && item.visible === undefined);
         }
 
         const where = remapWarningQueryFields(
@@ -125,6 +131,10 @@ export class WarningResolver {
 
         queryBuilder.where(where).limit(limit).offset(offset);
 
+        if (visible?.equal !== undefined) {
+            queryBuilder.andWhere(`${this.effectiveVisibleSql()} = ${visible.equal ? "true" : "false"}`);
+        }
+
         if (orderBy) {
             queryBuilder.orderBy(orderBy);
         }
@@ -136,5 +146,55 @@ export class WarningResolver {
     @ResolveField(() => EntityInfoObject, { nullable: true })
     async entityInfo(@Parent() warning: Warning): Promise<EntityInfoObject | undefined> {
         return this.entityInfoService.getEntityInfo(warning.sourceInfo.rootEntityName, warning.sourceInfo.targetId);
+    }
+
+    // Whether the warning's source is currently visible. For an entity warning this is the entity's
+    // visibility (EntityInfo view). For a block warning it additionally requires the block itself to be
+    // visible within its tree (block_index view). Both default to visible when no matching row exists.
+    @ResolveField(() => Boolean)
+    async visible(@Parent() warning: Warning): Promise<boolean> {
+        const { rootEntityName, targetId, rootColumnName, jsonPath } = warning.sourceInfo;
+
+        const entityInfo = await this.entityManager.findOne(EntityInfoObject, { id: targetId, entityName: rootEntityName });
+        const isEntityVisible = entityInfo?.visible ?? true;
+
+        let isBlockVisible = true;
+        if (this.hasRootBlocks() && rootColumnName && jsonPath) {
+            const rows = await this.entityManager
+                .getConnection()
+                .execute<
+                    Array<{ visible: boolean }>
+                >(`SELECT "visible" FROM "block_index" WHERE "rootId" = ? AND "rootColumnName" = ? AND "jsonPath" = ? LIMIT 1`, [targetId, rootColumnName, jsonPath]);
+            isBlockVisible = rows[0]?.visible ?? true;
+        }
+
+        return isEntityVisible && isBlockVisible;
+    }
+
+    private hasRootBlocks(): boolean {
+        return this.discoverService.discoverRootBlocks().length > 0;
+    }
+
+    // SQL for the effective visibility of a warning's source, evaluated against the `warning` alias. The
+    // `block_index` view only exists when the project has root blocks, so it's only referenced then.
+    private effectiveVisibleSql(): string {
+        const entityVisibleSql = `COALESCE((
+            SELECT "entityInfo"."visible" FROM "EntityInfo" "entityInfo"
+            WHERE "entityInfo"."id" = "warning"."sourceInfo"->>'targetId'
+                AND "entityInfo"."entityName" = "warning"."sourceInfo"->>'rootEntityName'
+        ), true)`;
+
+        if (!this.hasRootBlocks()) {
+            return entityVisibleSql;
+        }
+
+        const blockVisibleSql = `COALESCE((
+            SELECT "block_index"."visible" FROM "block_index"
+            WHERE "block_index"."rootId" = "warning"."sourceInfo"->>'targetId'
+                AND "block_index"."rootColumnName" = "warning"."sourceInfo"->>'rootColumnName'
+                AND "block_index"."jsonPath" = "warning"."sourceInfo"->>'jsonPath'
+        ), true)`;
+
+        return `(${entityVisibleSql} AND ${blockVisibleSql})`;
     }
 }

@@ -2345,6 +2345,7 @@ type Warning {
   sourceInfo: WarningSourceInfo!
   status: WarningStatus!
   updatedAt: DateTime!
+  visible: Boolean!
 }
 
 input WarningFilter {
@@ -2359,6 +2360,7 @@ input WarningFilter {
   status: WarningStatusEnumFilter
   type: StringFilter
   updatedAt: DateTimeFilter
+  visible: BooleanFilter
 }
 
 enum WarningSeverity {

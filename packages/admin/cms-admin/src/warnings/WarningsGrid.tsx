@@ -38,6 +38,7 @@ const warningsFragment = gql`
         updatedAt
         message
         severity
+        visible
         sourceInfo {
             rootEntityName
             rootColumnName
@@ -142,6 +143,14 @@ export function WarningsGrid() {
             sortable: false,
             visible: false,
             valueGetter: (params, row) => row.entityInfo?.secondaryInformation,
+        },
+        {
+            field: "visible",
+            headerName: intl.formatMessage({ id: "warning.visible", defaultMessage: "Visibility" }),
+            type: "boolean",
+            sortable: false,
+            width: 100,
+            valueGetter: (params, row) => row.visible,
         },
         {
             field: "type",
