@@ -11,7 +11,7 @@ import {
     DamImageBlock,
     ExtractBlockInput,
 } from "@comet/cms-api";
-import { IsNotEmpty, IsOptional, IsString, IsUrl, ValidateIf } from "class-validator";
+import { IsNotEmpty, IsString, IsUrl, ValidateIf } from "class-validator";
 
 import { SameAsUrlBlock } from "./same-as-url.block";
 
@@ -21,8 +21,8 @@ class OrganizationBlockData extends BlockData {
     @BlockField()
     name: string;
 
-    @BlockField({ nullable: true })
-    url?: string;
+    @BlockField()
+    url: string;
 
     @ChildBlock(DamImageBlock)
     logo: BlockDataInterface;
@@ -30,8 +30,8 @@ class OrganizationBlockData extends BlockData {
     @ChildBlock(SameAsListBlock)
     sameAs: BlockDataInterface;
 
-    @BlockField({ nullable: true })
-    description?: string;
+    @BlockField()
+    description: string;
 }
 
 class OrganizationBlockInput extends BlockInput {
@@ -40,10 +40,10 @@ class OrganizationBlockInput extends BlockInput {
     @IsNotEmpty()
     name: string;
 
-    @BlockField({ nullable: true })
+    @BlockField()
     @ValidateIf((input: OrganizationBlockInput) => Boolean(input.url))
     @IsUrl()
-    url?: string;
+    url: string;
 
     @ChildBlockInput(DamImageBlock)
     logo: ExtractBlockInput<typeof DamImageBlock>;
@@ -51,10 +51,9 @@ class OrganizationBlockInput extends BlockInput {
     @ChildBlockInput(SameAsListBlock)
     sameAs: ExtractBlockInput<typeof SameAsListBlock>;
 
-    @BlockField({ nullable: true })
+    @BlockField()
     @IsString()
-    @IsOptional()
-    description?: string;
+    description: string;
 
     transformToBlockData(): OrganizationBlockData {
         return blockInputToData(OrganizationBlockData, this);

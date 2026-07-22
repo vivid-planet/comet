@@ -40,13 +40,13 @@ export function buildOrganization(content: SiteSettingsContentBlockData, siteUrl
         .filter((block) => block.visible)
         .map((block) => block.props.url.trim())
         .filter(Boolean);
-    const description = organization.description?.trim();
+    const description = organization.description.trim();
 
     return {
         "@context": "https://schema.org",
         "@type": "Organization",
         name,
-        url: organization.url?.trim() || siteUrl,
+        url: organization.url.trim() || siteUrl,
         ...(logo ? { logo } : {}),
         ...(sameAs.length > 0 ? { sameAs } : {}),
         ...(description ? { description } : {}),

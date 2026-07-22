@@ -2201,7 +2201,7 @@
             {
                 "name": "url",
                 "kind": "String",
-                "nullable": true
+                "nullable": false
             },
             {
                 "name": "logo",
@@ -2218,7 +2218,7 @@
             {
                 "name": "description",
                 "kind": "String",
-                "nullable": true
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -2230,7 +2230,7 @@
             {
                 "name": "url",
                 "kind": "String",
-                "nullable": true
+                "nullable": false
             },
             {
                 "name": "logo",
@@ -2247,7 +2247,7 @@
             {
                 "name": "description",
                 "kind": "String",
-                "nullable": true
+                "nullable": false
             }
         ]
     },
