@@ -24,11 +24,13 @@ interface PGStatActivity {
 // Advisory lock key for block_index_dependencies refresh deduplication.
 const BLOCK_INDEX_REFRESH_LOCK_KEY = 4201;
 
+export type RefreshBlockIndexViewsResult = "refreshed" | "skipped";
+
 @Injectable()
 export class DependenciesService {
     private connection: Connection;
     private readonly logger = new Logger(DependenciesService.name);
-    private runningRefresh?: Promise<void>;
+    private runningRefresh?: Promise<RefreshBlockIndexViewsResult>;
 
     constructor(
         private readonly discoverService: DiscoverService,
@@ -183,13 +185,13 @@ export class DependenciesService {
      * @param options.force - If true, cancels any running refresh and performs a full synchronous refresh
      * @param options.awaitRefresh - If true, waits for background concurrent refreshes to complete. Intended to be used by CLI commands.
      *
-     * @returns A promise that resolves when the refresh completes (or immediately if skipped or backgrounded)
+     * @returns `"refreshed"` if a refresh was performed (or triggered in the background), `"skipped"` if the views were fresh enough
      */
-    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
+    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<RefreshBlockIndexViewsResult> {
         const knex = this.entityManager.getKnex("write");
 
-        const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<void> => {
-            await knex.transaction(async (trx) => {
+        const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<RefreshBlockIndexViewsResult> => {
+            return knex.transaction(async (trx) => {
                 if (refreshOptions?.concurrently) {
                     // Non-blocking lock: Try to acquire the lock. Only acquire if available.
                     const lockResult = await trx.raw(`SELECT pg_try_advisory_xact_lock(?) AS locked`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
@@ -197,7 +199,7 @@ export class DependenciesService {
                     if (!lockResult.rows[0]?.locked) {
                         // If another refresh already holds the lock (= a refresh is already in
                         // progress), skip this refresh entirely
-                        return;
+                        return "skipped";
                     }
                 } else {
                     // Blocking lock: Wait until the lock is available (= the currently running
@@ -211,7 +213,7 @@ export class DependenciesService {
                     if (recentRefresh && new Date(recentRefresh.finishedAt) > subMinutes(new Date(), 5)) {
                         // A refresh was completed within the last 5 minutes, which is fresh enough.
                         // Skip this refresh.
-                        return;
+                        return "skipped";
                     }
                 }
 
@@ -225,6 +227,8 @@ export class DependenciesService {
                 await trx("BlockIndexRefresh").where({ id }).update({ finishedAt: new Date() });
 
                 this.logger.log(`Completed block index refresh ${id}`);
+
+                return "refreshed";
             });
         };
 
@@ -254,7 +258,7 @@ export class DependenciesService {
                 await trx("BlockIndexRefresh").insert({ id: uuid(), startedAt: new Date(), finishedAt: new Date() });
             });
 
-            return;
+            return "refreshed";
         }
 
         // Decide refresh strategy based on age of the last completed refresh
@@ -270,7 +274,7 @@ export class DependenciesService {
 
         if (lastRefresh && new Date(lastRefresh.finishedAt) > subMinutes(now, 5)) {
             // Fresh enough (< 5 minutes) — skip refresh entirely
-            return;
+            return "skipped";
         }
 
         // Moderately stale (5–15 min): background concurrent refresh, caller doesn't wait.
@@ -292,8 +296,11 @@ export class DependenciesService {
 
         if (!runRefreshInBackground || options?.awaitRefresh) {
             // Wait when synchronous (very stale/uninitialized) or when explicitly requested (CLI awaitRefresh).
-            await this.runningRefresh;
+            return this.runningRefresh;
         }
+
+        // Backgrounded refresh the caller doesn't wait for — the refresh has been triggered.
+        return "refreshed";
     }
 
     async getDependents(
