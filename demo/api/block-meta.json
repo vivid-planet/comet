@@ -2191,6 +2191,67 @@
         ]
     },
     {
+        "name": "Organization",
+        "fields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "url",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "logo",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "sameAs",
+                "kind": "Block",
+                "block": "SameAsList",
+                "nullable": false
+            },
+            {
+                "name": "description",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "url",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "logo",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "sameAs",
+                "kind": "Block",
+                "block": "SameAsList",
+                "nullable": false
+            },
+            {
+                "name": "description",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "PageContent",
         "fields": [
             {
@@ -2797,6 +2858,80 @@
         ]
     },
     {
+        "name": "SameAsList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SameAsUrl",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SameAsUrl",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SameAsUrl",
+        "fields": [
+            {
+                "name": "url",
+                "kind": "String",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "url",
+                "kind": "String",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Seo",
         "fields": [
             {
@@ -2983,6 +3118,25 @@
                         }
                     ]
                 },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SiteSettingsContent",
+        "fields": [
+            {
+                "name": "organization",
+                "kind": "Block",
+                "block": "Organization",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "organization",
+                "kind": "Block",
+                "block": "Organization",
                 "nullable": false
             }
         ]
