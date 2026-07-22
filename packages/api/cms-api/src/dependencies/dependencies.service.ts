@@ -24,7 +24,7 @@ interface PGStatActivity {
 // Advisory lock key for block_index_dependencies refresh deduplication.
 const BLOCK_INDEX_REFRESH_LOCK_KEY = 4201;
 
-export type RefreshBlockIndexViewsResult = "refreshed" | "skipped";
+type RefreshBlockIndexViewsResult = "refreshed" | "skipped";
 
 @Injectable()
 export class DependenciesService {
