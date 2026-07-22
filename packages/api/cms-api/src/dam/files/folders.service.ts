@@ -1,10 +1,10 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
-import isEqual from "lodash.isequal";
 
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
+import { damScopesAreEqual } from "../dam-scopes-are-equal.util";
 import { DamScopeInterface } from "../types";
 import { DamFolderZipService } from "./dam-folder-zip.service";
 import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
@@ -258,7 +258,7 @@ export class FoldersService {
             }
 
             // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (scope && targetFolder.scope && !isEqual({ ...targetFolder.scope }, scope)) {
+            if (scope && targetFolder.scope && !damScopesAreEqual(targetFolder.scope, scope)) {
                 throw new Error("Scope arg doesn't match folder scope");
             }
         }
@@ -271,7 +271,7 @@ export class FoldersService {
             }
 
             // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (scope && folder.scope && !isEqual({ ...folder.scope }, scope)) {
+            if (scope && folder.scope && !damScopesAreEqual(folder.scope, scope)) {
                 throw new Error("Scope arg doesn't match folder scope");
             }
 

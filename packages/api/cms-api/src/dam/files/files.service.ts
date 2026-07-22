@@ -12,9 +12,9 @@ import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { slugifyFilename } from "../../file-utils/files.utils";
 import { FocalPoint } from "../../file-utils/focal-point.enum";
-import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, DAM_DOMINANT_COLOR_CALCULATOR } from "../dam.constants";
+import { damScopesAreEqual } from "../dam-scopes-are-equal.util";
 import { DominantColorCalculatorInterface } from "../images/dam-dominant-color.service";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { DamScopeInterface } from "../types";
@@ -116,7 +116,6 @@ export class FilesService {
         private readonly foldersService: FoldersService,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly orm: MikroORM,
-        private readonly contentScopeService: ContentScopeService,
         private readonly entityManager: EntityManager,
         @Inject(forwardRef(() => DamFileCopyService)) private readonly fileCopyService: DamFileCopyService,
         @Optional() @Inject(DAM_DOMINANT_COLOR_CALCULATOR) private readonly dominantColorCalculator?: DominantColorCalculatorInterface,
@@ -336,7 +335,7 @@ export class FilesService {
 
         for (const file of files) {
             // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (targetFolder?.scope !== undefined && !this.contentScopeService.scopesAreEqual(file.scope, targetFolder.scope)) {
+            if (targetFolder?.scope !== undefined && !damScopesAreEqual(file.scope, targetFolder.scope)) {
                 throw new Error("Target folder scope doesn't match file scope");
             }
 

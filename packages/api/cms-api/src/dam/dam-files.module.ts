@@ -1,5 +1,5 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
+import { DynamicModule, Global, Logger, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
@@ -40,6 +40,12 @@ export class DamFilesModule {
     static register({ damConfig, Scope, Folder, File }: DamFilesModuleOptions): DynamicModule {
         if (File.name !== FILE_ENTITY) {
             throw new Error(`DamModule: Your File entity must be named ${FILE_ENTITY}`);
+        }
+
+        if (damConfig.disableScopeAccessControl) {
+            new Logger(DamFilesModule.name).warn(
+                "Scope-based access control is disabled (damConfig.disableScopeAccessControl = true). The DAM endpoints will not perform scope checks — make sure they are protected by your own authentication guard.",
+            );
         }
 
         const damConfigProvider: ValueProvider<DamConfig> = {

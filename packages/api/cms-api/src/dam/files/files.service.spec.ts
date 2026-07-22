@@ -34,14 +34,13 @@ function createServiceWithMockQueryBuilder() {
 
     const service = new FilesService(
         filesRepository,
-        null as never, // damMediaAlternativesRepository
         null as never, // blobStorageBackendService
         null as never, // foldersService
         null as never, // DAM_CONFIG
-        null as never, // imgproxyService
         null as never, // orm
-        null as never, // contentScopeService
         null as never, // entityManager
+        null as never, // fileCopyService
+        null as never, // dominantColorCalculator
     );
 
     const hasFolderConstraint = () =>
