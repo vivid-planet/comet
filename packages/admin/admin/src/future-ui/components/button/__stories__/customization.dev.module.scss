@@ -24,7 +24,7 @@
         text-transform: uppercase;
     }
 
-    :global(.cometButton--variantPrimary) {
+    :global(.cometButton)[data-variant="primary"] {
         background: #6750a4;
     }
 
