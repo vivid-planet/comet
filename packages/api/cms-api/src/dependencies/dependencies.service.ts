@@ -88,25 +88,15 @@ export class DependenciesService {
                             indexObj->>'blockname'                                              "blockname",
                             indexObj->>'jsonPath'                                               "jsonPath",
                             indexObj->>'visible'                                                "blockVisible",
-                            COALESCE(ei_root."visible", true)                                   "entityVisible",
-                            ((indexObj->>'visible')::boolean AND COALESCE(ei_root."visible", true))  "visible",
                             targetTableData->>'entityName'                                      "targetEntityName",
                             targetTableData->>'graphqlObjectType'                               "targetGraphqlObjectType",
                             targetTableData->>'tableName'                                       "targetTableName",
                             targetTableData->>'primary'                                         "targetPrimaryKey",
-                            dependenciesObj->>'id'                                              "targetId",
-                            ei_root."name"                                                      "rootName",
-                            ei_root."secondaryInformation"                                      "rootSecondaryInformation",
-                            ei_target."name"                                                    "targetName",
-                            ei_target."secondaryInformation"                                    "targetSecondaryInformation"
+                            dependenciesObj->>'id'                                              "targetId"
                         FROM "${metadata.tableName}"
                         CROSS JOIN LATERAL json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj
                         CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
-                        CROSS JOIN LATERAL json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData
-                        LEFT JOIN "EntityInfo" as ei_root ON ei_root."id" = "${metadata.tableName}"."${primary}"::text
-                            AND ei_root."entityName" = '${metadata.name}'
-                        LEFT JOIN "EntityInfo" as ei_target ON ei_target."id" = dependenciesObj->>'id'
-                            AND ei_target."entityName" = dependenciesObj->>'targetEntityName'`;
+                        CROSS JOIN LATERAL json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData`;
 
             indexSelects.push(select);
         }
@@ -116,7 +106,38 @@ export class DependenciesService {
             return;
         }
 
-        const viewSql = indexSelects.join("\n UNION ALL \n");
+        // Resolve the root and target entity's EntityInfo once over the union of all root blocks.
+        // Joining EntityInfo inside each root block's SELECT instead re-evaluates the EntityInfo
+        // view (a UNION over every entity, including a recursive DAM folder-path CTE) once per root
+        // block, which dominates the refresh cost on large datasets.
+        const viewSql = `SELECT
+                        blockIndex."rootId",
+                        blockIndex."rootEntityName",
+                        blockIndex."rootGraphqlObjectType",
+                        blockIndex."rootTableName",
+                        blockIndex."rootColumnName",
+                        blockIndex."rootPrimaryKey",
+                        blockIndex."blockname",
+                        blockIndex."jsonPath",
+                        blockIndex."blockVisible",
+                        COALESCE(ei_root."visible", true)                                            "entityVisible",
+                        ((blockIndex."blockVisible")::boolean AND COALESCE(ei_root."visible", true)) "visible",
+                        blockIndex."targetEntityName",
+                        blockIndex."targetGraphqlObjectType",
+                        blockIndex."targetTableName",
+                        blockIndex."targetPrimaryKey",
+                        blockIndex."targetId",
+                        ei_root."name"                                                              "rootName",
+                        ei_root."secondaryInformation"                                              "rootSecondaryInformation",
+                        ei_target."name"                                                            "targetName",
+                        ei_target."secondaryInformation"                                            "targetSecondaryInformation"
+                    FROM (
+                        ${indexSelects.join("\n UNION ALL \n")}
+                    ) blockIndex
+                    LEFT JOIN "EntityInfo" as ei_root ON ei_root."id" = blockIndex."rootId"::text
+                        AND ei_root."entityName" = blockIndex."rootEntityName"
+                    LEFT JOIN "EntityInfo" as ei_target ON ei_target."id" = blockIndex."targetId"
+                        AND ei_target."entityName" = blockIndex."targetEntityName"`;
 
         console.time("creating block dependency materialized view");
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS block_index_dependencies`);
