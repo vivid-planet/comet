@@ -53,9 +53,9 @@ export const Default: Story = {
                 { timeout: 5000 },
             );
 
-            // Heading select shows "Default"
+            // Block type select shows "Paragraph"
             expect(canvas.getByRole("combobox")).toBeInTheDocument();
-            expect(canvas.getByText("Default")).toBeInTheDocument();
+            expect(canvas.getByText("Paragraph")).toBeInTheDocument();
 
             // Toolbar has buttons (undo, redo, bold, italic, strike, more, ol, ul, indent, dedent, nbsp, shy)
             const buttons = canvas.getAllByRole("button");
@@ -141,7 +141,7 @@ export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
     render: () => <TextBlockStylesStory />,
     play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready with text block style dropdown", async () => {
-            // Both heading select and text block style select show "Default"
+            // Block type select shows "Paragraph", text block style select shows "Default"
             await waitFor(
                 () => {
                     const comboboxes = canvas.getAllByRole("combobox");
@@ -150,8 +150,9 @@ export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
                 { timeout: 5000 },
             );
 
-            const defaults = canvas.getAllByText("Default");
-            expect(defaults.length).toBeGreaterThanOrEqual(2);
+            const comboboxes = canvas.getAllByRole("combobox");
+            expect(comboboxes[0]).toHaveTextContent("Paragraph");
+            expect(comboboxes[1]).toHaveTextContent("Default");
         });
 
         await step("Select text block style 'Intro Text'", async () => {
@@ -184,6 +185,76 @@ export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
             await waitFor(
                 () => {
                     expect(editor).toHaveTextContent("hello");
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};
+
+const SingleDropdownStylesBlock = createTipTapRichTextBlock({
+    supports: ["history", "bold", "italic", "strike", "sub", "sup", "ordered-list", "unordered-list", "non-breaking-space", "soft-hyphen"],
+    defaultTextBlockStyleLabel: "Copy Default",
+    textBlockStyles: [
+        {
+            name: "copy-small",
+            label: "Copy Small",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 11 }} {...props} />,
+        },
+        {
+            name: "headline-one",
+            label: "Headline One",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 32, fontWeight: 700 }} {...props} />,
+        },
+        {
+            name: "headline-two",
+            label: "Headline Two",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 24, fontWeight: 600 }} {...props} />,
+        },
+    ],
+});
+
+function SingleDropdownStylesStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(SingleDropdownStylesBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <SingleDropdownStylesBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+/**
+ * When only the visual appearance of text matters and not its semantic element, the block type is irrelevant. Disabling
+ * heading support hides the block type dropdown (paragraph / headings), leaving the text block style dropdown as the only
+ * selector, with `defaultTextBlockStyleLabel` renaming its no-style entry. This fits output such as emails or PDFs.
+ */
+export const SingleDropdownTextBlockStyles: StoryObj<typeof SingleDropdownStylesStory> = {
+    render: () => <SingleDropdownStylesStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Text block style dropdown shows the custom default label instead of 'Default'", async () => {
+            // Heading support is off, so the text block style dropdown is the only combobox
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("combobox")).toHaveTextContent("Copy Default");
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step("Opening the dropdown lists the custom default label alongside the configured styles", async () => {
+            await userEvent.click(canvas.getByRole("combobox"));
+
+            await waitFor(
+                () => {
+                    const body = within(document.body);
+                    expect(body.getByRole("option", { name: "Copy Default" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Copy Small" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Headline One" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Headline Two" })).toBeInTheDocument();
                 },
                 { timeout: 3000 },
             );
