@@ -14,6 +14,7 @@ import {
     type GridColDef,
     GridColumnsButton,
     GridFilterButton,
+    GridToolbarQuickFilter,
     messages,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -32,7 +33,6 @@ import {
     GridFilterInputSingleSelect,
     type GridRowSelectionModel,
     type GridSlotsComponent,
-    GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
 import { ProductCategoryFilterOperators } from "@src/products/ProductCategoryFilter";
 import { useMemo, useState } from "react";
@@ -40,14 +40,14 @@ import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { PublishAllProducts } from "./helpers/PublishAllProducts";
 import { ManufacturerFilterOperator } from "./ManufacturerFilter";
-import {
-    type GQLDeleteProductMutation,
-    type GQLDeleteProductMutationVariables,
-    type GQLProductsListManualFragment,
-    type GQLProductsListQuery,
-    type GQLProductsListQueryVariables,
-    type GQLUpdateProductStatusMutation,
-    type GQLUpdateProductStatusMutationVariables,
+import type {
+    GQLDeleteProductMutation,
+    GQLDeleteProductMutationVariables,
+    GQLProductsListManualFragment,
+    GQLProductsListQuery,
+    GQLProductsListQueryVariables,
+    GQLUpdateProductStatusMutation,
+    GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
@@ -81,7 +81,7 @@ function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarP
                         label: "Publish",
                         icon: <Online htmlColor={theme.palette.success.main} />,
                         onClick: () => {
-                            for (const id of selectionModel) {
+                            for (const id of Array.from(selectionModel.ids)) {
                                 client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
                                     mutation: updateProductStatusMutation,
                                     variables: { id: id as string, status: "Published" },
@@ -97,7 +97,7 @@ function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarP
                         label: "Unpublish",
                         icon: <Disabled />,
                         onClick: () => {
-                            for (const id of selectionModel) {
+                            for (const id of Array.from(selectionModel.ids)) {
                                 client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
                                     mutation: updateProductStatusMutation,
                                     variables: { id: id as string, status: "Unpublished" },
@@ -110,7 +110,7 @@ function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarP
                         },
                     },
                 ]}
-                selectionSize={selectionModel.length}
+                selectionSize={selectionModel.ids.size}
             />
             <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                 <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
@@ -125,7 +125,10 @@ export function ProductsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const theme = useTheme();
-    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
+        type: "include",
+        ids: new Set([]),
+    });
 
     const columns = useMemo((): GridColDef<GQLProductsListManualFragment>[] => {
         return [
@@ -389,6 +392,8 @@ export function ProductsGrid() {
             onRowSelectionModelChange={(selectionModel) => {
                 setSelectionModel(selectionModel);
             }}
+            disableRowSelectionExcludeModel
+            showToolbar
         />
     );
 }

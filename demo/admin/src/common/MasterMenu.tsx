@@ -29,7 +29,7 @@ import { Link } from "@src/documents/links/Link";
 import { Page } from "@src/documents/pages/Page";
 import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
-import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import type { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
@@ -46,7 +46,7 @@ import { ProductCategoriesPage as ProductCategoriesHandmadePage } from "@src/pro
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import { ProductTagsPage as ProductTagsHandmadePage } from "@src/products/tags/ProductTagsPage";
 import { RedirectsPage } from "@src/redirects/RedirectsPage";
-import { type ContentScope } from "@src/site-configs";
+import type { ContentScope } from "@src/site-configs";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";

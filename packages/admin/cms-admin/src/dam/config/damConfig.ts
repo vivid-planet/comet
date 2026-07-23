@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { useCometConfig } from "../../config/CometConfigContext";
 
@@ -17,7 +17,10 @@ export interface DamConfig {
     allowedImageAspectRatios: string[];
     maxSrcResolution: number;
     basePath?: string;
+    videoPerformanceWarningFileSize?: number | false;
 }
+
+const defaultVideoPerformanceWarningFileSize = 10;
 
 export function useDamConfig(): DamConfig {
     const cometConfig = useCometConfig();
@@ -27,6 +30,26 @@ export function useDamConfig(): DamConfig {
     }
 
     return cometConfig.dam;
+}
+
+interface VideoPerformanceWarning {
+    enabled: boolean;
+    maxFileSizeInBytes: number;
+    isVideoTooLarge: (file: { mimetype: string; size: number }) => boolean;
+}
+
+export function useVideoPerformanceWarning(): VideoPerformanceWarning {
+    const { videoPerformanceWarningFileSize } = useDamConfig();
+
+    const enabled = videoPerformanceWarningFileSize !== false;
+    const maxFileSizeInMegabytes =
+        typeof videoPerformanceWarningFileSize === "number" ? videoPerformanceWarningFileSize : defaultVideoPerformanceWarningFileSize;
+    const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
+
+    const isVideoTooLarge = (file: { mimetype: string; size: number }) =>
+        enabled && file.mimetype.startsWith("video/") && file.size > maxFileSizeInBytes;
+
+    return { enabled, maxFileSizeInBytes, isVideoTooLarge };
 }
 
 export function useDamBasePath(): string {

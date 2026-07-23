@@ -1,13 +1,19 @@
-import { AnyEntity, Connection, EntityManager, Knex } from "@mikro-orm/postgresql";
-import { Injectable, Logger } from "@nestjs/common";
+import { AnyEntity, Connection, EntityManager, type FindOptions, type ObjectQuery } from "@mikro-orm/postgresql";
+import { Injectable, Logger, Optional } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
+import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "../common/filter/mikro-orm";
+import { StringFilter } from "../common/filter/string.filter";
 import { EntityInfoService } from "../entity-info/entity-info.service";
+import { FullTextSearchService } from "../full-text-search/full-text-search.service";
+import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
+import { DependencySort } from "./dto/dependency-sort";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
+import { BlockIndexDependencyObject } from "./entities/block-index-dependency.object";
 
 interface PGStatActivity {
     pid: number;
@@ -18,15 +24,20 @@ interface PGStatActivity {
 // Advisory lock key for block_index_dependencies refresh deduplication.
 const BLOCK_INDEX_REFRESH_LOCK_KEY = 4201;
 
+type RefreshBlockIndexViewsResult = "refreshed" | "skipped";
+
 @Injectable()
 export class DependenciesService {
     private connection: Connection;
     private readonly logger = new Logger(DependenciesService.name);
+    private runningRefresh?: Promise<RefreshBlockIndexViewsResult>;
 
     constructor(
         private readonly discoverService: DiscoverService,
         private readonly entityInfoService: EntityInfoService,
         private entityManager: EntityManager,
+        @Optional() private readonly pageTreeFullTextService?: PageTreeFullTextService,
+        @Optional() private readonly fullTextSearchService?: FullTextSearchService,
     ) {
         this.connection = entityManager.getConnection();
     }
@@ -35,14 +46,18 @@ export class DependenciesService {
         await this.dropViews();
 
         await this.createBlockIndexView();
+        await this.pageTreeFullTextService?.createPageTreeFullTextView();
         await this.entityInfoService.createEntityInfoView();
+        await this.fullTextSearchService?.createEntityInfoFullTextView();
         await this.createDependenciesView();
     }
 
     async dropViews(): Promise<void> {
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS "block_index_dependencies"`);
         await this.connection.execute(`DROP VIEW IF EXISTS "block_index"`);
+        await this.fullTextSearchService?.dropEntityInfoFullTextView();
         await this.entityInfoService.dropEntityInfoView();
+        await this.pageTreeFullTextService?.dropPageTreeFullTextView();
     }
 
     private async createDependenciesView(): Promise<void> {
@@ -75,8 +90,6 @@ export class DependenciesService {
                             indexObj->>'blockname'                                              "blockname",
                             indexObj->>'jsonPath'                                               "jsonPath",
                             indexObj->>'visible'                                                "blockVisible",
-                            COALESCE(ei."visible", true)                                        "entityVisible",
-                            ((indexObj->>'visible')::boolean AND COALESCE(ei."visible", true))  "visible",
                             targetTableData->>'entityName'                                      "targetEntityName",
                             targetTableData->>'graphqlObjectType'                               "targetGraphqlObjectType",
                             targetTableData->>'tableName'                                       "targetTableName",
@@ -85,9 +98,7 @@ export class DependenciesService {
                         FROM "${metadata.tableName}"
                         CROSS JOIN LATERAL json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj
                         CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
-                        CROSS JOIN LATERAL json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData
-                        LEFT JOIN "EntityInfo" as ei ON ei."id" = "${metadata.tableName}"."${primary}"::text
-                            AND ei."entityName" = '${metadata.name}'`;
+                        CROSS JOIN LATERAL json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData`;
 
             indexSelects.push(select);
         }
@@ -97,7 +108,38 @@ export class DependenciesService {
             return;
         }
 
-        const viewSql = indexSelects.join("\n UNION ALL \n");
+        // Resolve the root and target entity's EntityInfo once over the union of all root blocks.
+        // Joining EntityInfo inside each root block's SELECT instead re-evaluates the EntityInfo
+        // view (a UNION over every entity, including a recursive DAM folder-path CTE) once per root
+        // block, which dominates the refresh cost on large datasets.
+        const viewSql = `SELECT
+                        blockIndex."rootId",
+                        blockIndex."rootEntityName",
+                        blockIndex."rootGraphqlObjectType",
+                        blockIndex."rootTableName",
+                        blockIndex."rootColumnName",
+                        blockIndex."rootPrimaryKey",
+                        blockIndex."blockname",
+                        blockIndex."jsonPath",
+                        blockIndex."blockVisible",
+                        COALESCE(ei_root."visible", true)                                            "entityVisible",
+                        ((blockIndex."blockVisible")::boolean AND COALESCE(ei_root."visible", true)) "visible",
+                        blockIndex."targetEntityName",
+                        blockIndex."targetGraphqlObjectType",
+                        blockIndex."targetTableName",
+                        blockIndex."targetPrimaryKey",
+                        blockIndex."targetId",
+                        ei_root."name"                                                              "rootName",
+                        ei_root."secondaryInformation"                                              "rootSecondaryInformation",
+                        ei_target."name"                                                            "targetName",
+                        ei_target."secondaryInformation"                                            "targetSecondaryInformation"
+                    FROM (
+                        ${indexSelects.join("\n UNION ALL \n")}
+                    ) blockIndex
+                    LEFT JOIN "EntityInfo" as ei_root ON ei_root."id" = blockIndex."rootId"::text
+                        AND ei_root."entityName" = blockIndex."rootEntityName"
+                    LEFT JOIN "EntityInfo" as ei_target ON ei_target."id" = blockIndex."targetId"
+                        AND ei_target."entityName" = blockIndex."targetEntityName"`;
 
         console.time("creating block dependency materialized view");
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS block_index_dependencies`);
@@ -164,13 +206,13 @@ export class DependenciesService {
      * @param options.force - If true, cancels any running refresh and performs a full synchronous refresh
      * @param options.awaitRefresh - If true, waits for background concurrent refreshes to complete. Intended to be used by CLI commands.
      *
-     * @returns A promise that resolves when the refresh completes (or immediately if skipped or backgrounded)
+     * @returns `"refreshed"` if a refresh was performed (or triggered in the background), `"skipped"` if the views were fresh enough
      */
-    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
+    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<RefreshBlockIndexViewsResult> {
         const knex = this.entityManager.getKnex("write");
 
-        const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<void> => {
-            await knex.transaction(async (trx) => {
+        const refresh = async (refreshOptions?: { concurrently: boolean }): Promise<RefreshBlockIndexViewsResult> => {
+            return knex.transaction(async (trx) => {
                 if (refreshOptions?.concurrently) {
                     // Non-blocking lock: Try to acquire the lock. Only acquire if available.
                     const lockResult = await trx.raw(`SELECT pg_try_advisory_xact_lock(?) AS locked`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
@@ -178,7 +220,7 @@ export class DependenciesService {
                     if (!lockResult.rows[0]?.locked) {
                         // If another refresh already holds the lock (= a refresh is already in
                         // progress), skip this refresh entirely
-                        return;
+                        return "skipped";
                     }
                 } else {
                     // Blocking lock: Wait until the lock is available (= the currently running
@@ -192,7 +234,7 @@ export class DependenciesService {
                     if (recentRefresh && new Date(recentRefresh.finishedAt) > subMinutes(new Date(), 5)) {
                         // A refresh was completed within the last 5 minutes, which is fresh enough.
                         // Skip this refresh.
-                        return;
+                        return "skipped";
                     }
                 }
 
@@ -206,6 +248,8 @@ export class DependenciesService {
                 await trx("BlockIndexRefresh").where({ id }).update({ finishedAt: new Date() });
 
                 this.logger.log(`Completed block index refresh ${id}`);
+
+                return "refreshed";
             });
         };
 
@@ -235,7 +279,7 @@ export class DependenciesService {
                 await trx("BlockIndexRefresh").insert({ id: uuid(), startedAt: new Date(), finishedAt: new Date() });
             });
 
-            return;
+            return "refreshed";
         }
 
         // Decide refresh strategy based on age of the last completed refresh
@@ -247,141 +291,158 @@ export class DependenciesService {
             .orderBy("finishedAt", "desc")
             .first();
 
-        if (!lastRefresh) {
-            // No prior refresh exists — first-time initialization, must refresh synchronously
-            await refresh();
-            return;
-        }
-
-        const finishedAt = new Date(lastRefresh.finishedAt);
         const now = new Date();
 
-        if (finishedAt > subMinutes(now, 5)) {
+        if (lastRefresh && new Date(lastRefresh.finishedAt) > subMinutes(now, 5)) {
             // Fresh enough (< 5 minutes) — skip refresh entirely
-            return;
-        } else if (finishedAt > subMinutes(now, 15)) {
-            // Moderately stale (5–15 minutes) — refresh concurrently in the background
-            const refreshPromise = refresh({ concurrently: true });
-            if (options?.awaitRefresh) {
-                // Caller wants to wait for the refresh to complete, even if it's concurrent. Only used by CLI command.
-                await refreshPromise;
-            }
-        } else {
-            // Very stale (> 15 minutes) — refresh synchronously, caller waits for fresh data
-            await refresh();
+            return "skipped";
         }
+
+        // Moderately stale (5–15 min): background concurrent refresh, caller doesn't wait.
+        // Very stale (> 15 min) or uninitialized: synchronous refresh, caller waits for fresh data.
+        const runRefreshInBackground = lastRefresh != null && new Date(lastRefresh.finishedAt) > subMinutes(now, 15);
+
+        // Deduplicate parallel refreshes within this instance (e.g. one per DAM "Usages" row): share a
+        // single in-flight refresh so they don't each open a transaction and pile up on the advisory lock.
+        if (!this.runningRefresh) {
+            const runningRefresh = refresh({ concurrently: runRefreshInBackground }).finally(() => {
+                this.runningRefresh = undefined;
+            });
+            this.runningRefresh = runningRefresh;
+            // A backgrounded refresh has no awaiter — log failures instead of leaving an unhandled rejection.
+            runningRefresh.catch((error) => {
+                this.logger.error(`Block index refresh failed: ${error instanceof Error ? error.message : error}`);
+            });
+        }
+
+        if (!runRefreshInBackground || options?.awaitRefresh) {
+            // Wait when synchronous (very stale/uninitialized) or when explicitly requested (CLI awaitRefresh).
+            return this.runningRefresh;
+        }
+
+        // Backgrounded refresh the caller doesn't wait for — the refresh has been triggered.
+        return "refreshed";
     }
 
     async getDependents(
         target: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        filter?: DependentFilter & {
-            rootEntityName?: string;
+        options?: {
+            filter?: DependentFilter & { rootEntityName?: string };
+            offset?: number;
+            limit?: number;
+            forceRefresh?: boolean;
+            sort?: DependencySort[];
         },
-        paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean },
     ): Promise<PaginatedDependencies> {
         await this.refreshViews({ force: options?.forceRefresh });
+        const { rootEntityName, ...filter } = options?.filter ?? {};
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
-        const qb = this.getQueryBuilderWithFilters(
-            {
-                ...filter,
-                targetEntityName: entityName,
-                targetId: target.id,
-            },
-            paginationArgs,
-        ).join("EntityInfo", (join) => {
-            join.on("idx.rootEntityName", "EntityInfo.entityName").andOn(
-                "EntityInfo.id",
-                this.entityManager.getKnex("read").raw('"idx"."rootId"::text'),
-            );
-        });
+        const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependents")) as ObjectQuery<BlockIndexDependencyObject>;
+        where.targetEntityName = entityName;
+        where.targetId = target.id;
+        if (rootEntityName) {
+            where.rootEntityName = rootEntityName;
+        }
 
-        const results: Dependency[] = await qb;
+        const findOptions: FindOptions<BlockIndexDependencyObject> = { offset: options?.offset, limit: options?.limit };
+        if (options?.sort) {
+            findOptions.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependents"));
+        }
 
-        const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("targetId").groupBy(["targetId", "targetEntityName"]);
-        const totalCount = countResult[0]?.count ?? 0;
+        const [entities, totalCount] = await this.entityManager.findAndCount(BlockIndexDependencyObject, where, findOptions);
 
-        return new PaginatedDependencies(results, Number(totalCount));
+        const results = entities.map((entity) => this.mapToResult(entity, "dependents"));
+        return new PaginatedDependencies(results, totalCount);
     }
 
     async getDependencies(
         root: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        filter?: DependencyFilter & {
-            targetEntityName?: string;
+        options?: {
+            filter?: DependencyFilter & { targetEntityName?: string };
+            offset?: number;
+            limit?: number;
+            forceRefresh?: boolean;
+            sort?: DependencySort[];
         },
-        paginationArgs?: { offset: number; limit: number },
-        options?: { forceRefresh: boolean },
     ): Promise<PaginatedDependencies> {
         await this.refreshViews({ force: options?.forceRefresh });
+        const { targetEntityName, ...filter } = options?.filter ?? {};
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 
-        const qb = this.getQueryBuilderWithFilters(
-            {
-                ...filter,
-                rootEntityName: entityName,
-                rootId: root.id,
-            },
-            paginationArgs,
-        ).join("EntityInfo", (join) => {
-            join.on("idx.targetEntityName", "EntityInfo.entityName").andOn(
-                "EntityInfo.id",
-                this.entityManager.getKnex("read").raw('"idx"."targetId"::text'),
-            );
-        });
+        const where = filtersToMikroOrmQuery(this.remapFilter(filter, "dependencies")) as ObjectQuery<BlockIndexDependencyObject>;
+        where.rootEntityName = entityName;
+        where.rootId = root.id;
+        if (targetEntityName) {
+            where.targetEntityName = targetEntityName;
+        }
 
-        const results: Dependency[] = await qb;
+        const findOptions: FindOptions<BlockIndexDependencyObject> = { offset: options?.offset, limit: options?.limit };
+        if (options?.sort) {
+            findOptions.orderBy = gqlSortToMikroOrmOrderBy(this.remapSort(options.sort, "dependencies"));
+        }
 
-        const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
-        const totalCount = countResult[0]?.count ?? 0;
+        const [entities, totalCount] = await this.entityManager.findAndCount(BlockIndexDependencyObject, where, findOptions);
 
-        return new PaginatedDependencies(results, Number(totalCount));
+        const results = entities.map((entity) => this.mapToResult(entity, "dependencies"));
+        return new PaginatedDependencies(results, totalCount);
     }
 
-    private getQueryBuilderWithFilters(
-        filter: DependentFilter &
-            DependencyFilter & {
-                targetEntityName?: string;
-                rootEntityName?: string;
-            },
-        paginationArgs?: { offset: number; limit: number },
-    ) {
-        const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private remapFilter(filter: Record<string, any>, context: "dependencies" | "dependents"): Record<string, any> {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const remapped: Record<string, any> = {};
 
-        if (paginationArgs?.offset !== undefined && paginationArgs?.limit !== undefined) {
-            qb.offset(paginationArgs.offset).limit(paginationArgs.limit);
-        }
+        for (const [key, value] of Object.entries(filter)) {
+            if (value === undefined) {
+                continue;
+            }
 
-        if (filter.targetEntityName) {
-            qb.andWhere({ targetEntityName: filter.targetEntityName });
-        }
-        if (filter?.targetGraphqlObjectType) {
-            qb.andWhere({ targetGraphqlObjectType: filter.targetGraphqlObjectType });
-        }
-        if (filter.targetId) {
-            qb.andWhere({ targetId: filter.targetId });
-        }
+            if (key === "and" || key === "or") {
+                remapped[key] = (value as Record<string, unknown>[]).map((f) => this.remapFilter(f, context));
+                continue;
+            }
 
-        if (filter.rootEntityName) {
-            qb.andWhere({ rootEntityName: filter.rootEntityName });
-        }
-        if (filter.rootGraphqlObjectType) {
-            qb.andWhere({ rootGraphqlObjectType: filter.rootGraphqlObjectType });
-        }
-        if (filter.rootId) {
-            qb.andWhere({ rootId: filter.rootId });
+            const mappedKey = this.remapColumnName(key, context);
+
+            // Convert plain string values to StringFilter so filtersToMikroOrmQuery can handle them
+            if (typeof value === "string") {
+                const stringFilter = new StringFilter();
+                stringFilter.equal = value;
+                remapped[mappedKey] = stringFilter;
+            } else {
+                remapped[mappedKey] = value;
+            }
         }
 
-        if (filter?.rootColumnName) {
-            qb.andWhere({ rootColumnName: filter.rootColumnName });
-        }
-
-        return qb;
+        return remapped;
     }
 
-    private withCount(qb: Knex.QueryBuilder) {
-        return qb.offset(0).clearSelect().count();
+    private remapColumnName(key: string, context: "dependencies" | "dependents"): string {
+        const prefix = context === "dependents" ? "root" : "target";
+        switch (key) {
+            case "name":
+                return `${prefix}Name`;
+            case "secondaryInformation":
+                return `${prefix}SecondaryInformation`;
+            case "graphqlObjectType":
+                return `${prefix}GraphqlObjectType`;
+            default:
+                return key;
+        }
+    }
+
+    private remapSort(sort: DependencySort[], context: "dependencies" | "dependents") {
+        return sort.map(({ field, direction }) => ({ field: this.remapColumnName(field, context), direction }));
+    }
+
+    private mapToResult(entity: BlockIndexDependencyObject, context: "dependencies" | "dependents"): Dependency {
+        const result = new Dependency();
+        Object.assign(result, entity);
+        result.name = context === "dependents" ? entity.rootName : entity.targetName;
+        result.secondaryInformation = context === "dependents" ? entity.rootSecondaryInformation : entity.targetSecondaryInformation;
+        return result;
     }
 }

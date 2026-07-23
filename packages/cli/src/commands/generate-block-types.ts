@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { readFile, writeFile } from "fs/promises";
 import { format, resolveConfig } from "prettier";
 
-import { type BlockMeta, type BlockMetaField } from "../BlockMeta";
+import type { BlockMeta, BlockMetaField } from "../BlockMeta";
 
 let content = "";
 
@@ -31,6 +31,8 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
         if (field.array) {
             content += "[]";
         }
+    } else if (field.kind === "TipTapRichTextBlock") {
+        content += "unknown";
     } else if (field.kind === "Enum") {
         const enumType = `"${field.enum.join('" | "')}"`;
         content += field.array ? `(${enumType})[]` : enumType;
@@ -50,7 +52,9 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
         content += "{\n";
         field.object.fields.forEach((f) => {
             content += f.name;
-            if (f.nullable) content += "?";
+            if (f.nullable) {
+                content += "?";
+            }
             content += ": ";
             writeFieldType(f, blockNamePostfix);
             content += ";\n";
@@ -60,7 +64,9 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
         content += "Array<{\n";
         field.object.fields.forEach((f) => {
             content += f.name;
-            if (f.nullable) content += "?";
+            if (f.nullable) {
+                content += "?";
+            }
             content += ": ";
             writeFieldType(f, blockNamePostfix);
             content += ";\n";
@@ -99,7 +105,9 @@ const generateBlockTypes = new Command("generate-block-types")
             content += `export interface ${block.name}BlockData {\n`;
             block.fields.forEach((field) => {
                 content += field.name;
-                if (field.nullable) content += "?";
+                if (field.nullable) {
+                    content += "?";
+                }
                 content += ": ";
                 writeFieldType(field, "BlockData");
                 content += ";\n";
@@ -112,7 +120,9 @@ const generateBlockTypes = new Command("generate-block-types")
                 content += `export interface ${block.name}BlockInput {\n`;
                 block.inputFields.forEach((field) => {
                     content += field.name;
-                    if (field.nullable) content += "?";
+                    if (field.nullable) {
+                        content += "?";
+                    }
                     content += ": ";
                     writeFieldType(field, "BlockInput");
                     content += ";\n";

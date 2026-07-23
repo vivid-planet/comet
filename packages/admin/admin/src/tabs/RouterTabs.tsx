@@ -4,7 +4,7 @@ import { Children, type ComponentType, isValidElement, type ReactElement, type R
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useSubRoutePrefix } from "../router/SubRoute";
 import { useIsActiveStackSwitch } from "../stack/useIsActiveStackSwitch";
 import { TabScrollButton } from "./TabScrollButton";

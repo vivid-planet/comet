@@ -1,14 +1,14 @@
-import { type Type } from "@nestjs/common";
+import type { Type } from "@nestjs/common";
 import { type ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
-import { type WarningSeverity as WarningSeverityEnum } from "src/warnings/entities/warning-severity.enum";
+import type { WarningSeverity as WarningSeverityEnum } from "src/warnings/entities/warning-severity.enum";
 
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "./migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "./migrations/decorators/BlockDataMigrationVersion";
-import { type BlockMigrationInterface } from "./migrations/types";
-import { type SearchText } from "./search/get-search-text";
+import type { BlockMigrationInterface } from "./migrations/types";
+import type { SearchText } from "./search/get-search-text";
 
 export interface BlockTransformerServiceInterface<
     Block extends BlockDataInterface = BlockDataInterface,
@@ -221,6 +221,7 @@ export enum BlockMetaFieldKind {
     OneOfBlocks = "OneOfBlocks",
     NestedObject = "NestedObject",
     NestedObjectList = "NestedObjectList",
+    TipTapRichTextBlock = "TipTapRichTextBlock",
 }
 
 export type BlockMetaLiteralFieldKind = BlockMetaFieldKind.String | BlockMetaFieldKind.Number | BlockMetaFieldKind.Boolean | BlockMetaFieldKind.Json;
@@ -236,7 +237,17 @@ export type BlockMetaField =
     | { name: string; kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }
     | { name: string; kind: BlockMetaFieldKind.NestedObject; object: BlockMetaInterface; nullable: boolean }
     | { name: string; kind: BlockMetaFieldKind.NestedObjectList; object: BlockMetaInterface; nullable: boolean }
-    | { name: string; kind: BlockMetaFieldKind.OneOfBlocks; blocks: Record<string, Block>; nullable: boolean };
+    | { name: string; kind: BlockMetaFieldKind.OneOfBlocks; blocks: Record<string, Block>; nullable: boolean }
+    | {
+          name: string;
+          kind: BlockMetaFieldKind.TipTapRichTextBlock;
+          /**
+           * The child blocks the rich text content may contain, keyed by their stable config key.
+           * Lets consumers like the block loader process blocks embedded in the content.
+           */
+          childBlocks: Record<string, Block>;
+          nullable: boolean;
+      };
 
 export interface BlockMetaInterface {
     fields: BlockMetaField[];

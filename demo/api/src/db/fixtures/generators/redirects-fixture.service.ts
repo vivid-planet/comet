@@ -4,11 +4,11 @@ import {
     RedirectGenerationType,
     REDIRECTS_LINK_BLOCK,
     RedirectsLinkBlock,
-    RedirectSourceTypeValues,
+    RedirectSourceType,
 } from "@comet/cms-api";
-import { faker } from "@faker-js/faker";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
+import { faker } from "@src/db/fixtures/faker";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import { SeoBlock } from "@src/documents/pages/blocks/seo.block";
 import { StageBlock } from "@src/documents/pages/blocks/stage.block";
@@ -90,7 +90,7 @@ export class RedirectsFixtureService {
                 scope: {
                     domain: "secondary",
                 },
-                sourceType: RedirectSourceTypeValues.path,
+                sourceType: RedirectSourceType.path,
             });
         }
 

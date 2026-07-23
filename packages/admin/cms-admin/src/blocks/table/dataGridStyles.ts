@@ -1,4 +1,4 @@
-import { type SxProps, type Theme } from "@mui/material";
+import type { SxProps, Theme } from "@mui/material";
 
 export const dataGridStyles: SxProps<Theme> = (theme) => ({
     "--DataGrid-rowBorderColor": theme.palette.grey[100],

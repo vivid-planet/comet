@@ -2,7 +2,7 @@ import { Field, FinalFormInput } from "@comet/admin";
 import { isEmail } from "class-validator";
 import { FormattedMessage } from "react-intl";
 
-import { type EmailLinkBlockData, type EmailLinkBlockInput } from "../blocks.generated";
+import type { EmailLinkBlockData, EmailLinkBlockInput } from "../blocks.generated";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";

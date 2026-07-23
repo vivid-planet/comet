@@ -13,7 +13,7 @@ import { setNotFoundContext } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Metadata } from "next";
 
-import { type GQLLayoutQuery, type GQLLayoutQueryVariables } from "./layout.generated";
+import type { GQLLayoutQuery, GQLLayoutQueryVariables } from "./layout.generated";
 
 export default async function Layout({ children, params }: LayoutProps<"/[visibility]/[domain]/[language]">) {
     const { domain, language: languageParam } = await params;

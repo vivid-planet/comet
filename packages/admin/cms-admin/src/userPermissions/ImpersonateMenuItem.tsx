@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 
 import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";
 import { useCurrentUser } from "./hooks/currentUser";
-import { type GQLUserImpersonationCheckQuery, type GQLUserImpersonationCheckQueryVariables } from "./ImpersonateMenuItem.generated";
+import type { GQLUserImpersonationCheckQuery, GQLUserImpersonationCheckQueryVariables } from "./ImpersonateMenuItem.generated";
 import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
 
 const userImpersonationCheckQuery = gql`

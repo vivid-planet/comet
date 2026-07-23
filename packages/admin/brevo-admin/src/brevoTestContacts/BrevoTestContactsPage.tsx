@@ -1,7 +1,7 @@
 import { type GridColDef, Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { ContentScopeIndicator, useContentScope } from "@comet/cms-admin";
-import { type DocumentNode } from "graphql";
-import { type JSX, type ReactNode } from "react";
+import type { DocumentNode } from "graphql";
+import type { JSX, ReactNode } from "react";
 import { useIntl } from "react-intl";
 
 import { useBrevoConfig } from "../common/BrevoConfigProvider";

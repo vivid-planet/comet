@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { type RefetchQueriesInclude } from "@apollo/client/core/types";
+import type { RefetchQueriesInclude } from "@apollo/client/core/types";
 import { Alert, Button, CheckboxField, Dialog, downloadFile, FinalForm, Loading, messages, useErrorDialog } from "@comet/admin";
 import { Upload } from "@comet/admin-icons";
 import { Box, DialogActions, DialogContent, DialogTitle, type MenuItem } from "@mui/material";
@@ -8,10 +8,10 @@ import { type ComponentProps, type ReactNode, type RefObject, useMemo, useRef, u
 import { useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type GQLCsvImportInformation, type GQLEmailCampaignContentScopeInput } from "../../graphql.generated";
+import type { GQLCsvImportInformation, GQLEmailCampaignContentScopeInput } from "../../graphql.generated";
 import { useBrevoConfig } from "../BrevoConfigProvider";
 import { startBrevoContactImportMutation } from "./useContactImportFromCsv.gql";
-import { type GQLStartBrevoContactImportMutation, type GQLStartBrevoContactImportMutationVariables } from "./useContactImportFromCsv.gql.generated";
+import type { GQLStartBrevoContactImportMutation, GQLStartBrevoContactImportMutationVariables } from "./useContactImportFromCsv.gql.generated";
 
 interface UseContactImportProps {
     scope: GQLEmailCampaignContentScopeInput;
@@ -182,7 +182,7 @@ const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDouble
                 intl.formatMessage({
                     id: "cometBrevoModule.useContactImport.error.defaultMessage",
                     defaultMessage:
-                        "An error occured during the import. Please try again in a while or contact your administrator if the error persists.",
+                        "An error occurred during the import. Please try again in a while or contact your administrator if the error persists.",
                 }),
             );
         }
@@ -278,7 +278,7 @@ const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDouble
                 const userMessage = (
                     <FormattedMessage
                         id="cometBrevoModule.useContactImport.error.defaultMessage"
-                        defaultMessage="An error occured during the import. Please try again in a while or contact your administrator if the error persists."
+                        defaultMessage="An error occurred during the import. Please try again in a while or contact your administrator if the error persists."
                     />
                 );
 

@@ -1,6 +1,6 @@
 import { IsValidRedirectSource } from "@comet/cms-api";
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import {
     IsEmail,
     IsISO8601,
@@ -13,6 +13,7 @@ import {
     ValidatorConstraintInterface,
 } from "class-validator";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { generateCrud } from "../../generateCrud/generate-crud";
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
@@ -117,7 +118,9 @@ describe("GenerateDefinedValidatorDecorators", () => {
             const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithEmail"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-email.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
             const classes = source.getClasses();
             const cls = classes[0];
@@ -157,7 +160,9 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
                 const formattedOut = await formatGeneratedFiles(out);
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-with-case-sensitive-constraint-name.input.ts");
-                if (!file) throw new Error("File not found");
+                if (!file) {
+                    throw new Error("File not found");
+                }
                 const source = parseSource(file.content);
                 const classes = source.getClasses();
                 const cls = classes[0];
@@ -197,7 +202,9 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
                 const formattedOut = await formatGeneratedFiles(out);
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
-                if (!file) throw new Error("File not found");
+                if (!file) {
+                    throw new Error("File not found");
+                }
                 const source = parseSource(file.content);
                 const classes = source.getClasses();
                 const cls = classes[0];
@@ -237,7 +244,9 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
                 const formattedOut = await formatGeneratedFiles(out);
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
-                if (!file) throw new Error("File not found");
+                if (!file) {
+                    throw new Error("File not found");
+                }
                 const source = parseSource(file.content);
                 const classes = source.getClasses();
                 const cls = classes[0];
@@ -278,7 +287,9 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
                 const formattedOut = await formatGeneratedFiles(out);
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-with-relative-import-decorator.input.ts");
-                if (!file) throw new Error("File not found");
+                if (!file) {
+                    throw new Error("File not found");
+                }
                 const source = parseSource(file.content);
                 const classes = source.getClasses();
                 const cls = classes[0];
@@ -316,7 +327,9 @@ describe("GenerateDefinedValidatorDecorators", () => {
             const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntityWithValidatorDefinedInFile"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-validator-defined-in-file.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
             const classes = source.getClasses();
             const cls = classes[0];
@@ -356,7 +369,9 @@ describe("GenerateDefinedValidatorDecorators", () => {
             );
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-duplicate-default-decorator.input.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
             const classes = source.getClasses();
             const cls = classes[0];

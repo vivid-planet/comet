@@ -1,6 +1,6 @@
-import { type PreviewData } from "@comet/site-react";
+import type { PreviewData } from "@comet/site-react";
 import { errors, jwtVerify, SignJWT } from "jose";
-import { type NextApiRequest } from "next";
+import type { NextApiRequest } from "next";
 import { cookies, draftMode, headers as getHeaders } from "next/headers";
 
 // Return type of previewParams function
@@ -28,7 +28,9 @@ export async function verifyJwt<T>(jwt: string): Promise<T | null> {
         const data = await jwtVerify<T>(jwt, new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
         return data.payload;
     } catch (e) {
-        if (e instanceof errors.JOSEError) return null;
+        if (e instanceof errors.JOSEError) {
+            return null;
+        }
         throw e;
     }
 }
@@ -57,7 +59,9 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
     }
 
     if (!options.skipDraftModeCheck) {
-        if (!(await draftMode()).isEnabled) return null;
+        if (!(await draftMode()).isEnabled) {
+            return null;
+        }
     }
 
     const cookie = (await cookies()).get("__comet_site_preview");

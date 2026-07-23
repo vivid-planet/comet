@@ -13,7 +13,7 @@ import { useThemeProps } from "@mui/material/styles";
 import { Children, isValidElement, type MouseEvent, type PropsWithChildren, type ReactElement, type ReactNode, useRef, useState } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { fireEvent, render, type RenderResult, waitFor, within } from "test-utils";
 import { expect } from "vitest";
 
-import { type TableBlockState } from "../../createTableBlock";
+import type { TableBlockState } from "../../createTableBlock";
 import { MockRichTextBlock } from "../__mocks__/TableBlockData.mocks";
 import { TableBlockContextProvider } from "../TableBlockContext";
 import { TableBlockGrid } from "../TableBlockGrid";

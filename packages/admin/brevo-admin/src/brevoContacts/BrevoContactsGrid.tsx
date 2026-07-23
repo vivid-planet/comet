@@ -4,6 +4,7 @@ import {
     CrudMoreActionsMenu,
     DataGridToolbar,
     type GridColDef,
+    GridToolbarQuickFilter,
     MainContent,
     messages,
     RowActionsItem,
@@ -15,15 +16,15 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add, Block, Check, Delete, Edit } from "@comet/admin-icons";
-import { type ContentScope } from "@comet/cms-admin";
+import type { ContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import type { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
-import { type ReactElement } from "react";
+import type { GridSlotsComponent } from "@mui/x-data-grid";
+import type { ReactElement } from "react";
 import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 
 import { useContactImportFromCsv } from "../common/contactImport/useContactImportFromCsv";
-import { type GQLEmailCampaignContentScopeInput } from "../graphql.generated";
+import { DataGrid } from "../dataGrid/DataGrid";
+import type { GQLEmailCampaignContentScopeInput } from "../graphql.generated";
 import {
     type GQLBrevoContactsGridQuery,
     type GQLBrevoContactsGridQueryVariables,
@@ -77,7 +78,10 @@ function BrevoContactsGridToolbar({ intl, scope }: BrevoContactsGridToolbarProps
             <DataGridToolbar>
                 <FormattedMessage id="cometBrevoModule.brevoContact.title" defaultMessage="Contacts" />
                 <GridToolbarQuickFilter
-                    placeholder={intl.formatMessage({ id: "cometBrevoModule.brevoContact.searchEmail", defaultMessage: "Search email address" })}
+                    placeholder={intl.formatMessage({
+                        id: "cometBrevoModule.brevoContact.searchEmail",
+                        defaultMessage: "Search email address",
+                    })}
                 />
                 <ToolbarFillSpace />
                 <CrudMoreActionsMenu overallActions={[moreActionsMenuItem]} />
@@ -211,7 +215,9 @@ export function BrevoContactsGrid({
     });
 
     const rowCount = useBufferedRowCount(data?.brevoContacts.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.brevoContacts.nodes ?? [];
 
     return (
@@ -232,6 +238,7 @@ export function BrevoContactsGrid({
                         scope,
                     } as BrevoContactsGridToolbarProps,
                 }}
+                showToolbar
             />
         </MainContent>
     );

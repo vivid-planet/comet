@@ -1,4 +1,4 @@
-import { type IntrospectionField, type IntrospectionQuery } from "graphql";
+import type { IntrospectionField, IntrospectionQuery } from "graphql";
 
 import { type FormConfig, type GeneratorReturn, type GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generate-command";
 import { convertConfigImport } from "../utils/convertConfigImport";
@@ -34,11 +34,15 @@ function hasPayloadResponseType(mutationField: IntrospectionField, gqlType: stri
 
 export type Prop = { type: string; optional: boolean; name: string; localAliasName?: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
-    if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
+    if (!props.length) {
+        return { formPropsTypeCode: "", formPropsParamsCode: "" };
+    }
 
     const uniqueProps = props.reduce<Prop[]>((acc, item) => {
         const propWithSameName = acc.find((prop) => prop.name == item.name);
-        if (!propWithSameName) return [item, ...acc];
+        if (!propWithSameName) {
+            return [item, ...acc];
+        }
         if (propWithSameName.type != item.type || propWithSameName.optional != item.optional) {
             // this is currently not supported
             return [item, ...acc];
@@ -171,7 +175,9 @@ export function generateForm(
         .filter((field) => field.type == "block")
         .map((field) => {
             // map is for ts to infer block type correctly
-            if (field.type !== "block") throw new Error("Field is not a block field");
+            if (field.type !== "block") {
+                throw new Error("Field is not a block field");
+            }
             return field;
         });
     rootBlockFields.forEach((field) => {
@@ -324,7 +330,9 @@ export function generateForm(
             importPath: `./${baseOutputFilename}.gql`,
         });
         const match = gqlDocument.document.match(/^\s*(query|mutation|fragment)\s+(\w+)/);
-        if (!match) throw new Error(`Could not find query or mutation name in ${gqlDocument}`);
+        if (!match) {
+            throw new Error(`Could not find query or mutation name in ${gqlDocument}`);
+        }
         const type = match[1];
         const documentName = match[2];
         imports.push({

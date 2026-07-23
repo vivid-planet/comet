@@ -616,6 +616,11 @@
         ]
     },
     {
+        "name": "ContactForm",
+        "fields": [],
+        "inputFields": []
+    },
+    {
         "name": "ContentGroup",
         "fields": [
             {
@@ -954,6 +959,15 @@
                             "nullable": true
                         },
                         {
+                            "name": "aiContentType",
+                            "kind": "Enum",
+                            "enum": [
+                                "Generated",
+                                "Modified"
+                            ],
+                            "nullable": true
+                        },
+                        {
                             "name": "archived",
                             "kind": "Boolean",
                             "nullable": false
@@ -1142,6 +1156,11 @@
                 "name": "openInNewWindow",
                 "kind": "Boolean",
                 "nullable": false
+            },
+            {
+                "name": "noFollow",
+                "kind": "Boolean",
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -1152,6 +1171,11 @@
             },
             {
                 "name": "openInNewWindow",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "noFollow",
                 "kind": "Boolean",
                 "nullable": false
             }
@@ -2214,8 +2238,10 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },
@@ -2280,8 +2306,10 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
-                                "pageTreeIndex": "PageTreeIndex"
+                                "pageTreeIndex": "PageTreeIndex",
+                                "contactForm": "ContactForm"
                             },
                             "nullable": false
                         },
@@ -2364,6 +2392,15 @@
                         {
                             "name": "altText",
                             "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "aiContentType",
+                            "kind": "Enum",
+                            "enum": [
+                                "Generated",
+                                "Modified"
+                            ],
                             "nullable": true
                         },
                         {
@@ -2599,6 +2636,64 @@
                 ],
                 "nullable": false,
                 "array": true
+            }
+        ]
+    },
+    {
+        "name": "ProductPrice",
+        "fields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "product",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "price",
+                            "kind": "Number",
+                            "nullable": true
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "ProductTeaser",
+        "fields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -3725,6 +3820,31 @@
                 "kind": "Block",
                 "block": "Link",
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TipTapRichText",
+        "fields": [
+            {
+                "name": "tipTapContent",
+                "kind": "TipTapRichTextBlock",
+                "nullable": false,
+                "childBlocks": {
+                    "productPrice": "ProductPrice",
+                    "productTeaser": "ProductTeaser"
+                }
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "tipTapContent",
+                "kind": "TipTapRichTextBlock",
+                "nullable": false,
+                "childBlocks": {
+                    "productPrice": "ProductPrice",
+                    "productTeaser": "ProductTeaser"
+                }
             }
         ]
     },

@@ -123,9 +123,9 @@ export const TimePicker = (inProps: TimePickerProps) => {
             readOnly
             required={required}
             endAdornment={
-                !required && !inputWithPopperProps.disabled ? (
+                !required && !inputWithPopperProps.disabled && value ? (
                     <>
-                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange?.(undefined)} />
+                        <ClearInputAdornment position="end" onClick={() => onChange?.(undefined)} />
                         {endAdornment}
                     </>
                 ) : (

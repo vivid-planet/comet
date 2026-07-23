@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { FinalForm } from "../../../FinalForm";
 import { FinalFormDebug } from "../../../form/FinalFormDebug";
@@ -183,7 +183,9 @@ export const CustomValidation: Story = {
         }
 
         const validateIsNotLunchBreak = async (value: string | undefined) => {
-            if (!value) return undefined;
+            if (!value) {
+                return undefined;
+            }
             const [hours, minutes] = value.split(":").map(Number);
             const totalMinutes = hours * 60 + minutes;
             const lunchStartMinutes = 12 * 60;

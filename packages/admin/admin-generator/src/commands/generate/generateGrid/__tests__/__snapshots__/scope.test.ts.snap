@@ -61,7 +61,7 @@ import { GridRenderCellParams } from "@mui/x-data-grid";
 import { GridSlotsComponent } from "@mui/x-data-grid";
 import { GridToolbarProps } from "@mui/x-data-grid";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid";
-import { GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@comet/admin";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useDataGridRemote } from "@comet/admin";
@@ -176,6 +176,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }
@@ -243,7 +244,7 @@ import { GridRenderCellParams } from "@mui/x-data-grid";
 import { GridSlotsComponent } from "@mui/x-data-grid";
 import { GridToolbarProps } from "@mui/x-data-grid";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid";
-import { GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@comet/admin";
 import { GridRowOrderChangeParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useDataGridRemote } from "@comet/admin";
@@ -357,6 +358,7 @@ renderCell: (params) => {
                 
                 
                 onRowClick={handleRowClick}
+                showToolbar
             />
         );
     }

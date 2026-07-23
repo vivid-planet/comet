@@ -14,9 +14,9 @@ import { type ReactNode, useRef } from "react";
 import { Tooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { PrettyBytes } from "../../helpers/PrettyBytes";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useElementIsOverflowing } from "../../hooks/useElementIsOverflowing";
-import { type ErrorFileSelectItem, type FileSelectItem } from "./fileSelectItemTypes";
+import type { ErrorFileSelectItem, FileSelectItem } from "./fileSelectItemTypes";
 
 type OwnerState = {
     hasFilePreview: boolean;

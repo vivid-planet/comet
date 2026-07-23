@@ -11,7 +11,7 @@ import { EditorState, type EntityInstance, RichUtils } from "draft-js";
 import { type MouseEvent, type ReactElement, useCallback, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type BlockInterface, type BlockState } from "../../../types";
+import type { BlockInterface, BlockState } from "../../../types";
 import { ENTITY_TYPE } from "./Decorator";
 
 interface IProps {

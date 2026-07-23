@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
-import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
+import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading, SelectField } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
 import { IconButton, InputAdornment } from "@mui/material";
@@ -11,17 +11,18 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useContentLanguage } from "../../contentLanguage/useContentLanguage";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDamConfig } from "../config/damConfig";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
-import { type DamFileDetails, type EditFileFormValues } from "./EditFile";
-import { type GQLDamIsFilenameOccupiedQuery, type GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
+import type { DamFileDetails, EditFileFormValues } from "./EditFile";
+import type { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
 import { generateAltTextMutation, generateImageTitleMutation } from "./FileSettingsFields.gql";
-import {
-    type GQLGenerateAltTextMutation,
-    type GQLGenerateAltTextMutationVariables,
-    type GQLGenerateImageTitleMutation,
-    type GQLGenerateImageTitleMutationVariables,
+import type {
+    GQLGenerateAltTextMutation,
+    GQLGenerateAltTextMutationVariables,
+    GQLGenerateImageTitleMutation,
+    GQLGenerateImageTitleMutationVariables,
 } from "./FileSettingsFields.gql.generated";
 import { type LicenseType, licenseTypeArray, licenseTypeLabels } from "./licenseType";
 
@@ -38,6 +39,13 @@ const damIsFilenameOccupiedQuery = gql`
 export const FileSettingsFields = ({ file }: SettingsFormProps) => {
     const folderId = file.folder?.id ?? null;
     const isImage = !!file.image;
+    const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+    // A deep fake can only be image, audio or video content, so the AI content disclosure is limited to those types.
+    // Vector images (SVG) are excluded because they cannot appear photorealistic.
+    const supportsAiContentType =
+        filteredAcceptedMimeTypes.pixelImage.includes(file.mimetype) ||
+        filteredAcceptedMimeTypes.video.includes(file.mimetype) ||
+        filteredAcceptedMimeTypes.audio.includes(file.mimetype);
     const intl = useIntl();
     const apollo = useApolloClient();
     const scope = useDamScope();
@@ -178,6 +186,38 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                     }
                 />
             </FormSection>
+            {supportsAiContentType && (
+                <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
+                    <SelectField
+                        name="aiContentType"
+                        label={<FormattedMessage id="comet.dam.file.aiContentType" defaultMessage="Was this asset generated or modified using AI?" />}
+                        helperText={
+                            <FormattedMessage
+                                id="comet.dam.file.aiContentType.helperText"
+                                defaultMessage="The EU AI Act (Article 50) requires AI-generated or AI-modified content to be marked as such. Set this for any asset that was generated or edited using artificial intelligence."
+                            />
+                        }
+                        fullWidth
+                        format={(value: string | null) => value ?? ""}
+                        parse={(value: string) => value || null}
+                        componentsProps={{ finalFormSelect: { displayEmpty: true } }}
+                        options={[
+                            {
+                                value: "",
+                                label: <FormattedMessage id="comet.dam.file.aiContentType.no" defaultMessage="No" />,
+                            },
+                            {
+                                value: "Generated",
+                                label: <FormattedMessage id="comet.dam.file.aiContentType.generated" defaultMessage="AI generated" />,
+                            },
+                            {
+                                value: "Modified",
+                                label: <FormattedMessage id="comet.dam.file.aiContentType.modified" defaultMessage="AI modified" />,
+                            },
+                        ]}
+                    />
+                </FormSection>
+            )}
             {damConfig.enableLicenseFeature && (
                 <FormSection title={<FormattedMessage id="comet.dam.file.licenseInformation" defaultMessage="License information" />}>
                     <Field

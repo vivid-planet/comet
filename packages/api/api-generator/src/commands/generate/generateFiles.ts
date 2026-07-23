@@ -9,8 +9,8 @@ import {
     type CrudSingleGeneratorOptions,
 } from "@comet/cms-api";
 import { CLIHelper } from "@mikro-orm/cli";
-import { type MikroORM } from "@mikro-orm/core";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import type { MikroORM } from "@mikro-orm/core";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { format, resolveConfig } from "prettier";
 
 import { buildOptions } from "./generateCrud/build-options";

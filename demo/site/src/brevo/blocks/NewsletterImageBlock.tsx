@@ -1,6 +1,6 @@
 import { MjmlColumn, MjmlImage, MjmlSection, type PropsWithData } from "@comet/mail-react";
 import { calculateInheritAspectRatio, generateImageUrl } from "@comet/site-nextjs";
-import { type NewsletterImageBlockData } from "@src/blocks.generated";
+import type { NewsletterImageBlockData } from "@src/blocks.generated";
 
 interface NewsletterImageBlockProps extends PropsWithData<NewsletterImageBlockData> {
     desktopRenderWidth?: number;
@@ -52,7 +52,7 @@ function isAbsoluteUrl(url: string): boolean {
     return !url.startsWith("/");
 }
 
-export const getOptimalAllowedImageWidth = (validSizes: number[], minimumWidth: number, contentWidth: number): number => {
+const getOptimalAllowedImageWidth = (validSizes: number[], minimumWidth: number, contentWidth: number): number => {
     const sortedValidSizes = validSizes.sort((a, b) => a - b);
 
     let width: number | null = null;

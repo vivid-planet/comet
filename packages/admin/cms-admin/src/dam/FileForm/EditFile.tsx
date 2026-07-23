@@ -26,19 +26,21 @@ import ReactSplit from "react-split";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DependentsList } from "../../dependencies/DependentsList";
-import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
+import type { GQLDamFileAiContentType, GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
-import { useDamConfig } from "../config/damConfig";
+import { useDamConfig, useVideoPerformanceWarning } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
+import { ArchivedTag } from "../DataGrid/tags/ArchivedTag";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import { MediaAlternativesGrid } from "../mediaAlternatives/MediaAlternativesGrid";
+import { VideoPerformanceWarningAlert } from "../VideoPerformanceWarningAlert";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
-import { type GQLDamFileDetailFragment, type GQLDamFileDetailQuery, type GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
+import type { GQLDamFileDetailFragment, GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
 import { FileSettingsFields } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
-import { type LicenseType } from "./licenseType";
+import type { LicenseType } from "./licenseType";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;
@@ -53,6 +55,7 @@ export interface EditImageFormValues {
 export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
+    aiContentType?: GQLDamFileAiContentType | null;
     title?: string | null;
     license?: Omit<GQLLicenseInput, "type"> & {
         type: LicenseType;
@@ -114,6 +117,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
     const acceptedMimeTypes = useDamAcceptedMimeTypes();
     const intl = useIntl();
     const damConfig = useDamConfig();
+    const { isVideoTooLarge } = useVideoPerformanceWarning();
     const apolloClient = useApolloClient();
     const isAllowed = useUserPermissionCheck();
 
@@ -146,6 +150,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     input: {
                         name: values.name,
                         altText: values.altText ?? null,
+                        aiContentType: values.aiContentType ?? null,
                         title: values.title ?? null,
                         image: {
                             cropArea,
@@ -176,6 +181,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     y: file.image?.cropArea.y ?? 0,
                 },
                 altText: file.altText,
+                aiContentType: file.aiContentType,
                 title: file.title,
                 license: {
                     type: file.license?.type ?? "NO_LICENSE",
@@ -192,6 +198,11 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     <Toolbar scopeIndicator={contentScopeIndicator}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
+                        {file.archived && (
+                            <ToolbarItem>
+                                <ArchivedTag />
+                            </ToolbarItem>
+                        )}
                         {damConfig.enableLicenseFeature &&
                             (file.license?.isNotValidYet || file.license?.expiresWithinThirtyDays || file.license?.hasExpired) && (
                                 <ToolbarItem>
@@ -209,6 +220,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
+                        {isVideoTooLarge(file) && <VideoPerformanceWarningAlert sx={{ marginBottom: 4 }} />}
                         <ReactSplit sizes={[initialPreviewWidth, initialBlockListWidth]} minSize={360} gutterSize={40} style={{ display: "flex" }}>
                             <StickyScrollWrapper>
                                 <FilePreview file={file} />

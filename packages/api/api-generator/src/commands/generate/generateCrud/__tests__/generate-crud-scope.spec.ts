@@ -1,7 +1,8 @@
 import { ScopedEntity } from "@comet/cms-api";
 import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
@@ -34,12 +35,16 @@ describe("GenerateCrud with ScopedEntity", () => {
 
         {
             const file = formattedOut.find((file) => file.name === "test-entity-with-scoped-entity.resolver.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
 
             const cls = source.getClassOrThrow("TestEntityWithScopedEntityResolver");
             const requiredPermissionDecorator = cls.getDecorators().find((decorator) => decorator.getName() === "RequiredPermission");
-            if (!requiredPermissionDecorator) throw new Error("RequiredPermission decorator not found");
+            if (!requiredPermissionDecorator) {
+                throw new Error("RequiredPermission decorator not found");
+            }
             const args = requiredPermissionDecorator.getArguments();
             expect(args.length).toBe(1); //must not contain a second argument with { skipScopeCheck: true }
         }
@@ -79,12 +84,16 @@ describe("GenerateCrud with Scope", () => {
 
         {
             const file = formattedOut.find((file) => file.name === "test-entity-with-scope.resolver.ts");
-            if (!file) throw new Error("File not found");
+            if (!file) {
+                throw new Error("File not found");
+            }
             const source = parseSource(file.content);
 
             const cls = source.getClassOrThrow("TestEntityWithScopeResolver");
             const requiredPermissionDecorator = cls.getDecorators().find((decorator) => decorator.getName() === "RequiredPermission");
-            if (!requiredPermissionDecorator) throw new Error("RequiredPermission decorator not found");
+            if (!requiredPermissionDecorator) {
+                throw new Error("RequiredPermission decorator not found");
+            }
             const args = requiredPermissionDecorator.getArguments();
             expect(args.length).toBe(1); //must not contain a second argument with { skipScopeCheck: true }
         }
