@@ -35,19 +35,12 @@
         --comet-color-action-secondary-foreground: var(--comet-brand-color-secondary-100);
         --comet-color-action-secondary-subtle: var(--comet-brand-color-secondary-800);
 
-        --comet-color-action-tertiary-default: var(--comet-brand-color-primary-400);
-        --comet-color-action-tertiary-hover: var(--comet-brand-color-primary-300);
-        --comet-color-action-tertiary-active: var(--comet-brand-color-primary-200);
-        --comet-color-action-tertiary-disabled: var(--comet-brand-color-neutral-700);
-        --comet-color-action-tertiary-subtle: var(--comet-brand-color-primary-900);
-        --comet-color-action-tertiary-foreground: var(--comet-brand-color-primary-400);
-
-        --comet-color-action-danger-default: var(--comet-color-red-400);
-        --comet-color-action-danger-hover: var(--comet-color-red-300);
-        --comet-color-action-danger-active: var(--comet-color-red-200);
-        --comet-color-action-danger-disabled: var(--comet-brand-color-neutral-700);
-        --comet-color-action-danger-subtle: var(--comet-color-red-900);
-        --comet-color-action-danger-foreground: var(--comet-color-white);
+        --comet-color-action-error-default: var(--comet-color-red-300);
+        --comet-color-action-error-hover: var(--comet-color-red-200);
+        --comet-color-action-error-active: var(--comet-color-red-100);
+        --comet-color-action-error-disabled: var(--comet-brand-color-neutral-700);
+        --comet-color-action-error-subtle: var(--comet-color-red-900);
+        --comet-color-action-error-foreground: var(--comet-color-grey-950);
 
         --comet-color-feedback-success-default: var(--comet-color-green-300);
         --comet-color-feedback-success-subtle: var(--comet-color-green-900);
@@ -90,6 +83,13 @@
 
         --comet-focus-ring-width: 2px;
         --comet-focus-ring-offset: 2px;
+
+        --comet-color-action-success-default: var(--comet-color-green-400);
+        --comet-color-action-success-hover: var(--comet-color-green-300);
+        --comet-color-action-success-active: var(--comet-color-green-200);
+        --comet-color-action-success-disabled: var(--comet-brand-color-neutral-700);
+        --comet-color-action-success-subtle: var(--comet-color-green-900);
+        --comet-color-action-success-foreground: var(--comet-color-green-950);
     }
 
     [data-comet-color-scheme="high-contrast"] {
@@ -126,19 +126,12 @@
         --comet-color-action-secondary-foreground: var(--comet-color-white);
         --comet-color-action-secondary-subtle: var(--comet-brand-color-secondary-900);
 
-        --comet-color-action-tertiary-default: var(--comet-brand-color-primary-100);
-        --comet-color-action-tertiary-hover: var(--comet-brand-color-primary-200);
-        --comet-color-action-tertiary-active: var(--comet-brand-color-primary-300);
-        --comet-color-action-tertiary-disabled: var(--comet-brand-color-neutral-700);
-        --comet-color-action-tertiary-subtle: var(--comet-brand-color-neutral-800);
-        --comet-color-action-tertiary-foreground: var(--comet-brand-color-primary-100);
-
-        --comet-color-action-danger-default: var(--comet-color-red-200);
-        --comet-color-action-danger-hover: var(--comet-color-red-100);
-        --comet-color-action-danger-active: var(--comet-color-red-50);
-        --comet-color-action-danger-disabled: var(--comet-brand-color-neutral-700);
-        --comet-color-action-danger-subtle: var(--comet-brand-color-neutral-900);
-        --comet-color-action-danger-foreground: var(--comet-color-black);
+        --comet-color-action-error-default: var(--comet-color-red-200);
+        --comet-color-action-error-hover: var(--comet-color-red-100);
+        --comet-color-action-error-active: var(--comet-color-red-50);
+        --comet-color-action-error-disabled: var(--comet-brand-color-neutral-700);
+        --comet-color-action-error-subtle: var(--comet-brand-color-neutral-900);
+        --comet-color-action-error-foreground: var(--comet-color-black);
 
         --comet-color-feedback-success-default: var(--comet-color-green-200);
         --comet-color-feedback-success-subtle: var(--comet-brand-color-neutral-900);
@@ -181,6 +174,13 @@
 
         --comet-focus-ring-width: 3px;
         --comet-focus-ring-offset: 2px;
+
+        --comet-color-action-success-default: var(--comet-color-green-200);
+        --comet-color-action-success-hover: var(--comet-color-green-100);
+        --comet-color-action-success-active: var(--comet-color-green-50);
+        --comet-color-action-success-disabled: var(--comet-brand-color-neutral-700);
+        --comet-color-action-success-subtle: var(--comet-brand-color-neutral-900);
+        --comet-color-action-success-foreground: var(--comet-color-black);
     }
 
     [data-comet-color-scheme="light"] {
@@ -217,19 +217,12 @@
         --comet-color-action-secondary-foreground: var(--comet-brand-color-secondary-800);
         --comet-color-action-secondary-subtle: var(--comet-brand-color-secondary-50);
 
-        --comet-color-action-tertiary-default: var(--comet-brand-color-primary-500);
-        --comet-color-action-tertiary-hover: var(--comet-brand-color-primary-600);
-        --comet-color-action-tertiary-active: var(--comet-brand-color-primary-700);
-        --comet-color-action-tertiary-disabled: var(--comet-brand-color-neutral-200);
-        --comet-color-action-tertiary-subtle: var(--comet-brand-color-primary-50);
-        --comet-color-action-tertiary-foreground: var(--comet-brand-color-primary-500);
-
-        --comet-color-action-danger-default: var(--comet-color-red-500);
-        --comet-color-action-danger-hover: var(--comet-color-red-600);
-        --comet-color-action-danger-active: var(--comet-color-red-700);
-        --comet-color-action-danger-disabled: var(--comet-brand-color-neutral-200);
-        --comet-color-action-danger-subtle: var(--comet-color-red-50);
-        --comet-color-action-danger-foreground: var(--comet-color-white);
+        --comet-color-action-error-default: var(--comet-color-red-500);
+        --comet-color-action-error-hover: var(--comet-color-red-600);
+        --comet-color-action-error-active: var(--comet-color-red-700);
+        --comet-color-action-error-disabled: var(--comet-brand-color-neutral-200);
+        --comet-color-action-error-subtle: var(--comet-color-red-50);
+        --comet-color-action-error-foreground: var(--comet-color-white);
 
         --comet-color-feedback-success-default: var(--comet-color-green-400);
         --comet-color-feedback-success-subtle: var(--comet-color-green-50);
@@ -272,5 +265,12 @@
 
         --comet-focus-ring-width: 2px;
         --comet-focus-ring-offset: 2px;
+
+        --comet-color-action-success-default: var(--comet-color-green-700);
+        --comet-color-action-success-hover: var(--comet-color-green-800);
+        --comet-color-action-success-active: var(--comet-color-green-900);
+        --comet-color-action-success-disabled: var(--comet-brand-color-neutral-200);
+        --comet-color-action-success-subtle: var(--comet-color-green-50);
+        --comet-color-action-success-foreground: var(--comet-color-white);
     }
 }
