@@ -186,3 +186,74 @@ export const {
 - Headings are styled text, not semantic `<h1>` elements, matching the text components' design.
 - Empty draft blocks are skipped; when the data contains no text at all, the block renders nothing.
 - Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, and `richTextBlock__link` class names for targeting with [registerStyles](./2-components-and-theme.md).
+
+## Tip-Tap rich-text blocks
+
+`createTipTapRichTextBlock` is the Tip-Tap sibling of `createRichTextBlock`, rendering `TipTapRichTextBlockData` (Tip-Tap/ProseMirror JSON) from the CMS `TipTapRichTextBlock`. It returns the same kind of `Mjml`/`Html` pair, configured the same way:
+
+```tsx title="src/emails/blocks/tipTapRichText.ts"
+import { createTipTapRichTextBlock } from "@comet/mail-react";
+
+export const { MjmlTipTapRichTextBlock, HtmlTipTapRichTextBlock } = createTipTapRichTextBlock({
+    blockTypes: {
+        "heading-1": { variant: "heading1" },
+        "heading-2": { variant: "heading2" },
+        paragraph: { variant: "body" },
+    },
+});
+```
+
+```tsx
+<MjmlSection indent>
+    <MjmlColumn>
+        <MjmlTipTapRichTextBlock data={tipTapRichTextData} />
+    </MjmlColumn>
+</MjmlSection>
+```
+
+### Block type and text-block-style configuration
+
+`blockTypes` maps the Tip-Tap text block types (`paragraph`, `heading-1`…`heading-6`, `unordered-list`, `ordered-list`) to text-component styling, the same way `createRichTextBlock`'s `blockTypes` does for draft block types.
+
+`textBlockStyles` maps the application's `textBlockStyle` attribute values — set on paragraph and heading nodes via the CMS block's own `textBlockStyles` option — to styling, and wins over the matching `blockTypes` entry when both apply to the same node:
+
+```tsx
+export const { MjmlTipTapRichTextBlock, HtmlTipTapRichTextBlock } = createTipTapRichTextBlock({
+    blockTypes: { paragraph: { variant: "body" } },
+    textBlockStyles: { small: { variant: "caption" } },
+});
+```
+
+`textBlockStyle` is ignored for paragraphs nested inside list items, since the whole list renders as one text component.
+
+### Link types
+
+Identical to `createRichTextBlock`'s `linkTypes`: a resolver per link block type, merged over the built-in `external` type, applied to `link` marks. Link types without a resolver render their text without a link.
+
+### Marks and inline styles
+
+Tip-Tap marks map through two distinct options, since Tip-Tap tracks structural marks and application-defined inline styles separately:
+
+- `marks` maps a mark's `type` (e.g. `bold`) to a renderer, merged over the built-ins (`bold`, `italic`, `strike`, `superscript`, `subscript`).
+- `inlineStyles` maps the `inlineStyle` mark's `attrs.type` value — the application-defined inline style names configured via the CMS block's own `inlineStyles` option — to a renderer. This option has **no built-ins**: an unconfigured inline style renders its text unchanged, since only the application knows what it should look like.
+
+```tsx
+export const { MjmlTipTapRichTextBlock, HtmlTipTapRichTextBlock } = createTipTapRichTextBlock({
+    inlineStyles: {
+        highlight: (children, { key }) => (
+            <span key={key} style={{ backgroundColor: "#ff0000", color: "#ffffff" }}>
+                {children}
+            </span>
+        ),
+    },
+});
+```
+
+### Rendering behavior
+
+- Each top-level Tip-Tap node renders as its own text component; spacing comes from the theme's `bottomSpacing`, and the last node gets none. Empty top-level nodes are skipped.
+- Lists render flat: one text component per top-level list, with nested lists (recommend `listLevelMax: 1` on the CMS block) flattened into sibling `<li>`s and multiple paragraphs within one list item joined with `<br/>`.
+- Headings are styled text, not semantic `<h1>` elements, matching the draft-js block and the text components' design.
+- `placeholder` nodes render their literal `{{name}}` text — recipient substitution happens downstream (e.g. in the ESP).
+- `cmsBlock`/`cmsInlineBlock` nodes are skipped silently; rendering the CMS block's embedded child blocks in email is out of scope.
+- Rendered elements carry `tipTapRichTextBlock__text`, `tipTapRichTextBlock__list`, `tipTapRichTextBlock__listItem`, and `tipTapRichTextBlock__link` class names — distinct from the draft-js block's classes — for targeting with [registerStyles](./2-components-and-theme.md).

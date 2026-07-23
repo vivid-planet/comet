@@ -116,6 +116,11 @@ export interface TipTapChildBlock {
 interface TipTapRichTextBlockFactoryOptions {
     supports?: TipTapSupports[];
     textBlockStyles?: TipTapTextBlockStyle[];
+    /**
+     * Label for the entry with no text block style in the text block style dropdown.
+     * @defaultValue "Default"
+     */
+    defaultTextBlockStyleLabel?: ReactNode;
     inlineStyles?: TipTapInlineStyle[];
     placeholders?: TipTapPlaceholder[];
     link?: BlockInterface & LinkBlockInterface;
@@ -322,6 +327,7 @@ const TipTapEditor = ({
     updateState,
     supports,
     textBlockStyles,
+    defaultTextBlockStyleLabel,
     inlineStyles,
     placeholders,
     linkBlock,
@@ -333,6 +339,7 @@ const TipTapEditor = ({
     updateState: React.Dispatch<React.SetStateAction<TipTapRichTextBlockState>>;
     supports: TipTapSupports[];
     textBlockStyles: TipTapTextBlockStyle[];
+    defaultTextBlockStyleLabel?: ReactNode;
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
@@ -424,6 +431,7 @@ const TipTapEditor = ({
                             editor={editor}
                             supports={supports}
                             textBlockStyles={textBlockStyles}
+                            defaultTextBlockStyleLabel={defaultTextBlockStyleLabel}
                             inlineStyles={inlineStyles}
                             placeholders={placeholders}
                             linkBlock={linkBlock}
@@ -448,6 +456,7 @@ export const createTipTapRichTextBlock = (
 ): BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> => {
     let supports = options?.supports ?? defaultSupports;
     const textBlockStyles = options?.textBlockStyles ?? [];
+    const defaultTextBlockStyleLabel = options?.defaultTextBlockStyleLabel;
     const inlineStyles = options?.inlineStyles ?? [];
     const placeholders = options?.placeholders ?? [];
     const linkBlock = options?.link;
@@ -532,6 +541,7 @@ export const createTipTapRichTextBlock = (
                     updateState={updateState}
                     supports={supports}
                     textBlockStyles={textBlockStyles}
+                    defaultTextBlockStyleLabel={defaultTextBlockStyleLabel}
                     inlineStyles={inlineStyles}
                     placeholders={placeholders}
                     linkBlock={linkBlock}
