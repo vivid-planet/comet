@@ -24,6 +24,13 @@ interface PGStatActivity {
 // Advisory lock key for block_index_dependencies refresh deduplication.
 const BLOCK_INDEX_REFRESH_LOCK_KEY = 4201;
 
+// Materialized snapshot of the "EntityInfo" view that the block_index_dependencies refresh joins
+// against. Materializing it means the refresh joins an indexed table scanned once, instead of
+// re-evaluating the "EntityInfo" view (a UNION over every entity, incl. a recursive DAM folder-path
+// CTE) twice. The live "EntityInfo" view stays in place for other consumers (full-text search,
+// warnings), so their data remains up-to-date; this snapshot's freshness is tied to the refresh.
+const BLOCK_INDEX_ENTITY_INFO_VIEW = "block_index_entity_info";
+
 @Injectable()
 export class DependenciesService {
     private connection: Connection;
@@ -47,15 +54,25 @@ export class DependenciesService {
         await this.pageTreeFullTextService?.createPageTreeFullTextView();
         await this.entityInfoService.createEntityInfoView();
         await this.fullTextSearchService?.createEntityInfoFullTextView();
+        await this.createBlockIndexEntityInfoView();
         await this.createDependenciesView();
     }
 
     async dropViews(): Promise<void> {
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS "block_index_dependencies"`);
+        await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS "${BLOCK_INDEX_ENTITY_INFO_VIEW}"`);
         await this.connection.execute(`DROP VIEW IF EXISTS "block_index"`);
         await this.fullTextSearchService?.dropEntityInfoFullTextView();
         await this.entityInfoService.dropEntityInfoView();
         await this.pageTreeFullTextService?.dropPageTreeFullTextView();
+    }
+
+    private async createBlockIndexEntityInfoView(): Promise<void> {
+        console.time("creating block index entity info materialized view");
+        await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS "${BLOCK_INDEX_ENTITY_INFO_VIEW}"`);
+        await this.connection.execute(`CREATE MATERIALIZED VIEW "${BLOCK_INDEX_ENTITY_INFO_VIEW}" AS SELECT * FROM "EntityInfo"`);
+        await this.connection.execute(`CREATE INDEX ON "${BLOCK_INDEX_ENTITY_INFO_VIEW}" ("entityName", "id")`);
+        console.timeEnd("creating block index entity info materialized view");
     }
 
     private async createDependenciesView(): Promise<void> {
@@ -134,9 +151,9 @@ export class DependenciesService {
                     FROM (
                         ${indexSelects.join("\n UNION ALL \n")}
                     ) blockIndex
-                    LEFT JOIN "EntityInfo" as ei_root ON ei_root."id" = blockIndex."rootId"::text
+                    LEFT JOIN "${BLOCK_INDEX_ENTITY_INFO_VIEW}" as ei_root ON ei_root."id" = blockIndex."rootId"::text
                         AND ei_root."entityName" = blockIndex."rootEntityName"
-                    LEFT JOIN "EntityInfo" as ei_target ON ei_target."id" = blockIndex."targetId"
+                    LEFT JOIN "${BLOCK_INDEX_ENTITY_INFO_VIEW}" as ei_target ON ei_target."id" = blockIndex."targetId"
                         AND ei_target."entityName" = blockIndex."targetEntityName"`;
 
         console.time("creating block dependency materialized view");
@@ -241,6 +258,10 @@ export class DependenciesService {
 
                 await trx("BlockIndexRefresh").insert({ id, startedAt: new Date(), finishedAt: null });
 
+                // Refresh the EntityInfo snapshot first so the dependency refresh joins up-to-date
+                // entity data. Non-concurrent is fine: only the dependency refresh reads it.
+                await trx.raw(`REFRESH MATERIALIZED VIEW "${BLOCK_INDEX_ENTITY_INFO_VIEW}"`);
+
                 await trx.raw(`REFRESH MATERIALIZED VIEW ${refreshOptions?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
 
                 await trx("BlockIndexRefresh").where({ id }).update({ finishedAt: new Date() });
@@ -271,6 +292,7 @@ export class DependenciesService {
             await knex.transaction(async (trx) => {
                 await trx.raw(`SELECT pg_advisory_xact_lock(?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
                 await trx("BlockIndexRefresh").truncate();
+                await trx.raw(`REFRESH MATERIALIZED VIEW "${BLOCK_INDEX_ENTITY_INFO_VIEW}"`);
                 await trx.raw(`REFRESH MATERIALIZED VIEW block_index_dependencies`);
                 await trx("BlockIndexRefresh").insert({ id: uuid(), startedAt: new Date(), finishedAt: new Date() });
             });
