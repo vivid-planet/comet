@@ -190,6 +190,13 @@ The partials and types are generated from a design-token export, not edited manu
 
 `Theme` selects the active color scheme. It stays a pure function of its props — reading no `window`, `localStorage`, or `matchMedia` — so it renders the same on server and client; switching, OS-scheme resolution, and preventing the first-paint flash on SSR stay in consumer code.
 
+## CLI
+
+Maintainer scripts, run through `pnpm --filter @comet/admin run …`:
+
+- **`future-ui-figma list`** prints the DDS component inventory as JSON — every component or component set a designer has marked for development in Figma (dev status "Ready for development" or "Completed"), skipping non-public `_`-prefixed names. It reads the Figma file over the REST API, so `FIGMA_TOKEN` must be set to a Figma [personal access token](https://developers.figma.com/docs/rest-api/personal-access-tokens/), or `list` fails with an `auth_missing` error. The token needs only the `file_content:read` scope.
+- **`generate-future-ui-theme-tokens`** regenerates the theme SCSS partials and types from a design-token export — see [Regenerating the tokens](#regenerating-the-tokens).
+
 ## Known issues
 
 - Styles are not delivered by the package build yet. The Babel build compiles no CSS Modules, so the class-name mapping applies in Storybook but not in published output.
