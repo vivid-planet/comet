@@ -33,7 +33,7 @@ interface ModeFile {
 }
 
 type RenderStrategy =
-    | { kind: "scope"; selector: string }
+    | { kind: "scope"; selector: string; mode?: string }
     | { kind: "attribute"; attribute: string }
     | { kind: "responsive"; baseMode: string; breakpointModes: Record<string, string> };
 
@@ -43,13 +43,14 @@ type RenderStrategy =
  * on, and the semantic variables a component references are out of scope at
  * `:root`.
  *
- * `brand` imports only its `default` mode — other brand modes in the export
- * are project-specific and intentionally not imported.
+ * A `scope` collection imports a single mode (`mode`, defaulting to `default`).
+ * `brand` imports only its `dextinity` mode — the other brand modes in the
+ * export belong to separate projects and are intentionally not imported.
  */
 const COLLECTION_RENDER_STRATEGIES: Record<string, RenderStrategy> = {
     primitives: { kind: "scope", selector: ":root" },
     components: { kind: "scope", selector: "[data-comet-color-scheme]" },
-    brand: { kind: "scope", selector: ":root" },
+    brand: { kind: "scope", selector: ":root", mode: "dextinity" },
     semantic: { kind: "attribute", attribute: "data-comet-color-scheme" },
     responsive: { kind: "responsive", baseMode: "mobile", breakpointModes: { desktop: "breakpoint-desktop" } },
 };
@@ -211,8 +212,8 @@ function getModeFile(collection: string, modeFiles: ModeFile[], mode: string): M
     return modeFile;
 }
 
-function renderScope(selector: string, collection: string, modeFiles: ModeFile[]): string {
-    const modeFile = getModeFile(collection, modeFiles, "default");
+function renderScope(selector: string, collection: string, modeFiles: ModeFile[], mode = "default"): string {
+    const modeFile = getModeFile(collection, modeFiles, mode);
     return renderPartialFile([renderSelectorBlock(selector, getTokenEntries(modeFile.tree))]);
 }
 
@@ -332,7 +333,7 @@ async function main(): Promise<void> {
         let contents: string;
         switch (strategy.kind) {
             case "scope":
-                contents = renderScope(strategy.selector, collection, modeFiles);
+                contents = renderScope(strategy.selector, collection, modeFiles, strategy.mode);
                 break;
             case "attribute":
                 contents = renderAttribute(strategy.attribute, modeFiles);
