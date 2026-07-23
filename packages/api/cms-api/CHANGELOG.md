@@ -1,5 +1,17 @@
 # @comet/cms-api
 
+## 9.2.2
+
+### Patch Changes
+
+- d1022e2: Improve performance of the `block_index_dependencies` materialized view refresh
+
+    Resolve the `EntityInfo` of the root and target entity once over the union of all root blocks, instead of joining `EntityInfo` inside each root block's `SELECT`. Previously the `EntityInfo` view (a `UNION` over every entity, including a recursive DAM folder-path CTE) was re-evaluated once per root block, which dominated the refresh cost on large datasets. The refreshed view's columns and contents are unchanged.
+
+- a2515ce: Add timing and outcome logs to the `refreshBlockIndexViews` command
+
+    The command now logs how long the refresh took and whether a refresh was actually performed or skipped because the block index views were still fresh enough.
+
 ## 9.2.1
 
 ## 9.2.0
