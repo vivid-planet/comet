@@ -195,6 +195,7 @@ The partials and types are generated from a design-token export, not edited manu
 Maintainer scripts, run through `pnpm --filter @comet/admin run …`:
 
 - **`future-ui-figma list`** prints the DDS component inventory as JSON — every component or component set a designer has marked for development in Figma (dev status "Ready for development" or "Completed"), skipping non-public `_`-prefixed names. It reads the Figma file over the REST API, so `FIGMA_TOKEN` must be set to a Figma [personal access token](https://developers.figma.com/docs/rest-api/personal-access-tokens/), or `list` fails with an `auth_missing` error. The token needs only the `file_content:read` scope.
+- **`future-ui-figma implemented <component>`** statically analyzes a future-ui component's committed source and prints, as JSON, what the code implements: its props (names, kinds, options, optionality, and `@defaultValue` defaults, resolved through the TypeScript type checker), its parts (the SCSS module's class names), and its Figma node id (from the story). React and DOM pass-through props are marked `CODE_SUPERSET`. It makes no network calls, so `FIGMA_TOKEN` is not required.
 - **`generate-future-ui-theme-tokens`** regenerates the theme SCSS partials and types from a design-token export — see [Regenerating the tokens](#regenerating-the-tokens).
 
 ## Known issues

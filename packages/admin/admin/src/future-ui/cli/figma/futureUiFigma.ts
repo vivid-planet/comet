@@ -3,6 +3,7 @@ import { Command } from "commander";
 import { ddsFigmaFileUrl } from "../../storybook/figmaDesign.js";
 import { discoverComponentInventory } from "./componentInventory.js";
 import { exitCode, exitCodeForError, FigmaCliError, FigmaRestClient, isFigmaCliError, parseFigmaFileKey, resolveFigmaToken } from "./figmaClient.js";
+import { projectImplementedComponent } from "./implementedProjection.js";
 
 function writeResult(payload: object): void {
     process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
@@ -16,9 +17,17 @@ async function runList(): Promise<void> {
     writeResult({ ok: true, fileKey, version, components });
 }
 
+function runImplemented(component: string): void {
+    writeResult({ ok: true, ...projectImplementedComponent(component) });
+}
+
 const program = new Command();
 program.name("future-ui-figma").description("Figma bridge for the future-ui component library (experimental)");
 program.command("list").description("List the DDS component inventory discovered in the Figma file").action(runList);
+program
+    .command("implemented <component>")
+    .description("Project a future-ui component's source into the comparable representation")
+    .action(runImplemented);
 
 function toFigmaCliError(error: unknown): FigmaCliError {
     if (isFigmaCliError(error)) {
