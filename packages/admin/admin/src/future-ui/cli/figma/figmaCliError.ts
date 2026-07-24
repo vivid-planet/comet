@@ -1,4 +1,11 @@
-type FigmaCliErrorCode = "auth_missing" | "scope_denied" | "rate_limited" | "figma_error" | "component_unknown" | "node_missing";
+type FigmaCliErrorCode =
+    | "auth_missing"
+    | "scope_denied"
+    | "rate_limited"
+    | "figma_error"
+    | "component_unknown"
+    | "node_missing"
+    | "source_incomplete";
 
 export class FigmaCliError extends Error {
     readonly code: FigmaCliErrorCode;
@@ -31,6 +38,7 @@ export function exitCodeForError(code: FigmaCliErrorCode): number {
         case "figma_error":
         case "component_unknown":
         case "node_missing":
+        case "source_incomplete":
             return exitCode.error;
     }
 }
