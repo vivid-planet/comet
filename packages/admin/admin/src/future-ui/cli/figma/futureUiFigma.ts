@@ -2,6 +2,7 @@ import { Command } from "commander";
 
 import { ddsFigmaFileUrl } from "../../storybook/figmaDesign.js";
 import { discoverComponentInventory } from "./componentInventory.js";
+import { describeImplementedComponent } from "./describeImplementedComponent.js";
 import { FigmaRestClient, parseFigmaFileKey, resolveFigmaToken } from "./figmaClient.js";
 import { exitCode, exitCodeForError, FigmaCliError, isFigmaCliError } from "./figmaCliError.js";
 import { describeFigmaTarget } from "./figmaTargetDescription.js";
@@ -32,10 +33,18 @@ async function runDescribeTarget(componentName: string): Promise<void> {
     writeResult({ ok: true, ...describeFigmaTarget(nodes, component.nodeId) });
 }
 
+function runDescribeImplemented(componentName: string): void {
+    writeResult({ ok: true, ...describeImplementedComponent(componentName) });
+}
+
 const program = new Command();
 program.name("future-ui-figma").description("Figma bridge for the future-ui component library (experimental)");
 program.command("list").description("List the DDS component inventory discovered in the Figma file").action(runList);
 program.command("describe-target <component>").description("Describe what a future-ui component's Figma design specifies").action(runDescribeTarget);
+program
+    .command("describe-implemented <component>")
+    .description("Describe what a future-ui component's source implements")
+    .action(runDescribeImplemented);
 
 function toFigmaCliError(error: unknown): FigmaCliError {
     if (isFigmaCliError(error)) {

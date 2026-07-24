@@ -196,6 +196,7 @@ Maintainer scripts, run through `pnpm --filter @comet/admin run …`:
 
 - **`future-ui-figma list`** prints the DDS component inventory as JSON — every component or component set a designer has marked for development in Figma (dev status "Ready for development" or "Completed"), skipping non-public `_`-prefixed names. It reads the Figma file over the REST API, so `FIGMA_TOKEN` must be set to a Figma [personal access token](https://developers.figma.com/docs/rest-api/personal-access-tokens/), or `list` fails with an `auth_missing` error. The token needs only the `file_content:read` scope.
 - **`future-ui-figma describe-target <component>`** prints the props one component's Figma design says it should have as JSON — each prop's type, an enum's options, and its default value.
+- **`future-ui-figma describe-implemented <component>`** prints the props one component's source implements, in the same shape as `describe-target`, reading the source instead of Figma.
 - **`generate-future-ui-theme-tokens`** regenerates the theme SCSS partials and types from a design-token export — see [Regenerating the tokens](#regenerating-the-tokens).
 
 ## Known issues
