@@ -65,6 +65,22 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(0);
         });
 
+        it("should accept underline marks", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [{ type: "text", marks: [{ type: "underline" }], text: "Underlined" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
+        });
+
         it("should accept headings", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
@@ -242,6 +258,22 @@ describe("createTipTapRichTextBlock validation", () => {
                         {
                             type: "paragraph",
                             content: [{ type: "text", marks: [{ type: "italic" }], text: "Italic" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(1);
+        });
+
+        it("should reject underline (not in supports)", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [{ type: "text", marks: [{ type: "underline" }], text: "Underlined" }],
                         },
                     ],
                 },

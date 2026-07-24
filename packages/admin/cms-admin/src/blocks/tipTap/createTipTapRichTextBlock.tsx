@@ -28,6 +28,7 @@ export type TipTapSupports =
     | "history"
     | "bold"
     | "italic"
+    | "underline"
     | "strike"
     | "sub"
     | "sup"
@@ -43,6 +44,7 @@ const defaultSupports: TipTapSupports[] = [
     "heading",
     "bold",
     "italic",
+    "underline",
     "strike",
     "sub",
     "sup",
@@ -354,6 +356,7 @@ const TipTapEditor = ({
             StarterKit.configure({
                 bold: supports.includes("bold") ? {} : false,
                 italic: supports.includes("italic") ? {} : false,
+                underline: supports.includes("underline") ? {} : false,
                 strike: supports.includes("strike") ? {} : false,
                 heading: supports.includes("heading") ? (hasTextBlockStyles ? false : {}) : false,
                 paragraph: hasTextBlockStyles ? false : undefined,

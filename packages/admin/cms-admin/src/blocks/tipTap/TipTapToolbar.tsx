@@ -17,6 +17,7 @@ import {
     RteSup,
     RteTextPlaceholder,
     RteUl,
+    RteUnderlined,
     RteUndo,
 } from "@comet/admin-icons";
 import {
@@ -180,7 +181,7 @@ export const TipTapToolbar = ({
     const [childBlockAnchorEl, setChildBlockAnchorEl] = useState<null | HTMLElement>(null);
     const [insertChildBlock, setInsertChildBlock] = useState<({ key: string } & TipTapChildBlock) | null>(null);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
-    const hasInlineFormatButtons = (["bold", "italic", "strike"] as const).some((s) => supports.includes(s));
+    const hasInlineFormatButtons = (["bold", "italic", "underline", "strike"] as const).some((s) => supports.includes(s));
     const moreOptions = (["sub", "sup"] as const).some((s) => supports.includes(s));
     const lists = (["ordered-list", "unordered-list"] as const).some((s) => supports.includes(s));
     const specialChars = (["non-breaking-space", "soft-hyphen"] as const).some((s) => supports.includes(s));
@@ -250,6 +251,7 @@ export const TipTapToolbar = ({
                 canDedent: e.can().liftListItem("listItem"),
                 isBoldActive: e.isActive("bold"),
                 isItalicActive: e.isActive("italic"),
+                isUnderlineActive: e.isActive("underline"),
                 isStrikeActive: e.isActive("strike"),
                 isSuperscriptActive: e.isActive("superscript"),
                 isSubscriptActive: e.isActive("subscript"),
@@ -444,6 +446,15 @@ export const TipTapToolbar = ({
                             tooltip={<FormattedMessage id="comet.blocks.tipTapRichText.italic.tooltip" defaultMessage="Italic" />}
                             isActive="italic"
                             onToggle={() => editor.chain().focus().toggleItalic().run()}
+                        />
+                    )}
+                    {supports.includes("underline") && (
+                        <ToolbarButton
+                            editor={editor}
+                            icon={RteUnderlined}
+                            tooltip={<FormattedMessage id="comet.blocks.tipTapRichText.underline.tooltip" defaultMessage="Underline" />}
+                            isActive="underline"
+                            onToggle={() => editor.chain().focus().toggleUnderline().run()}
                         />
                     )}
                     {supports.includes("strike") && (

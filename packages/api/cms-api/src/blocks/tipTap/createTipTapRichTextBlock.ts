@@ -36,6 +36,7 @@ import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTap
 export type TipTapSupports =
     | "bold"
     | "italic"
+    | "underline"
     | "strike"
     | "sub"
     | "sup"
@@ -88,6 +89,7 @@ interface TipTapInlineStyle {
 const defaultSupports: TipTapSupports[] = [
     "bold",
     "italic",
+    "underline",
     "strike",
     "sub",
     "sup",
@@ -165,6 +167,7 @@ function buildExtensions(
         StarterKit.configure({
             bold: supports.includes("bold") ? {} : false,
             italic: supports.includes("italic") ? {} : false,
+            underline: supports.includes("underline") ? {} : false,
             strike: supports.includes("strike") ? {} : false,
             heading: supports.includes("heading") ? (hasTextBlockStyles ? false : {}) : false,
             paragraph: hasTextBlockStyles ? false : undefined,
