@@ -1536,28 +1536,28 @@ importers:
         specifier: workspace:*
         version: link:../admin-rte
       '@tiptap/core':
-        specifier: ^3.22.3
+        specifier: '>=3.22.3 <3.28.0'
         version: 3.22.3(@tiptap/pm@3.22.3)
       '@tiptap/extension-heading':
-        specifier: ^3.22.3
+        specifier: '>=3.22.3 <3.28.0'
         version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
       '@tiptap/extension-paragraph':
-        specifier: ^3.22.3
+        specifier: '>=3.22.3 <3.28.0'
         version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
       '@tiptap/extension-subscript':
-        specifier: ^3.22.3
+        specifier: '>=3.22.3 <3.28.0'
         version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)
       '@tiptap/extension-superscript':
-        specifier: ^3.22.3
+        specifier: '>=3.22.3 <3.28.0'
         version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)
       '@tiptap/pm':
-        specifier: ^3.22.3
+        specifier: '>=3.22.3 <3.28.0'
         version: 3.22.3
       '@tiptap/react':
-        specifier: ^3.22.3
+        specifier: '>=3.22.3 <3.28.0'
         version: 3.22.3(@floating-ui/dom@1.7.6)(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tiptap/starter-kit':
-        specifier: ^3.22.3
+        specifier: '>=3.22.3 <3.28.0'
         version: 3.22.3
       change-case:
         specifier: ^4.1.2
