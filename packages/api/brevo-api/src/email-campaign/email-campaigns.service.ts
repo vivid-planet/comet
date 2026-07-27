@@ -1,5 +1,5 @@
 import { BlocksTransformerService, filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
-import { UpdateCampaignStatus } from "@getbrevo/brevo";
+import { Brevo } from "@getbrevo/brevo";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, ObjectQuery, wrap } from "@mikro-orm/postgresql";
 import { HttpService } from "@nestjs/axios";
@@ -98,7 +98,7 @@ export class EmailCampaignsService {
     }
 
     async suspendEmailCampaign(campaign: EmailCampaignInterface): Promise<boolean> {
-        return this.brevoApiCampaignService.updateBrevoCampaignStatus(campaign, UpdateCampaignStatus.StatusEnum.Suspended);
+        return this.brevoApiCampaignService.updateBrevoCampaignStatus(campaign, Brevo.UpdateCampaignStatus.Status.Suspended);
     }
 
     public async loadEmailCampaignSendingStatesForEmailCampaigns(

@@ -12,6 +12,7 @@ import {
     DamModule,
     DependenciesModule,
     FileUploadsModule,
+    FullTextSearchModule,
     ImgproxyModule,
     KubernetesModule,
     MailerModule,
@@ -156,6 +157,7 @@ export class AppModule {
                         }
                         return config.sitePreviewSecret;
                     },
+                    fullText: true,
                 }),
 
                 RedirectsModule.register({
@@ -218,36 +220,30 @@ export class AppModule {
                 MailTemplatesModule,
                 ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
-                AccessLogModule.forRoot({
-                    shouldLogRequest: ({ user }) => {
-                        // Ignore system user
-                        if (user === "system-user") {
-                            return false;
-                        }
-                        return true;
-                    },
-                }),
+                ...(!config.debug
+                    ? [
+                          AccessLogModule.forRoot({
+                              shouldLogRequest: ({ req }) => !req.route.path.startsWith("/api/healthcheck/"),
+                          }),
+                      ]
+                    : []),
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
                 WarningsModule,
+                FullTextSearchModule,
                 BrevoModule.register({
                     brevo: {
                         resolveConfig: (scope: EmailCampaignContentScope) => {
                             // change config based on scope - for example different sender email
                             // this is just to show you can use the scope to change the config but it has no real use in this example
-                            if (scope.domain === "main") {
-                                return {
-                                    apiKey: config.brevo.apiKey,
-                                    redirectUrlForImport: config.brevo.redirectUrlForImport,
-                                };
-                            } else if (scope.domain === "secondary") {
-                                return {
-                                    apiKey: config.brevo.apiKey,
-                                    redirectUrlForImport: config.brevo.redirectUrlForImport,
-                                };
+                            const siteConfig = config.siteConfigs.find((siteConfig) => siteConfig.scope.domain == scope.domain);
+                            if (!siteConfig) {
+                                throw Error("Invalid scope passed");
                             }
-
-                            throw Error("Invalid scope passed");
+                            return {
+                                apiKey: config.brevo.apiKey,
+                                redirectUrlForImport: siteConfig.url,
+                            };
                         },
                         BlacklistedContacts,
                         BrevoContactAttributes,
@@ -272,7 +268,7 @@ export class AppModule {
                                 throw new Error(`No site config found for scope ${scope.domain}`);
                             }
                             return {
-                                url: `${siteConfig.url}/${scope.language}/render-brevo-email-campaign`,
+                                url: `${siteConfig.url}/api/render-brevo-email-campaign`,
                                 basicAuth: {
                                     username: config.brevo.campaign.basicAuth.username,
                                     password: config.brevo.campaign.basicAuth.password,

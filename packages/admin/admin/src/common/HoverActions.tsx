@@ -2,7 +2,7 @@ import { type ComponentsOverrides, css, Grow, type Theme, useThemeProps } from "
 import { type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface HoverActionsProps
     extends ThemedComponentBaseProps<{

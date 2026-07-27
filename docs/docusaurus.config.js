@@ -4,6 +4,20 @@ const { themes } = require("prism-react-renderer");
 const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
+// Both this docs site and the Storybook composition are deployed via Netlify with wildcard DNS
+// for `*.storybook.comet-dxp.com`. Mirror the runtime mapping in StorybookAdminComponentDocsIframe
+// so the navbar link follows the docs deploy context: a PR's deploy-preview links to its matching
+// Storybook deploy-preview, `next` to `next.storybook.comet-dxp.com`, and main to production.
+function getStorybookUrl() {
+    if (process.env.CONTEXT === "deploy-preview" && process.env.REVIEW_ID) {
+        return `https://deploy-preview-${process.env.REVIEW_ID}.storybook.comet-dxp.com/`;
+    }
+    if (process.env.BRANCH === "next") {
+        return "https://next.storybook.comet-dxp.com/";
+    }
+    return "https://storybook.comet-dxp.com/";
+}
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: "COMET DXP Docs",
@@ -55,7 +69,7 @@ const config = {
                         label: "Docs",
                     },
                     {
-                        href: "https://storybook.comet-dxp.com/",
+                        href: getStorybookUrl(),
                         position: "right",
                         label: "Storybook",
                     },
@@ -91,13 +105,6 @@ const config = {
                     },
                 ],
                 additionalLanguages: ["bash", "diff", "json"],
-            },
-            announcementBar: {
-                id: "work-in-progress",
-                content: "Documentation is a work in progress",
-                backgroundColor: "var(--ifm-color-warning-contrast-background)",
-                textColor: "var(--ifm-color-warning-contrast-foreground)",
-                isCloseable: false,
             },
             liveCodeBlock: {
                 playgroundPosition: "top",

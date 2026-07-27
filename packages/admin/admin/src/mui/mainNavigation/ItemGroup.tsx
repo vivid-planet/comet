@@ -4,10 +4,10 @@ import { FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
 
 import { Tooltip as CommonTooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { type MainNavigationChild, type MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
-import { type MainNavigationItemProps } from "./Item";
-import { type MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { MainNavigationChild, MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
+import type { MainNavigationItemProps } from "./Item";
+import type { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 
 export type MainNavigationItemGroupClassKey = "root" | "open" | "tooltip" | "titleContainer" | "title" | "shortTitle";
 

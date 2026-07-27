@@ -10,9 +10,9 @@ import {
     type Theme,
     useThemeProps,
 } from "@mui/material";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import { type IControlProps } from "../types";
+import type { IControlProps } from "../types";
 import getRteTheme from "../utils/getRteTheme";
 import useBlockTypes, { type BlockTypesApi } from "./useBlockTypes";
 

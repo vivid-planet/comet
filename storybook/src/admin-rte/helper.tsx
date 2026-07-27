@@ -1,5 +1,5 @@
 import { FormSection } from "@comet/admin";
-import { type IRteRef } from "@comet/admin-rte";
+import type { IRteRef } from "@comet/admin-rte";
 import { Card, CardContent } from "@mui/material";
 import { convertToRaw, type EditorState, type RawDraftContentState } from "draft-js";
 import { type RefObject, useEffect } from "react";

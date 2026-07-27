@@ -1,7 +1,7 @@
 import { type ComponentsOverrides, css, IconButton, InputAdornment, type InputAdornmentProps, type Theme, useThemeProps } from "@mui/material";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 type OpenPickerAdornmentClassKey = "root" | "openPickerButton" | "inputIsDisabled";
 

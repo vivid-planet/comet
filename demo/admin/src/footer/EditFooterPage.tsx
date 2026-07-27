@@ -13,7 +13,7 @@ import {
     useSaveConflictQuery,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { type FooterContentBlockInput } from "@src/blocks.generated";
+import type { FooterContentBlockInput } from "@src/blocks.generated";
 import isEqual from "lodash.isequal";
 import { type JSX, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";

@@ -1,5 +1,5 @@
 import { type VideoPreviewImageProps, YouTubeVideoBlock as SiteReactYouTubeVideoBlock } from "@comet/site-react";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 
 import { VideoPreviewImage } from "./helpers/VideoPreviewImage";
 

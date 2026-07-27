@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 import { useScrollRestoration } from "./useScrollRestoration";
 

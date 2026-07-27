@@ -1,7 +1,7 @@
 import { Field } from "@comet/admin";
 import { defineMessage, FormattedMessage } from "react-intl";
 
-import { type PixelImageBlockData, type SvgImageBlockData } from "../../blocks.generated";
+import type { PixelImageBlockData, SvgImageBlockData } from "../../blocks.generated";
 import { createOneOfBlock } from "../../blocks/factories/createOneOfBlock";
 import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
 import { PixelImageBlock } from "../../blocks/PixelImageBlock";

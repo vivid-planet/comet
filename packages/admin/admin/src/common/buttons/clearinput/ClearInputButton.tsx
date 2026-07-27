@@ -1,7 +1,7 @@
 import { Clear } from "@comet/admin-icons";
 import { ButtonBase, type ButtonBaseProps, type ComponentsOverrides, inputAdornmentClasses } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 
@@ -23,7 +23,7 @@ const Root = createComponentSlot(ButtonBase)<ClearInputButtonClassKey>({
             margin-right: ${theme.spacing(-2)};
         }
 
-        ${`.${inputAdornmentClasses.positionStart}`}:first-child & {
+        ${`.${inputAdornmentClasses.positionStart}`}:first-of-type & {
             margin-left: ${theme.spacing(-2)};
         }
 

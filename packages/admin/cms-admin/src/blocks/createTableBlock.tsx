@@ -4,9 +4,9 @@ import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { type TableBlockData, type TableBlockInput } from "../blocks.generated";
-import { type BlockContext } from "./context/BlockContext";
-import { type RichTextBlock, type RichTextBlockState } from "./createRichTextBlock";
+import type { TableBlockData, TableBlockInput } from "../blocks.generated";
+import type { BlockContext } from "./context/BlockContext";
+import type { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";

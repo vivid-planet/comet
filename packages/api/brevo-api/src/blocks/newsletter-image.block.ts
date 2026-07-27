@@ -10,11 +10,11 @@ import {
     PixelImageBlock,
 } from "@comet/cms-api";
 
-export class NewsletterImageBlockData extends BlockData {
+class NewsletterImageBlockData extends BlockData {
     @ChildBlock(PixelImageBlock)
     image: BlockDataInterface;
 }
-export class NewsletterImageBlockInput extends BlockInput {
+class NewsletterImageBlockInput extends BlockInput {
     @ChildBlockInput(PixelImageBlock)
     image: ExtractBlockInput<typeof PixelImageBlock>;
 

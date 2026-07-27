@@ -7,11 +7,11 @@ import {
     type Theme,
     useThemeProps,
 } from "@mui/material";
-import { type ReactElement, type ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 
 import { Tooltip as CommonTooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useMainNavigation } from "./Context";
 import { Icon, type MainNavigationItemClassKey, type OwnerState, Root, Text } from "./Item.styles";
 
@@ -56,7 +56,9 @@ export const MainNavigationItem = (inProps: MainNavigationItemProps) => {
 
     const { drawerVariant } = useMainNavigation();
 
-    if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
+    if (level > 3) {
+        throw new Error("Maximum nesting level of 2 exceeded.");
+    }
 
     const showIcon = !!icon && level === 1;
 

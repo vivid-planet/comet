@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 import { useContentLanguage } from "../../contentLanguage/useContentLanguage";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentGenerationConfig } from "../../documents/ContentGenerationConfigContext";
-import { type GQLGenerateSeoTagsMutation, type GQLGenerateSeoTagsMutationVariables } from "./useSeoTagGeneration.generated";
+import type { GQLGenerateSeoTagsMutation, GQLGenerateSeoTagsMutationVariables } from "./useSeoTagGeneration.generated";
 
 export function useSeoTagGeneration() {
     const contentGenerationConfig = useContentGenerationConfig();

@@ -16,7 +16,7 @@ export type TimeRangePickerClassKey =
     | "separator";
 
 const Root = createComponentSlot("div")<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "LegacyTimeRangePicker",
     slotName: "root",
 })(css`
     display: flex;
@@ -24,31 +24,31 @@ const Root = createComponentSlot("div")<TimeRangePickerClassKey>({
 `);
 
 const StartFormControl = createComponentSlot(FormControl)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "LegacyTimeRangePicker",
     slotName: "startFormControl",
 })(css`
     flex-grow: 1;
 `);
 
 const EndFormControl = createComponentSlot(FormControl)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "LegacyTimeRangePicker",
     slotName: "endFormControl",
 })(css`
     flex-grow: 1;
 `);
 
 const StartTimePicker = createComponentSlot(TimePickerBase)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "LegacyTimeRangePicker",
     slotName: "startTimePicker",
 })();
 
 const EndTimePicker = createComponentSlot(TimePickerBase)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "LegacyTimeRangePicker",
     slotName: "endTimePicker",
 })();
 
 const Separator = createComponentSlot(Typography)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "LegacyTimeRangePicker",
     slotName: "separator",
 })(
     ({ theme }) => css`
@@ -57,6 +57,9 @@ const Separator = createComponentSlot(Typography)<TimeRangePickerClassKey>({
     `,
 );
 
+/**
+ * @deprecated Use `TimeRange` from `@comet/admin` instead.
+ */
 export type TimeRange = {
     start: string;
     end: string;
@@ -83,6 +86,9 @@ export interface TimeRangePickerProps
 
 type IndividualTimeValue = string | undefined;
 
+/**
+ * @deprecated Use `TimeRangePicker` from `@comet/admin` instead.
+ */
 export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
     const {
         onChange,
@@ -93,7 +99,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
         required,
         slotProps,
         ...propsForBothTimePickers
-    } = useThemeProps({ props: inProps, name: "CometAdminTimeRangePicker" });
+    } = useThemeProps({ props: inProps, name: "CometAdminLegacyTimeRangePicker" });
     const intl = useIntl();
 
     const [startTime, setStartTime] = useState<IndividualTimeValue>(value?.start);
@@ -180,17 +186,17 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminTimeRangePicker: TimeRangePickerClassKey;
+        CometAdminLegacyTimeRangePicker: TimeRangePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminTimeRangePicker: TimeRangePickerProps;
+        CometAdminLegacyTimeRangePicker: TimeRangePickerProps;
     }
 
     interface Components {
-        CometAdminTimeRangePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminTimeRangePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimeRangePicker"];
+        CometAdminLegacyTimeRangePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminLegacyTimeRangePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminLegacyTimeRangePicker"];
         };
     }
 }

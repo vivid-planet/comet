@@ -1,5 +1,41 @@
 # @comet/eslint-plugin
 
+## 9.2.2
+
+## 9.2.1
+
+## 9.2.0
+
+## 9.1.1
+
+## 9.1.0
+
+## 9.0.1
+
+## 9.0.0
+
+### Major Changes
+
+- db6b83a: Prevent lib imports from `@comet/` packages
+
+    Use `no-restricted-imports` to prevent importing private files from `@comet/*/lib`. For example, the following import would be forbidden:
+
+    ```ts
+    import { something } from "@comet/admin/lib/some/private/file";
+    ```
+
+## 9.0.0-beta.6
+
+## 9.0.0-beta.5
+
+## 9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+## 9.0.0-beta.2
+
+## 9.0.0-beta.1
+
 ## 9.0.0-beta.0
 
 ### Major Changes

@@ -5,7 +5,7 @@ import { type ComponentProps, isValidElement, type ReactElement, type ReactNode 
 
 import { Tooltip } from "../common/Tooltip";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type SectionHeadlineClassKey = "root" | "header" | "titleContainer" | "headline" | "divider" | "supportText" | "infoTooltip";
 
@@ -77,7 +77,9 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
 }
 
 const getTooltipProps = (infoTooltip: SectionHeadlineProps["infoTooltip"]) => {
-    if (!infoTooltip) return null;
+    if (!infoTooltip) {
+        return null;
+    }
 
     if (isValidElement(infoTooltip) || typeof infoTooltip === "string") {
         return {

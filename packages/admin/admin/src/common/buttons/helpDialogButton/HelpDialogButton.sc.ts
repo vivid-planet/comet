@@ -2,7 +2,7 @@ import { DialogContent as MuiDialogContent, IconButton } from "@mui/material";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { Dialog as CometDialog } from "../../Dialog";
-import { type HelpDialogButtonClassKey } from "./HelpDialogButton";
+import type { HelpDialogButtonClassKey } from "./HelpDialogButton";
 
 export const Button = createComponentSlot(IconButton)<HelpDialogButtonClassKey>({
     componentName: "HelpDialogButton",

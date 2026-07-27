@@ -1,5 +1,5 @@
 import { Scope } from "@nestjs/common";
-import { type ContextId, type ModuleRef } from "@nestjs/core";
+import type { ContextId, ModuleRef } from "@nestjs/core";
 import opentelemetry from "@opentelemetry/api";
 
 import { isInjectableService } from "../common/helper/is-injectable-service.helper";

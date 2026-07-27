@@ -1,18 +1,6 @@
 import { useQuery } from "@apollo/client";
-import {
-    type IFilterApi,
-    type ISortInformation,
-    SortDirection,
-    Stack,
-    StackMainContent,
-    StackPage,
-    StackSwitch,
-    Toolbar,
-    useStackApi,
-    useStoredState,
-    useTableQueryFilter,
-} from "@comet/admin";
-import { type ReactNode, useEffect, useState } from "react";
+import { type IFilterApi, Stack, StackMainContent, StackPage, StackSwitch, Toolbar, useStackApi, useTableQueryFilter } from "@comet/admin";
+import { type ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
@@ -20,12 +8,13 @@ import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/dupl
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import FolderDataGrid, {
     damFolderQuery,
+    type DamItemSelectionMap,
     type GQLDamFileTableFragment,
     type GQLDamFolderQuery,
     type GQLDamFolderQueryVariables,
     type GQLDamFolderTableFragment,
 } from "./DataGrid/FolderDataGrid";
-import { type RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
+import type { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 
@@ -33,7 +22,6 @@ export interface DamFilter {
     allowedMimetypes?: string[];
     archived?: boolean;
     searchText?: string;
-    sort?: ISortInformation;
 }
 
 interface FolderProps extends DamConfig {
@@ -98,7 +86,14 @@ export interface DamConfig {
     contentScopeIndicator?: ReactNode;
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
+    toolbarOptions?: {
+        hideSelectiveActions?: boolean;
+    };
     additionalToolbarItems?: ReactNode;
+    disableFolderSelection?: boolean;
+    keepNonExistentRowsSelected?: boolean;
+    initialSelection?: DamItemSelectionMap;
+    onSelectionChange?: (next: DamItemSelectionMap) => void;
 }
 
 type DamTableProps = DamConfig & {
@@ -107,34 +102,24 @@ type DamTableProps = DamConfig & {
 
 export const DamTable = ({ renderWithFullHeightMainContent, ...damConfigProps }: DamTableProps) => {
     const intl = useIntl();
-    const [sorting, setSorting] = useStoredState<ISortInformation>("dam_filter_sorting", {
-        columnName: "name",
-        direction: SortDirection.ASC,
-    });
 
     const propsWithDefaultValues = {
         hideContextMenu: false,
         hideMultiselect: false,
         hideDamActions: false,
         hideArchiveFilter: false,
+        disableFolderSelection: false,
+        keepNonExistentRowsSelected: false,
         ...damConfigProps,
     };
 
-    const filterApi = useTableQueryFilter<DamFilter>({
-        sort: sorting,
-    });
-
-    useEffect(() => {
-        if (filterApi.current.sort) {
-            setSorting(filterApi.current.sort);
-        }
-    }, [filterApi, filterApi.current.sort, setSorting]);
+    const filterApi = useTableQueryFilter<DamFilter>({});
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
             <FileUploadContextProvider>
                 <ManualDuplicatedFilenamesHandlerContextProvider>
-                    <DamSelectionProvider>
+                    <DamSelectionProvider initialSelection={damConfigProps.initialSelection} onSelectionChange={damConfigProps.onSelectionChange}>
                         <Folder
                             filterApi={filterApi}
                             {...propsWithDefaultValues}

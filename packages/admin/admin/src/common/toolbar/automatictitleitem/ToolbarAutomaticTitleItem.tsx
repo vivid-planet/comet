@@ -2,7 +2,7 @@ import { type ComponentsOverrides, Typography, type TypographyTypeMap } from "@m
 import { type Theme, useThemeProps } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem } from "../item/ToolbarItem";
 

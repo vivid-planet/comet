@@ -1,9 +1,9 @@
-import { type CrudGeneratorOptions } from "@comet/cms-api";
-import { type EntityMetadata } from "@mikro-orm/core";
+import type { CrudGeneratorOptions } from "@comet/cms-api";
+import type { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
 import { Node, ts, type Type } from "ts-morph";
 
-import { type Imports } from "./generate-imports-code";
+import type { Imports } from "./generate-imports-code";
 import { findImportPath, morphTsClass } from "./ts-morph-helper";
 
 function findReturnTypeImport(type: Type, serviceSourceFile: Node, targetDirectory: string): { name: string; importPath: string } | null {

@@ -19,6 +19,9 @@ export interface DatePickerNavigationProps
     maxDate: Date;
 }
 
+/**
+ * @deprecated The `@comet/admin-date-time` package is deprecated. Use the date/time components from `@comet/admin` instead.
+ */
 export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
     const { focusedDate, changeShownDate, minDate, maxDate, slotProps, ...restProps } = useThemeProps({
         props: inProps,

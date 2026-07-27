@@ -2,11 +2,11 @@ import { messages } from "@comet/admin";
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
-import { type TextImageBlockData, type TextImageBlockInput } from "../blocks.generated";
+import type { TextImageBlockData, TextImageBlockInput } from "../blocks.generated";
 import { useDamConfig } from "../dam/config/damConfig";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
-import { type RichTextBlock, type RichTextBlockState } from "./createRichTextBlock";
+import type { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
 import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";

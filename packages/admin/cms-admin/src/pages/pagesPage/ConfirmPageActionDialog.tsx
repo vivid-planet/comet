@@ -7,10 +7,10 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
-import { type ComponentType } from "react";
+import type { ComponentType } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type PageAction } from "./PagesPageActionToolbar";
+import type { PageAction } from "./PagesPageActionToolbar";
 
 interface ContentProps {
     selectedPagesCount: number;

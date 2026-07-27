@@ -5,7 +5,7 @@ import { IconButton, List as MuiList, ListItem, ListItemIcon as MuiListItemIcon,
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { type GQLDamFileDuplicatesQuery, type GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
+import type { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
 
 const damFileDuplicatesQuery = gql`
     query DamFileDuplicates($id: ID!) {

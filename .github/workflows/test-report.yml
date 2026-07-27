@@ -5,12 +5,23 @@ on:
         types:
             - completed
 jobs:
-    report:
+    test-report-unit:
+        name: "Test Report (unit)"
         runs-on: ubuntu-latest
         steps:
-            - uses: dorny/test-reporter@v1
+            - uses: dorny/test-reporter@v3
               with:
-                  artifact: test-results
+                  artifact: test-results-unit
                   name: Tests
-                  path: "**/junit.xml"
+                  path: "**/junit-*.xml"
+                  reporter: jest-junit
+    test-report-storybook:
+        name: "Test Report (storybook)"
+        runs-on: ubuntu-latest
+        steps:
+            - uses: dorny/test-reporter@v3
+              with:
+                  artifact: test-results-storybook
+                  name: Tests
+                  path: "**/junit-*.xml"
                   reporter: jest-junit

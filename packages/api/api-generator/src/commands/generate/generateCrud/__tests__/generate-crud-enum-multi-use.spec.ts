@@ -1,7 +1,8 @@
 import { BaseEntity, defineConfig, Entity, Enum, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { Field, registerEnumType } from "@nestjs/graphql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
@@ -44,7 +45,9 @@ describe("GenerateCrudEnumMultiUse", () => {
         const out = await generateCrud({ requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.input.ts");
-        if (!file) throw new Error("File not found");
+        if (!file) {
+            throw new Error("File not found");
+        }
         const source = parseSource(file.content);
 
         const imports: string[] = [];

@@ -7,6 +7,7 @@ export default defineConfig([
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",
+            "package-json/require-exports": "off", // TODO reenable after migrating to ESM
         },
     },
 ]);

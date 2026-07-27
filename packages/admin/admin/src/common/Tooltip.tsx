@@ -10,10 +10,10 @@ import {
     Typography,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 type SlotProps = MuiTooltipProps["slotProps"] &
     ThemedComponentBaseProps<{

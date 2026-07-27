@@ -1,6 +1,6 @@
-import { type EditorState } from "draft-js";
+import type { EditorState } from "draft-js";
 import { type FunctionComponent, useRef } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { FieldRenderProps } from "react-final-form";
 
 import makeRteApi, { type IMakeRteApiProps, type OnDebouncedContentChangeFn } from "../core/makeRteApi";
 import { type IOptions as RteOptions, Rte, type RteProps } from "../core/Rte";

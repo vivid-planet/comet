@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { FinalForm } from "../../../FinalForm";
 import { FinalFormDebug } from "../../../form/FinalFormDebug";
@@ -183,7 +183,9 @@ export const CustomValidation: Story = {
         }
 
         const validateIsWeekday = async (value: Date | undefined) => {
-            if (!value) return undefined;
+            if (!value) {
+                return undefined;
+            }
             const day = value.getDay();
             const isWeekday = day !== 0 && day !== 6;
             return isWeekday ? undefined : "Please select a weekday";

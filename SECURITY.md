@@ -6,7 +6,8 @@ The versions of the project that are currently supported with security updates.
 
 | Version | Supported                             |
 |--------:|:--------------------------------------|
-|     8.x | :white_check_mark:                    |
+|     9.x | :white_check_mark:                    |
+|     8.x | :white_check_mark: (until 2027-07-07) |
 |     7.x | :white_check_mark: (until 2026-08-07) |
 |   < 7.x | :x:                                   |
 

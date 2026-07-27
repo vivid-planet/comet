@@ -81,6 +81,15 @@ export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export type {
+    TipTapInlineStyle,
+    TipTapPlaceholder,
+    TipTapRichTextBlockContent,
+    TipTapTextBlockStyle,
+    TipTapTextBlockType,
+} from "./blocks/tipTap/createTipTapRichTextBlock";
+export { createTipTapRichTextBlock } from "./blocks/tipTap/createTipTapRichTextBlock";
+export type {
+    AnonymousBlockInterface,
     BlockAdminComponent,
     BlockAdminComponentPart,
     BlockDependency,
@@ -163,9 +172,14 @@ export {
     useContentGenerationConfig,
 } from "./documents/ContentGenerationConfigContext";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
-export type { DocumentInterface, DocumentType, InfoTagProps } from "./documents/types";
-export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
-export { FileField } from "./form/file/FileField";
+export type { DocumentInterface, DocumentType, InfoTagProps, SitePreviewActionProps } from "./documents/types";
+export { ChooseDamFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+export { SearchHeaderItem } from "./fullTextSearch/SearchHeaderItem";
+/** @deprecated Use `ChooseDamFileDialog` instead. */
+export { ChooseDamFileDialog as ChooseFileDialog } from "./form/file/chooseFile/ChooseDamFileDialog";
+export { ChooseDamFilesDialog } from "./form/file/chooseFile/ChooseDamFilesDialog";
+export { FileField, type GQLDamFileFieldFileFragment } from "./form/file/FileField";
+export { damFileFieldFragment } from "./form/file/FileField.gql";
 export { FileUploadField, type FileUploadFieldProps } from "./form/file/FileUploadField";
 export {
     FinalFormFileUpload,
@@ -183,6 +197,7 @@ export { createUsePage } from "./pages/createUsePage";
 export { PagesPage } from "./pages/pagesPage/PagesPage";
 export type { AllCategories } from "./pages/pageTree/PageTreeContext";
 export { useCopyPastePages } from "./pages/pageTree/useCopyPastePages";
+export { PageTreeSelect } from "./pages/pageTreeSelect/PageTreeSelect";
 export { resolveHasSaveConflict } from "./pages/resolveHasSaveConflict";
 export { useSaveConflict } from "./pages/useSaveConflict";
 export { useSaveConflictQuery } from "./pages/useSaveConflictQuery";
@@ -198,6 +213,9 @@ export type { SiteConfig } from "./siteConfigs/siteConfigsConfig";
 export { useSiteConfig } from "./siteConfigs/useSiteConfig";
 export { useSiteConfigs } from "./siteConfigs/useSiteConfigs";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
+export { createDocumentTranslationMethods } from "./translation/createDocumentTranslationMethods";
+export type { TranslatableInterface } from "./translation/TranslatableInterface";
+export { TranslateContentMenuItem } from "./translation/TranslateContentMenuItem";
 export {
     CurrentUserContext,
     type CurrentUserInterface,
@@ -213,6 +231,8 @@ export { UserPermissionsUserPagePermissionsPanel } from "./userPermissions/user/
 export { UserPermissionsUserPageToolbar } from "./userPermissions/user/UserPageToolbar";
 export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
+export { isLinkTarget } from "./validation/isLinkTarget";
+export { validateLinkTarget } from "./validation/validateLinkTarget";
 export { LatestWarningsDashboardWidget } from "./warnings/LatestWarningsDashboardWidget";
 export { WarningsPage } from "./warnings/WarningsPage";
 import packageJson from "../package.json";

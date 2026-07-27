@@ -2,10 +2,10 @@ import { ChevronRight } from "@comet/admin-icons";
 import { type ComponentsOverrides, css, type Theme, useTheme, useThemeProps } from "@mui/material/styles";
 import type Typography from "@mui/material/Typography";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { type Link } from "react-router-dom";
+import type { Link } from "react-router-dom";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 import { useStackApi } from "../Api";
 import { getElementOuterWidth, useItemsToRender } from "./utils";
@@ -116,7 +116,9 @@ export function StackBreadcrumbs(inProps: StackBreadcrumbsProps) {
     const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
     const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, itemWidths, overflowLinkText, backButtonUrl, slotProps);
 
-    if (!breadcrumbItems) return null;
+    if (!breadcrumbItems) {
+        return null;
+    }
 
     return (
         <Root {...slotProps?.root} {...restProps}>

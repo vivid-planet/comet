@@ -2,7 +2,7 @@ import { RteOl, RteUl } from "@comet/admin-icons";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import { BlockElement } from "./BlockElement";
-import { type IBlocktypeConfig, type IBlocktypeMap } from "./types";
+import type { IBlocktypeConfig, IBlocktypeMap } from "./types";
 
 const headerMessage = defineMessage({ id: "comet.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
 

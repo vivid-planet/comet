@@ -1,15 +1,15 @@
 import { gql, useQuery } from "@apollo/client";
 import { dataGridDateTimeColumn, type GridColDef } from "@comet/admin";
 import { Warning } from "@comet/admin-icons";
-import { DataGrid } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../contentScope/Provider";
 import { DashboardWidgetRoot } from "../dashboard/widgets/DashboardWidgetRoot";
-import {
-    type GQLLatestWarningsListFragment,
-    type GQLLatestWarningsQuery,
-    type GQLLatestWarningsQueryVariables,
+import { DataGrid } from "../dataGrid/DataGrid";
+import type {
+    GQLLatestWarningsListFragment,
+    GQLLatestWarningsQuery,
+    GQLLatestWarningsQueryVariables,
 } from "./LatestWarningsDashboardWidget.generated";
 import { WarningActions } from "./WarningActions";
 import { WarningMessage } from "./WarningMessage";

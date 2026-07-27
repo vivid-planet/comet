@@ -1,6 +1,6 @@
 import { MjmlText } from "@comet/mail-react";
 import { theme } from "@src/brevo/util/theme";
-import { type ComponentProps, type ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 type Variant = "body" | "headline";
 
@@ -12,11 +12,11 @@ export interface TypographyProps extends MjmlTextProps {
     children?: ReactNode;
 }
 
-type VariantStyle = MjmlTextProps & {
+type VariantStyle = Omit<MjmlTextProps, "variant" | "bottomSpacing"> & {
     bottomSpacing: number;
 };
 
-export const typographyVariantStyles: Record<Variant, VariantStyle> = {
+const typographyVariantStyles: Record<Variant, VariantStyle> = {
     headline: {
         fontFamily: "Roboto Condensed, Helvetica, Arial, sans-serif",
         fontWeight: "500",

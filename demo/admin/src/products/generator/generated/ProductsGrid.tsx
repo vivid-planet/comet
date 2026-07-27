@@ -41,7 +41,7 @@ import { GridRenderCellParams } from "@mui/x-data-grid-pro";
 import { GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { GridToolbarProps } from "@mui/x-data-grid-pro";
 import { GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
-import { GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { GridToolbarQuickFilter } from "@comet/admin";
 import { useMemo } from "react";
 import { useDataGridRemote } from "@comet/admin";
 import { GQLProductFilter } from "@src/graphql.generated";
@@ -397,6 +397,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 toolbar: { toolbarAction, exportApi } as ProductsGridToolbarToolbarProps,
             }}
             onRowClick={onRowClick}
+            showToolbar
         />
     );
 }

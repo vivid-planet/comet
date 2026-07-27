@@ -1,5 +1,5 @@
-import { type PropsWithData } from "@comet/site-nextjs";
-import { type TableBlockData } from "@src/blocks.generated";
+import type { PropsWithData } from "@comet/site-nextjs";
+import type { TableBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import clsx from "clsx";
 

@@ -44,7 +44,9 @@ export class CometAuthGuard implements CanActivate {
             this.logger.debug(`No AuthService could authenticate the user for ${context.getClass().name}::${context.getHandler().name}().`);
             throw new UnauthorizedException("No AuthService could authenticate the user");
         }
-        if ("authenticationError" in result) throw new UnauthorizedException(result.authenticationError);
+        if ("authenticationError" in result) {
+            throw new UnauthorizedException(result.authenticationError);
+        }
 
         if ("systemUser" in result) {
             request["user"] = result.systemUser;
@@ -53,12 +55,20 @@ export class CometAuthGuard implements CanActivate {
             if ("userId" in result) {
                 const userId = result.userId;
                 const userService = this.service.getUserService();
-                if (!userService) throw new UnauthorizedException(`User authenticated by ID but no user service given: ${userId}`);
+                if (!userService) {
+                    throw new UnauthorizedException(`User authenticated by ID but no user service given: ${userId}`);
+                }
                 try {
-                    if (userService.getUserForLogin) {
+                    if (userService.findUserForLoginOrThrow) {
+                        user = await userService.findUserForLoginOrThrow(userId);
+                    } else if (userService.getUserForLogin) {
                         user = await userService.getUserForLogin(userId);
-                    } else {
+                    } else if (userService.findUserOrThrow) {
+                        user = await userService.findUserOrThrow(userId);
+                    } else if (userService.getUser) {
                         user = await userService.getUser(userId);
+                    } else {
+                        throw new Error("The userService must implement `findUserOrThrow` (or one of the login-specific variants).");
                     }
                 } catch (e) {
                     throw new UnauthorizedException(`Could not get user from UserService: ${userId} - ${(e as Error).message}`);
@@ -75,7 +85,9 @@ export class CometAuthGuard implements CanActivate {
     private async getAuthenticatedUserResult(request: Request) {
         for (const authService of this.authServices) {
             const result = await authService.authenticateUser(request);
-            if (result && result !== SKIP_AUTH_SERVICE) return result;
+            if (result && result !== SKIP_AUTH_SERVICE) {
+                return result;
+            }
         }
     }
 

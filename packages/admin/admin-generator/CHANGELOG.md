@@ -1,5 +1,250 @@
 # @comet/admin-generator
 
+## 9.2.2
+
+### Patch Changes
+
+- @comet/admin@9.2.2
+- @comet/admin-icons@9.2.2
+- @comet/cms-admin@9.2.2
+
+## 9.2.1
+
+### Patch Changes
+
+- @comet/admin@9.2.1
+- @comet/admin-icons@9.2.1
+- @comet/cms-admin@9.2.1
+
+## 9.2.0
+
+### Patch Changes
+
+- Updated dependencies [ee0bf93]
+- Updated dependencies [5a05d97]
+- Updated dependencies [8c866a3]
+- Updated dependencies [48d06d6]
+- Updated dependencies [ba56f97]
+- Updated dependencies [eb0b156]
+    - @comet/cms-admin@9.2.0
+    - @comet/admin@9.2.0
+    - @comet/admin-icons@9.2.0
+
+## 9.1.1
+
+### Patch Changes
+
+- Updated dependencies [097f85a]
+    - @comet/cms-admin@9.1.1
+    - @comet/admin@9.1.1
+    - @comet/admin-icons@9.1.1
+
+## 9.1.0
+
+### Patch Changes
+
+- Updated dependencies [319f5b8]
+    - @comet/cms-admin@9.1.0
+    - @comet/admin@9.1.0
+    - @comet/admin-icons@9.1.0
+
+## 9.0.1
+
+### Patch Changes
+
+- Updated dependencies [0c8063e]
+    - @comet/cms-admin@9.0.1
+    - @comet/admin@9.0.1
+    - @comet/admin-icons@9.0.1
+
+## 9.0.0
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+- 0ec748a: Convert to ESM
+
+    To upgrade, make the following changes to your `tsconfig.json`:
+
+    ```diff
+    {
+        "compilerOptions": {
+    -       "module": "ESNext",
+    -       "moduleResolution": "Node",
+    +       "module": "preserve",
+    +       "moduleResolution": "bundler"
+        }
+    }
+    ```
+
+### Minor Changes
+
+- f1e6145: Add `initialPageSize` option to `GridConfig` for the Admin Generator. When set, the value is passed as `pageSize` to `useDataGridRemote` in the generated DataGrid code.
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- Updated dependencies [4c1aeb2]
+- Updated dependencies [92281f1]
+- Updated dependencies [dc8f29c]
+- Updated dependencies [15e771b]
+- Updated dependencies [c0cee12]
+- Updated dependencies [d7b77af]
+- Updated dependencies [7fbe2a7]
+- Updated dependencies [d7b77af]
+- Updated dependencies [1475f4a]
+- Updated dependencies [3cbf0ff]
+- Updated dependencies [8a93124]
+- Updated dependencies [8c2fdde]
+- Updated dependencies [f066335]
+- Updated dependencies [ee24125]
+- Updated dependencies [b4ba869]
+- Updated dependencies [0e9189b]
+- Updated dependencies [c6703db]
+- Updated dependencies [8cb0844]
+- Updated dependencies [127a492]
+- Updated dependencies [c6703db]
+- Updated dependencies [fa5c7a4]
+- Updated dependencies [5d006c1]
+- Updated dependencies [31d9296]
+- Updated dependencies [57678d0]
+- Updated dependencies [fdabaf1]
+- Updated dependencies [c7f80e9]
+- Updated dependencies [8e40458]
+- Updated dependencies [ae85ba9]
+- Updated dependencies [25f7342]
+- Updated dependencies [71dce06]
+- Updated dependencies [5f1566a]
+- Updated dependencies [99140f8]
+- Updated dependencies [b459ec7]
+- Updated dependencies [cabba53]
+- Updated dependencies [790e8d0]
+- Updated dependencies [8e3a074]
+- Updated dependencies [3fda20b]
+- Updated dependencies [f29b2d7]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [3c81ff0]
+- Updated dependencies [5e87236]
+- Updated dependencies [631540c]
+- Updated dependencies [7ab96c2]
+- Updated dependencies [85b09a2]
+- Updated dependencies [171c335]
+- Updated dependencies [4729b3f]
+- Updated dependencies [8ad9dd8]
+- Updated dependencies [bc57b4a]
+- Updated dependencies [2fe9d4b]
+- Updated dependencies [460cbfb]
+- Updated dependencies [9cb3f95]
+- Updated dependencies [ab5e547]
+    - @comet/cms-admin@9.0.0
+    - @comet/admin@9.0.0
+    - @comet/admin-icons@9.0.0
+
+## 9.0.0-beta.6
+
+### Patch Changes
+
+- Updated dependencies [4c1aeb2]
+- Updated dependencies [15e771b]
+- Updated dependencies [7fbe2a7]
+- Updated dependencies [b4ba869]
+- Updated dependencies [0e9189b]
+- Updated dependencies [57678d0]
+- Updated dependencies [c7f80e9]
+- Updated dependencies [b459ec7]
+- Updated dependencies [5e87236]
+- Updated dependencies [7ab96c2]
+    - @comet/cms-admin@9.0.0-beta.6
+    - @comet/admin@9.0.0-beta.6
+    - @comet/admin-icons@9.0.0-beta.6
+
+## 9.0.0-beta.5
+
+### Patch Changes
+
+- Updated dependencies [c0cee12]
+- Updated dependencies [3cbf0ff]
+- Updated dependencies [8cb0844]
+- Updated dependencies [5d006c1]
+- Updated dependencies [fdabaf1]
+- Updated dependencies [8ad9dd8]
+    - @comet/cms-admin@9.0.0-beta.5
+    - @comet/admin@9.0.0-beta.5
+    - @comet/admin-icons@9.0.0-beta.5
+
+## 9.0.0-beta.4
+
+### Patch Changes
+
+- Updated dependencies [d7b77af]
+- Updated dependencies [d7b77af]
+- Updated dependencies [c6703db]
+- Updated dependencies [127a492]
+- Updated dependencies [c6703db]
+- Updated dependencies [fa5c7a4]
+- Updated dependencies [31d9296]
+- Updated dependencies [8e40458]
+- Updated dependencies [ae85ba9]
+- Updated dependencies [2fe9d4b]
+- Updated dependencies [460cbfb]
+- Updated dependencies [ab5e547]
+    - @comet/admin@9.0.0-beta.4
+    - @comet/cms-admin@9.0.0-beta.4
+    - @comet/admin-icons@9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+### Minor Changes
+
+- f1e6145: Add `initialPageSize` option to `GridConfig` for the Admin Generator. When set, the value is passed as `pageSize` to `useDataGridRemote` in the generated DataGrid code.
+
+### Patch Changes
+
+- Updated dependencies [dc8f29c]
+- Updated dependencies [1475f4a]
+- Updated dependencies [8a93124]
+- Updated dependencies [71dce06]
+- Updated dependencies [cabba53]
+- Updated dependencies [f29b2d7]
+- Updated dependencies [3c81ff0]
+- Updated dependencies [4729b3f]
+    - @comet/cms-admin@9.0.0-beta.3
+    - @comet/admin@9.0.0-beta.3
+    - @comet/admin-icons@9.0.0-beta.3
+
+## 9.0.0-beta.2
+
+### Major Changes
+
+- 99140f8: Bump MUI X Data Grid peer dependency to v8
+
+    See the migration guide for information on how to upgrade.
+
+### Patch Changes
+
+- Updated dependencies [92281f1]
+- Updated dependencies [25f7342]
+- Updated dependencies [99140f8]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0-beta.2
+    - @comet/admin-icons@9.0.0-beta.2
+    - @comet/cms-admin@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [8e3a074]
+- Updated dependencies [85b09a2]
+- Updated dependencies [171c335]
+    - @comet/cms-admin@9.0.0-beta.1
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
 ## 9.0.0-beta.0
 
 ### Major Changes

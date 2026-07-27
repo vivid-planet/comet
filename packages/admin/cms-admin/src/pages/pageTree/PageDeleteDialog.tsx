@@ -15,7 +15,7 @@ import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
-import { type GQLPageTreePageFragment } from "../pageTree/usePageTree";
+import type { GQLPageTreePageFragment } from "../pageTree/usePageTree";
 import { DeleteContentInformation, PageCount, PageVisibility, WarningIcon, WarningIconWrapper } from "./PageDeleteDialog.sc";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";
 

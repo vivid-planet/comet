@@ -1,5 +1,5 @@
 import cometConfig from "@src/comet-config.json" with { type: "json" };
-import { type ContentScope } from "@src/site-configs";
+import type { ContentScope } from "@src/site-configs";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 
 export interface EmailCampaignConfig {

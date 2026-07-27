@@ -8,11 +8,11 @@ import {
     type ValidFileSelectItem,
 } from "@comet/admin";
 import { useMemo, useState } from "react";
-import { type FieldRenderProps } from "react-final-form";
+import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { useCometConfig } from "../../config/CometConfigContext";
-import { type GQLFinalFormFileUploadDownloadableFragment, type GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
+import type { GQLFinalFormFileUploadDownloadableFragment, GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 export const finalFormFileUploadFragment = gql`
     fragment FinalFormFileUpload on FileUpload {

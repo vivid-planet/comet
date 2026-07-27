@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 
 import { Button } from "../../common/buttons/Button";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type FileDropzoneProps = ThemedComponentBaseProps<{
     root: "div";

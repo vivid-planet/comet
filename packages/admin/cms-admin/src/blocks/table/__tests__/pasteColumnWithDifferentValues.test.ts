@@ -49,7 +49,9 @@ describe("TableBlock: Paste a column with different values", () => {
 
             const expectInsertedColumnToHaveCorrectValues = () => {
                 const isInsertedColumn = columnIndex == 1;
-                if (!isInsertedColumn) return;
+                if (!isInsertedColumn) {
+                    return;
+                }
 
                 newCellValues.forEach((newCellValue, index) => {
                     const cellWasIncludedInInsertValues = index < insertTexts.length;

@@ -1,6 +1,6 @@
 "use client";
 import { OptionalBlock, type PropsWithData, withPreview } from "@comet/site-nextjs";
-import { type FullWidthImageBlockData } from "@src/blocks.generated";
+import type { FullWidthImageBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 

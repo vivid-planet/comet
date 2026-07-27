@@ -3,7 +3,7 @@ import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 import { FillSpace } from "../FillSpace";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";

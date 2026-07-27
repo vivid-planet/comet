@@ -1,7 +1,7 @@
 import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type ReactElement } from "react";
 
-import { type PhoneLinkBlockData } from "../blocks.generated";
-import { type PropsWithData } from "./PropsWithData";
+import type { PhoneLinkBlockData } from "../blocks.generated";
+import type { PropsWithData } from "./PropsWithData";
 
 interface PhoneLinkBlockProps extends PropsWithData<PhoneLinkBlockData>, Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
     children: ReactElement;

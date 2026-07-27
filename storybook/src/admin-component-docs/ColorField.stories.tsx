@@ -2,7 +2,7 @@ import { FinalForm } from "@comet/admin";
 import { ColorField } from "@comet/admin-color-picker";
 import { ArrowRight } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { argTypes } from "./ColorPicker.stories";
 import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";

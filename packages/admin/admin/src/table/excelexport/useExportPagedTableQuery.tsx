@@ -1,10 +1,10 @@
 import { type OperationVariables, useApolloClient } from "@apollo/client";
 import { useState } from "react";
 
-import { type Table } from "../Table";
-import { type ITableQueryApi } from "../TableQueryContext";
+import type { Table } from "../Table";
+import type { ITableQueryApi } from "../TableQueryContext";
 import { createExcelExportDownload, type IExcelExportOptions } from "./createExcelExportDownload";
-import { type IExportApi } from "./IExportApi";
+import type { IExportApi } from "./IExportApi";
 
 interface IOptions<IVariables> {
     variablesForPage: (page: number) => IVariables;

@@ -1,4 +1,4 @@
-import { type FieldValidator } from "final-form";
+import type { FieldValidator } from "final-form";
 import { type ComponentType, createElement, type ReactNode, useRef } from "react";
 import { Field as FinalFormField, type FieldMetaState, type FieldRenderProps, FormSpy, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";

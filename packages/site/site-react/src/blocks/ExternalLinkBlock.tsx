@@ -2,18 +2,23 @@
 
 import { type AnchorHTMLAttributes, cloneElement, type DetailedHTMLProps, type MouseEventHandler, type ReactElement } from "react";
 
-import { type ExternalLinkBlockData } from "../blocks.generated";
+import type { ExternalLinkBlockData } from "../blocks.generated";
 import { usePreview } from "../preview/usePreview";
 import { sendSitePreviewIFrameMessage } from "../sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 import { SitePreviewIFrameMessageType } from "../sitePreview/iframebridge/SitePreviewIFrameMessage";
-import { type PropsWithData } from "./PropsWithData";
+import type { PropsWithData } from "./PropsWithData";
 
 interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData>, Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
     children: ReactElement;
     legacyBehavior?: boolean;
 }
 
-export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, children, legacyBehavior, ...anchorProps }: ExternalLinkBlockProps) {
+export function ExternalLinkBlock({
+    data: { targetUrl, openInNewWindow, noFollow },
+    children,
+    legacyBehavior,
+    ...anchorProps
+}: ExternalLinkBlockProps) {
     const preview = usePreview();
 
     if (preview.previewType === "SitePreview" || preview.previewType === "BlockPreview") {
@@ -23,7 +28,7 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
                 // send link to admin to handle external link
                 sendSitePreviewIFrameMessage({
                     cometType: SitePreviewIFrameMessageType.OpenLink,
-                    data: { link: { openInNewWindow, targetUrl } },
+                    data: { link: { openInNewWindow, targetUrl, noFollow } },
                 });
             }
         };
@@ -52,17 +57,19 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
 
         const href = targetUrl;
         const target = openInNewWindow ? "_blank" : anchorProps.target;
+        const rel = [anchorProps.rel, noFollow ? "nofollow" : undefined].filter(Boolean).join(" ") || undefined;
 
         if (legacyBehavior) {
             return cloneElement(children as ReactElement<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>, {
                 ...anchorProps,
                 href,
                 target,
+                rel,
             });
         }
 
         return (
-            <a {...anchorProps} href={href} target={target}>
+            <a {...anchorProps} href={href} target={target} rel={rel}>
                 {children}
             </a>
         );

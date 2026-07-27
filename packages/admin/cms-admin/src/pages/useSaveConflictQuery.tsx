@@ -20,7 +20,9 @@ export function useSaveConflictQuery<TData, TVariables extends OperationVariable
     const client = useApolloClient();
     const { resolveHasConflict, skip, ...restOptions } = options;
     const checkConflict = async () => {
-        if (skip) return false;
+        if (skip) {
+            return false;
+        }
         try {
             const { data, error } = await client.query({
                 query,
@@ -28,7 +30,9 @@ export function useSaveConflictQuery<TData, TVariables extends OperationVariable
                 context: LocalErrorScopeApolloContext,
                 ...restOptions,
             });
-            if (error) return false;
+            if (error) {
+                return false;
+            }
             return resolveHasConflict(data);
         } catch {
             return false;

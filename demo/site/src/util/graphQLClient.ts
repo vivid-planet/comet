@@ -31,8 +31,12 @@ export function createGraphQLFetch({ fetch: passedFetch }: { fetch?: Fetch } = {
 
         let previewData: SitePreviewData | undefined;
         const visibilityParam = getVisibilityParam();
-        if (visibilityParam === "invisibleBlocks") previewData = { includeInvisible: true };
-        if (visibilityParam === "invisiblePages") previewData = { includeInvisible: false };
+        if (visibilityParam === "invisibleBlocks") {
+            previewData = { includeInvisible: true };
+        }
+        if (visibilityParam === "invisiblePages") {
+            previewData = { includeInvisible: false };
+        }
 
         return createGraphQLFetchLibrary(
             // set a default revalidate time of 7.5 minutes to get an effective cache duration of 15 minutes if a CDN cache is enabled

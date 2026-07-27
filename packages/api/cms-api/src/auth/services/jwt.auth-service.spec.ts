@@ -1,12 +1,12 @@
 import { JwtService } from "@nestjs/jwt";
+import { describe, expect, it, vi } from "vitest";
 
 import { SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
 import { createJwtAuthService, type JwtAuthServiceOptions } from "./jwt.auth-service";
 
 describe("createJwtAuthService", () => {
     const instantianteService = (options: JwtAuthServiceOptions) => new (createJwtAuthService(options))(new JwtService());
-    const mockRequest = (authorizationHeader: string) =>
-        jest.fn().mockReturnValue({ header: jest.fn().mockImplementation(() => authorizationHeader) })();
+    const mockRequest = (authorizationHeader: string) => vi.fn().mockReturnValue({ header: vi.fn().mockImplementation(() => authorizationHeader) })();
     const authenticationError = expect.objectContaining({ authenticationError: expect.any(String) });
 
     // Default token from jwt.io:

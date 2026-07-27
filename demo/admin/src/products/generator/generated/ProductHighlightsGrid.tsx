@@ -119,6 +119,7 @@ export function ProductHighlightsGrid() {
                 toolbar: ProductHighlightsGridToolbar as GridSlotsComponent["toolbar"],
             }}
             onRowClick={handleRowClick}
+            showToolbar
         />
     );
 }

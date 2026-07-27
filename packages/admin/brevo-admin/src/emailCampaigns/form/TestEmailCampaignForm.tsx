@@ -6,12 +6,12 @@ import { Card } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { useBrevoConfig } from "../../common/BrevoConfigProvider";
-import { type GQLEmailCampaignContentScopeInput } from "../../graphql.generated";
-import { type GQLBrevoTestContactsSelectListFragment } from "./TestEmailCampaignForm.generated";
+import type { GQLEmailCampaignContentScopeInput } from "../../graphql.generated";
+import type { GQLBrevoTestContactsSelectListFragment } from "./TestEmailCampaignForm.generated";
 import { SendEmailCampaignToTestEmailsMutation } from "./TestEmailCampaignForm.gql";
-import {
-    type GQLSendEmailCampaignToTestEmailsMutation,
-    type GQLSendEmailCampaignToTestEmailsMutationVariables,
+import type {
+    GQLSendEmailCampaignToTestEmailsMutation,
+    GQLSendEmailCampaignToTestEmailsMutationVariables,
 } from "./TestEmailCampaignForm.gql.generated";
 
 interface FormProps {

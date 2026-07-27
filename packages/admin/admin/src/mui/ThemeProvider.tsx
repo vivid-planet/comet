@@ -1,6 +1,6 @@
-import { type Theme } from "@mui/material";
+import type { Theme } from "@mui/material";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { useIntl } from "react-intl";
 
 interface Props {

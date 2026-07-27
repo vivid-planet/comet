@@ -16,12 +16,12 @@ import { type MouseEvent, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ControlButton } from "../../Controls/ControlButton";
-import { type IControlProps } from "../../types";
+import type { IControlProps } from "../../types";
 import findEntityDataInCurrentSelection from "../../utils/findEntityDataInCurrentSelection";
 import findEntityInCurrentSelection from "../../utils/findEntityInCurrentSelection";
 import selectionIsInOneBlock from "../../utils/selectionIsInOneBlock";
 import { ENTITY_TYPE } from "./Decorator";
-import { type ILinkProps } from "./EditorComponent";
+import type { ILinkProps } from "./EditorComponent";
 
 export default function ToolbarButton(props: IControlProps) {
     const [open, setOpen] = useState(false);

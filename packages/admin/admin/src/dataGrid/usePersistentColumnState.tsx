@@ -1,10 +1,10 @@
 import { type DataGridProps, type GridColumnVisibilityModel, type GridPinnedColumnFields, useGridApiRef } from "@mui/x-data-grid";
-import { type DataGridProProps } from "@mui/x-data-grid-pro";
+import type { DataGridProProps } from "@mui/x-data-grid-pro";
 import { type RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouteMatch } from "react-router";
 
 import { useStoredState } from "../hooks/useStoredState";
-import { type GridColDef } from "./GridColDef";
+import type { GridColDef } from "./GridColDef";
 
 const useGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
     const [columns, setColumns] = useState<GridColDef[] | undefined>();

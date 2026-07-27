@@ -9,13 +9,13 @@ import { RootBlock } from "../../blocks/decorators/root-block";
 import { RootBlockEntity } from "../../blocks/decorators/root-block-entity";
 import { RootBlockType } from "../../blocks/root-block-type";
 import { EntityInfo } from "../../entity-info/entity-info.decorator";
-import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
+import { RedirectGenerationType, RedirectSourceType } from "../redirects.enum";
 import { RedirectScopeInterface } from "../types";
 
 export interface RedirectInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "active";
     id: string;
-    sourceType: RedirectSourceTypeValues;
+    sourceType: RedirectSourceType;
     source: string;
     target: BlockDataInterface;
     comment?: string;
@@ -39,9 +39,9 @@ export class RedirectEntityFactory {
             @Field(() => ID)
             id: string = uuid();
 
-            @Enum(() => RedirectSourceTypeValues)
-            @Field(() => RedirectSourceTypeValues)
-            sourceType: RedirectSourceTypeValues;
+            @Enum(() => RedirectSourceType)
+            @Field(() => RedirectSourceType)
+            sourceType: RedirectSourceType;
 
             @Property({
                 columnType: "text",

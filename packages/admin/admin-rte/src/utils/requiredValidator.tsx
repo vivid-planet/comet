@@ -1,5 +1,5 @@
 import { convertFromRaw, type RawDraftContentState } from "draft-js";
-import { type FieldValidator } from "final-form";
+import type { FieldValidator } from "final-form";
 import { FormattedMessage } from "react-intl";
 
 const requiredMessage = <FormattedMessage id="comet.form.required" defaultMessage="Required" />;

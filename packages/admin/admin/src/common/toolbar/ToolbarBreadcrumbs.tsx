@@ -4,7 +4,7 @@ import { Fragment, type ReactNode, useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../stack/Api";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 

@@ -5,9 +5,6 @@ import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from "@nest
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
-import { ProductColor } from "../entities/product-color.entity";
-import { ProductToTag } from "../entities/product-to-tag.entity";
-import { ProductStatistics } from "../entities/product-statistics.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
 import {
@@ -17,13 +14,16 @@ import {
     DamImageBlock,
     FileUpload,
     GetCurrentUser,
-    RequiredPermission,
     RootBlockDataScalar,
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
 } from "@comet/cms-api";
-import { ProductVariant } from "../entities/product-variant.entity";
+import { ProductColor } from "../entities/product-color.entity";
+import { ProductToTag } from "../entities/product-to-tag.entity";
 import { ProductTag } from "../entities/product-tag.entity";
+import { ProductStatistics } from "../entities/product-statistics.entity";
+import { ProductVariant } from "../entities/product-variant.entity";
+import { DamFile } from "../../dam/entities/dam-file.entity";
 import { Product } from "../entities/product.entity";
 import { ProductService } from "../product.service";
 import { ProductMutationError } from "./../product.service";
@@ -36,7 +36,6 @@ class CreateProductPayload {
     errors: ProductMutationError[];
 }
 @Resolver(() => Product)
-@RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
     constructor(
         protected readonly entityManager: EntityManager,
@@ -89,6 +88,7 @@ export class ProductResolver {
             tagsWithStatus: tagsWithStatusInput,
             tags: tagsInput,
             datasheets: datasheetsInput,
+            relatedImages: relatedImagesInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
             priceList: priceListInput,
@@ -141,6 +141,12 @@ export class ProductResolver {
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
         }
+        if (relatedImagesInput) {
+            const relatedImages = await this.entityManager.find(DamFile, { id: relatedImagesInput });
+            if (relatedImages.length != relatedImagesInput.length) throw new Error("Couldn't find all relatedImages that were passed as input");
+            await product.relatedImages.loadItems();
+            product.relatedImages.set(relatedImages.map((relatedImage) => Reference.create(relatedImage)));
+        }
         if (statisticsInput) {
             const statistic = new ProductStatistics();
             this.entityManager.assign(statistic, {
@@ -164,6 +170,7 @@ export class ProductResolver {
             tagsWithStatus: tagsWithStatusInput,
             tags: tagsInput,
             datasheets: datasheetsInput,
+            relatedImages: relatedImagesInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
             priceList: priceListInput,
@@ -211,6 +218,12 @@ export class ProductResolver {
             if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
+        }
+        if (relatedImagesInput) {
+            const relatedImages = await this.entityManager.find(DamFile, { id: relatedImagesInput });
+            if (relatedImages.length != relatedImagesInput.length) throw new Error("Couldn't find all relatedImages that were passed as input");
+            await product.relatedImages.loadItems();
+            product.relatedImages.set(relatedImages.map((relatedImage) => Reference.create(relatedImage)));
         }
         if (statisticsInput) {
             const statistic = product.statistics ? await product.statistics.loadOrFail() : new ProductStatistics();
@@ -301,6 +314,13 @@ export class ProductResolver {
         product: Product,
     ): Promise<FileUpload[]> {
         return product.datasheets.loadItems();
+    }
+    @ResolveField(() => [DamFile])
+    async relatedImages(
+        @Parent()
+        product: Product,
+    ): Promise<DamFile[]> {
+        return product.relatedImages.loadItems();
     }
     @ResolveField(() => ProductStatistics, { nullable: true })
     async statistics(

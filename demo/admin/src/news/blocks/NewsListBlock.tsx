@@ -3,10 +3,10 @@ import { useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from
 import { type BlockInterface, createBlockSkeleton, useContentScope } from "@comet/cms-admin";
 import { Box } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { type NewsListBlockData, type NewsListBlockInput } from "@src/blocks.generated";
+import type { NewsListBlockData, NewsListBlockInput } from "@src/blocks.generated";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type GQLNewsListBlockQuery, type GQLNewsListBlockQueryVariables } from "./NewsListBlock.generated";
+import type { GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables } from "./NewsListBlock.generated";
 
 type State = {
     ids: string[];
@@ -66,10 +66,11 @@ export const NewsListBlock: BlockInterface<NewsListBlockData, State, NewsListBlo
                     loading={loading}
                     checkboxSelection
                     keepNonExistentRowsSelected
-                    rowSelectionModel={state.ids}
+                    rowSelectionModel={{ type: "include", ids: new Set(state.ids) }}
                     onRowSelectionModelChange={(newSelection) => {
-                        updateState({ ids: newSelection as string[] });
+                        updateState({ ids: Array.from(newSelection.ids) as string[] });
                     }}
+                    disableRowSelectionExcludeModel
                 />
             </Box>
         );

@@ -3,15 +3,15 @@ import { Field, FinalForm, FinalFormInput, type ISelectionApi, Loading } from "@
 import { FormattedMessage } from "react-intl";
 
 import { FileField } from "../../form/file/FileField";
-import { type GQLDamMediaAlternativeType } from "../../graphql.generated";
+import type { GQLDamMediaAlternativeType } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
-import {
-    type GQLCreateDamMediaAlternativeMutation,
-    type GQLCreateDamMediaAlternativeMutationVariables,
-    type GQLEditMediaAlternativeQuery,
-    type GQLEditMediaAlternativeQueryVariables,
-    type GQLUpdateDamMediaAlternativeMutation,
-    type GQLUpdateDamMediaAlternativeMutationVariables,
+import type {
+    GQLCreateDamMediaAlternativeMutation,
+    GQLCreateDamMediaAlternativeMutationVariables,
+    GQLEditMediaAlternativeQuery,
+    GQLEditMediaAlternativeQueryVariables,
+    GQLUpdateDamMediaAlternativeMutation,
+    GQLUpdateDamMediaAlternativeMutationVariables,
 } from "./MediaAlternativeForm.generated";
 import { mediaAlternativesGridRefetchQueries } from "./MediaAlternativesGrid";
 

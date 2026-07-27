@@ -502,6 +502,20 @@ export const createOneOfBlock = <T extends boolean = boolean>(
             }, []);
             return content;
         },
+        translateContent: async (state, translate) => {
+            const translatedAttachedBlocks = await Promise.all(
+                state.attachedBlocks.map(async (child) => {
+                    const block = blockForType(child.type);
+                    if (!block) {
+                        throw new Error(`No Block found for type ${child.type}`);
+                    }
+
+                    const translatedProps = block.translateContent ? await block.translateContent(child.props, translate) : child.props;
+                    return { ...child, props: translatedProps };
+                }),
+            );
+            return { ...state, attachedBlocks: translatedAttachedBlocks };
+        },
     };
     if (override) {
         return override(OneOfBlock);

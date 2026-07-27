@@ -1,7 +1,7 @@
-import { type Adornment, type FormConfig, type FormFieldConfig } from "../../generate-command";
+import type { Adornment, FormConfig, FormFieldConfig } from "../../generate-command";
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "../../utils/convertConfigImport";
-import { type Imports } from "../../utils/generateImportsCode";
+import type { Imports } from "../../utils/generateImportsCode";
 import { generateFormattedMessage } from "../../utils/intl";
 import { isGeneratorConfigImport } from "../../utils/runtimeTypeGuards";
 

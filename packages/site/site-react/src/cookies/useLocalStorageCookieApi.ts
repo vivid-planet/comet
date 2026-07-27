@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
-import { type CookieApi, type CookieApiHook } from "./CookieApiContext";
+import type { CookieApi, CookieApiHook } from "./CookieApiContext";
 
 const localStorageCookieApiKey = "comet-dev-cookie-api-consented-cookies";
 
@@ -53,6 +53,5 @@ export const useLocalStorageCookieApi: CookieApiHook = () => {
 };
 
 const logCookieUpdate = (cookies: string[]) => {
-    // eslint-disable-next-line no-console
     console.info("Consented cookies updated:", cookies);
 };

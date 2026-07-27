@@ -3,7 +3,7 @@ import { Button, type ButtonProps, type ComponentsOverrides, IconButton } from "
 import { css, type Theme, useTheme, useThemeProps } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../../helpers/useWindowSize";
 import { Tooltip } from "../../Tooltip";
 

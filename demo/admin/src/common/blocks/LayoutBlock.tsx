@@ -11,7 +11,7 @@ import {
     createCompositeBlockField,
     FinalFormLayoutSelect,
 } from "@comet/cms-admin";
-import { type LayoutBlockData } from "@src/blocks.generated";
+import type { LayoutBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { FormattedMessage } from "react-intl";
 

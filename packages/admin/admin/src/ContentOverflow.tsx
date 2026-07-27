@@ -16,7 +16,7 @@ import { type PropsWithChildren, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "./helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 
 export type ContentOverflowClassKey =
     | "root"

@@ -1,7 +1,7 @@
 import { Field, type FieldProps } from "@comet/admin";
-import { type FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 
-import { type RteProps } from "../core/Rte";
+import type { RteProps } from "../core/Rte";
 import { requiredValidator } from "../utils/requiredValidator";
 import createFinalFormRte, { type IConfig } from "./createFinalFormRte";
 

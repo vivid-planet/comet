@@ -3,7 +3,7 @@ import { ButtonGroup, type ComponentsOverrides, css, type Theme, useThemeProps }
 
 import LinkToolbarButton from "../extension/Link/ToolbarButton";
 import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
-import { type IControlProps } from "../types";
+import type { IControlProps } from "../types";
 
 export interface RteLinkControlsProps
     extends IControlProps,

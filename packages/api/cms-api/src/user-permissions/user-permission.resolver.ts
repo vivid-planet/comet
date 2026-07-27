@@ -10,7 +10,7 @@ import { UserPermission, UserPermissionSource } from "./entities/user-permission
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ArgsType()
-export class UserPermissionListArgs {
+class UserPermissionListArgs {
     @Field()
     @IsString()
     userId: string;
@@ -27,7 +27,7 @@ export class UserPermissionResolver {
 
     @Query(() => [UserPermission])
     async userPermissionsPermissionList(@Args() args: UserPermissionListArgs): Promise<UserPermission[]> {
-        return this.service.getPermissions(await this.service.getUser(args.userId));
+        return this.service.getPermissions(await this.service.findUserOrThrow(args.userId));
     }
 
     @Query(() => UserPermission)
@@ -45,7 +45,7 @@ export class UserPermissionResolver {
         @Args("input", { type: () => UserPermissionInput }) input: UserPermissionInput,
     ): Promise<UserPermission> {
         const permission = new UserPermission();
-        this.service.getUser(userId); //validate user exists
+        await this.service.findUserOrThrow(userId); //validate user exists
         permission.userId = userId;
         permission.assign(input);
         await this.entityManager.persistAndFlush(permission);
@@ -97,8 +97,10 @@ export class UserPermissionResolver {
         if (!userId) {
             throw new Error(`Permission not found: ${id}`);
         }
-        for (const p of await this.service.getPermissions(await this.service.getUser(userId))) {
-            if (p.id === id) return p;
+        for (const p of await this.service.getPermissions(await this.service.findUserOrThrow(userId))) {
+            if (p.id === id) {
+                return p;
+            }
         }
         throw new Error("Permission not found");
     }

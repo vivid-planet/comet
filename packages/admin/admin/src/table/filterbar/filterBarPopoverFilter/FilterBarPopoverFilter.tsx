@@ -7,10 +7,10 @@ import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
-import { type FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
+import type { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 import { FilterBarButton, type FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
 
 /**

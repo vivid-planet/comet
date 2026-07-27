@@ -1,4 +1,4 @@
-import { type Breakpoint } from "@mui/material";
+import type { Breakpoint } from "@mui/material";
 
 type BreakpointKey = `'${Breakpoint}'` | number;
 

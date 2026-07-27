@@ -1,9 +1,9 @@
-import { type ThemedComponentBaseProps } from "@comet/admin";
-import { type ComponentsOverrides, type Theme } from "@mui/material";
+import type { ThemedComponentBaseProps } from "@comet/admin";
+import type { ComponentsOverrides, Theme } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
 import { createElement, type JSX } from "react";
 
-import { type IControlProps } from "../../types";
+import type { IControlProps } from "../../types";
 import { Root, type RteToolbarClassKey, Slot } from "./Toolbar.styles";
 
 interface RteToolbarProps

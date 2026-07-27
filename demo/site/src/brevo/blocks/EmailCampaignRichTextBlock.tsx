@@ -1,6 +1,6 @@
 import { MjmlColumn, type PropsWithData } from "@comet/mail-react";
 import { ExternalLinkBlock } from "@comet/site-nextjs";
-import { type ExternalLinkBlockData, type RichTextBlockData } from "@src/blocks.generated";
+import type { ExternalLinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { IndentedSectionGroup } from "@src/brevo/components/IndentedSectionGroup";
 import { Typography, type TypographyProps } from "@src/brevo/components/Typography";
 import { type FC, isValidElement } from "react";
@@ -15,7 +15,7 @@ function createTextBlockRenderFn(props: TypographyProps): TextBlockRenderFn {
         ));
 }
 
-export const defaultRichTextRenderers: Renderers = {
+const defaultRichTextRenderers: Renderers = {
     inline: {
         BOLD: (children, { key }) => <b key={key}>{children}</b>,
         ITALIC: (children, { key }) => <i key={key}>{children}</i>,

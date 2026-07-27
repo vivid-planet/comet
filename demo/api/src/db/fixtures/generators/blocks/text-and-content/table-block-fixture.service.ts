@@ -1,7 +1,7 @@
 import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
-import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
+import { faker } from "@src/db/fixtures/faker";
 import { LinkBlockFixtureService } from "@src/db/fixtures/generators/blocks/navigation/link-block-fixture.service";
 
 type RichTextInput = ExtractBlockInputFactoryProps<typeof RichTextBlock>;

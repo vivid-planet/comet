@@ -3,7 +3,7 @@ import { type ComponentsOverrides, type IconButton, type Theme, useThemeProps } 
 import { type FunctionComponent, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { Button, Dialog, DialogContent } from "./HelpDialogButton.sc";
 
 export type HelpDialogButtonClassKey = "button" | "dialog" | "dialogContent";

@@ -2,7 +2,7 @@ import { Button } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { Box, Chip, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";

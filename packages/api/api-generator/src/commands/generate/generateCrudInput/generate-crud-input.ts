@@ -1,5 +1,5 @@
 import { hasCrudFieldFeature, type Permission } from "@comet/cms-api";
-import { type EntityMetadata } from "@mikro-orm/postgresql";
+import type { EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 import { SyntaxKind } from "ts-morph";
 
@@ -18,11 +18,13 @@ import {
     getFieldDecoratorClassName,
     morphTsProperty,
 } from "../utils/ts-morph-helper";
-import { type GeneratedFile } from "../utils/write-generated-files";
+import type { GeneratedFile } from "../utils/write-generated-files";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);
-    if (filteredEntries.length == 0) return "";
+    if (filteredEntries.length == 0) {
+        return "";
+    }
     return `{${filteredEntries.map(([key, value]) => `${key}: ${value},`).join("\n")}}`;
 }
 
@@ -31,7 +33,9 @@ function findReferenceTargetType(
     referencedColumnName: string,
 ): "uuid" | "string" | "integer" | null {
     const referencedColumnProp = targetMeta?.props.find((p) => p.name == referencedColumnName);
-    if (!referencedColumnProp) throw new Error("referencedColumnProp not found");
+    if (!referencedColumnProp) {
+        throw new Error("referencedColumnProp not found");
+    }
     if (referencedColumnProp.type == "uuid") {
         return "uuid";
     } else if (referencedColumnProp.type == "text") {
@@ -242,7 +246,9 @@ export async function generateCrudInput(
             if (prop.orphanRemoval) {
                 //if orphanRemoval is enabled, we need to generate a nested input type
                 decorators.length = 0;
-                if (!prop.targetMeta) throw new Error("No targetMeta");
+                if (!prop.targetMeta) {
+                    throw new Error("No targetMeta");
+                }
                 const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
                 {
                     const excludeFields = prop.targetMeta.props.filter((p) => p.kind == "m:1" && p.targetMeta == metadata).map((p) => p.name);
@@ -315,7 +321,9 @@ export async function generateCrudInput(
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }
         } else if (prop.kind == "1:1") {
-            if (!prop.targetMeta) throw new Error("No targetMeta");
+            if (!prop.targetMeta) {
+                throw new Error("No targetMeta");
+            }
             const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
             {
                 const excludeFields = prop.targetMeta.props.filter((p) => p.kind == "1:1" && p.targetMeta == metadata).map((p) => p.name);
@@ -435,7 +443,9 @@ export async function generateCrudInput(
 
         const classValidatorValidators = getMetadataStorage().getTargetValidationMetadatas(metadata.class, prop.name, false, false, undefined);
         for (const validator of classValidatorValidators) {
-            if (validator.propertyName !== prop.name) continue;
+            if (validator.propertyName !== prop.name) {
+                continue;
+            }
             const constraints = getMetadataStorage().getTargetValidatorConstraints(validator.constraintCls);
             for (const constraint of constraints) {
                 const decorator = definedDecorators.find((decorator) => {

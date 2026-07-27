@@ -80,7 +80,9 @@ function Story() {
         }),
     });
 
-    if (!tableData) return null;
+    if (!tableData) {
+        return null;
+    }
 
     return (
         <SelectionRoute>

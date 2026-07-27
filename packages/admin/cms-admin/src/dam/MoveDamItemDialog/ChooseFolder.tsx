@@ -7,8 +7,8 @@ import AutoSizer, { type Size } from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 
 import { MarkedMatches } from "../../common/MarkedMatches";
-import { type FolderTreeMap } from "./useFolderTree";
-import { type FolderWithMatches } from "./useFolderTreeSearch";
+import type { FolderTreeMap } from "./useFolderTree";
+import type { FolderWithMatches } from "./useFolderTreeSearch";
 
 export { allFoldersQuery } from "./ChooseFolder.gql";
 export type { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder.gql.generated";

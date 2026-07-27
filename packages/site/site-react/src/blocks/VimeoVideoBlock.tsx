@@ -2,13 +2,13 @@
 import clsx from "clsx";
 import { type ComponentType, type ReactElement, type ReactNode, useCallback, useRef, useState } from "react";
 
-import { type VimeoVideoBlockData } from "../blocks.generated";
+import type { VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PlayPauseButton, type PlayPauseButtonProps } from "./helpers/PlayPauseButton";
 import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
-import { type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
-import { type PropsWithData } from "./PropsWithData";
+import type { VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import type { PropsWithData } from "./PropsWithData";
 import styles from "./VimeoVideoBlock.module.scss";
 
 function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
@@ -18,7 +18,9 @@ function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
     const urlRegExMatch = vimeoIdentifier.match(urlRegEx);
     const idRegExMatch = vimeoIdentifier.match(idRegEx);
 
-    if (!urlRegExMatch && !idRegExMatch) return undefined;
+    if (!urlRegExMatch && !idRegExMatch) {
+        return undefined;
+    }
 
     if (urlRegExMatch) {
         return urlRegExMatch[6];
@@ -90,18 +92,32 @@ export const VimeoVideoBlock = withPreview(
         const identifier = parseVimeoIdentifier(vimeoIdentifier);
 
         const searchParams = new URLSearchParams();
-        if (hasPreviewImage && !showPreviewImage) searchParams.append("autoplay", "1");
-        if (autoplay) searchParams.append("muted", "1");
+        if (autoplay || (hasPreviewImage && !showPreviewImage)) {
+            searchParams.append("autoplay", "1");
+        }
+        if (autoplay) {
+            searchParams.append("muted", "1");
+        }
 
-        if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
+        if (loop !== undefined) {
+            searchParams.append("loop", Number(loop).toString());
+        }
 
-        if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
+        if (showControls !== undefined) {
+            searchParams.append("controls", Number(showControls).toString());
+        }
 
         searchParams.append("dnt", "1");
 
         const vimeoBaseUrl = "https://player.vimeo.com/video/";
         const vimeoUrl = new URL(`${vimeoBaseUrl}${identifier ?? ""}`);
         vimeoUrl.search = searchParams.toString();
+
+        const handlePreviewPlay = () => {
+            setShowPreviewImage(false);
+            setIsPlaying(true);
+            setIsHandledManually(true);
+        };
 
         const handlePlayPauseClick = () => {
             if (isPlaying) {
@@ -118,7 +134,7 @@ export const VimeoVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage({
-                        onPlay: () => setShowPreviewImage(false),
+                        onPlay: handlePreviewPlay,
                         image: previewImage,
                         aspectRatio,
                         sizes: previewImageSizes,
@@ -132,7 +148,14 @@ export const VimeoVideoBlock = withPreview(
                         className={clsx(styles.videoContainer, fill && styles.fill)}
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
-                        <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
+                        <iframe
+                            ref={iframeRef}
+                            className={styles.vimeoContainer}
+                            src={vimeoUrl.toString()}
+                            allow="autoplay"
+                            allowFullScreen
+                            loading="lazy"
+                        />
                         {!showControls &&
                             (PlayPauseButtonComponent ? (
                                 <PlayPauseButtonComponent isPlaying={isPlaying} onClick={handlePlayPauseClick} />

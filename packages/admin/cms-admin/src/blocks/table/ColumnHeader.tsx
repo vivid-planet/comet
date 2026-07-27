@@ -2,15 +2,15 @@ import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardTe
 import { Add, Copy, Delete, DensityStandard, DragIndicator, Duplicate, Paste, PinLeft, PinRight, Remove } from "@comet/admin-icons";
 import { ButtonBase, Divider, Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type GridColumnHeaderParams } from "@mui/x-data-grid";
-import { type Dispatch, type ReactNode, type SetStateAction } from "react";
+import type { GridColumnHeaderParams } from "@mui/x-data-grid";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { type TableBlockData } from "../../blocks.generated";
+import type { TableBlockData } from "../../blocks.generated";
 import { useBlockContext } from "../context/useBlockContext";
-import { type RichTextBlockState } from "../createRichTextBlock";
-import { type TableBlockState } from "../createTableBlock";
+import type { RichTextBlockState } from "../createRichTextBlock";
+import type { TableBlockState } from "../createTableBlock";
 import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
 import { useTableBlockContext } from "./TableBlockContext";
 import {

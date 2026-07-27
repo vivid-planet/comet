@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { ArrayType, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ObjectType } from "@nestjs/graphql";
 
 // Note: This file is intentionally not named *.entity.ts to exclude it from MikroORM's CLI migration glob pattern.
@@ -8,9 +8,11 @@ import { Field, ObjectType } from "@nestjs/graphql";
 @ObjectType("EntityInfo")
 export class EntityInfoObject {
     @PrimaryKey({ type: "text" })
+    @Field()
     id: string;
 
     @PrimaryKey({ type: "text" })
+    @Field()
     entityName: string;
 
     @Field()
@@ -23,4 +25,7 @@ export class EntityInfoObject {
 
     @Property({ type: "boolean" })
     visible: boolean;
+
+    @Property({ type: ArrayType })
+    requiredPermission: string[];
 }

@@ -1,13 +1,13 @@
 import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
 import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from "@comet/admin-icons";
 import { Divider, Snackbar } from "@mui/material";
-import { type Dispatch, type SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useBlockContext } from "../context/useBlockContext";
-import { type RichTextBlockState } from "../createRichTextBlock";
-import { type TableBlockState } from "../createTableBlock";
+import type { RichTextBlockState } from "../createRichTextBlock";
+import type { TableBlockState } from "../createTableBlock";
 import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
 import { useTableBlockContext } from "./TableBlockContext";
 import { getClipboardValueForSchema } from "./utils/getClipboardValueForSchema";

@@ -6,7 +6,7 @@ export const useTopOffset = (ref: RefObject<HTMLElement | null>) => {
     useEffect(() => {
         const updateTopOffset = () => {
             if (ref.current) {
-                setTopOffset(ref.current.getBoundingClientRect().top);
+                setTopOffset(ref.current.getBoundingClientRect().top + window.scrollY);
             }
         };
 

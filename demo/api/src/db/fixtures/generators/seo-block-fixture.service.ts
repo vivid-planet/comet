@@ -1,6 +1,6 @@
 import { ExtractBlockInputFactoryProps, SitemapPageChangeFrequency, SitemapPagePriority } from "@comet/cms-api";
-import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
+import { faker } from "@src/db/fixtures/faker";
 import { SeoBlock } from "@src/documents/pages/blocks/seo.block";
 
 import { PixelImageBlockFixtureService } from "./blocks/media/pixel-image-block-fixture.service";

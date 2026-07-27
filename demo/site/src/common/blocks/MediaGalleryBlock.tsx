@@ -2,7 +2,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
-import { type MediaGalleryBlockData } from "@src/blocks.generated";
+import type { MediaGalleryBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Navigation } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
-import { type Swiper as SwiperClass } from "swiper/types";
+import type { Swiper as SwiperClass } from "swiper/types";
 
 import { BasicSwiper } from "../components/BasicSwiper";
 import styles from "./MediaGalleryBlock.module.scss";
@@ -28,7 +28,9 @@ export const MediaGalleryBlock = withPreview(
         const intl = useIntl();
 
         useEffect(() => {
-            if (!swiper) return;
+            if (!swiper) {
+                return;
+            }
 
             const updateInert = () => {
                 swiper.slides.forEach((slide, index) => {

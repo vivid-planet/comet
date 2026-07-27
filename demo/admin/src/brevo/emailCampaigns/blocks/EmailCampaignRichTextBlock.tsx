@@ -8,7 +8,7 @@ import {
     ExternalLinkBlock,
 } from "@comet/cms-admin";
 import { Box, List, ListItem, ListItemText } from "@mui/material";
-import { type RichTextBlockData } from "@src/blocks.generated";
+import type { RichTextBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
 const placeholders = [

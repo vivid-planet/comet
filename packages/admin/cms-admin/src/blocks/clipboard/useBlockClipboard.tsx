@@ -1,9 +1,9 @@
 import { readClipboardText, writeClipboardText } from "@comet/admin";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useBlockContext } from "../context/useBlockContext";
-import { type BlockInterface, type BlockOutputApi, type BlockState } from "../types";
+import type { BlockInterface, BlockOutputApi, BlockState } from "../types";
 
 interface ClipboardBlock {
     name: string;

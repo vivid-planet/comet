@@ -1,5 +1,144 @@
 # @comet/admin-color-picker
 
+## 9.2.2
+
+### Patch Changes
+
+- @comet/admin@9.2.2
+- @comet/admin-icons@9.2.2
+
+## 9.2.1
+
+### Patch Changes
+
+- @comet/admin@9.2.1
+- @comet/admin-icons@9.2.1
+
+## 9.2.0
+
+### Patch Changes
+
+- Updated dependencies [5a05d97]
+    - @comet/admin@9.2.0
+    - @comet/admin-icons@9.2.0
+
+## 9.1.1
+
+### Patch Changes
+
+- @comet/admin@9.1.1
+- @comet/admin-icons@9.1.1
+
+## 9.1.0
+
+### Patch Changes
+
+- @comet/admin@9.1.0
+- @comet/admin-icons@9.1.0
+
+## 9.0.1
+
+### Patch Changes
+
+- @comet/admin@9.0.1
+- @comet/admin-icons@9.0.1
+
+## 9.0.0
+
+### Major Changes
+
+- 5f1566a: Make packages ESM-only
+
+### Minor Changes
+
+- f066335: Add support for React 19
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+- Updated dependencies [15e771b]
+- Updated dependencies [d7b77af]
+- Updated dependencies [8c2fdde]
+- Updated dependencies [f066335]
+- Updated dependencies [b4ba869]
+- Updated dependencies [57678d0]
+- Updated dependencies [fdabaf1]
+- Updated dependencies [8e40458]
+- Updated dependencies [5f1566a]
+- Updated dependencies [99140f8]
+- Updated dependencies [b459ec7]
+- Updated dependencies [cabba53]
+- Updated dependencies [8e3a074]
+- Updated dependencies [3fda20b]
+- Updated dependencies [fd5c36f]
+- Updated dependencies [3c81ff0]
+- Updated dependencies [631540c]
+- Updated dependencies [2fe9d4b]
+- Updated dependencies [460cbfb]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0
+    - @comet/admin-icons@9.0.0
+
+## 9.0.0-beta.6
+
+### Patch Changes
+
+- Updated dependencies [15e771b]
+- Updated dependencies [b4ba869]
+- Updated dependencies [57678d0]
+- Updated dependencies [b459ec7]
+    - @comet/admin@9.0.0-beta.6
+    - @comet/admin-icons@9.0.0-beta.6
+
+## 9.0.0-beta.5
+
+### Patch Changes
+
+- Updated dependencies [fdabaf1]
+    - @comet/admin@9.0.0-beta.5
+    - @comet/admin-icons@9.0.0-beta.5
+
+## 9.0.0-beta.4
+
+### Patch Changes
+
+- Updated dependencies [d7b77af]
+- Updated dependencies [8e40458]
+- Updated dependencies [2fe9d4b]
+- Updated dependencies [460cbfb]
+    - @comet/admin@9.0.0-beta.4
+    - @comet/admin-icons@9.0.0-beta.4
+
+## 9.0.0-beta.3
+
+### Patch Changes
+
+- Updated dependencies [cabba53]
+- Updated dependencies [3c81ff0]
+    - @comet/admin@9.0.0-beta.3
+    - @comet/admin-icons@9.0.0-beta.3
+
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- 92281f1: Add `"sideEffects"` to package.json for better tree-shakability
+- Updated dependencies [92281f1]
+- Updated dependencies [99140f8]
+- Updated dependencies [9cb3f95]
+    - @comet/admin@9.0.0-beta.2
+    - @comet/admin-icons@9.0.0-beta.2
+
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [8c2fdde]
+- Updated dependencies [8e3a074]
+    - @comet/admin@9.0.0-beta.1
+    - @comet/admin-icons@9.0.0-beta.1
+
 ## 9.0.0-beta.0
 
 ### Major Changes

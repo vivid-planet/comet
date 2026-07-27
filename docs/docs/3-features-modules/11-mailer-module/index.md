@@ -109,6 +109,26 @@ async publishAllProducts(): Promise<boolean> {
 }
 ```
 
+### Config
+
+The `MailerModule.register` config accepts two recipient-overriding options that are designed for different environments and do not combine:
+
+#### `sendAllMailsTo`
+
+Sends every mail to the given addresses instead of the original `to`. The original `cc` and `bcc` are dropped. Intended for non-prod environments to prevent mails from reaching real users.
+
+```sh title="/.env"
+MAILER_SEND_ALL_MAILS_TO=demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com
+```
+
+#### `sendAllMailsBcc`
+
+Adds the given addresses as an additional BCC to every mail. Intended as a production backup recipient. Not applied when `sendAllMailsTo` is set.
+
+```sh title="/.env"
+MAILER_SEND_ALL_MAILS_BCC=mail-archive@comet-dxp.com,mail-backup@comet-dxp.com
+```
+
 ---
 
 ## Deleting Old Mail Logs

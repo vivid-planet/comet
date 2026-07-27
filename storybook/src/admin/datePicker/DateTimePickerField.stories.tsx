@@ -1,5 +1,5 @@
 import { Alert, DateTimePickerField, FinalForm } from "@comet/admin";
-import type { Meta, StoryFn } from "@storybook/react-webpack5";
+import type { Meta, StoryFn } from "@storybook/react-vite";
 
 type Story = StoryFn<typeof DateTimePickerField>;
 const config: Meta<typeof DateTimePickerField> = {

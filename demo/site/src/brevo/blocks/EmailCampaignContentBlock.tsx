@@ -1,10 +1,10 @@
 import { BlocksBlock, type SupportedBlocks } from "@comet/mail-react";
-import { type EmailCampaignContentBlockData } from "@src/blocks.generated";
+import type { EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignDividerBlock } from "@src/brevo/blocks/EmailCampaignDividerBlock";
 import { EmailCampaignRichTextBlock } from "@src/brevo/blocks/EmailCampaignRichTextBlock";
 import { EmailCampaignSalutationBlock } from "@src/brevo/blocks/EmailCampaignSalutationBlock";
 import { NewsletterImageBlock } from "@src/brevo/blocks/NewsletterImageBlock";
-import { type EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
+import type { EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
 
 function getSupportedBlocks(config: EmailCampaignConfig): SupportedBlocks {
     return {

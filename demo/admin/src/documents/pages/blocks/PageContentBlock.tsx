@@ -1,5 +1,6 @@
 import { AnchorBlock, createBlocksBlock, DamImageBlock } from "@comet/cms-admin";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
+import { ContactFormBlock } from "@src/common/blocks/ContactFormBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
 import { PageTreeIndexBlock } from "@src/common/blocks/PageTreeIndexBlock";
@@ -10,6 +11,7 @@ import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
 import { StandaloneRichTextBlock } from "@src/common/blocks/StandaloneRichTextBlock";
 import { TableBlock } from "@src/common/blocks/TableBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
+import { TipTapRichTextBlock } from "@src/common/blocks/TipTapRichTextBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
 import { ProductListBlock } from "@src/products/blocks/ProductListBlock";
@@ -50,8 +52,10 @@ export const PageContentBlock = createBlocksBlock({
         textImage: TextImageBlock,
         fullWidthImage: FullWidthImageBlock,
         table: TableBlock,
+        tipTapRichText: TipTapRichTextBlock,
         productList: ProductListBlock,
         pageTreeIndex: PageTreeIndexBlock,
+        contactForm: ContactFormBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

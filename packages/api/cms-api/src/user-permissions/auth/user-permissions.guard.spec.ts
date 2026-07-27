@@ -1,7 +1,8 @@
-import { createMock } from "@golevelup/ts-jest";
+import { createMock } from "@golevelup/ts-vitest";
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { ExecutionContext } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DISABLE_COMET_GUARDS_METADATA_KEY } from "../../auth/decorators/disable-comet-guards.decorator";
 import { AbstractAccessControlService } from "../access-control.service";
@@ -44,12 +45,22 @@ describe("UserPermissionsGuard", () => {
         disableCometGuards?: boolean;
         affectedScope?: AffectedScopeMeta;
     }) => {
-        reflector.getAllAndOverride = jest.fn().mockImplementation((decorator: string) => {
-            if (decorator === REQUIRED_PERMISSION_METADATA_KEY) return annotations.requiredPermission;
-            if (decorator === AFFECTED_ENTITY_METADATA_KEY) return annotations.affectedEntities;
-            if (decorator === SCOPED_ENTITY_METADATA_KEY) return annotations.scopedEntity;
-            if (decorator === DISABLE_COMET_GUARDS_METADATA_KEY) return annotations.disableCometGuards;
-            if (decorator === AFFECTED_SCOPE_METADATA_KEY) return annotations.affectedScope;
+        reflector.getAllAndOverride = vi.fn().mockImplementation((decorator: string) => {
+            if (decorator === REQUIRED_PERMISSION_METADATA_KEY) {
+                return annotations.requiredPermission;
+            }
+            if (decorator === AFFECTED_ENTITY_METADATA_KEY) {
+                return annotations.affectedEntities;
+            }
+            if (decorator === SCOPED_ENTITY_METADATA_KEY) {
+                return annotations.scopedEntity;
+            }
+            if (decorator === DISABLE_COMET_GUARDS_METADATA_KEY) {
+                return annotations.disableCometGuards;
+            }
+            if (decorator === AFFECTED_SCOPE_METADATA_KEY) {
+                return annotations.affectedScope;
+            }
             return false;
         });
     };
@@ -71,9 +82,9 @@ describe("UserPermissionsGuard", () => {
         });
     };
     const mockAffectedEntityValues = (values: { id: number; [key: string]: unknown }[]) => {
-        orm.em.getRepository = jest
+        orm.em.getRepository = vi
             .fn()
-            .mockReturnValue({ findOneOrFail: jest.fn().mockImplementation((id: number) => values.find((v) => v.id === id)) });
+            .mockReturnValue({ findOneOrFail: vi.fn().mockImplementation((id: number) => values.find((v) => v.id === id)) });
     };
 
     beforeEach(async () => {
@@ -722,6 +733,109 @@ describe("UserPermissionsGuard", () => {
                         },
                     ],
                     args: { a: 1, b: 2 },
+                }),
+            ),
+        ).toBe(false);
+    });
+
+    it("allows user by AffectedScope returning multiple scopes when user has all scopes", async () => {
+        mockAnnotations({
+            requiredPermission: {
+                requiredPermission: [permissions.p1],
+                options: undefined,
+            },
+            affectedScope: { argsToScope: (args) => [{ a: args.a }, { a: args.b }] },
+        });
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [{ a: 1 }, { a: 2 }],
+                        },
+                    ],
+                    args: { a: 1, b: 2 },
+                }),
+            ),
+        ).toBe(true);
+    });
+
+    it("denies by AffectedScope returning multiple scopes when user is missing any scope", async () => {
+        mockAnnotations({
+            requiredPermission: {
+                requiredPermission: [permissions.p1],
+                options: undefined,
+            },
+            affectedScope: { argsToScope: (args) => [{ a: args.a }, { a: args.b }] },
+        });
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [{ a: 1 }], // Missing {a: 2}
+                        },
+                    ],
+                    args: { a: 1, b: 2 },
+                }),
+            ),
+        ).toBe(false);
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [{ a: 2 }], // Missing {a: 1}
+                        },
+                    ],
+                    args: { a: 1, b: 2 },
+                }),
+            ),
+        ).toBe(false);
+    });
+
+    it("allows user by AffectedScope returning multiple multidimensional scopes when user has all scopes", async () => {
+        mockAnnotations({
+            requiredPermission: {
+                requiredPermission: [permissions.p1],
+                options: undefined,
+            },
+            affectedScope: {
+                argsToScope: (args) => [
+                    { a: args.a, b: args.b },
+                    { a: args.c, b: args.d },
+                ],
+            },
+        });
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [
+                                { a: 1, b: "x" },
+                                { a: 2, b: "y" },
+                            ],
+                        },
+                    ],
+                    args: { a: 1, b: "x", c: 2, d: "y" },
+                }),
+            ),
+        ).toBe(true);
+        expect(
+            await guard.canActivate(
+                mockContext({
+                    userPermissions: [
+                        {
+                            permission: permissions.p1,
+                            contentScopes: [{ a: 1, b: "x" }], // Missing {a: 2, b: "y"}
+                        },
+                    ],
+                    args: { a: 1, b: "x", c: 2, d: "y" },
                 }),
             ),
         ).toBe(false);

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
-import { type DependencyInterface } from "@comet/cms-admin";
+import type { DependencyInterface } from "@comet/cms-admin";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
-import { type GQLpageTreeNodeDependencyQuery, type GQLpageTreeNodeDependencyQueryVariables } from "@src/pageTree/PageTreeNodeDependency.generated";
+import type { GQLpageTreeNodeDependencyQuery, GQLpageTreeNodeDependencyQueryVariables } from "@src/pageTree/PageTreeNodeDependency.generated";
 import { FormattedMessage } from "react-intl";
 
 export const PageTreeNodeDependency: DependencyInterface = {

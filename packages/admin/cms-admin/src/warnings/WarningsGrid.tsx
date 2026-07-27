@@ -5,6 +5,7 @@ import {
     GridCellContent,
     type GridColDef,
     GridFilterButton,
+    GridToolbarQuickFilter,
     MainContent,
     messages,
     muiGridFilterToGql,
@@ -15,18 +16,20 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Chip } from "@mui/material";
-import { DataGrid, type GridFilterModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import type { GridFilterModel } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../contentScope/Provider";
+import { DataGrid } from "../dataGrid/DataGrid";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
+import { getDisplayNameString } from "../dependencies/getDisplayNameString";
 import { WarningActions } from "./WarningActions";
 import { WarningMessage } from "./WarningMessage";
 import { useWarningsConfig } from "./warningsConfig";
 import { WarningSeverity } from "./WarningSeverity";
-import { type GQLWarningsGridQuery, type GQLWarningsGridQueryVariables, type GQLWarningsListFragment } from "./WarningsGrid.generated";
+import type { GQLWarningsGridQuery, GQLWarningsGridQueryVariables, GQLWarningsListFragment } from "./WarningsGrid.generated";
 
 const warningsFragment = gql`
     fragment WarningsList on Warning {
@@ -77,7 +80,7 @@ function WarningsGridToolbar() {
 export function WarningsGrid() {
     const intl = useIntl();
     const dataGridProps = {
-        ...useDataGridRemote({ initialFilter: { items: [{ field: "state", operator: "is", value: "open" }] } }),
+        ...useDataGridRemote({ initialFilter: { items: [{ field: "status", operator: "is", value: "open" }] } }),
         ...usePersistentColumnState("WarningsGrid"),
     };
     const { messages: warningMessages } = useWarningsConfig();
@@ -121,10 +124,8 @@ export function WarningsGrid() {
             renderCell: (params) => <WarningSeverity severity={params.value} />,
         },
         {
-            field: "nameInfo",
-            headerName: intl.formatMessage({ id: "warning.nameAndInfo", defaultMessage: "Name/Info" }),
-            sortable: false,
-            filterable: false,
+            field: "name",
+            headerName: intl.formatMessage({ id: "warning.name", defaultMessage: "Name" }),
             width: 200,
             renderCell: ({ row }) => {
                 return (
@@ -136,11 +137,22 @@ export function WarningsGrid() {
             },
         },
         {
+            field: "secondaryInformation",
+            headerName: intl.formatMessage({ id: "warning.info", defaultMessage: "Info" }),
+            sortable: false,
+            visible: false,
+            valueGetter: (params, row) => row.entityInfo?.secondaryInformation,
+        },
+        {
             field: "type",
             headerName: intl.formatMessage({ id: "warning.type", defaultMessage: "Type" }),
-            sortable: false,
-            filterable: false,
+            type: "singleSelect",
+            valueOptions: Object.entries(entityDependencyMap).map(([value, dependency]) => ({
+                value,
+                label: getDisplayNameString(dependency.displayName, intl, value),
+            })),
             width: 100,
+            valueGetter: (params, row) => row.sourceInfo.rootEntityName,
             renderCell: ({ row }) => (
                 <Chip label={entityDependencyMap[row.sourceInfo.rootEntityName]?.displayName ?? row.sourceInfo.rootEntityName} />
             ),
@@ -180,6 +192,7 @@ export function WarningsGrid() {
         {
             field: "actions",
             headerName: "",
+            filterable: false,
             sortable: false,
             renderCell: ({ row }) => <WarningActions scope={row.scope} sourceInfo={row.sourceInfo} />,
         },
@@ -217,11 +230,13 @@ export function WarningsGrid() {
             search: gqlSearch,
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
-            sort: muiGridSortToGql(dataGridProps.sortModel),
+            sort: muiGridSortToGql(dataGridProps.sortModel, columns),
         },
     });
     const rowCount = useBufferedRowCount(data?.warnings.totalCount);
-    if (error) throw error;
+    if (error) {
+        throw error;
+    }
     const rows = data?.warnings.nodes ?? [];
 
     return (
@@ -236,6 +251,7 @@ export function WarningsGrid() {
                 slots={{
                     toolbar: WarningsGridToolbar,
                 }}
+                showToolbar
             />
         </MainContent>
     );

@@ -1,4 +1,4 @@
-import { type RefObject } from "react";
+import type { RefObject } from "react";
 
 import { usePersistedState } from "./usePersistedState";
 
@@ -43,7 +43,9 @@ export function useTableQueryPaging<T>(
 
     function changePage(vars: T, p?: number, changePageOptions?: IChangePageOptions) {
         setVariables(vars);
-        if (p) setPage(p);
+        if (p) {
+            setPage(p);
+        }
         if (tableRef && tableRef.current && !changePageOptions?.noScrollToTop) {
             tableRef.current.scrollIntoView();
         }

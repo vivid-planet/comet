@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl";
 
 import { SaveButton } from "../common/buttons/SaveButton";
 import { Loading } from "../common/Loading";
-import { type ITableLocalChangesApi } from "./TableLocalChanges";
+import type { ITableLocalChangesApi } from "./TableLocalChanges";
 
 interface Props {
     tableLocalChangesApi: ITableLocalChangesApi;

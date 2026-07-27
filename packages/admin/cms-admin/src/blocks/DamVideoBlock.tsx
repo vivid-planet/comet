@@ -2,14 +2,16 @@ import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Video } from "@comet/admin-icons";
 import { Box } from "@mui/material";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
+import { deepClone } from "@mui/x-data-grid/internals";
 import { defineMessage, FormattedMessage } from "react-intl";
 
-import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
+import type { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
+import { useVideoPerformanceWarning } from "../dam/config/damConfig";
+import { VideoPerformanceWarningAlert } from "../dam/VideoPerformanceWarningAlert";
 import { FileField } from "../form/file/FileField";
 import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
-import { type GQLVideoBlockDamFileQuery, type GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import type { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
@@ -116,10 +118,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     AdminComponent: ({ state, updateState }) => {
         const isInPaper = useBlockAdminComponentPaper();
+        const { isVideoTooLarge } = useVideoPerformanceWarning();
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
                 <BlocksFinalForm onSubmit={updateState} initialValues={state}>
+                    {state.damFile && isVideoTooLarge(state.damFile) && <VideoPerformanceWarningAlert sx={{ marginBottom: 2 }} />}
                     <Field
                         name="damFile"
                         component={FileField}
@@ -146,8 +150,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     extractTextContents: (state) => {
         const contents = [];
 
-        if (state.damFile?.altText) contents.push(state.damFile.altText);
-        if (state.damFile?.title) contents.push(state.damFile.title);
+        if (state.damFile?.altText) {
+            contents.push(state.damFile.altText);
+        }
+        if (state.damFile?.title) {
+            contents.push(state.damFile.title);
+        }
 
         return contents;
     },

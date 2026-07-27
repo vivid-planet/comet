@@ -1,11 +1,11 @@
 import { ThreeDotSaving } from "@comet/admin-icons";
-import { type ComponentsOverrides } from "@mui/material";
+import type { ComponentsOverrides } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
 import { type ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { Tooltip as CometTooltip } from "../../Tooltip";
 import { Button, type ButtonClassKey, type ButtonProps } from "../Button";
 
@@ -104,7 +104,9 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             : onClick;
 
     useEffect(() => {
-        if (isUncontrolled) return;
+        if (isUncontrolled) {
+            return;
+        }
 
         let timeoutId: number | undefined;
         let timeoutDuration: number | undefined;

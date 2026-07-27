@@ -1,5 +1,5 @@
 import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
-import { type StandaloneRichTextBlockData } from "@src/blocks.generated";
+import type { StandaloneRichTextBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { FormattedMessage } from "react-intl";
 

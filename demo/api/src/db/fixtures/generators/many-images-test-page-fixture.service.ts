@@ -1,8 +1,8 @@
 import { PageTreeNodeBaseCreateInput, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
-import { faker } from "@faker-js/faker";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { DamScope } from "@src/dam/dto/dam-scope";
+import { faker } from "@src/db/fixtures/faker";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import { StageBlock } from "@src/documents/pages/blocks/stage.block";
 import { PageInput } from "@src/documents/pages/dto/page.input";

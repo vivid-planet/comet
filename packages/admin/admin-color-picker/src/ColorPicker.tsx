@@ -149,9 +149,9 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
                 )
             }
             endAdornment={
-                !required ? (
+                !required && value ? (
                     <>
-                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange?.(undefined)} />
+                        <ClearInputAdornment position="end" onClick={() => onChange?.(undefined)} />
                         {endAdornment}
                     </>
                 ) : (

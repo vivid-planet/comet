@@ -17,8 +17,12 @@ afterEach(() => {
 describe("resolveOpReferences", () => {
     it("should resolve op:// references", () => {
         mockedExecSync.mockImplementation((cmd: string) => {
-            if (cmd === "op --version") return Buffer.from("2.0.0");
-            if (cmd === 'op read "op://vault/item/password"') return "resolved-secret\n";
+            if (cmd === "op --version") {
+                return Buffer.from("2.0.0");
+            }
+            if (cmd === 'op read "op://vault/item/password"') {
+                return "resolved-secret\n";
+            }
             return "";
         });
 
@@ -39,7 +43,9 @@ describe("resolveOpReferences", () => {
 
     it("should throw an error when op reference resolution fails", () => {
         mockedExecSync.mockImplementation((cmd: string) => {
-            if (cmd === "op --version") return Buffer.from("2.0.0");
+            if (cmd === "op --version") {
+                return Buffer.from("2.0.0");
+            }
             if (cmd === 'op read "op://vault/item/password"') {
                 throw new Error("Item not found");
             }
@@ -53,10 +59,18 @@ describe("resolveOpReferences", () => {
 
     it("should resolve multiple op:// references", () => {
         mockedExecSync.mockImplementation((cmd: string) => {
-            if (cmd === "op --version") return Buffer.from("2.0.0");
-            if (cmd === 'op read "op://vault/item/api-key"') return "resolved-api-key\n";
-            if (cmd === 'op read "op://vault/item/api-secret"') return "resolved-api-secret\n";
-            if (cmd === 'op read "op://vault/database/password"') return "resolved-db-password\n";
+            if (cmd === "op --version") {
+                return Buffer.from("2.0.0");
+            }
+            if (cmd === 'op read "op://vault/item/api-key"') {
+                return "resolved-api-key\n";
+            }
+            if (cmd === 'op read "op://vault/item/api-secret"') {
+                return "resolved-api-secret\n";
+            }
+            if (cmd === 'op read "op://vault/database/password"') {
+                return "resolved-db-password\n";
+            }
             return "";
         });
 

@@ -1,8 +1,8 @@
-import { type ComponentsOverrides, type Theme } from "@mui/material";
+import type { ComponentsOverrides, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FillSpaceClassKey = "root";
 

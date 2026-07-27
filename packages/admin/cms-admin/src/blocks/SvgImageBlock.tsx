@@ -1,22 +1,24 @@
 import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
+import { deepClone } from "@mui/x-data-grid/internals";
 import { FormattedMessage } from "react-intl";
 
-import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
+import type { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
 import { useCometConfig } from "../config/CometConfigContext";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { FileField } from "../form/file/FileField";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
-import { type GQLSvgImageBlockDamFileQuery, type GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
+import type { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
 import { BlockCategory, type BlockDependency, type BlockInterface } from "./types";
 
 type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 
 function createPreviewUrl({ damFile }: SvgImageBlockState, { apiUrl }: { apiUrl: string }): string {
-    if (!damFile) return "";
+    if (!damFile) {
+        return "";
+    }
     return `${apiUrl}${damFile.fileUrl}`;
 }
 
@@ -154,8 +156,12 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     extractTextContents: (state) => {
         const contents = [];
 
-        if (state.damFile?.altText) contents.push(state.damFile.altText);
-        if (state.damFile?.title) contents.push(state.damFile.title);
+        if (state.damFile?.altText) {
+            contents.push(state.damFile.altText);
+        }
+        if (state.damFile?.title) {
+            contents.push(state.damFile.title);
+        }
 
         return contents;
     },

@@ -1,7 +1,8 @@
 import { CrudGenerator, CrudGeneratorHooksService, CurrentUser, MutationError } from "@comet/cms-api";
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { v4 as uuid } from "uuid";
+import { describe, expect, it } from "vitest";
 
 import { findHooksService } from "../find-hooks-service";
 import { testPermission } from "../test-helper";
@@ -49,7 +50,9 @@ describe("find-hooks-service", () => {
             metadata: orm.em.getMetadata().get("TestEntity2"),
             targetDirectory: __dirname,
         });
-        if (!hooksService) throw new Error("hooksService not found");
+        if (!hooksService) {
+            throw new Error("hooksService not found");
+        }
         expect(hooksService.className).toEqual("TestEntity2Service");
         expect(hooksService.imports).toEqual([
             {
@@ -80,7 +83,9 @@ describe("find-hooks-service", () => {
             metadata: orm.em.getMetadata().get("TestEntity"),
             targetDirectory: __dirname,
         });
-        if (!hooksService) throw new Error("hooksService not found");
+        if (!hooksService) {
+            throw new Error("hooksService not found");
+        }
         expect(hooksService.className).toEqual("TestEntityService");
         expect(hooksService.imports).toEqual([
             {
@@ -114,7 +119,9 @@ describe("find-hooks-service", () => {
             metadata: orm.em.getMetadata().get("TestEntity3"),
             targetDirectory: __dirname,
         });
-        if (!hooksService) throw new Error("hooksService not found");
+        if (!hooksService) {
+            throw new Error("hooksService not found");
+        }
         expect(hooksService.className).toEqual("TestEntity3Service");
         expect(hooksService.imports).toEqual([
             {

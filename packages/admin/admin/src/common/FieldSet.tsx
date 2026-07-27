@@ -1,5 +1,5 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { type ComponentsOverrides, type Theme } from "@mui/material";
+import type { ComponentsOverrides, Theme } from "@mui/material";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
@@ -7,7 +7,7 @@ import { css, useThemeProps } from "@mui/material/styles";
 import { type PropsWithChildren, type ReactNode, type SyntheticEvent, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface FieldSetProps
     extends ThemedComponentBaseProps<{
