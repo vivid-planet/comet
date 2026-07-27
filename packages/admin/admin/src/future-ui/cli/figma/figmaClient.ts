@@ -1,29 +1,4 @@
-import { FigmaCliError, type FigmaCliErrorCode } from "./figmaCliError.js";
-
-export function isFigmaCliError(error: unknown): error is FigmaCliError {
-    return error instanceof FigmaCliError;
-}
-
-export const exitCode = {
-    ok: 0,
-    error: 1,
-    auth: 3,
-    rateLimit: 4,
-};
-
-export function exitCodeForError(code: FigmaCliErrorCode): number {
-    switch (code) {
-        case "auth_missing":
-            return exitCode.auth;
-        case "rate_limited":
-            return exitCode.rateLimit;
-        case "scope_denied":
-        case "figma_error":
-        case "component_unknown":
-        case "node_missing":
-            return exitCode.error;
-    }
-}
+import { FigmaCliError } from "./figmaCliError.js";
 
 const FIGMA_FILE_KEY_PATTERN = /\/(?:file|design)\/([^/?#]+)/;
 

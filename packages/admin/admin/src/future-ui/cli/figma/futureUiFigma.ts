@@ -2,8 +2,8 @@ import { Command } from "commander";
 
 import { ddsFigmaFileUrl } from "../../storybook/figmaDesign.js";
 import { discoverComponentInventory } from "./componentInventory.js";
-import { exitCode, exitCodeForError, FigmaRestClient, isFigmaCliError, parseFigmaFileKey, resolveFigmaToken } from "./figmaClient.js";
-import { FigmaCliError } from "./figmaCliError.js";
+import { FigmaRestClient, parseFigmaFileKey, resolveFigmaToken } from "./figmaClient.js";
+import { exitCode, exitCodeForError, FigmaCliError, isFigmaCliError } from "./figmaCliError.js";
 import { describeFigmaTarget } from "./figmaTargetDescription.js";
 
 function writeResult(payload: object): void {
