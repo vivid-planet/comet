@@ -528,7 +528,7 @@ importers:
         specifier: ^6.7.2
         version: 6.7.4(@vue/compiler-core@3.5.15)
       '@google-cloud/recaptcha-enterprise':
-        specifier: ^5.2.0
+        specifier: ^5.13.0
         version: 5.13.0
       '@next/bundle-analyzer':
         specifier: ^16.2.10
