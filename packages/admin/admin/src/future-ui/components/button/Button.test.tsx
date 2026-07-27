@@ -1,7 +1,10 @@
-import { render, screen } from "test-utils";
-import { describe, expect, it } from "vitest";
+import { cleanup, render, screen } from "test-utils";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { Button } from "./Button";
+
+// Testing Library only registers its own cleanup when Vitest's globals are enabled, which they are not.
+afterEach(cleanup);
 
 /**
  * Compile-time contract for slot-prop typing. Never rendered — it exists so
@@ -39,6 +42,61 @@ export function ButtonSlotPropsTypeContract() {
     );
 }
 
+describe("Button render contract", () => {
+    it("emits the root class", () => {
+        render(<Button>Label</Button>);
+
+        expect(screen.getByRole("button")).toHaveClass("cometButton");
+    });
+
+    it("adds the consumer's class alongside the root class", () => {
+        render(<Button className="consumer">Label</Button>);
+
+        expect(screen.getByRole("button")).toHaveClass("cometButton", "consumer");
+    });
+
+    it("emits the default variant as a data attribute", () => {
+        render(<Button>Label</Button>);
+
+        expect(screen.getByRole("button")).toHaveAttribute("data-variant", "primary");
+    });
+
+    it("emits the chosen variant as a data attribute", () => {
+        render(<Button variant="secondary">Label</Button>);
+
+        expect(screen.getByRole("button")).toHaveAttribute("data-variant", "secondary");
+    });
+
+    it("emits `data-disabled` without a value when disabled", () => {
+        render(<Button disabled>Label</Button>);
+
+        expect(screen.getByRole("button")).toHaveAttribute("data-disabled", "");
+    });
+
+    it("omits `data-disabled` when not disabled", () => {
+        render(<Button>Label</Button>);
+
+        expect(screen.getByRole("button")).not.toHaveAttribute("data-disabled");
+    });
+
+    it("sets the type that doesn't submit an enclosing form", () => {
+        render(<Button>Label</Button>);
+
+        expect(screen.getByRole("button")).toHaveAttribute("type", "button");
+    });
+
+    it("emits a part class on each icon", () => {
+        render(
+            <Button startIcon="start" endIcon="end">
+                Label
+            </Button>,
+        );
+
+        expect(screen.getByText("start")).toHaveClass("cometButton__startIcon");
+        expect(screen.getByText("end")).toHaveClass("cometButton__endIcon");
+    });
+});
+
 describe("Button slots", () => {
     it("renders a slot as the element chosen in `slots`, merging the contract class with consumer props", () => {
         render(
@@ -49,7 +107,6 @@ describe("Button slots", () => {
 
         const startIcon = screen.getByRole("link");
         expect(startIcon.getAttribute("href")).toBe("/downloads");
-        expect(startIcon.className).toContain("consumer-class");
-        expect(startIcon.className).toContain("startIcon");
+        expect(startIcon).toHaveClass("cometButton__startIcon", "consumer-class");
     });
 });
