@@ -1,6 +1,6 @@
 import { ArrowRight, Favorite } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { fn } from "storybook/test";
+import { expect, fn } from "storybook/test";
 
 import { figmaDesign } from "../../../storybook/figmaDesign";
 import { themeDecorator } from "../../../storybook/themeDecorator";
@@ -47,7 +47,13 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    play: async ({ args, canvas, userEvent }) => {
+        await userEvent.click(canvas.getByRole("button", { name: "Button" }));
+
+        await expect(args.onClick).toHaveBeenCalledOnce();
+    },
+};
 
 export const Secondary: Story = {
     args: {
@@ -58,6 +64,11 @@ export const Secondary: Story = {
 export const Disabled: Story = {
     args: {
         disabled: true,
+    },
+    play: async ({ args, canvas, userEvent }) => {
+        await userEvent.click(canvas.getByRole("button", { name: "Button" }));
+
+        await expect(args.onClick).not.toHaveBeenCalled();
     },
 };
 
