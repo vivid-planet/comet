@@ -99,6 +99,8 @@
         "@nestjs/testing": "^11.1.21",
         "@storybook/addon-docs": "^10.3.5",
         "@storybook/react-vite": "^10.3.5",
+        "@swc/cli": "^0.8.1",
+        "@swc/core": "^1.15.40",
         "@types/cli-progress": "^3.11.6",
         "@types/compression": "^1.8.1",
         "@types/cookie-parser": "^1.4.10",

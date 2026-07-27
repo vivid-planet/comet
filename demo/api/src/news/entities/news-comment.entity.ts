@@ -1,5 +1,5 @@
 import { ScopedEntity } from "@comet/cms-api";
-import { BaseEntity, Entity, ManyToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { BaseEntity, Entity, ManyToOne, OptionalProps, PrimaryKey, Property, type Rel } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
@@ -15,8 +15,10 @@ export class NewsComment extends BaseEntity {
     @Field(() => ID)
     id: string = uuid();
 
+    // `Rel` breaks the circular type reference between News and NewsComment, which SWC's emitted
+    // decorator metadata would otherwise access before the class is initialized (ReferenceError).
     @ManyToOne(() => News)
-    news!: News;
+    news!: Rel<News>;
 
     @Property()
     @Field()
