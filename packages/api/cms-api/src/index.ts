@@ -185,6 +185,7 @@ export { DAM_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
+export { DamFileAiContentType } from "./dam/files/entities/ai-content-type.enum";
 export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
 export { DamFileImage } from "./dam/files/entities/file-image.entity";
 export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
