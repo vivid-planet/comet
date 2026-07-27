@@ -29,6 +29,7 @@
         "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib --config-file ./.babelrc.build.json",
         "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
         "clean": "rimraf lib",
+        "future-ui-figma": "node --loader ts-node/esm src/future-ui/cli/figma/futureUiFigma.ts",
         "generate-future-ui-theme-tokens": "ts-node ./src/future-ui/cli/generateThemeTokens.ts",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
@@ -99,6 +100,7 @@
         "@types/react-router-dom": "^5.3.3",
         "@vitest/browser": "4.1.8",
         "@vitest/browser-playwright": "4.1.8",
+        "commander": "^9.5.0",
         "eslint": "^9.39.4",
         "eslint-plugin-storybook": "^10.3.5",
         "final-form": "^4.20.10",
@@ -124,7 +126,8 @@
         "typescript": "^5.9.3",
         "vite": "^7.3.1",
         "vite-tsconfig-paths": "^6.0.4",
-        "vitest": "^4.1.8"
+        "vitest": "^4.1.8",
+        "zod": "^4.4.3"
     },
     "peerDependencies": {
         "@apollo/client": "^3.7.0",
