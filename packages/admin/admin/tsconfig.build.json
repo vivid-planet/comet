@@ -3,6 +3,9 @@
         "rootDir": "src"
     },
     "exclude": [
+        "src/future-ui/cli",
+        "src/future-ui/cssModules",
+        "src/future-ui/storybook",
         "**/*.test.tsx",
         "**/*.test.ts",
         "**/*.spec.tsx",
