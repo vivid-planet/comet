@@ -78,7 +78,7 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
             fetch,
             scope: { domain, language },
         });
-        organization = buildOrganization(siteSettings.content, siteConfig.url);
+        organization = buildOrganization(siteSettings.content, { domain, language });
     }
 
     return (
