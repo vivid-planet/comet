@@ -14,13 +14,13 @@
     cursor: pointer;
 
     &[data-variant="primary"] {
-        background: var(--comet-button-variant-primary-default-background);
-        color: var(--comet-button-variant-primary-default-foreground);
+        background: var(--comet-button-color-primary-contained-default-background);
+        color: var(--comet-button-color-primary-contained-default-foreground);
     }
 
     &[data-variant="secondary"] {
-        background: var(--comet-button-variant-secondary-default-background);
-        color: var(--comet-button-variant-secondary-default-foreground);
+        background: var(--comet-button-color-secondary-contained-default-background);
+        color: var(--comet-button-color-secondary-contained-default-foreground);
     }
 
     &[data-disabled] {

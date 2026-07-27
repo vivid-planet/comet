@@ -79,78 +79,6 @@
         --comet-main-navigation-section-header-hover-foreground: var(--comet-color-foreground-muted);
         --comet-main-navigation-section-header-hover-icon: var(--comet-color-foreground-muted);
 
-        --comet-button-variant-primary-default-background: var(--comet-color-action-primary-default);
-        --comet-button-variant-primary-default-foreground: var(--comet-color-action-primary-foreground);
-        --comet-button-variant-primary-default-border: var(--comet-color-action-primary-default);
-
-        --comet-button-variant-primary-hover-background: var(--comet-color-action-primary-hover);
-        --comet-button-variant-primary-hover-foreground: var(--comet-color-action-primary-foreground);
-        --comet-button-variant-primary-hover-border: var(--comet-color-action-primary-hover);
-
-        --comet-button-variant-primary-active-background: var(--comet-color-action-primary-active);
-        --comet-button-variant-primary-active-foreground: var(--comet-color-action-primary-foreground);
-        --comet-button-variant-primary-active-border: var(--comet-color-action-primary-active);
-
-        --comet-button-variant-primary-focus-background: var(--comet-color-action-primary-default);
-        --comet-button-variant-primary-focus-foreground: var(--comet-color-action-primary-foreground);
-        --comet-button-variant-primary-focus-border: var(--comet-color-action-primary-default);
-
-        --comet-button-variant-primary-disabled-background: var(--comet-color-action-primary-disabled);
-        --comet-button-variant-primary-disabled-foreground: var(--comet-color-foreground-subtle);
-        --comet-button-variant-primary-disabled-border: var(--comet-color-action-primary-disabled);
-
-        --comet-button-variant-primary-loading-background: var(--comet-color-action-primary-default);
-        --comet-button-variant-primary-loading-foreground: var(--comet-color-action-primary-foreground);
-        --comet-button-variant-primary-loading-border: var(--comet-color-action-primary-default);
-
-        --comet-button-variant-secondary-default-background: var(--comet-color-background-default);
-        --comet-button-variant-secondary-default-foreground: var(--comet-color-foreground-default);
-        --comet-button-variant-secondary-default-border: var(--comet-color-border-default);
-
-        --comet-button-variant-secondary-hover-background: var(--comet-color-background-subtle);
-        --comet-button-variant-secondary-hover-foreground: var(--comet-color-foreground-default);
-        --comet-button-variant-secondary-hover-border: var(--comet-color-border-strong);
-
-        --comet-button-variant-secondary-active-background: var(--comet-color-background-muted);
-        --comet-button-variant-secondary-active-foreground: var(--comet-color-foreground-default);
-        --comet-button-variant-secondary-active-border: var(--comet-color-border-strong);
-
-        --comet-button-variant-secondary-focus-background: var(--comet-color-background-default);
-        --comet-button-variant-secondary-focus-foreground: var(--comet-color-foreground-default);
-        --comet-button-variant-secondary-focus-border: var(--comet-color-border-default);
-
-        --comet-button-variant-secondary-disabled-background: var(--comet-color-action-secondary-disabled);
-        --comet-button-variant-secondary-disabled-foreground: var(--comet-color-foreground-subtle);
-        --comet-button-variant-secondary-disabled-border: var(--comet-color-border-subtle);
-
-        --comet-button-variant-secondary-loading-background: var(--comet-color-background-default);
-        --comet-button-variant-secondary-loading-foreground: var(--comet-color-foreground-default);
-        --comet-button-variant-secondary-loading-border: var(--comet-color-border-default);
-
-        --comet-button-variant-tertiary-default-background: var(--comet-color-transparent);
-        --comet-button-variant-tertiary-default-foreground: var(--comet-color-action-tertiary-default);
-        --comet-button-variant-tertiary-default-border: var(--comet-color-transparent);
-
-        --comet-button-variant-tertiary-hover-background: var(--comet-color-action-tertiary-subtle);
-        --comet-button-variant-tertiary-hover-foreground: var(--comet-color-action-tertiary-default);
-        --comet-button-variant-tertiary-hover-border: var(--comet-color-transparent);
-
-        --comet-button-variant-tertiary-active-background: var(--comet-color-background-muted);
-        --comet-button-variant-tertiary-active-foreground: var(--comet-color-action-tertiary-active);
-        --comet-button-variant-tertiary-active-border: var(--comet-color-transparent);
-
-        --comet-button-variant-tertiary-focus-background: var(--comet-color-transparent);
-        --comet-button-variant-tertiary-focus-foreground: var(--comet-color-action-tertiary-default);
-        --comet-button-variant-tertiary-focus-border: var(--comet-color-transparent);
-
-        --comet-button-variant-tertiary-disabled-background: var(--comet-color-transparent);
-        --comet-button-variant-tertiary-disabled-foreground: var(--comet-color-foreground-subtle);
-        --comet-button-variant-tertiary-disabled-border: var(--comet-color-transparent);
-
-        --comet-button-variant-tertiary-loading-background: var(--comet-color-transparent);
-        --comet-button-variant-tertiary-loading-foreground: var(--comet-color-action-tertiary-default);
-        --comet-button-variant-tertiary-loading-border: var(--comet-color-transparent);
-
         --comet-button-type-button-small-font-size: var(--comet-typography-body-sm-size);
         --comet-button-type-button-small-font-line-height: var(--comet-typography-body-sm-line-height);
         --comet-button-type-button-small-font-weight: var(--comet-font-weight-medium);
@@ -313,20 +241,20 @@
         --comet-chip-variant-filled-primary-disabled-border: var(--comet-color-action-primary-disabled);
 
         --comet-chip-variant-filled-error-default-background: var(--comet-color-feedback-danger-default);
-        --comet-chip-variant-filled-error-default-foreground: var(--comet-color-action-danger-foreground);
+        --comet-chip-variant-filled-error-default-foreground: var(--comet-color-action-error-foreground);
         --comet-chip-variant-filled-error-default-border: var(--comet-color-feedback-danger-default);
 
-        --comet-chip-variant-filled-error-hover-background: var(--comet-color-action-danger-hover);
-        --comet-chip-variant-filled-error-hover-foreground: var(--comet-color-action-danger-foreground);
-        --comet-chip-variant-filled-error-hover-border: var(--comet-color-action-danger-hover);
+        --comet-chip-variant-filled-error-hover-background: var(--comet-color-action-error-hover);
+        --comet-chip-variant-filled-error-hover-foreground: var(--comet-color-action-error-foreground);
+        --comet-chip-variant-filled-error-hover-border: var(--comet-color-action-error-hover);
 
         --comet-chip-variant-filled-error-focus-background: var(--comet-color-feedback-danger-default);
-        --comet-chip-variant-filled-error-focus-foreground: var(--comet-color-action-danger-foreground);
+        --comet-chip-variant-filled-error-focus-foreground: var(--comet-color-action-error-foreground);
         --comet-chip-variant-filled-error-focus-border: var(--comet-color-feedback-danger-default);
 
-        --comet-chip-variant-filled-error-disabled-background: var(--comet-color-action-danger-disabled);
+        --comet-chip-variant-filled-error-disabled-background: var(--comet-color-action-error-disabled);
         --comet-chip-variant-filled-error-disabled-foreground: var(--comet-color-foreground-subtle);
-        --comet-chip-variant-filled-error-disabled-border: var(--comet-color-action-danger-disabled);
+        --comet-chip-variant-filled-error-disabled-border: var(--comet-color-action-error-disabled);
 
         --comet-chip-variant-filled-info-default-background: var(--comet-color-feedback-info-default);
         --comet-chip-variant-filled-info-default-foreground: var(--comet-color-foreground-on-accent);
@@ -501,5 +429,293 @@
         --comet-chip-size-small-font-weight: var(--comet-font-weight-medium);
 
         --comet-chip-size-small-font-weight-style: var(--comet-font-weight-medium-style);
+
+        --comet-button-color-primary-contained-default-background: var(--comet-color-action-primary-default);
+        --comet-button-color-primary-contained-default-foreground: var(--comet-color-action-primary-foreground);
+        --comet-button-color-primary-contained-default-border: var(--comet-color-action-primary-default);
+
+        --comet-button-color-primary-contained-hover-background: var(--comet-color-action-primary-hover);
+        --comet-button-color-primary-contained-hover-foreground: var(--comet-color-action-primary-foreground);
+        --comet-button-color-primary-contained-hover-border: var(--comet-color-action-primary-hover);
+
+        --comet-button-color-primary-contained-active-background: var(--comet-color-action-primary-active);
+        --comet-button-color-primary-contained-active-foreground: var(--comet-color-action-primary-foreground);
+        --comet-button-color-primary-contained-active-border: var(--comet-color-action-primary-active);
+
+        --comet-button-color-primary-contained-focus-background: var(--comet-color-action-primary-default);
+        --comet-button-color-primary-contained-focus-foreground: var(--comet-color-action-primary-foreground);
+        --comet-button-color-primary-contained-focus-border: var(--comet-color-action-primary-default);
+
+        --comet-button-color-primary-contained-disabled-background: var(--comet-color-action-primary-disabled);
+        --comet-button-color-primary-contained-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-primary-contained-disabled-border: var(--comet-color-action-primary-disabled);
+
+        --comet-button-color-primary-contained-loading-background: var(--comet-color-action-primary-default);
+        --comet-button-color-primary-contained-loading-foreground: var(--comet-color-action-primary-foreground);
+        --comet-button-color-primary-contained-loading-border: var(--comet-color-action-primary-default);
+
+        --comet-button-color-primary-outlined-default-background: var(--comet-color-transparent);
+        --comet-button-color-primary-outlined-default-foreground: var(--comet-color-action-primary-default);
+        --comet-button-color-primary-outlined-default-border: var(--comet-color-action-primary-default);
+
+        --comet-button-color-primary-outlined-hover-background: var(--comet-color-action-primary-subtle);
+        --comet-button-color-primary-outlined-hover-foreground: var(--comet-color-action-primary-hover);
+        --comet-button-color-primary-outlined-hover-border: var(--comet-color-action-primary-hover);
+
+        --comet-button-color-primary-outlined-active-background: var(--comet-color-action-primary-subtle);
+        --comet-button-color-primary-outlined-active-foreground: var(--comet-color-action-primary-active);
+        --comet-button-color-primary-outlined-active-border: var(--comet-color-action-primary-active);
+
+        --comet-button-color-primary-outlined-focus-background: var(--comet-color-transparent);
+        --comet-button-color-primary-outlined-focus-foreground: var(--comet-color-action-primary-default);
+        --comet-button-color-primary-outlined-focus-border: var(--comet-color-action-primary-default);
+
+        --comet-button-color-primary-outlined-disabled-background: var(--comet-color-transparent);
+        --comet-button-color-primary-outlined-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-primary-outlined-disabled-border: var(--comet-color-border-subtle);
+
+        --comet-button-color-primary-outlined-loading-background: var(--comet-color-transparent);
+        --comet-button-color-primary-outlined-loading-foreground: var(--comet-color-action-primary-default);
+        --comet-button-color-primary-outlined-loading-border: var(--comet-color-action-primary-default);
+
+        --comet-button-color-primary-text-default-background: var(--comet-color-transparent);
+        --comet-button-color-primary-text-default-foreground: var(--comet-color-action-primary-default);
+        --comet-button-color-primary-text-default-border: var(--comet-color-transparent);
+
+        --comet-button-color-primary-text-hover-background: var(--comet-color-action-primary-subtle);
+        --comet-button-color-primary-text-hover-foreground: var(--comet-color-action-primary-hover);
+        --comet-button-color-primary-text-hover-border: var(--comet-color-transparent);
+
+        --comet-button-color-primary-text-active-background: var(--comet-color-action-primary-subtle);
+        --comet-button-color-primary-text-active-foreground: var(--comet-color-action-primary-active);
+        --comet-button-color-primary-text-active-border: var(--comet-color-transparent);
+
+        --comet-button-color-primary-text-focus-background: var(--comet-color-transparent);
+        --comet-button-color-primary-text-focus-foreground: var(--comet-color-action-primary-default);
+        --comet-button-color-primary-text-focus-border: var(--comet-color-transparent);
+
+        --comet-button-color-primary-text-disabled-background: var(--comet-color-transparent);
+        --comet-button-color-primary-text-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-primary-text-disabled-border: var(--comet-color-transparent);
+
+        --comet-button-color-primary-text-loading-background: var(--comet-color-transparent);
+        --comet-button-color-primary-text-loading-foreground: var(--comet-color-action-primary-default);
+        --comet-button-color-primary-text-loading-border: var(--comet-color-transparent);
+
+        --comet-button-color-secondary-contained-default-background: var(--comet-color-action-secondary-default);
+        --comet-button-color-secondary-contained-default-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-contained-default-border: var(--comet-color-action-secondary-default);
+
+        --comet-button-color-secondary-contained-hover-background: var(--comet-color-action-secondary-hover);
+        --comet-button-color-secondary-contained-hover-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-contained-hover-border: var(--comet-color-action-secondary-hover);
+
+        --comet-button-color-secondary-contained-active-background: var(--comet-color-action-secondary-active);
+        --comet-button-color-secondary-contained-active-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-contained-active-border: var(--comet-color-action-secondary-active);
+
+        --comet-button-color-secondary-contained-focus-background: var(--comet-color-action-secondary-default);
+        --comet-button-color-secondary-contained-focus-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-contained-focus-border: var(--comet-color-action-secondary-default);
+
+        --comet-button-color-secondary-contained-disabled-background: var(--comet-color-action-secondary-disabled);
+        --comet-button-color-secondary-contained-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-secondary-contained-disabled-border: var(--comet-color-action-secondary-disabled);
+
+        --comet-button-color-secondary-contained-loading-background: var(--comet-color-action-secondary-default);
+        --comet-button-color-secondary-contained-loading-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-contained-loading-border: var(--comet-color-action-secondary-default);
+
+        --comet-button-color-secondary-outlined-default-background: var(--comet-color-transparent);
+        --comet-button-color-secondary-outlined-default-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-outlined-default-border: var(--comet-color-border-strong);
+
+        --comet-button-color-secondary-outlined-hover-background: var(--comet-color-action-secondary-subtle);
+        --comet-button-color-secondary-outlined-hover-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-outlined-hover-border: var(--comet-color-border-strong);
+
+        --comet-button-color-secondary-outlined-active-background: var(--comet-color-action-secondary-subtle);
+        --comet-button-color-secondary-outlined-active-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-outlined-active-border: var(--comet-color-border-strong);
+
+        --comet-button-color-secondary-outlined-focus-background: var(--comet-color-transparent);
+        --comet-button-color-secondary-outlined-focus-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-outlined-focus-border: var(--comet-color-border-strong);
+
+        --comet-button-color-secondary-outlined-disabled-background: var(--comet-color-transparent);
+        --comet-button-color-secondary-outlined-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-secondary-outlined-disabled-border: var(--comet-color-border-subtle);
+
+        --comet-button-color-secondary-outlined-loading-background: var(--comet-color-transparent);
+        --comet-button-color-secondary-outlined-loading-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-outlined-loading-border: var(--comet-color-border-strong);
+
+        --comet-button-color-secondary-text-default-background: var(--comet-color-transparent);
+        --comet-button-color-secondary-text-default-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-text-default-border: var(--comet-color-transparent);
+
+        --comet-button-color-secondary-text-hover-background: var(--comet-color-action-secondary-subtle);
+        --comet-button-color-secondary-text-hover-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-text-hover-border: var(--comet-color-transparent);
+
+        --comet-button-color-secondary-text-active-background: var(--comet-color-action-secondary-subtle);
+        --comet-button-color-secondary-text-active-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-text-active-border: var(--comet-color-transparent);
+
+        --comet-button-color-secondary-text-focus-background: var(--comet-color-transparent);
+        --comet-button-color-secondary-text-focus-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-text-focus-border: var(--comet-color-transparent);
+
+        --comet-button-color-secondary-text-disabled-background: var(--comet-color-transparent);
+        --comet-button-color-secondary-text-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-secondary-text-disabled-border: var(--comet-color-transparent);
+
+        --comet-button-color-secondary-text-loading-background: var(--comet-color-transparent);
+        --comet-button-color-secondary-text-loading-foreground: var(--comet-color-action-secondary-foreground);
+        --comet-button-color-secondary-text-loading-border: var(--comet-color-transparent);
+
+        --comet-button-color-error-contained-default-background: var(--comet-color-action-error-default);
+        --comet-button-color-error-contained-default-foreground: var(--comet-color-action-error-foreground);
+        --comet-button-color-error-contained-default-border: var(--comet-color-action-error-default);
+
+        --comet-button-color-error-contained-hover-background: var(--comet-color-action-error-hover);
+        --comet-button-color-error-contained-hover-foreground: var(--comet-color-action-error-foreground);
+        --comet-button-color-error-contained-hover-border: var(--comet-color-action-error-hover);
+
+        --comet-button-color-error-contained-active-background: var(--comet-color-action-error-active);
+        --comet-button-color-error-contained-active-foreground: var(--comet-color-action-error-foreground);
+        --comet-button-color-error-contained-active-border: var(--comet-color-action-error-active);
+
+        --comet-button-color-error-contained-focus-background: var(--comet-color-action-error-default);
+        --comet-button-color-error-contained-focus-foreground: var(--comet-color-action-error-foreground);
+        --comet-button-color-error-contained-focus-border: var(--comet-color-action-error-default);
+
+        --comet-button-color-error-contained-disabled-background: var(--comet-color-action-error-disabled);
+        --comet-button-color-error-contained-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-error-contained-disabled-border: var(--comet-color-action-error-disabled);
+
+        --comet-button-color-error-contained-loading-background: var(--comet-color-action-error-default);
+        --comet-button-color-error-contained-loading-foreground: var(--comet-color-action-error-foreground);
+        --comet-button-color-error-contained-loading-border: var(--comet-color-action-error-default);
+
+        --comet-button-color-error-outlined-default-background: var(--comet-color-transparent);
+        --comet-button-color-error-outlined-default-foreground: var(--comet-color-action-error-default);
+        --comet-button-color-error-outlined-default-border: var(--comet-color-action-error-default);
+
+        --comet-button-color-error-outlined-hover-background: var(--comet-color-action-error-subtle);
+        --comet-button-color-error-outlined-hover-foreground: var(--comet-color-action-error-hover);
+        --comet-button-color-error-outlined-hover-border: var(--comet-color-action-error-hover);
+
+        --comet-button-color-error-outlined-active-background: var(--comet-color-action-error-subtle);
+        --comet-button-color-error-outlined-active-foreground: var(--comet-color-action-error-active);
+        --comet-button-color-error-outlined-active-border: var(--comet-color-action-error-active);
+
+        --comet-button-color-error-outlined-focus-background: var(--comet-color-transparent);
+        --comet-button-color-error-outlined-focus-foreground: var(--comet-color-action-error-default);
+        --comet-button-color-error-outlined-focus-border: var(--comet-color-action-error-default);
+
+        --comet-button-color-error-outlined-disabled-background: var(--comet-color-transparent);
+        --comet-button-color-error-outlined-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-error-outlined-disabled-border: var(--comet-color-border-subtle);
+
+        --comet-button-color-error-outlined-loading-background: var(--comet-color-transparent);
+        --comet-button-color-error-outlined-loading-foreground: var(--comet-color-action-error-default);
+        --comet-button-color-error-outlined-loading-border: var(--comet-color-action-error-default);
+
+        --comet-button-color-error-text-default-background: var(--comet-color-transparent);
+        --comet-button-color-error-text-default-foreground: var(--comet-color-action-error-default);
+        --comet-button-color-error-text-default-border: var(--comet-color-transparent);
+
+        --comet-button-color-error-text-hover-background: var(--comet-color-action-error-subtle);
+        --comet-button-color-error-text-hover-foreground: var(--comet-color-action-error-hover);
+        --comet-button-color-error-text-hover-border: var(--comet-color-transparent);
+
+        --comet-button-color-error-text-active-background: var(--comet-color-action-error-subtle);
+        --comet-button-color-error-text-active-foreground: var(--comet-color-action-error-active);
+        --comet-button-color-error-text-active-border: var(--comet-color-transparent);
+
+        --comet-button-color-error-text-focus-background: var(--comet-color-transparent);
+        --comet-button-color-error-text-focus-foreground: var(--comet-color-action-error-default);
+        --comet-button-color-error-text-focus-border: var(--comet-color-transparent);
+
+        --comet-button-color-error-text-disabled-background: var(--comet-color-transparent);
+        --comet-button-color-error-text-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-error-text-disabled-border: var(--comet-color-transparent);
+
+        --comet-button-color-error-text-loading-background: var(--comet-color-transparent);
+        --comet-button-color-error-text-loading-foreground: var(--comet-color-action-error-default);
+        --comet-button-color-error-text-loading-border: var(--comet-color-transparent);
+
+        --comet-button-color-success-contained-default-background: var(--comet-color-action-success-default);
+        --comet-button-color-success-contained-default-foreground: var(--comet-color-action-success-foreground);
+        --comet-button-color-success-contained-default-border: var(--comet-color-action-success-default);
+
+        --comet-button-color-success-contained-hover-background: var(--comet-color-action-success-hover);
+        --comet-button-color-success-contained-hover-foreground: var(--comet-color-action-success-foreground);
+        --comet-button-color-success-contained-hover-border: var(--comet-color-action-success-hover);
+
+        --comet-button-color-success-contained-active-background: var(--comet-color-action-success-active);
+        --comet-button-color-success-contained-active-foreground: var(--comet-color-action-success-foreground);
+        --comet-button-color-success-contained-active-border: var(--comet-color-action-success-active);
+
+        --comet-button-color-success-contained-focus-background: var(--comet-color-action-success-default);
+        --comet-button-color-success-contained-focus-foreground: var(--comet-color-action-success-foreground);
+        --comet-button-color-success-contained-focus-border: var(--comet-color-action-success-default);
+
+        --comet-button-color-success-contained-disabled-background: var(--comet-color-action-success-disabled);
+        --comet-button-color-success-contained-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-success-contained-disabled-border: var(--comet-color-action-success-disabled);
+
+        --comet-button-color-success-contained-loading-background: var(--comet-color-action-success-default);
+        --comet-button-color-success-contained-loading-foreground: var(--comet-color-action-success-foreground);
+        --comet-button-color-success-contained-loading-border: var(--comet-color-action-success-default);
+
+        --comet-button-color-success-outlined-default-background: var(--comet-color-transparent);
+        --comet-button-color-success-outlined-default-foreground: var(--comet-color-action-success-default);
+        --comet-button-color-success-outlined-default-border: var(--comet-color-action-success-default);
+
+        --comet-button-color-success-outlined-hover-background: var(--comet-color-action-success-subtle);
+        --comet-button-color-success-outlined-hover-foreground: var(--comet-color-action-success-hover);
+        --comet-button-color-success-outlined-hover-border: var(--comet-color-action-success-hover);
+
+        --comet-button-color-success-outlined-active-background: var(--comet-color-action-success-subtle);
+        --comet-button-color-success-outlined-active-foreground: var(--comet-color-action-success-active);
+        --comet-button-color-success-outlined-active-border: var(--comet-color-action-success-active);
+
+        --comet-button-color-success-outlined-focus-background: var(--comet-color-transparent);
+        --comet-button-color-success-outlined-focus-foreground: var(--comet-color-action-success-default);
+        --comet-button-color-success-outlined-focus-border: var(--comet-color-action-success-default);
+
+        --comet-button-color-success-outlined-disabled-background: var(--comet-color-transparent);
+        --comet-button-color-success-outlined-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-success-outlined-disabled-border: var(--comet-color-border-subtle);
+
+        --comet-button-color-success-outlined-loading-background: var(--comet-color-transparent);
+        --comet-button-color-success-outlined-loading-foreground: var(--comet-color-action-success-default);
+        --comet-button-color-success-outlined-loading-border: var(--comet-color-action-success-default);
+
+        --comet-button-color-success-text-default-background: var(--comet-color-transparent);
+        --comet-button-color-success-text-default-foreground: var(--comet-color-action-success-default);
+        --comet-button-color-success-text-default-border: var(--comet-color-transparent);
+
+        --comet-button-color-success-text-hover-background: var(--comet-color-action-success-subtle);
+        --comet-button-color-success-text-hover-foreground: var(--comet-color-action-success-hover);
+        --comet-button-color-success-text-hover-border: var(--comet-color-transparent);
+
+        --comet-button-color-success-text-active-background: var(--comet-color-action-success-subtle);
+        --comet-button-color-success-text-active-foreground: var(--comet-color-action-success-active);
+        --comet-button-color-success-text-active-border: var(--comet-color-transparent);
+
+        --comet-button-color-success-text-focus-background: var(--comet-color-transparent);
+        --comet-button-color-success-text-focus-foreground: var(--comet-color-action-success-default);
+        --comet-button-color-success-text-focus-border: var(--comet-color-transparent);
+
+        --comet-button-color-success-text-disabled-background: var(--comet-color-transparent);
+        --comet-button-color-success-text-disabled-foreground: var(--comet-color-foreground-subtle);
+        --comet-button-color-success-text-disabled-border: var(--comet-color-transparent);
+
+        --comet-button-color-success-text-loading-background: var(--comet-color-transparent);
+        --comet-button-color-success-text-loading-foreground: var(--comet-color-action-success-default);
+        --comet-button-color-success-text-loading-border: var(--comet-color-transparent);
     }
 }
