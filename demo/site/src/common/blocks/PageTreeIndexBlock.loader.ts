@@ -22,6 +22,7 @@ export const loader = async ({ graphQLFetch, scope }: BlockLoaderOptions<PageTre
                             name
                             path
                             parentId
+                            visibility
                             scope {
                                 domain
                                 language
@@ -40,7 +41,7 @@ export const loader = async ({ graphQLFetch, scope }: BlockLoaderOptions<PageTre
 
         totalCount = paginatedPageTreeNodes.totalCount;
         currentCount += paginatedPageTreeNodes.nodes.length;
-        allNodes.push(...paginatedPageTreeNodes.nodes);
+        allNodes.push(...paginatedPageTreeNodes.nodes.filter((node) => node.visibility === "Published"));
     } while (totalCount > currentCount);
 
     return allNodes;
