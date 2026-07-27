@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 8.28.2
+
+### Patch Changes
+
+- e58d3cb: Export `DamFileAiContentType` enum
+
 ## 8.28.1
 
 ## 8.28.0

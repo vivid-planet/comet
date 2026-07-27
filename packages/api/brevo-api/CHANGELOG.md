@@ -1,5 +1,12 @@
 # @comet/brevo-api
 
+## 8.28.2
+
+### Patch Changes
+
+- Updated dependencies [e58d3cb]
+    - @comet/cms-api@8.28.2
+
 ## 8.28.1
 
 ### Patch Changes
