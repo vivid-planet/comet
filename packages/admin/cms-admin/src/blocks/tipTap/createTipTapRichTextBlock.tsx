@@ -44,7 +44,6 @@ const defaultSupports: TipTapSupports[] = [
     "heading",
     "bold",
     "italic",
-    "underline",
     "strike",
     "sub",
     "sup",
