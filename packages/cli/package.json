@@ -12,7 +12,7 @@
     "main": "lib/index.js",
     "typings": "lib/index.d.ts",
     "bin": {
-        "comet": "bin/comet.js"
+        "dextinity": "bin/dextinity.js"
     },
     "sideEffects": false,
     "files": [

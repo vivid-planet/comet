@@ -455,7 +455,7 @@ In this case, the `block-meta.json` must be provided via a separate API endpoint
 ```json title="package.json"
 {
     "scripts": {
-        "generate-block-types": "comet generate-block-types",
+        "generate-block-types": "dextinity generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"npm run generate-block-types\""
     }
 }
