@@ -11,7 +11,7 @@ import {
 } from "./createTipTapRichTextBlock";
 
 describe("createTipTapRichTextBlock validation", () => {
-    describe("default schema (all supports)", () => {
+    describe("default schema (default supports)", () => {
         const block = createTipTapRichTextBlock({}, "TestDefault");
 
         it("should accept a valid empty document", async () => {
@@ -65,7 +65,7 @@ describe("createTipTapRichTextBlock validation", () => {
             expect(errors).toHaveLength(0);
         });
 
-        it("should accept underline marks", async () => {
+        it("should reject underline marks (not in default supports)", async () => {
             const input = block.blockInputFactory({
                 tipTapContent: {
                     type: "doc",
@@ -78,7 +78,7 @@ describe("createTipTapRichTextBlock validation", () => {
                 },
             });
             const errors = await validate(input);
-            expect(errors).toHaveLength(0);
+            expect(errors).toHaveLength(1);
         });
 
         it("should accept headings", async () => {
@@ -318,6 +318,26 @@ describe("createTipTapRichTextBlock validation", () => {
             });
             const errors = await validate(input);
             expect(errors).toHaveLength(1);
+        });
+    });
+
+    describe("schema with underline support", () => {
+        const block = createTipTapRichTextBlock({ supports: ["underline"] }, "TestUnderline");
+
+        it("should accept underline marks", async () => {
+            const input = block.blockInputFactory({
+                tipTapContent: {
+                    type: "doc",
+                    content: [
+                        {
+                            type: "paragraph",
+                            content: [{ type: "text", marks: [{ type: "underline" }], text: "Underlined" }],
+                        },
+                    ],
+                },
+            });
+            const errors = await validate(input);
+            expect(errors).toHaveLength(0);
         });
     });
 
