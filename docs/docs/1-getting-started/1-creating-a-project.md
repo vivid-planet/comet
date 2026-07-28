@@ -21,7 +21,7 @@ Now, you are ready to create a new Comet DXP project.
 
 To create a new COMET DXP application, execute the following command in your OS command line:
 
-`npx @dextinity/create-app <project-name>`
+`npx @comet/create-app <project-name>`
 
 ## Installation
 
