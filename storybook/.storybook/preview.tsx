@@ -135,7 +135,6 @@ const preview: Preview = {
                     ...orderDevelopment,
                     "component-docs-",
                     "admin-",
-                    "comet-",
                     "stories-",
                 ];
 
