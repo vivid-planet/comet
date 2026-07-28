@@ -1,7 +1,9 @@
-import type { Connection, EntityManager } from "@mikro-orm/postgresql";
+import type { Connection, EntityManager, Knex } from "@mikro-orm/postgresql";
+import { Logger } from "@nestjs/common";
 import { describe, expect, it, vi } from "vitest";
 
 import type { EntityInfoService } from "../entity-info/entity-info.service";
+import type { DependenciesConfig } from "./dependencies.constants";
 import { DependenciesService } from "./dependencies.service";
 import type { DiscoverService } from "./discover.service";
 
@@ -40,7 +42,10 @@ const targetEntities: TargetEntityStub[] = [
     { entityName: "News", metadata: { tableName: "News", primaryKeys: ["id"] }, graphqlObjectType: "News" },
 ];
 
-function createService(rootBlocks: RootBlockStub[]): {
+function createService(
+    rootBlocks: RootBlockStub[],
+    config?: DependenciesConfig,
+): {
     service: DependenciesService;
     executedStatements: string[];
 } {
@@ -64,9 +69,33 @@ function createService(rootBlocks: RootBlockStub[]): {
 
     const entityInfoService = {} as unknown as EntityInfoService;
 
-    const service = new DependenciesService(discoverService, entityInfoService, entityManager);
+    const service = new DependenciesService(discoverService, entityInfoService, entityManager, config);
 
     return { service, executedStatements };
+}
+
+interface RecordedRawCall {
+    sql: string;
+    bindings?: readonly unknown[];
+}
+
+function createTransactionStub({ failOnRefresh = false }: { failOnRefresh?: boolean } = {}): {
+    trx: Knex.Transaction;
+    rawCalls: RecordedRawCall[];
+} {
+    const rawCalls: RecordedRawCall[] = [];
+
+    const trx = {
+        raw: vi.fn((sql: string, bindings?: readonly unknown[]) => {
+            rawCalls.push({ sql, bindings });
+            if (failOnRefresh && sql.includes("REFRESH MATERIALIZED VIEW")) {
+                return Promise.reject(new Error("canceling statement due to statement timeout"));
+            }
+            return Promise.resolve({ rows: [] });
+        }),
+    } as unknown as Knex.Transaction;
+
+    return { trx, rawCalls };
 }
 
 function findStatement(statements: string[], marker: string): string {
@@ -153,6 +182,71 @@ describe("DependenciesService", () => {
 
             const createStatement = findStatement(executedStatements, "CREATE VIEW block_index");
             expect(createStatement).toMatchSnapshot();
+        });
+    });
+
+    describe("refreshBlockIndexDependenciesView", () => {
+        async function runRefresh(config: DependenciesConfig | undefined, options: { concurrently?: boolean; failOnRefresh?: boolean } = {}) {
+            const { service } = createService([], config);
+            const { trx, rawCalls } = createTransactionStub({ failOnRefresh: options.failOnRefresh });
+            const run = service["refreshBlockIndexDependenciesView"](trx, { concurrently: options.concurrently ?? false, refreshId: "refresh-id" });
+            return { run, rawCalls };
+        }
+
+        it("applies configured work_mem and statement_timeout transaction-locally before the refresh", async () => {
+            const { run, rawCalls } = await runRefresh({ blockIndexRefresh: { workMem: "64MB", statementTimeout: 30000 } });
+            await run;
+
+            expect(rawCalls).toHaveLength(3);
+            expect(rawCalls[0].sql).toContain("set_config('work_mem'");
+            expect(rawCalls[0].bindings).toEqual(["64MB"]);
+            expect(rawCalls[1].sql).toContain("set_config('statement_timeout'");
+            expect(rawCalls[1].bindings).toEqual(["30000"]);
+            expect(rawCalls[2].sql).toContain("REFRESH MATERIALIZED VIEW");
+        });
+
+        it("does not emit any SET when no limits are configured", async () => {
+            const { run, rawCalls } = await runRefresh(undefined);
+            await run;
+
+            expect(rawCalls).toHaveLength(1);
+            expect(rawCalls[0].sql).toContain("REFRESH MATERIALIZED VIEW");
+            expect(rawCalls.some((call) => call.sql.includes("set_config"))).toBe(false);
+        });
+
+        it("treats statement_timeout of 0 as disabled and does not emit it", async () => {
+            const { run, rawCalls } = await runRefresh({ blockIndexRefresh: { workMem: "64MB", statementTimeout: 0 } });
+            await run;
+
+            expect(rawCalls).toHaveLength(2);
+            expect(rawCalls[0].sql).toContain("set_config('work_mem'");
+            expect(rawCalls.some((call) => call.sql.includes("statement_timeout"))).toBe(false);
+        });
+
+        it("refreshes CONCURRENTLY only when requested", async () => {
+            const { run: concurrentRun, rawCalls: concurrentCalls } = await runRefresh(undefined, { concurrently: true });
+            await concurrentRun;
+            expect(concurrentCalls[0].sql).toContain("CONCURRENTLY");
+
+            const { run: blockingRun, rawCalls: blockingCalls } = await runRefresh(undefined, { concurrently: false });
+            await blockingRun;
+            expect(blockingCalls[0].sql).not.toContain("CONCURRENTLY");
+        });
+
+        it("logs the refresh id and applied limits and rethrows when the refresh fails", async () => {
+            const loggerError = vi.spyOn(Logger.prototype, "error").mockImplementation(() => undefined);
+            try {
+                const { run } = await runRefresh({ blockIndexRefresh: { workMem: "64MB", statementTimeout: 30000 } }, { failOnRefresh: true });
+                await expect(run).rejects.toThrow("canceling statement due to statement timeout");
+
+                expect(loggerError).toHaveBeenCalledTimes(1);
+                const message = loggerError.mock.calls[0][0];
+                expect(message).toContain("refresh-id");
+                expect(message).toContain("work_mem=64MB");
+                expect(message).toContain("statement_timeout=30000ms");
+            } finally {
+                loggerError.mockRestore();
+            }
         });
     });
 });

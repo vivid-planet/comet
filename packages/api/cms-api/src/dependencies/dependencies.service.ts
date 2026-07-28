@@ -1,5 +1,5 @@
-import { AnyEntity, Connection, EntityManager, type FindOptions, type ObjectQuery } from "@mikro-orm/postgresql";
-import { Injectable, Logger, Optional } from "@nestjs/common";
+import { AnyEntity, Connection, EntityManager, type FindOptions, type Knex, type ObjectQuery } from "@mikro-orm/postgresql";
+import { Inject, Injectable, Logger, Optional } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 as uuid } from "uuid";
 
@@ -8,6 +8,7 @@ import { StringFilter } from "../common/filter/string.filter";
 import { EntityInfoService } from "../entity-info/entity-info.service";
 import { FullTextSearchService } from "../full-text-search/full-text-search.service";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
+import { DEPENDENCIES_CONFIG, DependenciesConfig } from "./dependencies.constants";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
@@ -36,6 +37,7 @@ export class DependenciesService {
         private readonly discoverService: DiscoverService,
         private readonly entityInfoService: EntityInfoService,
         private entityManager: EntityManager,
+        @Optional() @Inject(DEPENDENCIES_CONFIG) private readonly config?: DependenciesConfig,
         @Optional() private readonly pageTreeFullTextService?: PageTreeFullTextService,
         @Optional() private readonly fullTextSearchService?: FullTextSearchService,
     ) {
@@ -243,7 +245,7 @@ export class DependenciesService {
 
                 await trx("BlockIndexRefresh").insert({ id, startedAt: new Date(), finishedAt: null });
 
-                await trx.raw(`REFRESH MATERIALIZED VIEW ${refreshOptions?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+                await this.refreshBlockIndexDependenciesView(trx, { concurrently: refreshOptions?.concurrently ?? false, refreshId: id });
 
                 await trx("BlockIndexRefresh").where({ id }).update({ finishedAt: new Date() });
 
@@ -275,8 +277,9 @@ export class DependenciesService {
             await knex.transaction(async (trx) => {
                 await trx.raw(`SELECT pg_advisory_xact_lock(?)`, [BLOCK_INDEX_REFRESH_LOCK_KEY]);
                 await trx("BlockIndexRefresh").truncate();
-                await trx.raw(`REFRESH MATERIALIZED VIEW block_index_dependencies`);
-                await trx("BlockIndexRefresh").insert({ id: uuid(), startedAt: new Date(), finishedAt: new Date() });
+                const id = uuid();
+                await this.refreshBlockIndexDependenciesView(trx, { concurrently: false, refreshId: id });
+                await trx("BlockIndexRefresh").insert({ id, startedAt: new Date(), finishedAt: new Date() });
             });
 
             return "refreshed";
@@ -322,6 +325,45 @@ export class DependenciesService {
 
         // Backgrounded refresh the caller doesn't wait for — the refresh has been triggered.
         return "refreshed";
+    }
+
+    /**
+     * Runs `REFRESH MATERIALIZED VIEW block_index_dependencies` inside the given transaction, after
+     * applying the configured resource limits (`work_mem`, `statement_timeout`).
+     *
+     * The limits are set transaction-locally via `set_config(..., is_local => true)`, which is the
+     * parameterizable equivalent of `SET LOCAL` (plain `SET` does not accept bind parameters). They
+     * therefore apply only to this refresh and are reset when the transaction ends, without leaking
+     * into other users of the connection.
+     */
+    private async refreshBlockIndexDependenciesView(
+        trx: Knex.Transaction,
+        { concurrently, refreshId }: { concurrently: boolean; refreshId: string },
+    ): Promise<void> {
+        const { workMem, statementTimeout } = this.config?.blockIndexRefresh ?? {};
+
+        if (workMem != null) {
+            await trx.raw(`SELECT set_config('work_mem', ?, true)`, [workMem]);
+        }
+        if (statementTimeout != null && statementTimeout > 0) {
+            await trx.raw(`SELECT set_config('statement_timeout', ?, true)`, [String(statementTimeout)]);
+        }
+
+        try {
+            await trx.raw(`REFRESH MATERIALIZED VIEW ${concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+        } catch (error) {
+            const appliedLimits = [
+                workMem != null ? `work_mem=${workMem}` : undefined,
+                statementTimeout != null && statementTimeout > 0 ? `statement_timeout=${statementTimeout}ms` : undefined,
+            ].filter(Boolean);
+            const limitsInfo = appliedLimits.length > 0 ? ` (resource limits: ${appliedLimits.join(", ")})` : "";
+            this.logger.error(
+                `Block index refresh ${refreshId} failed while refreshing block_index_dependencies${limitsInfo}: ${
+                    error instanceof Error ? error.message : error
+                }`,
+            );
+            throw error;
+        }
     }
 
     async getDependents(
