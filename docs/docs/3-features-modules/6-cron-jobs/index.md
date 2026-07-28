@@ -26,7 +26,7 @@ NODE_OPTIONS='--max-old-space-size=256' npm run console demo-command
 
 ## Cron Job Module
 
-If Kubernetes Cron Jobs are used, Comet DXP can help you manage them.
+If Kubernetes Cron Jobs are used, Dextinity can help you manage them.
 
 ### API
 

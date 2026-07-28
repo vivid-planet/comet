@@ -2,7 +2,7 @@
 title: Preview
 ---
 
-COMET DXP comes with a built-in preview system. There are two different types of preview: the site preview and the block preview.
+Dextinity comes with a built-in preview system. There are two different types of preview: the site preview and the block preview.
 
 ## Block Preview
 

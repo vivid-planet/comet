@@ -6,13 +6,13 @@ MUI components support multiple ways of customization.
 You can override the styles of individual component instances or style them globally using the theme.
 You can also use the theme to override those components' default props.
 
-All Comet Admin components should also support these features.
+All Dextinity Admin components should also support these features.
 
 Those features should be usable as described in [Customization and Styling](/docs/admin-components/customization-and-styling).
 
 ## Basics
 
-Generally, a Comet Admin component should export the following in the `index.ts` file:
+Generally, a Dextinity Admin component should export the following in the `index.ts` file:
 
 - The component itself, with a unique name
 - The props type, named as the component, followed by `Props`
@@ -34,7 +34,7 @@ export type MyComponentClassKey = "root" | "title";
 
 ## Slots
 
-Each element or subcomponent of a Comet Admin component is defined as a slot.
+Each element or subcomponent of a Dextinity Admin component is defined as a slot.
 
 A slot is created and styled by using `createComponentSlot()` and passing in the HTML element or component you want to base your slot on.
 
@@ -60,7 +60,7 @@ const Title = createComponentSlot(Typography)<MyComponentClassKey>({
 
 ## Defining the props type
 
-The props type of Comet Admin components must extend `ThemedComponentBaseProps`.
+The props type of Dextinity Admin components must extend `ThemedComponentBaseProps`.
 As a generic, an object must be passed in with the slot's name as the keys and the type of their base element or component as values.
 
 ```tsx

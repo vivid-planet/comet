@@ -194,7 +194,7 @@ replaceDependenciesInOutput: (output, replacements) => {
 ### Dashboard
 
 New components `DashboardHeader`, `LatestBuildsDashboardWidget`, and `LatestContentUpdatesDashboardWidget` have been added to replace existing components defined in application code.
-See [this PR](https://github.com/vivid-planet/comet-starter/pull/40) for an example on how to migrate.
+See [this PR](https://github.com/vivid-planet/dextinity-starter/pull/40) for an example on how to migrate.
 
 ### BlockPreview
 
@@ -222,7 +222,7 @@ The `Loading` component now uses our `BallTriangle` instead of MUI's `CircularPr
 
 The `getOptionSelected()` prop was removed from `FinalFormSelect` and replaced with `getOptionValue()` in order to support multi-select.
 
-If you had a custom implementation of `getOptionSelected()`, you may need to replace it with a custom `getOptionValue()`. However, for most cases the [default implementation](https://github.com/vivid-planet/comet/commit/fe5e0735#diff-ef93179fe4c6d99e9e776fb1e928ac8b5af12c27fa2d2a6ea124e46028fb8b95R28-R31) will be sufficient.
+If you had a custom implementation of `getOptionSelected()`, you may need to replace it with a custom `getOptionValue()`. However, for most cases the [default implementation](https://github.com/vivid-planet/dextinity/commit/fe5e0735#diff-ef93179fe4c6d99e9e776fb1e928ac8b5af12c27fa2d2a6ea124e46028fb8b95R28-R31) will be sufficient.
 
 #### FilterBarMoreFilters
 

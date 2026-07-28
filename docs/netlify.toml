@@ -5,3 +5,14 @@
 
 [build.environment]
   NODE_OPTIONS = "--max-old-space-size=4096"
+
+# Keep inbound links working after the Comet to Dextinity rename moved these pages.
+[[redirects]]
+  from = "/docs/comet-core-development/*"
+  to = "/docs/dextinity-core-development/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/docs/guides/generate-grid-form-views/integrate-admin-generator-datagrid-into-comet-application"
+  to = "/docs/guides/generate-grid-form-views/integrate-admin-generator-datagrid-into-dextinity-application"
+  status = 301

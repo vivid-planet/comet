@@ -2,7 +2,7 @@
 title: Migration Guide
 ---
 
-This chapter contains instructions for migrating from one COMET DXP version to another.
+This chapter contains instructions for migrating from one Dextinity version to another.
 
 ## @comet/upgrade
 

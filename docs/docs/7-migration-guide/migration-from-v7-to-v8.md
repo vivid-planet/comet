@@ -813,7 +813,7 @@ Now it's time to run npm install:
 
 1. Enter the /api folder: `cd api`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/dextinity/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -1289,7 +1289,7 @@ This section highlights the necessary changes to convert a nestjs-console comman
 The passport dependencies were removed before the install. The following steps must be done manually:
 
 :::info
-If you're unsure about how to structure the AuthModule, look at the [COMET Starter version](https://github.com/vivid-planet/comet-starter/blob/main/api/src/auth/auth.module.ts).
+If you're unsure about how to structure the AuthModule, look at the [Dextinity Starter version](https://github.com/vivid-planet/dextinity-starter/blob/main/api/src/auth/auth.module.ts).
 :::
 
 1. Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`:
@@ -1876,7 +1876,7 @@ Now it's time to run npm install:
 
 1. Enter the /admin folder: `cd admin`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/dextinity/releases).
 4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
@@ -2887,7 +2887,7 @@ Now it's time to run npm install:
 
 1. Enter the /site folder: `cd site`
 2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
-3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/comet/releases).
+3. Update `@comet/` packages to the newest v8 version. You can find the latest release on [Github](https://github.com/vivid-planet/dextinity/releases).
 4. `npm install`
 5. Once the install passed, commit your changes with `--no-verify`
 
@@ -2966,5 +2966,5 @@ If your project uses the COMET brevo module for newsletter integration, check ou
 1. Start the site with `dpm start site`
 2. Check the logs with `dpm logs site`
 3. Fix occurring errors
-4. Execute a local prod build: `./build-and-run-site.sh` (if you don't have the script yet, get it from the [COMET Starter](https://github.com/vivid-planet/comet-starter/blob/main/build-and-run-site.sh))
+4. Execute a local prod build: `./build-and-run-site.sh` (if you don't have the script yet, get it from the [Dextinity Starter](https://github.com/vivid-planet/dextinity-starter/blob/main/build-and-run-site.sh))
 5. Once the site runs without problems: Commit **without** `--no-verify`

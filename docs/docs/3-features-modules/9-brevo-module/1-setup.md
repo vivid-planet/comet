@@ -6,7 +6,7 @@ title: Brevo Setup
 
 :::caution
 This documentation refers to Brevo v3 or higher.
-Make sure that your project uses COMET v7.0 or later.
+Make sure that your project uses Dextinity v7.0 or later.
 :::
 
 The Brevo Module provides three packages: `brevo-api`, `brevo-admin`, and the optional `brevo-mail-rendering` package. Please check the latest release [here](https://github.com/vivid-planet/comet-brevo-module/releases).
@@ -799,4 +799,4 @@ To add the Brevo Mail Rendering package, add the following to your `package.json
 
 To use a block from the package, register it in your `NewsletterContentBlock` (or any `BlocksBlock` you use for creating email campaigns).  
 Make sure to register the block in your API, admin, and site projects.  
-For detailed instructions on working with blocks in Comet, see https://docs.comet-dxp.com/docs/core-concepts/blocks/your-first-block
+For detailed instructions on working with blocks in Dextinity, see https://docs.dextinity.com/docs/core-concepts/blocks/your-first-block

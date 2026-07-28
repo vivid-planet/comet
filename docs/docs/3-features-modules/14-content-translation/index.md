@@ -2,7 +2,7 @@
 title: Content Translation
 ---
 
-COMET DXP provides a content translation feature that allows editors to translate text fields, rich text content, documents, and entire page trees using a pluggable translation service.
+Dextinity provides a content translation feature that allows editors to translate text fields, rich text content, documents, and entire page trees using a pluggable translation service.
 
 ## How it works
 
@@ -180,7 +180,7 @@ The page tree supports translating one or multiple pages at once, including thei
 
 ## Azure AI Translator
 
-COMET provides a built-in integration with [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) as a ready-to-use translation service implementation.
+Dextinity provides a built-in integration with [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) as a ready-to-use translation service implementation.
 
 ### API setup
 

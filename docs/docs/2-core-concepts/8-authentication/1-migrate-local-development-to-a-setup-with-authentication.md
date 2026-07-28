@@ -2,7 +2,7 @@
 title: Migrate local development to a setup with authentication
 ---
 
-This guide helps to add local authentication in a project, like the [current implementation the Comet DXP Starter](https://github.com/vivid-planet/comet-starter/pull/1201) uses.
+This guide helps to add local authentication in a project, like the [current implementation the Dextinity Starter](https://github.com/vivid-planet/dextinity-starter/pull/1201) uses.
 That brings the development setup closer to the production setup as it requires real authentication, thus reducing the risk of environment-specific bugs.
 
 ## Add Auth-Server
@@ -18,8 +18,8 @@ npm i @comet/dev-oidc-provider
 ```env
 # idp
 IDP_PORT=8080
-IDP_CLIENT_ID=comet-oidc-client
-IDP_CLIENT_SECRET=comet-oidc-secret
+IDP_CLIENT_ID=dextinity-oidc-client
+IDP_CLIENT_SECRET=dextinity-oidc-secret
 IDP_SSO_URL=http://${DEV_DOMAIN:-localhost}:${IDP_PORT}
 IDP_JWKS_URI=http://${DEV_DOMAIN:-localhost}:${IDP_PORT}/jwks
 IDP_END_SESSION_ENDPOINT=http://${DEV_DOMAIN:-localhost}:${IDP_PORT}/session/end

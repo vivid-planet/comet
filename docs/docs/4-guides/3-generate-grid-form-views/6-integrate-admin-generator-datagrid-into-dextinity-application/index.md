@@ -1,10 +1,10 @@
 ---
-title: Integrate Admin Generator DataGrid into Comet Application
+title: Integrate Admin Generator DataGrid into Dextinity Application
 ---
 
 At the end of this guide, we want to combine the generated `CustomerGrid` with the `CustomerForm` into a new page, `CustomerPage`.
 
-The `CustomerPage` will be a simple page that contains the `CustomerGrid`, the `CustomerForm`, and the related components from `@dextinity/admin` to seamlessly integrate into a Comet Application.
+The `CustomerPage` will be a simple page that contains the `CustomerGrid`, the `CustomerForm`, and the related components from `@dextinity/admin` to seamlessly integrate into a Dextinity Application.
 
 ## Create CustomerPage
 

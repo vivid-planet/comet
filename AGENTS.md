@@ -149,7 +149,7 @@ Common commands:
 | Package           | Description                                       |
 | ----------------- | ------------------------------------------------- |
 | `comet-storybook` | Storybook for all Comet components (`storybook/`) |
-| `comet-docs`      | Docusaurus documentation site (`docs/`)           |
+| `dextinity-docs`  | Docusaurus documentation site (`docs/`)           |
 
 ## Changesets and changelog
 

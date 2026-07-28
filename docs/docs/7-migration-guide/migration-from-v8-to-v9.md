@@ -12,7 +12,7 @@ This migration guide is designed to be executed by an AI coding agent (e.g., Cla
 **Sample prompt to get started:**
 
 ```
-Migrate this project from Comet v8 to v9. Follow the migration guide at https://docs.comet-dxp.com/docs/migration-guide/migration-from-v8-to-v9 step by step. Work through each section sequentially, making the required changes and running any verification commands. Commit after each major section.
+Migrate this project from Comet v8 to v9. Follow the migration guide at https://docs.dextinity.com/docs/migration-guide/migration-from-v8-to-v9 step by step. Work through each section sequentially, making the required changes and running any verification commands. Commit after each major section.
 ```
 
 :::
@@ -96,7 +96,7 @@ The following changes apply to API, Admin, and Site. Run the steps in each packa
 
 If the symbol you need isn't exported from the package root, **do not copy the code from `/lib` into your project**. The duplicate drifts out of sync with the library, misses bug fixes, and defeats the purpose of using the package.
 
-Instead, open a pull request in [vivid-planet/comet](https://github.com/vivid-planet/comet) that adds the missing export to the package's `src/index.ts` (plus a changeset). Once merged and released, import it from the package root.
+Instead, open a pull request in [vivid-planet/dextinity](https://github.com/vivid-planet/dextinity) that adds the missing export to the package's `src/index.ts` (plus a changeset). Once merged and released, import it from the package root.
 
 ## API
 
@@ -402,7 +402,7 @@ The `DependencyList` component has been replaced by two focused components:
 
 The admin packages now ship ESM-only builds.
 This should not require any significant changes if you're already using Vite.
-Review the [Starter](https://github.com/vivid-planet/comet-starter/tree/main/admin) for an example of a Vite-based admin setup.
+Review the [Starter](https://github.com/vivid-planet/dextinity-starter/tree/main/admin) for an example of a Vite-based admin setup.
 
 The only required change is to update your TSConfig's `module` and `moduleResolution` options:
 
@@ -1199,13 +1199,13 @@ export default class CacheHandler {
 }
 ```
 
-See the [full reference implementation in the demo](https://github.com/vivid-planet/comet/blob/main/demo/site/cache-handler.ts).
+See the [full reference implementation in the demo](https://github.com/vivid-planet/dextinity/blob/main/demo/site/cache-handler.ts).
 
 ### Domain Redirects
 
 Domain redirects can now be set in the admin. It is necessary to update your middleware — most likely the `redirectToMainHost` middleware — to handle domain redirects.
 
-The full reference implementation is in the demo: https://github.com/vivid-planet/comet/blob/main/demo/site/src/middleware/redirectToMainHost.ts.
+The full reference implementation is in the demo: https://github.com/vivid-planet/dextinity/blob/main/demo/site/src/middleware/redirectToMainHost.ts.
 The essential steps are outlined below.
 
 #### 1. Add a `DomainRedirects` query

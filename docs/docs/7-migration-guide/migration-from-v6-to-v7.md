@@ -636,7 +636,7 @@ The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
         +   type: "externalLink",
             primary: <FormattedMessage id="menu.cometDxp" defaultMessage="COMET DXP" />,
             icon: <Snips />,
-            href: "https://comet-dxp.com",
+            href: "https://dextinity.com",
         },
         ```
 
@@ -1121,7 +1121,7 @@ export const LinkBlock = withPreview(
 
 :::info
 
-New projects shouldn't use the legacy behavior. Instead, add support to pass the `className` prop through to the `LinkBlock` an its child blocks. See [this PR](https://github.com/vivid-planet/comet/pull/2271) for an example.
+New projects shouldn't use the legacy behavior. Instead, add support to pass the `className` prop through to the `LinkBlock` an its child blocks. See [this PR](https://github.com/vivid-planet/dextinity/pull/2271) for an example.
 
 :::
 

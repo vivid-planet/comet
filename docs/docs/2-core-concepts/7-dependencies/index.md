@@ -8,7 +8,7 @@ sidebar_position: 7
 Blocks can have references to entities.
 But since block data is stored as JSON, there is no actual database relationship.
 
-If you still need to know which entities a block references or in which blocks an entity is used, you can use COMET's block index.
+If you still need to know which entities a block references or in which blocks an entity is used, you can use Dextinity's block index.
 
 ---
 
