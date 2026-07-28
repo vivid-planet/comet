@@ -8,6 +8,7 @@ import { FormattedMessage } from "react-intl";
 import { useCometConfig } from "../../config/CometConfigContext";
 import { replaceById } from "../../form/file/upload";
 import { useDamBasePath, useDamConfig } from "../config/damConfig";
+import { getDamFileCategory, useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
 import type { DamFileDetails } from "./EditFile";
 
@@ -20,6 +21,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const { apiUrl } = useCometConfig();
     const damConfig = useDamConfig();
     const damBasePath = useDamBasePath();
+    const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -28,10 +30,12 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const errorDialog = useErrorDialog();
     const [replaceLoading, setReplaceLoading] = useState(false);
 
+    const acceptedMimetypesForCategory = filteredAcceptedMimeTypes[getDamFileCategory(file.mimetype)];
+
     const { getInputProps } = useDropzone({
         maxSize: maxFileSizeInBytes,
         multiple: false,
-        accept: convertMimetypesToDropzoneAccept([file.mimetype]),
+        accept: convertMimetypesToDropzoneAccept(acceptedMimetypesForCategory),
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             if (fileRejections.length > 0) {
                 errorDialog?.showError({

@@ -24,6 +24,7 @@ import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
+import { mimetypesHaveSameCategory } from "../common/mimeTypes/mimetype-category";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
@@ -266,9 +267,9 @@ export class FilesService {
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
-            if (uploadedFile.mimetype !== fileToReplace.mimetype) {
+            if (!mimetypesHaveSameCategory(uploadedFile.mimetype, fileToReplace.mimetype)) {
                 throw new Error(
-                    `File cannot be replaced by a file with a different mimetype. Existing mimetype: ${fileToReplace.mimetype}, new mimetype: ${uploadedFile.mimetype}`,
+                    `File cannot be replaced by a file of a different category. Existing mimetype: ${fileToReplace.mimetype}, new mimetype: ${uploadedFile.mimetype}`,
                 );
             }
 

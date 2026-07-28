@@ -1,24 +1,45 @@
 import { useDamConfig } from "./damConfig";
 import { damDefaultAcceptedMimeTypes } from "./damDefaultAcceptedMimeTypes";
 
-const isSvgImage = (mimeType: string): boolean => {
+// This categorization is duplicated in api/cms-api/src/dam/common/mimeTypes/mimetype-category.ts
+// If you change the categories here, change the api file too.
+
+export type DamFileCategory = "svgImage" | "pixelImage" | "audio" | "video" | "document";
+
+export const isSvgImage = (mimeType: string): boolean => {
     return mimeType === "image/svg+xml";
 };
 
-const isPixelImage = (mimeType: string): boolean => {
+export const isPixelImage = (mimeType: string): boolean => {
     return mimeType.startsWith("image/") && !isSvgImage(mimeType);
 };
 
-const isAudio = (mimeType: string): boolean => {
+export const isAudio = (mimeType: string): boolean => {
     return mimeType.startsWith("audio/");
 };
 
-const isVideo = (mimeType: string): boolean => {
+export const isVideo = (mimeType: string): boolean => {
     return mimeType.startsWith("video/");
 };
 
-const isDocument = (mimeType: string): boolean => {
+export const isDocument = (mimeType: string): boolean => {
     return !isSvgImage(mimeType) && !isPixelImage(mimeType) && !isAudio(mimeType) && !isVideo(mimeType);
+};
+
+export const getDamFileCategory = (mimeType: string): DamFileCategory => {
+    if (isSvgImage(mimeType)) {
+        return "svgImage";
+    }
+    if (isPixelImage(mimeType)) {
+        return "pixelImage";
+    }
+    if (isAudio(mimeType)) {
+        return "audio";
+    }
+    if (isVideo(mimeType)) {
+        return "video";
+    }
+    return "document";
 };
 
 interface UseDamAcceptedMimeTypesApi {
@@ -41,7 +62,7 @@ export const useDamAcceptedMimeTypes = (): UseDamAcceptedMimeTypesApi => {
     return {
         allAcceptedMimeTypes,
         filteredAcceptedMimeTypes: {
-            svgImage: allAcceptedMimeTypes.filter((mimetype) => mimetype === "image/svg+xml"),
+            svgImage: allAcceptedMimeTypes.filter(isSvgImage),
             pixelImage: allAcceptedMimeTypes.filter(isPixelImage),
             audio: allAcceptedMimeTypes.filter(isAudio),
             video: allAcceptedMimeTypes.filter(isVideo),
