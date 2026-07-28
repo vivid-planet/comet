@@ -1,8 +1,8 @@
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
-import { ClearInputAdornment, type InputWithPopperProps } from "@comet/admin";
-import { Calendar as CalendarIcon } from "@comet/admin-icons";
+import { ClearInputAdornment, type InputWithPopperProps } from "@dextinity/admin";
+import { Calendar as CalendarIcon } from "@dextinity/admin-icons";
 import type { ComponentsOverrides } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
 import { type FormatDateOptions, useIntl } from "react-intl";
@@ -24,7 +24,7 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
 }
 
 /**
- * @deprecated Use `DatePicker` from `@comet/admin` instead.
+ * @deprecated Use `DatePicker` from `@dextinity/admin` instead.
  */
 export const DatePicker = (inProps: DatePickerProps) => {
     const {

@@ -1,4 +1,4 @@
-import { RteRedo, RteUndo } from "@comet/admin-icons";
+import { RteRedo, RteUndo } from "@dextinity/admin-icons";
 import { EditorState } from "draft-js";
 import { type MouseEvent, useCallback, useMemo } from "react";
 import { useIntl } from "react-intl";

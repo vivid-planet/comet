@@ -3,7 +3,7 @@
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, IsString, ValidateNested } from "class-validator";
-import { OffsetBasedPaginationArgs } from "@comet/cms-api";
+import { OffsetBasedPaginationArgs } from "@dextinity/cms-api";
 import { ManufacturerCountryFilter } from "./manufacturer-country.filter";
 @ArgsType()
 export class ManufacturerCountriesArgs extends OffsetBasedPaginationArgs {

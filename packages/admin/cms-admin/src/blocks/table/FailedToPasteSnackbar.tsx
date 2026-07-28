@@ -1,4 +1,4 @@
-import { Alert } from "@comet/admin";
+import { Alert } from "@dextinity/admin";
 import { Snackbar, type SnackbarProps } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 

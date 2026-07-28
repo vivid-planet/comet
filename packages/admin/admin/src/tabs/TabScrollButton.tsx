@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "@comet/admin-icons";
+import { ChevronLeft, ChevronRight } from "@dextinity/admin-icons";
 import { ButtonBase, type ButtonBaseProps, type ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import isMobile from "is-mobile";

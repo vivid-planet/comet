@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Error } from "@comet/admin-icons";
+import { ChevronDown, ChevronRight, Error } from "@dextinity/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Alert as MuiAlert, type AlertProps, type ComponentsOverrides, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";

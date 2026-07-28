@@ -20,7 +20,7 @@ import {
     SvgImageBlock,
     type SupportedBlocks,
     withPreview,
-} from "@comet/site-nextjs";
+} from "@dextinity/site-nextjs";
 import { type MyBlockData } from "@src/blocks.generated";
 ```
 
@@ -50,11 +50,11 @@ export const MyBlock = withPreview(
 
 ## DamImageBlock Site Wrapper
 
-The site layer does **not** use `DamImageBlock` from a `@comet` package. It uses the site-specific wrapper, typically at `@src/common/blocks/DamImageBlock`:
+The site layer does **not** use `DamImageBlock` from a `@dextinity` package. It uses the site-specific wrapper, typically at `@src/common/blocks/DamImageBlock`:
 
 ```tsx
 // Wrong: import from cms-api
-import { DamImageBlock } from "@comet/cms-api";
+import { DamImageBlock } from "@dextinity/cms-api";
 
 // Correct: import site wrapper
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
@@ -182,7 +182,7 @@ Add `"use client"` at the top of the file when the block uses:
 - React hooks (`useState`, `useEffect`, `useRef`, `useId`, `useContext`, etc.)
 - Event handlers (`onClick`, `onChange`, etc.)
 - Client-only library imports
-- `usePreview()` from `@comet/site-nextjs`
+- `usePreview()` from `@dextinity/site-nextjs`
 
 Most simple composite and list blocks do **not** need `"use client"`.
 

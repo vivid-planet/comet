@@ -1,4 +1,4 @@
-import { OnChangeField, SwitchField } from "@comet/admin";
+import { OnChangeField, SwitchField } from "@dextinity/admin";
 import { useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 

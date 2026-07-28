@@ -1,4 +1,4 @@
-import { Dialog, OkayButton, useStackApi } from "@comet/admin";
+import { Dialog, OkayButton, useStackApi } from "@dextinity/admin";
 import { DialogActions } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";

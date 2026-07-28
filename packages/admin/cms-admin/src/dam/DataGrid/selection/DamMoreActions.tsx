@@ -1,5 +1,5 @@
-import { CrudMoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
-import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
+import { CrudMoreActionsMenu, useEditDialog, useSnackbarApi } from "@dextinity/admin";
+import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@dextinity/admin-icons";
 import { type PopoverOrigin, Slide, type SlideProps, Snackbar } from "@mui/material";
 import { useRef } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";

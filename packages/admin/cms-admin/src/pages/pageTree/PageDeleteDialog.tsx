@@ -1,5 +1,5 @@
-import { DeleteButton, messages } from "@comet/admin";
-import { ArrowRight, Clear, Delete } from "@comet/admin-icons";
+import { DeleteButton, messages } from "@dextinity/admin";
+import { ArrowRight, Clear, Delete } from "@dextinity/admin-icons";
 import {
     Box,
     // eslint-disable-next-line no-restricted-imports

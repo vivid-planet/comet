@@ -5,7 +5,7 @@ import { Args, Query, Resolver } from "@nestjs/graphql";
 import { PaginatedManufacturerCountries } from "./dto/paginated-manufacturer-countries";
 import { ManufacturerCountriesArgs } from "./dto/manufacturer-countries.args";
 import { ManufacturerCountry } from "../entities/manufacturer-country.entity";
-import { RequiredPermission, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
+import { RequiredPermission, gqlArgsToMikroOrmQuery } from "@dextinity/cms-api";
 @Resolver(() => ManufacturerCountry)
 @RequiredPermission(["manufacturers"], { skipScopeCheck: true })
 export class ManufacturerCountryResolver {

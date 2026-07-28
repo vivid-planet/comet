@@ -1,4 +1,4 @@
-import { htmlToState, type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@comet/admin-rte";
+import { htmlToState, type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@dextinity/admin-rte";
 import {
     BlockMapBuilder,
     convertFromHTML,

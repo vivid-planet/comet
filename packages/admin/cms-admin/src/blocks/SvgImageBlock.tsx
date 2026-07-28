@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Field } from "@comet/admin";
+import { Field } from "@dextinity/admin";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { FormattedMessage } from "react-intl";
 

@@ -8,8 +8,8 @@ import {
     Tooltip,
     UndoSnackbar,
     useSnackbarApi,
-} from "@comet/admin";
-import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { Add, Copy, Delete, Invisible, Paste, Visible } from "@dextinity/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {

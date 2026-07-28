@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Loading, StackPageTitle } from "@comet/admin";
+import { Loading, StackPageTitle } from "@dextinity/admin";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";

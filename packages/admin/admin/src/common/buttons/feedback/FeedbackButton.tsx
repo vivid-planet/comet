@@ -1,4 +1,4 @@
-import { ThreeDotSaving } from "@comet/admin-icons";
+import { ThreeDotSaving } from "@dextinity/admin-icons";
 import type { ComponentsOverrides } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
 import { type ReactNode, useEffect, useState } from "react";

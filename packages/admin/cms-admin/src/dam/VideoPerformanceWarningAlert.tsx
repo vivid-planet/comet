@@ -1,4 +1,4 @@
-import { Alert, type AlertProps } from "@comet/admin";
+import { Alert, type AlertProps } from "@dextinity/admin";
 import { FormattedMessage } from "react-intl";
 
 type VideoPerformanceWarningAlertProps = Omit<AlertProps, "severity" | "title" | "children">;

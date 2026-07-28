@@ -1,4 +1,4 @@
-import { Delete, Download, Error, File as FileIcon, FileNotMenu, ThreeDotSaving } from "@comet/admin-icons";
+import { Delete, Download, Error, File as FileIcon, FileNotMenu, ThreeDotSaving } from "@dextinity/admin-icons";
 import {
     Chip,
     type ComponentsOverrides,

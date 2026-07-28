@@ -18,15 +18,15 @@ For multi-site projects, the site pass runs **once per site** — each has its o
 
 Note the shape (verbatim from the prompt) at the top of `test-report.md` so the reader knows what was and wasn't covered.
 
-**Fallback if the prompt is missing this info:** scan `package.json` files for `@comet/site-nextjs` and flag the gap in your summary.
+**Fallback if the prompt is missing this info:** scan `package.json` files for `@dextinity/site-nextjs` and flag the gap in your summary.
 
 ```bash
-grep -l '"@comet/site-nextjs"' $(find . -name package.json -not -path '*/node_modules/*' -not -path '*/.next/*')
+grep -l '"@dextinity/site-nextjs"' $(find . -name package.json -not -path '*/node_modules/*' -not -path '*/.next/*')
 ```
 
 ## Prerequisites
 
-1. **Services running.** `dev-pm status`; admin, api, and codegens must be `Running`. Site only matters if `@comet/site-nextjs` exists. Restart any that aren't.
+1. **Services running.** `dev-pm status`; admin, api, and codegens must be `Running`. Site only matters if `@dextinity/site-nextjs` exists. Restart any that aren't.
 2. **Fixtures loaded.** `npm --prefix api run fixtures` — for projects with a page tree, this seeds the sitemap URLs. Re-run if the migration changed seed/slug logic.
 3. **Drive via Playwright MCP** (`browser_*` tools) so console errors are captured. `curl` is fine for HTTP-status sweeps but won't see hydration/DOM-prop errors.
 4. **Fresh repo-root `test-report.md` ready to write to.** Append findings as you go.
@@ -75,7 +75,7 @@ A project may have a few errors that fire on _every_ admin page. Identify these 
 
 ## Site pass
 
-**Skip this section entirely if no `@comet/site-nextjs` package.** Note "no site package, site pass skipped" in `test-report.md` and stop here.
+**Skip this section entirely if no `@dextinity/site-nextjs` package.** Note "no site package, site pass skipped" in `test-report.md` and stop here.
 
 **For multi-site projects, run once per site.** Each has its own sitemap, routes, and regression surface. Sites typically expose themselves:
 
@@ -111,7 +111,7 @@ Any URL that falls through to not-found may produce _additional_ errors from the
 Apply one of three labels _while_ walking, not after:
 
 1. **Project-fixable** — broken code is under `admin/src`, `site/src`, `api/src`. Belongs in the migration PR or a follow-up.
-2. **Comet upstream** — broken code is under `node_modules/@comet/*`. Surface to the user; don't workaround.
+2. **Comet upstream** — broken code is under `node_modules/@dextinity/*`. Surface to the user; don't workaround.
 3. **Pre-existing / out-of-scope** — same warning pre-existed the migration. Note once at the bottom; don't itemize per-route.
 
 If you can't tell which bucket, grep for the symbol in the project source — if absent, it's upstream or a transitive dep.
@@ -162,7 +162,7 @@ Scope: <admin route count> admin routes; per site, <URL count> sampled from <tot
 
 ## Hand off to Comet upstream
 
-<numbered list of upstream bugs with @comet/\* module paths>
+<numbered list of upstream bugs with @dextinity/\* module paths>
 
 ## Numbers
 
@@ -191,6 +191,6 @@ Useful pattern: ask "commit each fix atomically?" before starting — answer is 
 ## When to stop and ask the human
 
 - **Hundreds of URLs in a bucket all 404.** Route-group regression, not N bugs. Stop after the first 5–10 confirm the pattern.
-- **A console error mentions a file you can't locate** under `src/` or `node_modules/@comet/*`. Ask, don't guess.
+- **A console error mentions a file you can't locate** under `src/` or `node_modules/@dextinity/*`. Ask, don't guess.
 - **CRUD test fails with a 500 suggesting data corruption** (FK violation, dangling reference). Stop before continuing; test data may be polluting subsequent runs.
 - **Playwright MCP can't reach the dev server** (timeouts, ECONNREFUSED). Check `dev-pm status`; if everything is `Running` but unreachable, surface the discrepancy before random restart commands.

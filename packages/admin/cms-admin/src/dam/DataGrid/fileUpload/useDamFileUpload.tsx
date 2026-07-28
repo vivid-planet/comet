@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { Alert, useSnackbarApi } from "@comet/admin";
+import { Alert, useSnackbarApi } from "@dextinity/admin";
 import { Snackbar } from "@mui/material";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import type { Accept, FileRejection } from "react-dropzone";

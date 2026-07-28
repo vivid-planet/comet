@@ -1,5 +1,5 @@
-import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
-import { Document, LinkExternal } from "@comet/admin-icons";
+import { Stack, StackPage, StackSwitch, StackToolbar } from "@dextinity/admin";
+import { Document, LinkExternal } from "@dextinity/admin-icons";
 import type { ComponentType, JSX } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 

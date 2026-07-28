@@ -17,7 +17,7 @@ import {
     RootBlockDataScalar,
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductVariantService } from "../product-variant.service";
 import { ProductVariantMutationError } from "./../product-variant.service";

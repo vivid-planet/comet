@@ -1,4 +1,4 @@
-import { WarningSolid } from "@comet/admin-icons";
+import { WarningSolid } from "@dextinity/admin-icons";
 import { Chip } from "@mui/material";
 import { defineMessages, FormattedMessage } from "react-intl";
 

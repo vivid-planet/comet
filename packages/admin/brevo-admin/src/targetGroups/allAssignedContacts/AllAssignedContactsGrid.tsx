@@ -7,8 +7,8 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
-} from "@comet/admin";
-import type { ContentScope } from "@comet/cms-admin";
+} from "@dextinity/admin";
+import type { ContentScope } from "@dextinity/cms-admin";
 import type { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 

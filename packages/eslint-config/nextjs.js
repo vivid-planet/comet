@@ -29,7 +29,7 @@ const config = [
     nextPlugin.configs["core-web-vitals"],
     {
         rules: {
-            "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
+            "@dextinity/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
             "no-restricted-globals": ["error", "React"],
             "no-restricted-imports": [
                 "error",

@@ -1,4 +1,4 @@
-import { DateFnsLocaleProvider } from "@comet/admin-date-time";
+import { DateFnsLocaleProvider } from "@dextinity/admin-date-time";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import type { Decorator } from "@storybook/react-vite";

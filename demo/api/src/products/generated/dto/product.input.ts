@@ -3,7 +3,7 @@
 import { Field, InputType, ID } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { GraphQLLocalDate } from "graphql-scalars";
-import { BlockInputInterface, DamImageBlock, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { BlockInputInterface, DamImageBlock, IsNullable, IsSlug, PartialType, RootBlockInputScalar, isBlockInputInterface } from "@dextinity/cms-api";
 import { IsArray, IsBoolean, IsDate, IsDateString, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";

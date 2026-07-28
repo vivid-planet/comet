@@ -1,5 +1,5 @@
-import { ClearInputAdornment, type InputWithPopperComponents, type InputWithPopperProps } from "@comet/admin";
-import { Close } from "@comet/admin-icons";
+import { ClearInputAdornment, type InputWithPopperComponents, type InputWithPopperProps } from "@dextinity/admin";
+import { Close } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, type InputBaseProps, Typography } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
 import { type ChangeEvent, type ComponentType, type FocusEvent, type HTMLAttributes, type ReactNode, useEffect, useState } from "react";

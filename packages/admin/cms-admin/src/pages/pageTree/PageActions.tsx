@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
-import { type IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
-import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings, Translate } from "@comet/admin-icons";
+import { type IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@dextinity/admin";
+import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings, Translate } from "@dextinity/admin-icons";
 import { Divider } from "@mui/material";
 import { type PropsWithChildren, useState } from "react";
 import { FormattedMessage } from "react-intl";

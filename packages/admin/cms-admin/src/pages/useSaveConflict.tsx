@@ -1,4 +1,4 @@
-import { Alert, useSnackbarApi } from "@comet/admin";
+import { Alert, useSnackbarApi } from "@dextinity/admin";
 import { Snackbar } from "@mui/material";
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";

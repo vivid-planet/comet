@@ -1,5 +1,5 @@
-import type { GridColDef } from "@comet/admin";
-import { ArrowRight, Reload } from "@comet/admin-icons";
+import type { GridColDef } from "@dextinity/admin";
+import { ArrowRight, Reload } from "@dextinity/admin-icons";
 import { IconButton } from "@mui/material";
 import type { DataGridProps } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";

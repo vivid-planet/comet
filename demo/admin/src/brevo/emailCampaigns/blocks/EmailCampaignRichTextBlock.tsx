@@ -1,4 +1,4 @@
-import { CopyToClipboardButton } from "@comet/admin";
+import { CopyToClipboardButton } from "@dextinity/admin";
 import {
     BlockAdminComponentPaper,
     BlockAdminComponentSection,
@@ -6,7 +6,7 @@ import {
     type BlockState,
     createRichTextBlock,
     ExternalLinkBlock,
-} from "@comet/cms-admin";
+} from "@dextinity/cms-admin";
 import { Box, List, ListItem, ListItemText } from "@mui/material";
 import type { RichTextBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";

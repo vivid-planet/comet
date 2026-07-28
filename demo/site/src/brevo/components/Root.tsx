@@ -9,7 +9,7 @@ import {
     MjmlStyle,
     MjmlText,
     MjmlTitle,
-} from "@comet/mail-react";
+} from "@dextinity/mail-react";
 import { theme } from "@src/brevo/util/theme";
 import type { FC, PropsWithChildren } from "react";
 

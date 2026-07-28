@@ -1,4 +1,4 @@
-import { RteBold, RteItalic, RteStrikethrough, RteSub, RteSup, RteUnderlined } from "@comet/admin-icons";
+import { RteBold, RteItalic, RteStrikethrough, RteSub, RteSup, RteUnderlined } from "@dextinity/admin-icons";
 import * as detectBrowser from "detect-browser";
 import { type Editor, type EditorState, RichUtils } from "draft-js";
 import { type RefObject, useCallback, useMemo } from "react";

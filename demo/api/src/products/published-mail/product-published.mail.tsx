@@ -1,4 +1,4 @@
-import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
+import { MailTemplate, MailTemplateInterface } from "@dextinity/cms-api";
 import { TranslationService } from "@src/translation/translation.service";
 import { IntlProvider } from "react-intl";
 
@@ -12,7 +12,7 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
     async generateMail(props: MailProps) {
         // Imported lazily so the heavy MJML/jsdom rendering stack isn't pulled into memory on
         // API startup — it's only needed when a mail is actually rendered.
-        const { renderMailHtml } = await import("@comet/mail-react/server");
+        const { renderMailHtml } = await import("@dextinity/mail-react/server");
 
         const intl = await this.translationService.getIntl(props.recipient.language);
         const { html, mjmlWarnings } = renderMailHtml(

@@ -42,7 +42,7 @@ site/src/.../blocks/
 ### Signature
 
 ```ts
-import { type BlockLoaderOptions, gql } from "@comet/site-nextjs";
+import { type BlockLoaderOptions, gql } from "@dextinity/site-nextjs";
 import { type MyBlockData } from "@src/blocks.generated";
 
 import { type GQLMyBlockQuery, type GQLMyBlockQueryVariables } from "./MyBlock.loader.generated";
@@ -58,8 +58,8 @@ export const loader = async ({ blockData, graphQLFetch }: BlockLoaderOptions<MyB
 
 | Import                | Source                       | Purpose                                                                                                             |
 | --------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `BlockLoaderOptions`  | `@comet/site-nextjs`         | Types the loader function parameter (provides `blockData`, `graphQLFetch`, `fetch`, and any augmented dependencies) |
-| `gql`                 | `@comet/site-nextjs`         | Tagged template literal for GraphQL queries                                                                         |
+| `BlockLoaderOptions`  | `@dextinity/site-nextjs`     | Types the loader function parameter (provides `blockData`, `graphQLFetch`, `fetch`, and any augmented dependencies) |
+| `gql`                 | `@dextinity/site-nextjs`     | Tagged template literal for GraphQL queries                                                                         |
 | Block data type       | `@src/blocks.generated`      | Type for the block's persisted data (`blockData` parameter)                                                         |
 | Generated query types | `./MyBlock.loader.generated` | Auto-generated types for the GraphQL query and variables                                                            |
 
@@ -171,7 +171,7 @@ This pattern commonly applies to blocks like **GlobalContent**, where the block 
 After fetching the entity, call `recursivelyLoadBlockData` on the nested block field, passing the same dependencies your loader receives (e.g. `scope`, `graphQLFetch`, `fetch`). Use the correct root block type name for the nested content (e.g. `"PageContent"`).
 
 ```ts
-import { type BlockLoader, gql } from "@comet/site-nextjs";
+import { type BlockLoader, gql } from "@dextinity/site-nextjs";
 import { type MyContentBlockData } from "@src/blocks.generated";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 
@@ -297,7 +297,7 @@ Register the loader in the project's `recursivelyLoadBlockData.ts` wrapper (typi
 2. Add an entry to the `blockLoaders` record, keyed by the **block type name** (the name string passed to `createBlock` in the API, without the `Block` suffix in the key).
 
 ```ts
-import { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData as cometRecursivelyLoadBlockData } from "@comet/site-nextjs";
+import { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData as cometRecursivelyLoadBlockData } from "@dextinity/site-nextjs";
 import { type AllBlockNames } from "@src/blocks.generated";
 import { loader as myEntityLoader } from "@src/path/to/blocks/MyEntityBlock.loader";
 
@@ -318,7 +318,7 @@ The key must match the block's type name exactly. This is the string used as the
 The component receives the loader's return value under `data.loaded`. Type it by intersecting the block data with `{ loaded: LoadedData }`:
 
 ```tsx
-import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type PropsWithData, withPreview } from "@dextinity/site-nextjs";
 import { type MyEntityBlockData } from "@src/blocks.generated";
 
 import { type LoadedData } from "./MyEntityBlock.loader";

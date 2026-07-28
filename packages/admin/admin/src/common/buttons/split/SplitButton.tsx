@@ -1,4 +1,4 @@
-import { ChevronDown } from "@comet/admin-icons";
+import { ChevronDown } from "@dextinity/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Button,

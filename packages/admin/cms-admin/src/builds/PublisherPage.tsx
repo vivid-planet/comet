@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, Stack, Toolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, Stack, Toolbar, ToolbarActions, ToolbarTitleItem } from "@dextinity/admin";
 import { styled } from "@mui/material/styles";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";

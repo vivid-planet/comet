@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
-import { Alert, useSnackbarApi } from "@comet/admin";
-import { Assets, Delete, MoreVertical } from "@comet/admin-icons";
+import { Alert, useSnackbarApi } from "@dextinity/admin";
+import { Assets, Delete, MoreVertical } from "@dextinity/admin-icons";
 import { Box, Divider, Grid, IconButton, List, Snackbar, Typography } from "@mui/material";
 import { type ReactElement, type ReactNode, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";

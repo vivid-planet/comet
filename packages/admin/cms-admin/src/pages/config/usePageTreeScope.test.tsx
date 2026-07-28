@@ -1,5 +1,5 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { RouterMemoryRouter } from "@comet/admin";
+import { RouterMemoryRouter } from "@dextinity/admin";
 import type { ReactNode } from "react";
 import { renderHook } from "test-utils";
 import { describe, expect, it } from "vitest";

@@ -9,7 +9,7 @@ import {
     type GridColDef,
     GridToolbarQuickFilter,
     SaveButton,
-} from "@comet/admin";
+} from "@dextinity/admin";
 import {
     CircularProgress,
     // eslint-disable-next-line no-restricted-imports

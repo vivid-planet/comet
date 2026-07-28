@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import type { FetchResult } from "@apollo/client/link/core";
-import { Button, SaveButton } from "@comet/admin";
-import { Move, Reset } from "@comet/admin-icons";
+import { Button, SaveButton } from "@dextinity/admin";
+import { Move, Reset } from "@dextinity/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,

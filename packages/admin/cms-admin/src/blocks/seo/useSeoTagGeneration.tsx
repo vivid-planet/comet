@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { LocalErrorScopeApolloContext, useErrorDialog } from "@comet/admin";
+import { LocalErrorScopeApolloContext, useErrorDialog } from "@dextinity/admin";
 import { useCallback, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 

@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Field, FillSpace, FinalForm, FinalFormInput, Loading, ToolbarTitleItem } from "@comet/admin";
+import { Field, FillSpace, FinalForm, FinalFormInput, Loading, ToolbarTitleItem } from "@dextinity/admin";
 import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";

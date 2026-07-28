@@ -1,4 +1,4 @@
-import { Button, FormSection, useStoredState } from "@comet/admin";
+import { Button, FormSection, useStoredState } from "@dextinity/admin";
 import { InputBase, Stack } from "@mui/material";
 
 export default {

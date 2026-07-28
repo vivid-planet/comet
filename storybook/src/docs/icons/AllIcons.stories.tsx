@@ -1,5 +1,5 @@
-import { ClearInputAdornment } from "@comet/admin";
-import * as imports from "@comet/admin-icons";
+import { ClearInputAdornment } from "@dextinity/admin";
+import * as imports from "@dextinity/admin-icons";
 import { Grid, InputAdornment, InputBase, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";

@@ -1,5 +1,5 @@
-import { Stack, StackPage, StackSwitch, Toolbar } from "@comet/admin";
-import { ContentScopeIndicator, useContentScope } from "@comet/cms-admin";
+import { Stack, StackPage, StackSwitch, Toolbar } from "@dextinity/admin";
+import { ContentScopeIndicator, useContentScope } from "@dextinity/cms-admin";
 import type { DocumentNode } from "graphql";
 import type { JSX, ReactNode } from "react";
 import { useIntl } from "react-intl";

@@ -1,4 +1,4 @@
-import { CheckboxField, Field, FinalFormInput } from "@comet/admin";
+import { CheckboxField, Field, FinalFormInput } from "@dextinity/admin";
 import { FormattedMessage } from "react-intl";
 
 import type { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";

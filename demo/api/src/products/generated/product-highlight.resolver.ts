@@ -5,7 +5,7 @@ import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from "@nest
 import { ProductHighlightInput, ProductHighlightUpdateInput } from "./dto/product-highlight.input";
 import { Product } from "../entities/product.entity";
 import { ProductHighlight } from "../entities/product-highlight.entity";
-import { AffectedEntity, RequiredPermission } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission } from "@dextinity/cms-api";
 @Resolver(() => ProductHighlight)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductHighlightResolver {

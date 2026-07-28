@@ -1,4 +1,4 @@
-import { Add, Check, Close, Reset } from "@comet/admin-icons";
+import { Add, Check, Close, Reset } from "@dextinity/admin-icons";
 import {
     type ComponentsOverrides,
     css,

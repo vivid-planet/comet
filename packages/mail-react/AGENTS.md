@@ -1,4 +1,4 @@
-# Agent Instructions — @comet/mail-react
+# Agent Instructions — @dextinity/mail-react
 
 ## About this package
 
@@ -64,4 +64,4 @@ After making changes, run `pnpm run lint:fix` and then `pnpm run lint` to verify
 ## See also
 
 - Skill: `skills/comet-mail-react/SKILL.md` — patterns and conventions for building emails with this package
-- Docs: `docs/docs/3-features-modules/13-building-html-emails/` — end-user documentation for `@comet/mail-react`
+- Docs: `docs/docs/3-features-modules/13-building-html-emails/` — end-user documentation for `@dextinity/mail-react`

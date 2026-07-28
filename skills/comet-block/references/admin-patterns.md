@@ -13,12 +13,12 @@ import {
     createCompositeBlockSelectField,
     createCompositeBlockSwitchField,
     createCompositeBlockTextField,
-} from "@comet/cms-admin";
+} from "@dextinity/cms-admin";
 import { type MyBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 ```
 
-Image blocks (`DamImageBlock`, `PixelImageBlock`, `SvgImageBlock`) are imported from `@comet/cms-admin`.
+Image blocks (`DamImageBlock`, `PixelImageBlock`, `SvgImageBlock`) are imported from `@dextinity/cms-admin`.
 
 ---
 
@@ -120,7 +120,7 @@ If the composite has **no** sub-route children, omit `hiddenInSubroute` entirely
 
 ## BlockCategory Enum
 
-Import from `@comet/cms-admin`. Only set when the block is used inside a blocks block.
+Import from `@dextinity/cms-admin`. Only set when the block is used inside a blocks block.
 
 | Value               | Typical use                           |
 | ------------------- | ------------------------------------- |

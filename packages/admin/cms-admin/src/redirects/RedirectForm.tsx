@@ -14,7 +14,7 @@ import {
     ToolbarBackButton,
     ToolbarTitleItem,
     useStackSwitchApi,
-} from "@comet/admin";
+} from "@dextinity/admin";
 import { Box, MenuItem } from "@mui/material";
 import { isFQDN } from "class-validator";
 import isEqual from "lodash.isequal";

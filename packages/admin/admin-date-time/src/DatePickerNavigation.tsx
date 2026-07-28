@@ -1,5 +1,5 @@
-import { Button, createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
-import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
+import { Button, createComponentSlot, type ThemedComponentBaseProps } from "@dextinity/admin";
+import { ArrowLeft, ArrowRight, ChevronDown } from "@dextinity/admin-icons";
 import { Box, buttonClasses, type ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { useRef, useState } from "react";
@@ -20,7 +20,7 @@ export interface DatePickerNavigationProps
 }
 
 /**
- * @deprecated The `@comet/admin-date-time` package is deprecated. Use the date/time components from `@comet/admin` instead.
+ * @deprecated The `@dextinity/admin-date-time` package is deprecated. Use the date/time components from `@dextinity/admin` instead.
  */
 export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
     const { focusedDate, changeShownDate, minDate, maxDate, slotProps, ...restProps } = useThemeProps({

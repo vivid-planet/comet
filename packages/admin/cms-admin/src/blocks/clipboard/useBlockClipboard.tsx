@@ -1,4 +1,4 @@
-import { readClipboardText, writeClipboardText } from "@comet/admin";
+import { readClipboardText, writeClipboardText } from "@dextinity/admin";
 import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 

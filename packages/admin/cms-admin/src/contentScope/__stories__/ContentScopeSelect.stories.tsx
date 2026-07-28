@@ -1,5 +1,5 @@
-import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
-import { Domain, Language } from "@comet/admin-icons";
+import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@dextinity/admin";
+import { Domain, Language } from "@dextinity/admin-icons";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";

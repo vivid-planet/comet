@@ -1,8 +1,8 @@
 import { useApolloClient, useMutation } from "@apollo/client";
-import { Field, FinalFormSelect, SaveButton, Tooltip, useAsyncOptionsProps, useStackSwitchApi } from "@comet/admin";
-import { FinalFormDateTimePicker } from "@comet/admin-date-time";
-import { Info, Newsletter } from "@comet/admin-icons";
-import { BlockAdminComponentPaper, BlockAdminComponentSectionGroup, type ContentScope } from "@comet/cms-admin";
+import { Field, FinalFormSelect, SaveButton, Tooltip, useAsyncOptionsProps, useStackSwitchApi } from "@dextinity/admin";
+import { FinalFormDateTimePicker } from "@dextinity/admin-date-time";
+import { Info, Newsletter } from "@dextinity/admin-icons";
+import { BlockAdminComponentPaper, BlockAdminComponentSectionGroup, type ContentScope } from "@dextinity/cms-admin";
 import { Card } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";

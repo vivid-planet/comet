@@ -1,10 +1,10 @@
-import { CometDigitalExperienceLogo } from "@comet/admin-icons";
+import { CometDigitalExperienceLogo } from "@dextinity/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj;
 
 const config: Meta = {
-    title: "@comet/admin-icons/Comet Logo",
+    title: "@dextinity/admin-icons/Comet Logo",
 };
 
 export default config;

@@ -12,7 +12,7 @@ import {
     PreviewSkeleton,
     type PropsWithData,
     withPreview,
-} from "@comet/site-react";
+} from "@dextinity/site-react";
 // eslint-disable-next-line no-restricted-imports
 import NextImageImport, { type ImageProps } from "next/image";
 import type { ReactNode } from "react";

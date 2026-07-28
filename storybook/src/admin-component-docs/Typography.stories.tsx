@@ -56,7 +56,7 @@ export default meta;
 export const Default: Story = {};
 
 /**
- * When using the theme from `@comet/admin` the following additional variants are available to use when rendering lists:
+ * When using the theme from `@dextinity/admin` the following additional variants are available to use when rendering lists:
  *
  * - `list`
  * - `listItem`

@@ -24,7 +24,7 @@ query SitePreviewJwt($scope: JSONObject!, $path: String!, $includeInvisible: Boo
 }
 ```
 
-The `SitePreviewResolver` (in `@comet/cms-api`) signs a short-lived JWT (valid for 10 seconds) using a shared secret (`SITE_PREVIEW_SECRET`). The token payload contains:
+The `SitePreviewResolver` (in `@dextinity/cms-api`) signs a short-lived JWT (valid for 10 seconds) using a shared secret (`SITE_PREVIEW_SECRET`). The token payload contains:
 
 | Field                        | Description                                    |
 | ---------------------------- | ---------------------------------------------- |
@@ -51,10 +51,10 @@ The `/site-preview` route must be on its own domain (the preview domain) when de
 
 ### 3. `/site-preview` Route Validates the JWT and Sets a Cookie
 
-The site exposes a `/site-preview` route that handles the handshake. With the App Router (Next.js), this is a route handler that calls `sitePreviewRoute` from `@comet/site-nextjs`:
+The site exposes a `/site-preview` route that handles the handshake. With the App Router (Next.js), this is a route handler that calls `sitePreviewRoute` from `@dextinity/site-nextjs`:
 
 ```ts title="app/site-preview/route.ts"
-import { sitePreviewRoute } from "@comet/site-nextjs/server";
+import { sitePreviewRoute } from "@dextinity/site-nextjs/server";
 import { type NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
 
 ### 4. Site Reads the Cookie to Determine the Scope
 
-After the redirect, the normal site rendering pipeline runs. The middleware calls `getSiteConfigForHost`, which internally calls `previewParams()` from `@comet/site-nextjs/server`:
+After the redirect, the normal site rendering pipeline runs. The middleware calls `getSiteConfigForHost`, which internally calls `previewParams()` from `@dextinity/site-nextjs/server`:
 
 ```ts
 // Simplified version of getSiteConfigForHost

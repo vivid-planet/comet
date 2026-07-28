@@ -13,7 +13,7 @@ import {
     Video,
     Vimeo,
     YouTube,
-} from "@comet/admin-icons";
+} from "@dextinity/admin-icons";
 import { Box, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { Meta, StoryObj } from "@storybook/react-vite";

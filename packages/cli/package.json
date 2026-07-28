@@ -1,6 +1,6 @@
 {
-    "name": "@comet/cli",
-    "version": "9.2.2",
+    "name": "@dextinity/cli",
+    "version": "1.0.0",
     "description": "A collection of CLI tools for Comet projects",
     "repository": {
         "directory": "packages/cli",
@@ -42,7 +42,7 @@
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
-        "@comet/eslint-config": "workspace:*",
+        "@dextinity/eslint-config": "workspace:*",
         "@types/js-yaml": "^4.0.9",
         "@types/node": "^24.12.4",
         "eslint": "^9.39.4",

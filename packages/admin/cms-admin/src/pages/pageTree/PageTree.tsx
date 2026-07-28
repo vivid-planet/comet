@@ -1,5 +1,5 @@
 import { gql, type ObservableQuery, useApolloClient } from "@apollo/client";
-import { type IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { type IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@dextinity/admin";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
 import {

@@ -1,4 +1,4 @@
-import { Field, FinalFormInput } from "@comet/admin";
+import { Field, FinalFormInput } from "@dextinity/admin";
 import { Box } from "@mui/system";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 

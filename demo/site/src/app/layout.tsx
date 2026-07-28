@@ -1,7 +1,7 @@
-import "@comet/site-nextjs/css";
+import "@dextinity/site-nextjs/css";
 import "@src/styles/global.scss";
 
-import { CookieApiProvider, useLocalStorageCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@comet/site-nextjs";
+import { CookieApiProvider, useLocalStorageCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@dextinity/site-nextjs";
 import { ErrorHandler } from "@src/util/ErrorHandler";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";

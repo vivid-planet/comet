@@ -1,5 +1,5 @@
-import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
-import { type BlockInterface, ContentScopeIndicator, useContentScope } from "@comet/cms-admin";
+import { Stack, StackPage, StackSwitch, StackToolbar } from "@dextinity/admin";
+import { type BlockInterface, ContentScopeIndicator, useContentScope } from "@dextinity/cms-admin";
 import type { JSX } from "react";
 import { useIntl } from "react-intl";
 

@@ -1,4 +1,4 @@
-import { RteIndentDecrease, RteIndentIncrease } from "@comet/admin-icons";
+import { RteIndentDecrease, RteIndentIncrease } from "@dextinity/admin-icons";
 import { type BlockMap, type ContentState, EditorState } from "draft-js";
 import { type MouseEvent, useCallback, useMemo } from "react";
 import { useIntl } from "react-intl";

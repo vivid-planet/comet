@@ -14,15 +14,15 @@ importers:
       '@changesets/cli':
         specifier: ^2.31.0
         version: 2.31.0(@types/node@24.12.4)
-      '@comet/cli':
-        specifier: workspace:*
-        version: link:packages/cli
       '@comet/dev-oidc-provider':
         specifier: ^1.2.1
         version: 1.2.1
       '@comet/dev-process-manager':
         specifier: ^3.1.0
         version: 3.1.0
+      '@dextinity/cli':
+        specifier: workspace:*
+        version: link:packages/cli
       '@formatjs/cli':
         specifier: ^6.7.2
         version: 6.7.4(@vue/compiler-core@3.5.15)
@@ -62,19 +62,19 @@ importers:
       '@apollo/client':
         specifier: ^3.14.1
         version: 3.14.1(@types/react@19.2.15)(graphql-ws@6.0.8(graphql@16.14.2)(ws@8.20.0))(graphql@16.14.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(subscriptions-transport-ws@0.11.0(graphql@16.14.2))
-      '@comet/admin':
+      '@dextinity/admin':
         specifier: workspace:*
         version: link:../../packages/admin/admin
-      '@comet/admin-date-time':
+      '@dextinity/admin-date-time':
         specifier: workspace:*
         version: link:../../packages/admin/admin-date-time
-      '@comet/admin-icons':
+      '@dextinity/admin-icons':
         specifier: workspace:*
         version: link:../../packages/admin/admin-icons
-      '@comet/brevo-admin':
+      '@dextinity/brevo-admin':
         specifier: workspace:*
         version: link:../../packages/admin/brevo-admin
-      '@comet/cms-admin':
+      '@dextinity/cms-admin':
         specifier: workspace:*
         version: link:../../packages/admin/cms-admin
       '@emotion/react':
@@ -162,13 +162,13 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@comet/admin-generator':
+      '@dextinity/admin-generator':
         specifier: workspace:*
         version: link:../../packages/admin/admin-generator
-      '@comet/cli':
+      '@dextinity/cli':
         specifier: workspace:*
         version: link:../../packages/cli
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@formatjs/cli':
@@ -289,13 +289,13 @@ importers:
       '@as-integrations/express5':
         specifier: ^1.1.2
         version: 1.1.2(@apollo/server@5.5.1(graphql@16.14.2))(express@5.2.1)
-      '@comet/brevo-api':
+      '@dextinity/brevo-api':
         specifier: workspace:*
         version: link:../../packages/api/brevo-api
-      '@comet/cms-api':
+      '@dextinity/cms-api':
         specifier: workspace:*
         version: link:../../packages/api/cms-api
-      '@comet/mail-react':
+      '@dextinity/mail-react':
         specifier: workspace:*
         version: link:../../packages/mail-react
       '@faker-js/faker':
@@ -416,13 +416,13 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1
     devDependencies:
-      '@comet/api-generator':
+      '@dextinity/api-generator':
         specifier: workspace:*
         version: link:../../packages/api/api-generator
-      '@comet/cli':
+      '@dextinity/cli':
         specifier: workspace:*
         version: link:../../packages/cli
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@formatjs/cli':
@@ -518,10 +518,10 @@ importers:
       '@base-ui/react':
         specifier: ^1.4.1
         version: 1.5.0(@types/react@19.2.15)(date-fns@4.4.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      '@comet/mail-react':
+      '@dextinity/mail-react':
         specifier: workspace:*
         version: link:../../packages/mail-react
-      '@comet/site-nextjs':
+      '@dextinity/site-nextjs':
         specifier: workspace:*
         version: link:../../packages/site/site-nextjs
       '@formatjs/cli':
@@ -606,10 +606,10 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@comet/cli':
+      '@dextinity/cli':
         specifier: workspace:*
         version: link:../../packages/cli
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@graphql-codegen/add':
@@ -718,7 +718,7 @@ importers:
         specifier: ^2.17.3
         version: 2.17.3
     devDependencies:
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../packages/eslint-config
       '@docusaurus/module-type-aliases':
@@ -763,7 +763,7 @@ importers:
 
   packages/admin/admin:
     dependencies:
-      '@comet/admin-icons':
+      '@dextinity/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
       '@mui/utils':
@@ -812,13 +812,13 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@comet/admin-babel-preset':
+      '@dextinity/admin-babel-preset':
         specifier: workspace:*
         version: link:../admin-babel-preset
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
-      '@comet/eslint-plugin':
+      '@dextinity/eslint-plugin':
         specifier: workspace:*
         version: link:../../eslint-plugin
       '@emotion/react':
@@ -998,10 +998,10 @@ importers:
 
   packages/admin/admin-color-picker:
     dependencies:
-      '@comet/admin':
+      '@dextinity/admin':
         specifier: workspace:*
         version: link:../admin
-      '@comet/admin-icons':
+      '@dextinity/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
       react-colorful:
@@ -1020,10 +1020,10 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@comet/admin-babel-preset':
+      '@dextinity/admin-babel-preset':
         specifier: workspace:*
         version: link:../admin-babel-preset
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@mui/material':
@@ -1071,10 +1071,10 @@ importers:
 
   packages/admin/admin-date-time:
     dependencies:
-      '@comet/admin':
+      '@dextinity/admin':
         specifier: workspace:*
         version: link:../admin
-      '@comet/admin-icons':
+      '@dextinity/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
       '@mui/utils':
@@ -1093,10 +1093,10 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@comet/admin-babel-preset':
+      '@dextinity/admin-babel-preset':
         specifier: workspace:*
         version: link:../admin-babel-preset
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@mui/material':
@@ -1144,13 +1144,13 @@ importers:
 
   packages/admin/admin-generator:
     dependencies:
-      '@comet/admin':
+      '@dextinity/admin':
         specifier: workspace:*
         version: link:../admin
-      '@comet/admin-icons':
+      '@dextinity/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
-      '@comet/cms-admin':
+      '@dextinity/cms-admin':
         specifier: workspace:*
         version: link:../cms-admin
       '@graphql-tools/graphql-file-loader':
@@ -1193,7 +1193,7 @@ importers:
       '@apollo/client':
         specifier: ^3.14.1
         version: 3.14.1(@types/react@19.2.15)(graphql-ws@6.0.8(graphql@16.14.2)(ws@8.20.0))(graphql@16.14.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(subscriptions-transport-ws@0.11.0(graphql@16.14.2))
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@types/node':
@@ -1254,10 +1254,10 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@comet/admin-babel-preset':
+      '@dextinity/admin-babel-preset':
         specifier: workspace:*
         version: link:../admin-babel-preset
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@mui/material':
@@ -1311,10 +1311,10 @@ importers:
 
   packages/admin/admin-rte:
     dependencies:
-      '@comet/admin':
+      '@dextinity/admin':
         specifier: workspace:*
         version: link:../admin
-      '@comet/admin-icons':
+      '@dextinity/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
       detect-browser:
@@ -1339,10 +1339,10 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@comet/admin-babel-preset':
+      '@dextinity/admin-babel-preset':
         specifier: workspace:*
         version: link:../admin-babel-preset
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@mui/material':
@@ -1399,16 +1399,16 @@ importers:
 
   packages/admin/brevo-admin:
     dependencies:
-      '@comet/admin':
+      '@dextinity/admin':
         specifier: workspace:*
         version: link:../admin
-      '@comet/admin-date-time':
+      '@dextinity/admin-date-time':
         specifier: workspace:*
         version: link:../admin-date-time
-      '@comet/admin-icons':
+      '@dextinity/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
-      '@comet/cms-admin':
+      '@dextinity/cms-admin':
         specifier: workspace:*
         version: link:../cms-admin
       date-fns:
@@ -1427,10 +1427,10 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@comet/admin-babel-preset':
+      '@dextinity/admin-babel-preset':
         specifier: workspace:*
         version: link:../admin-babel-preset
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@emotion/react':
@@ -1523,16 +1523,16 @@ importers:
 
   packages/admin/cms-admin:
     dependencies:
-      '@comet/admin':
+      '@dextinity/admin':
         specifier: workspace:*
         version: link:../admin
-      '@comet/admin-date-time':
+      '@dextinity/admin-date-time':
         specifier: workspace:*
         version: link:../admin-date-time
-      '@comet/admin-icons':
+      '@dextinity/admin-icons':
         specifier: workspace:*
         version: link:../admin-icons
-      '@comet/admin-rte':
+      '@dextinity/admin-rte':
         specifier: workspace:*
         version: link:../admin-rte
       '@tiptap/core':
@@ -1641,13 +1641,13 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
-      '@comet/admin-babel-preset':
+      '@dextinity/admin-babel-preset':
         specifier: workspace:*
         version: link:../admin-babel-preset
-      '@comet/cli':
+      '@dextinity/cli':
         specifier: workspace:*
         version: link:../../cli
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@emotion/react':
@@ -1835,7 +1835,7 @@ importers:
 
   packages/api/api-generator:
     dependencies:
-      '@comet/cms-api':
+      '@dextinity/cms-api':
         specifier: workspace:*
         version: link:../cms-api
       chokidar:
@@ -1857,7 +1857,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
     devDependencies:
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@mikro-orm/cli':
@@ -1908,7 +1908,7 @@ importers:
 
   packages/api/brevo-api:
     dependencies:
-      '@comet/cms-api':
+      '@dextinity/cms-api':
         specifier: workspace:*
         version: link:../cms-api
       '@fast-csv/parse':
@@ -1954,7 +1954,7 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1
     devDependencies:
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@kubernetes/client-node':
@@ -2174,7 +2174,7 @@ importers:
       '@aws-sdk/types':
         specifier: ^3.973.15
         version: 3.973.15
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@golevelup/ts-vitest':
@@ -2325,7 +2325,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.41)(@types/node@24.12.4)(typescript@5.9.3)
     devDependencies:
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
       '@types/js-yaml':
@@ -2355,7 +2355,7 @@ importers:
       '@calm/eslint-plugin-react-intl':
         specifier: ^1.4.1
         version: 1.4.1
-      '@comet/eslint-plugin':
+      '@dextinity/eslint-plugin':
         specifier: workspace:*
         version: link:../eslint-plugin
       '@eslint/eslintrc':
@@ -2486,10 +2486,10 @@ importers:
         specifier: ^0.10.2
         version: 0.10.2
     devDependencies:
-      '@comet/cli':
+      '@dextinity/cli':
         specifier: workspace:*
         version: link:../cli
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
       '@storybook/addon-docs':
@@ -2558,7 +2558,7 @@ importers:
 
   packages/site/site-nextjs:
     dependencies:
-      '@comet/site-react':
+      '@dextinity/site-react':
         specifier: workspace:*
         version: link:../site-react
       jose:
@@ -2568,10 +2568,10 @@ importers:
         specifier: ^0.0.1
         version: 0.0.1
     devDependencies:
-      '@comet/cli':
+      '@dextinity/cli':
         specifier: workspace:*
         version: link:../../cli
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@types/react':
@@ -2650,10 +2650,10 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1(react@19.2.6)
     devDependencies:
-      '@comet/cli':
+      '@dextinity/cli':
         specifier: workspace:*
         version: link:../../cli
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
       '@types/draft-js':
@@ -2728,22 +2728,22 @@ importers:
       '@apollo/client':
         specifier: ^3.14.1
         version: 3.14.1(@types/react@19.2.15)(graphql-ws@6.0.8(graphql@16.14.2)(ws@8.20.0))(graphql@16.14.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(subscriptions-transport-ws@0.11.0(graphql@16.14.2))
-      '@comet/admin':
+      '@dextinity/admin':
         specifier: workspace:*
         version: link:../packages/admin/admin
-      '@comet/admin-color-picker':
+      '@dextinity/admin-color-picker':
         specifier: workspace:*
         version: link:../packages/admin/admin-color-picker
-      '@comet/admin-date-time':
+      '@dextinity/admin-date-time':
         specifier: workspace:*
         version: link:../packages/admin/admin-date-time
-      '@comet/admin-icons':
+      '@dextinity/admin-icons':
         specifier: workspace:*
         version: link:../packages/admin/admin-icons
-      '@comet/admin-rte':
+      '@dextinity/admin-rte':
         specifier: workspace:*
         version: link:../packages/admin/admin-rte
-      '@comet/cms-admin':
+      '@dextinity/cms-admin':
         specifier: workspace:*
         version: link:../packages/admin/cms-admin
       '@emotion/react':
@@ -2822,10 +2822,10 @@ importers:
       '@babel/cli':
         specifier: ^7.29.7
         version: 7.29.7(@babel/core@7.29.7)
-      '@comet/admin-babel-preset':
+      '@dextinity/admin-babel-preset':
         specifier: workspace:*
         version: link:../packages/admin/admin-babel-preset
-      '@comet/eslint-config':
+      '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../packages/eslint-config
       '@faker-js/faker':

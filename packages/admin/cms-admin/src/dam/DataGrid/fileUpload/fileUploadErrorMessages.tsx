@@ -1,4 +1,4 @@
-import { PrettyBytes } from "@comet/admin";
+import { PrettyBytes } from "@dextinity/admin";
 import { FormattedMessage } from "react-intl";
 
 import { formatStrong } from "../../../common/errors/errorMessages";

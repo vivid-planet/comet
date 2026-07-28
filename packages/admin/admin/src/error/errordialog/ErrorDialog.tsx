@@ -1,4 +1,4 @@
-import { Accept, Copy } from "@comet/admin-icons";
+import { Accept, Copy } from "@dextinity/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Button, Dialog, Divider, List, ListItem, Stack, Typography } from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";

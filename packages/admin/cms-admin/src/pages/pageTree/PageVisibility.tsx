@@ -1,6 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
-import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { ChevronDown } from "@comet/admin-icons";
+import { UndoSnackbar, useSnackbarApi } from "@dextinity/admin";
+import { ChevronDown } from "@dextinity/admin-icons";
 import { Chip, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";

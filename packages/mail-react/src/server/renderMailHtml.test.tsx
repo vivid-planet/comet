@@ -23,7 +23,7 @@ describe("server/renderMailHtml", () => {
     });
 
     it("includes the passed-in text content", () => {
-        const textContent = "Welcome to @comet/mail-react";
+        const textContent = "Welcome to @dextinity/mail-react";
 
         const { html } = renderMailHtml(
             <MjmlMailRoot>

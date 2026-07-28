@@ -32,7 +32,7 @@ Block fixtures are NestJS `@Injectable()` services that generate realistic seed 
 Projects define a shared `BlockFixture` type that every fixture service must satisfy:
 
 ```ts
-import { type Block, type ExtractBlockInputFactoryProps } from "@comet/cms-api";
+import { type Block, type ExtractBlockInputFactoryProps } from "@dextinity/cms-api";
 
 export type BlockFixture = {
     generateBlockInput: () => Promise<ExtractBlockInputFactoryProps<Block>>;
@@ -52,7 +52,7 @@ For blocks created with `createBlock()`. Inject child fixture services via the c
 ```ts
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
-import { DamImageBlock, type ExtractBlockInputFactoryProps } from "@comet/cms-api";
+import { DamImageBlock, type ExtractBlockInputFactoryProps } from "@dextinity/cms-api";
 import { MyItemBlock } from "@src/documents/pages/blocks/my-item.block";
 import { type BlockFixture } from "../block-fixture.type";
 import { DamImageBlockFixtureService } from "../media/dam-image-block-fixture.service";
@@ -86,7 +86,7 @@ For blocks created with `createListBlock()`. Accept optional `min`/`max` paramet
 ```ts
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
-import { type ExtractBlockInputFactoryProps } from "@comet/cms-api";
+import { type ExtractBlockInputFactoryProps } from "@dextinity/cms-api";
 import { MyListBlock } from "@src/documents/pages/blocks/my-list.block";
 import { type BlockFixture } from "../block-fixture.type";
 import { MyItemBlockFixtureService } from "./my-item-block-fixture.service";
@@ -120,7 +120,7 @@ For blocks created with `createBlocksBlock()`. Define a `Record<string, BlockFix
 ```ts
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
-import { type ExtractBlockInputFactoryProps } from "@comet/cms-api";
+import { type ExtractBlockInputFactoryProps } from "@dextinity/cms-api";
 import { MyContentBlock } from "@src/documents/pages/blocks/my-content.block";
 import { type BlockFixture } from "../block-fixture.type";
 import { RichTextBlockFixtureService } from "../text-and-content/rich-text-block-fixture.service";
@@ -167,7 +167,7 @@ For blocks created with `createOneOfBlock()` or `createLinkBlock()`. Generate al
 ```ts
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
-import { type ExtractBlockInputFactoryProps } from "@comet/cms-api";
+import { type ExtractBlockInputFactoryProps } from "@dextinity/cms-api";
 import { MyOneOfBlock } from "@src/documents/pages/blocks/my-one-of.block";
 import { type BlockFixture } from "../block-fixture.type";
 import { DamImageBlockFixtureService } from "../media/dam-image-block-fixture.service";
@@ -210,7 +210,7 @@ Blocks with no data fields return an empty object.
 
 ```ts
 import { Injectable } from "@nestjs/common";
-import { type ExtractBlockInputFactoryProps } from "@comet/cms-api";
+import { type ExtractBlockInputFactoryProps } from "@dextinity/cms-api";
 import { MySpacerBlock } from "@src/documents/pages/blocks/my-spacer.block";
 import { type BlockFixture } from "../block-fixture.type";
 

@@ -1,5 +1,5 @@
-import { defineConfig, type InjectedFormVariables, injectFormVariables } from "@comet/admin-generator";
-import { DamImageBlock } from "@comet/cms-admin";
+import { defineConfig, type InjectedFormVariables, injectFormVariables } from "@dextinity/admin-generator";
+import { DamImageBlock } from "@dextinity/cms-admin";
 import type { GQLProduct } from "@src/graphql.generated";
 import { productTypeValues } from "@src/products/generator/productTypeValues";
 import { FormattedMessage } from "react-intl";

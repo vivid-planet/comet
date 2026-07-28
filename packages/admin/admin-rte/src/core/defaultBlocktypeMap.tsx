@@ -1,4 +1,4 @@
-import { RteOl, RteUl } from "@comet/admin-icons";
+import { RteOl, RteUl } from "@dextinity/admin-icons";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import { BlockElement } from "./BlockElement";

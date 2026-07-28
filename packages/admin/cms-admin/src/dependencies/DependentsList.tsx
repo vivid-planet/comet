@@ -14,8 +14,8 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
-} from "@comet/admin";
-import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { ArrowRight, OpenNewTab, Reload, ThreeDotSaving } from "@dextinity/admin-icons";
 import { Box, Chip, IconButton } from "@mui/material";
 import type { GridSlotsComponent, GridToolbarProps } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";

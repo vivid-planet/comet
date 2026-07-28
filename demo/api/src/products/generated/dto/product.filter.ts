@@ -16,7 +16,7 @@ import {
     NumberFilter,
     OneToManyFilter,
     StringFilter,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 @InputType()
 export class ProductFilter {
     @Field(() => IdFilter, { nullable: true })

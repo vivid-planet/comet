@@ -18,7 +18,7 @@ export interface PixelImageBlockConfig {
  * Add custom keys via TypeScript interface declaration merging:
  *
  * ```ts
- * declare module "@comet/mail-react" {
+ * declare module "@dextinity/mail-react" {
  *     interface Config {
  *         myKey?: { foo: string };
  *     }

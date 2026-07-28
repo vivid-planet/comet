@@ -1,4 +1,4 @@
-import { MjmlText } from "@comet/mail-react";
+import { MjmlText } from "@dextinity/mail-react";
 import { theme } from "@src/brevo/util/theme";
 import type { ComponentProps, ReactNode } from "react";
 

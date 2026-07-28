@@ -1,6 +1,6 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@dextinity/admin";
 import { type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material";
 import {
     type DraftBlockType,

@@ -1,6 +1,6 @@
 {
-    "name": "@comet/admin-generator",
-    "version": "9.2.2",
+    "name": "@dextinity/admin-generator",
+    "version": "1.0.0",
     "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
@@ -40,9 +40,9 @@
         "test:watch": "vitest --watch"
     },
     "dependencies": {
-        "@comet/admin": "workspace:*",
-        "@comet/admin-icons": "workspace:*",
-        "@comet/cms-admin": "workspace:*",
+        "@dextinity/admin": "workspace:*",
+        "@dextinity/admin-icons": "workspace:*",
+        "@dextinity/cms-admin": "workspace:*",
         "@graphql-tools/graphql-file-loader": "^7.5.17",
         "@graphql-tools/load": "^7.8.14",
         "@mui/material": "^7.3.11",
@@ -58,7 +58,7 @@
     },
     "devDependencies": {
         "@apollo/client": "^3.14.1",
-        "@comet/eslint-config": "workspace:*",
+        "@dextinity/eslint-config": "workspace:*",
         "@types/node": "^24.12.4",
         "@types/object-path": "^0.11.4",
         "@types/pluralize": "^0.0.33",

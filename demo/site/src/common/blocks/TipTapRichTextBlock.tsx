@@ -8,7 +8,7 @@ import {
     type TipTapNode,
     type TipTapNodeHandler,
     withPreview,
-} from "@comet/site-nextjs";
+} from "@dextinity/site-nextjs";
 import type { LinkBlockData, ProductPriceBlockData, ProductTeaserBlockData, TipTapRichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import { ProductPriceBlock } from "@src/products/blocks/ProductPriceBlock";

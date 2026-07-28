@@ -110,39 +110,39 @@ Common commands:
 
 | Package                     | Description                                                                               |
 | --------------------------- | ----------------------------------------------------------------------------------------- |
-| `@comet/admin`              | Core admin components and framework (React, MUI, Apollo, Final Form)                      |
-| `@comet/admin-babel-preset` | Shared Babel preset for transpiling admin packages                                        |
-| `@comet/admin-color-picker` | Color picker form field component                                                         |
-| `@comet/admin-date-time`    | Date/time picker form field components                                                    |
-| `@comet/admin-icons`        | SVG icon library as React components                                                      |
-| `@comet/admin-rte`          | Rich text editor component (Draft.js-based)                                               |
-| `@comet/admin-generator`    | CLI tool that generates admin CRUD UIs from GraphQL schemas (`comet-admin-generator` bin) |
-| `@comet/cms-admin`          | Admin UI for CMS features (pages, blocks, content management)                             |
-| `@comet/brevo-admin`        | Admin UI for Brevo email/marketing integration                                            |
+| `@dextinity/admin`              | Core admin components and framework (React, MUI, Apollo, Final Form)                      |
+| `@dextinity/admin-babel-preset` | Shared Babel preset for transpiling admin packages                                        |
+| `@dextinity/admin-color-picker` | Color picker form field component                                                         |
+| `@dextinity/admin-date-time`    | Date/time picker form field components                                                    |
+| `@dextinity/admin-icons`        | SVG icon library as React components                                                      |
+| `@dextinity/admin-rte`          | Rich text editor component (Draft.js-based)                                               |
+| `@dextinity/admin-generator`    | CLI tool that generates admin CRUD UIs from GraphQL schemas (`comet-admin-generator` bin) |
+| `@dextinity/cms-admin`          | Admin UI for CMS features (pages, blocks, content management)                             |
+| `@dextinity/brevo-admin`        | Admin UI for Brevo email/marketing integration                                            |
 
 ### API (`packages/api/`)
 
 | Package                | Description                                                                                |
 | ---------------------- | ------------------------------------------------------------------------------------------ |
-| `@comet/cms-api`       | NestJS/GraphQL API for CMS features (file uploads, translations, blocks, S3/Azure storage) |
-| `@comet/brevo-api`     | NestJS integration for the Brevo email/marketing service                                   |
-| `@comet/api-generator` | CLI tool that generates TypeScript types from GraphQL schemas (`comet-api-generator` bin)  |
+| `@dextinity/cms-api`       | NestJS/GraphQL API for CMS features (file uploads, translations, blocks, S3/Azure storage) |
+| `@dextinity/brevo-api`     | NestJS integration for the Brevo email/marketing service                                   |
+| `@dextinity/api-generator` | CLI tool that generates TypeScript types from GraphQL schemas (`comet-api-generator` bin)  |
 
 ### Site (`packages/site/`)
 
 | Package              | Description                                                   |
 | -------------------- | ------------------------------------------------------------- |
-| `@comet/site-react`  | React components and utilities for the frontend/site layer    |
-| `@comet/site-nextjs` | Next.js-specific site layer components (extends `site-react`) |
+| `@dextinity/site-react`  | React components and utilities for the frontend/site layer    |
+| `@dextinity/site-nextjs` | Next.js-specific site layer components (extends `site-react`) |
 
 ### Utilities
 
 | Package                | Description                                                |
 | ---------------------- | ---------------------------------------------------------- |
-| `@comet/cli`           | Central CLI entry point for Comet projects (`comet` bin)   |
-| `@comet/eslint-config` | Shared ESLint configurations                               |
-| `@comet/eslint-plugin` | Custom ESLint rules for Comet projects                     |
-| `@comet/mail-react`    | Utilities for building HTML emails with React (MJML-based) |
+| `@dextinity/cli`           | Central CLI entry point for Comet projects (`comet` bin)   |
+| `@dextinity/eslint-config` | Shared ESLint configurations                               |
+| `@dextinity/eslint-plugin` | Custom ESLint rules for Comet projects                     |
+| `@dextinity/mail-react`    | Utilities for building HTML emails with React (MJML-based) |
 
 ### Docs & Storybook
 
@@ -169,7 +169,7 @@ Example:
 
 ```markdown
 ---
-"@comet/package-name": patch
+"@dextinity/package-name": patch
 ---
 
 Fix description here
@@ -178,7 +178,7 @@ Fix description here
 ## Commit messages
 
 - Do not use Conventional Commits.
-- If a change is scoped to one package, prefix the commit message with the affected package name. Don't include `@comet/` in the package name.
+- If a change is scoped to one package, prefix the commit message with the affected package name. Don't include `@dextinity/` in the package name.
 
 ## Generated demo files
 

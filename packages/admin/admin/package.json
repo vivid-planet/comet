@@ -1,6 +1,6 @@
 {
-    "name": "@comet/admin",
-    "version": "9.2.2",
+    "name": "@dextinity/admin",
+    "version": "1.0.0",
     "description": "Comet Admin package",
     "repository": {
         "directory": "packages/admin/admin",
@@ -43,7 +43,7 @@
         "test:watch": "vitest --watch"
     },
     "dependencies": {
-        "@comet/admin-icons": "workspace:*",
+        "@dextinity/admin-icons": "workspace:*",
         "@mui/utils": "^7.3.11",
         "date-fns": "^4.4.0",
         "exceljs": "^4.4.0",
@@ -61,9 +61,9 @@
         "@apollo/client": "^3.14.1",
         "@babel/cli": "^7.29.7",
         "@babel/core": "^7.29.7",
-        "@comet/admin-babel-preset": "workspace:*",
-        "@comet/eslint-config": "workspace:*",
-        "@comet/eslint-plugin": "workspace:*",
+        "@dextinity/admin-babel-preset": "workspace:*",
+        "@dextinity/eslint-config": "workspace:*",
+        "@dextinity/eslint-plugin": "workspace:*",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@mui/material": "^7.3.11",

@@ -10,7 +10,7 @@ import {
     FinalFormSelect,
     FormSection,
     OkayButton,
-} from "@comet/admin";
+} from "@dextinity/admin";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,

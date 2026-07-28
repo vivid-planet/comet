@@ -1,6 +1,6 @@
 # Components & Theme Reference
 
-Theme system, module augmentation, scoped theming, and the component behavior for `@comet/mail-react` that its types and TSDoc don't capture on their own. For prop names, types, and defaults, read the types and their TSDoc.
+Theme system, module augmentation, scoped theming, and the component behavior for `@dextinity/mail-react` that its types and TSDoc don't capture on their own. For prop names, types, and defaults, read the types and their TSDoc.
 
 ## Table of Contents
 
@@ -70,7 +70,7 @@ const theme = createTheme({
     },
 });
 
-declare module "@comet/mail-react" {
+declare module "@dextinity/mail-react" {
     interface TextVariants {
         heading: true;
         body: true;
@@ -105,7 +105,7 @@ const theme = createTheme({
     },
 });
 
-declare module "@comet/mail-react" {
+declare module "@dextinity/mail-react" {
     interface DividerVariants {
         thin: true;
         thick: true;
@@ -133,7 +133,7 @@ const theme = createTheme({
     },
 });
 
-declare module "@comet/mail-react" {
+declare module "@dextinity/mail-react" {
     interface ButtonVariants {
         primary: true;
         gradient: true;
@@ -148,7 +148,7 @@ Variant properties (`color`, `backgroundColor`, `backgroundImage`, `border`, `bo
 Built-in keys are `default` and `mobile`. Add custom breakpoints:
 
 ```ts
-import { createBreakpoint, type ThemeBreakpoint } from "@comet/mail-react";
+import { createBreakpoint, type ThemeBreakpoint } from "@dextinity/mail-react";
 
 const theme = createTheme({
     breakpoints: { tablet: createBreakpoint(540) },
@@ -157,7 +157,7 @@ const theme = createTheme({
     },
 });
 
-declare module "@comet/mail-react" {
+declare module "@dextinity/mail-react" {
     interface ThemeBreakpoints {
         tablet: ThemeBreakpoint;
     }
@@ -178,7 +178,7 @@ const theme = createTheme({
     },
 });
 
-declare module "@comet/mail-react" {
+declare module "@dextinity/mail-react" {
     interface ThemeBackgroundColors {
         highlight: string;
         footer: string;
@@ -377,7 +377,7 @@ Themed button, styled from `theme.button` (base styles plus variants). Falls bac
 **Prefer `MjmlWrapper` when only the background color changes.** Reach for `ThemeProvider` when text color, variants, or other theme values also need to differ — cloning a theme is overkill for a background-only change.
 
 ```tsx
-import { ThemeProvider } from "@comet/mail-react";
+import { ThemeProvider } from "@dextinity/mail-react";
 import { theme } from "./theme";
 
 const darkSectionTheme = {
@@ -424,7 +424,7 @@ Theme-aware `registerStyles` entries always resolve against the **root theme** f
 
 ## MJML Component Re-exports
 
-`@comet/mail-react` re-exports all MJML components from `@faire/mjml-react`. Consumers import everything from `@comet/mail-react` — never from `@faire/mjml-react` directly.
+`@dextinity/mail-react` re-exports all MJML components from `@faire/mjml-react`. Consumers import everything from `@dextinity/mail-react` — never from `@faire/mjml-react` directly.
 
 Common re-exports: `MjmlColumn`, `MjmlSpacer`, `MjmlTable`, `MjmlRaw`, `MjmlGroup`, `MjmlAttributes`, `MjmlAll`, `MjmlClass`, `MjmlStyle`, `MjmlComment`, `MjmlConditionalComment`.
 

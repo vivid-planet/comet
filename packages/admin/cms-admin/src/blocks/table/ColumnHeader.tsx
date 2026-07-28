@@ -1,5 +1,5 @@
-import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
-import { Add, Copy, Delete, DensityStandard, DragIndicator, Duplicate, Paste, PinLeft, PinRight, Remove } from "@comet/admin-icons";
+import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@dextinity/admin";
+import { Add, Copy, Delete, DensityStandard, DragIndicator, Duplicate, Paste, PinLeft, PinRight, Remove } from "@dextinity/admin-icons";
 import { ButtonBase, Divider, Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { GridColumnHeaderParams } from "@mui/x-data-grid";

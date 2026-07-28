@@ -34,7 +34,7 @@ However, if your project does **not** have the Warning Module configured yet, yo
 Add the module to the `imports` array:
 
 ```typescript
-import { WarningsModule } from "@comet/cms-api";
+import { WarningsModule } from "@dextinity/cms-api";
 
 return {
     module: AppModule,

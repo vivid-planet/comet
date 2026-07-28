@@ -3,7 +3,7 @@
 import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
-import { IdFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
+import { IdFilter, OneToManyFilter, StringFilter } from "@dextinity/cms-api";
 @InputType()
 export class ProductCategoryTypeFilter {
     @Field(() => IdFilter, { nullable: true })

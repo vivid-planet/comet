@@ -1,11 +1,11 @@
 ---
 name: comet-mail-react
-description: Guide for building HTML emails with @comet/mail-react and MJML. Use whenever working on email templates, mail markup, MJML components, email theming, email styling, responsive emails, column layouts, multi-column email sections, rendering Comet CMS block data (such as pixel-image blocks) in emails, or anything involving @comet/mail-react or HTML email development — even for seemingly simple tasks like putting content side-by-side in columns, since email client compatibility is a minefield that requires specific patterns and research before implementing.
+description: Guide for building HTML emails with @dextinity/mail-react and MJML. Use whenever working on email templates, mail markup, MJML components, email theming, email styling, responsive emails, column layouts, multi-column email sections, rendering Comet CMS block data (such as pixel-image blocks) in emails, or anything involving @dextinity/mail-react or HTML email development — even for seemingly simple tasks like putting content side-by-side in columns, since email client compatibility is a minefield that requires specific patterns and research before implementing.
 ---
 
-# Building HTML Emails with @comet/mail-react
+# Building HTML Emails with @dextinity/mail-react
 
-`@comet/mail-react` lets you build responsive, themed HTML emails using React components. Under the hood it uses [MJML](https://documentation.mjml.io/) to generate cross-client-compatible HTML. The library provides a theme system, higher-level wrapper components, a style utility layer, and Storybook integration for live previewing emails during development.
+`@dextinity/mail-react` lets you build responsive, themed HTML emails using React components. Under the hood it uses [MJML](https://documentation.mjml.io/) to generate cross-client-compatible HTML. The library provides a theme system, higher-level wrapper components, a style utility layer, and Storybook integration for live previewing emails during development.
 
 ---
 
@@ -41,7 +41,7 @@ This applies to seemingly simple things: `border-radius`, `background-image`, `f
 
 ### Library Documentation
 
-Full documentation for `@comet/mail-react`: https://docs.comet-dxp.com/docs/features-modules/building-html-emails/
+Full documentation for `@dextinity/mail-react`: https://docs.comet-dxp.com/docs/features-modules/building-html-emails/
 
 ---
 
@@ -148,7 +148,7 @@ Outlook ignores `border-radius` — rounded corners render as sharp rectangles. 
 Create a theme with `createTheme()` and pass it to `MjmlMailRoot`:
 
 ```tsx
-import { createTheme, MjmlMailRoot } from "@comet/mail-react";
+import { createTheme, MjmlMailRoot } from "@dextinity/mail-react";
 
 const theme = createTheme({
     sizes: {
@@ -188,12 +188,12 @@ For module-scoped responsive CSS that depends only on the theme, prefer `registe
 
 ### Module Augmentation for Type-Safety
 
-`@comet/mail-react` uses TypeScript module augmentation to make custom theme tokens type-safe. Always augment these interfaces when extending the theme — TypeScript will then error on typos or unknown keys.
+`@dextinity/mail-react` uses TypeScript module augmentation to make custom theme tokens type-safe. Always augment these interfaces when extending the theme — TypeScript will then error on typos or unknown keys.
 
 **Text Variants** — restrict `variant` prop to defined names:
 
 ```ts
-declare module "@comet/mail-react" {
+declare module "@dextinity/mail-react" {
     interface TextVariants {
         heading: true;
         body: true;
@@ -205,7 +205,7 @@ declare module "@comet/mail-react" {
 **Custom Breakpoints** — make new breakpoint keys available in responsive values:
 
 ```ts
-declare module "@comet/mail-react" {
+declare module "@dextinity/mail-react" {
     interface ThemeBreakpoints {
         tablet: ThemeBreakpoint;
     }
@@ -215,7 +215,7 @@ declare module "@comet/mail-react" {
 **Custom Colors** — add project-specific color tokens:
 
 ```ts
-declare module "@comet/mail-react" {
+declare module "@dextinity/mail-react" {
     interface ThemeBackgroundColors {
         highlight: string;
     }
@@ -236,7 +236,7 @@ Place `declare module` blocks in your theme file below the `createTheme()` call.
 `Config` exposes environment-specific values — e.g. asset base URLs — to every component in the tree. Add keys via module augmentation:
 
 ```ts
-declare module "@comet/mail-react" {
+declare module "@dextinity/mail-react" {
     interface Config {
         assetBaseUrl?: string;
     }
@@ -246,7 +246,7 @@ declare module "@comet/mail-react" {
 Wire at the root and read from any descendant:
 
 ```tsx
-import { MjmlMailRoot, useConfig, type Config } from "@comet/mail-react";
+import { MjmlMailRoot, useConfig, type Config } from "@dextinity/mail-react";
 
 const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
 
@@ -286,7 +286,7 @@ const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
 
 Variants are named typography presets (font size, weight, line height, color) defined in the theme; their values can change per breakpoint.
 
-All components are imported from `@comet/mail-react` — never from `@faire/mjml-react` directly.
+All components are imported from `@dextinity/mail-react` — never from `@faire/mjml-react` directly.
 
 → For theme tokens, responsive values, component behavior, scoped theming, and MJML re-exports, read [`references/components-and-theme.md`](references/components-and-theme.md).
 
@@ -294,7 +294,7 @@ All components are imported from `@comet/mail-react` — never from `@faire/mjml
 
 ## Blocks
 
-`@comet/mail-react` ships components that render Comet CMS block data — currently pixel-image and rich-text blocks. Reach for these instead of hand-rolled markup whenever the source is a CMS block-data record.
+`@dextinity/mail-react` ships components that render Comet CMS block data — currently pixel-image and rich-text blocks. Reach for these instead of hand-rolled markup whenever the source is a CMS block-data record.
 
 ### Pixel-image blocks
 
@@ -456,7 +456,7 @@ Use BEM with camelCase blocks for CSS class names:
 4. **`!important`** on all responsive overrides
 
 ```tsx
-import { css, MjmlColumn, MjmlRaw, MjmlSection, registerStyles } from "@comet/mail-react";
+import { css, MjmlColumn, MjmlRaw, MjmlSection, registerStyles } from "@dextinity/mail-react";
 
 function CalloutBox({ title, children }: { title: string; children: React.ReactNode }) {
     return (
@@ -503,8 +503,8 @@ registerStyles(
 Use `renderMailHtml` to convert the React tree to final HTML for sending:
 
 ```tsx
-import { MjmlMailRoot, MjmlSection, MjmlColumn, MjmlText } from "@comet/mail-react";
-import { renderMailHtml } from "@comet/mail-react/server";
+import { MjmlMailRoot, MjmlSection, MjmlColumn, MjmlText } from "@dextinity/mail-react";
+import { renderMailHtml } from "@dextinity/mail-react/server";
 
 const { html, mjmlWarnings } = renderMailHtml(
     <MjmlMailRoot theme={theme}>
@@ -517,9 +517,9 @@ const { html, mjmlWarnings } = renderMailHtml(
 );
 ```
 
-- **Server** (`@comet/mail-react/server`) — uses `mjml`, requires Node.js
-- **Client** (`@comet/mail-react/client`) — uses `mjml-browser`, works without `fs`
-- `renderMailHtml` is **not** on the main `@comet/mail-react` barrel — always import from `/server` or `/client`
+- **Server** (`@dextinity/mail-react/server`) — uses `mjml`, requires Node.js
+- **Client** (`@dextinity/mail-react/client`) — uses `mjml-browser`, works without `fs`
+- `renderMailHtml` is **not** on the main `@dextinity/mail-react` barrel — always import from `/server` or `/client`
 - Returns `{ html: string; mjmlWarnings: MjmlWarning[] }` — warnings are collected, not thrown
 
 ### Logging MJML Warnings
@@ -550,7 +550,7 @@ Add the addon to `.storybook/main.ts`:
 const config = {
     addons: [
         // ... other addons
-        "@comet/mail-react/storybook",
+        "@dextinity/mail-react/storybook",
     ],
 };
 ```
@@ -567,7 +567,7 @@ This single entry auto-configures:
 Stories only define the email content — the decorator handles `MjmlMailRoot`. Every story should render the actual component being demonstrated (not just surrounding context):
 
 ```tsx
-import { MjmlColumn, MjmlSection, MjmlText } from "@comet/mail-react";
+import { MjmlColumn, MjmlSection, MjmlText } from "@dextinity/mail-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const config: Meta = { title: "Mails/WelcomeEmail" };
@@ -615,7 +615,7 @@ Storybook previews show how the email renders in a web browser, but email client
 
 ## Related Modules
 
-The `@comet/mail-react` package focuses on building email markup. For sending emails and managing templates in a Comet project:
+The `@dextinity/mail-react` package focuses on building email markup. For sending emails and managing templates in a Comet project:
 
-- **Mail Templates Module** — server-side template registration, dependency injection, and sending. Integrates with `@comet/mail-react` via `renderMailHtml`. Docs: https://docs.comet-dxp.com/docs/features-modules/mail-templates-module/
+- **Mail Templates Module** — server-side template registration, dependency injection, and sending. Integrates with `@dextinity/mail-react` via `renderMailHtml`. Docs: https://docs.comet-dxp.com/docs/features-modules/mail-templates-module/
 - **Mailer Module** — lower-level mail sending service. Docs: https://docs.comet-dxp.com/docs/features-modules/mailer-module/

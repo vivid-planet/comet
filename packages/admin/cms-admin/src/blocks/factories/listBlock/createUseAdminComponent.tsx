@@ -1,4 +1,4 @@
-import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { UndoSnackbar, useSnackbarApi } from "@dextinity/admin";
 import { type ChangeEvent, type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";

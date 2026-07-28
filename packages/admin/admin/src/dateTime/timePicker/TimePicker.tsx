@@ -1,4 +1,4 @@
-import { Time } from "@comet/admin-icons";
+import { Time } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerProps as MuiTimePickerProps } from "@mui/x-date-pickers";
 import { type ReactNode, useState } from "react";
@@ -51,7 +51,7 @@ export type TimePickerProps = ThemedComponentBaseProps<{
  * with a time icon that opens a time picker dialog. The component handles time strings in 24-hour format (HH:mm)
  * and includes features like clearing, read-only state, and customizable icons.
  *
- * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-timepicker--docs)
+ * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@dextinity/admin_components-datetime-timepicker--docs)
  * - [MUI X TimePicker Documentation](https://mui.com/x/react-date-pickers/time-picker/)
  */
 export const TimePicker = (inProps: TimePickerProps) => {

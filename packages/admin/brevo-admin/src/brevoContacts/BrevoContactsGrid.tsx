@@ -14,9 +14,9 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
-} from "@comet/admin";
-import { Add, Block, Check, Delete, Edit } from "@comet/admin-icons";
-import type { ContentScope } from "@comet/cms-admin";
+} from "@dextinity/admin";
+import { Add, Block, Check, Delete, Edit } from "@dextinity/admin-icons";
+import type { ContentScope } from "@dextinity/cms-admin";
 import { IconButton } from "@mui/material";
 import type { GridSlotsComponent } from "@mui/x-data-grid";
 import type { ReactElement } from "react";

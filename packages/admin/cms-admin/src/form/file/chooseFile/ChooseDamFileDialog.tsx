@@ -1,4 +1,4 @@
-import { Button } from "@comet/admin";
+import { Button } from "@dextinity/admin";
 import { styled } from "@mui/material/styles";
 import type { SyntheticEvent } from "react";
 import { FormattedMessage } from "react-intl";

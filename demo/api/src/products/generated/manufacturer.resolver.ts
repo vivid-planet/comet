@@ -6,7 +6,7 @@ import { ManufacturerInput, ManufacturerUpdateInput } from "./dto/manufacturer.i
 import { PaginatedManufacturers } from "./dto/paginated-manufacturers";
 import { ManufacturersArgs } from "./dto/manufacturers.args";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { AffectedEntity, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { AffectedEntity, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@dextinity/cms-api";
 @Resolver(() => Manufacturer)
 export class ManufacturerResolver {
     constructor(protected readonly entityManager: EntityManager) {}

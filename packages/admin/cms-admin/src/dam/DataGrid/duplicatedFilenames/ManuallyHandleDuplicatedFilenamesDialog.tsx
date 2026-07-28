@@ -1,5 +1,5 @@
-import { Alert, Button } from "@comet/admin";
-import { Duplicate, Forward, Save } from "@comet/admin-icons";
+import { Alert, Button } from "@dextinity/admin";
+import { Duplicate, Forward, Save } from "@dextinity/admin-icons";
 import {
     Box,
     // eslint-disable-next-line no-restricted-imports

@@ -1,5 +1,5 @@
-import { Field, type FieldProps, FinalFormInput, Loading, messages, SelectField } from "@comet/admin";
-import { Add, ArtificialIntelligence, Delete } from "@comet/admin-icons";
+import { Field, type FieldProps, FinalFormInput, Loading, messages, SelectField } from "@dextinity/admin";
+import { Add, ArtificialIntelligence, Delete } from "@dextinity/admin-icons";
 import { Box, Divider, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";

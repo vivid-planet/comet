@@ -1,4 +1,4 @@
-import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@dextinity/admin";
 import { type ComponentsOverrides, css, type Theme, Typography, type TypographyProps, useThemeProps } from "@mui/material";
 import type { ElementType } from "react";
 

@@ -1,4 +1,4 @@
-import { BlockCategory, type BlockInterface, type BlockState, createCompositeBlock, PixelImageBlock } from "@comet/cms-admin";
+import { BlockCategory, type BlockInterface, type BlockState, createCompositeBlock, PixelImageBlock } from "@dextinity/cms-admin";
 import { FormattedMessage } from "react-intl";
 
 import type { NewsletterImageBlockData, NewsletterImageBlockInput } from "../blocks.generated";

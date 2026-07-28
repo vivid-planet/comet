@@ -1,5 +1,5 @@
-import { BrevoContactsService, SubscribeResponse } from "@comet/brevo-api";
-import { DisableCometGuards } from "@comet/cms-api";
+import { BrevoContactsService, SubscribeResponse } from "@dextinity/brevo-api";
+import { DisableCometGuards } from "@dextinity/cms-api";
 import { Body, Controller, Post } from "@nestjs/common";
 
 import { BrevoContactSubscribeInput } from "./dto/brevo-contact-subscribe.input";

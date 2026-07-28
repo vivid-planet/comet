@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { Tooltip } from "@comet/admin";
-import { CometColor, Domain, DomainLocked } from "@comet/admin-icons";
+import { Tooltip } from "@dextinity/admin";
+import { CometColor, Domain, DomainLocked } from "@dextinity/admin-icons";
 import { Grid, Typography } from "@mui/material";
 import { type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";

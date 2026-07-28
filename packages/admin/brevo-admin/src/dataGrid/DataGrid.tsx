@@ -1,4 +1,4 @@
-import { useCometConfig } from "@comet/cms-admin";
+import { useCometConfig } from "@dextinity/cms-admin";
 // eslint-disable-next-line no-restricted-imports
 import { DataGrid as MuiDataGrid, type DataGridProps, type GridValidRowModel } from "@mui/x-data-grid";
 

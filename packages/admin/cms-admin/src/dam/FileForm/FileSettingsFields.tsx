@@ -1,7 +1,7 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
-import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading, SelectField } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
+import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading, SelectField } from "@dextinity/admin";
+import { FinalFormDatePicker } from "@dextinity/admin-date-time";
+import { ArtificialIntelligence, Calendar } from "@dextinity/admin-icons";
 import { IconButton, InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useCallback } from "react";

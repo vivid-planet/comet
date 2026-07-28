@@ -1,4 +1,4 @@
-import { DisableCometGuards } from "@comet/cms-api";
+import { DisableCometGuards } from "@dextinity/cms-api";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Controller, Get, Header } from "@nestjs/common";
 

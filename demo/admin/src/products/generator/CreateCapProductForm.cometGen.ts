@@ -1,5 +1,5 @@
-import { defineConfig } from "@comet/admin-generator";
-import { DamImageBlock } from "@comet/cms-admin";
+import { defineConfig } from "@dextinity/admin-generator";
+import { DamImageBlock } from "@dextinity/cms-admin";
 import type { GQLProduct } from "@src/graphql.generated";
 
 import { validateTitle } from "./validateTitle";

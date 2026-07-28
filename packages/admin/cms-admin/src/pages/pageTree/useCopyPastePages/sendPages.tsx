@@ -1,5 +1,5 @@
 import { type ApolloClient, gql } from "@apollo/client";
-import { LocalErrorScopeApolloContext } from "@comet/admin";
+import { LocalErrorScopeApolloContext } from "@dextinity/admin";
 import isEqual from "lodash.isequal";
 import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";

@@ -1,6 +1,6 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Button, CancelButton, StackLink, Tooltip, useStackSwitchApi } from "@comet/admin";
-import { Play, Time } from "@comet/admin-icons";
+import { Button, CancelButton, StackLink, Tooltip, useStackSwitchApi } from "@dextinity/admin";
+import { Play, Time } from "@dextinity/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,

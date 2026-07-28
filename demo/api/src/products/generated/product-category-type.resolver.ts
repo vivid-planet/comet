@@ -7,7 +7,7 @@ import { PaginatedProductCategoryTypes } from "./dto/paginated-product-category-
 import { ProductCategoryTypesArgs } from "./dto/product-category-types.args";
 import { ProductCategory } from "../entities/product-category.entity";
 import { ProductCategoryType } from "../entities/product-category-type.entity";
-import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@dextinity/cms-api";
 @Resolver(() => ProductCategoryType)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductCategoryTypeResolver {

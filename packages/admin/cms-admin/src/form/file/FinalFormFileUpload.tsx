@@ -6,7 +6,7 @@ import {
     type FileSelectProps,
     type LoadingFileSelectItem,
     type ValidFileSelectItem,
-} from "@comet/admin";
+} from "@dextinity/admin";
 import { useMemo, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";

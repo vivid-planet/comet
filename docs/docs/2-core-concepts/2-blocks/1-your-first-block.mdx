@@ -58,7 +58,7 @@ Once we have defined the block data, we also need to define the block input. The
 <!-- TODO Add a comparison to GraphQL object and input type -->
 
 ```ts title="headline.block.ts"
-import { blockInputToData } from "@comet/cms-api";
+import { blockInputToData } from "@dextinity/cms-api";
 
 class HeadlineBlockInput extends BlockInput {
     @IsUndefinable()
@@ -125,9 +125,9 @@ The complete code for our Headline API block (including all necessary imports) c
     createBlock,
     ExtractBlockInput,
     blockInputToData,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
-import { IsUndefinable } from "@comet/cms-api";
+import { IsUndefinable } from "@dextinity/cms-api";
 import { IsEnum, IsString } from "class-validator";\n
 export enum HeadlineLevel {
     HeaderOne = "header-one",
@@ -312,8 +312,8 @@ The complete code for our Headline admin block (including all necessary imports)
     <summary>HeadlineBlock.tsx</summary>
     <div>
         <CodeBlock language="ts">
-            {`import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
-import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeBlockField, createRichTextBlock } from "@comet/cms-admin";
+            {`import { Field, FinalFormInput, FinalFormSelect } from "@dextinity/admin";
+import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeBlockField, createRichTextBlock } from "@dextinity/cms-admin";
 import { MenuItem } from "@material-ui/core";
 import { HeadlineBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";\n
@@ -438,7 +438,7 @@ The complete code for our Headline site block (including all necessary imports) 
     <summary>HeadlineBlock.tsx</summary>
     <div>
         <CodeBlock language="tsx">
-            {`import { PropsWithData, withPreview } from "@comet/site-nextjs";
+            {`import { PropsWithData, withPreview } from "@dextinity/site-nextjs";
 import { HeadlineBlockData } from "@src/blocks.generated";
 import { Renderers } from "redraft";\n
 import { RichTextBlock } from "./RichTextBlock";\n

@@ -1,5 +1,5 @@
-import { useStoredState } from "@comet/admin";
-import { Close, Search } from "@comet/admin-icons";
+import { useStoredState } from "@dextinity/admin";
+import { Close, Search } from "@dextinity/admin-icons";
 import {
     Checkbox,
     DialogContent,

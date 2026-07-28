@@ -1,4 +1,4 @@
-import { Close, CometDigitalExperienceLogo } from "@comet/admin-icons";
+import { Close, CometDigitalExperienceLogo } from "@dextinity/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,

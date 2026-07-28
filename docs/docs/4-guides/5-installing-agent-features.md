@@ -4,7 +4,7 @@ title: Installing agent features
 
 # Installing agent features
 
-The `npx @comet/cli install-agent-features` command installs [agent skills](https://agentskills.io/) and agent rules into your project — structured, reusable instructions for AI coding agents (such as Claude Code, Cursor, or GitHub Copilot). Skills land in `.agents/skills/` and `.claude/skills/`; rules land in `.agents/rules/`, `.claude/rules/`, `.cursor/rules/`, and `.github/instructions/`. Agents pick them up automatically.
+The `npx @dextinity/cli install-agent-features` command installs [agent skills](https://agentskills.io/) and agent rules into your project — structured, reusable instructions for AI coding agents (such as Claude Code, Cursor, or GitHub Copilot). Skills land in `.agents/skills/` and `.claude/skills/`; rules land in `.agents/rules/`, `.claude/rules/`, `.cursor/rules/`, and `.github/instructions/`. Agents pick them up automatically.
 
 ## Quick start
 
@@ -21,7 +21,7 @@ Add an `install-agent-features` script to your root `package.json`:
 ```json
 {
     "scripts": {
-        "install-agent-features": "npx @comet/cli install-agent-features"
+        "install-agent-features": "npx @dextinity/cli install-agent-features"
     }
 }
 ```
@@ -75,7 +75,7 @@ Place skill folders inside `skills/` or `agentic-plugin/skills/` and rule files 
 Then run the command to symlink them into the target directories:
 
 ```sh
-npx @comet/cli install-agent-features
+npx @dextinity/cli install-agent-features
 ```
 
 Local skills and rules are **symlinked**, so edits are reflected immediately without re-running the command.
@@ -157,7 +157,7 @@ These directories should not be committed to your repository as they are created
 Preview what would be installed without making changes:
 
 ```sh
-npx @comet/cli install-agent-features --dry-run
+npx @dextinity/cli install-agent-features --dry-run
 ```
 
 ## For library maintainers: Providing features to consumers

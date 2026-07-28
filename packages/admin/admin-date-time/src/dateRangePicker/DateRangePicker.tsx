@@ -1,8 +1,8 @@
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
-import { ClearInputAdornment, type InputWithPopperProps } from "@comet/admin";
-import { Calendar } from "@comet/admin-icons";
+import { ClearInputAdornment, type InputWithPopperProps } from "@dextinity/admin";
+import { Calendar } from "@dextinity/admin-icons";
 import type { ComponentsOverrides } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
 import type { Range } from "react-date-range";
@@ -14,7 +14,7 @@ import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/dateP
 import { DateRange, type DateRangePickerClassKey, Root, type SlotProps, StartAdornment } from "./DateRangePicker.slots";
 
 /**
- * @deprecated Use `DateRange` from `@comet/admin` instead.
+ * @deprecated Use `DateRange` from `@dextinity/admin` instead.
  */
 export type DateRange = {
     start: string;
@@ -73,7 +73,7 @@ const getRangeFromValue = (value: undefined | DateRange): Range => {
 };
 
 /**
- * @deprecated Use `DateRangePicker` from `@comet/admin` instead.
+ * @deprecated Use `DateRangePicker` from `@dextinity/admin` instead.
  */
 export const DateRangePicker = (inProps: DateRangePickerProps) => {
     const {

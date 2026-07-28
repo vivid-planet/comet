@@ -1,4 +1,4 @@
-import { ArrowLeft } from "@comet/admin-icons";
+import { ArrowLeft } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, type Theme, useThemeProps } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 

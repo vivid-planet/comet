@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
-import { Field } from "@comet/admin";
-import { Crop } from "@comet/admin-icons";
+import { Field } from "@dextinity/admin";
+import { Crop } from "@dextinity/admin-icons";
 import { styled } from "@mui/material/styles";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { useCallback, useState } from "react";

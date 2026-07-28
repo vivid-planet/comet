@@ -17,9 +17,9 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
-} from "@comet/admin";
-import { Add as AddIcon, Edit, Statistics, Visible } from "@comet/admin-icons";
-import type { BlockInterface, ContentScope } from "@comet/cms-admin";
+} from "@dextinity/admin";
+import { Add as AddIcon, Edit, Statistics, Visible } from "@dextinity/admin-icons";
+import type { BlockInterface, ContentScope } from "@dextinity/cms-admin";
 import { IconButton } from "@mui/material";
 import { isBefore } from "date-fns";
 import type { ReactElement } from "react";

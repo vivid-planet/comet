@@ -1,4 +1,4 @@
-import { RteNonBreakingSpace } from "@comet/admin-icons";
+import { RteNonBreakingSpace } from "@dextinity/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import Tooltip from "@mui/material/Tooltip";
 import { EditorState, Modifier } from "draft-js";

@@ -205,7 +205,7 @@ The `basePath` option specifies the URL path to the entity's edit page.
 
 ```tsx
 // NewsDependency.tsx
-import { createDependencyMethods } from "@comet/cms-admin";
+import { createDependencyMethods } from "@dextinity/cms-admin";
 
 // ...
 
@@ -226,7 +226,7 @@ It loads the document and also the `PageTreeNode` the document is attached to.
 
 ```tsx
 // Page.tsx
-import { createDocumentDependencyMethods } from "@comet/cms-admin";
+import { createDocumentDependencyMethods } from "@dextinity/cms-admin";
 
 // ...
 
@@ -287,7 +287,7 @@ export class NewsModule {}
 
 #### 5. Admin: Display dependencies with `DependenciesList` or `DependentsList`
 
-Use `DependenciesList` to display what an entity depends on, or `DependentsList` to display what depends on an entity. Both components are provided by `@comet/cms-admin`. The DAM uses `DependentsList` in its "Dependents" tab.
+Use `DependenciesList` to display what an entity depends on, or `DependentsList` to display what depends on an entity. Both components are provided by `@dextinity/cms-admin`. The DAM uses `DependentsList` in its "Dependents" tab.
 
 Each component requires two props:
 

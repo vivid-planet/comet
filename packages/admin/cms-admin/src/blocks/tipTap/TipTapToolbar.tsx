@@ -1,4 +1,4 @@
-import { greyPalette, Tooltip } from "@comet/admin";
+import { greyPalette, Tooltip } from "@dextinity/admin";
 import {
     Add,
     MoreHorizontal,
@@ -18,7 +18,7 @@ import {
     RteTextPlaceholder,
     RteUl,
     RteUndo,
-} from "@comet/admin-icons";
+} from "@dextinity/admin-icons";
 import {
     Box,
     FormControl,

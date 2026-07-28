@@ -1,4 +1,4 @@
-import { Delete, MoreVertical } from "@comet/admin-icons";
+import { Delete, MoreVertical } from "@dextinity/admin-icons";
 import { IconButton, ListItem, ListItemText, Stack } from "@mui/material";
 import { type MouseEventHandler, type ReactElement, type ReactNode, useState } from "react";
 import { useIntl } from "react-intl";

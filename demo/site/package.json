@@ -32,8 +32,8 @@
     },
     "dependencies": {
         "@base-ui/react": "^1.4.1",
-        "@comet/mail-react": "workspace:*",
-        "@comet/site-nextjs": "workspace:*",
+        "@dextinity/mail-react": "workspace:*",
+        "@dextinity/site-nextjs": "workspace:*",
         "@formatjs/cli": "^6.7.2",
         "@google-cloud/recaptcha-enterprise": "^5.2.0",
         "@next/bundle-analyzer": "^16.2.10",
@@ -63,8 +63,8 @@
     },
     "devDependencies": {
         "@babel/core": "^7.29.7",
-        "@comet/cli": "workspace:*",
-        "@comet/eslint-config": "workspace:*",
+        "@dextinity/cli": "workspace:*",
+        "@dextinity/eslint-config": "workspace:*",
         "@graphql-codegen/add": "^5.0.3",
         "@graphql-codegen/cli": "^5.0.7",
         "@graphql-codegen/named-operations-object": "^3.1.1",

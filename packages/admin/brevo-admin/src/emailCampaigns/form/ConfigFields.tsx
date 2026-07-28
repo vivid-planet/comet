@@ -1,4 +1,4 @@
-import { Field, FinalFormInput } from "@comet/admin";
+import { Field, FinalFormInput } from "@dextinity/admin";
 import { FormattedMessage } from "react-intl";
 
 export const ConfigFields = () => {

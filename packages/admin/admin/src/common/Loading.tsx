@@ -1,4 +1,4 @@
-import { BallTriangle } from "@comet/admin-icons";
+import { BallTriangle } from "@dextinity/admin-icons";
 import type { SvgIconProps } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import { type CSSProperties, useRef } from "react";

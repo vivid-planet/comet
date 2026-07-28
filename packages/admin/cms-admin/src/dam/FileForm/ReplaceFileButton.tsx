@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
-import { Button, useErrorDialog } from "@comet/admin";
-import { ThreeDotSaving, Upload } from "@comet/admin-icons";
+import { Button, useErrorDialog } from "@dextinity/admin";
+import { ThreeDotSaving, Upload } from "@dextinity/admin-icons";
 import { useRef, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";

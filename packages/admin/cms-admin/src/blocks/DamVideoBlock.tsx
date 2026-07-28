@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
-import { Field } from "@comet/admin";
-import { Video } from "@comet/admin-icons";
+import { Field } from "@dextinity/admin";
+import { Video } from "@dextinity/admin-icons";
 import { Box } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { defineMessage, FormattedMessage } from "react-intl";

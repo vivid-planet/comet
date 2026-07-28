@@ -1,6 +1,6 @@
 "use client";
 
-import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
+import { createFetchInMemoryCache, useIFrameBridge } from "@dextinity/site-nextjs";
 import type { EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { RenderedMailForBlockPreview } from "@src/brevo/components/RenderedMailForBlockPreview";
 import type { EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";

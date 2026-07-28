@@ -5,7 +5,7 @@ import {
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
     PageTreeService,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { CreateRequestContext, EntityManager, MikroORM } from "@mikro-orm/postgresql";
 import { Inject, Logger } from "@nestjs/common";
 import { Config } from "@src/config/config";

@@ -1,7 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormSelect, SaveButton, Tooltip } from "@comet/admin";
-import { Info, Newsletter } from "@comet/admin-icons";
-import { BlockAdminComponentPaper, BlockAdminComponentSectionGroup, useContentScope } from "@comet/cms-admin";
+import { Field, FinalForm, FinalFormSelect, SaveButton, Tooltip } from "@dextinity/admin";
+import { Info, Newsletter } from "@dextinity/admin-icons";
+import { BlockAdminComponentPaper, BlockAdminComponentSectionGroup, useContentScope } from "@dextinity/cms-admin";
 import { Card } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 

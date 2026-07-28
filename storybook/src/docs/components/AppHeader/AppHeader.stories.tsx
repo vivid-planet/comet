@@ -1,5 +1,5 @@
-import { AppHeader, AppHeaderButton, AppHeaderDropdown, AppHeaderMenuButton, Button, CometLogo, FillSpace } from "@comet/admin";
-import { Account, Language, Logout, Preview, Snips, SwitchUser, Wrench } from "@comet/admin-icons";
+import { AppHeader, AppHeaderButton, AppHeaderDropdown, AppHeaderMenuButton, Button, CometLogo, FillSpace } from "@dextinity/admin";
+import { Account, Language, Logout, Preview, Snips, SwitchUser, Wrench } from "@dextinity/admin-icons";
 import { Avatar, Box, Divider, MenuItem, MenuList, Typography } from "@mui/material";
 import { useState } from "react";
 

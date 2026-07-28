@@ -1,4 +1,4 @@
-import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
+import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@dextinity/admin";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { PropsWithChildren, ReactNode } from "react";

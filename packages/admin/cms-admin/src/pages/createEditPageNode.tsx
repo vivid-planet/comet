@@ -1,6 +1,6 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CheckboxField, ErrorScope, Field, FieldContainer, FinalForm, FinalFormInput, FinalFormSelect, Loading, Tooltip } from "@comet/admin";
-import { Info } from "@comet/admin-icons";
+import { CheckboxField, ErrorScope, Field, FieldContainer, FinalForm, FinalFormInput, FinalFormSelect, Loading, Tooltip } from "@dextinity/admin";
+import { Info } from "@dextinity/admin-icons";
 import { Box, Divider, IconButton, MenuItem, Typography } from "@mui/material";
 import type { Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";

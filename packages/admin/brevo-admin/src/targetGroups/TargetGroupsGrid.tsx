@@ -17,9 +17,9 @@ import {
     useDataGridRemote,
     useEditDialog,
     usePersistentColumnState,
-} from "@comet/admin";
-import { Add as AddIcon, Download, Edit } from "@comet/admin-icons";
-import type { ContentScope } from "@comet/cms-admin";
+} from "@dextinity/admin";
+import { Add as AddIcon, Download, Edit } from "@dextinity/admin-icons";
+import type { ContentScope } from "@dextinity/cms-admin";
 import { DialogContent, IconButton } from "@mui/material";
 import type { DocumentNode } from "graphql";
 import type { ReactElement } from "react";

@@ -6,10 +6,10 @@ We usually use [Next.js](https://nextjs.org/) to build our site client.
 This guide will show you how to build a custom client for your Comet DXP and render a typical content page from the page tree.
 
 For this guide, we will assume you use React but not Next.js.
-In this case, you can use the `@comet/site-react` package to build your custom client:
+In this case, you can use the `@dextinity/site-react` package to build your custom client:
 
 ```bash
-npm install @comet/site-react
+npm install @dextinity/site-react
 ```
 
 ## Loading documents (pages)
@@ -450,7 +450,7 @@ This block metadata is stored in the `block-meta.json` file created by the Comet
 If the `api` is developed independently of the `site`, a symlink is not possible.
 In this case, the `block-meta.json` must be provided via a separate API endpoint.
 
-`@comet/cli` provides a command to generate the available TypeScript types based on a `block-meta.json` file:
+`@dextinity/cli` provides a command to generate the available TypeScript types based on a `block-meta.json` file:
 
 ```json title="package.json"
 {
@@ -505,7 +505,7 @@ Having the block data in place, we can now render the blocks.
 The rendering logic for each block type is recommended to be implemented in a separate component.
 You can find example implementations [in the demo project in the comet repository](https://github.com/vivid-planet/comet/tree/main/demo/site/src/common/blocks), e.g. the [HeadlineBlock](https://github.com/vivid-planet/comet/blob/a737ccc2f0826b236b49d63129a6a49e7f790993/demo/site/src/blocks/HeadlineBlock.tsx#L36) component.
 
-The `@comet/site-react` package provides implementations for some important helper blocks:
+The `@dextinity/site-react` package provides implementations for some important helper blocks:
 
 - [BlocksBlock](/docs/core-concepts/blocks/factories#site-blocksblock)
 - [ListBlock](/docs/core-concepts/blocks/factories#site-listblock)
@@ -519,7 +519,7 @@ This `BlocksBlock` is a special block that can render other blocks based on thei
 It should be implemented like this:
 
 ```typescript
-import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/site-react";
+import { BlocksBlock, PropsWithData, SupportedBlocks } from "@dextinity/site-react";
 import { PageContentBlockData } from "@src/blocks.generated";
 
 const supportedBlocks: SupportedBlocks = {
@@ -537,11 +537,11 @@ In COMET DXP, we support pixel images and SVGs.
 These must be handled differently.
 We use a OneOfBlock to achieve this, which allows us to render either a pixel image or an SVG based on the block data.
 
-The SVG block is relatively simple and is provided by the `@comet/site-react` package as `SvgImageBlock`.
+The SVG block is relatively simple and is provided by the `@dextinity/site-react` package as `SvgImageBlock`.
 
 The PixelImageBlock is a bit more complex because pixel images are automatically optimized by our ImgProxy.
 The API returns a **url template** that can be used to generate the image URL with the desired width and height.
-You must implement the `PixelImageBlock` yourself, but the `@comet/site-react` package provides helper methods to generate the image URL based on the block data:
+You must implement the `PixelImageBlock` yourself, but the `@dextinity/site-react` package provides helper methods to generate the image URL based on the block data:
 
 - `generateImageUrl`: Takes the url template, width and aspect ratio and returns the actual image URL
 - `parseAspectRatio`: Converts an aspect ratio string (e.g., "16:9") or number into a number representing the aspect ratio (e.g., 1.7777777777777777 for "16:9")
@@ -655,7 +655,7 @@ The available root block types also depend on the project configuration and can 
 The page rendered under `/block-preview` must be wrapped in the `IFrameBridgeProvider` and `BlockPreviewProvider`:
 
 ```tsx
-import { BlockPreviewProvider, IFrameBridgeProvider } from "@comet/site-react";
+import { BlockPreviewProvider, IFrameBridgeProvider } from "@dextinity/site-react";
 
 export default function IFrameBridgeBlockPreviewPage(props: Route.ComponentProps) {
     return (
@@ -691,10 +691,10 @@ It also needs to match the `type` parameter to a root content block component to
 
 ### Making the blocks preview-ready
 
-All block implementations in the site should be wrapped in the `withPreview` higher-order component (HOC) from the `@comet/site-react` package:
+All block implementations in the site should be wrapped in the `withPreview` higher-order component (HOC) from the `@dextinity/site-react` package:
 
 ```tsx
-import { withPreview } from "@comet/site-react";
+import { withPreview } from "@dextinity/site-react";
 
 export const HeadingBlock = withPreview(
     ({ data: { eyebrow, headline, htmlTag } }: HeadingBlockProps) => {

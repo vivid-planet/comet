@@ -1,4 +1,4 @@
-import { ArrowRight, BallTriangle, PageTree, TreeCollapse, TreeExpand } from "@comet/admin-icons";
+import { ArrowRight, BallTriangle, PageTree, TreeCollapse, TreeExpand } from "@dextinity/admin-icons";
 import { ListItem, type SvgIconProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type CSSProperties, type ForwardRefExoticComponent, type ReactNode, type RefAttributes, useEffect, useRef } from "react";

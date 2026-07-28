@@ -1,4 +1,4 @@
-import { Delete as DeleteIcon, Remove as RemoveIcon, WarningSolid } from "@comet/admin-icons";
+import { Delete as DeleteIcon, Remove as RemoveIcon, WarningSolid } from "@dextinity/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,

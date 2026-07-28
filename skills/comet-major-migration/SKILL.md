@@ -1,13 +1,13 @@
 ---
 name: comet-major-migration
-description: Migrates a Comet project across a major version (e.g. v4 → v5, v5 → v6). Use when the user asks to upgrade Comet, follow a Comet migration guide, or bump @comet/* packages to a new major.
+description: Migrates a Comet project across a major version (e.g. v4 → v5, v5 → v6). Use when the user asks to upgrade Comet, follow a Comet migration guide, or bump @dextinity/* packages to a new major.
 ---
 
 # Major Comet Version Migration Skill
 
 ## When to use
 
-Upgrading `@comet/*` packages across a major version in a project (root, API, Admin, Site). A Comet major typically bundles breaking changes across React / Next.js / MUI X and may require updating peer/third-party packages.
+Upgrading `@dextinity/*` packages across a major version in a project (root, API, Admin, Site). A Comet major typically bundles breaking changes across React / Next.js / MUI X and may require updating peer/third-party packages.
 
 Do NOT use for minor or patch upgrades, or for ongoing feature work on a project already on the target major.
 
@@ -23,18 +23,18 @@ Do NOT use for minor or patch upgrades, or for ongoing feature work on a project
 
 ## Choose the target version
 
-When bumping the `@comet/*` packages, **do not pin to `{N+1}.0.0`.** The `.0.0` release is rarely what you want — the new major accumulates bug fixes and patches after release. Bump to the **newest minor/patch release within the new major** instead.
+When bumping the `@dextinity/*` packages, **do not pin to `{N+1}.0.0`.** The `.0.0` release is rarely what you want — the new major accumulates bug fixes and patches after release. Bump to the **newest minor/patch release within the new major** instead.
 
 Find it with `npm view` (filter to the new major, drop pre-releases like `-canary`/`-beta`/`-rc`):
 
 ```bash
-npm view @comet/cms-api versions --json | \
+npm view @dextinity/cms-api versions --json | \
   python3 -c "import json,sys; v=json.load(sys.stdin); \
     stable=[x for x in v if x.startswith('{N+1}.') and '-' not in x]; \
     print(stable[-1])"
 ```
 
-Substitute `{N+1}.` with the target major (e.g. `9.`). Pin every core `@comet/*` package to that exact version — no caret or tilde. The migration guide's own examples may show `{N+1}.0.0`; treat those as illustrative and use the newest release instead.
+Substitute `{N+1}.` with the target major (e.g. `9.`). Pin every core `@dextinity/*` package to that exact version — no caret or tilde. The migration guide's own examples may show `{N+1}.0.0`; treat those as illustrative and use the newest release instead.
 
 ## Detect the project shape
 
@@ -46,10 +46,10 @@ Before starting, figure out what's in this project. Comet projects vary — **an
 
 **Check whether the project has a page tree** (e.g. grep the admin source for its page-tree page like `PagesPage`, or the API for `PageTreeModule`). Skip page-tree-specific steps if it's absent.
 
-Sites can live under `site/`, `sites/<tenant>/`, or any custom path. Discover them by scanning `package.json` files for `@comet/site-nextjs`:
+Sites can live under `site/`, `sites/<tenant>/`, or any custom path. Discover them by scanning `package.json` files for `@dextinity/site-nextjs`:
 
 ```bash
-grep -l '"@comet/site-nextjs"' $(find . -name package.json -not -path '*/node_modules/*' -not -path '*/.next/*')
+grep -l '"@dextinity/site-nextjs"' $(find . -name package.json -not -path '*/node_modules/*' -not -path '*/.next/*')
 ```
 
 Record the resolved site list durably (e.g. a note on the first `TaskCreate` task) so every site-section pass references the same list. If empty, write "no site package — skip site sections".

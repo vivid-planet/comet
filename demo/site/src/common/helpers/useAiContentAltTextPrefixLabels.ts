@@ -1,4 +1,4 @@
-import type { AiContentAltTextPrefixLabels } from "@comet/site-nextjs";
+import type { AiContentAltTextPrefixLabels } from "@dextinity/site-nextjs";
 import { useIntl } from "react-intl";
 
 export function useAiContentAltTextPrefixLabels(): AiContentAltTextPrefixLabels {

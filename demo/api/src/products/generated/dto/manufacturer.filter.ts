@@ -4,7 +4,7 @@ import { IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
 import { ProductTypeEnumFilter } from "./product-type.enum-filter";
-import { DateTimeFilter, IdFilter, NumberFilter, StringFilter } from "@comet/cms-api";
+import { DateTimeFilter, IdFilter, NumberFilter, StringFilter } from "@dextinity/cms-api";
 @InputType()
 export class ManufacturerFilter {
     @Field(() => IdFilter, { nullable: true })

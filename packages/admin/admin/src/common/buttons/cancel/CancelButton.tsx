@@ -1,4 +1,4 @@
-import { Clear } from "@comet/admin-icons";
+import { Clear } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, type Theme, useThemeProps } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 

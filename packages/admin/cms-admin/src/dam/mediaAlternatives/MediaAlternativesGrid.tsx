@@ -16,8 +16,8 @@ import {
     useDataGridRemote,
     useEditDialog,
     usePersistentColumnState,
-} from "@comet/admin";
-import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@dextinity/admin-icons";
 import { DialogContent, IconButton } from "@mui/material";
 import type { GridSlotsComponent, GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactElement, useState } from "react";

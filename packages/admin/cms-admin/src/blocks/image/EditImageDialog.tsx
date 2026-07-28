@@ -1,8 +1,8 @@
 import "react-image-crop/dist/ReactCrop.css";
 
 import { useApolloClient } from "@apollo/client";
-import { CancelButton, Field, FormSection, messages, SaveButton } from "@comet/admin";
-import { OpenNewTab } from "@comet/admin-icons";
+import { CancelButton, Field, FormSection, messages, SaveButton } from "@dextinity/admin";
+import { OpenNewTab } from "@dextinity/admin-icons";
 import {
     Box,
     // eslint-disable-next-line no-restricted-imports

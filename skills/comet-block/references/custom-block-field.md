@@ -6,7 +6,7 @@ Detailed rules for creating custom block fields that reference entities using `c
 
 ## Overview
 
-`createCompositeBlockField` is a lower-level helper from `@comet/cms-admin` that creates a custom field for use inside a `createCompositeBlock` `blocks` object. It enables arbitrary admin UI (entity pickers, custom selectors, conditional inputs) while integrating with the block's state management.
+`createCompositeBlockField` is a lower-level helper from `@dextinity/cms-admin` that creates a custom field for use inside a `createCompositeBlock` `blocks` object. It enables arbitrary admin UI (entity pickers, custom selectors, conditional inputs) while integrating with the block's state management.
 
 Use it when the built-in helpers (`createCompositeBlockTextField`, `createCompositeBlockSelectField`, `createCompositeBlockSwitchField`) are insufficient — most commonly when a block needs to store an entity reference (e.g., a product ID selected via an autocomplete search).
 
@@ -46,10 +46,10 @@ Rules:
 
 ### `createCompositeBlockField` API
 
-Import from `@comet/cms-admin`:
+Import from `@dextinity/cms-admin`:
 
 ```ts
-import { createCompositeBlockField } from "@comet/cms-admin";
+import { createCompositeBlockField } from "@dextinity/cms-admin";
 ```
 
 **Signature:**
@@ -81,8 +81,8 @@ The `AdminComponent` receives these props:
 The most common use case is selecting an entity via async search. This combines `BlocksFinalForm`, `AsyncAutocompleteField`, and optionally `useContentScope` for scope-aware queries.
 
 ```tsx
-import { AsyncAutocompleteField } from "@comet/admin";
-import { BlocksFinalForm, createCompositeBlockField, useContentScope } from "@comet/cms-admin";
+import { AsyncAutocompleteField } from "@dextinity/admin";
+import { BlocksFinalForm, createCompositeBlockField, useContentScope } from "@dextinity/cms-admin";
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { type ProductPickerBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
@@ -157,9 +157,9 @@ export const ProductPickerBlock = createCompositeBlock(
 - `onSubmit` fires automatically whenever a form field changes.
 - `initialValues` should reflect the current block state.
 
-**`AsyncAutocompleteField`** — Async entity search field with type-ahead. Import from `@comet/admin`.
+**`AsyncAutocompleteField`** — Async entity search field with type-ahead. Import from `@dextinity/admin`.
 
-**`useContentScope`** — Hook from `@comet/cms-admin` that provides the current content scope (domain, language). Use it when the entity query requires scope filtering.
+**`useContentScope`** — Hook from `@dextinity/cms-admin` that provides the current content scope (domain, language). Use it when the entity query requires scope filtering.
 
 ```tsx
 const { scope } = useContentScope();
@@ -231,7 +231,7 @@ Use `skip: !state` to avoid querying when no entity is selected. Include `visibl
 The site receives the stored entity ID from the block data. Use a **block loader** to resolve the ID to full entity data at render time. Always filter out hidden or unpublished entities in the loader — never pass invisible entity data to the client.
 
 ```tsx
-import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type PropsWithData, withPreview } from "@dextinity/cms-site";
 import { type ProductPickerBlockData } from "@src/blocks.generated";
 
 interface ProductPickerBlockLoaderData {

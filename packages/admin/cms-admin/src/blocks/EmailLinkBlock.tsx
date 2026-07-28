@@ -1,4 +1,4 @@
-import { Field, FinalFormInput } from "@comet/admin";
+import { Field, FinalFormInput } from "@dextinity/admin";
 import { isEmail } from "class-validator";
 import { FormattedMessage } from "react-intl";
 

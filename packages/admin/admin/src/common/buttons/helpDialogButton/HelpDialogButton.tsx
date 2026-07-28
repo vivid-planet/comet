@@ -1,4 +1,4 @@
-import { QuestionMark } from "@comet/admin-icons";
+import { QuestionMark } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, type IconButton, type Theme, useThemeProps } from "@mui/material";
 import { type FunctionComponent, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";

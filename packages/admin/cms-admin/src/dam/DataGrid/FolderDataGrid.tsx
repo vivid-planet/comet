@@ -17,8 +17,8 @@ import {
     useSnackbarApi,
     useStackSwitchApi,
     useStoredState,
-} from "@comet/admin";
-import { Info as InfoIcon } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { Info as InfoIcon } from "@dextinity/admin-icons";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
 import {
     type DataGridProps,

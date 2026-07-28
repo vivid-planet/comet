@@ -1,4 +1,4 @@
-import { InvisibleItemHide, InvisibleItemShow } from "@comet/admin-icons";
+import { InvisibleItemHide, InvisibleItemShow } from "@dextinity/admin-icons";
 import { useIntl } from "react-intl";
 
 import { ToggleButton } from "./ToggleButton";

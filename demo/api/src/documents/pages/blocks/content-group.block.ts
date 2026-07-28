@@ -10,7 +10,7 @@ import {
     createBlock,
     createBlocksBlock,
     ExtractBlockInput,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";

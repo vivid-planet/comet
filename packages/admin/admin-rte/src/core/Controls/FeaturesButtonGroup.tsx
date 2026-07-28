@@ -1,5 +1,5 @@
-import { createComponentSlot, type ThemedComponentBaseProps, Tooltip } from "@comet/admin";
-import { MoreHorizontal } from "@comet/admin-icons";
+import { createComponentSlot, type ThemedComponentBaseProps, Tooltip } from "@dextinity/admin";
+import { MoreHorizontal } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, css, ListItemIcon as MuiListItemIcon, Menu, MenuItem, type Theme, useThemeProps } from "@mui/material";
 import type { Editor } from "draft-js";
 import { type MouseEvent, type RefObject, useState } from "react";

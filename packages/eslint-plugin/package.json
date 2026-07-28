@@ -1,6 +1,6 @@
 {
-    "name": "@comet/eslint-plugin",
-    "version": "9.2.2",
+    "name": "@dextinity/eslint-plugin",
+    "version": "1.0.0",
     "description": "A set of ESLint rules and configurations for Comet projects",
     "type": "commonjs",
     "main": "lib/index.js",

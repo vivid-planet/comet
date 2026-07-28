@@ -2,7 +2,7 @@
 title: Blocks
 ---
 
-`@comet/mail-react` ships basic block components to render Comet CMS block data types. Where the [base components](./2-components-and-theme.md) handle generic layout and typography, block components are tied to specific `*BlockData` shapes from the CMS schema.
+`@dextinity/mail-react` ships basic block components to render Comet CMS block data types. Where the [base components](./2-components-and-theme.md) handle generic layout and typography, block components are tied to specific `*BlockData` shapes from the CMS schema.
 
 :::info
 For background on the broader Comet block system — what blocks are, how they're authored, and how block data flows from API to admin to site — see [Blocks](../../2-core-concepts/2-blocks/index.md) in the core concepts.
@@ -18,7 +18,7 @@ Two components render `PixelImageBlockData` from the CMS — one for MJML contex
 | `HtmlPixelImageBlock` | raw `<img>`             | raw HTML or [MJML ending tags](./1-email-basics.md#ending-tags) such as `MjmlRaw` |
 
 ```tsx
-import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@comet/mail-react";
+import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@dextinity/mail-react";
 
 <MjmlSection indent>
     <MjmlColumn>
@@ -32,7 +32,7 @@ import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@comet/mail-react"
 Both blocks read `validSizes` and `baseUrl` from `config.pixelImageBlock`. In a typical Comet project, `validSizes` is the union of `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`; `baseUrl` is the API URL.
 
 ```tsx title="src/emails/WelcomeEmail.tsx"
-import { MjmlMailRoot, type Config } from "@comet/mail-react";
+import { MjmlMailRoot, type Config } from "@dextinity/mail-react";
 
 const config: Config = {
     pixelImageBlock: {
@@ -84,7 +84,7 @@ The `createRichTextBlock` factory creates components that render `RichTextBlockD
 Call the factory once — at the top level of a file, not inside a component — and export the returned components:
 
 ```tsx title="src/emails/blocks/richText.ts"
-import { createRichTextBlock } from "@comet/mail-react";
+import { createRichTextBlock } from "@dextinity/mail-react";
 
 export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
     blockTypes: {
@@ -145,7 +145,7 @@ export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
 });
 ```
 
-The same option renders **custom** inline styles an application adds to its RTE via `customInlineStyles` on `IRteOptions` (see `@comet/admin-rte`). The style name you configure there — for example `HIGHLIGHT` — is stored verbatim in the content's inline style ranges but carries no styling of its own, so the email defines how it looks:
+The same option renders **custom** inline styles an application adds to its RTE via `customInlineStyles` on `IRteOptions` (see `@dextinity/admin-rte`). The style name you configure there — for example `HIGHLIGHT` — is stored verbatim in the content's inline style ranges but carries no styling of its own, so the email defines how it looks:
 
 ```tsx
 export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({

@@ -1,4 +1,4 @@
-import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icons";
+import { Account, Dashboard, Language, Logout, Preview } from "@dextinity/admin-icons";
 import { Avatar, Box, Divider, MenuItem, MenuList } from "@mui/material";
 
 import { Button } from "../../common/buttons/Button";

@@ -1,4 +1,4 @@
-import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@dextinity/admin";
 import { type ComponentsOverrides, FormControl, type InputBaseProps } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { useRef } from "react";
@@ -93,7 +93,7 @@ export interface DateTimePickerProps
 }
 
 /**
- * @deprecated Use `DateTimePicker` from `@comet/admin` instead.
+ * @deprecated Use `DateTimePicker` from `@dextinity/admin` instead.
  */
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
     const { onChange, value, required, disabled, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
