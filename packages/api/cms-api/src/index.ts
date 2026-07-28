@@ -201,6 +201,11 @@ export { calculateInheritAspectRatio } from "./dam/images/images.util";
 export { IsAllowedImageAspectRatio, IsAllowedImageAspectRatioConstraint } from "./dam/images/validators/is-allowed-aspect-ratio.validator";
 export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/validators/is-allowed-image-size.validator";
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
+export {
+    type BlockIndexDependenciesExplainResult,
+    type BlockIndexDependenciesExplainSummary,
+    summarizeBlockIndexDependenciesExplain,
+} from "./dependencies/block-index-dependencies-explain";
 export { DependenciesConfig } from "./dependencies/dependencies.constants";
 export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";

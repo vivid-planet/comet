@@ -8,6 +8,11 @@ import { StringFilter } from "../common/filter/string.filter";
 import { EntityInfoService } from "../entity-info/entity-info.service";
 import { FullTextSearchService } from "../full-text-search/full-text-search.service";
 import { PageTreeFullTextService } from "../page-tree/fullText/page-tree-full-text.service";
+import {
+    type BlockIndexDependenciesExplainResult,
+    type ExplainAnalyzeResult,
+    summarizeBlockIndexDependenciesExplain,
+} from "./block-index-dependencies-explain";
 import { DEPENDENCIES_CONFIG, DependenciesConfig } from "./dependencies.constants";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
@@ -62,7 +67,14 @@ export class DependenciesService {
         await this.pageTreeFullTextService?.dropPageTreeFullTextView();
     }
 
-    private async createDependenciesView(): Promise<void> {
+    /**
+     * Builds the `SELECT` that defines the `block_index_dependencies` materialized view, or returns
+     * `null` when there are no root block entities.
+     *
+     * The generation is kept side-effect free (no database access) so it can be asserted on in unit
+     * tests and analyzed via {@link explainBlockIndexDependenciesRefresh} without running a refresh.
+     */
+    buildBlockIndexDependenciesViewSelectSql(): string | null {
         const indexSelects: string[] = [];
         const targetEntities = this.discoverService.discoverTargetEntities();
 
@@ -106,15 +118,14 @@ export class DependenciesService {
         }
 
         if (indexSelects.length === 0) {
-            this.logger.log("Skipping block_index_dependencies materialized view creation: no root block entities found");
-            return;
+            return null;
         }
 
         // Resolve the root and target entity's EntityInfo once over the union of all root blocks.
         // Joining EntityInfo inside each root block's SELECT instead re-evaluates the EntityInfo
         // view (a UNION over every entity, including a recursive DAM folder-path CTE) once per root
         // block, which dominates the refresh cost on large datasets.
-        const viewSql = `SELECT
+        return `SELECT
                         blockIndex."rootId",
                         blockIndex."rootEntityName",
                         blockIndex."rootGraphqlObjectType",
@@ -142,6 +153,42 @@ export class DependenciesService {
                         AND ei_root."entityName" = blockIndex."rootEntityName"
                     LEFT JOIN "EntityInfo" as ei_target ON ei_target."id" = blockIndex."targetId"
                         AND ei_target."entityName" = blockIndex."targetEntityName"`;
+    }
+
+    /**
+     * Analyzes the `block_index_dependencies` refresh without running it, by executing
+     * `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)` on the view's defining `SELECT`. Returns `null` when
+     * there are no root block entities (nothing to analyze).
+     *
+     * `EXPLAIN` is not supported on `REFRESH MATERIALIZED VIEW`, so the defining `SELECT` — which
+     * carries the dominant cost (the `EntityInfo` joins) — is analyzed instead. This reads data but
+     * writes nothing.
+     */
+    async explainBlockIndexDependenciesRefresh(): Promise<BlockIndexDependenciesExplainResult | null> {
+        const selectSql = this.buildBlockIndexDependenciesViewSelectSql();
+
+        if (selectSql === null) {
+            return null;
+        }
+
+        const knex = this.entityManager.getKnex("read");
+        const result = await knex.raw(`EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) ${selectSql}`);
+        const [explain] = result.rows[0]["QUERY PLAN"] as ExplainAnalyzeResult[];
+
+        return {
+            ...summarizeBlockIndexDependenciesExplain(explain),
+            entityInfoReferences: (selectSql.match(/"EntityInfo"/g) ?? []).length,
+            plan: explain,
+        };
+    }
+
+    private async createDependenciesView(): Promise<void> {
+        const viewSql = this.buildBlockIndexDependenciesViewSelectSql();
+
+        if (viewSql === null) {
+            this.logger.log("Skipping block_index_dependencies materialized view creation: no root block entities found");
+            return;
+        }
 
         console.time("creating block dependency materialized view");
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS block_index_dependencies`);
