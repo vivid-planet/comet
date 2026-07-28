@@ -2099,7 +2099,7 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0
       dompurify:
-        specifier: ^3.2.6
+        specifier: ^3.4.12
         version: 3.4.12
       exifr:
         specifier: ^7.1.3
