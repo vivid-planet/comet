@@ -1,0 +1,98 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DependenciesService > createBlockIndexView > generates stable SQL for a fixed set of root blocks 1`] = `
+"CREATE VIEW block_index AS SELECT
+                            "RootTable0"."id"  "rootId",
+                            'RootEntity0'                    "rootEntityName",
+                            'RootEntity0'                "rootGraphqlObjectType",
+                            'RootTable0'               "rootTableName",
+                            'content'                           "rootColumnName",
+                            'id'                          "rootPrimaryKey",
+                            indexObj->>'blockname'                "blockname",
+                            indexObj->>'jsonPath'                 "jsonPath",
+                            (indexObj->>'visible')::boolean       "visible"
+                        FROM "RootTable0",
+                            json_array_elements("RootTable0"."content"->'index') indexObj
+ UNION ALL 
+SELECT
+                            "RootTable1"."id"  "rootId",
+                            'RootEntity1'                    "rootEntityName",
+                            'RootEntity1'                "rootGraphqlObjectType",
+                            'RootTable1'               "rootTableName",
+                            'content'                           "rootColumnName",
+                            'id'                          "rootPrimaryKey",
+                            indexObj->>'blockname'                "blockname",
+                            indexObj->>'jsonPath'                 "jsonPath",
+                            (indexObj->>'visible')::boolean       "visible"
+                        FROM "RootTable1",
+                            json_array_elements("RootTable1"."content"->'index') indexObj"
+`;
+
+exports[`DependenciesService > createDependenciesView > generates stable SQL for a fixed set of root blocks 1`] = `
+"CREATE MATERIALIZED VIEW block_index_dependencies AS SELECT
+                        blockIndex."rootId",
+                        blockIndex."rootEntityName",
+                        blockIndex."rootGraphqlObjectType",
+                        blockIndex."rootTableName",
+                        blockIndex."rootColumnName",
+                        blockIndex."rootPrimaryKey",
+                        blockIndex."blockname",
+                        blockIndex."jsonPath",
+                        blockIndex."blockVisible",
+                        COALESCE(ei_root."visible", true)                                            "entityVisible",
+                        ((blockIndex."blockVisible")::boolean AND COALESCE(ei_root."visible", true)) "visible",
+                        blockIndex."targetEntityName",
+                        blockIndex."targetGraphqlObjectType",
+                        blockIndex."targetTableName",
+                        blockIndex."targetPrimaryKey",
+                        blockIndex."targetId",
+                        ei_root."name"                                                              "rootName",
+                        ei_root."secondaryInformation"                                              "rootSecondaryInformation",
+                        ei_target."name"                                                            "targetName",
+                        ei_target."secondaryInformation"                                            "targetSecondaryInformation"
+                    FROM (
+                        SELECT
+                            "RootTable0"."id"                                "rootId",
+                            'RootEntity0'                                                  "rootEntityName",
+                            'RootEntity0'                                              "rootGraphqlObjectType",
+                            'RootTable0'                                             "rootTableName",
+                            'content'                                                         "rootColumnName",
+                            'id'                                                        "rootPrimaryKey",
+                            indexObj->>'blockname'                                              "blockname",
+                            indexObj->>'jsonPath'                                               "jsonPath",
+                            indexObj->>'visible'                                                "blockVisible",
+                            targetTableData->>'entityName'                                      "targetEntityName",
+                            targetTableData->>'graphqlObjectType'                               "targetGraphqlObjectType",
+                            targetTableData->>'tableName'                                       "targetTableName",
+                            targetTableData->>'primary'                                         "targetPrimaryKey",
+                            dependenciesObj->>'id'                                              "targetId"
+                        FROM "RootTable0"
+                        CROSS JOIN LATERAL json_array_elements("RootTable0"."content"->'index') indexObj
+                        CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
+                        CROSS JOIN LATERAL json_extract_path('{"Page":{"entityName":"Page","tableName":"Page","primary":"id","graphqlObjectType":"Page"},"News":{"entityName":"News","tableName":"News","primary":"id","graphqlObjectType":"News"}}', dependenciesObj->>'targetEntityName') targetTableData
+ UNION ALL 
+SELECT
+                            "RootTable1"."id"                                "rootId",
+                            'RootEntity1'                                                  "rootEntityName",
+                            'RootEntity1'                                              "rootGraphqlObjectType",
+                            'RootTable1'                                             "rootTableName",
+                            'content'                                                         "rootColumnName",
+                            'id'                                                        "rootPrimaryKey",
+                            indexObj->>'blockname'                                              "blockname",
+                            indexObj->>'jsonPath'                                               "jsonPath",
+                            indexObj->>'visible'                                                "blockVisible",
+                            targetTableData->>'entityName'                                      "targetEntityName",
+                            targetTableData->>'graphqlObjectType'                               "targetGraphqlObjectType",
+                            targetTableData->>'tableName'                                       "targetTableName",
+                            targetTableData->>'primary'                                         "targetPrimaryKey",
+                            dependenciesObj->>'id'                                              "targetId"
+                        FROM "RootTable1"
+                        CROSS JOIN LATERAL json_array_elements("RootTable1"."content"->'index') indexObj
+                        CROSS JOIN LATERAL json_array_elements(indexObj->'dependencies') dependenciesObj
+                        CROSS JOIN LATERAL json_extract_path('{"Page":{"entityName":"Page","tableName":"Page","primary":"id","graphqlObjectType":"Page"},"News":{"entityName":"News","tableName":"News","primary":"id","graphqlObjectType":"News"}}', dependenciesObj->>'targetEntityName') targetTableData
+                    ) blockIndex
+                    LEFT JOIN "EntityInfo" as ei_root ON ei_root."id" = blockIndex."rootId"::text
+                        AND ei_root."entityName" = blockIndex."rootEntityName"
+                    LEFT JOIN "EntityInfo" as ei_target ON ei_target."id" = blockIndex."targetId"
+                        AND ei_target."entityName" = blockIndex."targetEntityName""
+`;
