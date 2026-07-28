@@ -89,7 +89,6 @@ interface TipTapInlineStyle {
 const defaultSupports: TipTapSupports[] = [
     "bold",
     "italic",
-    "underline",
     "strike",
     "sub",
     "sup",
