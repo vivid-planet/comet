@@ -29,10 +29,11 @@ after the system genuinely can't express what you need.
 3. **Consistency.** Every screen built from the same components and tokens looks and behaves the
    same way.
 
-This holds **even when a project's design deliberately differs** from the current library
-defaults: prefer the Comet component or token, and apply that project-specific difference by
-configuring the theme — not by re-styling individual components. Add custom styling only when
-explicitly instructed, or when no component, prop, or token can produce the result.
+This holds **even when a project's design deliberately differs** from the current library defaults —
+a permanent design decision, not a gap a later library upgrade will close. Prefer the Comet component
+or token, and apply that project-specific difference by configuring the theme — not by re-styling
+individual components. Add custom styling only when explicitly instructed, or when no component, prop,
+or token can produce the result.
 
 ## Decision framework
 
@@ -291,7 +292,7 @@ Don't use `Grid` or `Stack` to lay out form fields: Comet stacks them vertically
 grouped with `FieldSet` or `FormSection`.
 
 `sx` is fine for an occasional layout property that no `Stack` or `Grid` prop covers, such as
-`flexGrow`. It is not for visual styling — that goes through `styled()`.
+`flexGrow`. On your own markup, it is not for visual styling — that goes through `styled()`.
 
 ### Page structure: `MainContent`, `Toolbar`, and their parts
 
@@ -489,4 +490,55 @@ import deleteIcon from "./delete.svg";
 import { Delete } from "@comet/admin-icons";
 
 <Delete fontSize="small" color="error" />;
+```
+
+## Customizing an existing Comet Admin component
+
+When a Comet Admin component needs to look or behave differently than its defaults, customize it
+through the mechanisms it already supports: the component's own props, a per-slot `slotProps` prop,
+and theme-level `styleOverrides` and `defaultProps`. A _slot_ is a named inner element of a component;
+only `root` is universal — a component lists its own slot names on its props type. Which mechanism you
+pick depends on whether you're changing behavior or appearance.
+
+### Behavior
+
+Start with the component's own props. To reach an inner element, use `slotProps`: it forwards props
+to a named slot, letting you override that slot's props. This configures the component rather than
+restyling it.
+
+```tsx
+// Override an inner slot's props — here, disable the button behind the content
+<ContentOverflow slotProps={{ clickableContent: { disabled: true } }}>{children}</ContentOverflow>
+```
+
+### Appearance
+
+To change how a Comet component looks, configure the theme rather than the component itself — the core
+principle's rule for a project-specific design difference. `createCometTheme`'s `components` map takes
+a `CometAdmin*` key (MUI components use their `Mui*` key); `styleOverrides` restyles a component's
+slots and `defaultProps` sets default prop values, such as swapping an icon through `iconMapping`.
+Both apply to every instance, so the deviation stays consistent and is defined in one reviewable place.
+
+Styling a single instance directly is the rare exception — for a change genuinely specific to that
+instance, or when you're explicitly told to. Which tool you use is then the same as anywhere else:
+`sx` (or `slotProps.<slot>.sx` for a slot) for small layout, `styled()` for other custom styling, per
+the styling section above. Use this only for a true single-instance change; a difference that recurs
+belongs in the theme, not repeated on each instance.
+
+```tsx
+// Avoid — a styled() wrapper for a design difference that belongs in the theme
+const HighlightedContentOverflow = styled(ContentOverflow)`
+    background-color: ${({ theme }) => theme.palette.grey[50]};
+`;
+
+// Prefer — configure the theme, applied to every instance
+const theme = createCometTheme({
+    components: {
+        CometAdminContentOverflow: {
+            styleOverrides: {
+                root: ({ theme }) => ({ backgroundColor: theme.palette.grey[50] }),
+            },
+        },
+    },
+});
 ```

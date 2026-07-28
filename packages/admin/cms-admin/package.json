@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "9.2.1",
+    "version": "9.2.2",
     "description": "Comet CMS Admin package",
     "repository": {
         "directory": "packages/admin/cms-admin",
@@ -135,7 +135,7 @@
         "jsdom": "^28.1.0",
         "msw": "^2.14.6",
         "npm-run-all2": "^8.0.4",
-        "playwright": "^1.49.1",
+        "playwright": "^1.62.0",
         "prettier": "^3.6.2",
         "react": "^19.2.6",
         "react-dnd": "^16.0.1",

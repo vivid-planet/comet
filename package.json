@@ -59,7 +59,7 @@
         "setup:download-oauth2-proxy": "dotenv -- sh -c 'pnpm exec comet download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
     },
     "devDependencies": {
-        "@changesets/cli": "^2.31.0",
+        "@changesets/cli": "^2.31.1",
         "@comet/cli": "workspace:*",
         "@comet/dev-oidc-provider": "^1.2.1",
         "@comet/dev-process-manager": "^3.1.0",

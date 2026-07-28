@@ -1,5 +1,13 @@
 # @comet/admin-generator
 
+## 9.2.2
+
+### Patch Changes
+
+- @comet/admin@9.2.2
+- @comet/admin-icons@9.2.2
+- @comet/cms-admin@9.2.2
+
 ## 9.2.1
 
 ### Patch Changes
