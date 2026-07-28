@@ -49,7 +49,7 @@
         "@mikro-orm/cli": "^6.6.14",
         "@mikro-orm/core": "^6.6.14",
         "@mikro-orm/postgresql": "^6.6.14",
-        "@nestjs/graphql": "^13.4.0",
+        "@nestjs/graphql": "^13.4.2",
         "@types/node": "^24.12.4",
         "@types/pluralize": "^0.0.33",
         "class-validator": "^0.14.3",
