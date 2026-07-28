@@ -181,7 +181,7 @@ export default defineConfig({
         //group demo admin
         {
             name: "demo-admin",
-            script: "pnpm --filter comet-demo-admin run start",
+            script: "pnpm --filter dextinity-demo-admin run start",
             group: ["demo-admin", "demo"],
             waitOn: [
                 ...waitOnPackages("@dextinity/admin", "@dextinity/admin-icons", "@dextinity/admin-rte", "@dextinity/cms-admin", "@dextinity/brevo-admin"),
@@ -190,13 +190,13 @@ export default defineConfig({
         },
         {
             name: "demo-admin-codegen",
-            script: "pnpm --filter comet-demo-admin run gql:watch",
+            script: "pnpm --filter dextinity-demo-admin run gql:watch",
             group: ["demo-admin", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
         {
             name: "demo-admin-block-codegen",
-            script: "pnpm --filter comet-demo-admin run generate-block-types:watch",
+            script: "pnpm --filter dextinity-demo-admin run generate-block-types:watch",
             group: ["demo-admin", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
@@ -220,48 +220,48 @@ export default defineConfig({
         },
         {
             name: "demo-api-generator",
-            script: "pnpm --filter comet-demo-api exec comet-api-generator generate --watch",
+            script: "pnpm --filter dextinity-demo-api exec comet-api-generator generate --watch",
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@dextinity/cms-api"), "packages/api/api-generator/lib/apiGenerator.js"],
         },
         {
             name: "demo-api",
-            script: "pnpm --filter comet-demo-api run start:dev",
+            script: "pnpm --filter dextinity-demo-api run start:dev",
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@dextinity/cms-api", "@dextinity/brevo-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
         {
             name: "demo-api-block-codegen",
-            script: "pnpm --filter comet-demo-api run generate-block-types:watch",
+            script: "pnpm --filter dextinity-demo-api run generate-block-types:watch",
             group: ["demo-api", "demo"],
         },
         {
             name: "demo-api-storybook",
-            script: "pnpm --filter comet-demo-api run storybook",
+            script: "pnpm --filter dextinity-demo-api run storybook",
         },
 
         //group demo site
         {
             name: "demo-site",
-            script: "pnpm --filter comet-demo-site run dev",
+            script: "pnpm --filter dextinity-demo-site run dev",
             group: ["demo-site", "demo"],
             waitOn: [...waitOnPackages("@dextinity/site-nextjs"), "tcp:$API_PORT"],
         },
         {
             name: "demo-site-codegen",
-            script: "pnpm --filter comet-demo-site run gql:watch",
+            script: "pnpm --filter dextinity-demo-site run gql:watch",
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
         {
             name: "demo-site-block-codegen",
-            script: "pnpm --filter comet-demo-site run generate-block-types:watch",
+            script: "pnpm --filter dextinity-demo-site run generate-block-types:watch",
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
         {
             name: "demo-site-css-types",
-            script: "pnpm --filter comet-demo-site run css:types:watch",
+            script: "pnpm --filter dextinity-demo-site run css:types:watch",
             group: ["demo-site", "demo"],
         },
 

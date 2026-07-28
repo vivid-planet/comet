@@ -1,8 +1,8 @@
 {
-    "name": "comet-demo-admin",
+    "name": "dextinity-demo-admin",
     "version": "1.0.0",
     "private": true,
-    "description": "Comet Admin Demo Application",
+    "description": "Dextinity Admin Demo Application",
     "type": "commonjs",
     "scripts": {
         "admin-generator": "rimraf --glob 'src/**/generated' && comet-admin-generator generate",

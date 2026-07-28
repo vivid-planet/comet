@@ -37,28 +37,28 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
         return [
             {
                 props: {
-                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com", language: "en" as const },
+                    recipient: { name: "John Doe", email: "product-manager@dextinity.com", language: "en" as const },
                     countProductPublished: "all" as const,
                     supportInfo: exampleSupportInfo,
                 },
             },
             {
                 props: {
-                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com", language: "en" as const },
+                    recipient: { name: "John Doe", email: "product-manager@dextinity.com", language: "en" as const },
                     countProductPublished: 1,
                     supportInfo: exampleSupportInfo,
                 },
             },
             {
                 props: {
-                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com", language: "en" as const },
+                    recipient: { name: "John Doe", email: "product-manager@dextinity.com", language: "en" as const },
                     countProductPublished: 5,
                     supportInfo: exampleSupportInfo,
                 },
             },
             {
                 props: {
-                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com", language: "de" as const },
+                    recipient: { name: "John Doe", email: "product-manager@dextinity.com", language: "de" as const },
                     countProductPublished: 5,
                     supportInfo: exampleSupportInfo,
                 },

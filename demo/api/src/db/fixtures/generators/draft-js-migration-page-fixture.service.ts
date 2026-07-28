@@ -38,11 +38,11 @@ const legacyDraftJsContent = {
         },
         {
             key: "33333333-3333-3333-3333-333333333333",
-            text: "And here is a strikethrough plus a link to comet.",
+            text: "And here is a strikethrough plus a link to Dextinity.",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [{ style: "STRIKETHROUGH", offset: 14, length: 13 }],
-            entityRanges: [{ key: 0, offset: 43, length: 5 }],
+            entityRanges: [{ key: 0, offset: 43, length: 9 }],
             data: {},
         },
         {
@@ -110,7 +110,7 @@ const legacyDraftJsContent = {
             type: "LINK",
             mutability: "MUTABLE",
             data: {
-                attachedBlocks: [{ type: "external", props: { targetUrl: "https://comet-dxp.com", openInNewWindow: true } }],
+                attachedBlocks: [{ type: "external", props: { targetUrl: "https://dextinity.com", openInNewWindow: true } }],
                 activeType: "external",
             },
         },

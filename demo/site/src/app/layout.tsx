@@ -10,7 +10,7 @@ import type { PropsWithChildren } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Comet Demo Site",
+    title: "Dextinity Demo Site",
 };
 
 export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
