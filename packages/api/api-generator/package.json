@@ -12,7 +12,7 @@
     "main": "lib/apiGenerator.js",
     "typings": "lib/apiGenerator.d.ts",
     "bin": {
-        "comet-api-generator": "bin/api-generator.js"
+        "dextinity-api-generator": "bin/api-generator.js"
     },
     "sideEffects": false,
     "files": [

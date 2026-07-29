@@ -5,8 +5,8 @@
     "description": "Dextinity API Demo Application",
     "type": "commonjs",
     "scripts": {
-        "api-generator": "rimraf --glob 'src/**/generated' && comet-api-generator generate",
-        "api-generator:watch": "rimraf --glob 'src/**/generated' && comet-api-generator generate --watch",
+        "api-generator": "rimraf --glob 'src/**/generated' && dextinity-api-generator generate",
+        "api-generator:watch": "rimraf --glob 'src/**/generated' && dextinity-api-generator generate --watch",
         "build": "pnpm clean && pnpm run intl:compile && pnpm api-generator && pnpm run generate-block-types && nest build",
         "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
         "clean": "rimraf dist",
