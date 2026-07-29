@@ -1,4 +1,4 @@
-import cometConfig from "@src/comet-config.json" with { type: "json" };
+import dextinityConfig from "@src/dextinity-config.json" with { type: "json" };
 import type { ContentScope } from "@src/site-configs";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 
@@ -10,6 +10,6 @@ export interface EmailCampaignConfig {
 }
 
 export function getEmailCampaignConfig(scope: ContentScope): EmailCampaignConfig {
-    const validSizes = [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes];
+    const validSizes = [...dextinityConfig.images.imageSizes, ...dextinityConfig.images.deviceSizes];
     return { images: { validSizes, baseUrl: getSiteConfigForDomain(scope.domain).url } };
 }

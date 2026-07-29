@@ -1,9 +1,9 @@
-import { CometConfigProvider } from "@dextinity/cms-admin";
+import { DextinityConfigProvider } from "@dextinity/cms-admin";
 import type { Decorator } from "@storybook/react-vite";
 
-export const CometConfigProviderDecorator: Decorator = (fn, context) => {
+export const DextinityConfigProviderDecorator: Decorator = (fn, context) => {
     return (
-        <CometConfigProvider
+        <DextinityConfigProvider
             graphQLApiUrl="/graphql"
             apiUrl=""
             adminUrl=""
@@ -14,6 +14,6 @@ export const CometConfigProviderDecorator: Decorator = (fn, context) => {
             }}
         >
             {fn()}
-        </CometConfigProvider>
+        </DextinityConfigProvider>
     );
 };

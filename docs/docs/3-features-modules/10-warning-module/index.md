@@ -262,10 +262,10 @@ class NewsWarningService implements CreateWarningsServiceInterface {
 
 ## Admin: Custom Block Warning Messages
 
-In the API, you defined custom warning messages for your blocks or entities. To make these messages translatable in the Admin, you need to define them in your `App.tsx` using the `CometConfigProvider`:
+In the API, you defined custom warning messages for your blocks or entities. To make these messages translatable in the Admin, you need to define them in your `App.tsx` using the `DextinityConfigProvider`:
 
 ```tsx
-<CometConfigProvider
+<DextinityConfigProvider
     {...otherConfigs}
     warnings: {
         messages: {

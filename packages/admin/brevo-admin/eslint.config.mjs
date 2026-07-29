@@ -5,7 +5,7 @@ const dataGridImportRestrictions = ["@mui/x-data-grid", "@mui/x-data-grid-pro", 
     ["DataGrid", "DataGridPro", "DataGridPremium"].map((importName) => ({
         name,
         importNames: [importName],
-        message: "Please use DataGrid from `@dextinity/brevo-admin` instead, which resolves the configured grid via `CometConfig`.",
+        message: "Please use DataGrid from `@dextinity/brevo-admin` instead, which resolves the configured grid via `DextinityConfig`.",
     })),
 );
 

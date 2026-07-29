@@ -4,7 +4,7 @@ import { LicenseInfo } from "@mui/x-license";
 import type { Preview } from "@storybook/react-vite";
 import type { GlobalTypes } from "storybook/internal/csf";
 
-import { CometConfigProviderDecorator } from "./decorators/CometConfigProvider.decorator";
+import { DextinityConfigProviderDecorator } from "./decorators/DextinityConfigProvider.decorator";
 import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
 import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
@@ -58,7 +58,7 @@ const workerStarted = worker.start({ onUnhandledRequest: "bypass" });
 
 const preview: Preview = {
     tags: ["autodocs"],
-    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, CometConfigProviderDecorator],
+    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator, DextinityConfigProviderDecorator],
     loaders: [
         async () => {
             await workerStarted;

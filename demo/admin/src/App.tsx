@@ -6,11 +6,11 @@ import { DateFnsLocaleProvider } from "@dextinity/admin-date-time";
 import { BrevoConfigProvider } from "@dextinity/brevo-admin";
 import {
     AzureAiTranslatorProvider,
-    CometConfigProvider,
     type ContentScope,
     ContentScopeProvider,
     createDamFileDependency,
     CurrentUserProvider,
+    DextinityConfigProvider,
     SitePreview,
 } from "@dextinity/cms-admin";
 import { css, Global } from "@emotion/react";
@@ -72,7 +72,7 @@ export function App() {
     const theme = useMemo(() => createTheme(muiLocale), [muiLocale]);
 
     return (
-        <CometConfigProvider
+        <DextinityConfigProvider
             {...config}
             graphQLApiUrl={`${config.apiUrl}/graphql`}
             onError={(error, errorInfo) => {
@@ -211,6 +211,6 @@ export function App() {
                     </IntlProvider>
                 </ApolloProvider>
             </BrevoConfigProvider>
-        </CometConfigProvider>
+        </DextinityConfigProvider>
     );
 }

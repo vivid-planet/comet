@@ -318,7 +318,7 @@ Both blocks require `config.pixelImageBlock` and throw without it. Wire it once 
 ```tsx
 const config: Config = {
     pixelImageBlock: {
-        validSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
+        validSizes: [...dextinityConfig.images.imageSizes, ...dextinityConfig.images.deviceSizes],
         baseUrl: process.env.API_URL,
     },
 };
