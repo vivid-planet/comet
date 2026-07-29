@@ -1,4 +1,4 @@
-import { createComponentSlot } from "@comet/admin";
+import { createComponentSlot } from "@dextinity/admin";
 import { css } from "@mui/material/styles";
 
 import getRteTheme from "../../utils/getRteTheme";

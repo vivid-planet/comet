@@ -16,7 +16,7 @@ export type MjmlTextProps = IMjmlTextProps & {
      * Custom variants should be defined in the theme, through module augmentation.
      *
      * ```ts
-     * declare module "@comet/mail-react" {
+     * declare module "@dextinity/mail-react" {
      *     interface TextVariants { heading: true; body: true }
      * }
      * ```

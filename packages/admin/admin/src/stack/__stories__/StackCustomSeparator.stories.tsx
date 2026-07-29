@@ -1,4 +1,4 @@
-import { CometColor } from "@comet/admin-icons";
+import { CometColor } from "@dextinity/admin-icons";
 import { useContext } from "react";
 import { Redirect, Route, Switch } from "react-router";
 

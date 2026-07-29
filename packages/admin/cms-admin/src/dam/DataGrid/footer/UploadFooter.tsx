@@ -1,4 +1,4 @@
-import { Upload } from "@comet/admin-icons";
+import { Upload } from "@dextinity/admin-icons";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";

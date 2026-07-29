@@ -1,4 +1,4 @@
-import type { ThemedComponentBaseProps } from "@comet/admin";
+import type { ThemedComponentBaseProps } from "@dextinity/admin";
 import type { ComponentsOverrides, Theme } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
 import { createElement, type JSX } from "react";

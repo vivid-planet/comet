@@ -1,6 +1,6 @@
-import { CancelButton, DeleteButton, OkayButton } from "@comet/admin";
-import { Link } from "@comet/admin-icons";
-import { ControlButton, findEntityInCurrentSelection, findTextInCurrentSelection, selectionIsInOneBlock } from "@comet/admin-rte";
+import { CancelButton, DeleteButton, OkayButton } from "@dextinity/admin";
+import { Link } from "@dextinity/admin-icons";
+import { ControlButton, findEntityInCurrentSelection, findTextInCurrentSelection, selectionIsInOneBlock } from "@dextinity/admin-rte";
 // eslint-disable-next-line no-restricted-imports
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";

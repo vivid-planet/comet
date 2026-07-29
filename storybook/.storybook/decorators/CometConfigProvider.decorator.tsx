@@ -1,4 +1,4 @@
-import { CometConfigProvider } from "@comet/cms-admin";
+import { CometConfigProvider } from "@dextinity/cms-admin";
 import type { Decorator } from "@storybook/react-vite";
 
 export const CometConfigProviderDecorator: Decorator = (fn, context) => {

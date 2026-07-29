@@ -13,7 +13,7 @@ import {
     RootBlockDataScalar,
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { News, NewsContentScope } from "../entities/news.entity";
 @Resolver(() => News)

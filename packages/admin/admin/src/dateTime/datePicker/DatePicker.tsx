@@ -1,4 +1,4 @@
-import { Calendar } from "@comet/admin-icons";
+import { Calendar } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import { DatePicker as MuiDatePicker, type DatePickerProps as MuiDatePickerProps, pickersInputBaseClasses } from "@mui/x-date-pickers";
 import { type ReactNode, useState } from "react";
@@ -51,7 +51,7 @@ export type DatePickerProps = ThemedComponentBaseProps<{
  * with a calendar icon that opens a date picker dialog. The component handles ISO 8601 date strings and includes
  * features like clearing, read-only state, and customizable icons.
  *
- * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-datepicker--docs)
+ * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@dextinity/admin_components-datetime-datepicker--docs)
  * - [MUI X DatePicker Documentation](https://mui.com/x/react-date-pickers/date-picker/)
  */
 export const DatePicker = (inProps: DatePickerProps) => {

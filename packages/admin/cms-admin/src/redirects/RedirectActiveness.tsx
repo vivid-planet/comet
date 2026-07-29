@@ -1,5 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
-import { ChevronDown, Invisible, Visible } from "@comet/admin-icons";
+import { ChevronDown, Invisible, Visible } from "@dextinity/admin-icons";
 import { Chip, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { green } from "@mui/material/colors";
 import { type JSX, type MouseEvent, useState } from "react";

@@ -1,4 +1,4 @@
-import { Close, Maximize } from "@comet/admin-icons";
+import { Close, Maximize } from "@dextinity/admin-icons";
 import {
     ButtonBase,
     type ComponentsOverrides,

@@ -1,5 +1,5 @@
-import { CrudMoreActionsMenuItem, useContentTranslationService, useErrorDialog } from "@comet/admin";
-import { Translate } from "@comet/admin-icons";
+import { CrudMoreActionsMenuItem, useContentTranslationService, useErrorDialog } from "@dextinity/admin";
+import { Translate } from "@dextinity/admin-icons";
 import { CircularProgress, ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";

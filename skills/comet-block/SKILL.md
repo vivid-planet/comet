@@ -72,11 +72,11 @@ For block type decision guidance, see [block-types.md](references/block-types.md
 Before generating any code:
 
 1. **Locate the `api` and `admin` directories.**
-2. **Locate the site package or packages by their dependencies, not the folder name.** `site` is only the conventional name — a project may name the package differently or have several. A `package.json` (outside `node_modules`) that depends on `@comet/site-nextjs` or `@comet/site-react` is certainly a site package, since site blocks render through these (`withPreview`, `PropsWithData`):
+2. **Locate the site package or packages by their dependencies, not the folder name.** `site` is only the conventional name — a project may name the package differently or have several. A `package.json` (outside `node_modules`) that depends on `@dextinity/site-nextjs` or `@dextinity/site-react` is certainly a site package, since site blocks render through these (`withPreview`, `PropsWithData`):
     ```bash
-    grep -rl --include='package.json' --exclude-dir=node_modules -E '"@comet/site-(nextjs|react)"' . | xargs -n1 dirname
+    grep -rl --include='package.json' --exclude-dir=node_modules -E '"@dextinity/site-(nextjs|react)"' . | xargs -n1 dirname
     ```
-    A frontend package can also exist without those dependencies — for example one that renders blocks for email with `@comet/mail-react`. Skip the site steps only if you find neither a site package nor another frontend package.
+    A frontend package can also exist without those dependencies — for example one that renders blocks for email with `@dextinity/mail-react`. Skip the site steps only if you find neither a site package nor another frontend package.
 3. **Find existing blocks directories** — typically `src/documents/pages/blocks/`. Some shared blocks live in `common/blocks/` or similar. Check both.
 4. **Verify referenced blocks exist** — search for any blocks named in the prompt (e.g., `HeadingBlock`, `LinkBlock`) in all layers and note their import paths.
 5. **Find registration targets** — search for `createBlocksBlock` usages to locate `PageContentBlock`, `ContentGroupBlock`, or other targets. Note file paths in all layers.
@@ -161,7 +161,7 @@ File: `{BlockName}Block.tsx` (PascalCase). Place in the blocks directory found i
 - Set `previewContent` in the override callback for meaningful block list previews.
 - **`hiddenInSubroute` rule:** When the composite contains sub-route blocks (list, blocks-block, one-of), set `hiddenInSubroute: true` on every sibling entry that is _not_ a sub-route block. Never set it on sub-route block entries themselves.
 - **`label` vs `title`:** when the helper has a `label`, omit `title` on the block entry. When it has no `label`, provide `title` on the entry. They are mutually exclusive.
-- For list blocks: use `createListBlock` from `@comet/cms-admin` with `name`, `displayName`, `block`, `itemName`, `itemsName`.
+- For list blocks: use `createListBlock` from `@dextinity/cms-admin` with `name`, `displayName`, `block`, `itemName`, `itemsName`.
 
 For the full helper API, `BlockCategory` enum, and complete examples, see [admin-patterns.md](references/admin-patterns.md).
 
@@ -176,7 +176,7 @@ File: `{BlockName}Block.tsx` (PascalCase). Place in the blocks directory found i
 - Wrap with `withPreview(Component, { label: "BlockName" })`.
 - Type props as `PropsWithData<{BlockName}BlockData>` — import from `@src/blocks.generated`.
 - Use `hasRichTextBlockContent` guard before rendering RichText. Never wrap `RichTextBlock` in a `Typography` component.
-- `DamImageBlock` is **not** exported from `@comet/site-nextjs` — use the project-specific wrapper. See [image.md](references/image.md).
+- `DamImageBlock` is **not** exported from `@dextinity/site-nextjs` — use the project-specific wrapper. See [image.md](references/image.md).
 - Always validate `aspectRatio` against `allowedImageAspectRatios` in the API config. See [image.md](references/image.md).
 - The `supportedBlocks` object (for `BlocksBlock`/`PageContent` site wrapper) must be defined at module level, not inside the component.
 

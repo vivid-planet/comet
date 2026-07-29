@@ -1,4 +1,4 @@
-import { ChevronDown, Error } from "@comet/admin-icons";
+import { ChevronDown, Error } from "@dextinity/admin-icons";
 import {
     Autocomplete,
     type AutocompleteProps,

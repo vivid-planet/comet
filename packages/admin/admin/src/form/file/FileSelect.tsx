@@ -1,4 +1,4 @@
-import { Error as ErrorIcon } from "@comet/admin-icons";
+import { Error as ErrorIcon } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import type { ReactNode } from "react";

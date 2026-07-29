@@ -72,7 +72,7 @@ export default defineConfig({
 
 ```diff package.json
        "setup:ci": "npm run setup-project-files",
-+      "setup:download-oauth2-proxy": "dotenv -- sh -c 'npx @comet/cli download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
++      "setup:download-oauth2-proxy": "dotenv -- sh -c 'npx @dextinity/cli download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
 ```
 
 ```diff install.sh

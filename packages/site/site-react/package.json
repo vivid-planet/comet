@@ -1,6 +1,6 @@
 {
-    "name": "@comet/site-react",
-    "version": "9.2.2",
+    "name": "@dextinity/site-react",
+    "version": "1.0.0",
     "description": "Comet Site React package",
     "repository": {
         "type": "git",
@@ -53,8 +53,8 @@
         "usehooks-ts": "^3.1.1"
     },
     "devDependencies": {
-        "@comet/cli": "workspace:*",
-        "@comet/eslint-config": "workspace:*",
+        "@dextinity/cli": "workspace:*",
+        "@dextinity/eslint-config": "workspace:*",
         "@types/draft-js": "^0.11.20",
         "@types/lodash.isequal": "^4.5.8",
         "@types/react": "^19.2.15",

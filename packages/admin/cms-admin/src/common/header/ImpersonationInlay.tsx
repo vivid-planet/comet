@@ -1,4 +1,4 @@
-import { Reset } from "@comet/admin-icons";
+import { Reset } from "@dextinity/admin-icons";
 import { Box, Chip, Typography } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";

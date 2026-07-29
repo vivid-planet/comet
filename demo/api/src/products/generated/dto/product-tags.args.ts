@@ -3,7 +3,7 @@
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, IsString, ValidateNested } from "class-validator";
-import { OffsetBasedPaginationArgs, SortDirection } from "@comet/cms-api";
+import { OffsetBasedPaginationArgs, SortDirection } from "@dextinity/cms-api";
 import { ProductTagFilter } from "./product-tag.filter";
 import { ProductTagSort, ProductTagSortField } from "./product-tag.sort";
 @ArgsType()

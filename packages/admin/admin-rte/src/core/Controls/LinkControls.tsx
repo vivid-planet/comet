@@ -1,4 +1,4 @@
-import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@dextinity/admin";
 import { ButtonGroup, type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material";
 
 import LinkToolbarButton from "../extension/Link/ToolbarButton";

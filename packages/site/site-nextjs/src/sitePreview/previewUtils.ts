@@ -1,4 +1,4 @@
-import type { PreviewData } from "@comet/site-react";
+import type { PreviewData } from "@dextinity/site-react";
 import { errors, jwtVerify, SignJWT } from "jose";
 import type { NextApiRequest } from "next";
 import { cookies, draftMode, headers as getHeaders } from "next/headers";

@@ -1,6 +1,6 @@
 {
-    "name": "@comet/admin-icons",
-    "version": "9.2.2",
+    "name": "@dextinity/admin-icons",
+    "version": "1.0.0",
     "description": "A collection of icons for Comet Admin",
     "repository": {
         "directory": "packages/admin/admin-icons",
@@ -44,8 +44,8 @@
     "devDependencies": {
         "@babel/cli": "^7.29.7",
         "@babel/core": "^7.29.7",
-        "@comet/admin-babel-preset": "workspace:*",
-        "@comet/eslint-config": "workspace:*",
+        "@dextinity/admin-babel-preset": "workspace:*",
+        "@dextinity/eslint-config": "workspace:*",
         "@mui/material": "^7.3.11",
         "@types/cli-progress": "^3.11.6",
         "@types/node": "^24.12.4",

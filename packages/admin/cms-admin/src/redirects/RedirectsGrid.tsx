@@ -19,8 +19,8 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
-} from "@comet/admin";
-import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@dextinity/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {

@@ -1,4 +1,4 @@
-import { MoreVertical } from "@comet/admin-icons";
+import { MoreVertical } from "@dextinity/admin-icons";
 import {
     Chip,
     type ComponentsOverrides,

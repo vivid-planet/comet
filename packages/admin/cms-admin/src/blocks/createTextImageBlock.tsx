@@ -1,4 +1,4 @@
-import { messages } from "@comet/admin";
+import { messages } from "@dextinity/admin";
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 

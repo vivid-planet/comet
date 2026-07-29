@@ -1,4 +1,4 @@
-import { BrevoModule } from "@comet/brevo-api";
+import { BrevoModule } from "@dextinity/brevo-api";
 import {
     AccessLogModule,
     AzureAiTranslatorModule,
@@ -22,7 +22,7 @@ import {
     SentryModule,
     UserPermissionsModule,
     WarningsModule,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";

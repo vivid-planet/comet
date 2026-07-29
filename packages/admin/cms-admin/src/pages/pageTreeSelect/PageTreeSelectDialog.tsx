@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { Button, FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
-import { ArrowRight, Close, Delete } from "@comet/admin-icons";
+import { Button, FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@dextinity/admin";
+import { ArrowRight, Close, Delete } from "@dextinity/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,

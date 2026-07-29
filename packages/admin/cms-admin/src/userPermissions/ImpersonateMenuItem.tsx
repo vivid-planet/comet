@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { RowActionsItem } from "@comet/admin";
-import { ImpersonateUser, Reset } from "@comet/admin-icons";
+import { RowActionsItem } from "@dextinity/admin";
+import { ImpersonateUser, Reset } from "@dextinity/admin-icons";
 import { CircularProgress } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 

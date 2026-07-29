@@ -1,4 +1,4 @@
-import { defineConfig } from "@comet/admin-generator";
+import { defineConfig } from "@dextinity/admin-generator";
 import type { GQLManufacturer } from "@src/graphql.generated";
 
 export default defineConfig<GQLManufacturer>({

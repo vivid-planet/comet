@@ -1,4 +1,4 @@
-import { Translate } from "@comet/admin-icons";
+import { Translate } from "@dextinity/admin-icons";
 import { IconButton, InputBase, type InputBaseProps } from "@mui/material";
 import { useState } from "react";
 import type { FieldRenderProps } from "react-final-form";

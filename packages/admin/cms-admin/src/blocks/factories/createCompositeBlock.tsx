@@ -1,4 +1,4 @@
-import { StackPage, StackSwitch, StackSwitchApiContext, SubRoute, useSubRoutePrefix } from "@comet/admin";
+import { StackPage, StackSwitch, StackSwitchApiContext, SubRoute, useSubRoutePrefix } from "@dextinity/admin";
 import { Divider } from "@mui/material";
 import { Fragment, type ReactNode } from "react";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";

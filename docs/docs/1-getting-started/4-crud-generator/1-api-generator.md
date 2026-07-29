@@ -278,7 +278,7 @@ Create a class that implements `CrudGeneratorHooksService` and define the hooks 
 
 ```ts
 // products/product.service.ts
-import { CrudGeneratorHooksService, CurrentUser, MutationError } from "@comet/cms-api";
+import { CrudGeneratorHooksService, CurrentUser, MutationError } from "@dextinity/cms-api";
 import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { ProductInput } from "./generated/dto/product.input";
 

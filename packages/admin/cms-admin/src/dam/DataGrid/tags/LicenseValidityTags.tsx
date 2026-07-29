@@ -1,4 +1,4 @@
-import { WarningSolid } from "@comet/admin-icons";
+import { WarningSolid } from "@dextinity/admin-icons";
 import { formatDistanceToNow } from "date-fns";
 import { FormattedMessage } from "react-intl";
 

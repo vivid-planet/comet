@@ -1,5 +1,5 @@
-import { Alert, Button, messages } from "@comet/admin";
-import { Clear, Delete, OpenNewTab } from "@comet/admin-icons";
+import { Alert, Button, messages } from "@dextinity/admin";
+import { Clear, Delete, OpenNewTab } from "@dextinity/admin-icons";
 import {
     Box,
     // eslint-disable-next-line no-restricted-imports

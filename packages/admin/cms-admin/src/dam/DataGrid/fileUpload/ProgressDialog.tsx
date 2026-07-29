@@ -1,5 +1,5 @@
-import { PrettyBytes } from "@comet/admin";
-import { BallTriangle } from "@comet/admin-icons";
+import { PrettyBytes } from "@dextinity/admin";
+import { BallTriangle } from "@dextinity/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,

@@ -1,4 +1,4 @@
-import { createCometTheme, MuiThemeProvider } from "@comet/admin";
+import { createCometTheme, MuiThemeProvider } from "@dextinity/admin";
 import { createTheme as createMuiTheme, CssBaseline } from "@mui/material";
 import type { Decorator } from "@storybook/react-vite";
 

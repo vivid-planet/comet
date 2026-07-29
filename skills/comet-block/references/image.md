@@ -26,12 +26,12 @@ Work through these questions in order. Stop at the first "Yes".
 
 ## Block Comparison
 
-| Block             | Raster (JPEG, PNG, WebP, ...) | SVG | Video | Cropping / Optimization | Source                                                       |
-| ----------------- | ----------------------------- | --- | ----- | ----------------------- | ------------------------------------------------------------ |
-| `DamImageBlock`   | Yes                           | Yes | No    | Yes (pixel images only) | `@comet/cms-api` / `@comet/cms-admin`                        |
-| `PixelImageBlock` | Yes                           | No  | No    | Yes                     | `@comet/cms-api` / `@comet/cms-admin` / `@comet/site-nextjs` |
-| `SvgImageBlock`   | No                            | Yes | No    | No (not needed)         | `@comet/cms-api` / `@comet/cms-admin` / `@comet/site-nextjs` |
-| `MediaBlock`      | Yes                           | Yes | Yes   | Yes (pixel images only) | Project-specific (not in Comet core)                         |
+| Block             | Raster (JPEG, PNG, WebP, ...) | SVG | Video | Cropping / Optimization | Source                                                                   |
+| ----------------- | ----------------------------- | --- | ----- | ----------------------- | ------------------------------------------------------------------------ |
+| `DamImageBlock`   | Yes                           | Yes | No    | Yes (pixel images only) | `@dextinity/cms-api` / `@dextinity/cms-admin`                            |
+| `PixelImageBlock` | Yes                           | No  | No    | Yes                     | `@dextinity/cms-api` / `@dextinity/cms-admin` / `@dextinity/site-nextjs` |
+| `SvgImageBlock`   | No                            | Yes | No    | No (not needed)         | `@dextinity/cms-api` / `@dextinity/cms-admin` / `@dextinity/site-nextjs` |
+| `MediaBlock`      | Yes                           | Yes | Yes   | Yes (pixel images only) | Project-specific (not in Comet core)                                     |
 
 ---
 
@@ -45,11 +45,11 @@ A **one-of block** that wraps both `PixelImageBlock` and `SvgImageBlock`. It aut
 
 ### Imports
 
-| Layer | Import                                                                                                                                                                   |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| API   | `import { DamImageBlock } from "@comet/cms-api";`                                                                                                                        |
-| Admin | `import { DamImageBlock } from "@comet/cms-admin";`                                                                                                                      |
-| Site  | **Project-specific wrapper** -- not exported from `@comet/site-nextjs`. Each project creates its own component, typically at `site/src/common/blocks/DamImageBlock.tsx`. |
+| Layer | Import                                                                                                                                                                       |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| API   | `import { DamImageBlock } from "@dextinity/cms-api";`                                                                                                                        |
+| Admin | `import { DamImageBlock } from "@dextinity/cms-admin";`                                                                                                                      |
+| Site  | **Project-specific wrapper** -- not exported from `@dextinity/site-nextjs`. Each project creates its own component, typically at `site/src/common/blocks/DamImageBlock.tsx`. |
 
 ### Site Implementation
 
@@ -60,7 +60,7 @@ Typical pattern:
 ```tsx
 // site/src/common/blocks/DamImageBlock.tsx
 "use client";
-import { PixelImageBlock, PreviewSkeleton, type PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
+import { PixelImageBlock, PreviewSkeleton, type PropsWithData, SvgImageBlock, withPreview } from "@dextinity/site-nextjs";
 import { type DamImageBlockData, type PixelImageBlockData, type SvgImageBlockData } from "@src/blocks.generated";
 import { type ImageProps as NextImageProps } from "next/image";
 
@@ -143,11 +143,11 @@ Handles **raster/pixel-based images only**. Supports image optimization via ImgP
 
 ### Imports
 
-| Layer | Import                                                  |
-| ----- | ------------------------------------------------------- |
-| API   | `import { PixelImageBlock } from "@comet/cms-api";`     |
-| Admin | `import { PixelImageBlock } from "@comet/cms-admin";`   |
-| Site  | `import { PixelImageBlock } from "@comet/site-nextjs";` |
+| Layer | Import                                                      |
+| ----- | ----------------------------------------------------------- |
+| API   | `import { PixelImageBlock } from "@dextinity/cms-api";`     |
+| Admin | `import { PixelImageBlock } from "@dextinity/cms-admin";`   |
+| Site  | `import { PixelImageBlock } from "@dextinity/site-nextjs";` |
 
 ### Key Features
 
@@ -194,11 +194,11 @@ Handles **SVG images only**. Renders the SVG directly via an `<img>` tag without
 
 ### Imports
 
-| Layer | Import                                                |
-| ----- | ----------------------------------------------------- |
-| API   | `import { SvgImageBlock } from "@comet/cms-api";`     |
-| Admin | `import { SvgImageBlock } from "@comet/cms-admin";`   |
-| Site  | `import { SvgImageBlock } from "@comet/site-nextjs";` |
+| Layer | Import                                                    |
+| ----- | --------------------------------------------------------- |
+| API   | `import { SvgImageBlock } from "@dextinity/cms-api";`     |
+| Admin | `import { SvgImageBlock } from "@dextinity/cms-admin";`   |
+| Site  | `import { SvgImageBlock } from "@dextinity/site-nextjs";` |
 
 ### Site Props
 
@@ -260,7 +260,7 @@ If it does not exist and the block needs image + video support, create one follo
 
 ```ts
 // api/src/common/blocks/media.block.ts
-import { createOneOfBlock, DamImageBlock, DamVideoBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-api";
+import { createOneOfBlock, DamImageBlock, DamVideoBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@dextinity/cms-api";
 
 export const MediaBlock = createOneOfBlock(
     {
@@ -287,7 +287,7 @@ import {
     DamVideoBlock,
     VimeoVideoBlock,
     YouTubeVideoBlock,
-} from "@comet/cms-admin";
+} from "@dextinity/cms-admin";
 import { FormattedMessage } from "react-intl";
 
 export const MediaBlock: BlockInterface = createOneOfBlock({
@@ -321,7 +321,7 @@ media: {
 ## Common Pitfalls
 
 1. **Using `PixelImageBlock` when `DamImageBlock` would be better** -- Unless there is a specific reason to exclude SVGs, prefer `DamImageBlock`. It gives editors more flexibility.
-2. **Forgetting the site-side `DamImageBlock` wrapper** -- Unlike `PixelImageBlock` and `SvgImageBlock`, `DamImageBlock` is not exported from `@comet/site-nextjs`. Check whether the project already has a wrapper in `site/src/common/blocks/DamImageBlock.tsx` before creating one.
+2. **Forgetting the site-side `DamImageBlock` wrapper** -- Unlike `PixelImageBlock` and `SvgImageBlock`, `DamImageBlock` is not exported from `@dextinity/site-nextjs`. Check whether the project already has a wrapper in `site/src/common/blocks/DamImageBlock.tsx` before creating one.
 3. **Not checking for an existing `MediaBlock`** -- When the user asks for "image" support but the context suggests video might also be needed (stage blocks, hero blocks, teaser media), check if the project has a `MediaBlock` and suggest using it.
 4. **Missing `aspectRatio` on `PixelImageBlock` in the site** -- `PixelImageBlock` requires an `aspectRatio` prop in the site layer. Omitting it causes layout issues.
 5. **Not handling the empty state for `SvgImageBlock`** -- Always check `damFile` before rendering `SvgImageBlock` in the site to avoid broken image placeholders.

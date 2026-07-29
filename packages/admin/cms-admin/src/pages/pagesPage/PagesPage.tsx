@@ -15,8 +15,8 @@ import {
     useEditDialog,
     useFocusAwarePolling,
     useStoredState,
-} from "@comet/admin";
-import { Add } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { Add } from "@dextinity/admin-icons";
 import { Box, DialogContent, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
 import { type ComponentType, type ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";

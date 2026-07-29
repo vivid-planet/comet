@@ -65,12 +65,12 @@ Typically, you will need a subset of the available development processes.
 
 Here are a few examples:
 
-1. You want to add a new component to `@comet/admin`
+1. You want to add a new component to `@dextinity/admin`
 
-    Start the development process for `@comet/admin`:
+    Start the development process for `@dextinity/admin`:
 
     ```bash
-    pnpm exec dev-pm start @comet-admin
+    pnpm exec dev-pm start @dextinity-admin
     ```
 
     Create a development story in Storybook:
@@ -81,7 +81,7 @@ Here are a few examples:
 
 2. You want to add a CMS feature to the API
 
-    Start the development process for `@comet/cms-api`:
+    Start the development process for `@dextinity/cms-api`:
 
     ```bash
     pnpm exec dev-pm start @cms-api
@@ -97,7 +97,7 @@ Here are a few examples:
 
 3. You want to add a CMS feature to the Admin
 
-    Start the development process for `@comet/cms-admin`:
+    Start the development process for `@dextinity/cms-admin`:
 
     ```bash
     pnpm exec dev-pm start @cms-admin

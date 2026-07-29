@@ -1,4 +1,4 @@
-import { Calendar } from "@comet/admin-icons";
+import { Calendar } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import type { DateRangePickerProps as MuiDateRangePickerProps } from "@mui/x-date-pickers-pro";
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
@@ -63,7 +63,7 @@ const getDateRangeValue = (value: DateRange | undefined): [Date | null, Date | n
  * text fields with a calendar icon that opens a date range picker dialog. The component handles ISO 8601 date strings
  * and includes features like clearing, read-only state, and customizable icons.
  *
- * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-daterangepicker--docs)
+ * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@dextinity/admin_components-datetime-daterangepicker--docs)
  * - [MUI X DateRangePicker Documentation](https://mui.com/x/react-date-pickers/date-range-picker/)
  */
 export const DateRangePicker = (inProps: DateRangePickerProps) => {

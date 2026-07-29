@@ -5,8 +5,8 @@ import {
     type InputWithPopperClassKey,
     type InputWithPopperProps,
     type ThemedComponentBaseProps,
-} from "@comet/admin";
-import { Time } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { Time } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, InputAdornment, ListItemText, MenuItem, MenuList } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { format } from "date-fns";
@@ -60,7 +60,7 @@ export interface TimePickerProps extends Omit<InputWithPopperProps, "children" |
 }
 
 /**
- * @deprecated Use `TimePicker` from `@comet/admin` instead.
+ * @deprecated Use `TimePicker` from `@dextinity/admin` instead.
  */
 export const TimePicker = (inProps: TimePickerProps) => {
     const {

@@ -1,4 +1,4 @@
-import { Error, Info, Warning } from "@comet/admin-icons";
+import { Error, Info, Warning } from "@dextinity/admin-icons";
 import type { ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
 import type { FunctionComponent, ReactNode } from "react";

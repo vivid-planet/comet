@@ -1,4 +1,4 @@
-import { Lock } from "@comet/admin-icons";
+import { Lock } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, css, InputAdornment, type InputAdornmentProps, type Theme, useThemeProps } from "@mui/material";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";

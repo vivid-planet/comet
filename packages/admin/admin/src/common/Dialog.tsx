@@ -1,4 +1,4 @@
-import { Close } from "@comet/admin-icons";
+import { Close } from "@dextinity/admin-icons";
 import {
     type ComponentsOverrides,
     css,

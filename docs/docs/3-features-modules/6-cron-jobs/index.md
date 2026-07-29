@@ -30,7 +30,7 @@ If Kubernetes Cron Jobs are used, Comet DXP can help you manage them.
 
 ### API
 
-A `CronJobModule` is available for `@comet/cms-api` which adds GraphQL queries and mutations for interacting with Cron Jobs. The `CronJobModule`requires the `KubernetesModule` to be included.
+A `CronJobModule` is available for `@dextinity/cms-api` which adds GraphQL queries and mutations for interacting with Cron Jobs. The `CronJobModule`requires the `KubernetesModule` to be included.
 
 :::caution
 If including the Cron Job module, ensure you have proper access control in place as this module allows interacting with the Kubernetes API.
@@ -38,7 +38,7 @@ If including the Cron Job module, ensure you have proper access control in place
 
 ### Admin
 
-A `CronJobsPage` is available for `@comet/cms-admin` to display and manage Cron Jobs.
+A `CronJobsPage` is available for `@dextinity/cms-admin` to display and manage Cron Jobs.
 
 ### Scoping
 

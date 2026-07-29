@@ -1,4 +1,4 @@
-import { ErrorHandlerProvider } from "@comet/admin";
+import { ErrorHandlerProvider } from "@dextinity/admin";
 import type { DataGridProps } from "@mui/x-data-grid";
 import type { DataGridPremiumProps } from "@mui/x-data-grid-premium";
 import type { DataGridProProps } from "@mui/x-data-grid-pro";

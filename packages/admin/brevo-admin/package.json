@@ -1,6 +1,6 @@
 {
-    "name": "@comet/brevo-admin",
-    "version": "9.2.2",
+    "name": "@dextinity/brevo-admin",
+    "version": "1.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet/",
@@ -40,10 +40,10 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "@comet/admin": "workspace:*",
-        "@comet/admin-date-time": "workspace:*",
-        "@comet/admin-icons": "workspace:*",
-        "@comet/cms-admin": "workspace:*",
+        "@dextinity/admin": "workspace:*",
+        "@dextinity/admin-date-time": "workspace:*",
+        "@dextinity/admin-icons": "workspace:*",
+        "@dextinity/cms-admin": "workspace:*",
         "date-fns": "^4.4.0",
         "react-dropzone": "^14.2.3"
     },
@@ -51,8 +51,8 @@
         "@apollo/client": "^3.14.1",
         "@babel/cli": "^7.29.7",
         "@babel/core": "^7.29.7",
-        "@comet/admin-babel-preset": "workspace:*",
-        "@comet/eslint-config": "workspace:*",
+        "@dextinity/admin-babel-preset": "workspace:*",
+        "@dextinity/eslint-config": "workspace:*",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@graphql-codegen/cli": "^5.0.7",

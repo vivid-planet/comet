@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Link } from "@comet/admin-icons";
+import { Link } from "@dextinity/admin-icons";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 

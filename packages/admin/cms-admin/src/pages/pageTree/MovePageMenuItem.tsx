@@ -1,6 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
-import { RowActionsItem, RowActionsMenu } from "@comet/admin";
-import { MovePage } from "@comet/admin-icons";
+import { RowActionsItem, RowActionsMenu } from "@dextinity/admin";
+import { MovePage } from "@dextinity/admin-icons";
 import { FormattedMessage } from "react-intl";
 
 import type { DocumentInterface, DocumentType } from "../../documents/types";

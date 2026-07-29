@@ -21,7 +21,7 @@ The API block is project-wide regardless of how many Admin-side scoped variants 
 
 ```ts
 // api/src/common/blocks/rich-text.block.ts
-import { createRichTextBlock } from "@comet/cms-api";
+import { createRichTextBlock } from "@dextinity/cms-api";
 import { LinkBlock } from "@src/common/blocks/link.block";
 
 export const RichTextBlock = createRichTextBlock({ link: LinkBlock });
@@ -54,7 +54,7 @@ class MyBlockInput extends BlockInput {
 ## Admin Side
 
 ```ts
-import { createRichTextBlock } from "@comet/cms-admin";
+import { createRichTextBlock } from "@dextinity/cms-admin";
 ```
 
 Admin options: `link` (required), `rte` (partial `IRteOptions` — spread over defaults), `minHeight` (pixels, default ~150px), `tags`.
@@ -84,7 +84,7 @@ Defined once per project in `common/blocks/`. No `rte` overrides needed for a st
 
 ```tsx
 // admin/src/common/blocks/RichTextBlock.tsx
-import { createRichTextBlock } from "@comet/cms-admin";
+import { createRichTextBlock } from "@dextinity/cms-admin";
 import { LinkBlock } from "./LinkBlock";
 
 export const RichTextBlock = createRichTextBlock({ link: LinkBlock });
@@ -258,7 +258,7 @@ export const TeaserItemBlock = createCompositeBlock({
 ## Site Side
 
 ```tsx
-import { hasRichTextBlockContent, type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { hasRichTextBlockContent, type PropsWithData, withPreview } from "@dextinity/site-nextjs";
 import { type RichTextBlockData } from "@src/blocks.generated";
 ```
 

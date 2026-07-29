@@ -1,4 +1,4 @@
-import { SelectField } from "@comet/admin";
+import { SelectField } from "@dextinity/admin";
 import { MenuItem } from "@mui/material";
 import type { ReactNode } from "react";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";

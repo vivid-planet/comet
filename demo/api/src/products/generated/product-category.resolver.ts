@@ -9,7 +9,7 @@ import { ProductCategoriesArgs } from "./dto/product-categories.args";
 import { ProductCategoryType } from "../entities/product-category-type.entity";
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
-import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@dextinity/cms-api";
 @Resolver(() => ProductCategory)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductCategoryResolver {

@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp } from "@comet/admin-icons";
+import { ChevronDown, ChevronUp } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, Popover as MuiPopover, type Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import { type ReactNode, useEffect, useRef, useState } from "react";

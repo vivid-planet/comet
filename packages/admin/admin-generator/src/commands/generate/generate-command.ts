@@ -2,9 +2,9 @@
 import { readFile, writeFile } from "node:fs/promises";
 
 import type { ApolloClient } from "@apollo/client";
-import type { GridColDef } from "@comet/admin";
-import type { IconName } from "@comet/admin-icons";
-import type { BlockInterface, ContentScope, FinalFormFileUploadProps } from "@comet/cms-admin";
+import type { GridColDef } from "@dextinity/admin";
+import type { IconName } from "@dextinity/admin-icons";
+import type { BlockInterface, ContentScope, FinalFormFileUploadProps } from "@dextinity/cms-admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import type { IconProps } from "@mui/material";
@@ -386,7 +386,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.gql.tsx`;
             await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
-                import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
+                import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@dextinity/cms-admin";
 
                 ${gqlDocumentsOutputCode}
             `;

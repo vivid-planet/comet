@@ -1,5 +1,5 @@
-import { RowActionsItem } from "@comet/admin";
-import { Copy, Paste } from "@comet/admin-icons";
+import { RowActionsItem } from "@dextinity/admin";
+import { Copy, Paste } from "@dextinity/admin-icons";
 import { FormattedMessage } from "react-intl";
 
 import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";

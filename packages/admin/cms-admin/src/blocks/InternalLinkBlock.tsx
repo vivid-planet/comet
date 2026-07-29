@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Field, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormSelect } from "@dextinity/admin";
 import { Box, Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { FormattedMessage } from "react-intl";

@@ -1,4 +1,4 @@
-import { Button } from "@comet/admin";
+import { Button } from "@dextinity/admin";
 import { DialogActions } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";

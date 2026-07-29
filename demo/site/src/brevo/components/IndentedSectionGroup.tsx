@@ -1,4 +1,4 @@
-import { css, MjmlGroup, MjmlSection, MjmlStyle } from "@comet/mail-react";
+import { css, MjmlGroup, MjmlSection, MjmlStyle } from "@dextinity/mail-react";
 import { theme } from "@src/brevo/util/theme";
 import clsx from "clsx";
 import type { ComponentProps, ReactNode } from "react";

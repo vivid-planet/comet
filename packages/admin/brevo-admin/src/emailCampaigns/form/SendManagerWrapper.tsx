@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { Alert, Loading } from "@comet/admin";
-import type { ContentScope } from "@comet/cms-admin";
+import { Alert, Loading } from "@dextinity/admin";
+import type { ContentScope } from "@dextinity/cms-admin";
 import { Typography } from "@mui/material";
 import type { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";

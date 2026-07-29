@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import type { RefetchQueriesInclude } from "@apollo/client/core/types";
-import { Alert, Button, CheckboxField, Dialog, downloadFile, FinalForm, Loading, messages, useErrorDialog } from "@comet/admin";
-import { Upload } from "@comet/admin-icons";
+import { Alert, Button, CheckboxField, Dialog, downloadFile, FinalForm, Loading, messages, useErrorDialog } from "@dextinity/admin";
+import { Upload } from "@dextinity/admin-icons";
 import { Box, DialogActions, DialogContent, DialogTitle, type MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type ComponentProps, type ReactNode, type RefObject, useMemo, useRef, useState } from "react";

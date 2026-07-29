@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { Alert, Button, CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
+import { Alert, Button, CancelButton, LocalErrorScopeApolloContext } from "@dextinity/admin";
 import {
     CircularProgress,
     // eslint-disable-next-line no-restricted-imports

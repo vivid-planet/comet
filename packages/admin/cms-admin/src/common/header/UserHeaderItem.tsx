@@ -1,5 +1,5 @@
-import { AppHeaderDropdown, type AppHeaderDropdownProps } from "@comet/admin";
-import { Account, ImpersonateUser } from "@comet/admin-icons";
+import { AppHeaderDropdown, type AppHeaderDropdownProps } from "@dextinity/admin";
+import { Account, ImpersonateUser } from "@dextinity/admin-icons";
 import { Avatar, AvatarGroup, type AvatarProps, Box, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import { type PropsWithChildren, type ReactElement, useState } from "react";

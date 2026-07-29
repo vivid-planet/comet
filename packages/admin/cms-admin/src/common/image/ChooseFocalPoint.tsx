@@ -1,4 +1,4 @@
-import { FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest } from "@comet/admin-icons";
+import { FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest } from "@dextinity/admin-icons";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 

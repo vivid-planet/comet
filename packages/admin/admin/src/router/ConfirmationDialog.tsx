@@ -1,4 +1,4 @@
-import { Close, Delete, Save, Warning } from "@comet/admin-icons";
+import { Close, Delete, Save, Warning } from "@dextinity/admin-icons";
 import {
     type ComponentsOverrides,
     // eslint-disable-next-line no-restricted-imports

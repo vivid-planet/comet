@@ -8,7 +8,7 @@ import { ProductTagsArgs } from "./dto/product-tags.args";
 import { ProductToTag } from "../entities/product-to-tag.entity";
 import { Product } from "../entities/product.entity";
 import { ProductTag } from "../entities/product-tag.entity";
-import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "@dextinity/cms-api";
 @Resolver(() => ProductTag)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductTagResolver {

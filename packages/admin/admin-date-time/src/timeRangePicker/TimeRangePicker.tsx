@@ -1,4 +1,4 @@
-import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@dextinity/admin";
 import { type ComponentsOverrides, FormControl, type Theme, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
@@ -58,7 +58,7 @@ const Separator = createComponentSlot(Typography)<TimeRangePickerClassKey>({
 );
 
 /**
- * @deprecated Use `TimeRange` from `@comet/admin` instead.
+ * @deprecated Use `TimeRange` from `@dextinity/admin` instead.
  */
 export type TimeRange = {
     start: string;
@@ -87,7 +87,7 @@ export interface TimeRangePickerProps
 type IndividualTimeValue = string | undefined;
 
 /**
- * @deprecated Use `TimeRangePicker` from `@comet/admin` instead.
+ * @deprecated Use `TimeRangePicker` from `@dextinity/admin` instead.
  */
 export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
     const {

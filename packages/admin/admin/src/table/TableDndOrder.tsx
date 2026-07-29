@@ -1,4 +1,4 @@
-import { DragHandle } from "@comet/admin-icons";
+import { DragHandle } from "@dextinity/admin-icons";
 import type { ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";

@@ -17,7 +17,7 @@ import {
     RootBlockDataScalar,
     gqlArgsToMikroOrmQuery,
     gqlSortToMikroOrmOrderBy,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { ProductColor } from "../entities/product-color.entity";
 import { ProductToTag } from "../entities/product-to-tag.entity";
 import { ProductTag } from "../entities/product-tag.entity";

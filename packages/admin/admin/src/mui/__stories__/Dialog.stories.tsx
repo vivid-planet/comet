@@ -1,4 +1,4 @@
-import { Save } from "@comet/admin-icons";
+import { Save } from "@dextinity/admin-icons";
 import { DialogActions, DialogContent, DialogContentText, type DialogProps } from "@mui/material";
 import { Form } from "react-final-form";
 

@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { OpenNewTab } from "@comet/admin-icons";
+import { OpenNewTab } from "@dextinity/admin-icons";
 import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { type ComponentProps, isValidElement, type ReactElement, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";

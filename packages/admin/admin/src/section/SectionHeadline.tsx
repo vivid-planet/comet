@@ -1,4 +1,4 @@
-import { Info } from "@comet/admin-icons";
+import { Info } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, Divider, Typography } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type ComponentProps, isValidElement, type ReactElement, type ReactNode } from "react";

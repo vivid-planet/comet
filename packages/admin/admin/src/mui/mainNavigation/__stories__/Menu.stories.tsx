@@ -1,4 +1,4 @@
-import { CometColor, Dashboard, Settings, Sort } from "@comet/admin-icons";
+import { CometColor, Dashboard, Settings, Sort } from "@dextinity/admin-icons";
 import { Card, CardContent, Typography } from "@mui/material";
 import { Route, Switch } from "react-router";
 

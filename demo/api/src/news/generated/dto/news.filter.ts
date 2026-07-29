@@ -5,7 +5,7 @@ import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
 import { NewsStatusEnumFilter } from "./news-status.enum-filter";
 import { NewsCategoryEnumFilter } from "./news-category.enum-filter";
-import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
+import { DateTimeFilter, IdFilter, OneToManyFilter, StringFilter } from "@dextinity/cms-api";
 @InputType()
 export class NewsFilter {
     @Field(() => IdFilter, { nullable: true })

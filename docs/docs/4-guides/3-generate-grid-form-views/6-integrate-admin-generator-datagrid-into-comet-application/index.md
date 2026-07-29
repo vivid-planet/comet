@@ -4,7 +4,7 @@ title: Integrate Admin Generator DataGrid into Comet Application
 
 At the end of this guide, we want to combine the generated `CustomerGrid` with the `CustomerForm` into a new page, `CustomerPage`.
 
-The `CustomerPage` will be a simple page that contains the `CustomerGrid`, the `CustomerForm`, and the related components from `@comet/admin` to seamlessly integrate into a Comet Application.
+The `CustomerPage` will be a simple page that contains the `CustomerGrid`, the `CustomerForm`, and the related components from `@dextinity/admin` to seamlessly integrate into a Comet Application.
 
 ## Create CustomerPage
 
@@ -26,9 +26,9 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-} from "@comet/admin";
-import { Add, Edit } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+} from "@dextinity/admin";
+import { Add, Edit } from "@dextinity/admin-icons";
+import { ContentScopeIndicator } from "@dextinity/cms-admin";
 import { IconButton } from "@mui/material";
 import { CustomerForm } from "@src/customers/generated/CustomerForm";
 import { CustomersGrid } from "@src/customers/generated/CustomerGrid";

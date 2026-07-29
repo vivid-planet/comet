@@ -1,4 +1,4 @@
-import { Stack, StackBreadcrumbs } from "@comet/admin";
+import { Stack, StackBreadcrumbs } from "@dextinity/admin";
 import { styled } from "@mui/material/styles";
 import type { PropsWithChildren, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";

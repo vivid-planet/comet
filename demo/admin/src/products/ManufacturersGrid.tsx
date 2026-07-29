@@ -15,8 +15,8 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
-} from "@comet/admin";
-import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { Add as AddIcon, Edit, Info } from "@dextinity/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle } from "@mui/x-data-grid-pro";
 import type {

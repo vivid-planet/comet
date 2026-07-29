@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Minimize } from "@comet/admin-icons";
+import { Minimize } from "@dextinity/admin-icons";
 import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect } from "react";

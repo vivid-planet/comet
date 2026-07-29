@@ -1,4 +1,4 @@
-import { Filter } from "@comet/admin-icons";
+import { Filter } from "@dextinity/admin-icons";
 import type { ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type PropsWithChildren, type ReactNode, useState } from "react";

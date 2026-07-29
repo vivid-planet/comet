@@ -1,4 +1,4 @@
-import { Clear, Search } from "@comet/admin-icons";
+import { Clear, Search } from "@dextinity/admin-icons";
 import { InputBase } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import { styled } from "@mui/material/styles";

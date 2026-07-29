@@ -38,7 +38,7 @@ Email clients inline all styles during processing. Since inline styles have high
 `css` is a tagged template literal that returns a plain string. Its only purpose is enabling CSS syntax highlighting and auto-formatting in editors (e.g., the styled-components VS Code extension):
 
 ```ts
-import { css } from "@comet/mail-react";
+import { css } from "@dextinity/mail-react";
 
 const styles = css`
     @media (max-width: 419px) {
@@ -83,7 +83,7 @@ Theme-aware entries are called at render time with the theme from `MjmlMailRoot`
 When you genuinely don't need any theme values (rare — most responsive styles benefit from theme breakpoints):
 
 ```ts
-import { css, registerStyles } from "@comet/mail-react";
+import { css, registerStyles } from "@dextinity/mail-react";
 
 registerStyles(css`
     @media (max-width: 419px) {
@@ -133,7 +133,7 @@ The complete pattern for building email-safe custom components:
 4. **`!important`** on all responsive overrides
 
 ```tsx
-import { css, MjmlColumn, MjmlRaw, MjmlSection, registerStyles } from "@comet/mail-react";
+import { css, MjmlColumn, MjmlRaw, MjmlSection, registerStyles } from "@dextinity/mail-react";
 
 interface FeatureCardProps {
     title: string;

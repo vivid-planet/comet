@@ -1,4 +1,4 @@
-import { Time } from "@comet/admin-icons";
+import { Time } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, css, inputLabelClasses, type Theme, useThemeProps } from "@mui/material";
 import type { TimeRangePickerProps as MuiTimeRangePickerProps } from "@mui/x-date-pickers-pro";
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
@@ -63,7 +63,7 @@ const getTimeRangeValue = (value: TimeRange | undefined): [Date | null, Date | n
  * text fields with a time icon that opens a time range picker dialog. The component handles time strings in 24-hour
  * format (HH:mm) and includes features like clearing, read-only state, and customizable icons.
  *
- * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/admin_components-datetime-timerangepicker--docs)
+ * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@dextinity/admin_components-datetime-timerangepicker--docs)
  * - [MUI X TimeRangePicker Documentation](https://mui.com/x/react-date-pickers/time-range-picker/)
  */
 export const TimeRangePicker = (inProps: TimeRangePickerProps) => {

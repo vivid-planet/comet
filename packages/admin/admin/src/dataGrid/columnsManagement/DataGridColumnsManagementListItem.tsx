@@ -1,4 +1,4 @@
-import { PinLeft, PinRight } from "@comet/admin-icons";
+import { PinLeft, PinRight } from "@dextinity/admin-icons";
 import {
     type ComponentsOverrides,
     type IconButton,

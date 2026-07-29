@@ -1,4 +1,4 @@
-import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace, MainContent } from "@comet/admin";
+import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace, MainContent } from "@dextinity/admin";
 import { Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 

@@ -1,15 +1,15 @@
 ---
 name: comet-admin-ui
-description: Building or editing admin UI in a project that uses @comet/admin and its sibling packages — pages, dashboards, dialogs, widgets, layouts, or component styling. Use even for small UI changes, to build with Comet's theme, components, and helpers instead of custom sx/styled CSS, hard-coded values, or Box layouts.
+description: Building or editing admin UI in a project that uses @dextinity/admin and its sibling packages — pages, dashboards, dialogs, widgets, layouts, or component styling. Use even for small UI changes, to build with Comet's theme, components, and helpers instead of custom sx/styled CSS, hard-coded values, or Box layouts.
 ---
 
-# Building admin UIs with @comet/admin
+# Building admin UIs with @dextinity/admin
 
-`@comet/admin` and its sibling packages ship a design system: a theme (spacing,
+`@dextinity/admin` and its sibling packages ship a design system: a theme (spacing,
 colors, shadows, typography, breakpoints) and a library of ready-made components. For
 internationalization, Comet recommends `react-intl` (the default) to translate text, numbers, and
 dates. The components and types are available in the consuming project through the installed
-packages — import them directly (e.g. `import { Button, MainContent } from "@comet/admin"`).
+packages — import them directly (e.g. `import { Button, MainContent } from "@dextinity/admin"`).
 
 Build admin UI by composing what the design system already provides. Add custom styling only
 after the system genuinely can't express what you need.
@@ -371,15 +371,15 @@ the page structure, not a hand-written `height` that has to track the header and
 ### Containers and widgets: `FieldSet`, `FormSection`, and themed `Card`, not `Box`
 
 To group related content, use a container component instead of a `Box` with hand-set padding,
-borders, and a title. `FieldSet` (from `@comet/admin`) is a collapsible titled panel — wrap a page
+borders, and a title. `FieldSet` (from `@dextinity/admin`) is a collapsible titled panel — wrap a page
 form's fields in it. Inside a dialog or sidebar, group fields with `FormSection` instead, a lighter
-titled section with a divider. For a dashboard widget, if the project uses `@comet/cms-admin` (most
+titled section with a divider. For a dashboard widget, if the project uses `@dextinity/cms-admin` (most
 do), use its ready-made `DashboardWidgetRoot` rather than building one by hand; when you compose a
 container yourself, build it from MUI's `Card` (with `CardHeader` and `CardContent`) or `Paper`, with
 `Typography` for text and `Grid` for layout — Comet themes `Card`, `Paper`, and `Typography`, so they
 carry the right elevation, radius, and type scale without custom CSS, while `Grid` takes its spacing
 from the theme. `Card`, `CardHeader`, `CardContent`, `Paper`, `Typography`, and `Grid` come from
-`@mui/material`; `FieldSet` and `FormSection` from `@comet/admin`.
+`@mui/material`; `FieldSet` and `FormSection` from `@dextinity/admin`.
 
 ```tsx
 // Avoid — a Box hand-styled into a titled, bordered panel
@@ -393,7 +393,7 @@ from the theme. `Card`, `CardHeader`, `CardContent`, `Paper`, `Typography`, and 
     {children}
 </FieldSet>;
 
-// Prefer — a dashboard widget from @comet/cms-admin's ready-made container
+// Prefer — a dashboard widget from @dextinity/cms-admin's ready-made container
 <DashboardWidgetRoot header={title}>{children}</DashboardWidgetRoot>;
 ```
 
@@ -421,10 +421,10 @@ to copy text with a confirmation.
 <SaveButton onClick={onSave} />;
 ```
 
-### Date and time: pickers from `@comet/admin`, not raw inputs
+### Date and time: pickers from `@dextinity/admin`, not raw inputs
 
 Enter dates and times through the picker components rather than a plain text input or an MUI picker
-configured by hand. `@comet/admin` exports `DatePicker`, `DateTimePicker`, and `TimePicker` (with
+configured by hand. `@dextinity/admin` exports `DatePicker`, `DateTimePicker`, and `TimePicker` (with
 `DateRangePicker` and `DateTimeRangePicker` for ranges), plus `DatePickerField` and siblings for use
 as Final Form fields. Each picker
 manages its own value format — `DatePicker`, for example, reads and writes an ISO `YYYY-MM-DD`
@@ -453,7 +453,7 @@ Show status, loading, dialogs, and tooltips through the components rather than a
 `div`s and state. `Alert` takes a `severity` (`info`, `warning`, `error`, `success`), a `title`, an
 `action`, and an `onClose`. `Loading` renders the standard spinner; its `behavior` prop (`auto`,
 `fillParent`, `fillParentAbsolute`, `fillPageHeight`) sets whether it renders inline, fills its
-parent, or fills the page. Use `Dialog` and `Tooltip` from `@comet/admin` — Comet's own wrappers, not
+parent, or fills the page. Use `Dialog` and `Tooltip` from `@dextinity/admin` — Comet's own wrappers, not
 MUI's directly. For a transient confirmation, call `showSnackbar()` from `useSnackbarApi()` with a
 snackbar element — Comet's `UndoSnackbar`, or a MUI `Snackbar` wrapping an `Alert` — and mount
 `SnackbarProvider` near the app root.
@@ -472,9 +472,9 @@ snackbar element — Comet's `UndoSnackbar`, or a MUI `Snackbar` wrapping an `Al
 }
 ```
 
-### Icons: `@comet/admin-icons`, not ad-hoc SVGs
+### Icons: `@dextinity/admin-icons`, not ad-hoc SVGs
 
-Take icons from `@comet/admin-icons` rather than importing SVG files or an arbitrary
+Take icons from `@dextinity/admin-icons` rather than importing SVG files or an arbitrary
 icon from another set, so they match the design system and stay consistent. Each icon is a named
 export built on MUI's `SvgIcon`, so size it with the `fontSize` prop (`small`, `medium`, `large`) and
 color it with the `color` prop — the icons use `currentColor`.
@@ -486,7 +486,7 @@ import deleteIcon from "./delete.svg";
 <img src={deleteIcon} width={16} alt="" />;
 
 // Prefer — a named icon from the Comet set, sized and colored through props
-import { Delete } from "@comet/admin-icons";
+import { Delete } from "@dextinity/admin-icons";
 
 <Delete fontSize="small" color="error" />;
 ```

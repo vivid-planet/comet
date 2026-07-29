@@ -1,5 +1,5 @@
-import { Tooltip, useContentTranslationService } from "@comet/admin";
-import { Translate } from "@comet/admin-icons";
+import { Tooltip, useContentTranslationService } from "@dextinity/admin";
+import { Translate } from "@dextinity/admin-icons";
 import type { EditorState } from "draft-js";
 import { type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";

@@ -1,4 +1,4 @@
-import { Search } from "@comet/admin-icons";
+import { Search } from "@dextinity/admin-icons";
 import { InputAdornment } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
 import type { ReactNode } from "react";

@@ -41,7 +41,7 @@ The field is shown for **image, video and audio assets only**, since a deep fake
 
 ### Disclosure on the site
 
-When a marked asset is rendered, `PixelImageBlock` (`@comet/site-nextjs`) and `DamVideoBlock` (`@comet/site-react`) automatically render:
+When a marked asset is rendered, `PixelImageBlock` (`@dextinity/site-nextjs`) and `DamVideoBlock` (`@dextinity/site-react`) automatically render:
 
 - the **official EU AI-content label** as a badge in the top-right corner, using the artwork from the [EU labelling icons](https://digital-strategy.ec.europa.eu/en/policies/eu-icons-labelling-ai-generated-content), and
 - a prefix on the media element's **accessible name** (e.g. _"AI-generated"_), so screen-reader users learn about the disclosure at first exposure.
@@ -66,7 +66,7 @@ Art. 50(2)'s machine-readable marking is the generating tool's responsibility. C
 - `aiContentDisclosure` — render your own disclosure instead of the built-in badge (pass `null` to render none, e.g. when the project renders its own).
 - `aiContentAltTextPrefixLabels` — localize the AI content prefix added to the accessible name (defaults to English).
 
-`@comet/site-react` also exports the `AiContentDisclosure` badge component and the `getAiContentAltTextWithPrefix` helper for custom rendering.
+`@dextinity/site-react` also exports the `AiContentDisclosure` badge component and the `getAiContentAltTextWithPrefix` helper for custom rendering.
 
 The alt-text prefix defaults to English, so pass a translated string via `aiContentAltTextPrefixLabels` — for example using `react-intl`:
 

@@ -1,4 +1,4 @@
-import { Accept, Copy } from "@comet/admin-icons";
+import { Accept, Copy } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, css, Grow, IconButton, type Theme, useThemeProps } from "@mui/material";
 import { type ReactNode, useState } from "react";
 

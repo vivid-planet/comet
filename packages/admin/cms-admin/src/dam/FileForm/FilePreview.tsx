@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
-import { Button, downloadFile, useStackApi } from "@comet/admin";
-import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
+import { Button, downloadFile, useStackApi } from "@dextinity/admin";
+import { Archive, Delete, Download, Restore, ZipFile } from "@dextinity/admin-icons";
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type ReactNode, useState } from "react";

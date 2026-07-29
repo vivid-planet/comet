@@ -1,4 +1,4 @@
-import { CometDigitalExperienceLogo, Error, Info, Warning } from "@comet/admin-icons";
+import { CometDigitalExperienceLogo, Error, Info, Warning } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, type Divider, type Theme, type Typography, useThemeProps } from "@mui/material";
 import type { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";

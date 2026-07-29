@@ -1,6 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { downloadFile, RowActionsItem, RowActionsMenu, useEditDialog, useErrorDialog, useStackSwitchApi } from "@comet/admin";
-import { Archive, Delete, Download, Edit, Move, Restore } from "@comet/admin-icons";
+import { downloadFile, RowActionsItem, RowActionsMenu, useEditDialog, useErrorDialog, useStackSwitchApi } from "@dextinity/admin";
+import { Archive, Delete, Download, Edit, Move, Restore } from "@dextinity/admin-icons";
 import { Divider } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";

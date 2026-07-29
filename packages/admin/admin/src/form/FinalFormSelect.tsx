@@ -1,4 +1,4 @@
-import { Error } from "@comet/admin-icons";
+import { Error } from "@dextinity/admin-icons";
 import { InputAdornment, LinearProgress, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
 import type { ReactNode } from "react";
 import type { FieldRenderProps } from "react-final-form";

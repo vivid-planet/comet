@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
+import { ChevronDown, ChevronRight, ChevronUp } from "@dextinity/admin-icons";
 import { Collapse, type ComponentsOverrides, Fade, List, Menu, type Theme, type Typography, useThemeProps } from "@mui/material";
 import { Children, cloneElement, type MouseEvent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { matchPath, useLocation } from "react-router";

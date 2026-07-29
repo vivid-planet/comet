@@ -1,4 +1,4 @@
-import { Error, Select } from "@comet/admin-icons";
+import { Error, Select } from "@dextinity/admin-icons";
 import { Box, type ComponentsOverrides, css, type Theme, Typography, useThemeProps } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";

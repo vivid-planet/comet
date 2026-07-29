@@ -1,4 +1,4 @@
-import { Field } from "@comet/admin";
+import { Field } from "@dextinity/admin";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import type { PixelImageBlockData, SvgImageBlockData } from "../../blocks.generated";

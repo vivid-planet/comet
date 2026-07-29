@@ -13,7 +13,7 @@ This is more specific than the `@IsOptional()` decorator from `class-validator`,
 A typical use case is a small inline form that only updates a subset of an entity's fields (e.g., only the name). Fields not present in the form are omitted from the request body entirely (`undefined`) and should be left unchanged on the server.
 
 ```ts
-import { IsUndefinable } from "@comet/cms-api";
+import { IsUndefinable } from "@dextinity/cms-api";
 import { IsString } from "class-validator";
 
 class UpdateProductInput {
@@ -36,7 +36,7 @@ This is more specific than the `@IsOptional()` decorator, which also allows `und
 A typical use case is resetting or clearing an optional value (e.g., removing a product's assigned category).
 
 ```ts
-import { IsNullable } from "@comet/cms-api";
+import { IsNullable } from "@dextinity/cms-api";
 import { IsString } from "class-validator";
 
 class UpdateProductInput {
@@ -60,12 +60,12 @@ Use `@IsUndefinable()` or `@IsNullable()` to be more specific about which values
 
 ## PartialType
 
-COMET DXP provides its own `PartialType` helper (from `@comet/cms-api`) that uses `@IsUndefinable()` instead of `@IsOptional()`.
+COMET DXP provides its own `PartialType` helper (from `@dextinity/cms-api`) that uses `@IsUndefinable()` instead of `@IsOptional()`.
 
-When creating partial input types, use `PartialType` from `@comet/cms-api` instead of `@nestjs/mapped-types`:
+When creating partial input types, use `PartialType` from `@dextinity/cms-api` instead of `@nestjs/mapped-types`:
 
 ```ts
-import { PartialType } from "@comet/cms-api";
+import { PartialType } from "@dextinity/cms-api";
 
 import { CreateProductInput } from "./create-product.input";
 

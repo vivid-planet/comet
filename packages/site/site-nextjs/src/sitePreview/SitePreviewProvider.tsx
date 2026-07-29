@@ -1,5 +1,10 @@
 "use client";
-import { PreviewContext, sendSitePreviewIFrameMessage, type SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "@comet/site-react";
+import {
+    PreviewContext,
+    sendSitePreviewIFrameMessage,
+    type SitePreviewIFrameLocationMessage,
+    SitePreviewIFrameMessageType,
+} from "@dextinity/site-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { type PropsWithChildren, useEffect } from "react";
 

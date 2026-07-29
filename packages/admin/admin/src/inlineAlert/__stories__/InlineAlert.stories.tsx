@@ -1,4 +1,4 @@
-import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@comet/admin-icons";
+import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@dextinity/admin-icons";
 import { Box } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 

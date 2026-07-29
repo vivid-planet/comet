@@ -16,10 +16,10 @@ Translation happens at three levels:
 
 ## Setup
 
-Wrap your application (or parts of it) with the `ContentTranslationServiceProvider` from `@comet/admin`:
+Wrap your application (or parts of it) with the `ContentTranslationServiceProvider` from `@dextinity/admin`:
 
 ```tsx title="App.tsx"
-import { ContentTranslationServiceProvider } from "@comet/admin";
+import { ContentTranslationServiceProvider } from "@dextinity/admin";
 
 function App() {
     return (
@@ -60,7 +60,7 @@ When the translation provider is enabled, text fields automatically show a trans
 
 ### Rich text editor
 
-The rich text editor (`Rte` from `@comet/admin-rte`) also supports translation out of the box. A translate button appears in the toolbar. The editor translates the HTML content while preserving formatting and entities.
+The rich text editor (`Rte` from `@dextinity/admin-rte`) also supports translation out of the box. A translate button appears in the toolbar. The editor translates the HTML content while preserving formatting and entities.
 
 ### Disabling translation for a field
 
@@ -115,7 +115,7 @@ import {
     createDocumentTranslationMethods,
     type DocumentInterface,
     type TranslatableInterface,
-} from "@comet/cms-admin";
+} from "@dextinity/cms-admin";
 
 const rootBlocks = {
     content: PageContentBlock,
@@ -140,8 +140,8 @@ export const Page: DocumentInterface & TranslatableInterface = {
 Use the `TranslateContentMenuItem` component in your edit page's toolbar:
 
 ```tsx title="EditPage.tsx"
-import { CrudMoreActionsMenu } from "@comet/admin";
-import { createUsePage, TranslateContentMenuItem } from "@comet/cms-admin";
+import { CrudMoreActionsMenu } from "@dextinity/admin";
+import { createUsePage, TranslateContentMenuItem } from "@dextinity/cms-admin";
 
 const usePage = createUsePage({
     rootBlocks: { content: PageContentBlock, seo: SeoBlock, stage: StageBlock },
@@ -187,7 +187,7 @@ COMET provides a built-in integration with [Azure AI Translator](https://azure.m
 Register the `AzureAiTranslatorModule` in your `AppModule`:
 
 ```ts title="app.module.ts"
-import { AzureAiTranslatorModule } from "@comet/cms-api";
+import { AzureAiTranslatorModule } from "@dextinity/cms-api";
 
 @Module({
     imports: [
@@ -224,10 +224,10 @@ You can conditionally register the module based on whether the configuration is 
 
 ### Admin setup
 
-Use the `AzureAiTranslatorProvider` from `@comet/cms-admin` instead of configuring `ContentTranslationServiceProvider` manually:
+Use the `AzureAiTranslatorProvider` from `@dextinity/cms-admin` instead of configuring `ContentTranslationServiceProvider` manually:
 
 ```tsx title="App.tsx"
-import { AzureAiTranslatorProvider } from "@comet/cms-admin";
+import { AzureAiTranslatorProvider } from "@dextinity/cms-admin";
 
 function App() {
     return (

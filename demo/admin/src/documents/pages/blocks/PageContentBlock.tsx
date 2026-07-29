@@ -1,4 +1,4 @@
-import { AnchorBlock, createBlocksBlock, DamImageBlock } from "@comet/cms-admin";
+import { AnchorBlock, createBlocksBlock, DamImageBlock } from "@dextinity/cms-admin";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { ContactFormBlock } from "@src/common/blocks/ContactFormBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";

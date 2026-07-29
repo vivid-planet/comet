@@ -1,4 +1,4 @@
-import { MainContent, Stack, StackPage, StackSwitch, StackToolbar, ToolbarAutomaticTitleItem, ToolbarBackButton } from "@comet/admin";
+import { MainContent, Stack, StackPage, StackSwitch, StackToolbar, ToolbarAutomaticTitleItem, ToolbarBackButton } from "@dextinity/admin";
 import { useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";

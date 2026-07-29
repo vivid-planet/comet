@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
-import { Button, MainContent, StackLink, Toolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace } from "@comet/admin";
-import { Add as AddIcon } from "@comet/admin-icons";
-import { ContentScopeIndicator, useContentScopeConfig } from "@comet/cms-admin";
+import { Button, MainContent, StackLink, Toolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace } from "@dextinity/admin";
+import { Add as AddIcon } from "@dextinity/admin-icons";
+import { ContentScopeIndicator, useContentScopeConfig } from "@dextinity/cms-admin";
 import { Grid } from "@mui/material";
 import type { ReactElement } from "react";
 import { FormattedMessage } from "react-intl";

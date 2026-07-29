@@ -1,5 +1,5 @@
-import { Button } from "@comet/admin";
-import { Upload } from "@comet/admin-icons";
+import { Button } from "@dextinity/admin";
+import { Upload } from "@dextinity/admin-icons";
 import { useRef } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";

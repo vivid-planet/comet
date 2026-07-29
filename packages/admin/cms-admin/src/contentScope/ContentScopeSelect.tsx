@@ -1,5 +1,5 @@
-import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
-import { Domain, Language, Search } from "@comet/admin-icons";
+import { AppHeaderDropdown, ClearInputAdornment } from "@dextinity/admin";
+import { Domain, Language, Search } from "@dextinity/admin-icons";
 import {
     Box,
     Divider,

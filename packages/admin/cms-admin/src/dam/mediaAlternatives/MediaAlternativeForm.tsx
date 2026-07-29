@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, type ISelectionApi, Loading } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, type ISelectionApi, Loading } from "@dextinity/admin";
 import { FormattedMessage } from "react-intl";
 
 import { FileField } from "../../form/file/FileField";

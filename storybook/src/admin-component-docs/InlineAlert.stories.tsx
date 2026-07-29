@@ -1,5 +1,5 @@
-import { Button, InlineAlert } from "@comet/admin";
-import { ArrowRight, Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@comet/admin-icons";
+import { Button, InlineAlert } from "@dextinity/admin";
+import { ArrowRight, Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@dextinity/admin-icons";
 import { Box } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 

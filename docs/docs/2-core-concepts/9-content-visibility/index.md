@@ -86,7 +86,7 @@ The site preview mode allows editors to see content that is not yet live. The ad
 The **visibility toggle** ("Show only visible") in the `SitePreview` component controls **only block visibility**. When the toggle is off (showing all content), `Blocks:Invisible` is added to the header so that hidden blocks are also rendered in the preview. When the toggle is on, only visible blocks are shown — but unpublished pages remain accessible.
 
 ```typescript
-// From @comet/site-react — convertPreviewDataToHeaders
+// From @dextinity/site-react — convertPreviewDataToHeaders
 const includeInvisiblePages = !!previewData; // Always true when in preview mode
 const includeInvisibleBlocks = previewData && previewData.includeInvisible; // Controlled by the toggle
 ```
@@ -96,7 +96,7 @@ const includeInvisibleBlocks = previewData && previewData.includeInvisible; // C
 If you write custom GraphQL resolvers that have their own visibility logic, use the `@RequestContext()` decorator to respect the header. For example, a news resolver with a `visible` boolean column:
 
 ```typescript title="news.resolver.ts"
-import { RequestContext, RequestContextInterface } from "@comet/cms-api";
+import { RequestContext, RequestContextInterface } from "@dextinity/cms-api";
 
 @Resolver(() => News)
 export class NewsResolver {

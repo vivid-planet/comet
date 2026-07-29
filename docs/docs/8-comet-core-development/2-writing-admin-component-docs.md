@@ -24,7 +24,7 @@ It should allow setting all props using `argTypes`. Default values should not be
 - Create a story, named `Default` and add a concise description of the component in a comment above it
 
 ```tsx
-import { MyComponent } from "@comet/admin";
+import { MyComponent } from "@dextinity/admin";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
@@ -123,7 +123,7 @@ _Note that you then need to add `excludeStories: ["argTypes"]` to the meta objec
 `MyInputComponent.stories.tsx`
 
 ```tsx
-import { MyInputComponent } from "@comet/admin";
+import { MyInputComponent } from "@dextinity/admin";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
@@ -177,7 +177,7 @@ Additionally, the default story must render a Final Form as a wrapper, as this i
 `MyInputComponentField.stories.tsx`
 
 ```tsx
-import { MyInputComponentField } from "@comet/admin";
+import { MyInputComponentField } from "@dextinity/admin";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { argTypes, args } from "./MyInputComponent.stories";

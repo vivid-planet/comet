@@ -1,4 +1,4 @@
-import { FullPageAlert } from "@comet/admin";
+import { FullPageAlert } from "@dextinity/admin";
 import { Typography } from "@mui/material";
 import type { FunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";

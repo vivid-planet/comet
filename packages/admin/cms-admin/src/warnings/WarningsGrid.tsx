@@ -14,7 +14,7 @@ import {
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
-} from "@comet/admin";
+} from "@dextinity/admin";
 import { Chip } from "@mui/material";
 import type { GridFilterModel } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";

@@ -14,7 +14,7 @@ import {
     ToolbarBackButton,
     ToolbarItem,
     ToolbarTitleItem,
-} from "@comet/admin";
+} from "@dextinity/admin";
 import { Card, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";

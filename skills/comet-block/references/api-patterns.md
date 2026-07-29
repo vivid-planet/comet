@@ -17,11 +17,11 @@ import {
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    IsUndefinable, // from @comet/cms-api, not class-validator
-} from "@comet/cms-api";
+    IsUndefinable, // from @dextinity/cms-api, not class-validator
+} from "@dextinity/cms-api";
 ```
 
-Factory functions (`createListBlock`, `createBlocksBlock`, `createOneOfBlock`, `createOptionalBlock`) are also imported from `@comet/cms-api`. Standard validators (`@IsString`, `@IsInt`, `@IsBoolean`, `@IsEnum`, `@Min`, `@Max`) come from `class-validator`.
+Factory functions (`createListBlock`, `createBlocksBlock`, `createOneOfBlock`, `createOptionalBlock`) are also imported from `@dextinity/cms-api`. Standard validators (`@IsString`, `@IsInt`, `@IsBoolean`, `@IsEnum`, `@Min`, `@Max`) come from `class-validator`.
 
 ---
 
@@ -66,7 +66,7 @@ Key rules:
 
 ## @IsUndefinable vs @IsOptional
 
-**Always use `@IsUndefinable()` from `@comet/cms-api` for nullable fields — never `@IsOptional()`.**
+**Always use `@IsUndefinable()` from `@dextinity/cms-api` for nullable fields — never `@IsOptional()`.**
 
 - `@IsUndefinable()` permits only `undefined` and enforces all other validators on non-undefined values.
 - `@IsOptional()` also allows `null` and silently skips all other validators — this can hide validation bugs.

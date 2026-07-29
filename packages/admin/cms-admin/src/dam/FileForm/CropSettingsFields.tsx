@@ -1,5 +1,5 @@
-import { Button, Field, FieldContainer, FormSection } from "@comet/admin";
-import { Reset } from "@comet/admin-icons";
+import { Button, Field, FieldContainer, FormSection } from "@dextinity/admin";
+import { Reset } from "@dextinity/admin-icons";
 import { FormControlLabel, Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { ChangeEvent, JSX } from "react";

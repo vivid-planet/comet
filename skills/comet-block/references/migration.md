@@ -87,7 +87,7 @@ Apply the structural change to `BlockData` and `BlockInput` so the API accepts t
 ## Migration Class Template
 
 ```ts
-import { BlockMigration, type BlockMigrationInterface } from "@comet/cms-api";
+import { BlockMigration, type BlockMigrationInterface } from "@dextinity/cms-api";
 
 interface From {
     // Fields that exist before this migration. Use `unknown` for values.
@@ -163,7 +163,7 @@ When a block has **no existing migrations**, the `createBlock` third argument is
 export const MyBlock = createBlock(MyBlockData, MyBlockInput, "My");
 
 // After (first migration added)
-import { typeSafeBlockMigrationPipe } from "@comet/cms-api";
+import { typeSafeBlockMigrationPipe } from "@dextinity/cms-api";
 import { AddSubtitleMigration } from "./migrations/1-add-subtitle.migration";
 
 export const MyBlock = createBlock(MyBlockData, MyBlockInput, {
@@ -186,7 +186,7 @@ When a block **already has migrations**, three changes are needed:
 3. **Increment** `version` to match the new migration's `toVersion`.
 
 ```ts
-import { typeSafeBlockMigrationPipe } from "@comet/cms-api";
+import { typeSafeBlockMigrationPipe } from "@dextinity/cms-api";
 import { AddSubtitleMigration } from "./migrations/1-add-subtitle.migration";
 import { ReplaceTextWithRichTextMigration } from "./migrations/2-replace-text-with-rich-text.migration";
 
@@ -201,7 +201,7 @@ export const MyBlock = createBlock(MyBlockData, MyBlockInput, {
 
 ### `typeSafeBlockMigrationPipe`
 
-`typeSafeBlockMigrationPipe` accepts an ordered array of migration classes and enforces type-safe chaining at compile time (each migration's `To` must be compatible with the next migration's `From`). Import it from `@comet/cms-api`.
+`typeSafeBlockMigrationPipe` accepts an ordered array of migration classes and enforces type-safe chaining at compile time (each migration's `To` must be compatible with the next migration's `From`). Import it from `@dextinity/cms-api`.
 
 Rules for the migrations array:
 
@@ -271,7 +271,7 @@ For full annotated examples of migration registration, see the [Annotated Exampl
 **Migration file** (`migrations/1-add-background-option.migration.ts`):
 
 ```ts
-import { BlockMigration, type BlockMigrationInterface } from "@comet/cms-api";
+import { BlockMigration, type BlockMigrationInterface } from "@dextinity/cms-api";
 
 interface From {
     headline: unknown;
@@ -298,7 +298,7 @@ export class AddBackgroundOptionMigration extends BlockMigration<(from: From) =>
 **Registration:**
 
 ```ts
-import { typeSafeBlockMigrationPipe } from "@comet/cms-api";
+import { typeSafeBlockMigrationPipe } from "@dextinity/cms-api";
 import { AddBackgroundOptionMigration } from "./migrations/1-add-background-option.migration";
 
 export const HeadlineBlock = createBlock(HeadlineBlockData, HeadlineBlockInput, {
@@ -319,7 +319,7 @@ export const HeadlineBlock = createBlock(HeadlineBlockData, HeadlineBlockInput, 
 **Migration file** (`migrations/2-replace-text-with-rich-text-block.migration.ts`):
 
 ```ts
-import { BlockMigration, type BlockMigrationInterface } from "@comet/cms-api";
+import { BlockMigration, type BlockMigrationInterface } from "@dextinity/cms-api";
 import { v4 as uuid } from "uuid";
 
 interface From {
@@ -369,7 +369,7 @@ export class ReplaceTextWithRichTextMigration extends BlockMigration<(from: From
 **Migration file** (`migrations/1-add-text-to-contact-form.migration.ts`):
 
 ```ts
-import { BlockMigration, type BlockMigrationInterface } from "@comet/cms-api";
+import { BlockMigration, type BlockMigrationInterface } from "@dextinity/cms-api";
 
 interface From {
     contactFormDisclaimer: unknown;
@@ -407,7 +407,7 @@ The overall shape does not change -- `From` and `To` are identical. The migratio
 **Migration file** (`migrations/1-remove-contact-form-from-columns-block.migration.ts`):
 
 ```ts
-import { BlockMigration, type BlockMigrationInterface } from "@comet/cms-api";
+import { BlockMigration, type BlockMigrationInterface } from "@dextinity/cms-api";
 
 type From = {
     columns: Array<{
@@ -444,7 +444,7 @@ export class RemoveContactFormFromColumnsBlockMigration extends BlockMigration<(
 **Registration with ColumnsBlockFactory:**
 
 ```ts
-import { ColumnsBlockFactory, typeSafeBlockMigrationPipe } from "@comet/cms-api";
+import { ColumnsBlockFactory, typeSafeBlockMigrationPipe } from "@dextinity/cms-api";
 import { RemoveContactFormFromColumnsBlockMigration } from "./migrations/1-remove-contact-form-from-columns-block.migration";
 
 export const ColumnsBlock = ColumnsBlockFactory.create(
@@ -468,7 +468,7 @@ export const ColumnsBlock = ColumnsBlockFactory.create(
 **Migration file** (`migrations/1-thumbnail-to-preview-image.migration.ts`):
 
 ```ts
-import { BlockMigration, type BlockMigrationInterface } from "@comet/cms-api";
+import { BlockMigration, type BlockMigrationInterface } from "@dextinity/cms-api";
 
 interface From {
     thumbnail: unknown;

@@ -1,6 +1,6 @@
-# @comet/mail-react
+# @dextinity/mail-react
 
-Single-package solution for building HTML emails with React and MJML. Consumers install only `@comet/mail-react` (plus `react`) — never `@faire/mjml-react` directly.
+Single-package solution for building HTML emails with React and MJML. Consumers install only `@dextinity/mail-react` (plus `react`) — never `@faire/mjml-react` directly.
 
 The package:
 
@@ -59,7 +59,7 @@ Features substantial enough to live in their own directory should have a `README
 
 ### What is a feature
 
-A feature is any self-contained unit of behavior worth describing on its own — a component (`InlineLink`), a utility (`css` helper), an addon (the Storybook addon), or the package itself. Features nest: this README documents `@comet/mail-react` as a feature, and the components inside it are features in their own right.
+A feature is any self-contained unit of behavior worth describing on its own — a component (`InlineLink`), a utility (`css` helper), an addon (the Storybook addon), or the package itself. Features nest: this README documents `@dextinity/mail-react` as a feature, and the components inside it are features in their own right.
 
 A feature README describes **only its own feature**. It does not describe parent features that contain it, nor sub-features it contains — each of those has its own README.
 

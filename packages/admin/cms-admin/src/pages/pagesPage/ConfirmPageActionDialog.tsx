@@ -1,4 +1,4 @@
-import { CancelButton, OkayButton } from "@comet/admin";
+import { CancelButton, OkayButton } from "@dextinity/admin";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,

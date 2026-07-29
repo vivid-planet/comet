@@ -23,7 +23,7 @@ export class KubernetesService implements OnModuleInit {
     constructor(@Inject(KUBERNETES_CONFIG) readonly config: KubernetesConfig) {}
 
     // @kubernetes/client-node is heavy (~85 MB resident). It's imported lazily here rather than at
-    // module load, so importing @comet/cms-api doesn't pull it into memory — it's only loaded once
+    // module load, so importing @dextinity/cms-api doesn't pull it into memory — it's only loaded once
     // this service is instantiated (i.e. the Kubernetes feature is enabled) and connects to a cluster.
     async onModuleInit(): Promise<void> {
         if ("namespace" in this.config) {

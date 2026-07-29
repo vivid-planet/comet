@@ -11,8 +11,8 @@ import {
     useFormApiRef,
     useStackApi,
     useStackSwitchApi,
-} from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { ArrowLeft } from "@dextinity/admin-icons";
 import {
     BlockAdminComponentRoot,
     BlockAdminTabLabel,
@@ -31,7 +31,7 @@ import {
     useEditState,
     useFormSaveConflict,
     useSaveState,
-} from "@comet/cms-admin";
+} from "@dextinity/cms-admin";
 import { IconButton } from "@mui/material";
 import { isBefore } from "date-fns";
 import { useMemo } from "react";

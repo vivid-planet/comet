@@ -1,6 +1,6 @@
 {
-    "name": "@comet/site-nextjs",
-    "version": "9.2.2",
+    "name": "@dextinity/site-nextjs",
+    "version": "1.0.0",
     "description": "Comet Site Next.js package",
     "repository": {
         "type": "git",
@@ -46,13 +46,13 @@
         "test:watch": "vitest --watch"
     },
     "dependencies": {
-        "@comet/site-react": "workspace:*",
+        "@dextinity/site-react": "workspace:*",
         "jose": "^5.10.0",
         "server-only": "^0.0.1"
     },
     "devDependencies": {
-        "@comet/cli": "workspace:*",
-        "@comet/eslint-config": "workspace:*",
+        "@dextinity/cli": "workspace:*",
+        "@dextinity/eslint-config": "workspace:*",
         "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^4.7.0",

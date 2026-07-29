@@ -65,7 +65,7 @@ const StyledButton = createComponentSlot(Button)<ToolbarActionButtonClassKey, Ow
 })();
 
 /**
- * @deprecated Use `Button` from `@comet/admin` with the `responsive` prop instead.
+ * @deprecated Use `Button` from `@dextinity/admin` with the `responsive` prop instead.
  */
 export const ToolbarActionButton = (props: ToolbarActionButtonProps) => {
     const { children, slotProps = {}, ...restProps } = useThemeProps({ props, name: "CometAdminToolbarActionButton" });

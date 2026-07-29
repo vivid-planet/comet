@@ -1,4 +1,4 @@
-import { RteReadOnly } from "@comet/admin-rte";
+import { RteReadOnly } from "@dextinity/admin-rte";
 import { alpha, styled } from "@mui/material/styles";
 
 import type { RichTextBlockState } from "../createRichTextBlock";

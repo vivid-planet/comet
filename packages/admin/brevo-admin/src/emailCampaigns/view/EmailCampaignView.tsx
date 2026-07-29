@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { Loading, MainContent, Toolbar, ToolbarFillSpace, ToolbarItem, ToolbarTitleItem, useStackApi } from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
+import { Loading, MainContent, Toolbar, ToolbarFillSpace, ToolbarItem, ToolbarTitleItem, useStackApi } from "@dextinity/admin";
+import { ArrowLeft } from "@dextinity/admin-icons";
 import {
     type BlockInterface,
     BlockPreview,
@@ -9,7 +9,7 @@ import {
     useBlockContext,
     useBlockPreview,
     useContentScope,
-} from "@comet/cms-admin";
+} from "@dextinity/cms-admin";
 import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { useRouteMatch } from "react-router";

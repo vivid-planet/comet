@@ -21,7 +21,7 @@ export async function writeGenerated(filePath: string, contents: string): Promis
     console.log(`generated ${filePath}`);
 }
 
-// copy from @comet/api-generator
+// copy from @dextinity/api-generator
 function removeUnusedImports(): ts.TransformerFactory<ts.SourceFile> {
     return (context) => {
         function visit(sourceFile: ts.SourceFile): ts.SourceFile {

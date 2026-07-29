@@ -24,8 +24,8 @@ import {
     useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
-} from "@comet/admin";
-import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Online } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Online } from "@dextinity/admin-icons";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
 import {
     DataGridPro,

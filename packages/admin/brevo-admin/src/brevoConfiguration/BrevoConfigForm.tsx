@@ -16,9 +16,9 @@ import {
     Tooltip,
     useFormApiRef,
     useStackSwitchApi,
-} from "@comet/admin";
-import { Info } from "@comet/admin-icons";
-import { type ContentScope, ContentScopeIndicator, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+} from "@dextinity/admin";
+import { Info } from "@dextinity/admin-icons";
+import { type ContentScope, ContentScopeIndicator, resolveHasSaveConflict, useFormSaveConflict } from "@dextinity/cms-admin";
 import type { FormApi } from "final-form";
 import { type ReactElement, type ReactNode, useMemo } from "react";
 import { FormattedMessage } from "react-intl";

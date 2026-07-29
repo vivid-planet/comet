@@ -21,8 +21,8 @@ import {
     ToolbarTitleItem,
     useStackApi,
     useStackSwitchApi,
-} from "@comet/admin";
-import { ChevronLeft, CometColor, Search } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { ChevronLeft, CometColor, Search } from "@dextinity/admin-icons";
 import { Autocomplete, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";

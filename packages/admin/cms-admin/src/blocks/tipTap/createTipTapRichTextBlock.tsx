@@ -1,4 +1,4 @@
-import { greyPalette } from "@comet/admin";
+import { greyPalette } from "@dextinity/admin";
 import { Box } from "@mui/material";
 import { Extension } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";

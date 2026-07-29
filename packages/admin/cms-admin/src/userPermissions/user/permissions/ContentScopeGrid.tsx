@@ -10,8 +10,8 @@ import {
     messages,
     SaveBoundary,
     SaveBoundarySaveButton,
-} from "@comet/admin";
-import { Select } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { Select } from "@dextinity/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,

@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { AppHeaderDropdown, LocalErrorScopeApolloContext, useFocusAwarePolling } from "@comet/admin";
-import { SsgRunning, SsgStandby } from "@comet/admin-icons";
+import { AppHeaderDropdown, LocalErrorScopeApolloContext, useFocusAwarePolling } from "@dextinity/admin";
+import { SsgRunning, SsgStandby } from "@dextinity/admin-icons";
 import { Box, List, ListItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { differenceInMinutes, parseISO } from "date-fns";

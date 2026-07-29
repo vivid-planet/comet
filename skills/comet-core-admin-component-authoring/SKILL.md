@@ -1,13 +1,13 @@
 ---
 name: comet-core-admin-component-authoring
-description: Authoring or changing a component in @comet/admin or a sibling package that uses its slot and theme machinery (admin-color-picker, admin-date-time, admin-rte) so it supports MUI-style customization: per-instance sx/className overrides, theme styleOverrides, and defaultProps. Use whenever adding a new component or editing an existing one's slots, props, class keys, overridable icons, or theme-type registration — even for small changes.
+description: Authoring or changing a component in @dextinity/admin or a sibling package that uses its slot and theme machinery (admin-color-picker, admin-date-time, admin-rte) so it supports MUI-style customization: per-instance sx/className overrides, theme styleOverrides, and defaultProps. Use whenever adding a new component or editing an existing one's slots, props, class keys, overridable icons, or theme-type registration — even for small changes.
 metadata:
     internal: true
 ---
 
-# Authoring customizable @comet/admin components
+# Authoring customizable @dextinity/admin components
 
-Every component shipped from `@comet/admin` and its sibling packages must be
+Every component shipped from `@dextinity/admin` and its sibling packages must be
 customizable the same way MUI components are: consumers can override a single
 instance (`sx`/`className`), restyle every instance through the theme
 (`styleOverrides`), and set default props through the theme (`defaultProps`). This
@@ -17,8 +17,8 @@ three customization paths, and the gap is only found later, once someone tries t
 customize it. Add the customization from the start.
 
 This applies to any component built with the slot and theme machinery —
-`createComponentSlot` and `ThemedComponentBaseProps`, both from `@comet/admin`. Today
-that means components in `@comet/admin` and the sibling packages that use it:
+`createComponentSlot` and `ThemedComponentBaseProps`, both from `@dextinity/admin`. Today
+that means components in `@dextinity/admin` and the sibling packages that use it:
 `admin-color-picker`, `admin-date-time`, `admin-rte`. Other packages under
 `packages/admin/`, such as `cms-admin`, don't use this pattern and are out of scope.
 
@@ -36,7 +36,7 @@ follow the doc — and tell the user so this checklist can be corrected.
 
 ## When not to use this skill
 
-If you are building admin UI in a **project that consumes** `@comet/admin` (pages,
+If you are building admin UI in a **project that consumes** `@dextinity/admin` (pages,
 dashboards, dialogs, composing existing components), use the **`comet-admin-ui`** skill
 instead — that is a different job with different rules. This skill is only for authoring
 the library's own components.
