@@ -6,7 +6,7 @@ import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { useCometConfig } from "../../config/CometConfigContext";
-import { replaceById } from "../../form/file/upload";
+import { FileUploadError, replaceById } from "../../form/file/upload";
 import { useDamBasePath, useDamConfig } from "../config/damConfig";
 import { getDamFileCategory } from "../config/damFileCategory";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
@@ -16,6 +16,11 @@ import type { DamFileDetails } from "./EditFile";
 interface ReplaceFileButtonProps {
     file: DamFileDetails;
 }
+
+const fileExtension = (fileName: string) => {
+    const lastDotIndex = fileName.lastIndexOf(".");
+    return lastDotIndex === -1 ? "" : fileName.slice(lastDotIndex).toLowerCase();
+};
 
 export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const apolloClient = useApolloClient();
@@ -43,11 +48,16 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                     userMessage: (
                         <FormattedMessage
                             id="comet.dam.file.replace.fileRejection"
-                            defaultMessage="The selected file could not be uploaded because it doesn't meet the required criteria. A file can only be replaced by a file of the same type, for instance, an image by another image."
+                            defaultMessage="The selected file could not be uploaded because it doesn't meet the required criteria. Please choose a valid file to replace the existing one."
                         />
                     ),
                     error: fileRejections.toString(),
                 });
+                return;
+            }
+
+            const uploadedFile = acceptedFiles[0];
+            if (uploadedFile === undefined) {
                 return;
             }
 
@@ -60,7 +70,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 abortControllerRef.current = abortController;
                 const response = await replaceById({
                     apiUrl,
-                    data: { file: acceptedFiles[0], fileId: file.id },
+                    data: { file: uploadedFile, fileId: file.id },
                     damBasePath,
                 });
                 if (response.data) {
@@ -76,13 +86,22 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 const message = error instanceof Error ? error.message : String(error);
 
                 errorDialog?.showError({
-                    userMessage: (
-                        <FormattedMessage
-                            id="comet.dam.file.replace.error"
-                            defaultMessage="An error occurred while replacing the file: {message}"
-                            values={{ message }}
-                        />
-                    ),
+                    userMessage:
+                        error instanceof FileUploadError && error.exceptionName === "CometFileNameAlreadyExistsException" ? (
+                            <FormattedMessage
+                                id="comet.dam.file.replace.fileNameAlreadyExists"
+                                defaultMessage="This file cannot be replaced by a {newExtension} file because another file with the same name and that file extension already exists in this folder. Rename or delete the other file, or choose a {currentExtension} file instead."
+                                values={{
+                                    newExtension: fileExtension(uploadedFile.name),
+                                    currentExtension: fileExtension(file.name),
+                                }}
+                            />
+                        ) : (
+                            <FormattedMessage
+                                id="comet.dam.file.replace.error"
+                                defaultMessage="An error occurred while replacing the file. Please try again later."
+                            />
+                        ),
                     error: message,
                 });
             } finally {

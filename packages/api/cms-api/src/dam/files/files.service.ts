@@ -24,6 +24,7 @@ import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
+import { CometFileNameAlreadyExistsException } from "../common/errors/file-name-already-exists.exception";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { getDamFileCategory } from "../common/mimeTypes/dam-file-category";
 import { DamConfig } from "../dam.config";
@@ -345,7 +346,7 @@ export class FilesService {
         );
 
         if (fileWithSameName !== null && fileWithSameName.id !== fileToReplace.id) {
-            throw new CometValidationException(
+            throw new CometFileNameAlreadyExistsException(
                 `File cannot be replaced because a file named '${name}' already exists in ${
                     fileToReplace.folder ? `folder '${fileToReplace.folder.name}'` : "the root folder"
                 }`,

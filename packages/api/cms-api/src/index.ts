@@ -178,6 +178,7 @@ export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { PixelImageBlock } from "./dam/blocks/pixel-image.block";
 export { SvgImageBlock } from "./dam/blocks/svg-image.block";
 export { DamVideoBlock } from "./dam/blocks/video/dam-video.block";
+export { CometFileNameAlreadyExistsException } from "./dam/common/errors/file-name-already-exists.exception";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";
 export { damDefaultAcceptedMimetypes } from "./dam/common/mimeTypes/dam-default-accepted-mimetypes";
 export { type DamFileCategory, getDamFileCategory } from "./dam/common/mimeTypes/dam-file-category";
