@@ -16,7 +16,7 @@
         }
     },
     "bin": {
-        "comet-admin-generator": "bin/admin-generator.mjs"
+        "dextinity-admin-generator": "bin/admin-generator.mjs"
     },
     "sideEffects": false,
     "files": [
