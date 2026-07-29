@@ -140,7 +140,7 @@ Common commands:
 
 | Package                    | Description                                                |
 | -------------------------- | ---------------------------------------------------------- |
-| `@dextinity/cli`           | Central CLI entry point for Comet projects (`comet` bin)   |
+| `@dextinity/cli`           | Central CLI entry point for Comet projects (`dextinity` bin) |
 | `@dextinity/eslint-config` | Shared ESLint configurations                               |
 | `@dextinity/eslint-plugin` | Custom ESLint rules for Comet projects                     |
 | `@dextinity/mail-react`    | Utilities for building HTML emails with React (MJML-based) |

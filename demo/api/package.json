@@ -18,7 +18,7 @@
         "dev:reload": "rimraf src/reload.ts && chokidar \"node_modules/@dextinity/cms-api/lib/**\" \"node_modules/@dextinity/brevo-api/lib/**\" -s -c \"echo '// change' >> src/reload.ts\"",
         "fixtures": "pnpm console fixtures --",
         "fixtures:prod": "pnpm console:prod fixtures --",
-        "generate-block-types": "comet generate-block-types",
+        "generate-block-types": "dextinity generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm generate-block-types\"",
         "intl:compile": "pnpm run intl:compile:comet-demo",
         "intl:compile:comet-demo": "formatjs compile-folder --format simple --ast lang/comet-demo-lang/api lang-compiled/dextinity-demo-api",

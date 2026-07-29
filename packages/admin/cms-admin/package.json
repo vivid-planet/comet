@@ -25,7 +25,7 @@
         "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib --config-file ./.babelrc.build.json",
         "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
-        "generate-block-types": "comet generate-block-types --inputs",
+        "generate-block-types": "dextinity generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm generate-block-types\"",
         "gql:types": "graphql-codegen",
         "gql:watch": "pnpm graphql-codegen --watch",
