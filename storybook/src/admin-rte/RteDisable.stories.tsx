@@ -8,7 +8,7 @@ import { exampleContent, PrintEditorState, useAutoFocus } from "./helper";
 const [useRteApi] = makeRteApi();
 
 export default {
-    title: "comet-admin-rte",
+    title: "@dextinity/admin-rte",
 };
 
 export const RteDisable = {

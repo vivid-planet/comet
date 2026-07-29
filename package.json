@@ -9,7 +9,7 @@
     "license": "BSD-2-Clause",
     "scripts": {
         "create-site-configs-env": "dotenv -e .env.secrets -e .env.local -e .env -- pnpm exec comet inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
-        "build:storybook": "pnpm --recursive --filter '@dextinity/*admin*' --filter '@dextinity/eslint-plugin' --filter '@dextinity/cli' run build && pnpm --filter comet-storybook run build-storybook",
+        "build:storybook": "pnpm --recursive --filter '@dextinity/*admin*' --filter '@dextinity/eslint-plugin' --filter '@dextinity/cli' run build && pnpm --filter dextinity-storybook run build-storybook",
         "build:packages": "pnpm --recursive --filter '@dextinity/*' run build",
         "build:docs": "pnpm build:storybook && pnpm --recursive --filter '@dextinity/eslint-plugin' --filter '@dextinity/admin*' --filter '!@dextinity/admin-generator' --filter 'comet-docs' run build",
         "clean": "pnpm --recursive run clean",

@@ -36,7 +36,7 @@ export const LocalStorage = {
 
 export const SessionStorage = {
     render: () => {
-        const [storedState, setStoredState] = useStoredState<string>("stored_state_stories_session_storage_key", "☄️ Comet", window.sessionStorage);
+        const [storedState, setStoredState] = useStoredState<string>("stored_state_stories_session_storage_key", "Dextinity", window.sessionStorage);
         return (
             <FormSection title={`Stored State: ${storedState}`} disableMarginBottom>
                 <InputBase

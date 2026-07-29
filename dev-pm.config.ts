@@ -268,9 +268,9 @@ export default defineConfig({
         // group docs
         {
             name: "storybook",
-            script: "pnpm --filter comet-storybook run storybook",
+            script: "pnpm --filter dextinity-storybook run storybook",
             group: ["storybook", "docs"],
-            waitOn: ["tcp:26646", "tcp:26647"], // storybook-comet-admin, storybook-comet-cms-admin
+            waitOn: ["tcp:26646", "tcp:26647"], // storybook-dextinity-admin, storybook-dextinity-cms-admin
         },
         {
             name: "docs",
@@ -279,13 +279,13 @@ export default defineConfig({
             waitOn: ["tcp:26638"], // storybook
         },
         {
-            name: "storybook-comet-admin",
+            name: "storybook-dextinity-admin",
             script: "pnpm --filter @dextinity/admin run storybook",
             group: ["storybook", "docs"],
             waitOn: waitOnPackages("@dextinity/admin"),
         },
         {
-            name: "storybook-comet-cms-admin",
+            name: "storybook-dextinity-cms-admin",
             script: "pnpm --filter @dextinity/cms-admin run storybook",
             group: ["storybook", "docs"],
             waitOn: waitOnPackages("@dextinity/cms-admin"),
