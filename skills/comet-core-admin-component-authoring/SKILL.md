@@ -29,7 +29,7 @@ verification pass over what you wrote — it is the list of things that are easy
 and that otherwise get caught only in review. The reference doc is the single source for the
 conventions and their worked code examples:
 
-`docs/docs/8-comet-core-development/1-creating-customizable-admin-components.md`
+`docs/docs/8-dextinity-core-development/1-creating-customizable-admin-components.md`
 
 Every item below points at a section of that doc. When an item here and the doc disagree,
 follow the doc — and tell the user so this checklist can be corrected.

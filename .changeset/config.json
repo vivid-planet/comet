@@ -13,7 +13,7 @@
         "dextinity-demo-admin",
         "dextinity-demo-admin-server",
         "dextinity-demo-site",
-        "comet-docs"
+        "dextinity-docs"
     ],
     "snapshot": {
         "useCalculatedVersion": true

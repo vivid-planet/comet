@@ -3,9 +3,9 @@ title: Packages/Tools
 sidebar_position: 4
 ---
 
-### COMET DXP Package Overview
+### Dextinity Package Overview
 
-A COMET DXP application, at a minimum, consists of the following packages:
+A Dextinity application, at a minimum, consists of the following packages:
 
 - **Admin:** The user interface for managing the data and content of your application
 - **API:** Stores the data of your application and provides APIs for Admin, Site, and potentially others
@@ -17,7 +17,7 @@ A COMET DXP application, at a minimum, consists of the following packages:
 
 ### @dextinity/cms-api
 
-Used to integrate Comet DPX into a NestJS application.
+Used to integrate Dextinity into a NestJS application.
 
 ## Admin {#adminPackage}
 
@@ -62,4 +62,4 @@ Provides a component for selecting colors in forms, built with react-final-form.
 
 ### @dextinity/site-nextjs
 
-Used to integrate Comet DPX into a Next.js application.
+Used to integrate Dextinity into a Next.js application.

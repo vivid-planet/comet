@@ -2,7 +2,7 @@
 title: Content Visibility
 ---
 
-COMET DXP has a built-in content visibility system that controls which content is served to different consumers. Pages in the page tree have a **visibility state**, and individual blocks inside documents can be toggled **visible or invisible**. The API uses the `x-include-invisible-content` HTTP header to decide what content to include in responses.
+Dextinity has a built-in content visibility system that controls which content is served to different consumers. Pages in the page tree have a **visibility state**, and individual blocks inside documents can be toggled **visible or invisible**. The API uses the `x-include-invisible-content` HTTP header to decide what content to include in responses.
 
 ## Page Tree Node Visibility
 

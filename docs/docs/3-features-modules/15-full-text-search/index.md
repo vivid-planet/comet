@@ -10,7 +10,7 @@ The Full Text Search module is experimental. Its API may change in future releas
 
 ## Introduction
 
-The `FullTextSearchModule` provides a simple, PostgreSQL-native full text search for COMET DXP applications. It uses PostgreSQL's built-in `tsvector` type and full text index — no external search engine required.
+The `FullTextSearchModule` provides a simple, PostgreSQL-native full text search for Dextinity applications. It uses PostgreSQL's built-in `tsvector` type and full text index — no external search engine required.
 
 **This module is not a replacement for Elasticsearch-based search.** It is intentionally simple and suitable for moderate content sizes. Consider it when:
 
@@ -189,7 +189,7 @@ const MasterHeader = () => {
 
 ### Site
 
-Unlike the admin search bar, there is no ready-to-use resolver or block for site search. You need to implement both in your application. Comet does provide the underlying PostgreSQL views (`EntityInfoFullTextObject`) and the GraphQL types (`PaginatedEntityInfo`, `EntityInfoObject`) that you can build on, so the integration is straightforward.
+Unlike the admin search bar, there is no ready-to-use resolver or block for site search. You need to implement both in your application. Dextinity does provide the underlying PostgreSQL views (`EntityInfoFullTextObject`) and the GraphQL types (`PaginatedEntityInfo`, `EntityInfoObject`) that you can build on, so the integration is straightforward.
 
 Site search must also be publicly accessible without user authentication. The built-in `myFullTextSearch` query enforces permission checks and is therefore only suitable for the admin. For site search, you expose a separate resolver that skips permission checks but explicitly restricts the result set to entities whose content is meant to be publicly visible.
 

@@ -274,7 +274,7 @@ export default defineConfig({
         },
         {
             name: "docs",
-            script: "pnpm --filter comet-docs start",
+            script: "pnpm --filter dextinity-docs start",
             group: ["docs"],
             waitOn: ["tcp:26638"], // storybook
         },

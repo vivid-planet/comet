@@ -2,7 +2,7 @@
 title: Validation
 ---
 
-COMET DXP provides custom validation decorators for use with [class-validator](https://github.com/typestack/class-validator) in NestJS DTOs.
+Dextinity provides custom validation decorators for use with [class-validator](https://github.com/typestack/class-validator) in NestJS DTOs.
 
 ## @IsUndefinable()
 
@@ -60,7 +60,7 @@ Use `@IsUndefinable()` or `@IsNullable()` to be more specific about which values
 
 ## PartialType
 
-COMET DXP provides its own `PartialType` helper (from `@dextinity/cms-api`) that uses `@IsUndefinable()` instead of `@IsOptional()`.
+Dextinity provides its own `PartialType` helper (from `@dextinity/cms-api`) that uses `@IsUndefinable()` instead of `@IsOptional()`.
 
 When creating partial input types, use `PartialType` from `@dextinity/cms-api` instead of `@nestjs/mapped-types`:
 

@@ -3,7 +3,7 @@ title: How to build a custom client
 ---
 
 We usually use [Next.js](https://nextjs.org/) to build our site client.
-This guide will show you how to build a custom client for your Comet DXP and render a typical content page from the page tree.
+This guide will show you how to build a custom client for your Dextinity and render a typical content page from the page tree.
 
 For this guide, we will assume you use React but not Next.js.
 In this case, you can use the `@dextinity/site-react` package to build your custom client:
@@ -14,7 +14,7 @@ npm install @dextinity/site-react
 
 ## Loading documents (pages)
 
-In COMET DXP, content is organized in a hierarchical tree structure called the **page tree**.
+In Dextinity, content is organized in a hierarchical tree structure called the **page tree**.
 Each page tree node has a **document** attached to it, which can be a page, a link or other content types.
 
 A sample page tree list can look like this:
@@ -62,7 +62,7 @@ With that information in place, we can now query the page content based on the P
 
 ### Documents
 
-In Comet DXP, documents are the content entities that can be attached to page tree nodes.
+In Dextinity, documents are the content entities that can be attached to page tree nodes.
 The documents depend on the project configuration and can vary widely.
 The most common document type is the `Page`, which consists of **blocks** and represents one page of your website.
 
@@ -134,7 +134,7 @@ query Page {
 }
 ```
 
-The received `content` is a Comet DXP `PageContentBlockData` Scalar and contains a **root block** which is basically a JSONObject that contains the block data.
+The received `content` is a Dextinity `PageContentBlockData` Scalar and contains a **root block** which is basically a JSONObject that contains the block data.
 
 <details>
 <summary>Full Sample Response</summary>
@@ -382,7 +382,7 @@ The received `content` is a Comet DXP `PageContentBlockData` Scalar and contains
 
 The data in the `content` field is a so-called **root block**.
 The `Page` document can have multiple root blocks.
-Which root blocks are available depends on the page type and the configuration of the Comet DXP project.
+Which root blocks are available depends on the page type and the configuration of the Dextinity project.
 
 Another root block, which is not requested in this example, would be the `seo` field.
 This root block will contain all the necessary and available SEO information for the page in a block data structure.
@@ -443,8 +443,8 @@ More information about these blocks and how to handle them can be found in the [
 
 The whole GraphQL API is type-safe, but the block data is delivered as an untyped JSON string.
 This is because it is not possible to query recursive structures at an unknown depth in GraphQL.
-Thus, Comet DXP offers **block metadata** to provide the necessary information about the block types and their structure.
-This block metadata is stored in the `block-meta.json` file created by the Comet API.
+Thus, Dextinity offers **block metadata** to provide the necessary information about the block types and their structure.
+This block metadata is stored in the `block-meta.json` file created by the Dextinity API.
 `block-meta.json` is then symlinked to the `admin` and `site` services.
 
 If the `api` is developed independently of the `site`, a symlink is not possible.
@@ -533,7 +533,7 @@ export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) 
 
 ### Handling images
 
-In COMET DXP, we support pixel images and SVGs.
+In Dextinity, we support pixel images and SVGs.
 These must be handled differently.
 We use a OneOfBlock to achieve this, which allows us to render either a pixel image or an SVG based on the block data.
 
@@ -552,11 +552,11 @@ The urlTemplate returned by the API is either an absolute URL (default) or a rel
 This depends on the `x-relative-dam-urls` sent by the site.
 **We recommend using relative URLs and rewriting the URLs to the API url in your site** for SEO optimization.
 
-You can use the [implementation of PixelImageBlock for Next.js in the COMET Demo](https://github.com/vivid-planet/comet/blob/ede41201abfb664191fe286a58c46b0f053ebfd5/packages/site/site-nextjs/src/blocks/PixelImageBlock.tsx) as a reference.
+You can use the [implementation of PixelImageBlock for Next.js in the Dextinity Demo](https://github.com/vivid-planet/comet/blob/ede41201abfb664191fe286a58c46b0f053ebfd5/packages/site/site-nextjs/src/blocks/PixelImageBlock.tsx) as a reference.
 
 ### Handling rich text
 
-In COMET DXP we use the rich text editor [Draft.js](https://draftjs.org/) to handle rich text content.
+In Dextinity we use the rich text editor [Draft.js](https://draftjs.org/) to handle rich text content.
 We persist the rich text content in the raw Draft.js object format, which is a JSON object containing blocks and entity map.
 
 <details>
@@ -629,7 +629,7 @@ We persist the rich text content in the raw Draft.js object format, which is a J
 
 To render this rich text content in the site, you can use the [redraft](https://www.npmjs.com/package/redraft) package.
 This package allows you to define renderers for inline styles, blocks and entities within the rich text content.
-You can look at [the implementation in the COMET Demo](https://github.com/vivid-planet/comet/blob/904ff5f1d68bbfeb233c57f6fcb1dc05cc559c9b/demo/site/src/common/blocks/RichTextBlock.tsx) for an example of how this can be done.
+You can look at [the implementation in the Dextinity Demo](https://github.com/vivid-planet/comet/blob/904ff5f1d68bbfeb233c57f6fcb1dc05cc559c9b/demo/site/src/common/blocks/RichTextBlock.tsx) for an example of how this can be done.
 
 ## Implementing the block preview
 
@@ -711,10 +711,10 @@ The `withPreview` HOC is not required for the block preview to work, but it is h
 
 Note: `withPreview` prevents implementing blocks as React Server Components (RSC)
 
-More information on how to integrate and work with COMET's block preview can be found in the [IFrameBridge section](/docs/features-modules/preview/iframebridge/).
+More information on how to integrate and work with Dextinity's block preview can be found in the [IFrameBridge section](/docs/features-modules/preview/iframebridge/).
 
 ## Further Reading / Information
 
-- [Comet Starter - Next Site - Blueprint for new Comet Projects](https://github.com/vivid-planet/comet-starter/tree/main/site)
-- [Comet Starter - Page Tree Node Query](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/Page.tsx)
-- [Comet Starter - Rendering blocks with Blocks Block](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/blocks/PageContentBlock.tsx)
+- [Dextinity Starter - Next Site - Blueprint for new Dextinity Projects](https://github.com/vivid-planet/comet-starter/tree/main/site)
+- [Dextinity Starter - Page Tree Node Query](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/Page.tsx)
+- [Dextinity Starter - Rendering blocks with Blocks Block](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/blocks/PageContentBlock.tsx)

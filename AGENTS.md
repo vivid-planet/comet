@@ -150,7 +150,7 @@ Common commands:
 | Package               | Description                                           |
 | --------------------- | ----------------------------------------------------- |
 | `dextinity-storybook` | Storybook for all Dextinity components (`storybook/`) |
-| `comet-docs`          | Docusaurus documentation site (`docs/`)               |
+| `dextinity-docs`      | Docusaurus documentation site (`docs/`)               |
 
 ## Changesets and changelog
 

@@ -11,7 +11,7 @@
         "create-site-configs-env": "dotenv -e .env.secrets -e .env.local -e .env -- pnpm exec dextinity inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
         "build:storybook": "pnpm --recursive --filter '@dextinity/*admin*' --filter '@dextinity/eslint-plugin' --filter '@dextinity/cli' run build && pnpm --filter dextinity-storybook run build-storybook",
         "build:packages": "pnpm --recursive --filter '@dextinity/*' run build",
-        "build:docs": "pnpm build:storybook && pnpm --recursive --filter '@dextinity/eslint-plugin' --filter '@dextinity/admin*' --filter '!@dextinity/admin-generator' --filter 'comet-docs' run build",
+        "build:docs": "pnpm build:storybook && pnpm --recursive --filter '@dextinity/eslint-plugin' --filter '@dextinity/admin*' --filter '!@dextinity/admin-generator' --filter 'dextinity-docs' run build",
         "clean": "pnpm --recursive run clean",
         "copy-project-files": "node copy-project-files.js",
         "dev": "pnpm dev:admin && pnpm dev:cms && pnpm dev:mail-react && pnpm dev:brevo && pnpm dev:demo",
