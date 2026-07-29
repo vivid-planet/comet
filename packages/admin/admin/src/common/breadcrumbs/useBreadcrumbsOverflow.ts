@@ -1,10 +1,8 @@
 import { type RefObject, useEffect, useMemo, useState } from "react";
 
+import { getElementOuterWidth } from "../../utils/getElementOuterWidth";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 import type { Breadcrumb } from "./Breadcrumbs";
-
-const getElementOuterWidth = (element: Element): number =>
-    element.clientWidth + parseFloat(getComputedStyle(element).marginLeft) + parseFloat(getComputedStyle(element).marginRight);
 
 // Determines how many items (starting after the first one) need to be collapsed into the overflow ellipsis so that
 // the first item, the ellipsis and as many trailing items as possible fit into the available width. The first item

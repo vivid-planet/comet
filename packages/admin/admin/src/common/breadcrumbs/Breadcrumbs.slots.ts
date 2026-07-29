@@ -106,6 +106,11 @@ export const Separator = createComponentSlot("div")<BreadcrumbsClassKey>({
     align-items: flex-end;
 `);
 
+/**
+ * Content of the `Ellipsis` slot. It labels the overflow button on desktop and replaces all parent items on mobile.
+ */
+export const ellipsisLabel = ". . .";
+
 export const Ellipsis = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
     slotName: "ellipsis",
