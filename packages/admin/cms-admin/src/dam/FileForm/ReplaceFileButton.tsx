@@ -90,7 +90,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                         error instanceof FileUploadError && error.exceptionName === "CometFileNameAlreadyExistsException" ? (
                             <FormattedMessage
                                 id="comet.dam.file.replace.fileNameAlreadyExists"
-                                defaultMessage="This file cannot be replaced by a {newExtension} file because another file with the same name and that file extension already exists in this folder. Rename or delete the other file and try again."
+                                defaultMessage="This file cannot be replaced by a {newExtension} file because another file with the same name and that file extension already exists in this folder."
                                 values={{ newExtension: fileExtension(uploadedFile.name) }}
                             />
                         ) : (
