@@ -21,7 +21,7 @@ export class CustomProductResolver {
 
         await this.mailerService.sendMail({
             ...(await this.productPublishedMail.generateMail({
-                recipient: { name: "Product Manager", email: "product-manager@comet-dxp.com", language: "en" },
+                recipient: { name: "Product Manager", email: "product-manager@dextinity.com", language: "en" },
                 countProductPublished: countProductPublished,
             })),
         });

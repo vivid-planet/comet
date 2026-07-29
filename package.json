@@ -8,8 +8,8 @@
     "description": "Comet Monorepo",
     "license": "BSD-2-Clause",
     "scripts": {
-        "create-site-configs-env": "dotenv -e .env.secrets -e .env.local -e .env -- pnpm exec comet inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
-        "build:storybook": "pnpm --recursive --filter '@dextinity/*admin*' --filter '@dextinity/eslint-plugin' --filter '@dextinity/cli' run build && pnpm --filter comet-storybook run build-storybook",
+        "create-site-configs-env": "dotenv -e .env.secrets -e .env.local -e .env -- pnpm exec dextinity inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
+        "build:storybook": "pnpm --recursive --filter '@dextinity/*admin*' --filter '@dextinity/eslint-plugin' --filter '@dextinity/cli' run build && pnpm --filter dextinity-storybook run build-storybook",
         "build:packages": "pnpm --recursive --filter '@dextinity/*' run build",
         "build:docs": "pnpm build:storybook && pnpm --recursive --filter '@dextinity/eslint-plugin' --filter '@dextinity/admin*' --filter '!@dextinity/admin-generator' --filter 'dextinity-docs' run build",
         "clean": "pnpm --recursive run clean",
@@ -55,8 +55,8 @@
         "browser:demo:site": "dotenv -- sh -c 'open-cli http://localhost:$SITE_PORT'",
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'",
         "setup:ci": "pnpm --filter '@dextinity/cli' --filter '@dextinity/eslint-plugin' run build && pnpm run create-site-configs-env && pnpm run copy-project-files",
-        "install-agent-features": "pnpm exec comet install-agent-features --config agent-features.json",
-        "setup:download-oauth2-proxy": "dotenv -- sh -c 'pnpm exec comet download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
+        "install-agent-features": "pnpm exec dextinity install-agent-features --config agent-features.json",
+        "setup:download-oauth2-proxy": "dotenv -- sh -c 'pnpm exec dextinity download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
     },
     "devDependencies": {
         "@changesets/cli": "^2.31.0",

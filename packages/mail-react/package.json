@@ -24,7 +24,7 @@
         "build-storybook": "storybook build",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
         "dev": "pnpm run clean && pnpm generate-block-types && tsc --watch",
-        "generate-block-types": "comet generate-block-types",
+        "generate-block-types": "dextinity generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
         "lint": "pnpm generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
