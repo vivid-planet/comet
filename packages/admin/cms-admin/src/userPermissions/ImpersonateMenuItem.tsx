@@ -43,11 +43,11 @@ function StartImpersonationMenuItem({ userId }: { userId: string }) {
     const impersonationAllowed = data?.user.impersonationAllowed ?? false;
 
     const label = loading ? (
-        <FormattedMessage id="comet.userPermissions.evaluatingPermissions" defaultMessage="Evaluating permissions" />
+        <FormattedMessage id="dextinity.userPermissions.evaluatingPermissions" defaultMessage="Evaluating permissions" />
     ) : isSelf ? (
-        <FormattedMessage id="comet.userPermissions.cannotImpersonateYourself" defaultMessage="Cannot impersonate yourself" />
+        <FormattedMessage id="dextinity.userPermissions.cannotImpersonateYourself" defaultMessage="Cannot impersonate yourself" />
     ) : !impersonationAllowed ? (
-        <FormattedMessage id="comet.userPermissions.cannotImpersonate" defaultMessage="Cannot impersonate" />
+        <FormattedMessage id="dextinity.userPermissions.cannotImpersonate" defaultMessage="Cannot impersonate" />
     ) : (
         commonImpersonationMessages.startImpersonation
     );

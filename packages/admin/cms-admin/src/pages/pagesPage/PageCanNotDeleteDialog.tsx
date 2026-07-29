@@ -19,11 +19,11 @@ export const PageCanNotDeleteDialog = (props: PageCanNotDeleteDialogProps) => {
     return (
         <Dialog open={dialogOpen} onClose={onClosePressed}>
             <DialogTitle>
-                <FormattedMessage id="comet.pages.pages.page.canNotDeleteDialog.title" defaultMessage="Can not delete selected pages." />
+                <FormattedMessage id="dextinity.pages.pages.page.canNotDeleteDialog.title" defaultMessage="Can not delete selected pages." />
             </DialogTitle>
             <DialogContent>
                 <FormattedMessage
-                    id="comet.pages.pages.page.canNotDeleteDialog.content"
+                    id="dextinity.pages.pages.page.canNotDeleteDialog.content"
                     defaultMessage="WARNING: You can not delete the selected pages, because you have not fully selected all sub pages."
                 />
             </DialogContent>

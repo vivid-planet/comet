@@ -534,7 +534,7 @@ export const Save = () => {
                         }, 1000);
                     }}
                 >
-                    <FormattedMessage id="comet.save" defaultMessage="Save" />
+                    <FormattedMessage id="dextinity.save" defaultMessage="Save" />
                 </SaveButton>
             </ToolbarActions>
         </Toolbar>
@@ -616,7 +616,7 @@ export const SaveSplitButton = () => {
                             }, 1000);
                         }}
                     >
-                        <FormattedMessage id="comet.save" defaultMessage="Save" />
+                        <FormattedMessage id="dextinity.save" defaultMessage="Save" />
                     </SaveButton>
                     <SaveButton
                         loading={saving}
@@ -627,7 +627,7 @@ export const SaveSplitButton = () => {
                             }, 1000);
                         }}
                     >
-                        <FormattedMessage id="comet.saveAndGoBack" defaultMessage="Save and Go Back" />
+                        <FormattedMessage id="dextinity.saveAndGoBack" defaultMessage="Save and Go Back" />
                     </SaveButton>
                 </SplitButton>
             </ToolbarActions>

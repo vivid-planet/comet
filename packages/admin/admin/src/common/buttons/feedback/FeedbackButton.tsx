@@ -58,8 +58,8 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         disabled,
         startIcon,
         endIcon,
-        tooltipSuccessMessage = <FormattedMessage id="comet.feedbackButton.tooltipSuccessMessage" defaultMessage="Success" />,
-        tooltipErrorMessage = <FormattedMessage id="comet.feedbackButton.tooltipErrorMessage" defaultMessage="Error" />,
+        tooltipSuccessMessage = <FormattedMessage id="dextinity.feedbackButton.tooltipSuccessMessage" defaultMessage="Success" />,
+        tooltipErrorMessage = <FormattedMessage id="dextinity.feedbackButton.tooltipErrorMessage" defaultMessage="Error" />,
         slotProps,
         ...restProps
     } = useThemeProps({

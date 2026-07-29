@@ -36,7 +36,7 @@ export function createTargetGroupsPage({ additionalFormFields, nodeFragment, inp
 
         return (
             <ConfigVerification scope={scope}>
-                <Stack topLevelTitle={intl.formatMessage({ id: "cometBrevoModule.targetGroups.targetGroups", defaultMessage: "Target groups" })}>
+                <Stack topLevelTitle={intl.formatMessage({ id: "dextinity.targetGroups.targetGroups", defaultMessage: "Target groups" })}>
                     <StackSwitch>
                         <StackPage name="grid">
                             <Toolbar scopeIndicator={<ContentScopeIndicator scope={scope} />} />
@@ -44,7 +44,10 @@ export function createTargetGroupsPage({ additionalFormFields, nodeFragment, inp
                         </StackPage>
                         <StackPage
                             name="edit"
-                            title={intl.formatMessage({ id: "cometBrevoModule.targetGroups.editTargetGroup", defaultMessage: "Edit target group" })}
+                            title={intl.formatMessage({
+                                id: "dextinity.targetGroups.editTargetGroup",
+                                defaultMessage: "Edit target group",
+                            })}
                         >
                             {(selectedId) => (
                                 <TargetGroupForm

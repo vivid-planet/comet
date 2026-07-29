@@ -124,7 +124,7 @@ export function TargetGroupsGrid({
                         editDialogApi.openAddDialog();
                     }}
                 >
-                    <FormattedMessage id="cometBrevoModule.targetGroup.newTargetGroup" defaultMessage="New target group" />
+                    <FormattedMessage id="dextinity.targetGroup.newTargetGroup" defaultMessage="New target group" />
                 </Button>
             </DataGridToolbar>
         );
@@ -150,10 +150,10 @@ export function TargetGroupsGrid({
 
     const convertToCsv = (data: ContactWithAdditionalAttributes[]) => {
         const header = [
-            intl.formatMessage({ id: "cometBrevoModule.targetGroup.export.brevoId", defaultMessage: "Brevo ID" }),
-            intl.formatMessage({ id: "cometBrevoModule.targetGroup.export.email", defaultMessage: "Email" }),
-            intl.formatMessage({ id: "cometBrevoModule.targetGroup.export.emailBlacklisted", defaultMessage: "Email blacklisted" }),
-            intl.formatMessage({ id: "cometBrevoModule.targetGroup.export.smsBlacklisted", defaultMessage: "Sms blacklisted" }),
+            intl.formatMessage({ id: "dextinity.targetGroup.export.brevoId", defaultMessage: "Brevo ID" }),
+            intl.formatMessage({ id: "dextinity.targetGroup.export.email", defaultMessage: "Email" }),
+            intl.formatMessage({ id: "dextinity.targetGroup.export.emailBlacklisted", defaultMessage: "Email blacklisted" }),
+            intl.formatMessage({ id: "dextinity.targetGroup.export.smsBlacklisted", defaultMessage: "Sms blacklisted" }),
         ].concat(exportTargetGroupOptions?.exportFields.map((field) => field?.headerName ?? "") ?? []);
 
         const csvData = data.map((contact) => [
@@ -197,10 +197,10 @@ export function TargetGroupsGrid({
     }
 
     const columns: GridColDef<GQLTargetGroupsListFragment>[] = [
-        { field: "title", headerName: intl.formatMessage({ id: "cometBrevoModule.targetGroup.title", defaultMessage: "Title" }), flex: 1 },
+        { field: "title", headerName: intl.formatMessage({ id: "dextinity.targetGroup.title", defaultMessage: "Title" }), flex: 1 },
         {
             field: "totalSubscribers",
-            headerName: intl.formatMessage({ id: "cometBrevoModule.targetGroup.totalSubscribers", defaultMessage: "Total subscribers" }),
+            headerName: intl.formatMessage({ id: "dextinity.targetGroup.totalSubscribers", defaultMessage: "Total subscribers" }),
             type: "number",
             filterable: false,
             sortable: false,

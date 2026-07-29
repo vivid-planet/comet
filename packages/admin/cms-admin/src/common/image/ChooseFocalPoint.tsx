@@ -13,7 +13,7 @@ interface ChooseFocalPointProps {
 export const ChooseFocalPoint = ({ focalPoint, onChangeFocalPoint }: ChooseFocalPointProps) => {
     return (
         <BlockAdminComponentSection
-            title={<FormattedMessage id="comet.blocks.image.focalPoint" defaultMessage="Set manual focus point" />}
+            title={<FormattedMessage id="dextinity.blocks.image.focalPoint" defaultMessage="Set manual focus point" />}
             disableBottomMargin
         >
             <ToggleButtonGroup

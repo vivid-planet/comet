@@ -48,14 +48,14 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
             <Box width={300} padding={0}>
                 <Box padding={4}>
                     <LoggedInInfo variant="caption">
-                        <FormattedMessage id="comet.logged.in" defaultMessage="Logged in as" />
+                        <FormattedMessage id="dextinity.logged.in" defaultMessage="Logged in as" />
                     </LoggedInInfo>
                     <SingleLineTypography variant="h4">{user.authenticatedUser ? user.authenticatedUser.name : user.name}</SingleLineTypography>
                     <SingleLineTypography variant="body2">{user.authenticatedUser ? user.authenticatedUser.email : user.email}</SingleLineTypography>
                     {user.accountUrl && (
                         <MyAccountLink href={user.accountUrl} target="_blank" rel="noopener noreferrer">
                             <SingleLineTypography variant="body2">
-                                <FormattedMessage id="comet.myAccount" defaultMessage="My Account" />
+                                <FormattedMessage id="dextinity.myAccount" defaultMessage="My Account" />
                             </SingleLineTypography>
                         </MyAccountLink>
                     )}
@@ -83,7 +83,7 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                                     setShowAboutModal(true);
                                 }}
                             >
-                                <FormattedMessage id="comet.about" defaultMessage="About/Copyright" />
+                                <FormattedMessage id="dextinity.about" defaultMessage="About/Copyright" />
                             </AboutLink>
                         </Typography>
                     </MenuFooter>

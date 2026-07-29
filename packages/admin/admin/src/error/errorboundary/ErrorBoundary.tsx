@@ -181,7 +181,7 @@ class CoreErrorBoundary extends Component<CoreErrorBoundaryProps, IErrorBoundary
                         {userErrorMessage ? (
                             userErrorMessage
                         ) : (
-                            <FormattedMessage id="comet.error.abstractErrorMessage" defaultMessage="An error has occurred" />
+                            <FormattedMessage id="dextinity.error.abstractErrorMessage" defaultMessage="An error has occurred" />
                         )}
                     </Message>
 

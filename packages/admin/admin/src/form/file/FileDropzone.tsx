@@ -51,14 +51,14 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
         hideButton,
         multiple,
         dropzoneText = multiple ? (
-            <FormattedMessage id="comet.fileDropzone.dropfiles" defaultMessage="Drop files here to upload" />
+            <FormattedMessage id="dextinity.fileDropzone.dropfiles" defaultMessage="Drop files here to upload" />
         ) : (
-            <FormattedMessage id="comet.fileDropzone.dropFile" defaultMessage="Drop file here to upload" />
+            <FormattedMessage id="dextinity.fileDropzone.dropFile" defaultMessage="Drop file here to upload" />
         ),
         buttonText = multiple ? (
-            <FormattedMessage id="comet.fileDropzone.selectfiles" defaultMessage="Select files" />
+            <FormattedMessage id="dextinity.fileDropzone.selectfiles" defaultMessage="Select files" />
         ) : (
-            <FormattedMessage id="comet.fileDropzone.selectfile" defaultMessage="Select file" />
+            <FormattedMessage id="dextinity.fileDropzone.selectfile" defaultMessage="Select file" />
         ),
         iconMapping = {},
         slotProps,

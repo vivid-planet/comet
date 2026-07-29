@@ -159,7 +159,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                 <TimePicker
                     inputRef={timePickerRef}
                     value={value ? getTimeStringFromDate(value) : undefined}
-                    placeholder={intl.formatMessage({ id: "comet.timeTimePicker.time", defaultMessage: "Time" })}
+                    placeholder={intl.formatMessage({ id: "dextinity.timeTimePicker.time", defaultMessage: "Time" })}
                     onChange={onChangeTime}
                     fullWidth
                     required={required}

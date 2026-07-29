@@ -59,7 +59,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends Component<Pr
                                                 formRenderProps.form.reset();
                                             }}
                                         >
-                                            <FormattedMessage id="comet.table.tableFilterFinalForm.resetButton" defaultMessage="Reset filter" />
+                                            <FormattedMessage id="dextinity.table.tableFilterFinalForm.resetButton" defaultMessage="Reset filter" />
                                         </Button>
                                     </Grid>
                                 )}

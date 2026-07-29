@@ -211,19 +211,17 @@ import { createCompositeBlock } from "@dextinity/cms-admin";
 
 export const FullWidthImageBlock = createCompositeBlock({
     name: "FullWidthImage",
-    displayName: (
-        <FormattedMessage id="cometDemo.blocks.fullWidthImage" defaultMessage="Full Width Image" />
-    ),
+    displayName: <FormattedMessage id="blocks.fullWidthImage" defaultMessage="Full Width Image" />,
     category: BlockCategory.Media,
     blocks: {
         image: {
             block: DamImageBlock,
-            title: <FormattedMessage id="cometDemo.generic.image" defaultMessage="Image" />,
+            title: <FormattedMessage id="generic.image" defaultMessage="Image" />,
             paper: true,
         },
         content: {
             block: FullWidthImageContentBlock,
-            title: <FormattedMessage id="cometDemo.generic.content" defaultMessage="Content" />,
+            title: <FormattedMessage id="generic.content" defaultMessage="Content" />,
         },
     },
 });

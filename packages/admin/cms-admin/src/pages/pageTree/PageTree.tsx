@@ -274,7 +274,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
 
             snackbarApi.showSnackbar(
                 <UndoSnackbar
-                    message={<FormattedMessage id="comet.pagetree.pageMoved" defaultMessage="Page Moved" />}
+                    message={<FormattedMessage id="dextinity.pagetree.pageMoved" defaultMessage="Page Moved" />}
                     payload={{ previousPages: pages, pagesToUndo: pagesToMove }}
                     onUndoClick={async (payload) => {
                         if (payload) {

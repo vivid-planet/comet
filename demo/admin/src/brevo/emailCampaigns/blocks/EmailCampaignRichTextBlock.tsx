@@ -14,7 +14,7 @@ import { FormattedMessage } from "react-intl";
 const placeholders = [
     {
         placeholder: "{{SALUTATION}}",
-        helper: <FormattedMessage id="cometBrevoModule.richText.placeholder.salutation" defaultMessage="Dear Mr./Ms. LASTNAME" />,
+        helper: <FormattedMessage id="richText.placeholder.salutation" defaultMessage="Dear Mr./Ms. LASTNAME" />,
     },
 ];
 
@@ -33,7 +33,7 @@ export const EmailCampaignRichTextBlock: BlockInterface<RichTextBlockData, Block
                 <BaseRichTextBlock.AdminComponent {...rteAdminComponentProps} />
             </BlockAdminComponentSection>
             <BlockAdminComponentSection
-                title={<FormattedMessage id="cometBrevoModule.richText.placeholder.info" defaultMessage="Placeholders available in the text" />}
+                title={<FormattedMessage id="richText.placeholder.info" defaultMessage="Placeholders available in the text" />}
             >
                 <BlockAdminComponentPaper disablePadding>
                     <List>

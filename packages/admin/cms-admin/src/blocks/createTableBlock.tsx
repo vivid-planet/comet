@@ -71,7 +71,7 @@ export const createTableBlock = ({ richText: RichTextBlock }: TableBlockFactoryO
         ...createBlockSkeleton(),
 
         name: "Table",
-        displayName: <FormattedMessage id="comet.blocks.table.displayName" defaultMessage="Table" />,
+        displayName: <FormattedMessage id="dextinity.blocks.table.displayName" defaultMessage="Table" />,
         category: BlockCategory.TextAndContent,
 
         defaultValues: getInitialTableState,
@@ -143,7 +143,7 @@ export const createTableBlock = ({ richText: RichTextBlock }: TableBlockFactoryO
                                 open={showDialog}
                                 maxWidth="xl"
                                 onClose={closeTableBlock}
-                                title={intl.formatMessage({ id: "comet.blocks.table.displayName", defaultMessage: "Table" })}
+                                title={intl.formatMessage({ id: "dextinity.blocks.table.displayName", defaultMessage: "Table" })}
                                 PaperProps={{ sx: { height: "100%", maxHeight: 880 } }}
                                 sx={(theme) => ({ zIndex: theme.zIndex.modal - 2 })}
                             >

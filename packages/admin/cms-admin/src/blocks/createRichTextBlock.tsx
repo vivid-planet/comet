@@ -140,7 +140,7 @@ export const createRichTextBlock = (
 
         name: "RichText",
 
-        displayName: <FormattedMessage id="comet.blocks.richtext" defaultMessage="Rich Text" />,
+        displayName: <FormattedMessage id="dextinity.blocks.richtext" defaultMessage="Rich Text" />,
 
         defaultValues: () => ({ editorState: createEmptyState() }),
 

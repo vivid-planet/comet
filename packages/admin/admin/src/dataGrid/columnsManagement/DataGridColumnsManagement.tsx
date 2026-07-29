@@ -92,7 +92,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                         <List
                             subheader={
                                 <ListHeader {...slotProps.listHeader}>
-                                    <FormattedMessage id="dataGridColumnsManagement.header.pinnedLeft" defaultMessage="Pinned left" />
+                                    <FormattedMessage id="dextinity.dataGridColumnsManagement.header.pinnedLeft" defaultMessage="Pinned left" />
                                 </ListHeader>
                             }
                             {...slotProps.list}
@@ -118,7 +118,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                         <List
                             subheader={
                                 <ListHeader {...slotProps.listHeader}>
-                                    <FormattedMessage id="dataGridColumnsManagement.header.scrolling" defaultMessage="Scrolling" />
+                                    <FormattedMessage id="dextinity.dataGridColumnsManagement.header.scrolling" defaultMessage="Scrolling" />
                                 </ListHeader>
                             }
                             {...slotProps.list}
@@ -142,7 +142,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                     <List
                         subheader={
                             <ListHeader {...slotProps.listHeader}>
-                                <FormattedMessage id="dataGridColumnsManagement.header.pinnedright" defaultMessage="Pinned right" />
+                                <FormattedMessage id="dextinity.dataGridColumnsManagement.header.pinnedright" defaultMessage="Pinned right" />
                             </ListHeader>
                         }
                         {...slotProps.list}

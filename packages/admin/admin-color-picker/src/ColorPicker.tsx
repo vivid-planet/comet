@@ -78,8 +78,8 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
         endAdornment,
         onBlur,
         required,
-        titleText = <FormattedMessage id="comet.colorPicker.title" defaultMessage="Choose a color" />,
-        clearButtonText = <FormattedMessage id="comet.colorPicker.clearButton" defaultMessage="clear color" />,
+        titleText = <FormattedMessage id="dextinity.colorPicker.title" defaultMessage="Choose a color" />,
+        clearButtonText = <FormattedMessage id="dextinity.colorPicker.clearButton" defaultMessage="clear color" />,
         components = {},
         slotProps,
         ...restProps

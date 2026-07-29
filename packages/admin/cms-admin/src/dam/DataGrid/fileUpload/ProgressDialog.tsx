@@ -44,12 +44,12 @@ export const ProgressDialog = ({ open, totalSize, loadedSize }: ProgressDialogPr
 
                 {totalSize === undefined ? (
                     <Typography>
-                        <FormattedMessage id="comet.dam.file.loading" defaultMessage="Loading ..." />
+                        <FormattedMessage id="dextinity.dam.file.loading" defaultMessage="Loading ..." />
                     </Typography>
                 ) : (
                     <Typography>
                         <FormattedMessage
-                            id="comet.dam.file.totalLoadedUpload"
+                            id="dextinity.dam.file.totalLoadedUpload"
                             defaultMessage="{loaded} / {total}"
                             values={{
                                 loaded: loadedSize ? <PrettyBytes value={loadedSize > totalSize ? totalSize : loadedSize} /> : 0,

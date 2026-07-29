@@ -23,33 +23,33 @@ const dateFnsLocales: Record<LocaleOption, DateFnsLocale> = {
 // @TODO: use messages from lang-package
 const messages: Record<LocaleOption, Record<string, string>> = {
     en: {
-        "comet.core.deleteMutation.promptDelete": "Delete data?",
-        "comet.core.deleteMutation.yes": "Yes",
-        "comet.core.deleteMutation.no": "No",
-        "comet.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
-        "comet.core.editDialog.edit": "Edit",
-        "comet.core.editDialog.add": "Add",
-        "comet.core.editDialog.cancel": "Cancel",
-        "comet.core.editDialog.save": "Save",
-        "comet.core.finalForm.abort": "Cancel",
-        "comet.core.finalForm.save": "Save",
-        "comet.core.router.confirmationDialog.confirm": "OK",
-        "comet.core.router.confirmationDialog.abort": "Cancel",
-        "comet.core.stack.stack.back": "Back",
-        "comet.core.table.addButton": "Add",
-        "comet.core.table.excelExportButton": "Export",
-        "comet.core.table.deleteButton": "Delete",
-        "comet.core.table.pagination.pageInfo": "Page {current} of {total}",
-        "comet.core.table.localChangesToolbar.save": "Save",
-        "comet.core.table.localChangesToolbar.unsavedItems":
+        "dextinity.core.deleteMutation.promptDelete": "Delete data?",
+        "dextinity.core.deleteMutation.yes": "Yes",
+        "dextinity.core.deleteMutation.no": "No",
+        "dextinity.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
+        "dextinity.core.editDialog.edit": "Edit",
+        "dextinity.core.editDialog.add": "Add",
+        "dextinity.core.editDialog.cancel": "Cancel",
+        "dextinity.core.editDialog.save": "Save",
+        "dextinity.core.finalForm.abort": "Cancel",
+        "dextinity.core.finalForm.save": "Save",
+        "dextinity.core.router.confirmationDialog.confirm": "OK",
+        "dextinity.core.router.confirmationDialog.abort": "Cancel",
+        "dextinity.core.stack.stack.back": "Back",
+        "dextinity.core.table.addButton": "Add",
+        "dextinity.core.table.excelExportButton": "Export",
+        "dextinity.core.table.deleteButton": "Delete",
+        "dextinity.core.table.pagination.pageInfo": "Page {current} of {total}",
+        "dextinity.core.table.localChangesToolbar.save": "Save",
+        "dextinity.core.table.localChangesToolbar.unsavedItems":
             "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
-        "comet.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
-        "comet.core.table.tableQuery.error": "Error :( {error}",
+        "dextinity.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
+        "dextinity.core.table.tableQuery.error": "Error :( {error}",
     },
     de: {
-        "comet.core.table.localChangesToolbar.unsavedItems":
+        "dextinity.core.table.localChangesToolbar.unsavedItems":
             "{count, plural, =0 {keine ungespeicherten Änderungen} one {# ungespeicherte Änderung} other {# ungespeicherte Änderungen}}",
-        "comet.core.table.tableQuery.error": "Fehler :( {error}",
+        "dextinity.core.table.tableQuery.error": "Fehler :( {error}",
     },
 };
 

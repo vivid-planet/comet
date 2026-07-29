@@ -8,7 +8,7 @@ interface Props {
 }
 
 const BlockAdminComponentRoot = (props: PropsWithChildren<Props>) => {
-    const { children, title = <FormattedMessage id="comet.blocks" defaultMessage="Blocks" /> } = props;
+    const { children, title = <FormattedMessage id="dextinity.blocks" defaultMessage="Blocks" /> } = props;
 
     return (
         <Stack topLevelTitle={title}>

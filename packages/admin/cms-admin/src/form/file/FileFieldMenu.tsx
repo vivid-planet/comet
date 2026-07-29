@@ -39,7 +39,7 @@ export const FileFieldMenu = ({ fileId, anchorEl, onClose, menuActions, keepMoun
                     <ListItemIcon>
                         <OpenNewTab />
                     </ListItemIcon>
-                    <ListItemText primary={<FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />} />
+                    <ListItemText primary={<FormattedMessage id="dextinity.form.file.openInDam" defaultMessage="Open in DAM" />} />
                 </MenuItem>
             )}
             {menuActions?.map((item, index) => {

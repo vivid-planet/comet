@@ -15,7 +15,7 @@ export const PublishButton = () => {
     return (
         <Root>
             <Button onClick={handlePublishClick} disabled={process.env.NODE_ENV === "development"} fullWidth>
-                <FormattedMessage id="comet.pages.publisher.build" defaultMessage="Start builds" />
+                <FormattedMessage id="dextinity.pages.publisher.build" defaultMessage="Start builds" />
             </Button>
             <StartBuildsDialog
                 open={isStartBuildsDialogOpen}

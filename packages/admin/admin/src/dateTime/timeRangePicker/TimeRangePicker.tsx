@@ -124,7 +124,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                 slotProps={{
                     ...slotProps?.root?.slotProps,
                     field: {
-                        dateSeparator: intl.formatMessage({ id: "comet.timeRangePicker.separator", defaultMessage: "to" }),
+                        dateSeparator: intl.formatMessage({ id: "dextinity.timeRangePicker.separator", defaultMessage: "to" }),
                         ...slotProps?.root?.slotProps?.field,
                     },
                     textField: (ownerState) => {
@@ -150,7 +150,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                                             ...slotProps?.openPickerAdornment?.slotProps,
                                             openPickerButton: {
                                                 "aria-label": intl.formatMessage({
-                                                    id: "comet.timeRangePicker.openPicker",
+                                                    id: "dextinity.timeRangePicker.openPicker",
                                                     defaultMessage: "Open time range picker",
                                                 }),
                                                 ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
