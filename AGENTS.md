@@ -188,7 +188,7 @@ Fix description here
 
 ### admin-generator
 
-The source for generated files are \*.cometGen.tsx config files. Modify those and re-run `admin-generator` for changes.
+The source for generated files are \*.dextinityGen.tsx config files. Modify those and re-run `admin-generator` for changes.
 
 ### api-generator
 
