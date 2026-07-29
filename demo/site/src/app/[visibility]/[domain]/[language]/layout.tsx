@@ -68,18 +68,7 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
         });
     }
 
-    let organization: ReturnType<typeof buildOrganization> = null;
-
-    if (siteSettings) {
-        siteSettings.content = await recursivelyLoadBlockData({
-            blockData: siteSettings.content,
-            blockType: "SiteSettingsContent",
-            graphQLFetch,
-            fetch,
-            scope: { domain, language },
-        });
-        organization = buildOrganization(siteSettings.content, siteConfig.url);
-    }
+    const organization = siteSettings ? buildOrganization(siteSettings, siteConfig.url) : null;
 
     return (
         <IntlProvider locale={language} messages={messages}>
