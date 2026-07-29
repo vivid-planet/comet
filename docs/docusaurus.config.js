@@ -22,7 +22,7 @@ function getStorybookUrl() {
 const config = {
     title: "Dextinity Docs",
     tagline: "",
-    url: "https://docs.comet-dxp.com",
+    url: "https://docs.dextinity.com",
     baseUrl: "/",
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
