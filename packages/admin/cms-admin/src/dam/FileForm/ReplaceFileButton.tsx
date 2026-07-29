@@ -8,6 +8,8 @@ import { FormattedMessage } from "react-intl";
 import { useCometConfig } from "../../config/CometConfigContext";
 import { replaceById } from "../../form/file/upload";
 import { useDamBasePath, useDamConfig } from "../config/damConfig";
+import { getDamFileCategory } from "../config/damFileCategory";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
 import type { DamFileDetails } from "./EditFile";
 
@@ -20,6 +22,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const { apiUrl } = useCometConfig();
     const damConfig = useDamConfig();
     const damBasePath = useDamBasePath();
+    const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -28,21 +31,24 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const errorDialog = useErrorDialog();
     const [replaceLoading, setReplaceLoading] = useState(false);
 
+    const acceptedMimeTypesForReplacement = filteredAcceptedMimeTypes[getDamFileCategory(file.mimetype)];
+
     const { getInputProps } = useDropzone({
         maxSize: maxFileSizeInBytes,
         multiple: false,
-        accept: convertMimetypesToDropzoneAccept([file.mimetype]),
+        accept: convertMimetypesToDropzoneAccept(acceptedMimeTypesForReplacement),
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             if (fileRejections.length > 0) {
                 errorDialog?.showError({
                     userMessage: (
                         <FormattedMessage
                             id="comet.dam.file.replace.fileRejection"
-                            defaultMessage="The selected file could not be uploaded because it doesn't meet the required criteria. Please choose a valid file to replace the existing one."
+                            defaultMessage="The selected file could not be uploaded because it doesn't meet the required criteria. A file can only be replaced by a file of the same type, for instance, an image by another image."
                         />
                     ),
                     error: fileRejections.toString(),
                 });
+                return;
             }
 
             try {
@@ -63,21 +69,24 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                         apolloClient.cache.evict({ id: `DamFile:${file.id}` });
                     }
                 }
-                setReplaceLoading(false);
             } catch (error) {
                 if (error instanceof DOMException && error.name === "AbortError") {
-                    setReplaceLoading(false);
                     return;
                 }
+                const message = error instanceof Error ? error.message : String(error);
+
                 errorDialog?.showError({
                     userMessage: (
                         <FormattedMessage
                             id="comet.dam.file.replace.error"
-                            defaultMessage="An error occurred while replacing the file. Please try again later."
+                            defaultMessage="An error occurred while replacing the file: {message}"
+                            values={{ message }}
                         />
                     ),
-                    error: error instanceof Error ? error.message : String(error),
+                    error: message,
                 });
+            } finally {
+                setReplaceLoading(false);
             }
         },
     });
