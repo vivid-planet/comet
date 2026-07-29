@@ -20,7 +20,7 @@ function getStorybookUrl() {
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-    title: "COMET DXP Docs",
+    title: "Dextinity Docs",
     tagline: "",
     url: "https://docs.comet-dxp.com",
     baseUrl: "/",
@@ -56,9 +56,9 @@ const config = {
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
             navbar: {
-                title: "COMET DXP",
+                title: "Dextinity",
                 logo: {
-                    alt: "COMET DXP logo",
+                    alt: "Dextinity logo",
                     src: "img/comet-logo.svg",
                 },
                 items: [

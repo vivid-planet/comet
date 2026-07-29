@@ -2,7 +2,7 @@
     "name": "comet-docs",
     "version": "0.0.0",
     "private": true,
-    "description": "Documentation for Comet",
+    "description": "Documentation for Dextinity",
     "scripts": {
         "build": "run-s clear:generated-docs generate-component-docs:static-storybook build:docusaurus",
         "build:docusaurus": "docusaurus build",

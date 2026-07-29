@@ -4,12 +4,12 @@ title: AI Content Disclosure
 
 # AI Content Disclosure
 
-COMET DXP can mark digital assets as AI-generated or AI-modified and disclose this on the site.
+Dextinity can mark digital assets as AI-generated or AI-modified and disclose this on the site.
 This helps operators meet the transparency requirements of the [EU AI Act](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) (Regulation (EU) 2024/1689).
 
 :::info Not legal advice
 
-This page explains how COMET's feature maps to the regulation as we understand it. It is not legal advice.
+This page explains how Dextinity's feature maps to the regulation as we understand it. It is not legal advice.
 Whether and how the obligations apply to your project depends on your role and content — confirm your specific obligations with legal counsel.
 
 :::
@@ -21,13 +21,13 @@ Whether and how the obligations apply to your project depends on your role and c
 - **Providers** of an AI system that generates synthetic audio, image, video or text (Art. 50(2)) must mark the output in a **machine-readable** format. This obligation sits with the tool that generates the content (e.g. the image generator), **not** with the website operator.
 - **Deployers** of an AI system that generates or manipulates a **deep fake** (Art. 50(4)) must **disclose** that the content has been artificially generated or manipulated.
 
-A COMET-based website that uploads and publishes AI-generated assets is a **deployer**. Its relevant obligation is therefore the **Art. 50(4) disclosure** of deep fakes.
+A Dextinity-based website that uploads and publishes AI-generated assets is a **deployer**. Its relevant obligation is therefore the **Art. 50(4) disclosure** of deep fakes.
 
 A [deep fake](https://eur-lex.europa.eu/eli/reg/2024/1689/oj) is defined (Art. 3(60)) as:
 
 > AI-generated or manipulated image, audio or video content that resembles existing persons, objects, places, entities or events and would falsely appear to a person to be authentic or truthful.
 
-## How COMET implements the disclosure
+## How Dextinity implements the disclosure
 
 ### Marking assets in the DAM
 
@@ -48,13 +48,13 @@ When a marked asset is rendered, `PixelImageBlock` (`@dextinity/site-nextjs`) an
 
 :::warning You must disclose custom-rendered assets yourself
 
-The disclosure is only rendered automatically by the library's `PixelImageBlock` and `DamVideoBlock`. Any asset rendered another way — a custom image or video component, an audio player (COMET ships no audio block), or an asset served directly — will **not** be disclosed automatically. In those cases you are responsible for the disclosure yourself: read the asset's `aiContentType` and surface it (e.g. via `getAiContentAltTextWithPrefix` and the `AiContentDisclosure` badge).
+The disclosure is only rendered automatically by the library's `PixelImageBlock` and `DamVideoBlock`. Any asset rendered another way — a custom image or video component, an audio player (Dextinity ships no audio block), or an asset served directly — will **not** be disclosed automatically. In those cases you are responsible for the disclosure yourself: read the asset's `aiContentType` and surface it (e.g. via `getAiContentAltTextWithPrefix` and the `AiContentDisclosure` badge).
 
 :::
 
 :::note Why a rendered overlay instead of embedded metadata
 
-Art. 50(2)'s machine-readable marking is the generating tool's responsibility. COMET serves images through imgproxy, which strips provenance metadata (e.g. C2PA) during transformation. COMET therefore satisfies the **deployer's Art. 50(4) disclosure** with a rendered, human-visible label and an accessible-name prefix, rather than embedded metadata.
+Art. 50(2)'s machine-readable marking is the generating tool's responsibility. Dextinity serves images through imgproxy, which strips provenance metadata (e.g. C2PA) during transformation. Dextinity therefore satisfies the **deployer's Art. 50(4) disclosure** with a rendered, human-visible label and an accessible-name prefix, rather than embedded metadata.
 
 :::
 

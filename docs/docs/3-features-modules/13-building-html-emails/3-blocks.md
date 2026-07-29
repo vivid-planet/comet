@@ -2,10 +2,10 @@
 title: Blocks
 ---
 
-`@dextinity/mail-react` ships basic block components to render Comet CMS block data types. Where the [base components](./2-components-and-theme.md) handle generic layout and typography, block components are tied to specific `*BlockData` shapes from the CMS schema.
+`@dextinity/mail-react` ships basic block components to render Dextinity CMS block data types. Where the [base components](./2-components-and-theme.md) handle generic layout and typography, block components are tied to specific `*BlockData` shapes from the CMS schema.
 
 :::info
-For background on the broader Comet block system — what blocks are, how they're authored, and how block data flows from API to admin to site — see [Blocks](../../2-core-concepts/2-blocks/index.md) in the core concepts.
+For background on the broader Dextinity block system — what blocks are, how they're authored, and how block data flows from API to admin to site — see [Blocks](../../2-core-concepts/2-blocks/index.md) in the core concepts.
 :::
 
 ## Pixel-image blocks
@@ -29,7 +29,7 @@ import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@dextinity/mail-re
 
 ### Configuration
 
-Both blocks read `validSizes` and `baseUrl` from `config.pixelImageBlock`. In a typical Comet project, `validSizes` is the union of `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`; `baseUrl` is the API URL.
+Both blocks read `validSizes` and `baseUrl` from `config.pixelImageBlock`. In a typical Dextinity project, `validSizes` is the union of `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`; `baseUrl` is the API URL.
 
 ```tsx title="src/emails/WelcomeEmail.tsx"
 import { MjmlMailRoot, type Config } from "@dextinity/mail-react";

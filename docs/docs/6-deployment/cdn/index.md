@@ -2,7 +2,7 @@
 title: CDN
 ---
 
-Comet DXP can be run behind a CDN. This is useful to improve the performance of the application and to reduce the load on the server. No additional configuration is required as all GET requests set the `Cache-Control` header appropriately. Comet DXP is tested with CloudFront and Cloudflare.
+Dextinity can be run behind a CDN. This is useful to improve the performance of the application and to reduce the load on the server. No additional configuration is required as all GET requests set the `Cache-Control` header appropriately. Dextinity is tested with CloudFront and Cloudflare.
 
 ## CDN Guard
 
