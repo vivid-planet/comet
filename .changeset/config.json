@@ -7,7 +7,14 @@
     "access": "restricted",
     "baseBranch": "main",
     "updateInternalDependencies": "patch",
-    "ignore": ["dextinity-storybook", "comet-demo-api", "comet-demo-admin", "comet-demo-admin-server", "comet-demo-site", "comet-docs"],
+    "ignore": [
+        "dextinity-storybook",
+        "dextinity-demo-api",
+        "dextinity-demo-admin",
+        "dextinity-demo-admin-server",
+        "dextinity-demo-site",
+        "comet-docs"
+    ],
     "snapshot": {
         "useCalculatedVersion": true
     }

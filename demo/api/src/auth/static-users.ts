@@ -4,7 +4,7 @@ export const staticUsers: User[] = [
     {
         id: "1",
         name: "Admin",
-        email: "demo@comet-dxp.com",
+        email: "demo@dextinity.com",
         isAdmin: true,
     },
     {
