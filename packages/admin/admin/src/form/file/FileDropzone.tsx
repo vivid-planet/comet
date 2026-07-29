@@ -67,7 +67,7 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
         ...restDropzoneOptions
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminFileDropzone",
+        name: "DextinityAdminFileDropzone",
     });
     const { error: errorIcon = <Error color="error" />, select: selectIcon = <Select /> } = iconMapping;
     const [focused, setFocused] = useState(false);
@@ -243,17 +243,17 @@ const SelectFileButton = createComponentSlot(Button)<FileDropzoneClassKey>({
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFileDropzone: FileDropzoneClassKey;
+        DextinityAdminFileDropzone: FileDropzoneClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminFileDropzone: FileDropzoneProps;
+        DextinityAdminFileDropzone: FileDropzoneProps;
     }
 
     interface Components {
-        CometAdminFileDropzone?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFileDropzone"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFileDropzone"];
+        DextinityAdminFileDropzone?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFileDropzone"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFileDropzone"];
         };
     }
 }

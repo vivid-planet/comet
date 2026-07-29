@@ -14,7 +14,7 @@ export function CancelButton(inProps: CancelButtonProps) {
         children = <FormattedMessage {...messages.cancel} />,
         startIcon = <Clear />,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminCancelButton" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminCancelButton" });
 
     return (
         <Root variant="textDark" startIcon={startIcon} {...restProps}>
@@ -30,17 +30,17 @@ const Root = createComponentSlot(Button)<CancelButtonClassKey>({
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminCancelButton: CancelButtonClassKey;
+        DextinityAdminCancelButton: CancelButtonClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminCancelButton: CancelButtonProps;
+        DextinityAdminCancelButton: CancelButtonProps;
     }
 
     interface Components {
-        CometAdminCancelButton?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminCancelButton"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminCancelButton"];
+        DextinityAdminCancelButton?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminCancelButton"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminCancelButton"];
         };
     }
 }

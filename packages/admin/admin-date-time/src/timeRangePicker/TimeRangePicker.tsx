@@ -99,7 +99,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
         required,
         slotProps,
         ...propsForBothTimePickers
-    } = useThemeProps({ props: inProps, name: "CometAdminLegacyTimeRangePicker" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminLegacyTimeRangePicker" });
     const intl = useIntl();
 
     const [startTime, setStartTime] = useState<IndividualTimeValue>(value?.start);
@@ -186,17 +186,17 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminLegacyTimeRangePicker: TimeRangePickerClassKey;
+        DextinityAdminLegacyTimeRangePicker: TimeRangePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminLegacyTimeRangePicker: TimeRangePickerProps;
+        DextinityAdminLegacyTimeRangePicker: TimeRangePickerProps;
     }
 
     interface Components {
-        CometAdminLegacyTimeRangePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminLegacyTimeRangePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminLegacyTimeRangePicker"];
+        DextinityAdminLegacyTimeRangePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminLegacyTimeRangePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminLegacyTimeRangePicker"];
         };
     }
 }

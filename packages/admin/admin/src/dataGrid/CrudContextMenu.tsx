@@ -79,7 +79,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
         ...restProp
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminCrudContextMenu",
+        name: "DextinityAdminCrudContextMenu",
     });
 
     const {
@@ -295,17 +295,17 @@ const DeleteDialog = createComponentSlot(CommonDeleteDialog)<CrudContextMenuClas
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminCrudContextMenu: CrudContextMenuProps<unknown>;
+        DextinityAdminCrudContextMenu: CrudContextMenuProps<unknown>;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminCrudContextMenu: CrudContextMenuClassKey;
+        DextinityAdminCrudContextMenu: CrudContextMenuClassKey;
     }
 
     interface Components {
-        CometAdminCrudContextMenu?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminCrudContextMenu"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminCrudContextMenu"];
+        DextinityAdminCrudContextMenu?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminCrudContextMenu"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminCrudContextMenu"];
         };
     }
 }

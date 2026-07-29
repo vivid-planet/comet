@@ -52,11 +52,11 @@ const RteContentWrapper = styled("div")(({ theme }) => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
 
-    ".CometAdminRteBlockElement-root:first-child, .MuiTypography-root:first-child": {
+    ".DextinityAdminRteBlockElement-root:first-child, .MuiTypography-root:first-child": {
         marginTop: 0,
     },
 
-    ".CometAdminRteBlockElement-root:last-child, .MuiTypography-root:last-child": {
+    ".DextinityAdminRteBlockElement-root:last-child, .MuiTypography-root:last-child": {
         marginBottom: 0,
     },
 }));

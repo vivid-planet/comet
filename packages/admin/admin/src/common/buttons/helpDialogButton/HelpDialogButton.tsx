@@ -25,7 +25,7 @@ export const HelpDialogButton: FunctionComponent<HelpDialogButtonProps> = (inPro
         icon = <QuestionMark />,
         slotProps = {},
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminHelpDialogButton" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminHelpDialogButton" });
     const [showHelp, setShowHelp] = useState(false);
 
     return (
@@ -55,17 +55,17 @@ export const HelpDialogButton: FunctionComponent<HelpDialogButtonProps> = (inPro
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminHelpDialogButton: HelpDialogButtonProps;
+        DextinityAdminHelpDialogButton: HelpDialogButtonProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminHelpDialogButton: HelpDialogButtonClassKey;
+        DextinityAdminHelpDialogButton: HelpDialogButtonClassKey;
     }
 
     interface Components {
-        CometAdminHelpDialogButton?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminHelpDialogButton"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminHelpDialogButton"];
+        DextinityAdminHelpDialogButton?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminHelpDialogButton"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminHelpDialogButton"];
         };
     }
 }

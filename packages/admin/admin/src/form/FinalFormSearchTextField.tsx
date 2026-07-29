@@ -19,7 +19,7 @@ type FinalFormSearchTextFieldInternalProps = FieldRenderProps<string, HTMLInputE
  * @see {@link SearchField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps & FinalFormSearchTextFieldInternalProps) {
-    const { icon = <Search />, placeholder, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSearchTextField" });
+    const { icon = <Search />, placeholder, ...restProps } = useThemeProps({ props: inProps, name: "DextinityAdminFinalFormSearchTextField" });
     const intl = useIntl();
 
     return (
@@ -38,12 +38,12 @@ export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps 
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFinalFormSearchTextField: FinalFormSearchTextFieldProps;
+        DextinityAdminFinalFormSearchTextField: FinalFormSearchTextFieldProps;
     }
 
     interface Components {
-        CometAdminFinalFormSearchTextField?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFinalFormSearchTextField"]>;
+        DextinityAdminFinalFormSearchTextField?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFinalFormSearchTextField"]>;
         };
     }
 }

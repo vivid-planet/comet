@@ -1,4 +1,4 @@
-import { createCometTheme, MuiThemeProvider } from "@dextinity/admin";
+import { createDextinityTheme, MuiThemeProvider } from "@dextinity/admin";
 import { createTheme as createMuiTheme, CssBaseline } from "@mui/material";
 import { type Decorator } from "@storybook/react-vite";
 
@@ -9,7 +9,7 @@ export enum ThemeOption {
 
 export const ThemeProviderDecorator: Decorator = (fn, context) => {
     const { theme: selectedTheme } = context.globals;
-    const theme = selectedTheme === ThemeOption.Mui ? createMuiTheme() : createCometTheme();
+    const theme = selectedTheme === ThemeOption.Mui ? createMuiTheme() : createDextinityTheme();
     return (
         <MuiThemeProvider theme={theme}>
             <CssBaseline />

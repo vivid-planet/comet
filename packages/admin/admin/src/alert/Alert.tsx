@@ -67,7 +67,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>((inProps, ref) => {
         action,
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminAlert" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminAlert" });
     const singleRow = !title && (action || onClose);
 
     const ownerState: OwnerState = {
@@ -179,17 +179,17 @@ const CloseIcon = createComponentSlot(IconButton)<AlertClassKey, OwnerState>({
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminAlert: AlertProps;
+        DextinityAdminAlert: AlertProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminAlert: AlertClassKey;
+        DextinityAdminAlert: AlertClassKey;
     }
 
     interface Components {
-        CometAdminAlert?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminAlert"]>;
-            styleOverrides?: ComponentNameToClassKey["CometAdminAlert"];
+        DextinityAdminAlert?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminAlert"]>;
+            styleOverrides?: ComponentNameToClassKey["DextinityAdminAlert"];
         };
     }
 }

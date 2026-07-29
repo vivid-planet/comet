@@ -139,7 +139,7 @@ const ExceptionStackTrace = createComponentSlot(Typography)<ErrorBoundaryClassKe
 })();
 
 export const ErrorBoundary = (inProps: ErrorBoundaryProps) => {
-    const props = useThemeProps({ props: inProps, name: "CometAdminErrorBoundary" });
+    const props = useThemeProps({ props: inProps, name: "DextinityAdminErrorBoundary" });
     const { onError } = useErrorHandler();
     return <CoreErrorBoundary {...props} onError={onError} />;
 };
@@ -216,17 +216,17 @@ class CoreErrorBoundary extends Component<CoreErrorBoundaryProps, IErrorBoundary
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminErrorBoundary: ErrorBoundaryClassKey;
+        DextinityAdminErrorBoundary: ErrorBoundaryClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminErrorBoundary: ErrorBoundaryProps;
+        DextinityAdminErrorBoundary: ErrorBoundaryProps;
     }
 
     interface Components {
-        CometAdminErrorBoundary?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminErrorBoundary"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminErrorBoundary"];
+        DextinityAdminErrorBoundary?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminErrorBoundary"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminErrorBoundary"];
         };
     }
 }

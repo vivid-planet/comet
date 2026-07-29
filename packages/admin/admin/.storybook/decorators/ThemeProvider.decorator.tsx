@@ -1,4 +1,4 @@
-import { createCometTheme } from "../../src/theme/createCometTheme";
+import { createDextinityTheme } from "../../src/theme/createDextinityTheme";
 import { MuiThemeProvider } from "../../src/mui/ThemeProvider";
 
 import { createTheme as createMuiTheme, CssBaseline } from "@mui/material";
@@ -11,7 +11,7 @@ export enum ThemeOption {
 
 export const ThemeProviderDecorator: Decorator = (fn, context) => {
     const { theme: selectedTheme } = context.globals;
-    const theme = selectedTheme === ThemeOption.Mui ? createMuiTheme() : createCometTheme();
+    const theme = selectedTheme === ThemeOption.Mui ? createMuiTheme() : createDextinityTheme();
     return (
         <MuiThemeProvider theme={theme}>
             <CssBaseline />
