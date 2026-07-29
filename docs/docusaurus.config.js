@@ -56,10 +56,10 @@ const config = {
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
             navbar: {
-                title: "Dextinity",
                 logo: {
                     alt: "Dextinity logo",
-                    src: "img/comet-logo.svg",
+                    src: "img/dextinity-logo.svg",
+                    srcDark: "img/dextinity-logo-dark.svg",
                 },
                 items: [
                     {
