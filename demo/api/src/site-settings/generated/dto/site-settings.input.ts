@@ -2,14 +2,32 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { BlockInputInterface, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
-import { IsNotEmpty, ValidateNested } from "class-validator";
-import { SiteSettingsContentBlock } from "../../blocks/site-settings-content.block";
+import { BlockInputInterface, DamImageBlock, IsNullable, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
+import { IsArray, IsNotEmpty, IsString, IsUrl, ValidateNested } from "class-validator";
 @InputType()
 export class SiteSettingsInput {
     @IsNotEmpty()
-    @Field(() => RootBlockInputScalar(SiteSettingsContentBlock))
-    @Transform(({ value }) => (isBlockInputInterface(value) ? value : SiteSettingsContentBlock.blockInputFactory(value)), { toClassOnly: true })
+    @IsString()
+    @Field()
+    organizationName: string;
+    @IsUrl()
+    @IsNullable()
+    @IsString()
+    @Field({ nullable: true, defaultValue: null })
+    organizationUrl?: string;
+    @IsNotEmpty()
+    @Field(() => RootBlockInputScalar(DamImageBlock))
+    @Transform(({ value }) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
-    content: BlockInputInterface;
+    organizationLogo: BlockInputInterface;
+    @IsUrl({}, { each: true })
+    @IsNotEmpty()
+    @IsArray()
+    @Field(() => [String], { defaultValue: [] })
+    @IsString({ each: true })
+    organizationSameAs: string[];
+    @IsNullable()
+    @IsString()
+    @Field({ nullable: true, defaultValue: null })
+    organizationDescription?: string;
 }

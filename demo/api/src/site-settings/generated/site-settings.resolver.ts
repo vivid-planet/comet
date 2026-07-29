@@ -36,13 +36,13 @@ export class SiteSettingsResolver {
         if (!siteSettings) {
             siteSettings = this.entityManager.create(SiteSettings, {
                 ...input,
-                content: input.content.transformToBlockData(),
+                organizationLogo: input.organizationLogo.transformToBlockData(),
                 scope,
             });
         }
         siteSettings.assign({
             ...input,
-            content: input.content.transformToBlockData(),
+            organizationLogo: input.organizationLogo.transformToBlockData(),
         });
         await this.entityManager.flush();
         return siteSettings;
