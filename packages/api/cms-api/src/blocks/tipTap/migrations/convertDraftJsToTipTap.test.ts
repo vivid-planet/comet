@@ -6,6 +6,7 @@ import { buildStrippedTipTapDoc, convertDraftJsToTipTap, type DraftJsContent } f
 const defaultSupports = [
     "bold",
     "italic",
+    "underline",
     "strike",
     "sub",
     "sup",
@@ -289,13 +290,24 @@ describe("convertDraftJsToTipTap", () => {
             expect(segments?.[1].marks).toEqual([{ type: "subscript" }]);
         });
 
-        it("drops UNDERLINE silently", () => {
+        it("maps UNDERLINE to underline", () => {
             const result = convertDraftJsToTipTap(
                 {
                     blocks: [makeBlock({ type: "unstyled", text: "x", inlineStyleRanges: [{ style: "UNDERLINE", offset: 0, length: 1 }] })],
                     entityMap: {},
                 },
                 { supports: [...defaultSupports] },
+            );
+            expect(result.content?.[0].content?.[0].marks).toEqual([{ type: "underline" }]);
+        });
+
+        it("drops UNDERLINE when not in supports", () => {
+            const result = convertDraftJsToTipTap(
+                {
+                    blocks: [makeBlock({ type: "unstyled", text: "x", inlineStyleRanges: [{ style: "UNDERLINE", offset: 0, length: 1 }] })],
+                    entityMap: {},
+                },
+                { supports: ["bold"] },
             );
             expect(result.content?.[0].content).toEqual([{ type: "text", text: "x" }]);
         });

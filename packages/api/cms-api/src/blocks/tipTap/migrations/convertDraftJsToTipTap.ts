@@ -57,6 +57,7 @@ interface ConvertOptions {
 const INLINE_STYLE_TO_MARK: Record<string, { mark: string; supports: TipTapSupports }> = {
     BOLD: { mark: "bold", supports: "bold" },
     ITALIC: { mark: "italic", supports: "italic" },
+    UNDERLINE: { mark: "underline", supports: "underline" },
     STRIKETHROUGH: { mark: "strike", supports: "strike" },
     SUP: { mark: "superscript", supports: "sup" },
     SUB: { mark: "subscript", supports: "sub" },
