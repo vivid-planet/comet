@@ -36,6 +36,7 @@ export const loader = async ({ graphQLFetch, scope }: BlockLoaderOptions<PageTre
                 offset: currentCount,
                 limit: pageSize,
             },
+            { headers: { "x-include-invisible-content": "" } },
         );
 
         totalCount = paginatedPageTreeNodes.totalCount;
