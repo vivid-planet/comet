@@ -51,19 +51,19 @@ Before using the translation strings, they are compiled using `intl:compile` to 
 ```ts title="lang.ts"
 import { ResolvedIntlConfig } from "react-intl";
 
-import comet_demo_messages_de from "../lang-compiled/dextinity-demo-lang/de.json";
-import comet_demo_messages_en from "../lang-compiled/dextinity-demo-lang/en.json";
-import comet_messages_de from "../lang-compiled/dextinity-lang/de.json";
-import comet_messages_en from "../lang-compiled/dextinity-lang/en.json";
+import dextinity_demo_messages_de from "../lang-compiled/dextinity-demo-lang/de.json";
+import dextinity_demo_messages_en from "../lang-compiled/dextinity-demo-lang/en.json";
+import dextinity_messages_de from "../lang-compiled/dextinity-lang/de.json";
+import dextinity_messages_en from "../lang-compiled/dextinity-lang/en.json";
 
-const cometMessages = {
-    en: comet_messages_en,
-    de: comet_messages_de,
+const dextinityMessages = {
+    en: dextinity_messages_en,
+    de: dextinity_messages_de,
 };
 
-const cometDemoMessages = {
-    en: comet_demo_messages_en,
-    de: comet_demo_messages_de,
+const dextinityDemoMessages = {
+    en: dextinity_demo_messages_en,
+    de: dextinity_demo_messages_de,
 };
 
 export const getMessages = (): ResolvedIntlConfig["messages"] => {
@@ -73,8 +73,8 @@ export const getMessages = (): ResolvedIntlConfig["messages"] => {
     }
 
     return {
-        ...cometMessages["en"],
-        ...cometDemoMessages["en"],
+        ...dextinityMessages["en"],
+        ...dextinityDemoMessages["en"],
     };
 };
 ```
