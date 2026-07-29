@@ -17,6 +17,8 @@ interface ReplaceFileButtonProps {
     file: DamFileDetails;
 }
 
+const replaceFileErrorTitle = <FormattedMessage id="comet.dam.file.replace.errorTitle" defaultMessage="File could not be replaced" />;
+
 const fileExtension = (fileName: string) => {
     const lastDotIndex = fileName.lastIndexOf(".");
     return lastDotIndex === -1 ? "" : fileName.slice(lastDotIndex).toLowerCase();
@@ -45,6 +47,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             if (fileRejections.length > 0) {
                 errorDialog?.showError({
+                    title: replaceFileErrorTitle,
                     userMessage: (
                         <FormattedMessage
                             id="comet.dam.file.replace.fileRejection"
@@ -86,6 +89,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 const message = error instanceof Error ? error.message : String(error);
 
                 errorDialog?.showError({
+                    title: replaceFileErrorTitle,
                     userMessage:
                         error instanceof FileUploadError && error.exceptionName === "CometFileNameAlreadyExistsException" ? (
                             <FormattedMessage
