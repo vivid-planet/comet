@@ -410,6 +410,8 @@ Key behaviors:
     );
     ```
 
+    For a list block type, target `.<className> .richTextBlock__listItemText` instead of `> div` — the list's cells carry their own font styles, which outrank a rule on the block's element.
+
 - **Multiple configurations per app.** Each factory call is independent — rename the destructured components per use case:
 
     ```tsx
@@ -444,9 +446,9 @@ Key behaviors:
     });
     ```
 
-- **Lists** render flat (`<ul>` / `<ol>` inside one text component per list); nesting by draft depth isn't supported.
+- **Lists** render as a table inside one text component, with a row per item, a marker cell and a text cell — the indent and the marker gap are cell padding, which is the only spacing Outlook on Windows applies reliably. Items render flat; nesting by draft depth isn't supported.
 - Spacing between blocks comes from the theme's `bottomSpacing` (the last block gets none); headings are styled text, not semantic `<h1>` elements.
-- Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, and `richTextBlock__link` class names for targeting with `registerStyles`.
+- Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, `richTextBlock__listItemMarker`, `richTextBlock__listItemText`, and `richTextBlock__link` class names for targeting with `registerStyles`. The list table also carries a modifier naming the text variant its items render with, such as `richTextBlock__list--variantBody`, and its rows carry `richTextBlock__listItem--itemSpacing`, or `richTextBlock__listItem--blockSpacing` on the last row when spacing follows the list. Its cells restate the text styles inline, so a rule targeting list text needs `!important`.
 
 ---
 

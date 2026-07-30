@@ -111,7 +111,7 @@ The `blockTypes` option maps the application's draft block types to the styling 
 
 The factory works without any configuration: `createRichTextBlock()` renders every draft block with the base `theme.text` styles, as do block types missing from `blockTypes`. This makes the block usable before any text variants exist in the theme.
 
-Style values in `blockTypes` don't support responsive values — define a theme variant for responsive styling, or set a `className` and register responsive CSS via `registerStyles`.
+Style values in `blockTypes` don't support responsive values — define a theme variant for responsive styling, or set a `className` and register responsive CSS via `registerStyles`. For a list block type, such a rule has to target `.<className> .richTextBlock__listItemText`, because the list's cells carry their own font styles.
 
 ### Link types
 
@@ -182,7 +182,7 @@ export const {
 ### Rendering behavior
 
 - Each draft block renders as its own text component; spacing between blocks comes from the theme's `bottomSpacing`, and the last block gets none.
-- List items render flat as `<ul>` / `<ol>` inside one text component per list; nesting by draft depth isn't supported.
+- Each list renders as a table inside one text component, with a row per item, a marker cell and a text cell — the indent and the marker gap are cell padding, which is the only spacing Outlook on Windows applies reliably. List items render flat; nesting by draft depth isn't supported.
 - Headings are styled text, not semantic `<h1>` elements, matching the text components' design.
 - Empty draft blocks are skipped; when the data contains no text at all, the block renders nothing.
-- Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, and `richTextBlock__link` class names for targeting with [registerStyles](./2-components-and-theme.md).
+- Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, `richTextBlock__listItemMarker`, `richTextBlock__listItemText`, and `richTextBlock__link` class names for targeting with [registerStyles](./2-components-and-theme.md). The list table also carries a modifier naming the text variant its items render with, such as `richTextBlock__list--variantBody`, and its rows carry `richTextBlock__listItem--itemSpacing`, or `richTextBlock__listItem--blockSpacing` on the last row when spacing follows the list. Its cells restate the text styles inline, so a rule targeting list text needs `!important`.

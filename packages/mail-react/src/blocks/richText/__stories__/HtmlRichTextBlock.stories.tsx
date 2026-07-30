@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MjmlSection } from "../../../components/section/MjmlSection.js";
 import { createTheme } from "../../../theme/createTheme.js";
 import { createRichTextBlock } from "../createRichTextBlock.js";
-import { exampleBlockData, headlinesOnlyBlockData, highlightBlockData } from "./exampleBlockData.js";
+import { exampleBlockData, headlinesOnlyBlockData, highlightBlockData, listVarietyBlockData } from "./exampleBlockData.js";
 
 const { HtmlRichTextBlock } = createRichTextBlock();
 
@@ -34,6 +34,31 @@ export const Default: Story = {
             <MjmlColumn>
                 <MjmlRaw>
                     <HtmlRichTextBlock data={exampleBlockData} />
+                </MjmlRaw>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const listVarietyTheme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: {
+            body: { fontSize: { default: "16px", mobile: "14px" }, lineHeight: { default: "24px", mobile: "20px" }, bottomSpacing: "16px" },
+        },
+    },
+});
+
+/** Lists render as a table, not as `<ul>` / `<ol>`, so their spacing is consistent across email clients. */
+export const ListVariety: Story = {
+    parameters: {
+        theme: listVarietyTheme,
+    },
+    render: () => (
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlRaw>
+                    <HtmlRichTextBlock data={listVarietyBlockData} />
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
