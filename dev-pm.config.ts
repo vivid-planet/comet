@@ -220,7 +220,7 @@ export default defineConfig({
         },
         {
             name: "demo-api-generator",
-            script: "pnpm --filter dextinity-demo-api exec comet-api-generator generate --watch",
+            script: "pnpm --filter dextinity-demo-api exec dextinity-api-generator generate --watch",
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@dextinity/cms-api"), "packages/api/api-generator/lib/apiGenerator.js"],
         },

@@ -127,7 +127,7 @@ Common commands:
 | -------------------------- | ------------------------------------------------------------------------------------------ |
 | `@dextinity/cms-api`       | NestJS/GraphQL API for CMS features (file uploads, translations, blocks, S3/Azure storage) |
 | `@dextinity/brevo-api`     | NestJS integration for the Brevo email/marketing service                                   |
-| `@dextinity/api-generator` | CLI tool that generates TypeScript types from GraphQL schemas (`comet-api-generator` bin)  |
+| `@dextinity/api-generator` | CLI tool that generates TypeScript types from GraphQL schemas (`dextinity-api-generator` bin)  |
 
 ### Site (`packages/site/`)
 
