@@ -102,7 +102,7 @@ export const DamImageBlock = withPreview(
 
 Allowed values for `aspectRatio` (for pixel/DAM images) are **not arbitrary**. They are defined in the API config:
 
-- **Config location:** `api/src/comet-config.json` (or project equivalent) under `dam.allowedImageAspectRatios`.
+- **Config location:** `api/src/dextinity-config.json` (or project equivalent) under `dam.allowedImageAspectRatios`.
 
 When creating or editing a block that uses `DamImageBlock` or `PixelImageBlock` with a specific aspect ratio:
 

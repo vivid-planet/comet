@@ -6,7 +6,7 @@ import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { UnknownError } from "../../common/errors/errorMessages";
-import { useCometConfig } from "../../config/CometConfigContext";
+import { useDextinityConfig } from "../../config/DextinityConfigContext";
 import type { GQLDamFile, GQLDamFolder } from "../../graphql.generated";
 import { useDamBasePath } from "../config/damConfig";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
@@ -31,7 +31,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps) => {
     const [, , editDialogApi] = useEditDialog();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
-    const { apiUrl } = useCometConfig();
+    const { apiUrl } = useDextinityConfig();
     const damBasePath = useDamBasePath();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);

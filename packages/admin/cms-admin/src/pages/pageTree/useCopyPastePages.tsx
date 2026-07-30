@@ -3,7 +3,7 @@ import { LocalErrorScopeApolloContext, messages, readClipboardText, useErrorDial
 import { type ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useCometConfig } from "../../config/CometConfigContext";
+import { useDextinityConfig } from "../../config/DextinityConfigContext";
 import type { ContentScope } from "../../contentScope/Provider";
 import { useDamBasePath } from "../../dam/config/damConfig";
 import { useDamScope } from "../../dam/config/useDamScope";
@@ -68,7 +68,7 @@ interface UseCopyPastePagesApi {
  * This hooks provides some helper functions to copy / paste Pages and PageTreeNodes
  */
 function useCopyPastePages(): UseCopyPastePagesApi {
-    const { apiUrl } = useCometConfig();
+    const { apiUrl } = useDextinityConfig();
     const { documentTypes } = usePageTreeConfig();
     const { currentCategory } = usePageTreeContext();
     const client = useApolloClient();

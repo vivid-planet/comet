@@ -16,7 +16,7 @@ import type { RedirectsConfig } from "../redirects/redirectsConfig";
 import type { SiteConfigsConfig } from "../siteConfigs/siteConfigsConfig";
 import type { WarningsConfig } from "../warnings/warningsConfig";
 
-export interface CometConfig<SiteConfigs = unknown> {
+export interface DextinityConfig<SiteConfigs = unknown> {
     apiUrl: string;
     graphQLApiUrl: string;
     adminUrl: string;
@@ -37,30 +37,30 @@ export interface CometConfig<SiteConfigs = unknown> {
     onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
-const CometConfigContext = createContext<CometConfig | undefined>(undefined);
+const DextinityConfigContext = createContext<DextinityConfig | undefined>(undefined);
 
-export function CometConfigProvider<SiteConfigs = unknown>({ children, ...config }: PropsWithChildren<CometConfig<SiteConfigs>>) {
+export function DextinityConfigProvider<SiteConfigs = unknown>({ children, ...config }: PropsWithChildren<DextinityConfig<SiteConfigs>>) {
     const { context: blockContext = {}, ...blocksConfig } = config.blocks ?? {};
 
     return (
-        <CometConfigContext.Provider value={config as CometConfig<unknown>}>
+        <DextinityConfigContext.Provider value={config as DextinityConfig<unknown>}>
             <ErrorHandlerProvider onError={config.onError}>
                 <BlockContextProvider value={blockContext}>
                     <BlocksConfigProvider {...blocksConfig}>{children}</BlocksConfigProvider>
                 </BlockContextProvider>
             </ErrorHandlerProvider>
-        </CometConfigContext.Provider>
+        </DextinityConfigContext.Provider>
     );
 }
 
-export function useCometConfig<SiteConfigs = unknown>() {
-    const context = useContext(CometConfigContext);
+export function useDextinityConfig<SiteConfigs = unknown>() {
+    const context = useContext(DextinityConfigContext);
 
     if (!context) {
         throw new Error(
-            "No CometConfigContext instance can be found. Please ensure that you have called `CometConfigProvider` higher up in your tree.",
+            "No DextinityConfigContext instance can be found. Please ensure that you have called `DextinityConfigProvider` higher up in your tree.",
         );
     }
 
-    return context as CometConfig<SiteConfigs>;
+    return context as DextinityConfig<SiteConfigs>;
 }

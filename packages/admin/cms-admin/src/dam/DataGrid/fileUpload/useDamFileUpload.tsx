@@ -6,7 +6,7 @@ import type { Accept, FileRejection } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
-import { useCometConfig } from "../../../config/CometConfigContext";
+import { useDextinityConfig } from "../../../config/DextinityConfigContext";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
 import type { GQLLicenseInput } from "../../../graphql.generated";
 import { useDamBasePath, useDamConfig, useVideoPerformanceWarning } from "../../config/damConfig";
@@ -134,7 +134,7 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithDamUploadMetadata[]):
 };
 
 export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi => {
-    const { apiUrl } = useCometConfig();
+    const { apiUrl } = useDextinityConfig();
     const damConfig = useDamConfig();
     const damBasePath = useDamBasePath();
     const client = useApolloClient();

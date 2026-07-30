@@ -4,7 +4,7 @@ import { deepClone } from "@mui/x-data-grid/internals";
 import { FormattedMessage } from "react-intl";
 
 import type { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
-import { useCometConfig } from "../config/CometConfigContext";
+import { useDextinityConfig } from "../config/DextinityConfigContext";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { FileField } from "../form/file/FileField";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
@@ -116,7 +116,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const { apiUrl } = useCometConfig();
+        const { apiUrl } = useDextinityConfig();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
         const previewUrl = createPreviewUrl(state, { apiUrl });

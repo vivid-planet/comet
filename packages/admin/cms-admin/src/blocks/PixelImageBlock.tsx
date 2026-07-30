@@ -7,7 +7,7 @@ import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import type { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
-import { useCometConfig } from "../config/CometConfigContext";
+import { useDextinityConfig } from "../config/DextinityConfigContext";
 import { useDamBasePath } from "../dam/config/damConfig";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { FileField } from "../form/file/FileField";
@@ -145,7 +145,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     AdminComponent: ({ state, updateState }) => {
         const [open, setOpen] = useState(false);
-        const { apiUrl } = useCometConfig();
+        const { apiUrl } = useDextinityConfig();
         const damBasePath = useDamBasePath();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 

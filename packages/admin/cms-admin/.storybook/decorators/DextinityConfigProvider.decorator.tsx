@@ -1,9 +1,9 @@
 import type { Decorator } from "@storybook/react-vite";
 
-import { CometConfigProvider } from "../../src/config/CometConfigContext";
+import { DextinityConfigProvider } from "../../src/config/DextinityConfigContext";
 
-export const CometConfigProviderDecorator: Decorator = (Story) => (
-    <CometConfigProvider
+export const DextinityConfigProviderDecorator: Decorator = (Story) => (
+    <DextinityConfigProvider
         graphQLApiUrl="/graphql"
         apiUrl=""
         adminUrl=""
@@ -14,5 +14,5 @@ export const CometConfigProviderDecorator: Decorator = (Story) => (
         }}
     >
         <Story />
-    </CometConfigProvider>
+    </DextinityConfigProvider>
 );
