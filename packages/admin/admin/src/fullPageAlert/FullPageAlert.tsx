@@ -1,4 +1,4 @@
-import { CometDigitalExperienceLogo, Error, Info, Warning } from "@dextinity/admin-icons";
+import { DextinityLogo, Error, Info, Warning } from "@dextinity/admin-icons";
 import { type ComponentsOverrides, type Divider, type Theme, type Typography, useThemeProps } from "@mui/material";
 import type { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
@@ -94,7 +94,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
         iconMapping: passedIconMapping = {},
         detailDescription: _detailDescription,
         detailDescriptionMapping: passedDetailDescriptionMapping = {},
-        logo = <CometDigitalExperienceLogo sx={{ width: "100%", height: "30px" }} />,
+        logo = <DextinityLogo sx={{ fontSize: 30 }} />,
         actions = (
             <Button href="/" fullWidth>
                 <FormattedMessage id="comet.fullPageAlert.action.returnToHomePage" defaultMessage="Return to home page" />

@@ -1,4 +1,5 @@
-import { CometLogo } from "../../common/CometLogo";
+import { DextinityLogo } from "@dextinity/admin-icons";
+
 import { MuiThemeProvider } from "../../mui/ThemeProvider";
 import { createCometTheme } from "../../theme/createCometTheme";
 import { AppHeader } from "../AppHeader";
@@ -32,10 +33,10 @@ export const ThemableAppHeader = {
         return (
             <MuiThemeProvider theme={theme}>
                 <AppHeader position="relative">
-                    <CometLogo />
+                    <DextinityLogo variant="primaryNegative" sx={{ fontSize: 34 }} />
                 </AppHeader>
                 <AppHeader position="static" color="secondary">
-                    <CometLogo />
+                    <DextinityLogo variant="primaryNegative" sx={{ fontSize: 34 }} />
                 </AppHeader>
             </MuiThemeProvider>
         );

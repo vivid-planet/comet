@@ -1,4 +1,5 @@
-import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@dextinity/admin";
+import { AppHeader, AppHeaderMenuButton, FillSpace } from "@dextinity/admin";
+import { DextinityLogo } from "@dextinity/admin-icons";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { PropsWithChildren, ReactNode } from "react";
@@ -20,7 +21,7 @@ function Header({ children, logo }: PropsWithChildren<Props>) {
     return (
         <AppHeader>
             <AppHeaderMenuButton />
-            {!isMobile && <LogoWrapper>{logo || <CometLogo color="white" />}</LogoWrapper>}
+            {!isMobile && <LogoWrapper>{logo || <DextinityLogo variant="primaryNegative" sx={{ fontSize: 34 }} />}</LogoWrapper>}
             {!isMobile && <FillSpace />}
             {children}
         </AppHeader>

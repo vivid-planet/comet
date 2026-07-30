@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Tooltip } from "@dextinity/admin";
-import { CometColor, Domain, DomainLocked } from "@dextinity/admin-icons";
+import { DextinityIcon, Domain, DomainLocked } from "@dextinity/admin-icons";
 import { Grid, Typography } from "@mui/material";
 import { type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -44,7 +44,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     );
     return [value, setValue];
 }
-function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props) {
+function SitePreview({ resolvePath, logo = <DextinityIcon sx={{ fontSize: 32 }} /> }: Props) {
     const { scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
 
