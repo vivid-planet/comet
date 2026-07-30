@@ -15,7 +15,7 @@ export type TimePickerFieldProps = FieldProps<string, HTMLInputElement>;
  *
  * Use this component when working with Final Form. For standalone usage, use `TimePicker` instead.
  *
- * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@dextinity/admin_components-datetime-timepickerfield--docs)
+ * - [Storybook](https://storybook.dextinity.com/?path=/docs/@dextinity/admin_components-datetime-timepickerfield--docs)
  */
 export const TimePickerField = (props: TimePickerFieldProps) => {
     return <Field component={FinalFormTimePicker} {...props} />;

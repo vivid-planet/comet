@@ -5,17 +5,17 @@ const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
 // Both this docs site and the Storybook composition are deployed via Netlify with wildcard DNS
-// for `*.storybook.comet-dxp.com`. Mirror the runtime mapping in StorybookAdminComponentDocsIframe
+// for `*.storybook.dextinity.com`. Mirror the runtime mapping in StorybookAdminComponentDocsIframe
 // so the navbar link follows the docs deploy context: a PR's deploy-preview links to its matching
-// Storybook deploy-preview, `next` to `next.storybook.comet-dxp.com`, and main to production.
+// Storybook deploy-preview, `next` to `next.storybook.dextinity.com`, and main to production.
 function getStorybookUrl() {
     if (process.env.CONTEXT === "deploy-preview" && process.env.REVIEW_ID) {
-        return `https://deploy-preview-${process.env.REVIEW_ID}.storybook.comet-dxp.com/`;
+        return `https://deploy-preview-${process.env.REVIEW_ID}.storybook.dextinity.com/`;
     }
     if (process.env.BRANCH === "next") {
-        return "https://next.storybook.comet-dxp.com/";
+        return "https://next.storybook.dextinity.com/";
     }
-    return "https://storybook.comet-dxp.com/";
+    return "https://storybook.dextinity.com/";
 }
 
 /** @type {import('@docusaurus/types').Config} */

@@ -27,7 +27,7 @@ The Admin's user interface is built using [MUI](https://mui.com/), [react-final-
 
 :::note
 
-Documentation and usage examples of the individual components and tools from `@dextinity/admin` and its accompanying packages can be found in our Storybook: [Storybook](https://comet-admin.netlify.app/)
+Documentation and usage examples of the individual components and tools from `@dextinity/admin` and its accompanying packages can be found in our Storybook: [Storybook](https://storybook.dextinity.com/)
 
 :::
 
@@ -42,9 +42,9 @@ Using the `createCometTheme` function, you can create a theme that contains all 
 #### @dextinity/admin-icons
 
 Provides a set of icon components, based on MUI's [SvgIcon](https://mui.com/material-ui/icons/#svgicon) component.
-A complete list of the admin-icons can be found here: [Storybook](https://comet-admin.netlify.app/?path=/story/docs-icons-list--page)
+A complete list of the admin-icons can be found here: [Storybook](https://storybook.dextinity.com/?path=/story/docs-icons-list--page)
 
-<!--TODO: The link will change to “https://comet-admin.netlify.app/?path=/story/docs-icons-all-icons--page“ when merged: -->
+<!--TODO: The link will change to “https://storybook.dextinity.com/?path=/story/docs-icons-all-icons--page“ when merged: -->
 
 #### @dextinity/admin-rte
 

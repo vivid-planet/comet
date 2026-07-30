@@ -55,7 +55,7 @@ export type DateTimePickerProps = ThemedComponentBaseProps<{
  * It provides a text field with a calendar icon that opens a date-time picker dialog. The component handles
  * Date objects and includes features like clearing, read-only state, and customizable icons.
  *
- * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@dextinity/admin_components-datetime-datetimepicker--docs)
+ * - [Storybook](https://storybook.dextinity.com/?path=/docs/@dextinity/admin_components-datetime-datetimepicker--docs)
  * - [MUI X DateTimePicker Documentation](https://mui.com/x/react-date-pickers/date-time-picker/)
  */
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
