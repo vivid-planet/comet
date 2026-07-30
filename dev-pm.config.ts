@@ -22,32 +22,32 @@ export default defineConfig({
     scripts: [
         // group admin
         {
-            name: "comet-admin",
+            name: "dextinity-admin",
             script: "pnpm --filter @dextinity/admin run start",
-            group: ["comet-admin"],
+            group: ["dextinity-admin"],
             waitOn: waitOnPackages("@dextinity/admin-icons"),
         },
         {
-            name: "comet-admin-color-picker",
+            name: "dextinity-admin-color-picker",
             script: "pnpm --filter @dextinity/admin-color-picker run start",
-            group: ["comet-admin"],
+            group: ["dextinity-admin"],
             waitOn: waitOnPackages("@dextinity/admin"),
         },
         {
-            name: "comet-admin-date-time",
+            name: "dextinity-admin-date-time",
             script: "pnpm --filter @dextinity/admin-date-time run start",
-            group: ["comet-admin"],
+            group: ["dextinity-admin"],
             waitOn: waitOnPackages("@dextinity/admin-icons", "@dextinity/admin"),
         },
         {
-            name: "comet-admin-icons",
+            name: "dextinity-admin-icons",
             script: "pnpm --filter @dextinity/admin-icons run start",
-            group: ["comet-admin"],
+            group: ["dextinity-admin"],
         },
         {
-            name: "comet-admin-rte",
+            name: "dextinity-admin-rte",
             script: "pnpm --filter @dextinity/admin-rte run start",
-            group: ["comet-admin"],
+            group: ["dextinity-admin"],
         },
 
         // admin-generator
