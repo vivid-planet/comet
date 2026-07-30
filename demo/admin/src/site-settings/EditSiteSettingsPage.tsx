@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { FillSpace, MainContent, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, MainContent, SaveButton, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import {
     BlockAdminComponentRoot,
     type BlockState,
@@ -95,7 +95,7 @@ export function EditSiteSettingsPage(): JSX.Element | null {
     };
 
     return (
-        <Stack topLevelTitle={null}>
+        <>
             <StackToolbar scopeIndicator={<ContentScopeIndicator />}>
                 <ToolbarTitleItem>
                     <FormattedMessage id="siteSettings.edit.toolbarTitle" defaultMessage="Edit site settings" />
@@ -111,7 +111,7 @@ export function EditSiteSettingsPage(): JSX.Element | null {
                 </BlockAdminComponentRoot>
             </MainContent>
             {saveConflict.dialogs}
-        </Stack>
+        </>
     );
 }
 
