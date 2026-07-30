@@ -6,7 +6,7 @@ Detailed rules for creating block loaders that fetch server-side data in the sit
 
 ## Overview
 
-A block loader is an async function that runs server-side before the block component renders. It fetches data (typically from the Comet GraphQL API via `graphQLFetch`) and attaches the result to the block's data under a `loaded` property. The `recursivelyLoadBlockData` utility walks the block tree, finds blocks with registered loaders, and runs them in parallel.
+A block loader is an async function that runs server-side before the block component renders. It fetches data (typically from the Dextinity GraphQL API via `graphQLFetch`) and attaches the result to the block's data under a `loaded` property. The `recursivelyLoadBlockData` utility walks the block tree, finds blocks with registered loaders, and runs them in parallel.
 
 ---
 

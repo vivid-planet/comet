@@ -6,7 +6,7 @@
 
 ## Registration Targets
 
-Most Comet projects have a hierarchy of blocks blocks:
+Most Dextinity projects have a hierarchy of blocks blocks:
 
 | Target                    | Purpose                                                                                                     | Typical Includes                                                                                                        |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |

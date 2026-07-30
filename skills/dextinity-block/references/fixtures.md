@@ -1,6 +1,6 @@
 # Block Fixture Rules
 
-Detailed rules for creating and maintaining block fixture services that generate realistic seed data for Comet blocks. Load this file when creating a new block, editing an existing block, or managing fixture services.
+Detailed rules for creating and maintaining block fixture services that generate realistic seed data for Dextinity blocks. Load this file when creating a new block, editing an existing block, or managing fixture services.
 
 ---
 

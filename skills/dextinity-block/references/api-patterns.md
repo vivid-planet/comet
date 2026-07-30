@@ -1,6 +1,6 @@
 # API Block Patterns
 
-Comet-specific patterns for API-layer block definitions. All API blocks live in `{block-name}.block.ts` (kebab-case) inside `api/src/`, typically under `documents/pages/blocks/` or `common/blocks/`.
+Dextinity-specific patterns for API-layer block definitions. All API blocks live in `{block-name}.block.ts` (kebab-case) inside `api/src/`, typically under `documents/pages/blocks/` or `common/blocks/`.
 
 ---
 

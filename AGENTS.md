@@ -138,12 +138,12 @@ Common commands:
 
 ### Utilities
 
-| Package                    | Description                                                  |
-| -------------------------- | ------------------------------------------------------------ |
-| `@dextinity/cli`           | Central CLI entry point for Comet projects (`dextinity` bin) |
-| `@dextinity/eslint-config` | Shared ESLint configurations                                 |
-| `@dextinity/eslint-plugin` | Custom ESLint rules for Comet projects                       |
-| `@dextinity/mail-react`    | Utilities for building HTML emails with React (MJML-based)   |
+| Package                    | Description                                                      |
+| -------------------------- | ---------------------------------------------------------------- |
+| `@dextinity/cli`           | Central CLI entry point for Dextinity projects (`dextinity` bin) |
+| `@dextinity/eslint-config` | Shared ESLint configurations                                     |
+| `@dextinity/eslint-plugin` | Custom ESLint rules for Dextinity projects                       |
+| `@dextinity/mail-react`    | Utilities for building HTML emails with React (MJML-based)       |
 
 ### Docs & Storybook
 
