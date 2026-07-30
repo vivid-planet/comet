@@ -1,7 +1,6 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { FillSpace, MainContent, SaveButton, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { FieldSet, FillSpace, MainContent, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import {
-    BlockAdminComponentRoot,
     type BlockState,
     ContentScopeIndicator,
     resolveHasSaveConflict,
@@ -106,9 +105,20 @@ export function EditSiteSettingsPage(): JSX.Element | null {
                 </ToolbarActions>
             </StackToolbar>
             <MainContent>
-                <BlockAdminComponentRoot>
-                    <OrganizationBlock.AdminComponent state={organizationState} updateState={setOrganizationState} />
-                </BlockAdminComponentRoot>
+                <FieldSet
+                    title={<FormattedMessage id="siteSettings.organization.title" defaultMessage="Organization" />}
+                    supportText={
+                        <FormattedMessage
+                            id="siteSettings.organization.supportText"
+                            defaultMessage="Emitted as Organization structured data (JSON-LD) on every page of this scope."
+                        />
+                    }
+                    collapsible={false}
+                >
+                    <Stack topLevelTitle={null}>
+                        <OrganizationBlock.AdminComponent state={organizationState} updateState={setOrganizationState} />
+                    </Stack>
+                </FieldSet>
             </MainContent>
             {saveConflict.dialogs}
         </>
