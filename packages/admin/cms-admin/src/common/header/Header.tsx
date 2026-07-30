@@ -5,6 +5,11 @@ import { styled } from "@mui/material/styles";
 import type { PropsWithChildren, ReactNode } from "react";
 
 const LogoWrapper = styled("div")`
+    /* Flex rather than block: the logo is an inline-block SVG, so a block wrapper would add baseline
+       descender space below it and the wrapper would no longer be centered on the logo itself. */
+    display: flex;
+    align-items: center;
+
     ${({ theme }) => theme.breakpoints.up("md")} {
         margin-left: 14px;
     }
