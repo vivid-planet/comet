@@ -339,7 +339,7 @@ export type GeneratorReturn = { code: string; gqlDocuments: GQLDocumentConfigMap
 /**
  * @experimental
  */
-async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
+async function runGenerate(filePattern = "src/**/*.dextinityGen.{ts,tsx}") {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });
@@ -351,16 +351,16 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         let outputCode = "";
         let gqlDocumentsOutputCode = "";
         const targetDirectory = `${dirname(file)}/generated`;
-        const baseOutputFilename = basename(file).replace(/\.cometGen\.tsx?$/, "");
+        const baseOutputFilename = basename(file).replace(/\.dextinityGen\.tsx?$/, "");
 
         console.log(`generating ${file}`);
 
         const config = await parseConfig(`${process.cwd()}/${file}`);
 
-        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
+        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.dextinityGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
 
-        const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
+        const exportName = file.match(/([^/]+)\.dextinityGen\.tsx?$/)?.[1];
         if (!exportName) {
             throw new Error("Can not determine exportName");
         }
@@ -383,7 +383,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         writtenFiles.push(codeOuputFilename);
 
         if (gqlDocumentsOutputCode != "") {
-            const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.gql.tsx`;
+            const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.dextinityGen\.tsx?$/, ""))}.gql.tsx`;
             await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
                 import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@dextinity/cms-admin";
