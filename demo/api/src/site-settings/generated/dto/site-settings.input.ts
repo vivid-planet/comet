@@ -4,12 +4,12 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { BlockInputInterface, RootBlockInputScalar, isBlockInputInterface } from "@comet/cms-api";
 import { IsNotEmpty, ValidateNested } from "class-validator";
-import { SiteSettingsContentBlock } from "../../blocks/site-settings-content.block";
+import { OrganizationBlock } from "../../blocks/organization.block";
 @InputType()
 export class SiteSettingsInput {
     @IsNotEmpty()
-    @Field(() => RootBlockInputScalar(SiteSettingsContentBlock))
-    @Transform(({ value }) => (isBlockInputInterface(value) ? value : SiteSettingsContentBlock.blockInputFactory(value)), { toClassOnly: true })
+    @Field(() => RootBlockInputScalar(OrganizationBlock))
+    @Transform(({ value }) => (isBlockInputInterface(value) ? value : OrganizationBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
-    content: BlockInputInterface;
+    organization: BlockInputInterface;
 }

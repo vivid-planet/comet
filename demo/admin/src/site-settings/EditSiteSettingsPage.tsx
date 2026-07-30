@@ -9,12 +9,12 @@ import {
     useContentScopeConfig,
     useSaveConflictQuery,
 } from "@comet/cms-admin";
-import type { SiteSettingsContentBlockInput } from "@src/blocks.generated";
+import type { OrganizationBlockInput } from "@src/blocks.generated";
 import isEqual from "lodash.isequal";
 import { type JSX, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { SiteSettingsContentBlock } from "./blocks/SiteSettingsContentBlock";
+import { OrganizationBlock } from "./blocks/OrganizationBlock";
 import {
     type GQLCheckForChangesSiteSettingsQuery,
     type GQLCheckForChangesSiteSettingsQueryVariables,
@@ -27,9 +27,9 @@ import {
 
 export function EditSiteSettingsPage(): JSX.Element | null {
     const { scope } = useContentScope();
-    const [siteSettingsState, setSiteSettingsState] = useState<BlockState<typeof SiteSettingsContentBlock>>(SiteSettingsContentBlock.defaultValues());
+    const [organizationState, setOrganizationState] = useState<BlockState<typeof OrganizationBlock>>(OrganizationBlock.defaultValues());
     const [hasChanges, setHasChanges] = useState(false);
-    const [referenceContent, setReferenceContent] = useState<SiteSettingsContentBlockInput | null>(null);
+    const [referenceOrganization, setReferenceOrganization] = useState<OrganizationBlockInput | null>(null);
 
     useContentScopeConfig({ redirectPathAfterChange: "/project-snips/site-settings" });
 
@@ -67,22 +67,16 @@ export function EditSiteSettingsPage(): JSX.Element | null {
 
     useEffect(() => {
         if (data) {
-            if (data.siteSettings) {
-                const content = SiteSettingsContentBlock.input2State(data.siteSettings.content);
-                setSiteSettingsState(content);
-                setReferenceContent(SiteSettingsContentBlock.state2Output(content));
-            } else {
-                const state = SiteSettingsContentBlock.defaultValues();
-                setSiteSettingsState(state);
-                setReferenceContent(SiteSettingsContentBlock.state2Output(state));
-            }
+            const state = data.siteSettings ? OrganizationBlock.input2State(data.siteSettings.organization) : OrganizationBlock.defaultValues();
+            setOrganizationState(state);
+            setReferenceOrganization(OrganizationBlock.state2Output(state));
         }
     }, [data]);
 
     useEffect(() => {
-        const equal = isEqual(referenceContent, siteSettingsState ? SiteSettingsContentBlock.state2Output(siteSettingsState) : null);
+        const equal = isEqual(referenceOrganization, organizationState ? OrganizationBlock.state2Output(organizationState) : null);
         setHasChanges(!equal);
-    }, [siteSettingsState, referenceContent]);
+    }, [organizationState, referenceOrganization]);
 
     if (loading) {
         return null;
@@ -94,7 +88,7 @@ export function EditSiteSettingsPage(): JSX.Element | null {
             return; // dialogs open for the user to handle the conflict
         }
 
-        const input = { content: SiteSettingsContentBlock.state2Output(siteSettingsState) };
+        const input = { organization: OrganizationBlock.state2Output(organizationState) };
         await update({
             variables: { input, scope },
         });
@@ -113,7 +107,7 @@ export function EditSiteSettingsPage(): JSX.Element | null {
             </StackToolbar>
             <MainContent>
                 <BlockAdminComponentRoot>
-                    <SiteSettingsContentBlock.AdminComponent state={siteSettingsState} updateState={setSiteSettingsState} />
+                    <OrganizationBlock.AdminComponent state={organizationState} updateState={setOrganizationState} />
                 </BlockAdminComponentRoot>
             </MainContent>
             {saveConflict.dialogs}
@@ -125,7 +119,7 @@ const siteSettingsQuery = gql`
     query SiteSettings($scope: SiteSettingsScopeInput!) {
         siteSettings(scope: $scope) {
             id
-            content
+            organization
             scope {
                 domain
                 language
@@ -139,7 +133,7 @@ const saveSiteSettingsMutation = gql`
     mutation SaveSiteSettings($input: SiteSettingsInput!, $scope: SiteSettingsScopeInput!) {
         saveSiteSettings(input: $input, scope: $scope) {
             id
-            content
+            organization
             updatedAt
         }
     }

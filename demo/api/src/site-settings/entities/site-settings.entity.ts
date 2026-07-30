@@ -3,7 +3,7 @@ import { BaseEntity, Embedded, Entity, OptionalProps, PrimaryKey, Property } fro
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { SiteSettingsContentBlock } from "../blocks/site-settings-content.block";
+import { OrganizationBlock } from "../blocks/organization.block";
 import { SiteSettingsScope } from "../dto/site-settings-scope";
 
 @Entity()
@@ -17,10 +17,10 @@ export class SiteSettings extends BaseEntity {
     @Field(() => ID)
     id: string = uuid();
 
-    @RootBlock(SiteSettingsContentBlock)
-    @Property({ type: new RootBlockType(SiteSettingsContentBlock) })
-    @Field(() => RootBlockDataScalar(SiteSettingsContentBlock))
-    content: BlockDataInterface;
+    @RootBlock(OrganizationBlock)
+    @Property({ type: new RootBlockType(OrganizationBlock) })
+    @Field(() => RootBlockDataScalar(OrganizationBlock))
+    organization: BlockDataInterface;
 
     @Embedded(() => SiteSettingsScope)
     @Field(() => SiteSettingsScope)

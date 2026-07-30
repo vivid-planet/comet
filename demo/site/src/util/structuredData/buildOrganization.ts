@@ -1,5 +1,5 @@
 import { generateImageUrl } from "@comet/site-nextjs";
-import type { DamImageBlockData, SiteSettingsContentBlockData } from "@src/blocks.generated";
+import type { DamImageBlockData, OrganizationBlockData } from "@src/blocks.generated";
 import type { Organization, WithContext } from "schema-dts";
 
 function toAbsoluteUrl(url: string, siteUrl: string): string {
@@ -26,9 +26,7 @@ function buildLogoUrl(logo: DamImageBlockData, siteUrl: string): string | undefi
     return undefined;
 }
 
-export function buildOrganization(content: SiteSettingsContentBlockData, siteUrl: string): WithContext<Organization> | null {
-    const { organization } = content;
-
+export function buildOrganization(organization: OrganizationBlockData, siteUrl: string): WithContext<Organization> | null {
     const name = organization.name.trim();
 
     if (!name) {

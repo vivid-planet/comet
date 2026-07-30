@@ -3123,25 +3123,6 @@
         ]
     },
     {
-        "name": "SiteSettingsContent",
-        "fields": [
-            {
-                "name": "organization",
-                "kind": "Block",
-                "block": "Organization",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "organization",
-                "kind": "Block",
-                "block": "Organization",
-                "nullable": false
-            }
-        ]
-    },
-    {
         "name": "Slider",
         "fields": [
             {
