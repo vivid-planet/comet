@@ -94,9 +94,9 @@ export const BoldOnly: StoryObj<typeof BoldOnlyStory> = {
                 { timeout: 5000 },
             );
 
-            // Only bold button, no heading select
+            // Only bold button, no block type select
             expect(canvas.queryByRole("combobox")).not.toBeInTheDocument();
-            expect(canvas.queryByText("Default")).not.toBeInTheDocument();
+            expect(canvas.queryByText("Paragraph")).not.toBeInTheDocument();
 
             // Exactly 1 button (bold only — no undo/redo, no lists, no special chars)
             const buttons = canvas.getAllByRole("button");
@@ -194,25 +194,41 @@ export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
 
 const SingleDropdownStylesBlock = createTipTapRichTextBlock({
     supports: ["history", "bold", "italic", "strike", "sub", "sup", "ordered-list", "unordered-list", "non-breaking-space", "soft-hyphen"],
-    defaultTextBlockStyleLabel: "Copy Default",
+    defaultTextBlockStyleLabel: "Copy 100",
     textBlockStyles: [
         {
-            name: "copy-small",
-            label: "Copy Small",
+            name: "copy-200",
+            label: "Copy 200",
             appliesTo: ["paragraph"],
-            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 11 }} {...props} />,
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 20, lineHeight: "28px" }} {...props} />,
         },
         {
-            name: "headline-one",
-            label: "Headline One",
+            name: "label-100",
+            label: "Label 100",
             appliesTo: ["paragraph"],
-            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 32, fontWeight: 700 }} {...props} />,
+            element: (props: HTMLAttributes<HTMLElement>) => (
+                <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }} {...props} />
+            ),
         },
         {
-            name: "headline-two",
-            label: "Headline Two",
+            name: "label-200",
+            label: "Label 200",
             appliesTo: ["paragraph"],
-            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 24, fontWeight: 600 }} {...props} />,
+            element: (props: HTMLAttributes<HTMLElement>) => (
+                <p style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }} {...props} />
+            ),
+        },
+        {
+            name: "headline-100",
+            label: "Headline 100",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 28, fontWeight: 600, lineHeight: "34px" }} {...props} />,
+        },
+        {
+            name: "headline-200",
+            label: "Headline 200",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 36, fontWeight: 700, lineHeight: "44px" }} {...props} />,
         },
     ],
 });
@@ -239,7 +255,7 @@ export const SingleDropdownTextBlockStyles: StoryObj<typeof SingleDropdownStyles
             // Heading support is off, so the text block style dropdown is the only combobox
             await waitFor(
                 () => {
-                    expect(canvas.getByRole("combobox")).toHaveTextContent("Copy Default");
+                    expect(canvas.getByRole("combobox")).toHaveTextContent("Copy 100");
                 },
                 { timeout: 5000 },
             );
@@ -251,10 +267,12 @@ export const SingleDropdownTextBlockStyles: StoryObj<typeof SingleDropdownStyles
             await waitFor(
                 () => {
                     const body = within(document.body);
-                    expect(body.getByRole("option", { name: "Copy Default" })).toBeInTheDocument();
-                    expect(body.getByRole("option", { name: "Copy Small" })).toBeInTheDocument();
-                    expect(body.getByRole("option", { name: "Headline One" })).toBeInTheDocument();
-                    expect(body.getByRole("option", { name: "Headline Two" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Copy 100" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Copy 200" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Label 100" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Label 200" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Headline 100" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Headline 200" })).toBeInTheDocument();
                 },
                 { timeout: 3000 },
             );

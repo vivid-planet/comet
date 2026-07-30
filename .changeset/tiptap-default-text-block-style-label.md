@@ -4,15 +4,19 @@
 
 Add `defaultTextBlockStyleLabel` option to `createTipTapRichTextBlock`
 
-The text block style dropdown always showed `Default` for the entry that applies no style. When a block configures named styles such as `Paragraph Default` and `Paragraph Small`, that fixed `Default` is inconsistent with the styles it sits next to.
+The first entry of the text block style dropdown applies no style and was always labeled `Default`. `defaultTextBlockStyleLabel` sets that label, so a block can name the entry after the base style its site renders when no style is stored.
 
-`defaultTextBlockStyleLabel` lets the block relabel that entry so it matches the block's naming. It only changes the label — selecting the entry still stores no text block style — and when the option is omitted the entry stays labeled `Default`.
+Only the label changes: selecting the entry still stores no text block style. Omitting the option keeps `Default`.
 
 **Example**
 
 ```tsx
 createTipTapRichTextBlock({
-    defaultTextBlockStyleLabel: "Paragraph Default",
-    textBlockStyles: [{ name: "small", label: "Paragraph Small", appliesTo: ["paragraph"], element: (props) => <p {...props} /> }],
+    defaultTextBlockStyleLabel: "Copy 100",
+    textBlockStyles: [
+        { name: "copy-200", label: "Copy 200", appliesTo: ["paragraph"], element: (props) => <p {...props} /> },
+        { name: "label-100", label: "Label 100", appliesTo: ["paragraph"], element: (props) => <p {...props} /> },
+        { name: "label-200", label: "Label 200", appliesTo: ["paragraph"], element: (props) => <p {...props} /> },
+    ],
 });
 ```
