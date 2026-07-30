@@ -105,16 +105,7 @@ export function EditSiteSettingsPage(): JSX.Element | null {
                 </ToolbarActions>
             </StackToolbar>
             <MainContent>
-                <FieldSet
-                    title={<FormattedMessage id="siteSettings.organization.title" defaultMessage="Organization" />}
-                    supportText={
-                        <FormattedMessage
-                            id="siteSettings.organization.supportText"
-                            defaultMessage="Emitted as Organization structured data (JSON-LD) on every page of this scope."
-                        />
-                    }
-                    collapsible={false}
-                >
+                <FieldSet title={<FormattedMessage id="siteSettings.organization.title" defaultMessage="Organization" />}>
                     <Stack topLevelTitle={null}>
                         <OrganizationBlock.AdminComponent state={organizationState} updateState={setOrganizationState} />
                     </Stack>
