@@ -283,6 +283,34 @@ export const listSpacingBlockData: RichTextBlockData = {
     },
 };
 
+function createNestedListItem(type: "unordered-list-item" | "ordered-list-item", key: string, text: string, depth: number) {
+    return { key, text, type, depth, inlineStyleRanges: [], entityRanges: [], data: {} };
+}
+
+export const nestedListBlockData: RichTextBlockData = {
+    draftContent: {
+        blocks: [
+            createNestedListItem("unordered-list-item", "nl1", "A bulleted item at the top level", 0),
+            createNestedListItem("unordered-list-item", "nl2", "One level in", 1),
+            createNestedListItem("unordered-list-item", "nl3", "Still one level in", 1),
+            createNestedListItem("unordered-list-item", "nl4", "Two levels in", 2),
+            createNestedListItem("unordered-list-item", "nl5", "Back at the top level", 0),
+            createNestedListItem("ordered-list-item", "nl6", "A numbered item at the top level", 0),
+            createNestedListItem("ordered-list-item", "nl7", "One level in, counted on its own", 1),
+            createNestedListItem("ordered-list-item", "nl8", "Still one level in", 1),
+            createNestedListItem("ordered-list-item", "nl9", "Back at the top level", 0),
+        ],
+        entityMap: {},
+    },
+};
+
+export const bulletedListBlockData: RichTextBlockData = {
+    draftContent: {
+        blocks: createListItems("unordered-list-item", ["Bulleted item one", "Bulleted item two", "Bulleted item three"]),
+        entityMap: {},
+    },
+};
+
 export const headlinesOnlyBlockData: RichTextBlockData = {
     draftContent: {
         blocks: [

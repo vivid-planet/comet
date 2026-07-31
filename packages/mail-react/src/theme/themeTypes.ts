@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { ResponsiveValue } from "./responsiveValue.js";
 
 /**
@@ -48,7 +50,21 @@ export interface ThemeText extends TextStyles {
     variants?: VariantsRecord;
 }
 
-/** Spacing tokens in pixels, applying to lists the RichText block renders. */
+/** The position of the item a marker belongs to. */
+export interface ListMarkerOptions {
+    /** The item's position in its own list, counting from zero. */
+    index: number;
+    /** The nesting level of the item's list, zero when it is not nested. */
+    depth: number;
+}
+
+/**
+ * A list item's marker content: a fixed node, or a function of the item's position.
+ * Use plain HTML elements, not MJML components.
+ */
+export type ListMarker = ReactNode | ((options: ListMarkerOptions) => ReactNode);
+
+/** Spacing tokens in pixels and marker content, applying to lists the RichText block renders. */
 export interface ThemeList {
     /** The space before the marker, measured from the list's left edge. */
     indent: ResponsiveValue;
@@ -56,6 +72,10 @@ export interface ThemeList {
     markerGap: ResponsiveValue;
     /** The space between items. The space below the last one comes from the text variant's `bottomSpacing`. */
     itemSpacing: ResponsiveValue;
+    /** The marker of every item of an unordered list. */
+    unorderedMarker: ListMarker;
+    /** The marker of every item of an ordered list. */
+    orderedMarker: ListMarker;
 }
 
 /**

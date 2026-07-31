@@ -51,6 +51,20 @@ const theme = createTheme({
 
 The `default` key provides the base value (rendered inline). Other keys generate media query overrides automatically.
 
+### List Markers
+
+`list.unorderedMarker` and `list.orderedMarker` set the markers of the lists the RichText block renders: a fixed node, or a function receiving the item's zero-based `index` and the `depth` of its list. Use plain HTML and React elements, not MJML components:
+
+```tsx
+const theme = createTheme({
+    list: {
+        unorderedMarker: ({ depth }) => ["▪", "–", "·"][depth % 3],
+        // 97 is the code of "a", so nested items are lettered a., b., c.
+        orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `${String.fromCharCode(97 + index)}.`),
+    },
+});
+```
+
 ---
 
 ## Module Augmentation Interfaces

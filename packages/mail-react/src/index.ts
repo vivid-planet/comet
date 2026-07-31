@@ -47,6 +47,8 @@ export type {
     DividerStyles,
     DividerVariants,
     DividerVariantStyles,
+    ListMarker,
+    ListMarkerOptions,
     TextStyles,
     TextVariants,
     TextVariantStyles,
