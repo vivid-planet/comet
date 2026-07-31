@@ -1,7 +1,11 @@
+import { MjmlColumn } from "@faire/mjml-react";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
+import { MjmlMailRoot } from "../../../components/mailRoot/MjmlMailRoot.js";
+import { MjmlSection } from "../../../components/section/MjmlSection.js";
+import { renderMailHtml } from "../../../server/renderMailHtml.js";
 import { createTheme } from "../../../theme/createTheme.js";
 import { defaultTheme } from "../../../theme/defaultTheme.js";
 import { getDefaultFromResponsiveValue } from "../../../theme/responsiveValue.js";
@@ -416,5 +420,164 @@ describe("createRichTextBlock — lists", () => {
 
         expect(renderWithTheme(<HtmlVariantRichTextBlock data={data} />, themeWithVariants)).toContain("richTextBlock__list--variantBody");
         expect(renderWithTheme(<HtmlRichTextBlock data={data} />, themeWithDefaultVariant)).toContain("richTextBlock__list--variantBody");
+    });
+});
+
+describe("createRichTextBlock — nested lists", () => {
+    const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock();
+
+    function createNestedListBlocks(items: Array<{ text: string; depth: number; type?: string }>) {
+        return items.map(({ text, depth, type = "unordered-list-item" }, index) =>
+            createDraftBlock({ key: `nested-${String(index)}`, text, type, depth }),
+        );
+    }
+
+    it("nests three levels one inside the next, each indenting by the same marker padding", () => {
+        const data = createBlockData(
+            createNestedListBlocks([
+                { text: "Level one", depth: 0 },
+                { text: "Level two", depth: 1 },
+                { text: "Level three", depth: 2 },
+            ]),
+        );
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />);
+        const indent = getDefaultFromResponsiveValue(defaultTheme.list.indent);
+
+        expect(markup.match(/<table/g)).toHaveLength(3);
+        // No table closes between the levels, so each one sits inside the level above rather than beside it.
+        expect(markup.slice(markup.indexOf("Level one"), markup.indexOf("Level three"))).not.toContain("</table>");
+        expect(markup.match(new RegExp(`padding-left:${String(indent)}px`, "g"))).toHaveLength(3);
+    });
+
+    it("marks a nested level as nested and leaves the variant modifier to the enclosing list", () => {
+        const themeWithDefaultVariant = createTheme({ text: { defaultVariant: "body", variants: { body: { fontSize: "16px" } } } });
+        const data = createBlockData(
+            createNestedListBlocks([
+                { text: "Level one", depth: 0 },
+                { text: "Level two", depth: 1 },
+            ]),
+        );
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, themeWithDefaultVariant);
+
+        expect(markup.match(/richTextBlock__list--nested/g)).toHaveLength(1);
+        expect(markup.match(/richTextBlock__list--variantBody/g)).toHaveLength(1);
+    });
+
+    // The variant belongs to the enclosing text component, but the list type is the nested level's own.
+    it("names a nested level's own list type", () => {
+        const data = createBlockData([
+            createDraftBlock({ key: "a", text: "Level one", type: "unordered-list-item" }),
+            createDraftBlock({ key: "b", text: "Level two", type: "ordered-list-item", depth: 1 }),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />);
+
+        expect(markup.match(/richTextBlock__list--(un)?ordered/g)).toEqual(["richTextBlock__list--unordered", "richTextBlock__list--ordered"]);
+    });
+
+    it("names each level's nesting depth on its table", () => {
+        const data = createBlockData(
+            createNestedListBlocks([
+                { text: "Level one", depth: 0 },
+                { text: "Level two", depth: 1 },
+                { text: "Level three", depth: 2 },
+                { text: "Back on level two", depth: 1 },
+                { text: "Back on level one", depth: 0 },
+            ]),
+        );
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />);
+
+        expect(markup.match(/richTextBlock__list--depth\d+/g)).toEqual([
+            "richTextBlock__list--depth0",
+            "richTextBlock__list--depth1",
+            "richTextBlock__list--depth2",
+        ]);
+    });
+
+    it("names the depth a level renders at, not the depth the draft data asked for", () => {
+        const data = createBlockData(
+            createNestedListBlocks([
+                { text: "Level one", depth: 0 },
+                { text: "Asked for the third level", depth: 2 },
+            ]),
+        );
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />);
+
+        expect(markup.match(/richTextBlock__list--depth\d+/g)).toEqual(["richTextBlock__list--depth0", "richTextBlock__list--depth1"]);
+    });
+
+    it("leaves the spacing below a nested level to the item enclosing it", () => {
+        const data = createBlockData(
+            createNestedListBlocks([
+                { text: "Level one", depth: 0 },
+                { text: "Level two", depth: 1 },
+                { text: "Another level one", depth: 0 },
+            ]),
+        );
+        const rows = renderWithTheme(<HtmlRichTextBlock data={data} />).split("<tr");
+
+        expect(rows[1]).toContain("richTextBlock__listItem--itemSpacing");
+        expect(rows[2]).not.toContain("richTextBlock__listItem--blockSpacing");
+        expect(rows[2]).not.toMatch(/padding-bottom:\d+px/);
+    });
+
+    it("spaces the items of a nested level through their own rows", () => {
+        const data = createBlockData(
+            createNestedListBlocks([
+                { text: "Level one", depth: 0 },
+                { text: "Nested item one", depth: 1 },
+                { text: "Nested item two", depth: 1 },
+            ]),
+        );
+        const rows = renderWithTheme(<HtmlRichTextBlock data={data} />).split("<tr");
+
+        expect(rows[2]).toContain("richTextBlock__listItem--itemSpacing");
+        expect(rows[3]).not.toContain("richTextBlock__listItem--itemSpacing");
+    });
+
+    it("renders a level nested under a block that is not a list item inside that block's text", () => {
+        const data = createBlockData([
+            createDraftBlock({ key: "p", text: "A paragraph" }),
+            createDraftBlock({ key: "a", text: "Nested under the paragraph", type: "unordered-list-item", depth: 1 }),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />);
+
+        expect(markup.match(/richTextBlock__text/g)).toHaveLength(1);
+        expect(markup).toContain("richTextBlock__list--nested");
+        // The level still counts as the first one below the top, even though the block it nests into is not a list.
+        expect(markup).toContain("richTextBlock__list--depth1");
+        expect(markup.indexOf("A paragraph")).toBeLessThan(markup.indexOf("Nested under the paragraph"));
+    });
+
+    it("renders a level with nothing above it to nest into at the top level", () => {
+        const data = createBlockData([
+            createDraftBlock({ key: "empty", text: "", type: "unordered-list-item" }),
+            createDraftBlock({ key: "a", text: "Item one", type: "unordered-list-item", depth: 1 }),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />);
+
+        expect(markup).toContain("Item one");
+        expect(markup).not.toContain("richTextBlock__list--nested");
+    });
+
+    it("leaves no unprocessed MJML tag in the compiled mail", () => {
+        const data = createBlockData(
+            createNestedListBlocks([
+                { text: "Level one", depth: 0 },
+                { text: "Level two", depth: 1 },
+            ]),
+        );
+        const { html, mjmlWarnings } = renderMailHtml(
+            <MjmlMailRoot>
+                <MjmlSection indent>
+                    <MjmlColumn>
+                        <MjmlRichTextBlock data={data} />
+                    </MjmlColumn>
+                </MjmlSection>
+            </MjmlMailRoot>,
+        );
+
+        expect(html).toContain("Level two");
+        expect(html).not.toContain("<mj-");
+        expect(mjmlWarnings).toHaveLength(0);
     });
 });

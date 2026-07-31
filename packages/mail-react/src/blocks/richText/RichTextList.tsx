@@ -17,6 +17,10 @@ function variantModifier(variantName: string): string {
     return `richTextBlock__list--variant${variantName.charAt(0).toUpperCase()}${variantName.slice(1)}`;
 }
 
+function depthModifier(depth: number): string {
+    return `richTextBlock__list--depth${String(depth)}`;
+}
+
 interface RichTextListItem {
     key: string;
     content: ReactNode;
@@ -27,11 +31,13 @@ interface RichTextListProps {
     variant?: VariantName;
     /** When true, the variant's spacing below the block applies below the last item. */
     bottomSpacing?: boolean;
+    /** How many lists enclose this one. The caller does the nesting; this only names the level. */
+    depth?: number;
     items: RichTextListItem[];
 }
 
 /** Renders one draft-js list as a table, because cell padding is the only list indent Outlook applies reliably. */
-export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTextListProps): ReactNode {
+export function RichTextList({ ordered, variant, bottomSpacing, depth = 0, items }: RichTextListProps): ReactNode {
     const theme = useOptionalTheme();
     const outlookTextStyle = useOutlookTextStyle();
 
@@ -53,6 +59,11 @@ export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTex
         ...(outlookTextStyle?.lineHeight !== undefined && { msoLineHeightRule: "exactly" }),
     };
 
+    // A nested level's cells copy the text styles the enclosing text component resolved, not this
+    // list's own variant, so naming a variant here would misstate what they render with — and the
+    // enclosing table's modifier already applies to these cells anyway.
+    const variantClass = depth > 0 || !activeVariant ? undefined : variantModifier(activeVariant);
+
     const itemSpacing = getDefaultFromResponsiveValue(list.itemSpacing);
     const markerCellPadding: CSSProperties = {
         paddingLeft: getDefaultFromResponsiveValue(list.indent),
@@ -69,7 +80,11 @@ export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTex
             className={clsx(
                 "richTextBlock__list",
                 ordered ? "richTextBlock__list--ordered" : "richTextBlock__list--unordered",
-                activeVariant && variantModifier(activeVariant),
+                depthModifier(depth),
+                // Redundant with the depth modifier, but it lets a rule for every level below the
+                // outermost avoid both a per-depth selector list and `:not()`.
+                depth > 0 && "richTextBlock__list--nested",
+                variantClass,
             )}
             style={{ borderCollapse: "collapse" }}
         >

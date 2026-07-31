@@ -44,6 +44,7 @@ function HtmlBlockText({ bottomSpacing, variant, className, children, ...stylePr
 interface DraftBlock {
     key: string;
     text: string;
+    depth?: number;
 }
 
 function isDraftBlock(block: unknown): block is DraftBlock {
@@ -53,7 +54,11 @@ function isDraftBlock(block: unknown): block is DraftBlock {
 
     const { key, text } = block;
 
-    return typeof key === "string" && typeof text === "string";
+    if (typeof key !== "string" || typeof text !== "string") {
+        return false;
+    }
+
+    return !("depth" in block) || typeof block.depth === "number";
 }
 
 function isDraftContent(draftContent: unknown): draftContent is { blocks: DraftBlock[] } {
@@ -64,6 +69,23 @@ function isDraftContent(draftContent: unknown): draftContent is { blocks: DraftB
     const { blocks } = draftContent;
 
     return Array.isArray(blocks) && blocks.every(isDraftBlock);
+}
+
+/**
+ * `redraft`'s grouping throws when a depth jumps by more than one level, or when the first block has
+ * any depth at all. Draft's own data never does that, but dropping the empty blocks can. Clamping
+ * also keeps each depth equal to the level the renderer nests the block at.
+ */
+function withNestableDepths(blocks: DraftBlock[]): DraftBlock[] {
+    let previousDepth = -1;
+
+    return blocks.map((block) => {
+        const requestedDepth = Math.max(block.depth ?? 0, 0);
+        const depth = Math.min(requestedDepth, previousDepth + 1);
+        previousDepth = depth;
+
+        return { ...block, depth };
+    });
 }
 
 interface RenderRichTextContentOptions {
@@ -88,7 +110,7 @@ function renderRichTextContent({ draftContent, blockTypes, linkTypes, inline, bl
 
     const renderers = createRichTextRenderers({ blockTypes, linkTypes, inline, blockTextComponent, lastBlockKey });
 
-    return redraft({ ...draftContent, blocks: blocksWithText }, renderers);
+    return redraft({ ...draftContent, blocks: withNestableDepths(blocksWithText) }, renderers);
 }
 
 /**

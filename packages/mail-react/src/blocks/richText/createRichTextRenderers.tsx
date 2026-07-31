@@ -94,20 +94,28 @@ function createListBlockRenderFn({
     blockTypeProps,
     lastBlockKey,
 }: CreateBlockRenderFnOptions & { ordered: boolean }): TextBlockRenderFn {
-    return (children, { keys }) => (
-        <BlockText
-            key={keys.join("-")}
-            bottomSpacing={false} // The list holds this space itself — applying it here too would double it.
-            {...blockTypeProps}
-        >
-            <RichTextList
-                ordered={ordered}
-                variant={blockTypeProps.variant}
-                bottomSpacing={!keys.includes(lastBlockKey)}
-                items={children.map((child, index) => ({ key: keys[index], content: renderWithLineBreaks(child) }))}
-            />
-        </BlockText>
-    );
+    return (children, { keys, depth }) => {
+        const items = children.map((child, index) => ({ key: keys[index], content: renderWithLineBreaks(child) }));
+        const key = keys.join("-");
+
+        // A nested level renders into the enclosing item's text cell, which is already inside a text
+        // component. Wrapping it in a second one leaves a literal `mj-text` tag in the compiled HTML,
+        // since MJML does not process the content of an ending tag. The enclosing item provides the
+        // space below it, so it takes no bottom spacing of its own either.
+        if (depth > 0) {
+            return <RichTextList key={key} depth={depth} ordered={ordered} items={items} />;
+        }
+
+        return (
+            <BlockText
+                key={key}
+                bottomSpacing={false} // The list holds this space itself — applying it here too would double it.
+                {...blockTypeProps}
+            >
+                <RichTextList ordered={ordered} variant={blockTypeProps.variant} bottomSpacing={!keys.includes(lastBlockKey)} items={items} />
+            </BlockText>
+        );
+    };
 }
 
 const listBlockTypes = ["unordered-list-item", "ordered-list-item"];
