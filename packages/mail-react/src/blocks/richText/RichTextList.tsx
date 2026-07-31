@@ -3,12 +3,12 @@ import type { CSSProperties, ReactNode } from "react";
 
 import { useOutlookTextStyle } from "../../components/text/OutlookTextStyleContext.js";
 import { generateResponsiveTextCss } from "../../components/text/textStyles.js";
+import { generateResponsiveTokenCss } from "../../styles/generateResponsiveVariantCss.js";
 import { registerStyles } from "../../styles/registerStyles.js";
 import { defaultTheme } from "../../theme/defaultTheme.js";
-import { getDefaultFromResponsiveValue, getDefaultOrUndefined, getResponsiveOverrides } from "../../theme/responsiveValue.js";
+import { getDefaultFromResponsiveValue, getDefaultOrUndefined } from "../../theme/responsiveValue.js";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
-import type { TextVariantStyles, Theme, ThemeBreakpoint, ThemeBreakpoints, ThemeList, ThemeText, VariantName } from "../../theme/themeTypes.js";
-import { css } from "../../utils/css.js";
+import type { TextVariantStyles, Theme, ThemeText, VariantName } from "../../theme/themeTypes.js";
 
 const unorderedMarker = "•";
 
@@ -120,57 +120,24 @@ export function generateRichTextListStyles(theme: Theme): string {
         .join("\n");
 }
 
-type DeclarationsBySelector = Map<string, string[]>;
-
-const listSpacingProperties: Array<{ token: keyof ThemeList; selector: string; cssProperty: string }> = [
-    { token: "indent", selector: ".richTextBlock__listItemMarker", cssProperty: "padding-left" },
-    { token: "markerGap", selector: ".richTextBlock__listItemMarker", cssProperty: "padding-right" },
-    { token: "itemSpacing", selector: ".richTextBlock__listItem--itemSpacing > td", cssProperty: "padding-bottom" },
-];
-
 function generateResponsiveListSpacingCss(theme: Theme): string {
-    return [...groupListSpacingOverridesByBreakpoint(theme.list)]
-        .map(([breakpointKey, declarationsBySelector]) => {
-            const breakpoint = theme.breakpoints[breakpointKey];
-            return breakpoint ? renderMediaQuery(breakpoint, declarationsBySelector) : "";
-        })
+    return [
+        generateResponsiveTokenCss({
+            breakpoints: theme.breakpoints,
+            selector: ".richTextBlock__listItemMarker",
+            tokens: [
+                { value: theme.list.indent, cssProperty: "padding-left", unit: "px" },
+                { value: theme.list.markerGap, cssProperty: "padding-right", unit: "px" },
+            ],
+        }),
+        generateResponsiveTokenCss({
+            breakpoints: theme.breakpoints,
+            selector: ".richTextBlock__listItem--itemSpacing > td",
+            tokens: [{ value: theme.list.itemSpacing, cssProperty: "padding-bottom", unit: "px" }],
+        }),
+    ]
         .filter(Boolean)
         .join("\n");
-}
-
-function groupListSpacingOverridesByBreakpoint(list: ThemeList): Map<keyof ThemeBreakpoints, DeclarationsBySelector> {
-    const declarationsByBreakpoint = new Map<keyof ThemeBreakpoints, DeclarationsBySelector>();
-
-    for (const { token, selector, cssProperty } of listSpacingProperties) {
-        for (const override of getResponsiveOverrides(list[token])) {
-            const declarationsBySelector = declarationsByBreakpoint.get(override.breakpointKey) ?? new Map<string, string[]>();
-            const declarations = declarationsBySelector.get(selector) ?? [];
-
-            declarations.push(`${cssProperty}: ${String(override.value)}px !important`);
-            declarationsBySelector.set(selector, declarations);
-            declarationsByBreakpoint.set(override.breakpointKey, declarationsBySelector);
-        }
-    }
-
-    return declarationsByBreakpoint;
-}
-
-function renderMediaQuery(breakpoint: ThemeBreakpoint, declarationsBySelector: DeclarationsBySelector): string {
-    const rules = [...declarationsBySelector]
-        .map(
-            ([selector, declarations]) => css`
-                ${selector} {
-                    ${declarations.join(";\n")}
-                }
-            `,
-        )
-        .join("\n");
-
-    return css`
-        ${breakpoint.belowMediaQuery} {
-            ${rules}
-        }
-    `;
 }
 
 registerStyles(generateRichTextListStyles);
