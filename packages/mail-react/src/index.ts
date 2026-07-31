@@ -57,6 +57,7 @@ export type {
     ThemeButton,
     ThemeColors,
     ThemeDivider,
+    ThemeList,
     ThemeSizes,
     ThemeText,
 } from "./theme/themeTypes.js";
