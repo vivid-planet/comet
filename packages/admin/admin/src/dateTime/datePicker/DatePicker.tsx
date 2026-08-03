@@ -4,7 +4,7 @@ import { DatePicker as MuiDatePicker, type DatePickerProps as MuiDatePickerProps
 import { type ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { ClearInputAdornment as BaseClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -15,7 +15,7 @@ export type DatePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdorn
 
 export type DatePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiDatePicker;
-    clearInputAdornment: typeof CometClearInputAdornment;
+    clearInputAdornment: typeof BaseClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
@@ -164,7 +164,7 @@ const Root = createComponentSlot(MuiDatePicker)<DatePickerClassKey>({
     }
 `);
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DatePickerClassKey>({
+const ClearInputAdornment = createComponentSlot(BaseClearInputAdornment)<DatePickerClassKey>({
     componentName: "DatePicker",
     slotName: "clearInputAdornment",
 })();

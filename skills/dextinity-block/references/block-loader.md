@@ -297,7 +297,7 @@ Register the loader in the project's `recursivelyLoadBlockData.ts` wrapper (typi
 2. Add an entry to the `blockLoaders` record, keyed by the **block type name** (the name string passed to `createBlock` in the API, without the `Block` suffix in the key).
 
 ```ts
-import { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData as cometRecursivelyLoadBlockData } from "@dextinity/site-nextjs";
+import { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData as baseRecursivelyLoadBlockData } from "@dextinity/site-nextjs";
 import { type AllBlockNames } from "@src/blocks.generated";
 import { loader as myEntityLoader } from "@src/path/to/blocks/MyEntityBlock.loader";
 
