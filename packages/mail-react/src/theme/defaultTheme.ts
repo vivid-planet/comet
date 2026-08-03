@@ -17,6 +17,7 @@ export const defaultTheme: Theme = {
         fontSize: "16px",
         lineHeight: "20px",
         bottomSpacing: "16px",
+        color: "#000000",
     },
     divider: defaultDividerStyles,
     button: defaultButtonStyles,
