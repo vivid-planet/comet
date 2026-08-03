@@ -229,11 +229,11 @@ export class UserPermissionsService {
     }
 
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
-        if (request?.cookies["comet-impersonate-user-id"]) {
+        if (request?.cookies["dextinity-impersonate-user-id"]) {
             const permissions = await this.getPermissions(authenticatedUser);
             if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
-                    const user = await this.findUserOrThrow(request.cookies["comet-impersonate-user-id"]);
+                    const user = await this.findUserOrThrow(request.cookies["dextinity-impersonate-user-id"]);
                     if (
                         await AbstractAccessControlService.isEqualOrMorePermissions(
                             await this.getPermissionsAndContentScopes(authenticatedUser),
