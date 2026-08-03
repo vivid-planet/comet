@@ -1,11 +1,11 @@
 ---
-name: comet-minor-update
-description: Performs a minor or patch version bump of all @dextinity/* packages across a Comet project (root, api, admin, and any site packages — zero, one, or many) to the newest version within the current major from npm, then installs. Use when the user asks to update Comet, bump Comet packages, do a minor Comet update, or upgrade Comet to the latest patch/minor of the current major.
+name: dextinity-minor-update
+description: Performs a minor or patch version bump of all @dextinity/* packages across a Dextinity project (root, api, admin, and any site packages — zero, one, or many) to the newest version within the current major from npm, then installs. Use when the user asks to update Dextinity, bump Dextinity packages, do a minor Dextinity update, or upgrade Dextinity to the latest patch/minor of the current major.
 ---
 
-# Comet Minor/Patch Update Skill
+# Dextinity Minor/Patch Update Skill
 
-A Comet project is not an npm workspace — the repo root, `api/`, `admin/`, and any site packages (zero, one, or many) each have their own `package.json` and `package-lock.json`. A minor or patch Comet update therefore means updating every occurrence of every `@dextinity/*` dependency across those files to the same new version, then running `npm install` in each directory so each lockfile picks up the new version.
+A Dextinity project is not an npm workspace — the repo root, `api/`, `admin/`, and any site packages (zero, one, or many) each have their own `package.json` and `package-lock.json`. A minor or patch Dextinity update therefore means updating every occurrence of every `@dextinity/*` dependency across those files to the same new version, then running `npm install` in each directory so each lockfile picks up the new version.
 
 This skill covers **minor and patch** updates within the current major only (e.g. `8.20.4 → 8.21.0`). Major upgrades (e.g. `8.x → 9.x`) are different — they typically ship breaking changes, codemods, and migration guides, and are out of scope here.
 
@@ -16,12 +16,12 @@ Two rules hold across every `@dextinity/*` core package in the project, before a
 - **Pinned versions only.** Every core `@dextinity/*` entry must be an exact version (e.g. `8.21.0`), never a range (`^8.21.0`, `~8.21.0`, `>=…`). If you see a caret or tilde on a core package, the project is in a broken state — stop and tell the user.
 - **All core packages on the same version.** Every core `@dextinity/*` package in the project must be pinned to the same version across every `package.json`. There is no supported mix-and-match.
 
-These rules apply only to the core set (packages released together from the Comet monorepo). Satellite packages like `@comet/dev-process-manager` are out of scope — see Step 1.
+These rules apply only to the core set (packages released together from the Dextinity monorepo). Satellite packages like `@comet/dev-process-manager` are out of scope — see Step 1.
 
 ## When to use
 
-- "Do a minor comet update"
-- "Update comet" / "bump comet" / "update all comet packages"
+- "Do a minor dextinity update"
+- "Update dextinity" / "bump dextinity" / "update all dextinity packages"
 - "Upgrade to the latest patch of the current major"
 - "Update `@dextinity/cms-api` and friends to the newest 8.x"
 
@@ -31,7 +31,7 @@ If the user asks for a **major** bump (crossing major versions), stop and tell t
 
 ## Workflow
 
-1. [Find all `@dextinity/*` dependencies and their current version](#step-1--find-all-comet-dependencies)
+1. [Find all `@dextinity/*` dependencies and their current version](#step-1--find-all-dextinity-dependencies)
 2. [Find the newest version in the current major on npm](#step-2--find-the-newest-version-in-the-current-major)
 3. [Update every `package.json`](#step-3--update-every-packagejson)
 4. [Install](#step-4--install)
@@ -60,7 +60,7 @@ grep -n '"@dextinity/' package.json api/package.json admin/package.json \
 
 Notes:
 
-- Not every `@dextinity/*` package follows the core release cadence. Packages that live outside the core monorepo (for example `@comet/dev-process-manager`) may use a different versioning scheme (often `^x.y.z`). **Only** bump packages whose current version matches the core Comet version (the one shared by `@dextinity/cms-api`, `@dextinity/admin`, `@dextinity/site-nextjs`, etc.). Leave the others untouched.
+- Not every `@dextinity/*` package follows the core release cadence. Packages that live outside the core monorepo (for example `@comet/dev-process-manager`) may use a different versioning scheme (often `^x.y.z`). **Only** bump packages whose current version matches the core Dextinity version (the one shared by `@dextinity/cms-api`, `@dextinity/admin`, `@dextinity/site-nextjs`, etc.). Leave the others untouched.
 - Use the invariants to tell core from satellite: core packages are all pinned to the same exact version, with no caret or tilde. Anything with a range or a different version is not core — verify before touching it.
 - If you find core packages on different versions, or any core package using a range (`^`, `~`), the project violates the invariants. Stop and tell the user — don't paper over it by bumping.
 
@@ -161,7 +161,7 @@ If a project has a top-level lint/test script in the root `package.json`, run th
 What to do with the output:
 
 - **All green:** mention it briefly in the report.
-- **Failures:** report the failing command, the directory, and the first few error lines. Do not attempt to fix lint/test failures — they may indicate a real regression in the new Comet version, or pre-existing issues unrelated to the bump. The user decides.
+- **Failures:** report the failing command, the directory, and the first few error lines. Do not attempt to fix lint/test failures — they may indicate a real regression in the new Dextinity version, or pre-existing issues unrelated to the bump. The user decides.
 - **Type errors specifically:** these often come from stale generated files (`block-meta.json`, GraphQL schema) that only refresh when the app boots. Flag this possibility in the report so the user knows to start the dev server before assuming the bump broke types.
 
 ---
@@ -175,7 +175,7 @@ Tell the user:
 - That each lockfile was updated and install succeeded
 - The verify results (lint/tests green, or which ones failed and where)
 - Anything suspicious you noticed (e.g. "the api/ install emitted a peer-dep warning about X — probably benign but worth a look")
-- **Remind the user to start the app once** (`npm run dev`). A minor Comet release can ship changes to generated artifacts like `block-meta.json` or the GraphQL schema, which are only regenerated when the app boots. Without this step, stale generated files can cause confusing type errors or runtime mismatches.
+- **Remind the user to start the app once** (`npm run dev`). A minor Dextinity release can ship changes to generated artifacts like `block-meta.json` or the GraphQL schema, which are only regenerated when the app boots. Without this step, stale generated files can cause confusing type errors or runtime mismatches.
 
 ---
 

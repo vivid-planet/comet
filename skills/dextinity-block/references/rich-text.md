@@ -1,6 +1,6 @@
 # RichText Block Rules
 
-Detailed rules for creating and configuring RichText blocks in Comet. Load this file when a block contains a rich text field.
+Detailed rules for creating and configuring RichText blocks in Dextinity. Load this file when a block contains a rich text field.
 
 ---
 

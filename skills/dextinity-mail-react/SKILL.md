@@ -1,6 +1,6 @@
 ---
-name: comet-mail-react
-description: Guide for building HTML emails with @dextinity/mail-react and MJML. Use whenever working on email templates, mail markup, MJML components, email theming, email styling, responsive emails, column layouts, multi-column email sections, rendering Comet CMS block data (such as pixel-image blocks) in emails, or anything involving @dextinity/mail-react or HTML email development — even for seemingly simple tasks like putting content side-by-side in columns, since email client compatibility is a minefield that requires specific patterns and research before implementing.
+name: dextinity-mail-react
+description: Guide for building HTML emails with @dextinity/mail-react and MJML. Use whenever working on email templates, mail markup, MJML components, email theming, email styling, responsive emails, column layouts, multi-column email sections, rendering Dextinity CMS block data (such as pixel-image blocks) in emails, or anything involving @dextinity/mail-react or HTML email development — even for seemingly simple tasks like putting content side-by-side in columns, since email client compatibility is a minefield that requires specific patterns and research before implementing.
 ---
 
 # Building HTML Emails with @dextinity/mail-react
@@ -267,7 +267,7 @@ const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
 | `MjmlColumn`          | Vertical column inside a section                                   | —                                                               |
 | `MjmlText`            | Themed text block with typography variants                         | `.mjmlText`, `.mjmlText--{variant}`, `.mjmlText--bottomSpacing` |
 | `MjmlImage`           | Responsive image                                                   | `.mjmlImage`                                                    |
-| `MjmlPixelImageBlock` | Renders a Comet CMS `PixelImageBlockData` via `MjmlImage`          | `.mjmlPixelImageBlock`                                          |
+| `MjmlPixelImageBlock` | Renders a Dextinity CMS `PixelImageBlockData` via `MjmlImage`      | `.mjmlPixelImageBlock`                                          |
 | `MjmlButton`          | Themed button (ending tag), theme styling and variants             | `.mjmlButton`, `.mjmlButton--{variant}`                         |
 | `MjmlDivider`         | Themed horizontal divider, configurable through theme and variants | `.mjmlDivider`, `.mjmlDivider--{variant}`                       |
 | `MjmlSpacer`          | Vertical spacing                                                   | —                                                               |
@@ -280,7 +280,7 @@ const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
 | `HtmlText`            | Themed text rendered as an HTML element                            | `.htmlText`, `.htmlText--{variant}`, `.htmlText--bottomSpacing` |
 | `HtmlInlineLink`      | `<a>` that inherits parent text styles, works in Outlook           | `.htmlInlineLink`                                               |
 | `HtmlImage`           | Responsive image (`<img>`)                                         | `.htmlImage`                                                    |
-| `HtmlPixelImageBlock` | Renders a Comet CMS `PixelImageBlockData` as `<img>`               | `.htmlPixelImageBlock`                                          |
+| `HtmlPixelImageBlock` | Renders a Dextinity CMS `PixelImageBlockData` as `<img>`           | `.htmlPixelImageBlock`                                          |
 | `HtmlButton`          | Themed button for ending tags or non-MJML contexts                 | `.htmlButton`, `.htmlButton--{variant}`                         |
 | `HtmlDivider`         | Themed horizontal divider, configurable through theme and variants | `.htmlDivider`, `.htmlDivider--{variant}`                       |
 
@@ -294,7 +294,7 @@ All components are imported from `@dextinity/mail-react` — never from `@faire/
 
 ## Blocks
 
-`@dextinity/mail-react` ships components that render Comet CMS block data — currently pixel-image and rich-text blocks. Reach for these instead of hand-rolled markup whenever the source is a CMS block-data record.
+`@dextinity/mail-react` ships components that render Dextinity CMS block data — currently pixel-image and rich-text blocks. Reach for these instead of hand-rolled markup whenever the source is a CMS block-data record.
 
 ### Pixel-image blocks
 
@@ -615,7 +615,7 @@ Storybook previews show how the email renders in a web browser, but email client
 
 ## Related Modules
 
-The `@dextinity/mail-react` package focuses on building email markup. For sending emails and managing templates in a Comet project:
+The `@dextinity/mail-react` package focuses on building email markup. For sending emails and managing templates in a Dextinity project:
 
 - **Mail Templates Module** — server-side template registration, dependency injection, and sending. Integrates with `@dextinity/mail-react` via `renderMailHtml`. Docs: https://docs.comet-dxp.com/docs/features-modules/mail-templates-module/
 - **Mailer Module** — lower-level mail sending service. Docs: https://docs.comet-dxp.com/docs/features-modules/mailer-module/

@@ -1,7 +1,7 @@
 {
     "name": "@dextinity/agent-features",
     "version": "1.0.0",
-    "description": "Agent features (skills and rules) for Comet projects",
+    "description": "Agent features (skills and rules) for Dextinity projects",
     "repository": {
         "directory": "packages/agent-features",
         "type": "git",

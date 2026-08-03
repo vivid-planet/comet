@@ -1,13 +1,13 @@
 ---
-name: comet-major-migration
-description: Migrates a Comet project across a major version (e.g. v4 → v5, v5 → v6). Use when the user asks to upgrade Comet, follow a Comet migration guide, or bump @dextinity/* packages to a new major.
+name: dextinity-major-migration
+description: Migrates a Dextinity project across a major version (e.g. v4 → v5, v5 → v6). Use when the user asks to upgrade Dextinity, follow a Dextinity migration guide, or bump @dextinity/* packages to a new major.
 ---
 
-# Major Comet Version Migration Skill
+# Major Dextinity Version Migration Skill
 
 ## When to use
 
-Upgrading `@dextinity/*` packages across a major version in a project (root, API, Admin, Site). A Comet major typically bundles breaking changes across React / Next.js / MUI X and may require updating peer/third-party packages.
+Upgrading `@dextinity/*` packages across a major version in a project (root, API, Admin, Site). A Dextinity major typically bundles breaking changes across React / Next.js / MUI X and may require updating peer/third-party packages.
 
 Do NOT use for minor or patch upgrades, or for ongoing feature work on a project already on the target major.
 
@@ -38,7 +38,7 @@ Substitute `{N+1}.` with the target major (e.g. `9.`). Pin every core `@dextinit
 
 ## Detect the project shape
 
-Before starting, figure out what's in this project. Comet projects vary — **anywhere between 0 and N sites is possible**:
+Before starting, figure out what's in this project. Dextinity projects vary — **anywhere between 0 and N sites is possible**:
 
 - **0 sites** — admin-only/headless. **Skip every site step in the guide** (package.json edits, codemods, config, verification). Don't treat the missing site as an error.
 - **1 site** — run the site section once.
@@ -103,7 +103,7 @@ After the full migration is committed:
 Example prompt:
 
 ```
-The branch <branch> migrates this project from Comet v{N} to v{N+1}.
+The branch <branch> migrates this project from Dextinity v{N} to v{N+1}.
 The migration guide is at <raw-md-url>.
 
 For every section and sub-bullet in the guide, verify that a commit in
@@ -129,7 +129,7 @@ If the user agrees and prerequisites are met, **dispatch the smoke test in a fre
 
 Two things to substitute in the prompt:
 
-- The **absolute path** to `references/migration-smoke-test.md` inside this skill. The skill lives wherever Claude Code installed it (typically `~/.claude/skills/comet-major-migration/` or `<project>/.claude/skills/comet-major-migration/`). Resolve `references/migration-smoke-test.md` relative to the SKILL.md you're reading.
+- The **absolute path** to `references/migration-smoke-test.md` inside this skill. The skill lives wherever Claude Code installed it (typically `~/.claude/skills/dextinity-major-migration/` or `<project>/.claude/skills/dextinity-major-migration/`). Resolve `references/migration-smoke-test.md` relative to the SKILL.md you're reading.
 - The **detected site list** with dev URLs, and **whether the project has a page tree** (see [Detect the project shape](#detect-the-project-shape)).
 
 ```

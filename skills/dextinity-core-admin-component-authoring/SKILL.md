@@ -1,5 +1,5 @@
 ---
-name: comet-core-admin-component-authoring
+name: dextinity-core-admin-component-authoring
 description: Authoring or changing a component in @dextinity/admin or a sibling package that uses its slot and theme machinery (admin-color-picker, admin-date-time, admin-rte) so it supports MUI-style customization: per-instance sx/className overrides, theme styleOverrides, and defaultProps. Use whenever adding a new component or editing an existing one's slots, props, class keys, overridable icons, or theme-type registration — even for small changes.
 metadata:
     internal: true
@@ -37,7 +37,7 @@ follow the doc — and tell the user so this checklist can be corrected.
 ## When not to use this skill
 
 If you are building admin UI in a **project that consumes** `@dextinity/admin` (pages,
-dashboards, dialogs, composing existing components), use the **`comet-admin-ui`** skill
+dashboards, dialogs, composing existing components), use the **`dextinity-admin-ui`** skill
 instead — that is a different job with different rules. This skill is only for authoring
 the library's own components.
 

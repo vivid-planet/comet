@@ -111,7 +111,7 @@ Any URL that falls through to not-found may produce _additional_ errors from the
 Apply one of three labels _while_ walking, not after:
 
 1. **Project-fixable** — broken code is under `admin/src`, `site/src`, `api/src`. Belongs in the migration PR or a follow-up.
-2. **Comet upstream** — broken code is under `node_modules/@dextinity/*`. Surface to the user; don't workaround.
+2. **Dextinity upstream** — broken code is under `node_modules/@dextinity/*`. Surface to the user; don't workaround.
 3. **Pre-existing / out-of-scope** — same warning pre-existed the migration. Note once at the bottom; don't itemize per-route.
 
 If you can't tell which bucket, grep for the symbol in the project source — if absent, it's upstream or a transitive dep.
@@ -160,7 +160,7 @@ Scope: <admin route count> admin routes; per site, <URL count> sampled from <tot
 
 <grouped by error class, e.g. "0 errors", "1 error — <error string>">
 
-## Hand off to Comet upstream
+## Hand off to Dextinity upstream
 
 <numbered list of upstream bugs with @dextinity/\* module paths>
 

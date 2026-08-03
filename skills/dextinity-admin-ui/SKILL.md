@@ -1,13 +1,13 @@
 ---
-name: comet-admin-ui
-description: Building or editing admin UI in a project that uses @dextinity/admin and its sibling packages — pages, dashboards, dialogs, widgets, layouts, or component styling. Use even for small UI changes, to build with Comet's theme, components, and helpers instead of custom sx/styled CSS, hard-coded values, or Box layouts.
+name: dextinity-admin-ui
+description: Building or editing admin UI in a project that uses @dextinity/admin and its sibling packages — pages, dashboards, dialogs, widgets, layouts, or component styling. Use even for small UI changes, to build with Dextinity's theme, components, and helpers instead of custom sx/styled CSS, hard-coded values, or Box layouts.
 ---
 
 # Building admin UIs with @dextinity/admin
 
 `@dextinity/admin` and its sibling packages ship a design system: a theme (spacing,
 colors, shadows, typography, breakpoints) and a library of ready-made components. For
-internationalization, Comet recommends `react-intl` (the default) to translate text, numbers, and
+internationalization, Dextinity recommends `react-intl` (the default) to translate text, numbers, and
 dates. The components and types are available in the consuming project through the installed
 packages — import them directly (e.g. `import { Button, MainContent } from "@dextinity/admin"`).
 
@@ -16,7 +16,7 @@ after the system genuinely can't express what you need.
 
 ## Core principle
 
-**Prefer Comet's theme values, components, and helpers over custom styling.** Three reasons:
+**Prefer Dextinity's theme values, components, and helpers over custom styling.** Three reasons:
 
 1. **Reviewability.** When styling lives in the theme and in components, the markup stays
    declarative and diffs stay small. A component that mixes `sx`, inline `style`, and `styled()`
@@ -24,13 +24,13 @@ after the system genuinely can't express what you need.
 2. **Automatic upgrades.** A project's visual design is often built against a _future_ version of
    the design system, so it won't fully match what the currently installed components and theme
    produce. That gap is expected — it is not a reason to add custom styling to force the match.
-   Use the current Comet components and tokens as they are; a later library upgrade closes the gap
+   Use the current Dextinity components and tokens as they are; a later library upgrade closes the gap
    on its own, with no hand-written CSS to find and rework.
 3. **Consistency.** Every screen built from the same components and tokens looks and behaves the
    same way.
 
 This holds **even when a project's design deliberately differs** from the current library
-defaults: prefer the Comet component or token, and apply that project-specific difference by
+defaults: prefer the Dextinity component or token, and apply that project-specific difference by
 configuring the theme — not by re-styling individual components. Add custom styling only when
 explicitly instructed, or when no component, prop, or token can produce the result.
 
@@ -79,7 +79,7 @@ const Panel = styled("div")`
 
 Read spacing and color from the theme instead of typing pixels and hex codes. The theme is the
 single place those values are defined, so reading from it keeps every screen consistent and lets a
-theme change reach all of them at once. Comet's spacing base is `5px` — `theme.spacing(1)` is `5px`,
+theme change reach all of them at once. Dextinity's spacing base is `5px` — `theme.spacing(1)` is `5px`,
 `theme.spacing(2)` is `10px` — and it takes up to four arguments for top, right, bottom, and left.
 
 ```tsx
@@ -103,7 +103,7 @@ Use the palette tokens — `primary`, `secondary`, `error`, `warning`, `info`, `
 
 ### Elevation and shape: `elevation` and `square`, not manual CSS
 
-Shadows and corner radius come from props on `Paper` and `Card`, not hand-written CSS. Comet defines
+Shadows and corner radius come from props on `Paper` and `Card`, not hand-written CSS. Dextinity defines
 four shadow elevations (1–4); higher values are `none`. The `elevation` prop selects one, and the
 `square` prop toggles the rounded corner. Read `theme.shadows[n]` directly only inside a `styled()`
 component that cannot be a `Paper` or `Card`.
@@ -160,7 +160,7 @@ generically-named file only when explicitly instructed.
 
 ## Internationalization
 
-Comet recommends `react-intl` (the default). When a project uses it, its user-facing text,
+Dextinity recommends `react-intl` (the default). When a project uses it, its user-facing text,
 numbers, and dates go through the `react-intl` helpers instead of being hard-coded.
 
 ### Text: `<FormattedMessage>` and `useIntl`, not literals
@@ -287,7 +287,7 @@ For responsive behaviour, pass a per-breakpoint object to these props (`size` on
 `direction` on `Stack`); inside a `styled()` component, use `theme.breakpoints` for media
 queries.
 
-Don't use `Grid` or `Stack` to lay out form fields: Comet stacks them vertically at full width,
+Don't use `Grid` or `Stack` to lay out form fields: Dextinity stacks them vertically at full width,
 grouped with `FieldSet` or `FormSection`.
 
 `sx` is fine for an occasional layout property that no `Stack` or `Grid` prop covers, such as
@@ -324,7 +324,7 @@ its parts instead of assembling one from a flex row:
 <MainContent>{children}</MainContent>;
 ```
 
-When a page is rendered inside a Comet navigation `Stack` (nested master–detail views), use the
+When a page is rendered inside a Dextinity navigation `Stack` (nested master–detail views), use the
 `StackMainContent` and `StackToolbar` variants instead: they render only for the active stack
 level, so nested pages don't show duplicate toolbars.
 
@@ -376,7 +376,7 @@ form's fields in it. Inside a dialog or sidebar, group fields with `FormSection`
 titled section with a divider. For a dashboard widget, if the project uses `@dextinity/cms-admin` (most
 do), use its ready-made `DashboardWidgetRoot` rather than building one by hand; when you compose a
 container yourself, build it from MUI's `Card` (with `CardHeader` and `CardContent`) or `Paper`, with
-`Typography` for text and `Grid` for layout — Comet themes `Card`, `Paper`, and `Typography`, so they
+`Typography` for text and `Grid` for layout — Dextinity themes `Card`, `Paper`, and `Typography`, so they
 carry the right elevation, radius, and type scale without custom CSS, while `Grid` takes its spacing
 from the theme. `Card`, `CardHeader`, `CardContent`, `Paper`, `Typography`, and `Grid` come from
 `@mui/material`; `FieldSet` and `FormSection` from `@dextinity/admin`.
@@ -453,9 +453,9 @@ Show status, loading, dialogs, and tooltips through the components rather than a
 `div`s and state. `Alert` takes a `severity` (`info`, `warning`, `error`, `success`), a `title`, an
 `action`, and an `onClose`. `Loading` renders the standard spinner; its `behavior` prop (`auto`,
 `fillParent`, `fillParentAbsolute`, `fillPageHeight`) sets whether it renders inline, fills its
-parent, or fills the page. Use `Dialog` and `Tooltip` from `@dextinity/admin` — Comet's own wrappers, not
+parent, or fills the page. Use `Dialog` and `Tooltip` from `@dextinity/admin` — Dextinity's own wrappers, not
 MUI's directly. For a transient confirmation, call `showSnackbar()` from `useSnackbarApi()` with a
-snackbar element — Comet's `UndoSnackbar`, or a MUI `Snackbar` wrapping an `Alert` — and mount
+snackbar element — Dextinity's `UndoSnackbar`, or a MUI `Snackbar` wrapping an `Alert` — and mount
 `SnackbarProvider` near the app root.
 
 ```tsx
@@ -485,7 +485,7 @@ import deleteIcon from "./delete.svg";
 
 <img src={deleteIcon} width={16} alt="" />;
 
-// Prefer — a named icon from the Comet set, sized and colored through props
+// Prefer — a named icon from the Dextinity set, sized and colored through props
 import { Delete } from "@dextinity/admin-icons";
 
 <Delete fontSize="small" color="error" />;

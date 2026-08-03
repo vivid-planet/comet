@@ -1,9 +1,9 @@
 ---
-name: comet-block
-description: Creates and edits Comet blocks (API, Admin, Site) from natural-language prompts, including block fixture services. Use when the user asks to create a new block, edit an existing block, add/remove/change fields or child blocks, scaffold block files, or create block fixtures in a Comet project.
+name: dextinity-block
+description: Creates and edits Dextinity blocks (API, Admin, Site) from natural-language prompts, including block fixture services. Use when the user asks to create a new block, edit an existing block, add/remove/change fields or child blocks, scaffold block files, or create block fixtures in a Dextinity project.
 ---
 
-# Comet Block Skill
+# Dextinity Block Skill
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ description: Creates and edits Comet blocks (API, Admin, Site) from natural-lang
 
 ## When to use
 
-- Creating a **new** Comet block from a natural-language description.
+- Creating a **new** Dextinity block from a natural-language description.
 - Scaffolding block files across API, Admin, and Site layers.
 - Adding, removing, or changing fields or child blocks in an existing block.
 - Changing enum values, field types, or property names in an existing block.

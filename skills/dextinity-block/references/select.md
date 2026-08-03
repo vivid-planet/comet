@@ -1,6 +1,6 @@
 # Select Field Patterns
 
-Comet-specific patterns for select (dropdown) fields. Load this file when a block contains a select/enum field.
+Dextinity-specific patterns for select (dropdown) fields. Load this file when a block contains a select/enum field.
 
 The basic enum definition (`export enum Variant { ... }`, `@IsEnum`, `@BlockField({ type: "enum" })`) is covered in api-patterns.md. The full `createCompositeBlockSelectField` options table is in admin-patterns.md. This file covers the **unique patterns** only.
 

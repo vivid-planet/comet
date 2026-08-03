@@ -1,6 +1,6 @@
 # Block Types Overview
 
-Comet provides five core block types. Choose based on how content editors interact with the block.
+Dextinity provides five core block types. Choose based on how content editors interact with the block.
 
 ## Decision Guide
 

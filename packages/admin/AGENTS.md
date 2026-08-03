@@ -1,6 +1,6 @@
 # Admin Packages
 
-This directory contains all admin-related packages for the Comet framework.
+This directory contains all admin-related packages for the Dextinity framework.
 
 ## Packages
 
@@ -37,7 +37,7 @@ pnpm run build-storybook
 
 ### Root Storybook (repo-level)
 
-Located in `storybook/` at the repo root. Aggregates stories across multiple Comet packages and references the `@dextinity/admin` Storybook.
+Located in `storybook/` at the repo root. Aggregates stories across multiple Dextinity packages and references the `@dextinity/admin` Storybook.
 
 - Runs on port **26638**
 

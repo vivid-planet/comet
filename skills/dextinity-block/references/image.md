@@ -1,12 +1,12 @@
 # Image Block Selection Rules
 
-Detailed rules for choosing and using the correct image block in Comet. Load this file when a block contains an image or media property.
+Detailed rules for choosing and using the correct image block in Dextinity. Load this file when a block contains an image or media property.
 
 ---
 
 ## Overview
 
-Comet provides three built-in image blocks (`DamImageBlock`, `PixelImageBlock`, `SvgImageBlock`) and a project-specific `MediaBlock` pattern. Each block accepts different file types and has different capabilities. Selecting the wrong block leads to editors being unable to upload the file type they need, or missing features like cropping and optimization.
+Dextinity provides three built-in image blocks (`DamImageBlock`, `PixelImageBlock`, `SvgImageBlock`) and a project-specific `MediaBlock` pattern. Each block accepts different file types and has different capabilities. Selecting the wrong block leads to editors being unable to upload the file type they need, or missing features like cropping and optimization.
 
 ---
 
@@ -31,7 +31,7 @@ Work through these questions in order. Stop at the first "Yes".
 | `DamImageBlock`   | Yes                           | Yes | No    | Yes (pixel images only) | `@dextinity/cms-api` / `@dextinity/cms-admin`                            |
 | `PixelImageBlock` | Yes                           | No  | No    | Yes                     | `@dextinity/cms-api` / `@dextinity/cms-admin` / `@dextinity/site-nextjs` |
 | `SvgImageBlock`   | No                            | Yes | No    | No (not needed)         | `@dextinity/cms-api` / `@dextinity/cms-admin` / `@dextinity/site-nextjs` |
-| `MediaBlock`      | Yes                           | Yes | Yes   | Yes (pixel images only) | Project-specific (not in Comet core)                                     |
+| `MediaBlock`      | Yes                           | Yes | Yes   | Yes (pixel images only) | Project-specific (not in Dextinity core)                                 |
 
 ---
 
@@ -238,7 +238,7 @@ icon: {
 
 ## MediaBlock (Project-Specific)
 
-A **one-of block** that typically combines `DamImageBlock` with one or more video blocks (`DamVideoBlock`, `YouTubeVideoBlock`, `VimeoVideoBlock`). **Not part of Comet core** -- each project defines its own `MediaBlock`.
+A **one-of block** that typically combines `DamImageBlock` with one or more video blocks (`DamVideoBlock`, `YouTubeVideoBlock`, `VimeoVideoBlock`). **Not part of Dextinity core** -- each project defines its own `MediaBlock`.
 
 **Accepted file types:** Depends on the wrapped blocks. Typically includes all image types (via `DamImageBlock`) plus video.
 
