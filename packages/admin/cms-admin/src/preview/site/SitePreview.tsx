@@ -109,7 +109,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     const siteLink = `${siteConfig.url}${sitePath}`;
 
     useSitePreviewIFrameBridge((message) => {
-        switch (message.cometType) {
+        switch (message.dextinityType) {
             case SitePreviewIFrameMessageType.OpenLink:
                 setLinkToOpen(message.data.link);
                 break;
