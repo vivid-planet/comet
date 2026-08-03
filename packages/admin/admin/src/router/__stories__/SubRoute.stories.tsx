@@ -1,9 +1,8 @@
-import { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "@comet/admin";
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
+import { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "../SubRoute";
 
 function Cmp1() {
     const urlPrefix = useSubRoutePrefix();
@@ -80,8 +79,7 @@ function Path() {
 }
 
 export default {
-    title: "@comet/admin/router",
-    decorators: [storyRouterDecorator()],
+    title: "components/router/SubRoute",
 };
 
 export const Subroute = () => {
