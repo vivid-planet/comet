@@ -21,7 +21,7 @@ export const DataGridPagination: FunctionComponent<DataGridPaginationProps> = (i
         slotProps = {},
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminDataGridPagination",
+        name: "DextinityAdminDataGridPagination",
     });
 
     const apiRef = useGridApiContext();
@@ -83,17 +83,17 @@ export const DataGridPagination: FunctionComponent<DataGridPaginationProps> = (i
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminDataGridPagination: DataGridPaginationProps;
+        DextinityAdminDataGridPagination: DataGridPaginationProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminDataGridPagination: DataGridPaginationClassKey;
+        DextinityAdminDataGridPagination: DataGridPaginationClassKey;
     }
 
     interface Components {
-        CometAdminDataGridPagination?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDataGridPagination"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDataGridPagination"];
+        DextinityAdminDataGridPagination?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminDataGridPagination"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminDataGridPagination"];
         };
     }
 }

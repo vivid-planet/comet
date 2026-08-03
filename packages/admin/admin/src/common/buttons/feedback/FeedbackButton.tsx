@@ -64,7 +64,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminFeedbackButton",
+        name: "DextinityAdminFeedbackButton",
     });
 
     const [displayState, setDisplayState] = useState<FeedbackButtonDisplayState>("idle");
@@ -172,17 +172,17 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFeedbackButton: FeedbackButtonClassKey;
+        DextinityAdminFeedbackButton: FeedbackButtonClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminFeedbackButton: FeedbackButtonProps;
+        DextinityAdminFeedbackButton: FeedbackButtonProps;
     }
 
     interface Components {
-        CometAdminFeedbackButton?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFeedbackButton"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFeedbackButton"];
+        DextinityAdminFeedbackButton?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFeedbackButton"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFeedbackButton"];
         };
     }
 }

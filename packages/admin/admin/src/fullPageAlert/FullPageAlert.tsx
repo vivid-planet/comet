@@ -103,7 +103,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
         sx,
         className,
         slotProps = {},
-    } = useThemeProps({ props: inProps, name: "CometAdminFullPageAlert" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminFullPageAlert" });
 
     const iconMapping = { ...defaultIconMapping, ...passedIconMapping };
     const titleMapping = { ...defaultTitleMapping, ...passedTitleMapping };
@@ -151,17 +151,17 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFullPageAlert: FullPageAlertProps;
+        DextinityAdminFullPageAlert: FullPageAlertProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminFullPageAlert: FullPageAlertClassKey;
+        DextinityAdminFullPageAlert: FullPageAlertClassKey;
     }
 
     interface Components {
-        CometAdminFullPageAlert?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFullPageAlert"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFullPageAlert"];
+        DextinityAdminFullPageAlert?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFullPageAlert"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFullPageAlert"];
         };
     }
 }

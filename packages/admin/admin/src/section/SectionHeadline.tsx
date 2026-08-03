@@ -44,7 +44,7 @@ export function SectionHeadline(inProps: SectionHeadlineProps) {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminSectionHeadline",
+        name: "DextinityAdminSectionHeadline",
     });
 
     const { tooltip: tooltipIcon = <Info sx={{ fontSize: "inherit" }} /> } = iconMapping;
@@ -151,17 +151,17 @@ const StyledDivider = createComponentSlot(Divider)<SectionHeadlineClassKey>({
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminSectionHeadline: SectionHeadlineClassKey;
+        DextinityAdminSectionHeadline: SectionHeadlineClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminSectionHeadline: SectionHeadlineProps;
+        DextinityAdminSectionHeadline: SectionHeadlineProps;
     }
 
     interface Components {
-        CometAdminSectionHeadline?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminSectionHeadline"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminSectionHeadline"];
+        DextinityAdminSectionHeadline?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminSectionHeadline"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminSectionHeadline"];
         };
     }
 }

@@ -233,17 +233,17 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminCrudMoreActionsMenu: CrudMoreActionsMenuProps;
+        DextinityAdminCrudMoreActionsMenu: CrudMoreActionsMenuProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminCrudMoreActionsMenu: CrudMoreActionsMenuClassKey;
+        DextinityAdminCrudMoreActionsMenu: CrudMoreActionsMenuClassKey;
     }
 
     interface Components {
-        CometAdminCrudMoreActionsMenu?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminCrudMoreActionsMenu"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminCrudMoreActionsMenu"];
+        DextinityAdminCrudMoreActionsMenu?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminCrudMoreActionsMenu"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminCrudMoreActionsMenu"];
         };
     }
 }

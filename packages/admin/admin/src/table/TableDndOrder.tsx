@@ -176,7 +176,7 @@ export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRo
         dragHandleIcon = <DragHandle />,
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminTableDndOrder" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminTableDndOrder" });
 
     const renderHeadTableRow = useCallback<NonNullable<ITableProps<TRow>["renderHeadTableRow"]>>((ownProps) => {
         return (
@@ -203,17 +203,17 @@ export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRo
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminTableDndOrder: TableDndOrderProps<IRow>;
+        DextinityAdminTableDndOrder: TableDndOrderProps<IRow>;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminTableDndOrder: TableDndOrderClassKey;
+        DextinityAdminTableDndOrder: TableDndOrderClassKey;
     }
 
     interface Components {
-        CometAdminTableDndOrder?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminTableDndOrder"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTableDndOrder"];
+        DextinityAdminTableDndOrder?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminTableDndOrder"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminTableDndOrder"];
         };
     }
 }

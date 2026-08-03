@@ -93,7 +93,14 @@ const addFilterText = <FormattedMessage id="dataGrid.panel.addFilter" defaultMes
 let lastAddedFilterItemId = 0;
 
 export const DataGridPanel = (inProps: DataGridPanelProps) => {
-    const { children, open, slotProps, iconMapping = {}, onClose, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridPanel" });
+    const {
+        children,
+        open,
+        slotProps,
+        iconMapping = {},
+        onClose,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "DextinityAdminDataGridPanel" });
     const apiRef = useGridApiContext();
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
@@ -406,17 +413,17 @@ const ApplyButton = createComponentSlot(Button)<DataGridPanelClassKey>({
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminDataGridPanel: DataGridPanelProps;
+        DextinityAdminDataGridPanel: DataGridPanelProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminDataGridPanel: DataGridPanelClassKey;
+        DextinityAdminDataGridPanel: DataGridPanelClassKey;
     }
 
     interface Components {
-        CometAdminDataGridPanel?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDataGridPanel"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDataGridPanel"];
+        DextinityAdminDataGridPanel?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminDataGridPanel"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminDataGridPanel"];
         };
     }
 }

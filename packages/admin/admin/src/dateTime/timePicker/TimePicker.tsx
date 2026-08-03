@@ -69,7 +69,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminTimePicker",
+        name: "DextinityAdminTimePicker",
     });
     const [open, setOpen] = useState(false);
     const intl = useIntl();
@@ -170,17 +170,17 @@ const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<TimePi
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminTimePicker: TimePickerProps;
+        DextinityAdminTimePicker: TimePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminTimePicker: TimePickerClassKey;
+        DextinityAdminTimePicker: TimePickerClassKey;
     }
 
     interface Components {
-        CometAdminTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimePicker"];
+        DextinityAdminTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminTimePicker"];
         };
     }
 }

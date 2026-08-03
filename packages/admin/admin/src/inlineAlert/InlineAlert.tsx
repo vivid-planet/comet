@@ -104,7 +104,7 @@ export const InlineAlert: FunctionComponent<InlineAlertProps> = (inProps) => {
         sx,
         className,
         slotProps = {},
-    } = useThemeProps({ props: inProps, name: "CometAdminInlineAlert" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminInlineAlert" });
 
     const iconMapping = { ...defaultIconMapping, ...passedIconMapping };
     const titleMapping = { ...defaultTitleMapping, ...passedTitleMapping };
@@ -130,17 +130,17 @@ export const InlineAlert: FunctionComponent<InlineAlertProps> = (inProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminInlineAlert: InlineAlertProps;
+        DextinityAdminInlineAlert: InlineAlertProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminInlineAlert: InlineAlertClassKey;
+        DextinityAdminInlineAlert: InlineAlertClassKey;
     }
 
     interface Components {
-        CometAdminInlineAlert?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminInlineAlert"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminInlineAlert"];
+        DextinityAdminInlineAlert?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminInlineAlert"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminInlineAlert"];
         };
     }
 }

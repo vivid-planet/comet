@@ -30,7 +30,7 @@ const BlockAdminComponentRoot = (props: PropsWithChildren<Props>) => {
 export { BlockAdminComponentRoot };
 
 const ChildrenContainer = styled("div")`
-    .CometAdminRte-root > .CometAdminRteToolbar-root {
+    .DextinityAdminRte-root > .DextinityAdminRteToolbar-root {
         top: 70px;
     }
 `;

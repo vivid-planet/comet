@@ -64,7 +64,7 @@ Each item names a rule and why it matters; the doc has the exact syntax for each
    mismatch types that slot's `slotProps` against the wrong component.
 
 5. **Props are read through `useThemeProps`, never the raw `inProps`, with the name
-   prefixed `CometAdmin`.** This merges the theme's `defaultProps` with the passed props —
+   prefixed `DextinityAdmin`.** This merges the theme's `defaultProps` with the passed props —
    skip it and `defaultProps` customization is dead.
 
 6. **`slotProps?.<slot>` is spread into each slot, and `restProps` (carrying `sx` and
@@ -82,11 +82,11 @@ Each item names a rule and why it matters; the doc has the exact syntax for each
    icon is for. Destructure with an `Icon` suffix and a default, so the component works
    with no mapping but every icon can be replaced.
 
-10. **The component is registered in MUI's theme types** — the `CometAdmin<Name>` key added
+10. **The component is registered in MUI's theme types** — the `DextinityAdmin<Name>` key added
     to `ComponentsPropsList`, `ComponentNameToClassKey`, and `Components` (with
     `defaultProps?: Partial<...>` and `styleOverrides`). Without this, consumers get no type
     safety on their overrides.
 
-Two final checks that catch the most frequent review findings: the `CometAdmin<Name>` name
+Two final checks that catch the most frequent review findings: the `DextinityAdmin<Name>` name
 is identical in `useThemeProps` and in all three theme-type interfaces, and the package
 type-checks (`tsc`) — the theme-type augmentation is the usual failure point.

@@ -137,8 +137,8 @@ const InnerContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
                 border-color: ${theme.palette.error.main};
             }
 
-            .CometAdminRte-root:not(:focus-within),
-            .CometAdminRte-root:hover:not(:focus-within) {
+            .DextinityAdminRte-root:not(:focus-within),
+            .DextinityAdminRte-root:hover:not(:focus-within) {
                 --comet-admin-rte-outer-border-color: ${theme.palette.error.main};
             }
         `}
@@ -153,8 +153,8 @@ const InnerContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
                 border-color: ${theme.palette.warning.main};
             }
 
-            .CometAdminRte-root:not(:focus-within),
-            .CometAdminRte-root:hover:not(:focus-within) {
+            .DextinityAdminRte-root:not(:focus-within),
+            .DextinityAdminRte-root:hover:not(:focus-within) {
                 --comet-admin-rte-outer-border-color: ${theme.palette.warning.main};
             }
         `}
@@ -225,7 +225,7 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
             @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
                 min-height: 40px;
 
-                > .CometAdminFormFieldContainer-root {
+                > .DextinityAdminFormFieldContainer-root {
                     margin-bottom: 0;
                 }
             }
@@ -324,7 +324,7 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
         fieldMargin = "onlyIfNotLast",
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminFormFieldContainer" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminFormFieldContainer" });
     const fullWidth = passedFullWidth ?? variant === "horizontal";
 
     const hasError = !!error;
@@ -389,17 +389,17 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFormFieldContainer: FieldContainerClassKey;
+        DextinityAdminFormFieldContainer: FieldContainerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminFormFieldContainer: FieldContainerProps;
+        DextinityAdminFormFieldContainer: FieldContainerProps;
     }
 
     interface Components {
-        CometAdminFormFieldContainer?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFormFieldContainer"]>;
-            styleOverrides?: ComponentsOverrides["CometAdminFormFieldContainer"];
+        DextinityAdminFormFieldContainer?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFormFieldContainer"]>;
+            styleOverrides?: ComponentsOverrides["DextinityAdminFormFieldContainer"];
         };
     }
 }

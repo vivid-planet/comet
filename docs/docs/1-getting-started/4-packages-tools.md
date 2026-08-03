@@ -37,7 +37,7 @@ Components for use in forms generally have an accompanying component, optimized 
 
 Navigation and routing are managed by [react-router](https://reactrouter.com/).
 
-Using the `createCometTheme` function, you can create a theme that contains all the default styling for your admin. Custom options and styles can be added the same way as with MUI's [createTheme](https://mui.com/material-ui/customization/theming/#api) function. The resulting theme can simply be used with MUI's [ThemeProvider](https://mui.com/material-ui/customization/theming/#theme-provider).
+Using the `createDextinityTheme` function, you can create a theme that contains all the default styling for your admin. Custom options and styles can be added the same way as with MUI's [createTheme](https://mui.com/material-ui/customization/theming/#api) function. The resulting theme can simply be used with MUI's [ThemeProvider](https://mui.com/material-ui/customization/theming/#theme-provider).
 
 #### @dextinity/admin-icons
 

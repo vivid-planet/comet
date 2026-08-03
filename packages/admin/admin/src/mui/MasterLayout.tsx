@@ -69,7 +69,7 @@ export function MasterLayout(inProps: MasterLayoutProps) {
         headerHeight = 60,
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminMasterLayout" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminMasterLayout" });
 
     const [open, setOpen] = useStoredState("main-navigation-open", openMenuByDefault);
     const [drawerVariant, setDrawerVariant] = useState<"permanent" | "temporary">("permanent");
@@ -137,17 +137,17 @@ export function MasterLayout(inProps: MasterLayoutProps) {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminMasterLayout: MasterLayoutClassKey;
+        DextinityAdminMasterLayout: MasterLayoutClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminMasterLayout: MasterLayoutProps;
+        DextinityAdminMasterLayout: MasterLayoutProps;
     }
 
     interface Components {
-        CometAdminMasterLayout?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminMasterLayout"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMasterLayout"];
+        DextinityAdminMasterLayout?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminMasterLayout"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminMasterLayout"];
         };
     }
 }

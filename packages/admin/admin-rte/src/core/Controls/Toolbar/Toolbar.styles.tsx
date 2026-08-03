@@ -16,7 +16,7 @@ export const Root = createComponentSlot("div")<RteToolbarClassKey>({
         display: flex;
         flex-wrap: wrap;
         border-top: 1px solid var(--comet-admin-rte-outer-border-color);
-        background-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.toolbarBackground};
+        background-color: ${getRteTheme(theme.components?.DextinityAdminRte?.defaultProps).colors?.toolbarBackground};
         padding-left: 6px;
         padding-right: 6px;
         overflow: hidden;
@@ -42,7 +42,7 @@ export const Slot = createComponentSlot("div")<RteToolbarClassKey>({
         &::after {
             content: "";
             position: absolute;
-            background-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.border};
+            background-color: ${getRteTheme(theme.components?.DextinityAdminRte?.defaultProps).colors?.border};
         }
 
         &::before {
