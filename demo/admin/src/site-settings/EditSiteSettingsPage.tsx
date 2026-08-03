@@ -1,17 +1,7 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { FillSpace, MainContent, SaveButton, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import {
-    FieldSet,
-    FillSpace,
-    MainContent,
-    SaveButton,
-    Stack,
-    StackBreadcrumbs,
-    StackToolbar,
-    ToolbarActions,
-    ToolbarTitleItem,
-    useStackApi,
-} from "@comet/admin";
-import {
+    BlockAdminComponentRoot,
     type BlockState,
     ContentScopeIndicator,
     resolveHasSaveConflict,
@@ -34,16 +24,6 @@ import {
     type GQLSiteSettingsQueryVariables,
     namedOperations,
 } from "./EditSiteSettingsPage.generated";
-
-function SubrouteBreadcrumbs() {
-    const stackApi = useStackApi();
-
-    if (!stackApi || stackApi.breadCrumbs.length <= 1) {
-        return null;
-    }
-
-    return <StackBreadcrumbs />;
-}
 
 export function EditSiteSettingsPage(): JSX.Element | null {
     const { scope } = useContentScope();
@@ -126,12 +106,9 @@ export function EditSiteSettingsPage(): JSX.Element | null {
                 </ToolbarActions>
             </StackToolbar>
             <MainContent>
-                <FieldSet title={<FormattedMessage id="siteSettings.organization.title" defaultMessage="Organization" />}>
-                    <Stack topLevelTitle={<FormattedMessage id="siteSettings.organization.title" defaultMessage="Organization" />}>
-                        <SubrouteBreadcrumbs />
-                        <OrganizationBlock.AdminComponent state={organizationState} updateState={setOrganizationState} />
-                    </Stack>
-                </FieldSet>
+                <BlockAdminComponentRoot title={<FormattedMessage id="siteSettings.organization.title" defaultMessage="Organization" />}>
+                    <OrganizationBlock.AdminComponent state={organizationState} updateState={setOrganizationState} />
+                </BlockAdminComponentRoot>
             </MainContent>
             {saveConflict.dialogs}
         </>
