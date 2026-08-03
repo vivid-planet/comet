@@ -93,7 +93,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
     const {
         onChange,
         value,
-        separatorText = <FormattedMessage id="comet.dateTime.fromToSeparatorText" defaultMessage="to" />,
+        separatorText = <FormattedMessage id="dextinity.dateTime.fromToSeparatorText" defaultMessage="to" />,
         className,
         sx,
         required,
@@ -155,7 +155,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                 <StartTimePicker
                     inputRef={startPickerRef}
                     value={startTime}
-                    placeholder={intl.formatMessage({ id: "comet.timeRangePicker.start", defaultMessage: "Start" })}
+                    placeholder={intl.formatMessage({ id: "dextinity.timeRangePicker.start", defaultMessage: "Start" })}
                     onChange={(time) => onChangeTimeValue(time, "start")}
                     onOpenPopper={() => setStartPickerIsOpen(true)}
                     onClosePopper={() => setStartPickerIsOpen(false)}
@@ -170,7 +170,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                 <EndTimePicker
                     inputRef={endPickerRef}
                     value={endTime}
-                    placeholder={intl.formatMessage({ id: "comet.timeRangePicker.end", defaultMessage: "End" })}
+                    placeholder={intl.formatMessage({ id: "dextinity.timeRangePicker.end", defaultMessage: "End" })}
                     onChange={(time) => onChangeTimeValue(time, "end")}
                     onOpenPopper={() => setEndPickerIsOpen(true)}
                     onClosePopper={() => setEndPickerIsOpen(false)}

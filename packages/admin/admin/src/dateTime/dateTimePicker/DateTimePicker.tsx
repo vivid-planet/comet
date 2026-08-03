@@ -123,7 +123,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                                         ...slotProps?.openPickerAdornment?.slotProps,
                                         openPickerButton: {
                                             "aria-label": intl.formatMessage({
-                                                id: "comet.dateTimePicker.openPicker",
+                                                id: "dextinity.dateTimePicker.openPicker",
                                                 defaultMessage: "Open date time picker",
                                             }),
                                             ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,

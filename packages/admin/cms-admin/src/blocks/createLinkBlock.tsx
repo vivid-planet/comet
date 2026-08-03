@@ -20,7 +20,7 @@ interface CreateLinkBlockOptions extends Omit<CreateOneOfBlockOptions<boolean>, 
 function createLinkBlock(
     {
         name = "Link",
-        displayName = <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
+        displayName = <FormattedMessage id="dextinity.blocks.link" defaultMessage="Link" />,
         supportedBlocks = { internal: InternalLinkBlock, external: ExternalLinkBlock },
         allowEmpty = false,
         tags,
@@ -67,7 +67,7 @@ function createLinkBlock(
                                 <Field
                                     name="title"
                                     component={FinalFormInput}
-                                    label={<FormattedMessage id="comet.blocks.link.title" defaultMessage="Title" />}
+                                    label={<FormattedMessage id="dextinity.blocks.link.title" defaultMessage="Title" />}
                                     fullWidth
                                 />
                             </BlocksFinalForm>

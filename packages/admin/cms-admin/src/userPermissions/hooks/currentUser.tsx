@@ -65,7 +65,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     if (error) {
         return (
             <FormattedMessage
-                id="comet.currentUser.loadError"
+                id="dextinity.currentUser.loadError"
                 defaultMessage="Cannot load user: {errorMessage}"
                 values={{ errorMessage: error.message }}
             />

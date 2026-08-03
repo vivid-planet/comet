@@ -27,7 +27,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     name: "SVG",
 
-    displayName: <FormattedMessage id="comet.blocks.svgImage" defaultMessage="SVG" />,
+    displayName: <FormattedMessage id="dextinity.blocks.svgImage" defaultMessage="SVG" />,
 
     defaultValues: () => ({}),
 
@@ -133,7 +133,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                         name="damFile"
                         component={FileField}
                         fullWidth
-                        buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
+                        buttonText={<FormattedMessage id="dextinity.blocks.image.chooseImage" defaultMessage="Choose image" />}
                         allowedMimetypes={filteredAcceptedMimeTypes.svgImage}
                         preview={<img src={previewUrl} width="70" height="70" />}
                     />

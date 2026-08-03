@@ -34,7 +34,7 @@ export const UserPermissionsUserPageBasicDataPanel = ({ userId }: { userId: stri
         <Card>
             <CardToolbar>
                 <ToolbarTitleItem>
-                    <FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />
+                    <FormattedMessage id="dextinity.userPermissions.basicData" defaultMessage="Basic Data" />
                 </ToolbarTitleItem>
                 <FillSpace />
             </CardToolbar>
@@ -51,14 +51,14 @@ export const UserPermissionsUserPageBasicDataPanel = ({ userId }: { userId: stri
                         name="email"
                         component={FinalFormInput}
                         disabled={true}
-                        label={<FormattedMessage id="comet.userPermissions.email" defaultMessage="E-Mail" />}
+                        label={<FormattedMessage id="dextinity.userPermissions.email" defaultMessage="E-Mail" />}
                     />
                     <Field
                         variant="horizontal"
                         name="name"
                         component={FinalFormInput}
                         disabled={true}
-                        label={<FormattedMessage id="comet.userPermissions.name" defaultMessage="Name" />}
+                        label={<FormattedMessage id="dextinity.userPermissions.name" defaultMessage="Name" />}
                     />
                 </FinalForm>
             </CardContent>

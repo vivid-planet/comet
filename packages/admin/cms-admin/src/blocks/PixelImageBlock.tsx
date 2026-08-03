@@ -53,7 +53,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     name: "Image",
 
-    displayName: <FormattedMessage id="comet.blocks.image" defaultMessage="Image" />,
+    displayName: <FormattedMessage id="dextinity.blocks.image" defaultMessage="Image" />,
 
     defaultValues: () => ({
         file: undefined,
@@ -173,12 +173,12 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                         name="damFile"
                         component={FileField}
                         fullWidth
-                        buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
+                        buttonText={<FormattedMessage id="dextinity.blocks.image.chooseImage" defaultMessage="Choose image" />}
                         allowedMimetypes={filteredAcceptedMimeTypes.pixelImage}
                         preview={<PreviewImage src={previewUrl} width="70" height="70" />}
                         menuActions={[
                             {
-                                label: <FormattedMessage id="comet.blocks.image.cropImage" defaultMessage="Crop image" />,
+                                label: <FormattedMessage id="dextinity.blocks.image.cropImage" defaultMessage="Crop image" />,
                                 icon: <Crop />,
                                 onClick: handleCropClick,
                             },

@@ -78,7 +78,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
             const isRequired = type === "ROYALTY_FREE" ? false : damConfig.requireLicense;
 
             if (isRequired && !value) {
-                return <FormattedMessage id="comet.form.required" defaultMessage="Required" />;
+                return <FormattedMessage id="dextinity.form.required" defaultMessage="Required" />;
             }
         },
         [damConfig.requireLicense],
@@ -96,7 +96,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
             <FormSection title="General">
                 <Field
                     label={intl.formatMessage({
-                        id: "comet.dam.file.fileName",
+                        id: "dextinity.dam.file.fileName",
                         defaultMessage: "File Name",
                     })}
                     name="name"
@@ -106,7 +106,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                         if (value && meta?.dirty) {
                             if (await damIsFilenameOccupied(value)) {
                                 return intl.formatMessage({
-                                    id: "comet.dam.file.validate.filename.error",
+                                    id: "dextinity.dam.file.validate.filename.error",
                                     defaultMessage: "Filename already exists",
                                 });
                             }
@@ -138,10 +138,10 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                 />
             </FormSection>
             {isImage && <CropSettingsFields />}
-            <FormSection title={intl.formatMessage({ id: "comet.dam.file.seo", defaultMessage: "SEO" })}>
+            <FormSection title={intl.formatMessage({ id: "dextinity.dam.file.seo", defaultMessage: "SEO" })}>
                 <Field
                     label={intl.formatMessage({
-                        id: "comet.dam.file.altText",
+                        id: "dextinity.dam.file.altText",
                         defaultMessage: "Alternative Text",
                     })}
                     name="altText"
@@ -164,7 +164,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                 />
                 <Field
                     label={intl.formatMessage({
-                        id: "comet.dam.file.title",
+                        id: "dextinity.dam.file.title",
                         defaultMessage: "Title",
                     })}
                     name="title"
@@ -187,13 +187,15 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                 />
             </FormSection>
             {supportsAiContentType && (
-                <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
+                <FormSection title={<FormattedMessage id="dextinity.dam.file.aiContent" defaultMessage="AI content" />}>
                     <SelectField
                         name="aiContentType"
-                        label={<FormattedMessage id="comet.dam.file.aiContentType" defaultMessage="Was this asset generated or modified using AI?" />}
+                        label={
+                            <FormattedMessage id="dextinity.dam.file.aiContentType" defaultMessage="Was this asset generated or modified using AI?" />
+                        }
                         helperText={
                             <FormattedMessage
-                                id="comet.dam.file.aiContentType.helperText"
+                                id="dextinity.dam.file.aiContentType.helperText"
                                 defaultMessage="The EU AI Act (Article 50) requires AI-generated or AI-modified content to be marked as such. Set this for any asset that was generated or edited using artificial intelligence."
                             />
                         }
@@ -204,22 +206,22 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                         options={[
                             {
                                 value: "",
-                                label: <FormattedMessage id="comet.dam.file.aiContentType.no" defaultMessage="No" />,
+                                label: <FormattedMessage id="dextinity.dam.file.aiContentType.no" defaultMessage="No" />,
                             },
                             {
                                 value: "Generated",
-                                label: <FormattedMessage id="comet.dam.file.aiContentType.generated" defaultMessage="AI generated" />,
+                                label: <FormattedMessage id="dextinity.dam.file.aiContentType.generated" defaultMessage="AI generated" />,
                             },
                             {
                                 value: "Modified",
-                                label: <FormattedMessage id="comet.dam.file.aiContentType.modified" defaultMessage="AI modified" />,
+                                label: <FormattedMessage id="dextinity.dam.file.aiContentType.modified" defaultMessage="AI modified" />,
                             },
                         ]}
                     />
                 </FormSection>
             )}
             {damConfig.enableLicenseFeature && (
-                <FormSection title={<FormattedMessage id="comet.dam.file.licenseInformation" defaultMessage="License information" />}>
+                <FormSection title={<FormattedMessage id="dextinity.dam.file.licenseInformation" defaultMessage="License information" />}>
                     <Field
                         component={FinalFormSelect}
                         options={licenseTypeArray}
@@ -228,12 +230,12 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                             return option === selectedOption;
                         }}
                         name="license.type"
-                        label={<FormattedMessage id="comet.dam.file.type" defaultMessage="Type" />}
+                        label={<FormattedMessage id="dextinity.dam.file.type" defaultMessage="Type" />}
                         fullWidth
                         required={damConfig.requireLicense}
                         validate={(value: string) => {
                             if (damConfig.requireLicense && value === "NO_LICENSE") {
-                                return <FormattedMessage id="comet.dam.file.error.license.type" defaultMessage="License type is required" />;
+                                return <FormattedMessage id="dextinity.dam.file.error.license.type" defaultMessage="License type is required" />;
                             }
                         }}
                         shouldShowError={() => true}
@@ -243,7 +245,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                             return (
                                 <>
                                     <Field
-                                        label={<FormattedMessage id="comet.dam.file.licenseDetails" defaultMessage="License details" />}
+                                        label={<FormattedMessage id="dextinity.dam.file.licenseDetails" defaultMessage="License details" />}
                                         name="license.details"
                                         component={FinalFormInput}
                                         multiline
@@ -253,7 +255,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                                         shouldShowError={() => true}
                                     />
                                     <Field
-                                        label={<FormattedMessage id="comet.dam.file.creatorOrAuthor" defaultMessage="Creator/Author" />}
+                                        label={<FormattedMessage id="dextinity.dam.file.creatorOrAuthor" defaultMessage="Creator/Author" />}
                                         name="license.author"
                                         component={FinalFormInput}
                                         fullWidth
@@ -261,7 +263,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                                         shouldShowError={() => true}
                                     />
                                     <FieldContainer
-                                        label={<FormattedMessage id="comet.dam.file.licenseDuration" defaultMessage="License duration" />}
+                                        label={<FormattedMessage id="dextinity.dam.file.licenseDuration" defaultMessage="License duration" />}
                                         fullWidth
                                         disabled={licenseType === "NO_LICENSE"}
                                     >
@@ -303,7 +305,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                                                     if (value && durationFrom && value < durationFrom) {
                                                         return (
                                                             <FormattedMessage
-                                                                id="comet.dam.file.error.durationTo"
+                                                                id="dextinity.dam.file.error.durationTo"
                                                                 defaultMessage="The end date of the license must be after the start date"
                                                             />
                                                         );

@@ -136,7 +136,9 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
                 input = JSON.parse(clipboard);
             } catch (e) {
                 errorDialog?.showError({
-                    userMessage: <FormattedMessage id="comet.common.clipboardInvalidFormat" defaultMessage="Clipboard contains an invalid format" />,
+                    userMessage: (
+                        <FormattedMessage id="dextinity.common.clipboardInvalidFormat" defaultMessage="Clipboard contains an invalid format" />
+                    ),
                     error: e.toString(),
                 });
             }
@@ -155,7 +157,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
                     errorDialog?.showError({
                         userMessage: (
                             <FormattedMessage
-                                id="comet.common.pasteFailedInvalidFormat"
+                                id="dextinity.common.pasteFailedInvalidFormat"
                                 defaultMessage="Paste failed, probably due to an invalid format"
                             />
                         ),
@@ -200,7 +202,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
                                     snackbarApi.showSnackbar(
                                         <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} autoHideDuration={5000}>
                                             <Alert severity="error">
-                                                <FormattedMessage id="comet.crudContextMenu.copyFailed" defaultMessage="Copy failed" />
+                                                <FormattedMessage id="dextinity.crudContextMenu.copyFailed" defaultMessage="Copy failed" />
                                             </Alert>
                                         </Snackbar>,
                                     );

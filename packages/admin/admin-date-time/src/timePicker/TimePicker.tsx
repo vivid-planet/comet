@@ -97,7 +97,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
     return (
         <Root
             value={dateValue ? intl.formatTime(dateValue, formatOptions) : ""}
-            placeholder={placeholder ?? intl.formatMessage({ id: "comet.timePicker.select", defaultMessage: "Select" })}
+            placeholder={placeholder ?? intl.formatMessage({ id: "dextinity.timePicker.select", defaultMessage: "Select" })}
             startAdornment={
                 <StartAdornment position="start" disablePointerEvents {...slotProps?.startAdornment}>
                     <Time />

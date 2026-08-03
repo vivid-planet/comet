@@ -31,7 +31,7 @@ function ToolbarButton({ editorState, setEditorState }: IControlProps) {
 
     return (
         <Tooltip
-            title={<FormattedMessage id="comet.rte.extensions.nonBreakingSpace.buttonTooltip" defaultMessage="Insert a non-breaking space" />}
+            title={<FormattedMessage id="dextinity.rte.extensions.nonBreakingSpace.buttonTooltip" defaultMessage="Insert a non-breaking space" />}
             placement="top"
         >
             <span>

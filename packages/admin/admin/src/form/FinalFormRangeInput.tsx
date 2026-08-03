@@ -96,7 +96,7 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
         max,
         startAdornment,
         endAdornment,
-        separator = <FormattedMessage id="comet.rangeInput.separator" defaultMessage="to" />,
+        separator = <FormattedMessage id="dextinity.rangeInput.separator" defaultMessage="to" />,
         disableSlider,
         sliderProps,
         input: { name, onChange, value: fieldValue },

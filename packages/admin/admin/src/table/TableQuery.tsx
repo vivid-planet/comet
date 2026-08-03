@@ -101,7 +101,7 @@ export function TableQuery(inProps: TableQueryProps) {
                 {error && (
                     <p>
                         <FormattedMessage
-                            id="comet.table.tableQuery.error"
+                            id="dextinity.table.tableQuery.error"
                             defaultMessage="Error :( {error}"
                             description="Display apollo error message"
                             values={{

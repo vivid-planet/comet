@@ -154,14 +154,14 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                             <LogoWrapper>
                                 {logo}
                                 <Typography textTransform="uppercase" color="white">
-                                    <FormattedMessage defaultMessage="Preview" id="comet.sitePreview.preview" />
+                                    <FormattedMessage defaultMessage="Preview" id="dextinity.sitePreview.preview" />
                                 </Typography>
                             </LogoWrapper>
                             <SiteLinkWrapper>
                                 {siteConfig.preloginEnabled ? (
                                     <Tooltip
                                         title={intl.formatMessage({
-                                            id: "comet.sitePreview.sitePreloginEnabledMessage",
+                                            id: "dextinity.sitePreview.sitePreloginEnabledMessage",
                                             defaultMessage: "Site is not yet publicly available",
                                         })}
                                     >

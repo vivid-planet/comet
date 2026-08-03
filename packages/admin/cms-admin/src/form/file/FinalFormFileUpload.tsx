@@ -192,7 +192,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             onChange([...inputValue, ...successfullyUploadedFiles]);
                         }
                     } else {
-                        let errorMessage = <FormattedMessage id="comet.finalFormFileUpload.uploadFailed" defaultMessage="Upload failed." />;
+                        let errorMessage = <FormattedMessage id="dextinity.finalFormFileUpload.uploadFailed" defaultMessage="Upload failed." />;
 
                         if (jsonResponse.message === "Unsupported mime type") {
                             errorMessage = commonFileErrorMessages.invalidFileType;

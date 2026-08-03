@@ -53,7 +53,7 @@ export interface ContentOverflowProps
 export const ContentOverflow = (inProps: PropsWithChildren<ContentOverflowProps>) => {
     const {
         children,
-        dialogTitle = <FormattedMessage id="comet.contentOverflow.dialogTitle" defaultMessage="Preview" />,
+        dialogTitle = <FormattedMessage id="dextinity.contentOverflow.dialogTitle" defaultMessage="Preview" />,
         iconMapping = {},
         slotProps,
         ...restProps

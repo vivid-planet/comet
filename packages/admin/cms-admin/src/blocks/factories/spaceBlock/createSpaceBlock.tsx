@@ -26,7 +26,7 @@ export const createSpaceBlock = <T extends string | number>({
 
         name,
 
-        displayName: <FormattedMessage id="comet.blocks.space" defaultMessage="Space" />,
+        displayName: <FormattedMessage id="dextinity.blocks.space" defaultMessage="Space" />,
 
         category: BlockCategory.Layout,
 

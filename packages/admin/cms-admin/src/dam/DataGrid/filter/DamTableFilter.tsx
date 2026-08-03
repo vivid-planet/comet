@@ -30,12 +30,12 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
                 />
                 {!hideArchiveFilter && (
                     <FilterBarPopoverFilter
-                        label={intl.formatMessage({ id: "comet.pages.dam.archived", defaultMessage: "Archived" })}
+                        label={intl.formatMessage({ id: "dextinity.pages.dam.archived", defaultMessage: "Archived" })}
                         sx={{ marginRight: 2, marginLeft: 2, marginBottom: 0 }}
                     >
                         <SwitchField
                             name="archived"
-                            label={<FormattedMessage id="comet.pages.dam.showArchivedAssets" defaultMessage="Show archived assets" />}
+                            label={<FormattedMessage id="dextinity.pages.dam.showArchivedAssets" defaultMessage="Show archived assets" />}
                         />
                     </FilterBarPopoverFilter>
                 )}

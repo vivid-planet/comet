@@ -63,7 +63,7 @@ export function FilterBarMoreFilters(inProps: PropsWithChildren<FilterBarMoreFil
     return (
         <Root {...slotProps?.root} {...restProps}>
             <StyledFilterBarButton {...slotProps?.button} onClick={() => setHasExtended(true)} startIcon={icon} endIcon={null}>
-                <FormattedMessage id="comet.filterbar.moreFilter" defaultMessage="More Filter" />
+                <FormattedMessage id="dextinity.filterbar.moreFilter" defaultMessage="More Filter" />
             </StyledFilterBarButton>
         </Root>
     );

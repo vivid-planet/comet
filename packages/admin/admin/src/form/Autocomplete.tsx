@@ -47,10 +47,10 @@ export const FinalFormAutocomplete = <
     isAsync = false,
     disabled,
     readOnly,
-    loadingText = <FormattedMessage id="common.loading" defaultMessage="Loading ..." />,
+    loadingText = <FormattedMessage id="dextinity.common.loading" defaultMessage="Loading ..." />,
     popupIcon = <ChevronDown />,
-    noOptionsText = <FormattedMessage id="finalFormAutocomplete.noOptions" defaultMessage="No options." />,
-    errorText = <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />,
+    noOptionsText = <FormattedMessage id="dextinity.finalFormAutocomplete.noOptions" defaultMessage="No options." />,
+    errorText = <FormattedMessage id="dextinity.finalFormSelect.error" defaultMessage="Error loading options." />,
     required,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> & FinalFormAutocompleteInternalProps<T>) => {

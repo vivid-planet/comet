@@ -61,13 +61,13 @@ const defaultIconMapping: Record<FullPageAlertSeverity, ReactNode> = {
 };
 
 const defaultTitleMapping: Record<FullPageAlertSeverity, ReactNode> = {
-    error: <FormattedMessage id="comet.fullPageAlert.error.title" defaultMessage="Something went wrong" />,
-    warning: <FormattedMessage id="comet.fullPageAlert.warning.title" defaultMessage="Warning" />,
-    info: <FormattedMessage id="comet.fullPageAlert.info.title" defaultMessage="Info" />,
+    error: <FormattedMessage id="dextinity.fullPageAlert.error.title" defaultMessage="Something went wrong" />,
+    warning: <FormattedMessage id="dextinity.fullPageAlert.warning.title" defaultMessage="Warning" />,
+    info: <FormattedMessage id="dextinity.fullPageAlert.info.title" defaultMessage="Info" />,
 };
 
 const defaultDescriptionMapping: Record<FullPageAlertSeverity, ReactNode> = {
-    error: <FormattedMessage id="comet.fullPageAlert.error.description" defaultMessage="An unexpected error occurred." />,
+    error: <FormattedMessage id="dextinity.fullPageAlert.error.description" defaultMessage="An unexpected error occurred." />,
     warning: null,
     info: null,
 };
@@ -75,7 +75,7 @@ const defaultDescriptionMapping: Record<FullPageAlertSeverity, ReactNode> = {
 const defaultDetailDescriptionMapping: Record<FullPageAlertSeverity, ReactNode> = {
     error: (
         <FormattedMessage
-            id="comet.fullPageAlert.error.detailDescription"
+            id="dextinity.fullPageAlert.error.detailDescription"
             defaultMessage="Please check the URL for typos, or use the button below to return to the homepage. If the issue persists, contact our support team."
         />
     ),
@@ -97,7 +97,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
         logo = <CometDigitalExperienceLogo sx={{ width: "100%", height: "30px" }} />,
         actions = (
             <Button href="/" fullWidth>
-                <FormattedMessage id="comet.fullPageAlert.action.returnToHomePage" defaultMessage="Return to home page" />
+                <FormattedMessage id="dextinity.fullPageAlert.action.returnToHomePage" defaultMessage="Return to home page" />
             </Button>
         ),
         sx,
