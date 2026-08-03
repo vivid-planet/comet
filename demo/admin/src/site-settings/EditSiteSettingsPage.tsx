@@ -1,5 +1,16 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { FieldSet, FillSpace, MainContent, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import {
+    FieldSet,
+    FillSpace,
+    MainContent,
+    SaveButton,
+    Stack,
+    StackBreadcrumbs,
+    StackToolbar,
+    ToolbarActions,
+    ToolbarTitleItem,
+    useStackApi,
+} from "@comet/admin";
 import {
     type BlockState,
     ContentScopeIndicator,
@@ -23,6 +34,16 @@ import {
     type GQLSiteSettingsQueryVariables,
     namedOperations,
 } from "./EditSiteSettingsPage.generated";
+
+function SubrouteBreadcrumbs() {
+    const stackApi = useStackApi();
+
+    if (!stackApi || stackApi.breadCrumbs.length <= 1) {
+        return null;
+    }
+
+    return <StackBreadcrumbs />;
+}
 
 export function EditSiteSettingsPage(): JSX.Element | null {
     const { scope } = useContentScope();
@@ -106,7 +127,8 @@ export function EditSiteSettingsPage(): JSX.Element | null {
             </StackToolbar>
             <MainContent>
                 <FieldSet title={<FormattedMessage id="siteSettings.organization.title" defaultMessage="Organization" />}>
-                    <Stack topLevelTitle={null}>
+                    <Stack topLevelTitle={<FormattedMessage id="siteSettings.organization.title" defaultMessage="Organization" />}>
+                        <SubrouteBreadcrumbs />
                         <OrganizationBlock.AdminComponent state={organizationState} updateState={setOrganizationState} />
                     </Stack>
                 </FieldSet>
