@@ -9,11 +9,11 @@
 
 ## Docs
 
-Visit https://docs.comet-dxp.com/ to view the documentation.
+Visit https://docs.dextinity.com/ to view the documentation.
 
 ## Create a new Comet DXP project
 
-Use `@comet/create-app` to create a new Comet DXP project. More information can be found in the [docs](https://docs.comet-dxp.com/docs/getting-started/).
+Use `@comet/create-app` to create a new Comet DXP project. More information can be found in the [docs](https://docs.dextinity.com/docs/getting-started/).
 
 ## Development
 

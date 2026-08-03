@@ -41,7 +41,7 @@ This applies to seemingly simple things: `border-radius`, `background-image`, `f
 
 ### Library Documentation
 
-Full documentation for `@dextinity/mail-react`: https://docs.comet-dxp.com/docs/features-modules/building-html-emails/
+Full documentation for `@dextinity/mail-react`: https://docs.dextinity.com/docs/features-modules/building-html-emails/
 
 ---
 
@@ -617,5 +617,5 @@ Storybook previews show how the email renders in a web browser, but email client
 
 The `@dextinity/mail-react` package focuses on building email markup. For sending emails and managing templates in a Comet project:
 
-- **Mail Templates Module** — server-side template registration, dependency injection, and sending. Integrates with `@dextinity/mail-react` via `renderMailHtml`. Docs: https://docs.comet-dxp.com/docs/features-modules/mail-templates-module/
-- **Mailer Module** — lower-level mail sending service. Docs: https://docs.comet-dxp.com/docs/features-modules/mailer-module/
+- **Mail Templates Module** — server-side template registration, dependency injection, and sending. Integrates with `@dextinity/mail-react` via `renderMailHtml`. Docs: https://docs.dextinity.com/docs/features-modules/mail-templates-module/
+- **Mailer Module** — lower-level mail sending service. Docs: https://docs.dextinity.com/docs/features-modules/mailer-module/

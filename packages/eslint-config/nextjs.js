@@ -13,7 +13,7 @@ export const restrictedImportPaths = [
     {
         name: "next/image",
         importNames: ["default"],
-        message: "Don't use next/image. See https://docs.comet-dxp.com/docs/faqs/next-image-import-restriction",
+        message: "Don't use next/image. See https://docs.dextinity.com/docs/faqs/next-image-import-restriction",
     },
     {
         name: "node-cache",
