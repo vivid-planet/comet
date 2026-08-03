@@ -29,6 +29,60 @@ function parseRepoUrl(rawUrl: string): { repoUrl: string; ref: string | undefine
 
 const SKILL_SOURCE_PATHS = ["skills", "agentic-plugin/skills"];
 
+function discoverNodeModulesPackages(cwd: string): string[] {
+    const nodeModulesDir = path.join(cwd, "node_modules");
+    if (!fs.existsSync(nodeModulesDir)) {
+        return [];
+    }
+
+    const packageDirs: string[] = [];
+    let entries: string[];
+    try {
+        entries = fs.readdirSync(nodeModulesDir);
+    } catch {
+        return [];
+    }
+
+    for (const entry of entries) {
+        if (entry.startsWith(".")) {
+            continue;
+        }
+        const fullPath = path.join(nodeModulesDir, entry);
+        if (entry.startsWith("@")) {
+            // Scoped package: read one level deeper
+            let scopedEntries: string[];
+            try {
+                scopedEntries = fs.readdirSync(fullPath);
+            } catch {
+                continue;
+            }
+            for (const scopedEntry of scopedEntries) {
+                if (scopedEntry.startsWith(".")) {
+                    continue;
+                }
+                const scopedPath = path.join(fullPath, scopedEntry);
+                try {
+                    if (fs.statSync(scopedPath).isDirectory()) {
+                        packageDirs.push(scopedPath);
+                    }
+                } catch {
+                    // skip unreadable entries
+                }
+            }
+        } else {
+            try {
+                if (fs.statSync(fullPath).isDirectory()) {
+                    packageDirs.push(fullPath);
+                }
+            } catch {
+                // skip unreadable entries
+            }
+        }
+    }
+
+    return packageDirs;
+}
+
 function cloneRepo(rawUrl: string): string {
     const { repoUrl, ref } = parseRepoUrl(rawUrl);
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "comet-agent-skills-"));
@@ -148,6 +202,60 @@ function loadConfig(configPath: string): AgentSkillsConfig {
     return JSON.parse(raw) as AgentSkillsConfig;
 }
 
+export function installAgentSkills(cwd: string, repos: string[], options: InstallOptions): void {
+    const targetDirs = [path.join(cwd, ".agents", "skills"), path.join(cwd, ".claude", "skills")];
+
+    // Ensure target directories exist (without clearing existing contents)
+    for (const dir of targetDirs) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+
+    // Priority order: local skill folders (in declared order) > node_modules packages > external repos (in arg order)
+    const sources: SkillSource[] = SKILL_SOURCE_PATHS.map((p) => ({
+        label: `local ${p}/`,
+        directory: path.join(cwd, p),
+        symlink: true,
+    }));
+
+    // Discover skills from node_modules (direct dependencies only, including @scoped packages)
+    const nodeModulesPackages = discoverNodeModulesPackages(cwd);
+    for (const pkgDir of nodeModulesPackages) {
+        const pkgName = pkgDir.includes(`${path.sep}@`) ? pkgDir.split(path.sep).slice(-2).join("/") : path.basename(pkgDir);
+        for (const p of SKILL_SOURCE_PATHS) {
+            const dir = path.join(pkgDir, p);
+            if (fs.existsSync(dir)) {
+                sources.push({
+                    label: `node_modules ${pkgName} (${p}/)`,
+                    directory: dir,
+                    symlink: true,
+                    filterInternal: true,
+                });
+            }
+        }
+    }
+
+    const tempDirs: string[] = [];
+    try {
+        for (const rawUrl of repos) {
+            const cloneDir = cloneRepo(rawUrl);
+            tempDirs.push(cloneDir);
+            for (const p of SKILL_SOURCE_PATHS) {
+                sources.push({
+                    label: `external ${rawUrl} (${p}/)`,
+                    directory: path.join(cloneDir, p),
+                    symlink: false,
+                    filterInternal: true,
+                });
+            }
+        }
+        installSkills(sources, targetDirs, options);
+    } finally {
+        for (const tmpDir of tempDirs) {
+            fs.rmSync(tmpDir, { recursive: true, force: true });
+        }
+    }
+}
+
 export const installAgentSkillsCommand = new Command("install-agent-skills")
     .description("Install agent skills from local directories and optional external git repos")
     .option("--config <path>", "Path to a JSON config file specifying repos to install skills from", "agent-skills.json")
@@ -159,41 +267,7 @@ export const installAgentSkillsCommand = new Command("install-agent-skills")
         const repos = fs.existsSync(resolvedConfig) ? (loadConfig(configPath).repos ?? []) : [];
         console.log(`=== Installing agent skills${dryRun ? " (dry run)" : ""} ===`);
 
-        const cwd = process.cwd();
-        const targetDirs = [path.join(cwd, ".agents", "skills"), path.join(cwd, ".claude", "skills")];
-
-        // Ensure target directories exist (without clearing existing contents)
-        for (const dir of targetDirs) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
-
-        // Priority order: local skill folders (in declared order) > external repos (in arg order)
-        const sources: SkillSource[] = SKILL_SOURCE_PATHS.map((p) => ({
-            label: `local ${p}/`,
-            directory: path.join(cwd, p),
-            symlink: true,
-        }));
-
-        const tempDirs: string[] = [];
-        try {
-            for (const rawUrl of repos) {
-                const cloneDir = cloneRepo(rawUrl);
-                tempDirs.push(cloneDir);
-                for (const p of SKILL_SOURCE_PATHS) {
-                    sources.push({
-                        label: `external ${rawUrl} (${p}/)`,
-                        directory: path.join(cloneDir, p),
-                        symlink: false,
-                        filterInternal: true,
-                    });
-                }
-            }
-            installSkills(sources, targetDirs, { dryRun });
-        } finally {
-            for (const tmpDir of tempDirs) {
-                fs.rmSync(tmpDir, { recursive: true, force: true });
-            }
-        }
+        installAgentSkills(process.cwd(), repos, { dryRun });
 
         console.log("=== Finished ===");
     });
