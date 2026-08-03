@@ -7,8 +7,8 @@ import {
     ActiveItem,
     Ellipsis,
     ellipsisLabel,
-    EllipsisMeasureLayer,
     Item,
+    MeasureLayer,
     MenuContainer,
     OverflowButton,
     OverflowMenu,
@@ -61,47 +61,42 @@ const OverflowEllipsis = ({
 export const DesktopBreadcrumbs = ({ items, separatorIcon, slotProps, ...restProps }: DesktopBreadcrumbsProps) => {
     const [isOverflowMenuOpen, setIsOverflowMenuOpen] = useState(false);
     const toolbarRef = useRef<HTMLDivElement>(null);
-    const ellipsisMeasureRef = useRef<HTMLDivElement>(null);
+    const measureRef = useRef<HTMLDivElement>(null);
     const overflowButtonRef = useRef<HTMLButtonElement>(null);
 
-    const { isMeasuring, numberOfHiddenItems } = useBreadcrumbsOverflow({ items, itemsRef: toolbarRef, ellipsisRef: ellipsisMeasureRef });
-    const hasHiddenItems = !isMeasuring && numberOfHiddenItems > 0;
-    const hiddenItems = hasHiddenItems ? items.slice(1, 1 + numberOfHiddenItems) : [];
-
-    // While measuring, all items are rendered so that `useBreadcrumbsOverflow` can determine their widths.
-    const itemsAfterFirst = items.slice(1);
-    const visibleTrailingItems = isMeasuring ? itemsAfterFirst : itemsAfterFirst.slice(numberOfHiddenItems);
+    const { leadingItem, hiddenItems, trailingItems } = useBreadcrumbsOverflow({ items, containerRef: toolbarRef, measureRef });
 
     return (
         <Root {...slotProps?.root} {...restProps}>
             <ToolbarContainer ref={toolbarRef} {...slotProps?.toolbarContainer}>
-                {items.length <= 1 ? (
-                    items.map((item) => <CurrentBreadcrumbItem key={item.url} item={item} slotProps={slotProps} />)
-                ) : (
-                    <>
-                        <BreadcrumbItemLink item={items[0]} separatorIcon={separatorIcon} slotProps={slotProps} />
-                        {hasHiddenItems && (
-                            <OverflowEllipsis
-                                separatorIcon={separatorIcon}
-                                slotProps={slotProps}
-                                onClick={() => setIsOverflowMenuOpen((prev) => !prev)}
-                                buttonRef={overflowButtonRef}
-                            />
-                        )}
-                        {visibleTrailingItems.map((item, index) =>
-                            index === visibleTrailingItems.length - 1 ? (
-                                <CurrentBreadcrumbItem key={item.url} item={item} slotProps={slotProps} />
-                            ) : (
-                                <BreadcrumbItemLink key={item.url} item={item} separatorIcon={separatorIcon} slotProps={slotProps} />
-                            ),
-                        )}
-                    </>
+                {leadingItem && <BreadcrumbItemLink item={leadingItem} separatorIcon={separatorIcon} slotProps={slotProps} />}
+                {hiddenItems.length > 0 && (
+                    <OverflowEllipsis
+                        separatorIcon={separatorIcon}
+                        slotProps={slotProps}
+                        onClick={() => setIsOverflowMenuOpen((prev) => !prev)}
+                        buttonRef={overflowButtonRef}
+                    />
+                )}
+                {trailingItems.map((item, index) =>
+                    index === trailingItems.length - 1 ? (
+                        <CurrentBreadcrumbItem key={item.url} item={item} slotProps={slotProps} />
+                    ) : (
+                        <BreadcrumbItemLink key={item.url} item={item} separatorIcon={separatorIcon} slotProps={slotProps} />
+                    ),
                 )}
             </ToolbarContainer>
 
-            <EllipsisMeasureLayer ref={ellipsisMeasureRef} aria-hidden>
+            <MeasureLayer ref={measureRef} aria-hidden>
+                {items.map((item, index) =>
+                    index === items.length - 1 ? (
+                        <CurrentBreadcrumbItem key={item.url} item={item} slotProps={slotProps} />
+                    ) : (
+                        <BreadcrumbItemLink key={item.url} item={item} separatorIcon={separatorIcon} slotProps={slotProps} />
+                    ),
+                )}
                 <OverflowEllipsis separatorIcon={separatorIcon} slotProps={slotProps} />
-            </EllipsisMeasureLayer>
+            </MeasureLayer>
 
             <OverflowMenu
                 open={isOverflowMenuOpen && hiddenItems.length > 0}

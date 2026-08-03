@@ -194,8 +194,10 @@ export const MenuContainer = createComponentSlot("div")<BreadcrumbsClassKey, Men
     `,
 );
 
-export const EllipsisMeasureLayer = styled("div")`
+export const MeasureLayer = styled("div")`
     position: absolute;
+    display: flex;
+    width: max-content;
     visibility: hidden;
     pointer-events: none;
     height: 0;

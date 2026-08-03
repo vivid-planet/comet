@@ -1,84 +1,99 @@
-import { type RefObject, useEffect, useMemo, useState } from "react";
+import { type RefObject, useEffect, useState } from "react";
 
 import { getElementOuterWidth } from "../../utils/getElementOuterWidth";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 import type { Breadcrumb } from "./Breadcrumbs";
 
-// Determines how many items (starting after the first one) need to be collapsed into the overflow ellipsis so that
-// the first item, the ellipsis and as many trailing items as possible fit into the available width. The first item
-// (root) and the last item (current page) are always kept, matching the responsive behavior of `StackBreadcrumbs`.
-const getNumberOfHiddenItems = ({
-    itemWidths,
-    ellipsisWidth,
+type MeasuredWidths = { itemWidths: number[]; ellipsisWidth: number };
+
+type BreadcrumbsOverflow = {
+    leadingItem?: Breadcrumb;
+    hiddenItems: Breadcrumb[];
+    trailingItems: Breadcrumb[];
+};
+
+const getOverflow = ({
+    items,
+    measuredWidths,
     containerWidth,
 }: {
-    itemWidths: number[];
-    ellipsisWidth: number;
+    items: Breadcrumb[];
+    measuredWidths?: MeasuredWidths;
     containerWidth: number;
-}): number => {
-    if (itemWidths.length <= 2) {
-        return 0;
+}): BreadcrumbsOverflow => {
+    const lastIndex = items.length - 1;
+
+    if (lastIndex < 1) {
+        return { hiddenItems: [], trailingItems: items };
     }
 
-    const totalWidth = itemWidths.reduce((sum, width) => sum + width, 0);
-    if (totalWidth <= containerWidth) {
-        return 0;
+    const allItemsVisible = { leadingItem: items[0], hiddenItems: [], trailingItems: items.slice(1) };
+
+    if (!measuredWidths || measuredWidths.itemWidths.length !== items.length) {
+        return allItemsVisible;
     }
 
-    const lastIndex = itemWidths.length - 1;
-    const availableWidthForTrailingItems = containerWidth - itemWidths[0] - ellipsisWidth;
+    const { itemWidths, ellipsisWidth } = measuredWidths;
 
-    let usedWidth = itemWidths[lastIndex]; // The last item (current page) is always shown.
-    let firstVisibleTrailingIndex = lastIndex;
+    if (itemWidths.reduce((sum, width) => sum + width, 0) <= containerWidth) {
+        return allItemsVisible;
+    }
 
-    for (let index = lastIndex - 1; index >= 1; index--) {
-        if (usedWidth + itemWidths[index] > availableWidthForTrailingItems) {
+    const isRootVisible = itemWidths[0] + ellipsisWidth + itemWidths[lastIndex] <= containerWidth;
+    const firstCollapsibleIndex = isRootVisible ? 1 : 0;
+    const availableWidth = containerWidth - ellipsisWidth - (isRootVisible ? itemWidths[0] : 0);
+
+    let usedWidth = itemWidths[lastIndex];
+    let firstTrailingIndex = lastIndex;
+
+    for (let index = lastIndex - 1; index >= firstCollapsibleIndex; index--) {
+        if (usedWidth + itemWidths[index] > availableWidth) {
             break;
         }
         usedWidth += itemWidths[index];
-        firstVisibleTrailingIndex = index;
+        firstTrailingIndex = index;
     }
 
-    return firstVisibleTrailingIndex - 1;
+    return {
+        leadingItem: isRootVisible ? items[0] : undefined,
+        hiddenItems: items.slice(firstCollapsibleIndex, firstTrailingIndex),
+        trailingItems: items.slice(firstTrailingIndex),
+    };
 };
 
 /**
- * Measures the rendered breadcrumb items and the overflow ellipsis to determine how many items don't fit into the
- * available width. While `isMeasuring` is `true`, all items must be rendered so that their widths can be measured.
+ * Distributes the breadcrumb items over the leading item, the overflow menu and the trailing items, based on the
+ * available width.
+ *
+ * The widths are measured in a hidden layer instead of on the visible items, because the current item shrinks and
+ * truncates as soon as the items overflow. Measuring the visible items would report that already-shrunk width and
+ * therefore never detect the overflow it is supposed to resolve.
  */
 export const useBreadcrumbsOverflow = ({
     items,
-    itemsRef,
-    ellipsisRef,
+    containerRef,
+    measureRef,
 }: {
     items: Breadcrumb[];
-    itemsRef: RefObject<HTMLElement | null>;
-    ellipsisRef: RefObject<HTMLElement | null>;
-}): { isMeasuring: boolean; numberOfHiddenItems: number } => {
-    const containerWidth = useObservedWidth(itemsRef);
-    const [itemWidths, setItemWidths] = useState<number[] | undefined>();
-    const [ellipsisWidth, setEllipsisWidth] = useState<number | undefined>();
+    containerRef: RefObject<HTMLElement | null>;
+    measureRef: RefObject<HTMLElement | null>;
+}): BreadcrumbsOverflow => {
+    const containerWidth = useObservedWidth(containerRef);
+    const [measuredWidths, setMeasuredWidths] = useState<MeasuredWidths>();
     const itemsKey = items.map((item) => item.url).join("|");
 
     useEffect(() => {
-        setItemWidths(undefined);
-    }, [itemsKey]);
+        const children = measureRef.current?.children;
 
-    useEffect(() => {
-        if (items.length && !itemWidths?.length) {
-            const children = itemsRef.current?.children;
-            setItemWidths(children ? Array.from(children).map(getElementOuterWidth) : []);
+        if (!children?.length) {
+            setMeasuredWidths(undefined);
+            return;
         }
-        if (ellipsisRef.current && ellipsisWidth === undefined) {
-            setEllipsisWidth(getElementOuterWidth(ellipsisRef.current));
-        }
-    }, [items.length, itemsKey, itemWidths, ellipsisWidth, itemsRef, ellipsisRef]);
 
-    const isMeasuring = !itemWidths?.length || ellipsisWidth === undefined;
-    const numberOfHiddenItems = useMemo(
-        () => (isMeasuring ? 0 : getNumberOfHiddenItems({ itemWidths, ellipsisWidth, containerWidth })),
-        [isMeasuring, itemWidths, ellipsisWidth, containerWidth],
-    );
+        const widths = Array.from(children).map(getElementOuterWidth);
 
-    return { isMeasuring, numberOfHiddenItems };
+        setMeasuredWidths({ itemWidths: widths.slice(0, -1), ellipsisWidth: widths[widths.length - 1] });
+    }, [itemsKey, measureRef]);
+
+    return getOverflow({ items, measuredWidths, containerWidth });
 };
