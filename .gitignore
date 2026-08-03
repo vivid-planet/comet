@@ -3,7 +3,7 @@
 **/.watchmanconfig
 /.docker-sync
 storybook-static/
-comet-lang/
+dextinity-lang/
 lang/
 /.npm
 .pnp.*
