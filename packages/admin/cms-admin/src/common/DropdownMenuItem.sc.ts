@@ -3,6 +3,10 @@ import { styled } from "@mui/material/styles";
 
 const lightOverlayColor = "rgba(255, 255, 255, 0.2)";
 
+export const buttonTextClassName = "CometAdminDropdownMenuItemButtonText";
+export const buttonIconWrapperWithSpacingClassName = "CometAdminDropdownMenuItemButtonIconWrapperWithSpacing";
+export const arrowWrapperClassName = "CometAdminDropdownMenuItemArrowWrapper";
+
 export const Root = styled("div")`
     position: relative;
     border-left: thin solid ${lightOverlayColor};
@@ -42,7 +46,7 @@ export const Button = styled(ButtonBase)<ButtonProps>`
         `}
 
     &:disabled {
-        ${ButtonText}, ${ButtonIconWrapperWithSpacing}, ${ArrowWrapper} {
+        .${buttonTextClassName}, .${buttonIconWrapperWithSpacingClassName}, .${arrowWrapperClassName} {
             opacity: 0.5;
         }
     }

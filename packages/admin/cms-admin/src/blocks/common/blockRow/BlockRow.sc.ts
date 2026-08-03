@@ -1,6 +1,8 @@
 import { css, keyframes } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
+export const addContainerClassName = "CometAdminBlockRowAddContainer";
+
 export const AddContainer = styled("div")`
     display: none;
     position: absolute;
@@ -28,7 +30,7 @@ const slideInAnimation = keyframes`
 export const BlockWrapper = styled("div")`
     position: relative;
 
-    &:hover ${`${AddContainer}`} {
+    &:hover .${addContainerClassName} {
         display: block;
     }
 `;

@@ -135,7 +135,7 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
 
     return (
         <sc.BlockWrapper>
-            <sc.AddContainer>
+            <sc.AddContainer className={sc.addContainerClassName}>
                 <InsertInBetweenAction
                     top={<InsertInBetweenActionButton onClick={() => onAddNewBlock(index)} />}
                     bottom={!props.hideBottomInsertBetweenButton && <InsertInBetweenActionButton onClick={() => onAddNewBlock(index + 1)} />}

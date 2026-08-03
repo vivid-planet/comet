@@ -43,14 +43,18 @@ export function DropdownMenuItem({
             <sc.Button open={showDropdown} onClick={() => setShowDropdown(!showDropdown)} disabled={disabled}>
                 {buttonText ? (
                     <>
-                        {buttonIcon && <sc.ButtonIconWrapperWithSpacing>{buttonIcon}</sc.ButtonIconWrapperWithSpacing>}
-                        <sc.ButtonText>{buttonText}</sc.ButtonText>
+                        {buttonIcon && (
+                            <sc.ButtonIconWrapperWithSpacing className={sc.buttonIconWrapperWithSpacingClassName}>
+                                {buttonIcon}
+                            </sc.ButtonIconWrapperWithSpacing>
+                        )}
+                        <sc.ButtonText className={sc.buttonTextClassName}>{buttonText}</sc.ButtonText>
                     </>
                 ) : (
                     buttonIcon
                 )}
                 {!disableArrow && (
-                    <sc.ArrowWrapper>
+                    <sc.ArrowWrapper className={sc.arrowWrapperClassName}>
                         {showDropdown ? (
                             <ChevronUp htmlColor={theme.palette.primary.contrastText} />
                         ) : (

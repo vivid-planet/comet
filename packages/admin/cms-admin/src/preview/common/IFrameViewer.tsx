@@ -34,6 +34,8 @@ const devicesConfig: Record<Exclude<Device, Device.Responsive>, DeviceConfig> = 
     },
 };
 
+const outerFrameClassName = "CometAdminIFrameViewerOuterFrame";
+
 interface Props {
     device: Device;
     initialPageUrl: string;
@@ -51,6 +53,7 @@ const IFrameViewer = forwardRef<HTMLIFrameElement, Props>(({ device, initialPage
         <Root ref={containerRef}>
             {isLoading && <Loading behavior="fillParentAbsolute" sx={{ zIndex: 1 }} />}
             <OuterFrame
+                className={outerFrameClassName}
                 // Inline style to prevent device frame disappearing while scaling
                 style={{ transform: `scale(${scaleFactor})` }}
                 deviceConfig={deviceConfig}
@@ -118,7 +121,7 @@ const IFrame = styled("iframe", { shouldForwardProp: (prop) => prop !== "deviceC
     height: 100%;
     background-color: ${({ theme }) => theme.palette.common.white};
 
-    ${OuterFrame}:not(:hover):not(:active) & {
+    .${outerFrameClassName}:not(:hover):not(:active) & {
         /**
         * Remove iFrame pointer-events while not interacting with the parent to fix a chrome-bug that prevents
         * drag-and-drop from working in a modal over the iFrame when using an external URL as the source.
