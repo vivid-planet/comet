@@ -103,7 +103,7 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
         slotProps,
         disabled,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminFinalFormRangeInput" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminFinalFormRangeInput" });
 
     const [internalMinInput, setInternalMinInput] = useState(fieldValue.min || undefined);
     const [internalMaxInput, setInternalMaxInput] = useState(fieldValue.max || undefined);
@@ -213,12 +213,12 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFinalFormRangeInput: FinalFormRangeInputClassKey;
+        DextinityAdminFinalFormRangeInput: FinalFormRangeInputClassKey;
     }
 
     interface Components {
-        CometAdminFinalFormRangeInput?: {
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormRangeInput"];
+        DextinityAdminFinalFormRangeInput?: {
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFinalFormRangeInput"];
         };
     }
 }

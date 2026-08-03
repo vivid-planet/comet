@@ -1,6 +1,6 @@
 import { CometLogo } from "../../common/CometLogo";
 import { MuiThemeProvider } from "../../mui/ThemeProvider";
-import { createCometTheme } from "../../theme/createCometTheme";
+import { createDextinityTheme } from "../../theme/createDextinityTheme";
 import { AppHeader } from "../AppHeader";
 
 export default {
@@ -9,9 +9,9 @@ export default {
 
 export const ThemableAppHeader = {
     render: () => {
-        const theme = createCometTheme({
+        const theme = createDextinityTheme({
             components: {
-                CometAdminAppHeader: {
+                DextinityAdminAppHeader: {
                     defaultProps: {
                         headerHeight: 60,
                     },

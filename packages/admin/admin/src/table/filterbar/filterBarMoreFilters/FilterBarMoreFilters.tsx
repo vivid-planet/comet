@@ -52,7 +52,7 @@ export function FilterBarMoreFilters(inProps: PropsWithChildren<FilterBarMoreFil
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminFilterBarMoreFilters",
+        name: "DextinityAdminFilterBarMoreFilters",
     });
     const [hasExtended, setHasExtended] = useState(false);
 
@@ -71,17 +71,17 @@ export function FilterBarMoreFilters(inProps: PropsWithChildren<FilterBarMoreFil
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFilterBarMoreFilters: FilterBarMoreFiltersClassKey;
+        DextinityAdminFilterBarMoreFilters: FilterBarMoreFiltersClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBarMoreFilters: FilterBarMoreFiltersProps;
+        DextinityAdminFilterBarMoreFilters: FilterBarMoreFiltersProps;
     }
 
     interface Components {
-        CometAdminFilterBarMoreFilters?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarMoreFilters"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarMoreFilters"];
+        DextinityAdminFilterBarMoreFilters?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFilterBarMoreFilters"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFilterBarMoreFilters"];
         };
     }
 }

@@ -52,7 +52,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminMainNavigationCollapsibleItem",
+        name: "DextinityAdminMainNavigationCollapsibleItem",
     });
 
     const {
@@ -234,17 +234,17 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminMainNavigationCollapsibleItem: MainNavigationCollapsibleItemClassKey;
+        DextinityAdminMainNavigationCollapsibleItem: MainNavigationCollapsibleItemClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminMainNavigationCollapsibleItem: MainNavigationCollapsibleItemProps;
+        DextinityAdminMainNavigationCollapsibleItem: MainNavigationCollapsibleItemProps;
     }
 
     interface Components {
-        CometAdminMainNavigationCollapsibleItem?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminMainNavigationCollapsibleItem"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMainNavigationCollapsibleItem"];
+        DextinityAdminMainNavigationCollapsibleItem?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminMainNavigationCollapsibleItem"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminMainNavigationCollapsibleItem"];
         };
     }
 }

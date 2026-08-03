@@ -89,7 +89,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
         maxDate = defaultMaxDate,
         slotProps,
         ...inputWithPopperProps
-    } = useThemeProps({ props: inProps, name: "CometAdminLegacyDateRangePicker" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminLegacyDateRangePicker" });
     const intl = useIntl();
     const textValue = useDateRangeTextValue(value, rangeStringSeparator, formatDateOptions);
     const dateFnsLocale = useDateFnsLocale();
@@ -156,17 +156,17 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminLegacyDateRangePicker: DateRangePickerClassKey;
+        DextinityAdminLegacyDateRangePicker: DateRangePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminLegacyDateRangePicker: DateRangePickerProps;
+        DextinityAdminLegacyDateRangePicker: DateRangePickerProps;
     }
 
     interface Components {
-        CometAdminLegacyDateRangePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminLegacyDateRangePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminLegacyDateRangePicker"];
+        DextinityAdminLegacyDateRangePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminLegacyDateRangePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminLegacyDateRangePicker"];
         };
     }
 }

@@ -47,7 +47,7 @@ export interface ToolbarBreadcrumbsProps
 }
 
 export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
-    const { iconMapping = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarBreadcrumbs" });
+    const { iconMapping = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "DextinityAdminToolbarBreadcrumbs" });
     const {
         itemSeparator: itemSeparatorIcon = <ChevronRight />,
         openMobileMenu: openMobileMenuIcon = <ChevronDown />,
@@ -392,17 +392,17 @@ const MobileMenuItemNestingIndicator = createComponentSlot("div")<ToolbarBreadcr
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsClassKey;
+        DextinityAdminToolbarBreadcrumbs: ToolbarBreadcrumbsClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsProps;
+        DextinityAdminToolbarBreadcrumbs: ToolbarBreadcrumbsProps;
     }
 
     interface Components {
-        CometAdminToolbarBreadcrumbs?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarBreadcrumbs"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarBreadcrumbs"];
+        DextinityAdminToolbarBreadcrumbs?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminToolbarBreadcrumbs"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminToolbarBreadcrumbs"];
         };
     }
 }

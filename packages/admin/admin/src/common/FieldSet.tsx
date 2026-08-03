@@ -57,7 +57,7 @@ export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
         disablePadding = false,
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminFieldSet" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminFieldSet" });
     const [expanded, setExpanded] = useState(initiallyExpanded);
 
     const handleChange = (event: SyntheticEvent, isExpanded: boolean) => {
@@ -225,17 +225,17 @@ const Children = createComponentSlot(MuiAccordionDetails)<FieldSetClassKey, Owne
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFieldSet: FieldSetProps;
+        DextinityAdminFieldSet: FieldSetProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminFieldSet: FieldSetClassKey;
+        DextinityAdminFieldSet: FieldSetClassKey;
     }
 
     interface Components {
-        CometAdminFieldSet?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFieldSet"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFieldSet"];
+        DextinityAdminFieldSet?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFieldSet"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFieldSet"];
         };
     }
 }

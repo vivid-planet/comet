@@ -98,7 +98,7 @@ export interface DateTimePickerProps
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
     const { onChange, value, required, disabled, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
         props: inProps,
-        name: "CometAdminLegacyDateTimePicker",
+        name: "DextinityAdminLegacyDateTimePicker",
     });
     const intl = useIntl();
     const datePickerRef = useRef<HTMLElement>(null);
@@ -181,17 +181,17 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminLegacyDateTimePicker: DateTimePickerClassKey;
+        DextinityAdminLegacyDateTimePicker: DateTimePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminLegacyDateTimePicker: DateTimePickerProps;
+        DextinityAdminLegacyDateTimePicker: DateTimePickerProps;
     }
 
     interface Components {
-        CometAdminLegacyDateTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminLegacyDateTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminLegacyDateTimePicker"];
+        DextinityAdminLegacyDateTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminLegacyDateTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminLegacyDateTimePicker"];
         };
     }
 }

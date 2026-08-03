@@ -78,7 +78,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminFileSelect",
+        name: "DextinityAdminFileSelect",
     });
 
     const { error: errorIcon = <ErrorIcon color="error" /> } = iconMapping;
@@ -219,7 +219,7 @@ const FileList = createComponentSlot("div")<FileSelectClassKey, OwnerState>({
             ${theme.breakpoints.up("md")} {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 
-                .CometAdminFormFieldContainer-horizontal & {
+                .DextinityAdminFormFieldContainer-horizontal & {
                     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 }
             }
@@ -259,17 +259,17 @@ const ErrorMessage = createComponentSlot(Typography)<FileSelectClassKey>({
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFileSelect: FileSelectClassKey;
+        DextinityAdminFileSelect: FileSelectClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminFileSelect: FileSelectProps;
+        DextinityAdminFileSelect: FileSelectProps;
     }
 
     interface Components {
-        CometAdminFileSelect?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFileSelect"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFileSelect"];
+        DextinityAdminFileSelect?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFileSelect"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFileSelect"];
         };
     }
 }

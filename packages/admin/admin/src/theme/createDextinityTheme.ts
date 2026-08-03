@@ -2,13 +2,13 @@ import { createTheme, type Theme, type ThemeOptions } from "@mui/material";
 import { createBreakpoints } from "@mui/system";
 import { deepmerge } from "@mui/utils";
 
-import { breakpointsOptions as cometBreakpointsOptions } from "./breakpointsOptions";
+import { breakpointsOptions as dextinityBreakpointsOptions } from "./breakpointsOptions";
 import { getComponentsTheme } from "./componentsTheme/getComponentsTheme";
-import { paletteOptions as cometPaletteOptions } from "./paletteOptions";
+import { paletteOptions as dextinityPaletteOptions } from "./paletteOptions";
 import { shadows } from "./shadows";
 import { createTypographyOptions } from "./typographyOptions";
 
-export const createCometTheme = (
+export const createDextinityTheme = (
     {
         palette: passedPaletteOptions = {},
         typography: passedTypographyOptions = {},
@@ -20,16 +20,16 @@ export const createCometTheme = (
     }: ThemeOptions | undefined = {},
     ...args: object[]
 ): Theme => {
-    const breakpointsOptions = deepmerge(cometBreakpointsOptions, passedBreakpointsOptions);
+    const breakpointsOptions = deepmerge(dextinityBreakpointsOptions, passedBreakpointsOptions);
     const breakpoints = createBreakpoints(breakpointsOptions);
 
-    const paletteOptions = deepmerge(cometPaletteOptions, passedPaletteOptions);
+    const paletteOptions = deepmerge(dextinityPaletteOptions, passedPaletteOptions);
     const { palette } = createTheme({ palette: paletteOptions });
 
     const passedTypographyOptionsObject = typeof passedTypographyOptions === "function" ? passedTypographyOptions(palette) : passedTypographyOptions;
     const typographyOptions = deepmerge(createTypographyOptions(breakpoints), passedTypographyOptionsObject);
 
-    const cometThemeOptionsBeforeAddingComponents = {
+    const dextinityThemeOptionsBeforeAddingComponents = {
         spacing: passedSpacingOptions,
         palette: {
             ...paletteOptions,
@@ -47,14 +47,14 @@ export const createCometTheme = (
         breakpoints: breakpointsOptions,
     } satisfies ThemeOptions;
 
-    const combinedThemeOptionsBeforeAddingComponents = deepmerge(cometThemeOptionsBeforeAddingComponents, restPassedOptions);
+    const combinedThemeOptionsBeforeAddingComponents = deepmerge(dextinityThemeOptionsBeforeAddingComponents, restPassedOptions);
     const themeBeforeAddingComponents = createTheme(combinedThemeOptionsBeforeAddingComponents);
 
-    const cometThemeOptions = {
-        ...cometThemeOptionsBeforeAddingComponents,
+    const dextinityThemeOptions = {
+        ...dextinityThemeOptionsBeforeAddingComponents,
         components: getComponentsTheme(passedComponentsOptions, themeBeforeAddingComponents),
     } satisfies ThemeOptions;
 
-    const themeOptions = deepmerge(cometThemeOptions, restPassedOptions);
+    const themeOptions = deepmerge(dextinityThemeOptions, restPassedOptions);
     return createTheme(themeOptions, ...args);
 };

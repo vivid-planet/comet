@@ -57,7 +57,7 @@ export const ContentOverflow = (inProps: PropsWithChildren<ContentOverflowProps>
         iconMapping = {},
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminContentOverflow" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminContentOverflow" });
     const { openDialog: openDialogIcon = <Maximize fontSize="inherit" />, closeDialog: closeDialogIcon = <Close /> } = iconMapping;
 
     const [open, setOpen] = useState(false);
@@ -208,17 +208,17 @@ const InnerDialogContent = createComponentSlot("div")<ContentOverflowClassKey>({
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminContentOverflow: ContentOverflowClassKey;
+        DextinityAdminContentOverflow: ContentOverflowClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminContentOverflow: ContentOverflowProps;
+        DextinityAdminContentOverflow: ContentOverflowProps;
     }
 
     interface Components {
-        CometAdminContentOverflow?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminContentOverflow"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminContentOverflow"];
+        DextinityAdminContentOverflow?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminContentOverflow"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminContentOverflow"];
         };
     }
 }

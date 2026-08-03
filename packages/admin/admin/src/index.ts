@@ -318,7 +318,7 @@ export { Tab, Tabs, type TabsClassKey, type TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, type TabScrollButtonClassKey, type TabScrollButtonProps } from "./tabs/TabScrollButton";
 export { breakpointsOptions, breakpointValues } from "./theme/breakpointsOptions";
 export { errorPalette, greyPalette, infoPalette, primaryPalette, successPalette, warningPalette } from "./theme/colors";
-export { createCometTheme } from "./theme/createCometTheme";
+export { createDextinityTheme } from "./theme/createDextinityTheme";
 export { paletteOptions } from "./theme/paletteOptions";
 export { shadows } from "./theme/shadows";
 export { createTypographyOptions } from "./theme/typographyOptions";

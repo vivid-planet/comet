@@ -73,7 +73,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminDateTimePicker",
+        name: "DextinityAdminDateTimePicker",
     });
     const [open, setOpen] = useState(false);
     const intl = useIntl();
@@ -173,17 +173,17 @@ const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DateTi
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminDateTimePicker: DateTimePickerProps;
+        DextinityAdminDateTimePicker: DateTimePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminDateTimePicker: DateTimePickerClassKey;
+        DextinityAdminDateTimePicker: DateTimePickerClassKey;
     }
 
     interface Components {
-        CometAdminDateTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDateTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDateTimePicker"];
+        DextinityAdminDateTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminDateTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminDateTimePicker"];
         };
     }
 }
