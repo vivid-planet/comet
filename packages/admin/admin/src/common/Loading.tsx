@@ -12,7 +12,7 @@ export const Loading = ({ behavior = "auto", fontSize, sx, ...svgIconsProps }: L
     const offsetTop = rootRef.current?.offsetTop || 0;
 
     return (
-        <Root ref={rootRef} style={{ "--comet-admin-loading-offset-top": `${offsetTop}px` } as CSSProperties} behavior={behavior}>
+        <Root ref={rootRef} style={{ "--dextinity-admin-loading-offset-top": `${offsetTop}px` } as CSSProperties} behavior={behavior}>
             <LoadingContainer behavior={behavior}>
                 <BallTriangle sx={{ fontSize: fontSize ?? 40, ...sx }} {...svgIconsProps} />
             </LoadingContainer>
@@ -40,7 +40,7 @@ const Root = styled("div")<Required<Pick<LoadingProps, "behavior">>>`
 
         if (behavior === "fillPageHeight") {
             return css`
-                height: calc(100vh - var(--comet-admin-loading-offset-top));
+                height: calc(100vh - var(--dextinity-admin-loading-offset-top));
             `;
         }
     }}
