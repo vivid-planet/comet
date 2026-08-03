@@ -51,7 +51,7 @@ When the header is **absent**, only published pages and visible blocks are retur
 
 ### Authentication Requirement
 
-When the `x-include-invisible-content` header is present, the API **requires authentication** — even on endpoints that would normally be public (decorated with `@DisableCometGuards()`). This ensures that invisible content is never accidentally exposed to unauthenticated users.
+When the `x-include-invisible-content` header is present, the API **requires authentication** — even on endpoints that would normally be public (decorated with `@DisableDextinityGuards()`). This ensures that invisible content is never accidentally exposed to unauthenticated users.
 
 ## How Each Layer Uses the Header
 
