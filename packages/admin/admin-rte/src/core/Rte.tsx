@@ -348,18 +348,18 @@ const Root = createComponentSlot("div")<RteClassKey, OwnerState>({
     },
 })(
     ({ theme }) => css`
-        --comet-admin-rte-outer-border-color: ${getRteTheme(theme.components?.DextinityAdminRte?.defaultProps).colors.border};
-        border: 1px solid var(--comet-admin-rte-outer-border-color);
+        --dextinity-admin-rte-outer-border-color: ${getRteTheme(theme.components?.DextinityAdminRte?.defaultProps).colors.border};
+        border: 1px solid var(--dextinity-admin-rte-outer-border-color);
         border-top-width: 0; // To prevent the top border from being hidden, when to toolbar is sticky, the top border must be handled by the Toolbar itself
         background-color: #fff;
         border-radius: 2px;
 
         &:hover {
-            --comet-admin-rte-outer-border-color: ${getRteTheme(theme.components?.DextinityAdminRte?.defaultProps).colors.outerBorderOnHover};
+            --dextinity-admin-rte-outer-border-color: ${getRteTheme(theme.components?.DextinityAdminRte?.defaultProps).colors.outerBorderOnHover};
         }
 
         &:focus-within {
-            --comet-admin-rte-outer-border-color: ${getRteTheme(theme.components?.DextinityAdminRte?.defaultProps).colors.outerBorderOnFocus};
+            --dextinity-admin-rte-outer-border-color: ${getRteTheme(theme.components?.DextinityAdminRte?.defaultProps).colors.outerBorderOnFocus};
         }
     `,
 );

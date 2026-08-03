@@ -29,7 +29,7 @@ const buildsQuery = gql`
 
 const DataGridContainer = styled("div")`
     width: 100%;
-    height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
+    height: calc(100vh - var(--dextinity-admin-master-layout-content-top-spacing));
 `;
 
 export function PublisherPage() {

@@ -39,8 +39,8 @@ const ContentWrapper = createComponentSlot("div")<MasterLayoutClassKey>({
     slotName: "contentWrapper",
 })(css`
     flex-grow: 1;
-    padding-top: var(--comet-admin-master-layout-content-top-spacing);
-    width: calc(100% - var(--comet-admin-master-layout-menu-width));
+    padding-top: var(--dextinity-admin-master-layout-content-top-spacing);
+    width: calc(100% - var(--dextinity-admin-master-layout-menu-width));
 `);
 
 export interface MasterLayoutProps
@@ -122,8 +122,8 @@ export function MasterLayout(inProps: MasterLayoutProps) {
                         {...slotProps?.contentWrapper}
                         style={
                             {
-                                "--comet-admin-master-layout-content-top-spacing": `${headerHeight}px`,
-                                "--comet-admin-master-layout-menu-width": `${menuWidth}px`,
+                                "--dextinity-admin-master-layout-content-top-spacing": `${headerHeight}px`,
+                                "--dextinity-admin-master-layout-menu-width": `${menuWidth}px`,
                             } as CSSProperties
                         }
                     >

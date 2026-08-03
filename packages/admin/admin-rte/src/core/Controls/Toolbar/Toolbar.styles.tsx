@@ -15,7 +15,7 @@ export const Root = createComponentSlot("div")<RteToolbarClassKey>({
         z-index: 2;
         display: flex;
         flex-wrap: wrap;
-        border-top: 1px solid var(--comet-admin-rte-outer-border-color);
+        border-top: 1px solid var(--dextinity-admin-rte-outer-border-color);
         background-color: ${getRteTheme(theme.components?.DextinityAdminRte?.defaultProps).colors?.toolbarBackground};
         padding-left: 6px;
         padding-right: 6px;
