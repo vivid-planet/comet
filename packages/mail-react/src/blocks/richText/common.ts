@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
-
-import type { TextStyles, VariantName } from "../../theme/themeTypes.js";
+import type { BlockTextStyleProps } from "../helpers/blockText.js";
+import type { LinkHrefResolver } from "../helpers/linkTypes.js";
+import type { BlockTextMarkRenderer } from "../helpers/markRenderers.js";
 import type { PropsWithData } from "../helpers/PropsWithData.js";
 
 export interface RichTextBlockData {
@@ -10,35 +10,14 @@ export interface RichTextBlockData {
 
 export type RichTextBlockProps = PropsWithData<RichTextBlockData>;
 
-/**
- * Styling for all draft blocks of one type, applied on top of the base theme text styles.
- *
- * Style props accept plain values only. For responsive styling, use a theme
- * variant, or set a `className` and register responsive CSS via `registerStyles`.
- */
-export type RichTextBlockTypeProps = Omit<TextStyles, "bottomSpacing"> & {
-    /**
-     * The text component's variant to apply, as defined in the theme.
-     *
-     * @defaultValue The theme's `text.defaultVariant`, when set
-     */
-    variant?: VariantName;
-    className?: string;
-};
+/** Styling for all draft blocks of one type — see `BlockTextStyleProps`. */
+export type RichTextBlockTypeProps = BlockTextStyleProps;
 
-/**
- * Resolves the href of one link block type from the link block's props.
- *
- * Return `undefined` to render the linked text without a link.
- */
-export type RichTextLinkHrefResolver<TProps = unknown> = (props: TProps) => string | undefined;
+/** Resolves the href of one link block type from the link block's props — see `LinkHrefResolver`. */
+export type RichTextLinkHrefResolver<TProps = unknown> = LinkHrefResolver<TProps>;
 
-/**
- * Renders the text spanned by one draft-js inline style (e.g. `BOLD`).
- *
- * `key` must be set on the returned element's root.
- */
-export type RichTextInlineRenderer = (children: ReactNode, options: { key: string }) => ReactNode;
+/** Renders the text spanned by one draft-js inline style (e.g. `BOLD`) — see `BlockTextMarkRenderer`. */
+export type RichTextInlineRenderer = BlockTextMarkRenderer;
 
 export interface CreateRichTextBlockOptions<TLinkTypes extends Record<string, unknown> = Record<string, unknown>> {
     /**

@@ -191,6 +191,109 @@ export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
     },
 };
 
+const CustomDefaultLabelBlock = createTipTapRichTextBlock({
+    defaultTextBlockStyleLabel: "Paragraph Default",
+    textBlockStyles: [
+        {
+            name: "small",
+            label: "Paragraph Small",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 11 }} {...props} />,
+        },
+    ],
+});
+
+function CustomDefaultLabelStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(CustomDefaultLabelBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <CustomDefaultLabelBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+/**
+ * `defaultTextBlockStyleLabel` renames the no-style entry so it reads consistently next to named styles like
+ * `Paragraph Small`, instead of a fixed `Default`. The stored value is unchanged.
+ */
+export const CustomDefaultTextBlockStyleLabel: StoryObj<typeof CustomDefaultLabelStory> = {
+    render: () => <CustomDefaultLabelStory />,
+    play: async ({ canvas, userEvent, step }) => {
+        await step("Text block style dropdown shows the custom default label instead of 'Default'", async () => {
+            await waitFor(
+                () => {
+                    const comboboxes = canvas.getAllByRole("combobox");
+                    expect(comboboxes).toHaveLength(2);
+                },
+                { timeout: 5000 },
+            );
+
+            // The text block style dropdown (second combobox) shows the custom label instead of "Default"
+            const textBlockStyleSelect = canvas.getAllByRole("combobox")[1];
+            expect(textBlockStyleSelect).toHaveTextContent("Paragraph Default");
+        });
+
+        await step("Opening the dropdown lists the custom default label alongside the configured style", async () => {
+            const textBlockStyleSelect = canvas.getAllByRole("combobox")[1];
+            await userEvent.click(textBlockStyleSelect);
+
+            await waitFor(
+                () => {
+                    const body = within(document.body);
+                    expect(body.getByRole("option", { name: "Paragraph Default" })).toBeInTheDocument();
+                    expect(body.getByRole("option", { name: "Paragraph Small" })).toBeInTheDocument();
+                },
+                { timeout: 3000 },
+            );
+        });
+    },
+};
+
+const SingleDropdownStylesBlock = createTipTapRichTextBlock({
+    supports: ["history", "bold", "italic", "strike", "sub", "sup", "ordered-list", "unordered-list", "non-breaking-space", "soft-hyphen"],
+    defaultTextBlockStyleLabel: "Copy Default",
+    textBlockStyles: [
+        {
+            name: "copy-small",
+            label: "Copy Small",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 11 }} {...props} />,
+        },
+        {
+            name: "headline-one",
+            label: "Headline One",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 32, fontWeight: 700 }} {...props} />,
+        },
+        {
+            name: "headline-two",
+            label: "Headline Two",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 24, fontWeight: 600 }} {...props} />,
+        },
+    ],
+});
+
+function SingleDropdownStylesStory() {
+    const [state, setState] = useState<TipTapRichTextBlockState>(SingleDropdownStylesBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <SingleDropdownStylesBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+/**
+ * When only the visual appearance of text matters and not its semantic element, the block type is irrelevant. Disabling
+ * heading support hides the block type dropdown (paragraph / headings), leaving the text block style dropdown as the only
+ * selector, with `defaultTextBlockStyleLabel` renaming its no-style entry. This fits output such as emails or PDFs.
+ */
+export const SingleDropdownTextBlockStyles: StoryObj<typeof SingleDropdownStylesStory> = {
+    render: () => <SingleDropdownStylesStory />,
+};
+
 const PlaceholdersBlock = createTipTapRichTextBlock({
     placeholders: [
         { name: "firstName", label: "First Name" },

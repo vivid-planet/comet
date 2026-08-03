@@ -160,6 +160,7 @@ export const TipTapToolbar = ({
     editor,
     supports,
     textBlockStyles,
+    defaultTextBlockStyleLabel = <FormattedMessage id="comet.blocks.tipTapRichText.textBlockStyle.default" defaultMessage="Default" />,
     inlineStyles,
     placeholders,
     linkBlock,
@@ -169,6 +170,7 @@ export const TipTapToolbar = ({
     editor: Editor;
     supports: TipTapSupports[];
     textBlockStyles: TipTapTextBlockStyle[];
+    defaultTextBlockStyleLabel?: ReactNode;
     inlineStyles: TipTapInlineStyle[];
     placeholders: TipTapPlaceholder[];
     linkBlock?: BlockInterface & LinkBlockInterface;
@@ -393,7 +395,7 @@ export const TipTapToolbar = ({
                             sx={selectSx}
                         >
                             <MenuItem value="" dense>
-                                <FormattedMessage id="comet.blocks.tipTapRichText.textBlockStyle.default" defaultMessage="Default" />
+                                {defaultTextBlockStyleLabel}
                             </MenuItem>
                             {applicableTextBlockStyles.map((style) => (
                                 <MenuItem key={style.name} value={style.name} dense>

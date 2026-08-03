@@ -65,6 +65,7 @@ import { SeoBlockFixtureService } from "./generators/seo-block-fixture.service";
 import { StageBlockFixtureService } from "./generators/stage-block-fixture.service";
 import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.service";
 import { VideoFixtureService } from "./generators/video-fixture.service";
+import { WelcomeEmailFixtureService } from "./generators/welcome-email-fixture.service";
 
 @Module({
     imports: [
@@ -128,6 +129,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         ProductListBlockFixtureService,
         TableBlockFixtureService,
         TipTapRichTextBlockFixtureService,
+        WelcomeEmailFixtureService,
     ],
 })
 export class FixturesModule {}

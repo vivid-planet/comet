@@ -31,6 +31,7 @@ import { NewsFixtureService } from "./generators/news-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 import { VideoFixtureService } from "./generators/video-fixture.service";
+import { WelcomeEmailFixtureService } from "./generators/welcome-email-fixture.service";
 
 const getDefaultPageInput = (): PageInput => {
     const pageInput = new PageInput();
@@ -68,6 +69,7 @@ export class FixturesCommand extends CommandRunner {
         private readonly videoFixtureService: VideoFixtureService,
         private readonly newsFixtureService: NewsFixtureService,
         private readonly draftJsMigrationPageFixtureService: DraftJsMigrationPageFixtureService,
+        private readonly welcomeEmailFixtureService: WelcomeEmailFixtureService,
     ) {
         super();
     }
@@ -105,6 +107,9 @@ export class FixturesCommand extends CommandRunner {
 
         this.logger.log("Generate Videos...");
         await this.videoFixtureService.generateVideos({ domain: "main" });
+
+        this.logger.log("Generate Welcome Email...");
+        await this.welcomeEmailFixtureService.generate();
 
         this.logger.log("Generate Pages...");
         await this.documentGeneratorService.generatePage({ name: "Home", scope });

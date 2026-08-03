@@ -10,6 +10,8 @@ export type { MjmlPixelImageBlockProps } from "./blocks/pixelImage/MjmlPixelImag
 export { MjmlPixelImageBlock } from "./blocks/pixelImage/MjmlPixelImageBlock.js";
 export type { CreateRichTextBlockOptions, RichTextBlockProps } from "./blocks/richText/common.js";
 export { createRichTextBlock } from "./blocks/richText/createRichTextBlock.js";
+export type { CreateTipTapRichTextBlockOptions, TipTapRichTextBlockProps } from "./blocks/tipTapRichText/common.js";
+export { createTipTapRichTextBlock } from "./blocks/tipTapRichText/createTipTapRichTextBlock.js";
 export type { HtmlButtonProps } from "./components/button/HtmlButton.js";
 export { HtmlButton } from "./components/button/HtmlButton.js";
 export type { MjmlButtonProps } from "./components/button/MjmlButton.js";
