@@ -37,7 +37,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 errorDialog?.showError({
                     userMessage: (
                         <FormattedMessage
-                            id="comet.dam.file.replace.fileRejection"
+                            id="dextinity.dam.file.replace.fileRejection"
                             defaultMessage="The selected file could not be uploaded because it doesn't meet the required criteria. Please choose a valid file to replace the existing one."
                         />
                     ),
@@ -72,7 +72,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 errorDialog?.showError({
                     userMessage: (
                         <FormattedMessage
-                            id="comet.dam.file.replace.error"
+                            id="dextinity.dam.file.replace.error"
                             defaultMessage="An error occurred while replacing the file. Please try again later."
                         />
                     ),
@@ -92,7 +92,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                     fileInputRef.current?.click();
                 }}
             >
-                <FormattedMessage id="comet.dam.file.replaceFile" defaultMessage="Replace File" />
+                <FormattedMessage id="dextinity.dam.file.replaceFile" defaultMessage="Replace File" />
             </Button>
             <input type="file" hidden {...getInputProps()} ref={fileInputRef} />
         </>

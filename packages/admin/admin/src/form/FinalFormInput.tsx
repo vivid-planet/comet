@@ -48,7 +48,7 @@ export function FinalFormInput({
                         <>
                             {clearable && input.value && <ClearInputAdornment position="end" onClick={() => input.onChange("")} />}
                             {isTranslatable && (
-                                <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
+                                <Tooltip title={<FormattedMessage id="dextinity.translate" defaultMessage="Translate" />}>
                                     <IconButton
                                         onClick={async () => {
                                             if (showApplyTranslationDialog) {

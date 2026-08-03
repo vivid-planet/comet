@@ -75,7 +75,7 @@ export function FeaturesButtonGroup(inProps: IProps) {
                 <>
                     <ButtonWrapper {...slotProps?.buttonWrapper}>
                         <Tooltip
-                            title={<FormattedMessage id="comet.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
+                            title={<FormattedMessage id="dextinity.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
                             placement="top"
                         >
                             <span>

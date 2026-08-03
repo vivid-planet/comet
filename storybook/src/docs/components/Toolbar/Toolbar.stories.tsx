@@ -8,6 +8,7 @@ import {
     FinalFormSaveSplitButton,
     FinalFormSearchTextField,
     MainContent,
+    messages,
     SaveButton,
     SplitButton,
     StackApiContext,
@@ -534,7 +535,7 @@ export const Save = () => {
                         }, 1000);
                     }}
                 >
-                    <FormattedMessage id="comet.save" defaultMessage="Save" />
+                    <FormattedMessage {...messages.save} />
                 </SaveButton>
             </ToolbarActions>
         </Toolbar>
@@ -616,7 +617,7 @@ export const SaveSplitButton = () => {
                             }, 1000);
                         }}
                     >
-                        <FormattedMessage id="comet.save" defaultMessage="Save" />
+                        <FormattedMessage {...messages.save} />
                     </SaveButton>
                     <SaveButton
                         loading={saving}
@@ -627,7 +628,7 @@ export const SaveSplitButton = () => {
                             }, 1000);
                         }}
                     >
-                        <FormattedMessage id="comet.saveAndGoBack" defaultMessage="Save and Go Back" />
+                        <FormattedMessage {...messages.saveAndGoBack} />
                     </SaveButton>
                 </SplitButton>
             </ToolbarActions>

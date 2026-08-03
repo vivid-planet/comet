@@ -139,7 +139,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
                                             ...slotProps?.openPickerAdornment?.slotProps,
                                             openPickerButton: {
                                                 "aria-label": intl.formatMessage({
-                                                    id: "comet.dateRangePicker.openPicker",
+                                                    id: "dextinity.dateRangePicker.openPicker",
                                                     defaultMessage: "Open date range picker",
                                                 }),
                                                 ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,

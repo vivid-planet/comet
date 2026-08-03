@@ -65,7 +65,7 @@ export const DataGridPaginationActions: FunctionComponent<PropsWithChildren<Data
                 <PageOf variant="body2" {...slotProps.pageOf}>
                     <FormattedMessage
                         defaultMessage="Page {page} of {pageCount}"
-                        id="comet.dataGridPaginationActions.pageXOfY"
+                        id="dextinity.dataGridPaginationActions.pageXOfY"
                         values={{
                             page: pageCount === 0 ? 0 : page + 1,
                             pageCount: pageCount,

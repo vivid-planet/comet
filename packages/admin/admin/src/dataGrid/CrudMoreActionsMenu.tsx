@@ -143,7 +143,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
     return (
         <CrudMoreActionsMenuContext.Provider value={{ closeMenu: handleClose }}>
             <MoreActionsButton variant="textDark" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick} responsive>
-                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
+                <FormattedMessage id="dextinity.crudMoreActions.title" defaultMessage="More" />
                 {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
             </MoreActionsButton>
             <Menu
@@ -160,7 +160,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     <CrudMoreActionsGroup
                         groupTitle={
                             hasSelectiveActions ? (
-                                <FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />
+                                <FormattedMessage id="dextinity.crudMoreActions.overallActions" defaultMessage="Overall actions" />
                             ) : undefined
                         }
                         {...groupProps}
@@ -195,7 +195,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     <CrudMoreActionsGroup
                         groupTitle={
                             hasOverallActions ? (
-                                <FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />
+                                <FormattedMessage id="dextinity.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />
                             ) : undefined
                         }
                         {...groupProps}

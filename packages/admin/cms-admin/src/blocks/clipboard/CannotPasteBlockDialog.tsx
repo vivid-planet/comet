@@ -21,7 +21,7 @@ const CannotPasteBlockDialog = ({ open, onClose, error }: Props) => {
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>
-                <FormattedMessage id="comet.blocks.cannotPasteBlock.title" defaultMessage="Can't paste block" />
+                <FormattedMessage id="dextinity.blocks.cannotPasteBlock.title" defaultMessage="Can't paste block" />
             </DialogTitle>
             <DialogContent>{error}</DialogContent>
             <DialogActions>

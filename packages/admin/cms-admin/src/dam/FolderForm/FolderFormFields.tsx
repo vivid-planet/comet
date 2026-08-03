@@ -10,7 +10,7 @@ export const FolderFormFields = () => {
 
     return (
         <Field
-            label={intl.formatMessage({ id: "comet.pages.dam.name", defaultMessage: "Name" })}
+            label={intl.formatMessage({ id: "dextinity.pages.dam.name", defaultMessage: "Name" })}
             name="name"
             component={FinalFormInput}
             fullWidth

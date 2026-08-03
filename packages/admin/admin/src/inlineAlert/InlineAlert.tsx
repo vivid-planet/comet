@@ -71,16 +71,16 @@ const defaultIconMapping: Record<InlineAlertSeverity, ReactNode> = {
 };
 
 const defaultTitleMapping: Record<InlineAlertSeverity, ReactNode> = {
-    error: <FormattedMessage defaultMessage="Error" id="comet.inlineAlert.error.title" />,
-    warning: <FormattedMessage defaultMessage="Warning" id="comet.inlineAlert.warning.title" />,
-    info: <FormattedMessage defaultMessage="Info" id="comet.inlineAlert.info.title" />,
+    error: <FormattedMessage defaultMessage="Error" id="dextinity.inlineAlert.error.title" />,
+    warning: <FormattedMessage defaultMessage="Warning" id="dextinity.inlineAlert.warning.title" />,
+    info: <FormattedMessage defaultMessage="Info" id="dextinity.inlineAlert.info.title" />,
 };
 
 const defaultDescriptionMapping: Record<InlineAlertSeverity, ReactNode> = {
     error: (
         <FormattedMessage
             defaultMessage="An error occurred. Please try again later or contact the support."
-            id="comet.inlineAlert.error.description"
+            id="dextinity.inlineAlert.error.description"
         />
     ),
     warning: null,

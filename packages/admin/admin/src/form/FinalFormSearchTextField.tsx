@@ -25,7 +25,9 @@ export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps 
     return (
         <FinalFormInput
             {...restProps}
-            placeholder={placeholder ?? intl.formatMessage({ id: "comet.finalformsearchtextfield.default.placeholder", defaultMessage: "Search" })}
+            placeholder={
+                placeholder ?? intl.formatMessage({ id: "dextinity.finalformsearchtextfield.default.placeholder", defaultMessage: "Search" })
+            }
             startAdornment={
                 <InputAdornment position="start" disablePointerEvents>
                     {icon}

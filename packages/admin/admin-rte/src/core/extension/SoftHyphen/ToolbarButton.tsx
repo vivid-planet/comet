@@ -24,7 +24,7 @@ export function ToolbarButton({ editorState, setEditorState }: IControlProps) {
 
     return (
         <Tooltip
-            title={<FormattedMessage id="comet.rte.extensions.softHyphen.buttonTooltip" defaultMessage="Insert a soft hyphen" />}
+            title={<FormattedMessage id="dextinity.rte.extensions.softHyphen.buttonTooltip" defaultMessage="Insert a soft hyphen" />}
             placement="top"
         >
             <span>

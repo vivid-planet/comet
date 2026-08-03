@@ -32,7 +32,7 @@ const validateScheduledAt = (value: Date, now: Date) => {
     if (value < now) {
         return (
             <FormattedMessage
-                id="cometBrevoModule.emailCampaigns.sendManager.scheduledAt.validationError.pastDate"
+                id="dextinity.emailCampaigns.sendManager.scheduledAt.validationError.pastDate"
                 defaultMessage="Date must be in the future"
             />
         );
@@ -65,7 +65,7 @@ export const SendManagerFields = ({ isCampaignCreated, scope, id, isSendable }: 
         <Card>
             <BlockAdminComponentPaper>
                 <BlockAdminComponentSectionGroup
-                    title={<FormattedMessage id="cometBrevoModule.emailCampaigns.sendManager.title" defaultMessage="Send Manager" />}
+                    title={<FormattedMessage id="dextinity.emailCampaigns.sendManager.title" defaultMessage="Send Manager" />}
                 >
                     <Field
                         component={FinalFormSelect}
@@ -75,7 +75,7 @@ export const SendManagerFields = ({ isCampaignCreated, scope, id, isSendable }: 
                         }}
                         {...selectAsyncMultipleProps}
                         name="targetGroups"
-                        label={<FormattedMessage id="cometBrevoModule.emailCampaigns.targetGroups" defaultMessage="Target groups" />}
+                        label={<FormattedMessage id="dextinity.emailCampaigns.targetGroups" defaultMessage="Target groups" />}
                         multiple
                         fullWidth
                     />
@@ -86,12 +86,12 @@ export const SendManagerFields = ({ isCampaignCreated, scope, id, isSendable }: 
                         clearable
                         label={
                             <>
-                                <FormattedMessage id="cometBrevoModule.emailCampaigns.scheduledAt" defaultMessage="Schedule date and time" />{" "}
+                                <FormattedMessage id="dextinity.emailCampaigns.scheduledAt" defaultMessage="Schedule date and time" />{" "}
                                 {isCampaignCreated && (
                                     <Tooltip
                                         title={
                                             <FormattedMessage
-                                                id="cometBrevoModule.emailCampaigns.scheduledAt.info"
+                                                id="dextinity.emailCampaigns.scheduledAt.info"
                                                 defaultMessage="Please select a target group and save the campaign before scheduling."
                                             />
                                         }
@@ -119,7 +119,7 @@ export const SendManagerFields = ({ isCampaignCreated, scope, id, isSendable }: 
                             setIsSendEmailCampaignNowDialogOpen(true);
                         }}
                     >
-                        <FormattedMessage id="cometBrevoModule.emailCampaigns.sendNow.sendText" defaultMessage="Send email campaign now" />
+                        <FormattedMessage id="dextinity.emailCampaigns.sendNow.sendText" defaultMessage="Send email campaign now" />
                     </SaveButton>
                     <SendEmailCampaignNowDialog
                         dialogOpen={isSendEmailCampaignNowDialogOpen}

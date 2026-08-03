@@ -33,7 +33,7 @@ export const TablePagination = ({ totalCount, pagingInfo, rowName }: IProps) => 
                                 <Grid>
                                     <Typography color="textSecondary" variant="body2">
                                         <FormattedMessage
-                                            id="comet.table.pagination.pageInfo"
+                                            id="dextinity.table.pagination.pageInfo"
                                             values={{ total: pagingInfo.totalPages, current: pagingInfo.currentPage }}
                                             defaultMessage="Page {current} of {total}"
                                             description="Pagination-info"

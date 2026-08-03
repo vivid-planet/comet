@@ -66,7 +66,7 @@ export const ChooseFolder = ({
                                     <StyledListItem offset={20 + 36} style={style}>
                                         <div>
                                             <BallTriangle sx={{ marginRight: "20px" }} />
-                                            <FormattedMessage id="comet.dam.moveDamItemDialog.loading" defaultMessage="Loading ..." />
+                                            <FormattedMessage id="dextinity.dam.moveDamItemDialog.loading" defaultMessage="Loading ..." />
                                         </div>
                                     </StyledListItem>
                                 );
@@ -76,7 +76,7 @@ export const ChooseFolder = ({
                                 return (
                                     <ChooseFolderItem
                                         Icon={PageTree}
-                                        message={<FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" />}
+                                        message={<FormattedMessage id="dextinity.pages.dam.assetManager" defaultMessage="Asset Manager" />}
                                         offset={20}
                                         isChosen={selectedId === null}
                                         onClick={() => {

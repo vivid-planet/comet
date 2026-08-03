@@ -102,12 +102,12 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                 <>
                     {maxAmountOfFilesSelected ? (
                         <MaxFilesReachedInfo
-                            title={<FormattedMessage id="comet.fileSelect.maximumReached" defaultMessage="Maximum reached" />}
+                            title={<FormattedMessage id="dextinity.fileSelect.maximumReached" defaultMessage="Maximum reached" />}
                             severity="info"
                             {...slotProps?.maxFilesReachedInfo}
                         >
                             <FormattedMessage
-                                id="comet.fileSelect.maximumFilesAmount"
+                                id="dextinity.fileSelect.maximumFilesAmount"
                                 defaultMessage="The maximum number of uploads has been reached. Please delete files from the list before uploading new files."
                             />
                         </MaxFilesReachedInfo>
@@ -166,7 +166,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                         <FileListItem
                             file={{
                                 name: intl.formatMessage({
-                                    id: "comet.fileSelect.noAttachments",
+                                    id: "dextinity.fileSelect.noAttachments",
                                     defaultMessage: "There are no attachments",
                                 }),
                             }}

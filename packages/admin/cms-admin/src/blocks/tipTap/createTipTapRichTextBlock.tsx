@@ -467,7 +467,7 @@ export const createTipTapRichTextBlock = (
 
         name: "TipTapRichText",
 
-        displayName: <FormattedMessage id="comet.blocks.tipTapRichText" defaultMessage="Rich Text (TipTap)" />,
+        displayName: <FormattedMessage id="dextinity.blocks.tipTapRichText" defaultMessage="Rich Text (TipTap)" />,
 
         defaultValues: () => ({ tipTapContent: emptyContent }),
 

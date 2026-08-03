@@ -45,7 +45,7 @@ export function JobLogs(props: { jobName: string }) {
             <StackPageTitle
                 title={
                     <FormattedMessage
-                        id="comet.jobLogs.title"
+                        id="dextinity.jobLogs.title"
                         defaultMessage="Job logs for {job}"
                         values={{
                             job: job?.label ? `${job?.label} (${job?.name})` : job?.name,
@@ -61,7 +61,7 @@ export function JobLogs(props: { jobName: string }) {
                 <Box padding={4}>
                     <Typography>
                         <FormattedMessage
-                            id="comet.cronJobs.noLogs"
+                            id="dextinity.cronJobs.noLogs"
                             defaultMessage="No logs available. You may consider checking external logging tools if available."
                         />
                     </Typography>

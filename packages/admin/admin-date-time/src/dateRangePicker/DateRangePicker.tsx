@@ -102,7 +102,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
                     <Calendar />
                 </StartAdornment>
             }
-            placeholder={placeholder ?? intl.formatMessage({ id: "comet.dateRangePicker.selectDateRange", defaultMessage: "Select date range" })}
+            placeholder={placeholder ?? intl.formatMessage({ id: "dextinity.dateRangePicker.selectDateRange", defaultMessage: "Select date range" })}
             {...slotProps?.root}
             {...inputWithPopperProps}
             readOnly

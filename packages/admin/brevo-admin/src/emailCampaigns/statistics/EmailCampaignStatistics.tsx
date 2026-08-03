@@ -32,7 +32,7 @@ export const EmailCampaignStatistics = ({ id }: Props): ReactElement => {
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="primary">
-                        <FormattedMessage id="cometBrevoModule.emailCampaign.newEmailCampaign" defaultMessage="New email campaign" />
+                        <FormattedMessage id="dextinity.emailCampaign.newEmailCampaign" defaultMessage="New email campaign" />
                     </Button>
                 </ToolbarActions>
             </Toolbar>
@@ -40,9 +40,7 @@ export const EmailCampaignStatistics = ({ id }: Props): ReactElement => {
                 <Grid container spacing={4}>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <PercentageCard
-                            title={
-                                <FormattedMessage id="cometBrevoModule.emailCampaignStatistics.overallDelivery" defaultMessage="Overall delivery" />
-                            }
+                            title={<FormattedMessage id="dextinity.emailCampaignStatistics.overallDelivery" defaultMessage="Overall delivery" />}
                             currentNumber={campaignStatistics?.brevoEmailCampaignStatistics?.delivered}
                             targetNumber={campaignStatistics?.brevoEmailCampaignStatistics?.sent}
                         />
@@ -51,7 +49,7 @@ export const EmailCampaignStatistics = ({ id }: Props): ReactElement => {
                         <PercentageCard
                             title={
                                 <FormattedMessage
-                                    id="cometBrevoModule.emailCampaignStatistics.overallFailedDelivery"
+                                    id="dextinity.emailCampaignStatistics.overallFailedDelivery"
                                     defaultMessage="Overall failed delivery"
                                 />
                             }
@@ -66,7 +64,7 @@ export const EmailCampaignStatistics = ({ id }: Props): ReactElement => {
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                         <PercentageCard
-                            title={<FormattedMessage id="cometBrevoModule.emailCampaignStatistics.uniqueViews" defaultMessage="Unique views" />}
+                            title={<FormattedMessage id="dextinity.emailCampaignStatistics.uniqueViews" defaultMessage="Unique views" />}
                             variant="circle"
                             currentNumber={campaignStatistics?.brevoEmailCampaignStatistics?.uniqueViews}
                             targetNumber={campaignStatistics?.brevoEmailCampaignStatistics?.sent}
@@ -74,7 +72,7 @@ export const EmailCampaignStatistics = ({ id }: Props): ReactElement => {
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                         <PercentageCard
-                            title={<FormattedMessage id="cometBrevoModule.emailCampaignStatistics.overallClicked" defaultMessage="Overall clicked" />}
+                            title={<FormattedMessage id="dextinity.emailCampaignStatistics.overallClicked" defaultMessage="Overall clicked" />}
                             variant="circle"
                             currentNumber={campaignStatistics?.brevoEmailCampaignStatistics?.uniqueClicks}
                             targetNumber={campaignStatistics?.brevoEmailCampaignStatistics?.sent}
@@ -82,7 +80,7 @@ export const EmailCampaignStatistics = ({ id }: Props): ReactElement => {
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                         <PercentageCard
-                            title={<FormattedMessage id="cometBrevoModule.emailCampaignStatistics.overallBounce" defaultMessage="Overall bounce" />}
+                            title={<FormattedMessage id="dextinity.emailCampaignStatistics.overallBounce" defaultMessage="Overall bounce" />}
                             currentNumber={
                                 campaignStatistics?.brevoEmailCampaignStatistics
                                     ? campaignStatistics.brevoEmailCampaignStatistics.softBounces +
@@ -95,9 +93,7 @@ export const EmailCampaignStatistics = ({ id }: Props): ReactElement => {
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                         <PercentageCard
-                            title={
-                                <FormattedMessage id="cometBrevoModule.emailCampaignStatistics.unsubscriptions" defaultMessage="Unsubscriptions" />
-                            }
+                            title={<FormattedMessage id="dextinity.emailCampaignStatistics.unsubscriptions" defaultMessage="Unsubscriptions" />}
                             currentNumber={campaignStatistics?.brevoEmailCampaignStatistics?.unsubscriptions}
                             targetNumber={campaignStatistics?.brevoEmailCampaignStatistics?.sent}
                             variant="circle"

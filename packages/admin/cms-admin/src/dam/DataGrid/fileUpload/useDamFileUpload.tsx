@@ -494,7 +494,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                 <Snackbar autoHideDuration={5000}>
                     <Alert severity="warning">
                         <FormattedMessage
-                            id="comet.dam.videoPerformanceWarning.snackbar"
+                            id="dextinity.dam.videoPerformanceWarning.snackbar"
                             defaultMessage="{count, plural, one {A very large video was uploaded} other {# very large videos were uploaded}}. Videos are delivered without optimization, which can lead to poor loading performance."
                             values={{ count: tooLargeVideoCount }}
                         />

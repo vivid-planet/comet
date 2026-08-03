@@ -74,7 +74,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const client = useApolloClient();
     const scope = usePageTreeScope();
     const damScope = useDamScope();
-    const progress = useProgressDialog({ title: <FormattedMessage id="comet.pages.insertingPages" defaultMessage="Inserting pages" /> });
+    const progress = useProgressDialog({ title: <FormattedMessage id="dextinity.pages.insertingPages" defaultMessage="Inserting pages" /> });
     const errorDialog = useErrorDialog();
     const damBasePath = useDamBasePath();
 
@@ -131,7 +131,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 canPaste: false,
                 error: (
                     <FormattedMessage
-                        id="comet.pages.cannotPastePage.messageFailedToReadClipboard"
+                        id="dextinity.pages.cannotPastePage.messageFailedToReadClipboard"
                         defaultMessage="Can't read clipboard content. Please make sure that clipboard access is given"
                     />
                 ),
@@ -141,7 +141,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
         if (text.trim() === "") {
             return {
                 canPaste: false,
-                error: <FormattedMessage id="comet.pages.cannotPastePage.messageEmptyClipboard" defaultMessage="Clipboard is empty" />,
+                error: <FormattedMessage id="dextinity.pages.cannotPastePage.messageEmptyClipboard" defaultMessage="Clipboard is empty" />,
             };
         }
 
@@ -154,7 +154,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     canPaste: false,
                     error: (
                         <FormattedMessage
-                            id="comet.pages.cannotPasteBlock.messageFailedToParseClipboard"
+                            id="dextinity.pages.cannotPasteBlock.messageFailedToParseClipboard"
                             defaultMessage="Content from clipboard aren't valid blocks"
                         />
                     ),
@@ -165,7 +165,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 canPaste: false,
                 error: (
                     <FormattedMessage
-                        id="comet.pages.cannotPasteBlock.messageFailedToParseClipboard"
+                        id="dextinity.pages.cannotPasteBlock.messageFailedToParseClipboard"
                         defaultMessage="Content from clipboard aren't valid blocks"
                     />
                 ),
@@ -188,7 +188,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 errorDialog?.showError({
                     title: <FormattedMessage {...messages.error} />,
                     userMessage: (
-                        <FormattedMessage id="comet.pages.cannotPastePage" defaultMessage="An unexpected error occurred when pasting pages." />
+                        <FormattedMessage id="dextinity.pages.cannotPastePage" defaultMessage="An unexpected error occurred when pasting pages." />
                     ),
                     error: String(e),
                 });
