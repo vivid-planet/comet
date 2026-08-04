@@ -6,7 +6,7 @@ The package:
 
 - re-exports all `@faire/mjml-react` MJML components (with prop types renamed to drop the `I` prefix);
 - extends some of them with extra props and features;
-- adds new components and utilities — block factories (`BlocksBlock`, `ListBlock`, `OneOfBlock`, `OptionalBlock`) for rendering Comet CMS block data, and a `css()` tagged template literal for IDE syntax highlighting.
+- adds new components and utilities — block factories (`BlocksBlock`, `ListBlock`, `OneOfBlock`, `OptionalBlock`) for rendering Dextinity CMS block data, and a `css()` tagged template literal for IDE syntax highlighting.
 
 Some components also ship in an `Html` variant for use inside MJML ending tags. These variants are additive — separate components alongside the `Mjml` versions, with their own API.
 
