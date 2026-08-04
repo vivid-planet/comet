@@ -7,7 +7,7 @@
         "directory": "packages/admin/admin-babel-preset"
     },
     "type": "commonjs",
-    "description": "Babel preset for Comet Admin packages",
+    "description": "Babel preset for Dextinity Admin packages",
     "license": "BSD-2-Clause",
     "main": "index.js",
     "dependencies": {

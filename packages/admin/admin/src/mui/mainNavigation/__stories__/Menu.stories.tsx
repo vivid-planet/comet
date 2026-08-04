@@ -40,7 +40,7 @@ const AppMenu = () => {
             <MainNavigationItemGroup title="Further Layers">
                 <MainNavigationItemRouterLink primary="Settings" badgeContent={2} icon={<Settings />} to="/settings" />
                 <MainNavigationItemAnchorLink
-                    primary="Comet Admin"
+                    primary="Dextinity"
                     secondary="View on GitHub"
                     target="_blank"
                     href="https://github.com/vivid-planet/comet"

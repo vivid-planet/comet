@@ -1,7 +1,7 @@
 {
     "name": "@dextinity/eslint-plugin",
     "version": "1.0.0",
-    "description": "A set of ESLint rules and configurations for Comet projects",
+    "description": "A set of ESLint rules and configurations for Dextinity projects",
     "type": "commonjs",
     "main": "lib/index.js",
     "license": "BSD-2-Clause",

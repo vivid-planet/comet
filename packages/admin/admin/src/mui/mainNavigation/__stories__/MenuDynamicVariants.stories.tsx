@@ -53,7 +53,7 @@ const AppMenu = () => {
                 <MainNavigationItemRouterLink primary="Foo4" to="/foo4" />
             </MainNavigationCollapsibleItem>
             <MainNavigationItemAnchorLink
-                primary="Comet Admin"
+                primary="Dextinity"
                 secondary="View on GitHub"
                 target="_blank"
                 href="https://github.com/vivid-planet/comet"
