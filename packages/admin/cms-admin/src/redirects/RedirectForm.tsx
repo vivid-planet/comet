@@ -236,7 +236,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                             name="source"
                             required
                             component={FinalFormInput}
-                            // @TODO: FIX ts-type here: https://github.com/vivid-planet/comet-admin/blob/next/packages/admin/src/form/Field.tsx#L18
+                            // @TODO: FIX ts-type here: https://github.com/vivid-planet/dextinity/blob/main/packages/admin/admin/src/form/Field.tsx
                             // type object doesnt work with "strict"
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             validate={validateSource as any}
