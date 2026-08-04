@@ -48,6 +48,16 @@ export interface ThemeText extends TextStyles {
     variants?: VariantsRecord;
 }
 
+/** Spacing tokens in pixels, applying to lists the RichText block renders. */
+export interface ThemeList {
+    /** The space before the marker, measured from the list's left edge. */
+    indent: ResponsiveValue;
+    /** The space between the marker and the item's text. */
+    markerGap: ResponsiveValue;
+    /** The space between items. The space below the last one comes from the text variant's `bottomSpacing`. */
+    itemSpacing: ResponsiveValue;
+}
+
 /**
  * Single source of truth for divider style property names and their value types.
  * Both `DividerStyles` and `DividerVariantStyles` are derived from this interface.
@@ -210,6 +220,7 @@ export interface Theme {
     sizes: ThemeSizes;
     breakpoints: ThemeBreakpoints;
     text: ThemeText;
+    list: ThemeList;
     divider: ThemeDivider;
     button: ThemeButton;
     colors: ThemeColors;

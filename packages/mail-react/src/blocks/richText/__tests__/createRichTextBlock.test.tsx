@@ -3,6 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { createTheme } from "../../../theme/createTheme.js";
+import { defaultTheme } from "../../../theme/defaultTheme.js";
+import { getDefaultFromResponsiveValue } from "../../../theme/responsiveValue.js";
 import { ThemeProvider } from "../../../theme/ThemeProvider.js";
 import type { RichTextBlockData } from "../common.js";
 import { createRichTextBlock } from "../createRichTextBlock.js";
@@ -378,6 +380,33 @@ describe("createRichTextBlock — lists", () => {
 
         expect(markup).toContain("Item one");
         expect(markup).not.toContain("font-family");
+    });
+
+    it("takes the spacing of the marker and of the items from the theme", () => {
+        const spaciousTheme = createTheme({ list: { indent: 40, markerGap: 24, itemSpacing: 20 } });
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one", "Item two"]));
+        const rows = renderWithTheme(<HtmlRichTextBlock data={data} />, spaciousTheme).split("<tr");
+
+        expect(rows[1]).toContain("padding-left:40px");
+        expect(rows[1]).toContain("padding-right:24px");
+        expect(rows[1]).toContain("padding-bottom:20px");
+    });
+
+    it("falls back to the default theme's spacing when no theme is set", () => {
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+        const markup = renderToStaticMarkup(<MjmlRichTextBlock data={data} />);
+        const { indent, markerGap } = defaultTheme.list;
+
+        expect(markup).toContain(`padding-left:${String(getDefaultFromResponsiveValue(indent))}px`);
+        expect(markup).toContain(`padding-right:${String(getDefaultFromResponsiveValue(markerGap))}px`);
+    });
+
+    it("adds the modifier naming the list's type", () => {
+        const unorderedData = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+        const orderedData = createBlockData(createListBlocks("ordered-list-item", ["Item one"]));
+
+        expect(renderWithTheme(<HtmlRichTextBlock data={unorderedData} />)).toContain("richTextBlock__list--unordered");
+        expect(renderWithTheme(<HtmlRichTextBlock data={orderedData} />)).toContain("richTextBlock__list--ordered");
     });
 
     it("adds the variant modifier for the variant its items render with", () => {

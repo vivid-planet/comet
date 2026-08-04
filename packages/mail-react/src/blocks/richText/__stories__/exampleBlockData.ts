@@ -159,7 +159,19 @@ export const highlightBlockData: RichTextBlockData = {
     },
 };
 
-const orderedItemsPastTen = [
+function createListItems(type: "unordered-list-item" | "ordered-list-item", texts: string[]) {
+    return texts.map((text, index) => ({
+        key: `${type}-${String(index)}`,
+        text,
+        type,
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        data: {},
+    }));
+}
+
+const orderedItemsPastTen = createListItems("ordered-list-item", [
     "Ordered item one",
     "Ordered item two",
     "Ordered item three",
@@ -171,15 +183,7 @@ const orderedItemsPastTen = [
     "Ordered item nine",
     "Ordered item ten — the marker column widens here, and every item's text keeps the same left edge",
     "Ordered item eleven",
-].map((text, index) => ({
-    key: `ov${String(index)}`,
-    text,
-    type: "ordered-list-item",
-    depth: 0,
-    inlineStyleRanges: [],
-    entityRanges: [],
-    data: {},
-}));
+]);
 
 export const listVarietyBlockData: RichTextBlockData = {
     draftContent: {
@@ -266,6 +270,16 @@ export const listVarietyBlockData: RichTextBlockData = {
                 },
             },
         },
+    },
+};
+
+export const listSpacingBlockData: RichTextBlockData = {
+    draftContent: {
+        blocks: [
+            ...createListItems("unordered-list-item", ["Bulleted item one", "Bulleted item two", "Bulleted item three"]),
+            ...createListItems("ordered-list-item", ["Numbered item one", "Numbered item two", "Numbered item three"]),
+        ],
+        entityMap: {},
     },
 };
 

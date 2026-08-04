@@ -43,6 +43,9 @@ const theme = createTheme({
     sizes: {
         contentIndentation: { default: 40, tablet: 30, mobile: 20 },
     },
+    list: {
+        indent: { default: 24, tablet: 16, mobile: 8 },
+    },
 });
 ```
 

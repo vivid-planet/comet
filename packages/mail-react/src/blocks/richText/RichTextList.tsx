@@ -3,14 +3,12 @@ import type { CSSProperties, ReactNode } from "react";
 
 import { useOutlookTextStyle } from "../../components/text/OutlookTextStyleContext.js";
 import { generateResponsiveTextCss } from "../../components/text/textStyles.js";
+import { generateResponsiveTokenCss } from "../../styles/generateResponsiveVariantCss.js";
 import { registerStyles } from "../../styles/registerStyles.js";
-import { getDefaultOrUndefined } from "../../theme/responsiveValue.js";
+import { defaultTheme } from "../../theme/defaultTheme.js";
+import { getDefaultFromResponsiveValue, getDefaultOrUndefined } from "../../theme/responsiveValue.js";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
 import type { TextVariantStyles, Theme, ThemeText, VariantName } from "../../theme/themeTypes.js";
-
-const listIndent = 8;
-const markerGap = 12;
-const itemSpacing = 8;
 
 const unorderedMarker = "•";
 
@@ -37,6 +35,7 @@ export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTex
     const theme = useOptionalTheme();
     const outlookTextStyle = useOutlookTextStyle();
 
+    const list = theme?.list ?? defaultTheme.list;
     const themeText: ThemeText = theme?.text ?? {};
     const { defaultVariant, variants, ...baseTextStyles } = themeText;
     const activeVariant = variant ?? defaultVariant;
@@ -54,6 +53,12 @@ export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTex
         ...(outlookTextStyle?.lineHeight !== undefined && { msoLineHeightRule: "exactly" }),
     };
 
+    const itemSpacing = getDefaultFromResponsiveValue(list.itemSpacing);
+    const markerCellPadding: CSSProperties = {
+        paddingLeft: getDefaultFromResponsiveValue(list.indent),
+        paddingRight: getDefaultFromResponsiveValue(list.markerGap),
+    };
+
     return (
         <table
             role="presentation"
@@ -61,7 +66,11 @@ export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTex
             cellSpacing={0}
             border={0}
             width="100%"
-            className={clsx("richTextBlock__list", activeVariant && variantModifier(activeVariant))}
+            className={clsx(
+                "richTextBlock__list",
+                ordered ? "richTextBlock__list--ordered" : "richTextBlock__list--unordered",
+                activeVariant && variantModifier(activeVariant),
+            )}
             style={{ borderCollapse: "collapse" }}
         >
             <tbody>
@@ -85,8 +94,7 @@ export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTex
                                 valign="top"
                                 style={{
                                     ...cellStyle,
-                                    paddingLeft: listIndent,
-                                    paddingRight: markerGap,
+                                    ...markerCellPadding,
                                     whiteSpace: "nowrap", // The full-width text cell squeezes this column, so markers such as `10.` must stay on one line.
                                 }}
                             >
@@ -104,11 +112,36 @@ export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTex
 }
 
 export function generateRichTextListStyles(theme: Theme): string {
-    return generateResponsiveTextCss(theme, {
-        styleSelector: (variantName) =>
-            `.${variantModifier(variantName)} .richTextBlock__listItemMarker, .${variantModifier(variantName)} .richTextBlock__listItemText`,
-        spacingSelector: (variantName) => `.${variantModifier(variantName)} .richTextBlock__listItem--blockSpacing > td`,
-    });
+    return [
+        generateResponsiveListSpacingCss(theme),
+        generateResponsiveTextCss(theme, {
+            styleSelector: (variantName) =>
+                `.${variantModifier(variantName)} .richTextBlock__listItemMarker, .${variantModifier(variantName)} .richTextBlock__listItemText`,
+            spacingSelector: (variantName) => `.${variantModifier(variantName)} .richTextBlock__listItem--blockSpacing > td`,
+        }),
+    ]
+        .filter(Boolean)
+        .join("\n");
+}
+
+function generateResponsiveListSpacingCss(theme: Theme): string {
+    return [
+        generateResponsiveTokenCss({
+            breakpoints: theme.breakpoints,
+            selector: ".richTextBlock__listItemMarker",
+            tokens: [
+                { value: theme.list.indent, cssProperty: "padding-left", unit: "px" },
+                { value: theme.list.markerGap, cssProperty: "padding-right", unit: "px" },
+            ],
+        }),
+        generateResponsiveTokenCss({
+            breakpoints: theme.breakpoints,
+            selector: ".richTextBlock__listItem--itemSpacing > td",
+            tokens: [{ value: theme.list.itemSpacing, cssProperty: "padding-bottom", unit: "px" }],
+        }),
+    ]
+        .filter(Boolean)
+        .join("\n");
 }
 
 registerStyles(generateRichTextListStyles);
