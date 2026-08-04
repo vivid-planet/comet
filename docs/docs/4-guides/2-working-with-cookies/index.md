@@ -33,18 +33,18 @@ For local development and other environments that do not embed the project's coo
 
 #### Debugging using the dev tools console
 
-The localStorage cookie api can be accessed via the dev tools console with `window.cometLocalStorageCookieApi`.
+The localStorage cookie api can be accessed via the dev tools console with `window.dextinityLocalStorageCookieApi`.
 
 ##### Open Cookie Settings
 
 ```js
-window.cometLocalStorageCookieApi.openCookieSettings();
+window.dextinityLocalStorageCookieApi.openCookieSettings();
 ```
 
 ##### View the currently consented cookies
 
 ```js
-window.cometLocalStorageCookieApi.consentedCookies;
+window.dextinityLocalStorageCookieApi.consentedCookies;
 ```
 
 ## Using the `<CookieSafe />` component
