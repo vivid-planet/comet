@@ -9,6 +9,7 @@ import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs, PermissionFilter } from "./dto/paginated-user-list";
 import { UserPermissionsUser } from "./dto/user";
 import { User } from "./interfaces/user";
+import { UserContentScopesLoaderService } from "./user-content-scopes-loader.service";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ObjectType()
@@ -19,7 +20,10 @@ class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(Us
 export class UserResolver {
     private readonly logger = new Logger(UserResolver.name);
 
-    constructor(private readonly userService: UserPermissionsService) {}
+    constructor(
+        private readonly userService: UserPermissionsService,
+        private readonly userContentScopesLoader: UserContentScopesLoaderService,
+    ) {}
 
     @Query(() => UserPermissionsUser)
     async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<UserPermissionsUser> {
@@ -34,59 +38,52 @@ export class UserResolver {
             throw new Error("You cannot use both 'and' and 'or' permission filters at the same time.");
         }
 
-        // Warms up the available-content-scopes cache for the lifetime of this query, so the contentScopesCount
-        // field resolver doesn't recompute (and dedupe) the full scope list once per returned user.
-        await this.userService.warmupAvailableContentScopesCache();
-        try {
-            if (permissionAndFilters && permissionAndFilters.length > 0) {
-                await this.userService.warmupHasPermissionCache();
-                // If a permission filter is provided, we need to get all users and filter them
-                const filteredUsers: User[] = [];
+        if (permissionAndFilters && permissionAndFilters.length > 0) {
+            await this.userService.warmupHasPermissionCache();
+            // If a permission filter is provided, we need to get all users and filter them
+            const filteredUsers: User[] = [];
+            let offset = 0;
+            let users: User[] = [];
+            do {
+                [users] = await this.userService.findUsers({ filter: args.filter, sort: args.sort, offset, limit: 100 });
+                for (let i = 0; i < users.length; i++) {
+                    if (await this.permissionAndFiltersApplies(users[i], permissionAndFilters)) {
+                        filteredUsers.push(users[i]);
+                    }
+                }
+                offset += users.length;
+            } while (users.length > 0);
+            return new UserPermissionPaginatedUserList(filteredUsers.slice(args.offset, args.offset + args.limit), filteredUsers.length);
+        } else if (permissionOrFilters && permissionOrFilters.length > 0) {
+            await this.userService.warmupHasPermissionCache();
+            const matchedUsers = new Set<User>();
+            let users: User[] = [];
+            // Add all users that match other than permission filters
+            if (args.filter?.or?.some((f) => !f.permission)) {
                 let offset = 0;
-                let users: User[] = [];
                 do {
                     [users] = await this.userService.findUsers({ filter: args.filter, sort: args.sort, offset, limit: 100 });
                     for (let i = 0; i < users.length; i++) {
-                        if (await this.permissionAndFiltersApplies(users[i], permissionAndFilters)) {
-                            filteredUsers.push(users[i]);
-                        }
+                        matchedUsers.add(users[i]);
                     }
                     offset += users.length;
                 } while (users.length > 0);
-                return new UserPermissionPaginatedUserList(filteredUsers.slice(args.offset, args.offset + args.limit), filteredUsers.length);
-            } else if (permissionOrFilters && permissionOrFilters.length > 0) {
-                await this.userService.warmupHasPermissionCache();
-                const matchedUsers = new Set<User>();
-                let users: User[] = [];
-                // Add all users that match other than permission filters
-                if (args.filter?.or?.some((f) => !f.permission)) {
-                    let offset = 0;
-                    do {
-                        [users] = await this.userService.findUsers({ filter: args.filter, sort: args.sort, offset, limit: 100 });
-                        for (let i = 0; i < users.length; i++) {
-                            matchedUsers.add(users[i]);
-                        }
-                        offset += users.length;
-                    } while (users.length > 0);
-                }
-                // Add users that match permission filters
-                let offset = 0;
-                do {
-                    [users] = await this.userService.findUsers({ sort: args.sort, offset, limit: 100 });
-                    for (let i = 0; i < users.length; i++) {
-                        if (await this.permissionOrFiltersApplies(users[i], permissionOrFilters)) {
-                            matchedUsers.add(users[i]);
-                        }
-                    }
-                    offset += users.length;
-                } while (users.length > 0);
-                return new UserPermissionPaginatedUserList(Array.from(matchedUsers).slice(args.offset, args.offset + args.limit), matchedUsers.size);
-            } else {
-                const [users, totalCount] = await this.userService.findUsers(args);
-                return new UserPermissionPaginatedUserList(users, totalCount);
             }
-        } finally {
-            this.userService.clearAvailableContentScopesCache();
+            // Add users that match permission filters
+            let offset = 0;
+            do {
+                [users] = await this.userService.findUsers({ sort: args.sort, offset, limit: 100 });
+                for (let i = 0; i < users.length; i++) {
+                    if (await this.permissionOrFiltersApplies(users[i], permissionOrFilters)) {
+                        matchedUsers.add(users[i]);
+                    }
+                }
+                offset += users.length;
+            } while (users.length > 0);
+            return new UserPermissionPaginatedUserList(Array.from(matchedUsers).slice(args.offset, args.offset + args.limit), matchedUsers.size);
+        } else {
+            const [users, totalCount] = await this.userService.findUsers(args);
+            return new UserPermissionPaginatedUserList(users, totalCount);
         }
     }
 
@@ -123,7 +120,7 @@ export class UserResolver {
 
     @ResolveField(() => Int)
     async contentScopesCount(@Parent() user: UserPermissionsUser): Promise<number> {
-        return (await this.userService.getContentScopes(user)).length;
+        return (await this.userContentScopesLoader.load(user)).length;
     }
 
     @ResolveField(() => Boolean)

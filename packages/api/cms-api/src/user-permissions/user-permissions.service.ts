@@ -52,26 +52,8 @@ export class UserPermissionsService {
 
     private manualPermissions: { userId: string; permission: Permission }[] | undefined;
     private availablePermissions: Permission[] | undefined;
-    private availableContentScopesCache: ContentScopeWithLabel[] | undefined;
-
-    // Populates the cache used by getAvailableContentScopes() for the duration of one operation (e.g. resolving a list of users).
-    // Must be paired with clearAvailableContentScopesCache() so later, unrelated requests don't see a stale snapshot.
-    async warmupAvailableContentScopesCache(): Promise<void> {
-        this.availableContentScopesCache = await this.computeAvailableContentScopes();
-    }
-
-    clearAvailableContentScopesCache(): void {
-        this.availableContentScopesCache = undefined;
-    }
 
     async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
-        if (this.availableContentScopesCache !== undefined) {
-            return this.availableContentScopesCache;
-        }
-        return this.computeAvailableContentScopes();
-    }
-
-    private async computeAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
         let contentScopes: AvailableContentScope[] = [];
         if (this.options.availableContentScopes) {
             if (typeof this.options.availableContentScopes === "function") {
@@ -236,8 +218,28 @@ export class UserPermissionsService {
     }
 
     async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[]> {
-        const contentScopes: ContentScope[] = [];
         const availableContentScopes = (await this.getAvailableContentScopes()).map((cs) => cs.scope);
+        return this.filterContentScopesForUser({ user, availableContentScopes, includeContentScopesManual });
+    }
+
+    // Resolves the content scopes for many users while computing the (shared) available content scopes only once.
+    // Used by the request-scoped UserContentScopesLoaderService so the contentScopesCount field resolver doesn't
+    // recompute (and dedupe) the full available-scope list once per returned user.
+    async getContentScopesForUsers(users: User[], includeContentScopesManual = true): Promise<ContentScope[][]> {
+        const availableContentScopes = (await this.getAvailableContentScopes()).map((cs) => cs.scope);
+        return Promise.all(users.map((user) => this.filterContentScopesForUser({ user, availableContentScopes, includeContentScopesManual })));
+    }
+
+    private async filterContentScopesForUser({
+        user,
+        availableContentScopes,
+        includeContentScopesManual,
+    }: {
+        user: User;
+        availableContentScopes: ContentScope[];
+        includeContentScopesManual: boolean;
+    }): Promise<ContentScope[]> {
+        const contentScopes: ContentScope[] = [];
 
         if (this.accessControlService.getContentScopesForUser) {
             const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
