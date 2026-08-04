@@ -4,7 +4,7 @@
     "description": "Comet Site React package",
     "repository": {
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet",
+        "url": "https://github.com/vivid-planet/dextinity",
         "directory": "packages/site/site-react"
     },
     "license": "BSD-2-Clause",

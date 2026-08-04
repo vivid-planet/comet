@@ -14,10 +14,10 @@ Do NOT use for minor or patch upgrades, or for ongoing feature work on a project
 ## Locate the migration guide
 
 1. **Find out the target major** from the user if not specified.
-2. **Browse the index:** https://github.com/vivid-planet/comet/tree/main/docs/docs/7-migration-guide — use a GitHub MCP tool if available, otherwise `WebFetch`.
+2. **Browse the index:** https://github.com/vivid-planet/dextinity/tree/main/docs/docs/7-migration-guide — use a GitHub MCP tool if available, otherwise `WebFetch`.
 3. **Download the raw Markdown** so all content is in context:
     ```
-    https://raw.githubusercontent.com/vivid-planet/comet/refs/heads/main/docs/docs/7-migration-guide/migration-from-v{N}-to-v{N+1}.md
+    https://raw.githubusercontent.com/vivid-planet/dextinity/refs/heads/main/docs/docs/7-migration-guide/migration-from-v{N}-to-v{N+1}.md
     ```
 4. **If no guide exists** for the target version, stop and tell the user. Don't migrate without an official guide.
 
@@ -73,7 +73,7 @@ Record the resolved site list durably (e.g. a note on the first `TaskCreate` tas
 
 If a step is ambiguous or doesn't match the project, consult before guessing:
 
-- **https://github.com/vivid-planet/comet** — the monorepo. Check the source of the package the guide discusses for the new public API shape.
+- **https://github.com/vivid-planet/dextinity** — the monorepo. Check the source of the package the guide discusses for the new public API shape.
 - **https://github.com/vivid-planet/comet-starter** — the canonical reference project, always kept on the current major. Use it for questions like "how should `tsconfig.json` look after this migration?"
 
 Prefer the GitHub MCP; fall back to `WebFetch` on `raw.githubusercontent.com`. If still unclear, ask the user — don't guess.

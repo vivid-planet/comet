@@ -503,7 +503,7 @@ export interface HeadlineBlockData {
 
 Having the block data in place, we can now render the blocks.
 The rendering logic for each block type is recommended to be implemented in a separate component.
-You can find example implementations [in the demo project in the comet repository](https://github.com/vivid-planet/comet/tree/main/demo/site/src/common/blocks), e.g. the [HeadlineBlock](https://github.com/vivid-planet/comet/blob/a737ccc2f0826b236b49d63129a6a49e7f790993/demo/site/src/blocks/HeadlineBlock.tsx#L36) component.
+You can find example implementations [in the demo project in the comet repository](https://github.com/vivid-planet/dextinity/tree/main/demo/site/src/common/blocks), e.g. the [HeadlineBlock](https://github.com/vivid-planet/dextinity/blob/a737ccc2f0826b236b49d63129a6a49e7f790993/demo/site/src/blocks/HeadlineBlock.tsx#L36) component.
 
 The `@dextinity/site-react` package provides implementations for some important helper blocks:
 
@@ -552,7 +552,7 @@ The urlTemplate returned by the API is either an absolute URL (default) or a rel
 This depends on the `x-relative-dam-urls` sent by the site.
 **We recommend using relative URLs and rewriting the URLs to the API url in your site** for SEO optimization.
 
-You can use the [implementation of PixelImageBlock for Next.js in the Dextinity Demo](https://github.com/vivid-planet/comet/blob/ede41201abfb664191fe286a58c46b0f053ebfd5/packages/site/site-nextjs/src/blocks/PixelImageBlock.tsx) as a reference.
+You can use the [implementation of PixelImageBlock for Next.js in the Dextinity Demo](https://github.com/vivid-planet/dextinity/blob/ede41201abfb664191fe286a58c46b0f053ebfd5/packages/site/site-nextjs/src/blocks/PixelImageBlock.tsx) as a reference.
 
 ### Handling rich text
 
@@ -629,7 +629,7 @@ We persist the rich text content in the raw Draft.js object format, which is a J
 
 To render this rich text content in the site, you can use the [redraft](https://www.npmjs.com/package/redraft) package.
 This package allows you to define renderers for inline styles, blocks and entities within the rich text content.
-You can look at [the implementation in the Dextinity Demo](https://github.com/vivid-planet/comet/blob/904ff5f1d68bbfeb233c57f6fcb1dc05cc559c9b/demo/site/src/common/blocks/RichTextBlock.tsx) for an example of how this can be done.
+You can look at [the implementation in the Dextinity Demo](https://github.com/vivid-planet/dextinity/blob/904ff5f1d68bbfeb233c57f6fcb1dc05cc559c9b/demo/site/src/common/blocks/RichTextBlock.tsx) for an example of how this can be done.
 
 ## Implementing the block preview
 

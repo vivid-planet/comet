@@ -5,7 +5,7 @@
     "repository": {
         "directory": "packages/admin/admin-icons",
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet"
+        "url": "https://github.com/vivid-planet/dextinity"
     },
     "license": "BSD-2-Clause",
     "sideEffects": false,

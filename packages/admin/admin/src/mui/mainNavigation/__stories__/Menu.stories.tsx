@@ -43,7 +43,7 @@ const AppMenu = () => {
                     primary="Comet Admin"
                     secondary="View on GitHub"
                     target="_blank"
-                    href="https://github.com/vivid-planet/comet"
+                    href="https://github.com/vivid-planet/dextinity"
                     icon={<CometColor />}
                 />
             </MainNavigationItemGroup>

@@ -3,7 +3,7 @@
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet"
+        "url": "https://github.com/vivid-planet/dextinity"
     },
     "description": "Comet Monorepo",
     "license": "BSD-2-Clause",

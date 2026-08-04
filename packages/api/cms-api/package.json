@@ -5,7 +5,7 @@
     "repository": {
         "directory": "packages/api/cms-api",
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet"
+        "url": "https://github.com/vivid-planet/dextinity"
     },
     "license": "BSD-2-Clause",
     "type": "commonjs",
