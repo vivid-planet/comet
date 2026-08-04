@@ -369,11 +369,9 @@ It supports the same `variant` and `bottomSpacing` props as `MjmlText`:
 <MjmlSection>
     <MjmlColumn>
         <MjmlRaw>
-            <table>
-                <tr>
-                    <HtmlText>Themed text inside a raw HTML table</HtmlText>
-                </tr>
-            </table>
+            <tr>
+                <HtmlText>Themed text in a row of the column's table</HtmlText>
+            </tr>
         </MjmlRaw>
     </MjmlColumn>
 </MjmlSection>

@@ -49,7 +49,11 @@ export const Default: Story = {
             <MjmlSection indent>
                 <MjmlColumn>
                     <MjmlRaw>
-                        <HtmlPixelImageBlock {...args} />
+                        <tr>
+                            <td>
+                                <HtmlPixelImageBlock {...args} />
+                            </td>
+                        </tr>
                     </MjmlRaw>
                 </MjmlColumn>
             </MjmlSection>
@@ -77,8 +81,12 @@ export const AspectRatioOverride: Story = {
             <MjmlSection indent>
                 <MjmlColumn>
                     <MjmlRaw>
-                        <HtmlPixelImageBlock {...args} />
-                        <HtmlPixelImageBlock {...args} aspectRatio="16x9" />
+                        <tr>
+                            <td>
+                                <HtmlPixelImageBlock {...args} />
+                                <HtmlPixelImageBlock {...args} aspectRatio="16x9" />
+                            </td>
+                        </tr>
                     </MjmlRaw>
                 </MjmlColumn>
             </MjmlSection>
