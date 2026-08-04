@@ -13,7 +13,7 @@ import {
     Root,
 } from "./CollapsibleItem.styles";
 import { useMainNavigation } from "./Context";
-import type { MainNavigationItem as CometMainNavigationItem, MainNavigationItemLevel, MainNavigationItemProps } from "./Item";
+import type { MainNavigationItem, MainNavigationItemLevel, MainNavigationItemProps } from "./Item";
 import type { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 
 export type MainNavigationChild = ReactElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>;
@@ -22,7 +22,7 @@ export interface MainNavigationCollapsibleItemProps
     extends Omit<MainNavigationItemProps, "slotProps">,
         ThemedComponentBaseProps<{
             root: "div";
-            mainNavigationItem: typeof CometMainNavigationItem;
+            mainNavigationItem: typeof MainNavigationItem;
             itemTitle: typeof Typography;
             collapsibleIndicator: "div";
         }> {
