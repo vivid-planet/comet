@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/vivid-planet/dextinity/",
+        "url": "https://github.com/vivid-planet/dextinity",
         "directory": "packages/api/brevo-api"
     },
     "license": "BSD-2-Clause",
