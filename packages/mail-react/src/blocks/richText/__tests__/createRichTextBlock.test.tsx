@@ -401,6 +401,14 @@ describe("createRichTextBlock — lists", () => {
         expect(markup).toContain(`padding-right:${String(getDefaultFromResponsiveValue(markerGap))}px`);
     });
 
+    it("adds the modifier naming the list's type", () => {
+        const unorderedData = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+        const orderedData = createBlockData(createListBlocks("ordered-list-item", ["Item one"]));
+
+        expect(renderWithTheme(<HtmlRichTextBlock data={unorderedData} />)).toContain("richTextBlock__list--unordered");
+        expect(renderWithTheme(<HtmlRichTextBlock data={orderedData} />)).toContain("richTextBlock__list--ordered");
+    });
+
     it("adds the variant modifier for the variant its items render with", () => {
         const { HtmlRichTextBlock: HtmlVariantRichTextBlock } = createRichTextBlock({ blockTypes: { "unordered-list-item": { variant: "body" } } });
         const themeWithDefaultVariant = createTheme({ text: { defaultVariant: "body", variants: { body: { fontSize: "16px" } } } });

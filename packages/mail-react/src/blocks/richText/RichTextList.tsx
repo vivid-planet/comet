@@ -66,7 +66,11 @@ export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTex
             cellSpacing={0}
             border={0}
             width="100%"
-            className={clsx("richTextBlock__list", activeVariant && variantModifier(activeVariant))}
+            className={clsx(
+                "richTextBlock__list",
+                ordered ? "richTextBlock__list--ordered" : "richTextBlock__list--unordered",
+                activeVariant && variantModifier(activeVariant),
+            )}
             style={{ borderCollapse: "collapse" }}
         >
             <tbody>
