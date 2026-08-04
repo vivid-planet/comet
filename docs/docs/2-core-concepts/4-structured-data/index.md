@@ -3,7 +3,7 @@ title: Structured Data
 sidebar_position: 4
 ---
 
-Structured data is application-specific data that is managed by the customer. This data is displayed in tables; in order to edit a contribution, a form is used. These tables and forms are created with the help of the [@dextinity/admin](https://github.com/vivid-planet/dextinity) package.
+Structured data is application-specific data that is managed by the customer. This data is displayed in tables; in order to edit a contribution, a form is used. These tables and forms are created with the help of the `@dextinity/admin` package.
 
 ## Table/Form
 
