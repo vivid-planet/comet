@@ -1,6 +1,6 @@
 import { ChevronRight } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
-import { type ReactNode, type Ref, useRef, useState } from "react";
+import { type ReactNode, type Ref, useEffect, useRef, useState } from "react";
 
 import type { Breadcrumb, BreadcrumbsProps, BreadcrumbsSlotProps } from "./Breadcrumbs";
 import {
@@ -65,12 +65,19 @@ export const DesktopBreadcrumbs = ({ items, separatorIcon, slotProps, ...restPro
     const overflowButtonRef = useRef<HTMLButtonElement>(null);
 
     const { leadingItem, hiddenItems, trailingItems } = useBreadcrumbsOverflow({ items, containerRef: toolbarRef, measureRef });
+    const hasHiddenItems = hiddenItems.length > 0;
+
+    useEffect(() => {
+        if (!hasHiddenItems) {
+            setIsOverflowMenuOpen(false);
+        }
+    }, [hasHiddenItems]);
 
     return (
         <Root {...slotProps?.root} {...restProps}>
             <ToolbarContainer ref={toolbarRef} {...slotProps?.toolbarContainer}>
                 {leadingItem && <BreadcrumbItemLink item={leadingItem} separatorIcon={separatorIcon} slotProps={slotProps} />}
-                {hiddenItems.length > 0 && (
+                {hasHiddenItems && (
                     <OverflowEllipsis
                         separatorIcon={separatorIcon}
                         slotProps={slotProps}
@@ -98,22 +105,24 @@ export const DesktopBreadcrumbs = ({ items, separatorIcon, slotProps, ...restPro
                 <OverflowEllipsis separatorIcon={separatorIcon} slotProps={slotProps} />
             </MeasureLayer>
 
-            <OverflowMenu
-                open={isOverflowMenuOpen && hiddenItems.length > 0}
-                anchorEl={overflowButtonRef.current}
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                transformOrigin={{ vertical: "top", horizontal: "left" }}
-                marginThreshold={0}
-                onClose={() => setIsOverflowMenuOpen(false)}
-                {...slotProps?.overflowMenu}
-            >
-                {hiddenItems.map((item) => (
-                    <OverflowMenuItem key={item.url} href={item.url} {...slotProps?.overflowMenuItem}>
-                        <ChevronRight />
-                        <Typography variant="body2">{item.title}</Typography>
-                    </OverflowMenuItem>
-                ))}
-            </OverflowMenu>
+            {hasHiddenItems && (
+                <OverflowMenu
+                    open={isOverflowMenuOpen}
+                    anchorEl={overflowButtonRef.current}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                    transformOrigin={{ vertical: "top", horizontal: "left" }}
+                    marginThreshold={0}
+                    onClose={() => setIsOverflowMenuOpen(false)}
+                    {...slotProps?.overflowMenu}
+                >
+                    {hiddenItems.map((item) => (
+                        <OverflowMenuItem key={item.url} href={item.url} {...slotProps?.overflowMenuItem}>
+                            <ChevronRight />
+                            <Typography variant="body2">{item.title}</Typography>
+                        </OverflowMenuItem>
+                    ))}
+                </OverflowMenu>
+            )}
         </Root>
     );
 };
