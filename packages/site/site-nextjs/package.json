@@ -1,7 +1,7 @@
 {
     "name": "@dextinity/site-nextjs",
     "version": "1.0.0",
-    "description": "Comet Site Next.js package",
+    "description": "Dextinity Site Next.js package",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",

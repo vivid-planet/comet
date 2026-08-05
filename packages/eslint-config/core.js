@@ -6,7 +6,7 @@ import prettierPlugin from "eslint-plugin-prettier/recommended";
 import unusedImports from "eslint-plugin-unused-imports";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import { configs as eslintPluginJsonc } from "eslint-plugin-jsonc";
-import cometPlugin from "@dextinity/eslint-plugin";
+import dextinityPlugin from "@dextinity/eslint-plugin";
 import importPlugin from "eslint-plugin-import";
 import js from "@eslint/js";
 import packageJson from "eslint-plugin-package-json";
@@ -47,7 +47,7 @@ const config = [
     },
     {
         plugins: {
-            "@dextinity": cometPlugin,
+            "@dextinity": dextinityPlugin,
         },
         rules: {
             "@dextinity/no-other-module-relative-import": ["warn"],

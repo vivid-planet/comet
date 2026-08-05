@@ -3,7 +3,7 @@ import eslintConfigReact, { restrictedImportPaths } from "@dextinity/eslint-conf
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import storybook from "eslint-plugin-storybook";
 
-import cometPlugin from "@dextinity/eslint-plugin";
+import dextinityPlugin from "@dextinity/eslint-plugin";
 
 export default defineConfig([
     globalIgnores(["src/*.generated.ts", "lib/**"]),
@@ -45,7 +45,7 @@ export default defineConfig([
     },
     {
         plugins: {
-            "@dextinity": cometPlugin,
+            "@dextinity": dextinityPlugin,
         },
         rules: {
             "@dextinity/no-private-sibling-import": ["error", ["gql", "sc", "styles", "generated"]],

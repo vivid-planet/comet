@@ -1,7 +1,7 @@
 {
     "name": "@dextinity/api-generator",
     "version": "1.0.0",
-    "description": "Comet API Generator CLI tool",
+    "description": "Dextinity API Generator CLI tool",
     "repository": {
         "directory": "packages/api/api-generator",
         "type": "git",

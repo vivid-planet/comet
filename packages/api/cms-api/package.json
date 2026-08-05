@@ -1,7 +1,7 @@
 {
     "name": "@dextinity/cms-api",
     "version": "1.0.0",
-    "description": "Comet CMS API package",
+    "description": "Dextinity CMS API package",
     "repository": {
         "directory": "packages/api/cms-api",
         "type": "git",

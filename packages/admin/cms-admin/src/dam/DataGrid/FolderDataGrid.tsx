@@ -648,11 +648,11 @@ const FolderDataGrid = ({
 
     const getRowClassName = ({ row }: GridRowClassNameParams) => {
         if (fileUploadApi.newlyUploadedItems.find((newItem) => newItem.id === row.id)) {
-            return "CometDataGridRow--highlighted";
+            return "DextinityDataGridRow--highlighted";
         }
 
         if (row.isInboxFromOtherScope) {
-            return "CometDataGridRow--inboxFolder";
+            return "DextinityDataGridRow--inboxFolder";
         }
 
         return "";
