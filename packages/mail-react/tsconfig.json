@@ -5,7 +5,7 @@
         "moduleResolution": "NodeNext",
         "outDir": "lib",
         "rootDir": "src",
-        "target": "ES2022"
+        "target": "ES2023"
     },
     "exclude": ["node_modules", "lib"],
     "extends": "../../tsconfig.core.json",

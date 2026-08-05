@@ -23,7 +23,7 @@
         "skipLibCheck": true,
         "stableTypeOrdering": true,
         "strict": true,
-        "target": "ES2017",
+        "target": "ES2023",
         "types": ["*"]
     },
     "exclude": ["node_modules"],

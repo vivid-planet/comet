@@ -11,7 +11,7 @@
         "strict": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": false,
-        "target": "esnext"
+        "target": "ES2023"
     },
     "exclude": ["node_modules"],
     "extends": "../../../tsconfig.core.json",
