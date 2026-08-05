@@ -28,7 +28,7 @@ export const UserPermissionsPage = () => {
                     <MainContent fullHeight>
                         <UserPermissionsUserGrid
                             rowAction={(params) => (
-                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id} subUrl="permissions">
+                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                     <Edit />
                                 </IconButton>
                             )}
@@ -41,12 +41,15 @@ export const UserPermissionsPage = () => {
                             <UserPermissionsUserPageToolbar userId={userId} />
                             <MainContent>
                                 <RouterTabs>
-                                    <RouterTab path="" label={<FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />}>
+                                    <RouterTab
+                                        path={isAllowed("userPermissions") ? "/basic-data" : ""}
+                                        label={<FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />}
+                                    >
                                         <UserPermissionsUserPageBasicDataPanel userId={userId} />
                                     </RouterTab>
                                     {isAllowed("userPermissions") && (
                                         <RouterTab
-                                            path="/permissions"
+                                            path=""
                                             label={<FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />}
                                         >
                                             <UserPermissionsUserPagePermissionsPanel userId={userId} />
