@@ -15,7 +15,7 @@ import { IsNotEmpty, IsString, IsUrl, ValidateIf } from "class-validator";
 
 import { SameAsUrlBlock } from "./same-as-url.block";
 
-const SameAsListBlock = createListBlock({ block: SameAsUrlBlock }, "SameAsList");
+const SameAsUrlListBlock = createListBlock({ block: SameAsUrlBlock }, "SameAsUrlList");
 
 class OrganizationBlockData extends BlockData {
     @BlockField()
@@ -27,7 +27,7 @@ class OrganizationBlockData extends BlockData {
     @ChildBlock(DamImageBlock)
     logo: BlockDataInterface;
 
-    @ChildBlock(SameAsListBlock)
+    @ChildBlock(SameAsUrlListBlock)
     sameAs: BlockDataInterface;
 
     @BlockField()
@@ -48,8 +48,8 @@ class OrganizationBlockInput extends BlockInput {
     @ChildBlockInput(DamImageBlock)
     logo: ExtractBlockInput<typeof DamImageBlock>;
 
-    @ChildBlockInput(SameAsListBlock)
-    sameAs: ExtractBlockInput<typeof SameAsListBlock>;
+    @ChildBlockInput(SameAsUrlListBlock)
+    sameAs: ExtractBlockInput<typeof SameAsUrlListBlock>;
 
     @BlockField()
     @IsString()

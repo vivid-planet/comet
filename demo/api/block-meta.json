@@ -2212,7 +2212,7 @@
             {
                 "name": "sameAs",
                 "kind": "Block",
-                "block": "SameAsList",
+                "block": "SameAsUrlList",
                 "nullable": false
             },
             {
@@ -2241,7 +2241,7 @@
             {
                 "name": "sameAs",
                 "kind": "Block",
-                "block": "SameAsList",
+                "block": "SameAsUrlList",
                 "nullable": false
             },
             {
@@ -2858,63 +2858,6 @@
         ]
     },
     {
-        "name": "SameAsList",
-        "fields": [
-            {
-                "name": "blocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "Block",
-                            "block": "SameAsUrl",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "blocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "Block",
-                            "block": "SameAsUrl",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ]
-    },
-    {
         "name": "SameAsUrl",
         "fields": [
             {
@@ -2927,6 +2870,63 @@
             {
                 "name": "url",
                 "kind": "String",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SameAsUrlList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SameAsUrl",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SameAsUrl",
+                            "nullable": false
+                        }
+                    ]
+                },
                 "nullable": false
             }
         ]
