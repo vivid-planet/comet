@@ -14,6 +14,8 @@ export type HtmlButtonProps = ButtonProps & Omit<AnchorHTMLAttributes<HTMLAnchor
 
 /**
  * Themed button for use inside MJML ending tags or outside of the MJML context.
+ * Inside `MjmlRaw` in an `MjmlColumn`, place `HtmlButton` in a `<tr>` and `<td>` of its own.
+ * For MJML context, use `MjmlButton`.
  */
 export function HtmlButton({
     variant: variantProp,

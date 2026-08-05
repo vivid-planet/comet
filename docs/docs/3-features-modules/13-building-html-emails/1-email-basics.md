@@ -42,21 +42,21 @@ When you need to drop into raw HTML outside of a text context — for example, t
 
 ### Start Raw Content Inside a Column With `<tr>`
 
-`mj-column` wraps every child in its own `<tr><td>` — except `MjmlRaw` content, which goes straight into the column's table unwrapped. A `<table>`, `<div>`, or `<img>` in that position breaks the surrounding layout: the section or column after it renders outside its wrapper or group, and MJML reports no error. Open with a `<tr>` and put your markup in a `<td>`, zeroing that cell's `padding`, `font-size`, and `line-height` so it adds no height of its own:
+`mj-column` wraps every child in its own `<tr><td>` — except `MjmlRaw` content, which goes straight into the column's table unwrapped. A `<table>`, `<div>`, or `<img>` in that position ends up outside the column's table instead, and MJML reports no error. This covers the `Html*` components. Open with a `<tr>` and put your markup in a `<td>`:
 
 ```tsx
 <MjmlColumn>
     <MjmlRaw>
         <tr>
-            <td style={{ padding: 0, fontSize: 0, lineHeight: 0, msoLineHeightRule: "exactly" }}>
-                <HtmlDivider />
-            </td>
+            <td>{/* your raw markup */}</td>
         </tr>
     </MjmlRaw>
 </MjmlColumn>
 ```
 
-This applies to `MjmlColumn` and `MjmlHero`. `MjmlSection` and `MjmlWrapper` already place their children inside a shared cell, so any root element is safe there.
+`HtmlText` is the exception: it renders the `<td>` itself, so a surrounding `<tr>` is all it needs — unless its `element` prop renders something else, which needs a `<td>` again. `MjmlDivider` supplies both the row and the cell — use it instead of a hand-wrapped `HtmlDivider` whenever you are in an `MjmlColumn`.
+
+The rule applies to `MjmlColumn` and `MjmlHero`. `MjmlSection` and `MjmlWrapper` already place their children inside a shared cell, so any root element is safe there.
 
 ### Avoid Block-Level HTML Elements Inside Ending Tags
 

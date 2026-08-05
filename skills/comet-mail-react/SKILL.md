@@ -127,21 +127,21 @@ Always use `theme.breakpoints.*.belowMediaQuery` inside `registerStyles` instead
 
 ### Start Raw Content Inside a Column With `<tr>`
 
-`mj-column` wraps every child in its own `<tr><td>` — except `MjmlRaw` content, which goes straight into the column's table unwrapped. A `<table>`, `<div>`, or `<img>` in that position breaks the surrounding layout: the section or column after it renders outside its wrapper or group, and MJML reports no error. Open with a `<tr>` and put the markup in a `<td>`, zeroing that cell's `padding`, `font-size`, and `line-height` so it adds no height:
+`mj-column` wraps every child in its own `<tr><td>` — except `MjmlRaw` content, which goes straight into the column's table unwrapped. A `<table>`, `<div>`, or `<img>` in that position ends up outside the column's table instead, and MJML reports no error. This covers the `Html*` components. Open with a `<tr>` and put the markup in a `<td>`:
 
 ```tsx
 <MjmlColumn>
     <MjmlRaw>
         <tr>
-            <td style={{ padding: 0, fontSize: 0, lineHeight: 0, msoLineHeightRule: "exactly" }}>
-                <HtmlDivider />
-            </td>
+            <td>{/* your raw markup */}</td>
         </tr>
     </MjmlRaw>
 </MjmlColumn>
 ```
 
-`MjmlColumn` and `MjmlHero` are both affected — `MjmlSection` and `MjmlWrapper` already place their children inside a shared cell, so any root element is safe there. `MjmlDivider` handles this itself; use it instead of a hand-wrapped `HtmlDivider` whenever you are in an `MjmlColumn`.
+`HtmlText` is the exception: it renders the `<td>` itself, so a surrounding `<tr>` is all it needs — unless its `element` prop renders something else, which needs a `<td>` again.
+
+`MjmlColumn` and `MjmlHero` are both affected — `MjmlSection` and `MjmlWrapper` already place their children inside a shared cell, so any root element is safe there. `MjmlDivider` supplies both the row and the cell; use it instead of a hand-wrapped `HtmlDivider` whenever you are in an `MjmlColumn`.
 
 ### Avoid Block-Level HTML Elements Inside Ending Tags
 
@@ -321,6 +321,8 @@ All components are imported from `@comet/mail-react` — never from `@faire/mjml
 | `MjmlPixelImageBlock` | re-exported `MjmlImage` | an `MjmlColumn` (standard MJML layout)         |
 | `HtmlPixelImageBlock` | raw `<img>`             | raw HTML or MJML ending tags such as `MjmlRaw` |
 
+Inside `MjmlRaw` in an `MjmlColumn`, `HtmlPixelImageBlock` needs its own `<tr>` and `<td>` — see _Start Raw Content Inside a Column With `<tr>`_ above.
+
 ```tsx
 <MjmlSection indent>
     <MjmlColumn>
@@ -378,6 +380,8 @@ export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
 | ------------------- | --------------------------- | ---------------------------------------------- |
 | `MjmlRichTextBlock` | `MjmlText`                  | an `MjmlColumn` (standard MJML layout)         |
 | `HtmlRichTextBlock` | `HtmlText` (`<div>`)        | raw HTML or MJML ending tags such as `MjmlRaw` |
+
+Inside `MjmlRaw` in an `MjmlColumn`, `HtmlRichTextBlock` needs its own `<tr>` and `<td>` — see _Start Raw Content Inside a Column With `<tr>`_ above.
 
 Usage sites pass only `data`:
 

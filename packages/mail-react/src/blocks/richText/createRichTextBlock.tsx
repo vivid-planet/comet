@@ -102,7 +102,9 @@ function renderRichTextContent({ draftContent, blockTypes, linkTypes, inline, bl
  *
  * `MjmlRichTextBlock` renders each draft block as `MjmlText` and must be
  * placed within an `MjmlColumn`. `HtmlRichTextBlock` renders each draft block
- * as `HtmlText` for raw-HTML contexts (e.g. inside `MjmlRaw`).
+ * as `HtmlText` for raw-HTML contexts (e.g. inside `MjmlRaw`); inside
+ * `MjmlRaw` in an `MjmlColumn`, place `HtmlRichTextBlock` in a `<tr>` and
+ * `<td>` of its own.
  *
  * ```ts
  * export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
@@ -120,7 +122,7 @@ export function createRichTextBlock<TLinkTypes extends Record<string, unknown> =
     /** Renders CMS RichText block data (draft-js raw content) as one `MjmlText` per draft block. Must be placed within an `MjmlColumn`. */
     MjmlRichTextBlock: (props: RichTextBlockProps) => ReactNode;
     // The description below is duplicated in HtmlRichTextBlock.stories.tsx because Storybook cannot read TSDoc from factory return type properties. Update both when the description changes.
-    /** Renders CMS RichText block data (draft-js raw content) as one `HtmlText` div per draft block, for raw-HTML contexts such as `MjmlRaw`. */
+    /** Renders CMS RichText block data (draft-js raw content) as one `HtmlText` div per draft block, for raw-HTML contexts such as `MjmlRaw`. Inside `MjmlRaw` in an `MjmlColumn`, place `HtmlRichTextBlock` in a `<tr>` and `<td>` of its own. */
     HtmlRichTextBlock: (props: RichTextBlockProps) => ReactNode;
 } {
     const blockTypes = options.blockTypes ?? {};
