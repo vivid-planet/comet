@@ -445,9 +445,9 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                 } catch (err) {
                     errorOccurred = true;
 
-                    if (hasObjectErrorData(err) && err.response?.data.error === "CometImageResolutionException") {
+                    if (hasObjectErrorData(err) && err.response?.data.error === "DextinityImageResolutionException") {
                         addValidationError(file, <MaxResolutionError maxResolution={damConfig.maxSrcResolution} />);
-                    } else if (hasObjectErrorData(err) && err.response?.data.error === "CometValidationException") {
+                    } else if (hasObjectErrorData(err) && err.response?.data.error === "DextinityValidationException") {
                         const message = err.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;
                         if (message.includes("Unsupported mime type")) {
