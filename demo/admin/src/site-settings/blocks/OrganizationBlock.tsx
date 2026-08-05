@@ -1,10 +1,10 @@
-import { createCompositeBlock, createCompositeBlockTextField, createListBlock, DamImageBlock } from "@comet/cms-admin";
+import { createCompositeBlock, createCompositeBlockTextField, createListBlock, DamImageBlock, isValidUrl } from "@comet/cms-admin";
 import { FormattedMessage } from "react-intl";
 
 import { SameAsUrlBlock } from "./SameAsUrlBlock";
 
 const validateUrl = (value?: string) =>
-    value && !URL.canParse(value) ? <FormattedMessage id="siteSettings.blocks.invalidUrl" defaultMessage="Invalid URL" /> : undefined;
+    value && !isValidUrl(value) ? <FormattedMessage id="siteSettings.blocks.invalidUrl" defaultMessage="Invalid URL" /> : undefined;
 
 const SameAsUrlListBlock = createListBlock({
     name: "SameAsUrlList",
