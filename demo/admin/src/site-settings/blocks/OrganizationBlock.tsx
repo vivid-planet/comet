@@ -31,7 +31,7 @@ export const OrganizationBlock = createCompositeBlock({
                 helperText: (
                     <FormattedMessage
                         id="siteSettings.blocks.organization.url.helperText"
-                        defaultMessage="If empty, the site URL configured for this scope (siteConfig.url) is used."
+                        defaultMessage="If empty, the address of this website is used."
                     />
                 ),
                 validate: validateUrl,
