@@ -19,7 +19,7 @@ describe("getDamFileCategory", () => {
         expect(getDamFileCategory(mimeType)).toBe("video");
     });
 
-    it.each(["application/pdf", "text/plain", "text/vtt", "text/csv", "application/zip"])("categorizes %s as document", (mimeType) => {
-        expect(getDamFileCategory(mimeType)).toBe("document");
+    it.each(["application/pdf", "text/plain", "text/vtt", "text/csv", "application/zip"])("categorizes %s as other", (mimeType) => {
+        expect(getDamFileCategory(mimeType)).toBe("other");
     });
 });

@@ -3,7 +3,7 @@
 // if you change this file, change the api file too
 // -------- IMPORTANT --------
 
-export type DamFileCategory = "svgImage" | "pixelImage" | "audio" | "video" | "document";
+export type DamFileCategory = "svgImage" | "pixelImage" | "audio" | "video" | "other";
 
 const svgMimeType = "image/svg+xml";
 
@@ -24,5 +24,5 @@ export function getDamFileCategory(mimeType: string): DamFileCategory {
         return "video";
     }
 
-    return "document";
+    return "other";
 }

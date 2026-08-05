@@ -3,7 +3,7 @@
 // if you change this file, change the admin file too
 // -------- IMPORTANT --------
 
-export type DamFileCategory = "svgImage" | "pixelImage" | "audio" | "video" | "document";
+export type DamFileCategory = "svgImage" | "pixelImage" | "audio" | "video" | "other";
 
 const svgMimetype = "image/svg+xml";
 
@@ -24,5 +24,5 @@ export function getDamFileCategory(mimetype: string): DamFileCategory {
         return "video";
     }
 
-    return "document";
+    return "other";
 }
