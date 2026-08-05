@@ -12,6 +12,10 @@ const config: Meta<typeof AboutModal> = {
     args: {
         open: true,
     },
+    // The modal overlays the whole page, so the docs page — which stacks all stories — can't be read.
+    parameters: {
+        docs: { disable: true },
+    },
 };
 
 export default config;

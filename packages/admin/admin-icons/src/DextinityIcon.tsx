@@ -60,6 +60,8 @@ const BrandGradientStops = () => (
 );
 
 export const DextinityIcon = forwardRef<SVGSVGElement, DextinityIconProps>(({ variant = "light", ...props }, ref) => {
+    // Ids in `defs` are document-global, so each instance needs its own. With the static ids Figma exports,
+    // a second icon on the page would take over the first one's gradients.
     const backgroundGradientId = useUniqueId("dextinity-icon-background");
     const markGradientId = useUniqueId("dextinity-icon-mark");
     const shadowGradientId = useUniqueId("dextinity-icon-shadow");

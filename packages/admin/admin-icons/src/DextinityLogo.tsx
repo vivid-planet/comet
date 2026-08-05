@@ -35,6 +35,8 @@ const flatMarkPath =
     "M100 0C169.036 2.2552e-06 225 55.9644 225 125C225 194.036 169.036 250 100 250H0V55H100C138.66 55 170 86.3401 170 125C170 163.66 138.66 195 100 195H55V92.5H80V170H100C124.853 170 145 149.853 145 125C145 100.147 124.853 80 100 80H25V225H100C155.228 225 200 180.228 200 125C200 69.7715 155.228 25 100 25H80V42.5H55V0H100Z";
 
 export const DextinityLogo = forwardRef<SVGSVGElement, DextinityLogoProps>(({ variant = "primaryPositive", sx, ...props }, ref) => {
+    // Ids in `defs` are document-global, so each instance needs its own. With the static ids Figma exports,
+    // a second logo on the page would take over the first one's gradients.
     const markGradientId = useUniqueId("dextinity-logo-mark");
     const shadowGradientId = useUniqueId("dextinity-logo-shadow");
 
