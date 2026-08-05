@@ -1,20 +1,19 @@
-import { gql, JsonLd } from "@comet/site-nextjs";
+import { gql } from "@comet/site-nextjs";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { Header } from "@src/layout/header/Header";
 import { headerFragment } from "@src/layout/header/Header.fragment";
 import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
+import { SiteSettings } from "@src/siteSettings/SiteSettings";
+import { siteSettingsFragment } from "@src/siteSettings/SiteSettings.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { IntlProvider } from "@src/util/IntlProvider";
 import { loadMessages } from "@src/util/loadMessages";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { setNotFoundContext } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import { buildOrganization } from "@src/util/structuredData/buildOrganization";
-import { siteSettingsFragment } from "@src/util/structuredData/SiteSettings.fragment";
 import type { Metadata } from "next";
-import type { Organization } from "schema-dts";
 
 import type { GQLLayoutQuery, GQLLayoutQueryVariables } from "./layout.generated";
 
@@ -68,22 +67,9 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
         });
     }
 
-    let organization: ReturnType<typeof buildOrganization> = null;
-
-    if (siteSettings) {
-        siteSettings.organization = await recursivelyLoadBlockData({
-            blockData: siteSettings.organization,
-            blockType: "Organization",
-            graphQLFetch,
-            fetch,
-            scope: { domain, language },
-        });
-        organization = buildOrganization(siteSettings.organization, siteConfig.url);
-    }
-
     return (
         <IntlProvider locale={language} messages={messages}>
-            {organization && <JsonLd<Organization> data={organization} />}
+            {siteSettings && <SiteSettings siteSettings={siteSettings} scope={{ domain, language }} />}
             <TopNavigation data={topMenu} />
             <Header header={header} />
             {children}
