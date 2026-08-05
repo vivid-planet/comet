@@ -1,69 +1,22 @@
-import { ChevronRight } from "@comet/admin-icons";
-import { type ComponentsOverrides, css, type Theme, useTheme, useThemeProps } from "@mui/material/styles";
-import type Typography from "@mui/material/Typography";
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import type { Link } from "react-router-dom";
+import { LevelUp } from "@comet/admin-icons";
+import { type ComponentsOverrides, IconButton as MuiIconButton } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import type { ReactNode } from "react";
 
+import { Breadcrumbs, type BreadcrumbsClassKey, type BreadcrumbsSlotsMap } from "../../common/breadcrumbs/Breadcrumbs";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { getElementOuterWidth } from "../../utils/getElementOuterWidth";
-import { useObservedWidth } from "../../utils/useObservedWidth";
 import { useStackApi } from "../Api";
-import { useItemsToRender } from "./utils";
+import { BreadcrumbLink } from "./BreadcrumbLink";
 
-export type StackBreadcrumbsClassKey =
-    | "root"
-    | "breadcrumbs"
-    | "listItem"
-    | "link"
-    | "disabledLink"
-    | "overflowLink"
-    | "separator"
-    | "backButton"
-    | "backButtonSeparator";
+export type StackBreadcrumbsClassKey = BreadcrumbsClassKey | "backButton" | "backButtonSeparator";
 
-const Root = createComponentSlot("div")<StackBreadcrumbsClassKey>({
+const BackButton = createComponentSlot(MuiIconButton)<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
-    slotName: "root",
-})(css`
-    position: relative;
-`);
+    slotName: "backButton",
+})() as typeof MuiIconButton;
 
-const Breadcrumbs = createComponentSlot("div")<StackBreadcrumbsClassKey>({
-    componentName: "StackBreadcrumbs",
-    slotName: "breadcrumbs",
-})(
-    ({ theme }) => css`
-        display: flex;
-        height: 50px;
-        border-bottom: 1px solid ${theme.palette.divider};
-        box-sizing: border-box;
-        flex-wrap: nowrap;
-        overflow-x: auto; // Make the breadcrumbs scrollable, if they still take up too much space, when only the first, last & the overflow link are visible.
-    `,
-);
-
-const ListItem = createComponentSlot("div")<StackBreadcrumbsClassKey>({
-    componentName: "StackBreadcrumbs",
-    slotName: "listItem",
-})(css`
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    white-space: nowrap;
-`);
-
-const Separator = createComponentSlot("div")<StackBreadcrumbsClassKey>({
-    componentName: "StackBreadcrumbs",
-    slotName: "separator",
-})(css`
-    font-size: 12px;
-    line-height: 0;
-    margin-left: 8px;
-    margin-right: 8px;
-`);
-
-export const BackButtonSeparator = createComponentSlot("div")<StackBreadcrumbsClassKey>({
+const BackButtonSeparator = createComponentSlot("div")<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "backButtonSeparator",
 })(
@@ -76,17 +29,12 @@ export const BackButtonSeparator = createComponentSlot("div")<StackBreadcrumbsCl
 );
 
 export interface StackBreadcrumbsProps
-    extends ThemedComponentBaseProps<{
-        root: "div";
-        breadcrumbs: "div";
-        listItem: "div";
-        link: typeof Link;
-        disabledLink: typeof Typography;
-        overflowLink: typeof Link;
-        separator: "div";
-        backButton: typeof Link;
-        backButtonSeparator: "div";
-    }> {
+    extends ThemedComponentBaseProps<
+        BreadcrumbsSlotsMap & {
+            backButton: typeof MuiIconButton;
+            backButtonSeparator: "div";
+        }
+    > {
     separator?: ReactNode;
     overflowLinkText?: ReactNode;
 }
@@ -94,48 +42,36 @@ export interface StackBreadcrumbsProps
 export function StackBreadcrumbs(inProps: StackBreadcrumbsProps) {
     const { separator, overflowLinkText = ". . .", slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminStackBreadcrumbs" });
     const stackApi = useStackApi();
-    const { palette } = useTheme();
-    const breadcrumbsRef = useRef<HTMLDivElement>(null);
-    const containerWidth = useObservedWidth(breadcrumbsRef);
-    const [itemWidths, setItemWidths] = useState<number[] | undefined>();
 
-    const breadcrumbItems = useMemo(() => stackApi?.breadCrumbs ?? [], [stackApi]);
-    const combinedTitlesOfBreadcrumbs = breadcrumbItems.map(({ title }) => title).join("");
+    const breadcrumbItems = stackApi?.breadCrumbs ?? [];
 
-    useEffect(() => {
-        setItemWidths(undefined);
-    }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs]);
-
-    useEffect(() => {
-        if (breadcrumbItems?.length && !itemWidths?.length) {
-            const listItems = breadcrumbsRef.current?.children;
-            const newItemWidths = listItems ? Object.values(listItems).map((listItem) => getElementOuterWidth(listItem)) : [];
-            setItemWidths(newItemWidths);
-        }
-    }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs, itemWidths]);
-
-    const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
-    const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, itemWidths, overflowLinkText, backButtonUrl, slotProps);
-
-    if (!breadcrumbItems) {
+    if (!breadcrumbItems.length) {
         return null;
     }
 
+    const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
+    const items = breadcrumbItems.map(({ url, title }) => ({ url, title }));
+
+    const startAdornment = backButtonUrl ? (
+        <>
+            {/* @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop */}
+            <BackButton component={BreadcrumbLink} to={backButtonUrl} {...slotProps?.backButton}>
+                <LevelUp />
+            </BackButton>
+            <BackButtonSeparator {...slotProps?.backButtonSeparator} />
+        </>
+    ) : undefined;
+
     return (
-        <Root {...slotProps?.root} {...restProps}>
-            <Breadcrumbs {...slotProps?.breadcrumbs} ref={breadcrumbsRef}>
-                {itemsToRender.map((item, index) => (
-                    <ListItem {...slotProps?.listItem} key={index}>
-                        {item}
-                        {index < itemsToRender.length - 1 && (
-                            <Separator {...slotProps?.separator}>
-                                {separator ?? <ChevronRight fontSize="inherit" htmlColor={palette.grey[300]} />}
-                            </Separator>
-                        )}
-                    </ListItem>
-                ))}
-            </Breadcrumbs>
-        </Root>
+        <Breadcrumbs
+            items={items}
+            linkComponent={BreadcrumbLink}
+            startAdornment={startAdornment}
+            overflowLabel={overflowLinkText}
+            iconMapping={{ separator }}
+            slotProps={slotProps}
+            {...restProps}
+        />
     );
 }
 

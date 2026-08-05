@@ -5,6 +5,7 @@ import { createComponentSlot } from "../../helpers/createComponentSlot";
 
 export type BreadcrumbsClassKey =
     | "root"
+    | "startAdornment"
     | "item"
     | "activeItem"
     | "separator"
@@ -56,6 +57,15 @@ export const Root = createComponentSlot("div")<BreadcrumbsClassKey>({
         }
     `,
 );
+
+export const StartAdornment = createComponentSlot("div")<BreadcrumbsClassKey>({
+    componentName: "Breadcrumbs",
+    slotName: "startAdornment",
+})(css`
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+`);
 
 export const Item = createComponentSlot(Typography)<BreadcrumbsClassKey>({
     componentName: "Breadcrumbs",
@@ -276,6 +286,8 @@ export const ExpandedMenuActiveItemWrapper = createComponentSlot("div")<Breadcru
         height: 45px;
         padding-left: ${wrapperPaddingLeft(theme, ownerState.indentation)};
         padding-right: ${theme.spacing(3)};
+        color: inherit;
+        text-decoration: none;
         background-color: ${alpha(theme.palette.primary.main, 0.1)};
     `,
 );
@@ -291,6 +303,12 @@ export const ExpandedMenuSubitemWrapper = createComponentSlot("div")<Breadcrumbs
         height: 45px;
         padding-left: ${wrapperPaddingLeft(theme, ownerState.indentation)};
         padding-right: ${theme.spacing(3)};
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+            background-color: ${theme.palette.grey[50]};
+        }
     `,
 );
 
@@ -306,8 +324,11 @@ export const MobileRootButton = createComponentSlot(ButtonBase)<BreadcrumbsClass
     componentName: "Breadcrumbs",
     slotName: "mobileRootButton",
 })(css`
-    display: block;
-    width: 100%;
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
     text-align: left;
 `);
 
