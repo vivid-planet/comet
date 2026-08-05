@@ -339,7 +339,8 @@ export class FilesService {
             return fileToReplace.name;
         }
 
-        const name = slugifyFilename(basename(fileToReplace.name, previousExtension), newExtension);
+        // fileToReplace.name is already slugified, so only the extension needs to be swapped
+        const name = `${basename(fileToReplace.name, previousExtension)}${newExtension}`;
         const fileWithSameName = await this.findOneByFilenameAndFolder(
             { filename: name, folderId: fileToReplace.folder?.id ?? null },
             fileToReplace.scope,
