@@ -9,6 +9,7 @@ import getUuid from "uuid-by-string";
 
 import { AbstractAccessControlService } from "./access-control.service";
 import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
+import { deduplicateByContentScope } from "./deduplicate-by-content-scope";
 import { ContentScopeWithLabel } from "./dto/content-scope";
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
@@ -25,19 +26,6 @@ import {
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
 } from "./user-permissions.types";
-
-// Dedupes by scope content without lodash's deep-equal uniqWith, which is O(n^2) and too slow for large scope lists.
-// Scopes are flat objects of primitive values, so a sorted-entries string key is a safe stand-in for deep equality.
-function dedupeByContentScope<T>(items: T[], getScope: (item: T) => ContentScope): T[] {
-    const seen = new Map<string, T>();
-    for (const item of items) {
-        const key = JSON.stringify(Object.entries(getScope(item)).sort(([a], [b]) => a.localeCompare(b)));
-        if (!seen.has(key)) {
-            seen.set(key, item);
-        }
-    }
-    return [...seen.values()];
-}
 
 @Injectable()
 export class UserPermissionsService {
@@ -87,7 +75,7 @@ export class UserPermissionsService {
                     ]),
                 ),
             }));
-        return dedupeByContentScope(contentScopesWithLabel, (cs) => cs.scope);
+        return deduplicateByContentScope(contentScopesWithLabel, (cs) => cs.scope);
     }
 
     async getAvailablePermissions(): Promise<Permission[]> {
@@ -237,7 +225,7 @@ export class UserPermissionsService {
             }
         }
 
-        return dedupeByContentScope(contentScopes, (scope) => scope);
+        return deduplicateByContentScope(contentScopes, (scope) => scope);
     }
 
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
@@ -282,7 +270,7 @@ export class UserPermissionsService {
                 const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
                 const existingPermission = acc.find((p) => p.permission === userPermission.permission);
                 if (existingPermission) {
-                    existingPermission.contentScopes = dedupeByContentScope(
+                    existingPermission.contentScopes = deduplicateByContentScope(
                         [...existingPermission.contentScopes, ...contentScopes],
                         (scope) => scope,
                     );
