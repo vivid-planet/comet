@@ -4,6 +4,7 @@ import { ProductTeaserBlock } from "@src/products/blocks/product-teaser.block";
 
 import { LinkBlock } from "./link.block";
 import { Heading1ToHeading2Migration } from "./tip-tap-rich-text/migrations/2-heading-1-to-heading-2.migration";
+import { RemoveParagraph300Migration } from "./tip-tap-rich-text/migrations/3-remove-paragraph-300.migration";
 
 export const TipTapRichTextBlock = createTipTapRichTextBlock(
     {
@@ -13,7 +14,6 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock(
             productTeaser: { block: ProductTeaserBlock, display: "block" },
         },
         textBlockStyles: [
-            { name: "paragraph300", appliesTo: ["paragraph"] },
             { name: "paragraph200", appliesTo: ["paragraph"] },
             { name: "eyebrow600", appliesTo: ["paragraph"] },
             { name: "eyebrow550", appliesTo: ["paragraph"] },
@@ -32,8 +32,8 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock(
     {
         name: "TipTapRichText",
         migrate: {
-            migrations: typeSafeBlockMigrationPipe([Heading1ToHeading2Migration]),
-            version: 2,
+            migrations: typeSafeBlockMigrationPipe([Heading1ToHeading2Migration, RemoveParagraph300Migration]),
+            version: 3,
         },
     },
 );

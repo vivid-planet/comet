@@ -14,14 +14,8 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
     },
     textBlockStyles: [
         {
-            name: "paragraph300",
-            label: <FormattedMessage id="tipTapRichTextBlock.paragraph300" defaultMessage="Paragraph" />,
-            appliesTo: ["paragraph"],
-            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 18, lineHeight: "26px" }} {...props} />,
-        },
-        {
             name: "paragraph200",
-            label: <FormattedMessage id="tipTapRichTextBlock.paragraph200" defaultMessage="Paragraph Small" />,
+            label: <FormattedMessage id="tipTapRichTextBlock.small" defaultMessage="Small" />,
             appliesTo: ["paragraph"],
             element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 15, lineHeight: "22px" }} {...props} />,
         },
