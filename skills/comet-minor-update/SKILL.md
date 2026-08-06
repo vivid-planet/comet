@@ -16,7 +16,7 @@ Two rules hold across every `@comet/*` core package in the project, before and a
 - **Pinned versions only.** Every core `@comet/*` entry must be an exact version (e.g. `8.21.0`), never a range (`^8.21.0`, `~8.21.0`, `>=…`). If you see a caret or tilde on a core package, the project is in a broken state — stop and tell the user.
 - **All core packages on the same version.** Every core `@comet/*` package in the project must be pinned to the same version across every `package.json`. There is no supported mix-and-match.
 
-These rules apply only to the core set (packages released together from the Comet monorepo). Satellite `@comet/*` packages — anything released outside the monorepo, on its own cadence — are out of scope — see Step 1.
+These rules apply only to the core set (packages released together from the Comet monorepo). Any other `@comet/*` package a project happens to depend on is out of scope — see Step 1.
 
 ## When to use
 
@@ -60,8 +60,8 @@ grep -n '"@comet/' package.json api/package.json admin/package.json \
 
 Notes:
 
-- Not every `@comet/*` package follows the core release cadence. Packages that live outside the core monorepo may use a different versioning scheme (often `^x.y.z`). **Only** bump packages whose current version matches the core Comet version (the one shared by `@comet/cms-api`, `@comet/admin`, `@comet/site-nextjs`, etc.). Leave the others untouched.
-- Use the invariants to tell core from satellite: core packages are all pinned to the same exact version, with no caret or tilde. Anything with a range or a different version is not core — verify before touching it.
+- Not every `@comet/*` dependency you find follows the core release cadence. The dev tools once published as `@comet/dev-process-manager` and `@comet/dev-oidc-provider` have been renamed to `dev-process-manager` and `dev-oidc-provider`, but a project that hasn't migrated yet still depends on the old scoped names — on their own versioning scheme (often `^x.y.z`), unrelated to the core version. **Only** bump packages whose current version matches the core Comet version (the one shared by `@comet/cms-api`, `@comet/admin`, `@comet/site-nextjs`, etc.). Leave the others untouched.
+- Use the invariants to tell core from non-core: core packages are all pinned to the same exact version, with no caret or tilde. Anything with a range or a different version is not core — verify before touching it.
 - If you find core packages on different versions, or any core package using a range (`^`, `~`), the project violates the invariants. Stop and tell the user — don't paper over it by bumping.
 
 Confirm the **current major** from the version string (e.g. `8.20.4` → major `8`).
@@ -184,7 +184,7 @@ Tell the user:
 | Pitfall                                             | How to avoid                                                                                        |
 | --------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | Picking a canary/beta as "newest"                   | Filter out any version containing `-` in Step 2.                                                    |
-| Bumping a satellite `@comet/*` package by accident  | Only bump packages pinned to the shared core version — see Step 1.                                  |
+| Bumping a non-core `@comet/*` package by accident   | Only bump packages pinned to the shared core version — see Step 1.                                  |
 | Forgetting the root `package.json`                  | The repo root has its own `package.json` with `@comet/cli`. Always include it in the grep.          |
 | Assuming "up to date" means the install did nothing | It means the lockfile already satisfies the new range. Verify with `grep` against the lockfile.     |
 | Running installs in parallel in a sandbox           | If `&` backgrounding fails, just run the installs sequentially. Takes a bit longer, works reliably. |
