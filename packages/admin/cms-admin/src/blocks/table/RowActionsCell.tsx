@@ -6,7 +6,6 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useBlockContext } from "../context/useBlockContext";
-import type { RichTextBlockState } from "../createRichTextBlock";
 import type { TableBlockState } from "../createTableBlock";
 import { FailedToPasteSnackbar } from "./FailedToPasteSnackbar";
 import { useTableBlockContext } from "./TableBlockContext";
@@ -113,7 +112,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
             return;
         }
 
-        let cellValuesToInsert: RichTextBlockState[] = [];
+        let cellValuesToInsert: unknown[] = [];
 
         try {
             cellValuesToInsert = await Promise.all(clipboardData.cellValues.map((cellValue) => RichTextBlock.output2State(cellValue, blockContext)));
