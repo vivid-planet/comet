@@ -42,24 +42,30 @@ A `CronJobsPage` is available for `@dextinity/cms-admin` to display and manage C
 
 ### Scoping
 
-The Cron Job Module respects the [Kubernetes annotation](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) `comet-dxp.com/content-scope` and will only allow access to the Cron Job if the user can access the specified content scope.
+The Cron Job Module respects the [Kubernetes annotation](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) `dextinity.com/content-scope` and will only allow access to the Cron Job if the user can access the specified content scope.
 
 ```yaml
 …
 metadata:
     annotations:
-        comet-dxp.com/content-scope: "{ \"domain\": \"main\", \"language\": \"en\" }"
+        dextinity.com/content-scope: "{ \"domain\": \"main\", \"language\": \"en\" }"
 …
 ```
 
 ### Labeling
 
-Cron Jobs and Jobs can be given a human-readable label using the [Kubernetes annotation](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) `comet-dxp.com/label`.
+Cron Jobs and Jobs can be given a human-readable label using the [Kubernetes annotation](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) `dextinity.com/label`.
 
 ```yaml
 …
 metadata:
     annotations:
-        comet-dxp.com/label: "Demo Cron Job"
+        dextinity.com/label: "Demo Cron Job"
 …
 ```
+
+### Legacy `comet-dxp.com` labels and annotations
+
+All labels and annotations read by Dextinity use the `dextinity.com` prefix.
+The former `comet-dxp.com` prefix (for instance, `comet-dxp.com/content-scope`) is still supported, so existing Helm charts keep working.
+Resources are expected to use one prefix or the other: if no resource matches the `dextinity.com` labels, the `comet-dxp.com` ones are used instead.
