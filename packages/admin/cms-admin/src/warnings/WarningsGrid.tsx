@@ -77,7 +77,11 @@ function WarningsGridToolbar() {
     );
 }
 
-export function WarningsGrid() {
+export interface WarningsGridProps {
+    showAllScopes?: boolean;
+}
+
+export function WarningsGrid({ showAllScopes }: WarningsGridProps) {
     const intl = useIntl();
     const dataGridProps = {
         ...useDataGridRemote({ initialFilter: { items: [{ field: "status", operator: "is", value: "open" }] } }),
@@ -85,8 +89,8 @@ export function WarningsGrid() {
     };
     const { messages: warningMessages } = useWarningsConfig();
     const { entityDependencyMap } = useDependenciesConfig();
-    const { values: scopeValues } = useContentScope();
-    const scopes = scopeValues.map((item) => item.scope);
+    const { scope, values: scopeValues } = useContentScope();
+    const scopes = showAllScopes ? scopeValues.map((item) => item.scope) : [scope];
 
     const scopeValueOptions = scopeValues.map((item) => {
         const label: string[] = [];
