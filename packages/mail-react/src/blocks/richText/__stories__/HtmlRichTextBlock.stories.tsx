@@ -2,9 +2,11 @@ import { MjmlColumn, MjmlRaw } from "@faire/mjml-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { MjmlSection } from "../../../components/section/MjmlSection.js";
+import { registerStyles } from "../../../styles/registerStyles.js";
 import { createTheme } from "../../../theme/createTheme.js";
+import { css } from "../../../utils/css.js";
 import { createRichTextBlock } from "../createRichTextBlock.js";
-import { exampleBlockData, headlinesOnlyBlockData, highlightBlockData } from "./exampleBlockData.js";
+import { exampleBlockData, headlinesOnlyBlockData, highlightBlockData, listSpacingBlockData, listVarietyBlockData } from "./exampleBlockData.js";
 
 const { HtmlRichTextBlock } = createRichTextBlock();
 
@@ -19,7 +21,7 @@ const config: Meta<typeof HtmlRichTextBlock> = {
             description: {
                 // Duplicates the TSDoc on HtmlRichTextBlock in createRichTextBlock.tsx — Storybook cannot read it from factory return type properties. Update both when the description changes.
                 component:
-                    "Renders CMS RichText block data (draft-js raw content) as one `HtmlText` div per draft block, for raw-HTML contexts such as `MjmlRaw`.",
+                    "Renders CMS RichText block data (draft-js raw content) as one `HtmlText` div per draft block, for raw-HTML contexts such as `MjmlRaw`. Inside `MjmlRaw` in an `MjmlColumn`, place `HtmlRichTextBlock` in a `<tr>` and `<td>` of its own.",
             },
         },
     },
@@ -33,7 +35,118 @@ export const Default: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlRichTextBlock data={exampleBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlRichTextBlock data={exampleBlockData} />
+                        </td>
+                    </tr>
+                </MjmlRaw>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const listVarietyTheme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: {
+            body: { fontSize: { default: "16px", mobile: "14px" }, lineHeight: { default: "24px", mobile: "20px" }, bottomSpacing: "16px" },
+        },
+    },
+});
+
+/** Lists render as a table, not as `<ul>` / `<ol>`, so their spacing is consistent across email clients. */
+export const ListVariety: Story = {
+    parameters: {
+        theme: listVarietyTheme,
+    },
+    render: () => (
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlRaw>
+                    <tr>
+                        <td>
+                            <HtmlRichTextBlock data={listVarietyBlockData} />
+                        </td>
+                    </tr>
+                </MjmlRaw>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const listSpacingTheme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: { body: { fontSize: "16px", lineHeight: "24px", bottomSpacing: "16px" } },
+    },
+    list: {
+        indent: { default: 40, mobile: 8 },
+        markerGap: { default: 24, mobile: 4 },
+        itemSpacing: { default: 20, mobile: 4 },
+    },
+});
+
+/** List spacing comes from `theme.list`, and every token accepts a value per breakpoint. Resize the preview below 420px to see the mobile values. */
+export const ListSpacing: Story = {
+    parameters: {
+        theme: listSpacingTheme,
+    },
+    render: () => (
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlRaw>
+                    <tr>
+                        <td>
+                            <HtmlRichTextBlock data={listSpacingBlockData} />
+                        </td>
+                    </tr>
+                </MjmlRaw>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const { HtmlRichTextBlock: HtmlPerVariantRichTextBlock } = createRichTextBlock({
+    blockTypes: {
+        "unordered-list-item": { variant: "copyDefault" },
+        "ordered-list-item": { variant: "copyLarge" },
+    },
+});
+
+const perVariantListSpacingTheme = createTheme({
+    text: {
+        variants: {
+            copyDefault: { fontSize: "16px", lineHeight: "24px", bottomSpacing: "24px" },
+            copyLarge: { fontSize: "20px", lineHeight: "28px", bottomSpacing: "24px" },
+        },
+    },
+    list: { itemSpacing: 8 },
+});
+
+registerStyles(
+    css`
+        .perVariantListSpacingSection .richTextBlock__list--variantCopyLarge .richTextBlock__listItem--itemSpacing > td {
+            padding-bottom: 24px !important;
+        }
+    `,
+    { inline: true },
+);
+
+/** The theme's `list.itemSpacing` applies to every list the block renders. A single list departs from it through a rule scoped to its text variant, since the variant is what a list carries. */
+export const ListSpacingPerVariant: Story = {
+    parameters: {
+        theme: perVariantListSpacingTheme,
+    },
+    render: () => (
+        <MjmlSection indent className="perVariantListSpacingSection">
+            <MjmlColumn>
+                <MjmlRaw>
+                    <tr>
+                        <td>
+                            <HtmlPerVariantRichTextBlock data={listSpacingBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -56,7 +169,11 @@ export const WithCustomLinkType: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlCustomLinkTypeRichTextBlock data={exampleBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlCustomLinkTypeRichTextBlock data={exampleBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -92,7 +209,11 @@ export const WithVariants: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlVariantsRichTextBlock data={exampleBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlVariantsRichTextBlock data={exampleBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -115,7 +236,11 @@ export const WithCustomInlineStyle: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlCustomInlineStyleRichTextBlock data={highlightBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlCustomInlineStyleRichTextBlock data={highlightBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -138,7 +263,11 @@ export const RestrictedHeadlineBlock: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlHeadlineRichTextBlock data={headlinesOnlyBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlHeadlineRichTextBlock data={headlinesOnlyBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>

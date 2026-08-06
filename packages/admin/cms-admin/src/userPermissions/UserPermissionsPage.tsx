@@ -28,7 +28,7 @@ export const UserPermissionsPage = () => {
                     <MainContent fullHeight>
                         <UserPermissionsUserGrid
                             rowAction={(params) => (
-                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id} subUrl="permissions">
+                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                     <Edit />
                                 </IconButton>
                             )}
@@ -42,15 +42,25 @@ export const UserPermissionsPage = () => {
                             <MainContent>
                                 <RouterTabs>
                                     <RouterTab
+<<<<<<< HEAD
                                         path=""
                                         label={<FormattedMessage id="dextinity.userPermissions.basicData" defaultMessage="Basic Data" />}
+=======
+                                        path={isAllowed("userPermissions") ? "/basic-data" : ""}
+                                        label={<FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />}
+>>>>>>> main
                                     >
                                         <UserPermissionsUserPageBasicDataPanel userId={userId} />
                                     </RouterTab>
                                     {isAllowed("userPermissions") && (
                                         <RouterTab
+<<<<<<< HEAD
                                             path="/permissions"
                                             label={<FormattedMessage id="dextinity.userPermissions.permissions" defaultMessage="Permissions" />}
+=======
+                                            path=""
+                                            label={<FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />}
+>>>>>>> main
                                         >
                                             <UserPermissionsUserPagePermissionsPanel userId={userId} />
                                         </RouterTab>

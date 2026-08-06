@@ -40,6 +40,24 @@ When you need to drop into raw HTML outside of a text context — for example, t
 
 ## Common Pitfalls
 
+### Start Raw Content Inside a Column With `<tr>`
+
+`mj-column` wraps every child in its own `<tr><td>` — except `MjmlRaw` content, which goes straight into the column's table unwrapped. A `<table>`, `<div>`, or `<img>` in that position ends up outside the column's table instead, and MJML reports no error. This covers the `Html*` components. Open with a `<tr>` and put your markup in a `<td>`:
+
+```tsx
+<MjmlColumn>
+    <MjmlRaw>
+        <tr>
+            <td>{/* your raw markup */}</td>
+        </tr>
+    </MjmlRaw>
+</MjmlColumn>
+```
+
+`HtmlText` is the exception: it renders the `<td>` itself, so a surrounding `<tr>` is all it needs — unless its `element` prop renders something else, which needs a `<td>` again. `MjmlDivider` supplies both the row and the cell — use it instead of a hand-wrapped `HtmlDivider` whenever you are in an `MjmlColumn`.
+
+The rule applies to `MjmlColumn` and `MjmlHero`. `MjmlSection` and `MjmlWrapper` already place their children inside a shared cell, so any root element is safe there.
+
 ### Avoid Block-Level HTML Elements Inside Ending Tags
 
 Don't use `<p>`, `<h1>`, `<h2>`, or other block-level HTML elements inside ending tags. They have wildly inconsistent default margins and spacing across email clients and add no rendering value in email HTML. Instead, use `<td>`, `<div>`, and `<span>` for structure, and build your typography hierarchy through `MjmlText`/`HtmlText` [text variants](./2-components-and-theme.md#variants) rather than HTML semantics. If a block-level element is truly unavoidable, always reset its margins explicitly with inline styles (e.g., `style={{ margin: 0 }}`).

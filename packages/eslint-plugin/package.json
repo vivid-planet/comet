@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/eslint-plugin",
     "version": "1.0.0",
     "description": "A set of ESLint rules and configurations for Dextinity projects",
+=======
+    "name": "@comet/eslint-plugin",
+    "version": "9.3.0",
+    "description": "A set of ESLint rules and configurations for Comet projects",
+>>>>>>> main
     "type": "commonjs",
     "main": "lib/index.js",
     "license": "BSD-2-Clause",
@@ -26,7 +32,7 @@
         "test:watch": "vitest --watch"
     },
     "devDependencies": {
-        "@eslint/js": "^9.39.4",
+        "@eslint/js": "^9.39.5",
         "eslint": "^9.39.4",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-import": "^2.32.0",

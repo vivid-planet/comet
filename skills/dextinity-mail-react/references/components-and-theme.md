@@ -43,6 +43,9 @@ const theme = createTheme({
     sizes: {
         contentIndentation: { default: 40, tablet: 30, mobile: 20 },
     },
+    list: {
+        indent: { default: 24, tablet: 16, mobile: 8 },
+    },
 });
 ```
 
@@ -279,13 +282,13 @@ Themed text for use inside ending tags (`MjmlText`, `MjmlRaw`) or custom HTML st
 **CSS classes:** `.htmlText`, `.htmlText--{variant}`, `.htmlText--bottomSpacing`.
 
 ```tsx
-<MjmlRaw>
-    <table>
+<MjmlColumn>
+    <MjmlRaw>
         <tr>
-            <HtmlText variant="body">Themed text inside a raw table</HtmlText>
+            <HtmlText variant="body">Themed text in a row of the column's table</HtmlText>
         </tr>
-    </table>
-</MjmlRaw>
+    </MjmlRaw>
+</MjmlColumn>
 
 <MjmlText>
     <HtmlText element="div" variant="caption">Rendered as a div</HtmlText>

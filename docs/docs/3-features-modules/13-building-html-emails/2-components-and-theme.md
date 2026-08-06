@@ -31,6 +31,10 @@ const theme = createTheme({
         fontFamily: "Georgia, serif",
         fontSize: "18px",
     },
+    list: {
+        indent: 16,
+        markerGap: { default: 12, mobile: 8 },
+    },
     colors: {
         background: {
             body: "#EAEAEA",
@@ -46,7 +50,7 @@ The built-in breakpoints are `default` and `mobile`. To add more, augment the `T
 
 Breakpoint values must be created with `createBreakpoint()`, which produces an object containing the pixel width and a ready-to-use media query string.
 
-Once augmented, the new key automatically becomes available in all responsive theme values, e.g. `contentIndentation`.
+Once augmented, the new key automatically becomes available in all responsive theme values, e.g. `sizes.contentIndentation` and the `list` spacing tokens.
 
 ```ts title="theme.ts"
 import { createBreakpoint, createTheme, type ThemeBreakpoint } from "@dextinity/mail-react";
@@ -365,11 +369,9 @@ It supports the same `variant` and `bottomSpacing` props as `MjmlText`:
 <MjmlSection>
     <MjmlColumn>
         <MjmlRaw>
-            <table>
-                <tr>
-                    <HtmlText>Themed text inside a raw HTML table</HtmlText>
-                </tr>
-            </table>
+            <tr>
+                <HtmlText>Themed text in a row of the column's table</HtmlText>
+            </tr>
         </MjmlRaw>
     </MjmlColumn>
 </MjmlSection>

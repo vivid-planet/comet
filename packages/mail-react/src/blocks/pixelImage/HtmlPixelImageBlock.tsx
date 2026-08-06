@@ -12,6 +12,7 @@ export type HtmlPixelImageBlockProps = Omit<ComponentProps<"img">, "src" | "widt
  *
  * Use within raw HTML context — HTML-only emails or
  * [MJML ending tags](https://documentation.mjml.io/#ending-tags) like `MjmlRaw`.
+ * Inside `MjmlRaw` in an `MjmlColumn`, place `HtmlPixelImageBlock` in a `<tr>` and `<td>` of its own.
  * For MJML context, use `MjmlPixelImageBlock`.
  */
 export function HtmlPixelImageBlock({

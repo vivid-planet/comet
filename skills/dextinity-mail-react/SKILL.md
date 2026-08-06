@@ -125,6 +125,24 @@ Always use `theme.breakpoints.*.belowMediaQuery` inside `registerStyles` instead
 
 ## Common Pitfalls
 
+### Start Raw Content Inside a Column With `<tr>`
+
+`mj-column` wraps every child in its own `<tr><td>` — except `MjmlRaw` content, which goes straight into the column's table unwrapped. A `<table>`, `<div>`, or `<img>` in that position ends up outside the column's table instead, and MJML reports no error. This covers the `Html*` components. Open with a `<tr>` and put the markup in a `<td>`:
+
+```tsx
+<MjmlColumn>
+    <MjmlRaw>
+        <tr>
+            <td>{/* your raw markup */}</td>
+        </tr>
+    </MjmlRaw>
+</MjmlColumn>
+```
+
+`HtmlText` is the exception: it renders the `<td>` itself, so a surrounding `<tr>` is all it needs — unless its `element` prop renders something else, which needs a `<td>` again.
+
+`MjmlColumn` and `MjmlHero` are both affected — `MjmlSection` and `MjmlWrapper` already place their children inside a shared cell, so any root element is safe there. `MjmlDivider` supplies both the row and the cell; use it instead of a hand-wrapped `HtmlDivider` whenever you are in an `MjmlColumn`.
+
 ### Avoid Block-Level HTML Elements Inside Ending Tags
 
 Don't use `<p>`, `<h1>`, `<h2>`, or other block-level HTML elements inside ending tags. They have wildly inconsistent default margins and spacing across email clients and add no rendering value in email HTML. Instead, use `<td>`, `<div>`, and `<span>` for structure, and build your typography hierarchy through `MjmlText`/`HtmlText` variants rather than HTML semantics. If a block-level element is truly unavoidable, always reset its margins inline: `style={{ margin: 0 }}`.
@@ -303,6 +321,8 @@ All components are imported from `@dextinity/mail-react` — never from `@faire/
 | `MjmlPixelImageBlock` | re-exported `MjmlImage` | an `MjmlColumn` (standard MJML layout)         |
 | `HtmlPixelImageBlock` | raw `<img>`             | raw HTML or MJML ending tags such as `MjmlRaw` |
 
+Inside `MjmlRaw` in an `MjmlColumn`, `HtmlPixelImageBlock` needs its own `<tr>` and `<td>` — see _Start Raw Content Inside a Column With `<tr>`_ above.
+
 ```tsx
 <MjmlSection indent>
     <MjmlColumn>
@@ -361,6 +381,8 @@ export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
 | `MjmlRichTextBlock` | `MjmlText`                  | an `MjmlColumn` (standard MJML layout)         |
 | `HtmlRichTextBlock` | `HtmlText` (`<div>`)        | raw HTML or MJML ending tags such as `MjmlRaw` |
 
+Inside `MjmlRaw` in an `MjmlColumn`, `HtmlRichTextBlock` needs its own `<tr>` and `<td>` — see _Start Raw Content Inside a Column With `<tr>`_ above.
+
 Usage sites pass only `data`:
 
 ```tsx
@@ -391,6 +413,8 @@ Key behaviors:
         `,
     );
     ```
+
+    For a list block type, target `.<className> .richTextBlock__listItemText` instead of `> div` — the list's cells carry their own font styles, which outrank a rule on the block's element.
 
 - **Multiple configurations per app.** Each factory call is independent — rename the destructured components per use case:
 
@@ -426,9 +450,10 @@ Key behaviors:
     });
     ```
 
-- **Lists** render flat (`<ul>` / `<ol>` inside one text component per list); nesting by draft depth isn't supported.
+- **Lists** render as a table inside one text component, with a row per item, a marker cell and a text cell — the indent and the marker gap are cell padding, which is the only spacing Outlook on Windows applies reliably. Items render flat; nesting by draft depth isn't supported.
+- **List spacing** comes from the theme's `list.indent` (before the marker), `list.markerGap` (between the marker and the text) and `list.itemSpacing` (between items), all responsive and all applying to every list the block renders. To override it, register a rule scoped to a list's type or variant modifier with `{ inline: true }`, which has MJML write the declaration into the cell's `style` attribute at compile time so it also reaches Outlook.
 - Spacing between blocks comes from the theme's `bottomSpacing` (the last block gets none); headings are styled text, not semantic `<h1>` elements.
-- Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, and `richTextBlock__link` class names for targeting with `registerStyles`.
+- Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, `richTextBlock__listItemMarker`, `richTextBlock__listItemText`, and `richTextBlock__link` class names for targeting with `registerStyles`. The list table also carries `richTextBlock__list--ordered` or `richTextBlock__list--unordered`, plus a modifier naming the text variant its items render with, such as `richTextBlock__list--variantBody`. Its rows carry `richTextBlock__listItem--itemSpacing`, or `richTextBlock__listItem--blockSpacing` on the last row when spacing follows the list. Its cells restate the text styles inline, so a rule targeting list text needs `!important`.
 
 ---
 

@@ -57,6 +57,38 @@ export function generateResponsiveVariantCss<TVariantStyles extends VariantStyle
     return cssChunks.filter(Boolean).join("\n");
 }
 
+interface ResponsiveToken {
+    value: ResponsiveValue<string | number>;
+    cssProperty: string;
+    unit?: string;
+}
+
+/**
+ * Generates `max-width` media-query CSS for theme tokens that are not keyed by variant name.
+ * Returns an empty string when no token has breakpoint overrides.
+ */
+export function generateResponsiveTokenCss({
+    breakpoints,
+    selector,
+    tokens,
+}: {
+    breakpoints: ThemeBreakpoints;
+    selector: string;
+    tokens: readonly ResponsiveToken[];
+}): string {
+    const overridesByBreakpoint = new Map<keyof ThemeBreakpoints, string[]>();
+
+    for (const token of tokens) {
+        for (const { breakpointKey, value } of getResponsiveOverrides(token.value)) {
+            const declarations = overridesByBreakpoint.get(breakpointKey) ?? [];
+            declarations.push(formatDeclaration({ cssProperty: token.cssProperty, value, unit: token.unit }));
+            overridesByBreakpoint.set(breakpointKey, declarations);
+        }
+    }
+
+    return renderMediaQueries({ breakpoints, selector, overridesByBreakpoint });
+}
+
 function collectOverridesByBreakpoint<TVariantStyles extends VariantStylesConstraint>(
     variantStyles: TVariantStyles,
     properties: ResponsiveVariantProperties<TVariantStyles>,
