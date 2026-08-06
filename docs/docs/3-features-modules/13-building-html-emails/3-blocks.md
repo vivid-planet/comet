@@ -17,6 +17,8 @@ Two components render `PixelImageBlockData` from the CMS — one for MJML contex
 | `MjmlPixelImageBlock` | re-exported `MjmlImage` | an `MjmlColumn` (standard MJML layout model)                                      |
 | `HtmlPixelImageBlock` | raw `<img>`             | raw HTML or [MJML ending tags](./1-email-basics.md#ending-tags) such as `MjmlRaw` |
 
+Inside `MjmlRaw` in an `MjmlColumn`, `HtmlPixelImageBlock` needs its own `<tr>` and `<td>` — see [Start Raw Content Inside a Column With `<tr>`](./1-email-basics.md#start-raw-content-inside-a-column-with-tr).
+
 ```tsx
 import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@comet/mail-react";
 
@@ -80,6 +82,8 @@ The `createRichTextBlock` factory creates components that render `RichTextBlockD
 | ------------------- | --------------------------- | --------------------------------------------------------------------------------- |
 | `MjmlRichTextBlock` | `MjmlText`                  | an `MjmlColumn` (standard MJML layout model)                                      |
 | `HtmlRichTextBlock` | `HtmlText` (`<div>`)        | raw HTML or [MJML ending tags](./1-email-basics.md#ending-tags) such as `MjmlRaw` |
+
+Inside `MjmlRaw` in an `MjmlColumn`, `HtmlRichTextBlock` needs its own `<tr>` and `<td>` — see [Start Raw Content Inside a Column With `<tr>`](./1-email-basics.md#start-raw-content-inside-a-column-with-tr).
 
 Call the factory once — at the top level of a file, not inside a component — and export the returned components:
 

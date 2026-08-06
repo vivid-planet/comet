@@ -21,7 +21,7 @@ const config: Meta<typeof HtmlRichTextBlock> = {
             description: {
                 // Duplicates the TSDoc on HtmlRichTextBlock in createRichTextBlock.tsx — Storybook cannot read it from factory return type properties. Update both when the description changes.
                 component:
-                    "Renders CMS RichText block data (draft-js raw content) as one `HtmlText` div per draft block, for raw-HTML contexts such as `MjmlRaw`.",
+                    "Renders CMS RichText block data (draft-js raw content) as one `HtmlText` div per draft block, for raw-HTML contexts such as `MjmlRaw`. Inside `MjmlRaw` in an `MjmlColumn`, place `HtmlRichTextBlock` in a `<tr>` and `<td>` of its own.",
             },
         },
     },
@@ -35,7 +35,11 @@ export const Default: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlRichTextBlock data={exampleBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlRichTextBlock data={exampleBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -60,7 +64,11 @@ export const ListVariety: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlRichTextBlock data={listVarietyBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlRichTextBlock data={listVarietyBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -88,7 +96,11 @@ export const ListSpacing: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlRichTextBlock data={listSpacingBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlRichTextBlock data={listSpacingBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -130,7 +142,11 @@ export const ListSpacingPerVariant: Story = {
         <MjmlSection indent className="perVariantListSpacingSection">
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlPerVariantRichTextBlock data={listSpacingBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlPerVariantRichTextBlock data={listSpacingBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -153,7 +169,11 @@ export const WithCustomLinkType: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlCustomLinkTypeRichTextBlock data={exampleBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlCustomLinkTypeRichTextBlock data={exampleBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -189,7 +209,11 @@ export const WithVariants: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlVariantsRichTextBlock data={exampleBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlVariantsRichTextBlock data={exampleBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -212,7 +236,11 @@ export const WithCustomInlineStyle: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlCustomInlineStyleRichTextBlock data={highlightBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlCustomInlineStyleRichTextBlock data={highlightBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -235,7 +263,11 @@ export const RestrictedHeadlineBlock: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlHeadlineRichTextBlock data={headlinesOnlyBlockData} />
+                    <tr>
+                        <td>
+                            <HtmlHeadlineRichTextBlock data={headlinesOnlyBlockData} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
