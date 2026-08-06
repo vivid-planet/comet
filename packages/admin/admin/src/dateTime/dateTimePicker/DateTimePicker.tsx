@@ -8,7 +8,7 @@ import {
 import { type ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { ClearInputAdornment as BaseClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -19,7 +19,7 @@ export type DateTimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyA
 
 export type DateTimePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiDateTimePicker;
-    clearInputAdornment: typeof CometClearInputAdornment;
+    clearInputAdornment: typeof BaseClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
@@ -166,7 +166,7 @@ const Root = createComponentSlot(MuiDateTimePicker)<DateTimePickerClassKey>({
     }
 `);
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DateTimePickerClassKey>({
+const ClearInputAdornment = createComponentSlot(BaseClearInputAdornment)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "clearInputAdornment",
 })();

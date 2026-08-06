@@ -4,7 +4,7 @@ import type { DateTimeRangePickerProps as MuiDateTimeRangePickerProps } from "@m
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { ClearInputAdornment as BaseClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -23,7 +23,7 @@ export type DateTimeRangePickerClassKey = "root" | "clearInputAdornment" | "read
 
 export type DateTimeRangePickerProps = ThemedComponentBaseProps<{
     root: ComponentType<MuiDateTimeRangePickerProps>;
-    clearInputAdornment: typeof CometClearInputAdornment;
+    clearInputAdornment: typeof BaseClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
@@ -192,7 +192,7 @@ const LazyRoot = lazy(async () => {
     };
 });
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DateTimeRangePickerClassKey>({
+const ClearInputAdornment = createComponentSlot(BaseClearInputAdornment)<DateTimeRangePickerClassKey>({
     componentName: "DateTimeRangePicker",
     slotName: "clearInputAdornment",
 })();

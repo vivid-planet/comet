@@ -23,7 +23,7 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@dextinity/admin";
-import { ChevronLeft, CometColor, Search } from "@dextinity/admin-icons";
+import { ChevronLeft, DextinityIcon, Search } from "@dextinity/admin-icons";
 import { Autocomplete, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
@@ -312,7 +312,7 @@ export const CustomTitleH2 = {
             <Toolbar>
                 <ToolbarItem>
                     <>
-                        <CometColor fontSize="large" />
+                        <DextinityIcon fontSize="large" />
                         <Typography variant="h2">Custom Title H2</Typography>
                     </>
                 </ToolbarItem>
@@ -434,7 +434,7 @@ export const FinalFormSearchCustomIcon = {
                                         name="query"
                                         type="text"
                                         component={FinalFormSearchTextField}
-                                        icon={<CometColor />}
+                                        icon={<DextinityIcon />}
                                         placeholder="Dextinity Search"
                                     />
                                 </ToolbarItem>

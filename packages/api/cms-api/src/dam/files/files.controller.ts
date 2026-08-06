@@ -27,7 +27,7 @@ import { DisableDextinityGuards } from "../../auth/decorators/disable-dextinity-
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
-import { CometValidationException } from "../../common/errors/validation.exception";
+import { DextinityValidationException } from "../../common/errors/validation.exception";
 import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { calculatePartialRanges, slugifyFilename } from "../../file-utils/files.utils";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
@@ -83,7 +83,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
             if (errors.length > 0) {
-                throw new CometValidationException("Validation failed", errors);
+                throw new DextinityValidationException("Validation failed", errors);
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
@@ -122,7 +122,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
             if (errors.length > 0) {
-                throw new CometValidationException("Validation failed", errors);
+                throw new DextinityValidationException("Validation failed", errors);
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
@@ -176,7 +176,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             const { fileId, ...restBody } = transformedBody;
 
             if (errors.length > 0) {
-                throw new CometValidationException("Validation failed", errors);
+                throw new DextinityValidationException("Validation failed", errors);
             }
 
             const fileToReplace = await this.filesService.findOneById(fileId);

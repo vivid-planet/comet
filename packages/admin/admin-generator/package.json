@@ -1,7 +1,7 @@
 {
     "name": "@dextinity/admin-generator",
-    "version": "1.0.0",
-    "description": "Comet Admin Generator CLI tool",
+    "version": "9.2.2",
+    "description": "Dextinity Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
         "type": "git",

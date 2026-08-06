@@ -72,7 +72,7 @@ describe("UserPermissionsGuard", () => {
                         ? ({
                               id: "1",
                               name: "Admin",
-                              email: "demo@comet-dxp.com",
+                              email: "demo@dextinity.com",
                               permissions: options.userPermissions,
                           } satisfies CurrentUser)
                         : undefined,

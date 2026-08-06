@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
-import { Tooltip as CometTooltip } from "../../Tooltip";
+import { Tooltip as BaseTooltip } from "../../Tooltip";
 import { Button, type ButtonClassKey, type ButtonProps } from "../Button";
 
 export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "error" | "tooltip" | ButtonClassKey;
@@ -26,7 +26,7 @@ const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
     },
 })();
 
-const Tooltip = createComponentSlot(CometTooltip)<FeedbackButtonClassKey>({
+const Tooltip = createComponentSlot(BaseTooltip)<FeedbackButtonClassKey>({
     componentName: "FeedbackButton",
     slotName: "tooltip",
 })();
@@ -34,7 +34,7 @@ const Tooltip = createComponentSlot(CometTooltip)<FeedbackButtonClassKey>({
 export interface FeedbackButtonProps
     extends ThemedComponentBaseProps<{
             root: typeof Button;
-            tooltip: typeof CometTooltip;
+            tooltip: typeof BaseTooltip;
         }>,
         Omit<ButtonProps, "slotProps"> {
     onClick?: () => void | Promise<void>;

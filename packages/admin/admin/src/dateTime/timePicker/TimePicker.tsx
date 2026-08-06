@@ -4,7 +4,7 @@ import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerPr
 import { type ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { ClearInputAdornment as BaseClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -15,7 +15,7 @@ export type TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdorn
 
 export type TimePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiTimePicker;
-    clearInputAdornment: typeof CometClearInputAdornment;
+    clearInputAdornment: typeof BaseClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
@@ -163,7 +163,7 @@ const Root = createComponentSlot(MuiTimePicker)<TimePickerClassKey>({
     }
 `);
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<TimePickerClassKey>({
+const ClearInputAdornment = createComponentSlot(BaseClearInputAdornment)<TimePickerClassKey>({
     componentName: "TimePicker",
     slotName: "clearInputAdornment",
 })();

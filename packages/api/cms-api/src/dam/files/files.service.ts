@@ -15,7 +15,7 @@ const inflate = promisify(inflateCallback);
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
-import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
+import { DextinityEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { slugifyFilename } from "../../file-utils/files.utils";
@@ -23,7 +23,7 @@ import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
-import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
+import { DextinityImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
@@ -315,7 +315,7 @@ export class FilesService {
     async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {
         const file = await this.findOneById(id);
         if (!file) {
-            throw new CometEntityNotFoundException();
+            throw new DextinityEntityNotFoundException();
         }
         return this.updateByEntity(file, data);
     }
@@ -360,7 +360,7 @@ export class FilesService {
     async delete(id: string): Promise<boolean> {
         const file = await this.findOneById(id);
         if (!file) {
-            throw new CometEntityNotFoundException();
+            throw new DextinityEntityNotFoundException();
         }
 
         const result = await this.filesRepository.nativeDelete(id);
@@ -732,7 +732,7 @@ export class FilesService {
             image.height &&
             Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.config.maxSrcResolution
         ) {
-            throw new CometImageResolutionException(`Maximal image resolution exceeded`);
+            throw new DextinityImageResolutionException(`Maximal image resolution exceeded`);
         }
 
         let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
