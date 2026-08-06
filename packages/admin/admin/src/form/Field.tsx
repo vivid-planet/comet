@@ -56,7 +56,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
 }: FieldProps<FieldValue, FieldElement>) {
     const { disabled, variant, fullWidth } = otherProps;
 
-    const { mutators } = useForm();
+    const { mutators, getFieldState } = useForm();
     const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
     const currentWarningValidationRound = useRef(0);
 
@@ -67,12 +67,26 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     const shouldShowWarning = passedShouldShowWarning ?? finalFormContext.shouldShowFieldWarning;
     const shouldScrollToField = passedShouldScrollTo ?? finalFormContext.shouldScrollToField;
 
+    // We need to change the key of the field when required or validate changes, to force revalidation
+    // https://codesandbox.io/p/sandbox/changing-field-level-validators-zc8ei
+    const keyRequired = required ? "required" : "not-required";
+    const keyValidate = validate ? "validate" : "no-validate";
+
     function renderField({
         input,
         meta,
         fieldContainerProps,
         ...rest
     }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean; required?: boolean }) {
+        // Workaround for stale validation errors when using conditional validation.
+        // The meta passed to renderField isn't updated yet when re-rendering the field.
+        // We therefore fall back to the meta from getFieldState, which is updated correctly.
+        // See https://github.com/final-form/react-final-form/issues/980 for more information.
+        const formMeta = getFieldState(name);
+
+        if (formMeta) {
+            meta = formMeta;
+        }
         function render() {
             if (component) {
                 return createElement(component, { ...rest, input, meta });
@@ -83,6 +97,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 return children({ input, meta, disabled, required });
             }
         }
+
         return (
             <FieldContainer
                 label={label}
@@ -109,6 +124,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 validate={validateError}
                 required={required}
                 {...otherProps}
+                key={keyRequired + keyValidate}
             >
                 {renderField}
             </FinalFormField>
