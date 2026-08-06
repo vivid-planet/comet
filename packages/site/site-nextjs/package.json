@@ -1,6 +1,6 @@
 {
     "name": "@dextinity/site-nextjs",
-    "version": "1.0.0",
+    "version": "9.2.2",
     "description": "Dextinity Site Next.js package",
     "repository": {
         "type": "git",
