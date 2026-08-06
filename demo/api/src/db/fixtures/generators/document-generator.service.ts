@@ -53,7 +53,7 @@ export class DocumentGeneratorService {
                 },
                 parentId,
                 userGroup: UserGroup.all,
-            } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
+            } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/dextinity/pull/1515#issue-2042001589
             category,
             scope,
         );

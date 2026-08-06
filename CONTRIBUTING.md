@@ -11,7 +11,7 @@ To run Comet DXP locally, see [Getting started](README.md#getting-started) in ou
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Pull requests with minor or patch changes should target the [`main`](https://github.com/vivid-planet/comet/tree/main) branch, while major/breaking changes should target the [`next`](https://github.com/vivid-planet/comet/tree/next) branch.
+Pull requests with minor or patch changes should target the [`main`](https://github.com/vivid-planet/dextinity/tree/main) branch, while major/breaking changes should target the [`next`](https://github.com/vivid-planet/dextinity/tree/next) branch.
 
 ## Pull requests
 

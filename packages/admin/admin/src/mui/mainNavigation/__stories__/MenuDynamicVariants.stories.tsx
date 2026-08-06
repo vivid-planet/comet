@@ -55,7 +55,7 @@ const AppMenu = () => {
                 primary="Dextinity"
                 secondary="View on GitHub"
                 target="_blank"
-                href="https://github.com/vivid-planet/comet"
+                href="https://github.com/vivid-planet/dextinity"
                 icon={<DextinityIcon />}
                 secondaryAction={<LinkExternal />}
             />
