@@ -59,7 +59,7 @@ _It is recommended to build all packages every time you switch to the `main` bra
 
 ### Start development processes
 
-[dev-process-manager](https://github.com/vivid-planet/dev-process-manager) is used for local development.
+[dev-process-manager](https://dev-process-manager.com/) is used for local development.
 We recommend only running the development process you will need.
 Typically, you will need a subset of the available development processes.
 
