@@ -5,8 +5,8 @@ import { registerStyles } from "../../styles/registerStyles.js";
 import { getDefaultOrUndefined } from "../../theme/responsiveValue.js";
 import { useTheme } from "../../theme/ThemeProvider.js";
 import type { TextVariantStyles, Theme, VariantName } from "../../theme/themeTypes.js";
+import { generateResponsiveTextCss } from "./generateResponsiveTextCss.js";
 import { OutlookTextStyleProvider, type OutlookTextStyleValues } from "./OutlookTextStyleContext.js";
-import { generateResponsiveTextCss } from "./textStyles.js";
 
 interface HtmlTextOwnProps {
     /**
