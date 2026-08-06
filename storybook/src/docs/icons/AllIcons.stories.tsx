@@ -5,7 +5,8 @@ import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
 
-const iconBlockList = ["CometDigitalExperienceLogo"];
+// The wordmark is far too wide for the icon grid; it has its own story.
+const iconBlockList = ["DextinityLogo"];
 
 const matchesSearchQuery = (str: string, query: string): boolean => {
     if (!query.length) {

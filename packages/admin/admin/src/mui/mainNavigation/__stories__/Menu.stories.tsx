@@ -1,10 +1,9 @@
-import { CometColor, Dashboard, Settings, Sort } from "@dextinity/admin-icons";
+import { Dashboard, DextinityIcon, DextinityLogo, Settings, Sort } from "@dextinity/admin-icons";
 import { Card, CardContent, Typography } from "@mui/material";
 import { Route, Switch } from "react-router";
 
 import { AppHeader } from "../../../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../../../appHeader/menuButton/AppHeaderMenuButton";
-import { CometLogo } from "../../../common/CometLogo";
 import { FillSpace } from "../../../common/FillSpace";
 import { MainContent } from "../../../common/MainContent";
 import { useWindowSize } from "../../../helpers/useWindowSize";
@@ -44,7 +43,7 @@ const AppMenu = () => {
                     secondary="View on GitHub"
                     target="_blank"
                     href="https://github.com/vivid-planet/comet"
-                    icon={<CometColor />}
+                    icon={<DextinityIcon />}
                 />
             </MainNavigationItemGroup>
         </MainNavigation>
@@ -54,7 +53,7 @@ const AppMenu = () => {
 const Header = () => (
     <AppHeader>
         <AppHeaderMenuButton />
-        <CometLogo />
+        <DextinityLogo variant="light" sx={{ fontSize: 34 }} />
         <FillSpace />
     </AppHeader>
 );

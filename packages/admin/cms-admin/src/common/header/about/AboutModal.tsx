@@ -1,4 +1,4 @@
-import { Close, CometDigitalExperienceLogo } from "@dextinity/admin-icons";
+import { Close, DextinityLogo } from "@dextinity/admin-icons";
 import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
@@ -23,7 +23,7 @@ interface AboutModalProps {
     logo?: ReactElement;
 }
 
-export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo sx={{ width: "300px", height: "84px" }} /> }: AboutModalProps) {
+export function AboutModal({ open, onClose, logo = <DextinityLogo sx={{ fontSize: 68 }} /> }: AboutModalProps) {
     const buildInformation = useBuildInformation();
 
     return (
