@@ -11,9 +11,9 @@ exports[`AsyncSelect filter > generates field without filter 1`] = `
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
-                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                         query: gql\`
-    query CategoriesSelect {
+    query CategorySelect {
         categories {
             nodes { id name }
         }
@@ -42,9 +42,9 @@ exports[`AsyncSelect filter > generates filter with value dependent on other fie
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
-                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                         query: gql\`
-    query CategoriesSelect($title: String) {
+    query CategorySelect($title: String) {
         categories(title: $title) {
             nodes { id name }
         }
@@ -106,8 +106,8 @@ import { FormApi } from "final-form";
 import { useMemo } from "react";
 import { GQLCategoryType } from "@src/graphql.generated";
 import { OnChangeField } from "@comet/admin";
-import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
-import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { GQLCategorySelectQuery } from "./ProductForm.generated";
+import { GQLCategorySelectQueryVariables } from "./ProductForm.generated";
 import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
@@ -240,9 +240,9 @@ id?: string;
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
-                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                         query: gql\`
-    query CategoriesSelect($type: CategoryType) {
+    query CategorySelect($type: CategoryType) {
         categories(type: $type) {
             nodes { id name }
         }
@@ -305,8 +305,8 @@ import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
 import { OnChangeField } from "@comet/admin";
-import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
-import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { GQLCategorySelectQuery } from "./ProductForm.generated";
+import { GQLCategorySelectQueryVariables } from "./ProductForm.generated";
 import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
@@ -439,9 +439,9 @@ id?: string;
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
-                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                         query: gql\`
-    query CategoriesSelect($foo: String) {
+    query CategorySelect($foo: String) {
         categories(foo: $foo) {
             nodes { id name }
         }
@@ -504,8 +504,8 @@ import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import { useMemo } from "react";
 import { OnChangeField } from "@comet/admin";
-import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
-import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { GQLCategorySelectQuery } from "./ProductForm.generated";
+import { GQLCategorySelectQueryVariables } from "./ProductForm.generated";
 import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
@@ -638,9 +638,9 @@ id?: string;
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
-                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                         query: gql\`
-    query CategoriesSelect($filter: CategoryFilter) {
+    query CategorySelect($filter: CategoryFilter) {
         categories(filter: $filter) {
             nodes { id name }
         }
@@ -704,8 +704,8 @@ import { FormApi } from "final-form";
 import { useMemo } from "react";
 import { GQLCategoryType } from "@src/graphql.generated";
 import { OnChangeField } from "@comet/admin";
-import { GQLCategoriesSelectQuery } from "./ProductForm.generated";
-import { GQLCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import { GQLCategorySelectQuery } from "./ProductForm.generated";
+import { GQLCategorySelectQueryVariables } from "./ProductForm.generated";
 import { AsyncSelectField } from "@comet/admin";
 import { productFormFragment } from "./ProductForm.gql";
 import { GQLProductFormFragment } from "./ProductForm.gql.generated";
@@ -838,9 +838,9 @@ id?: string;
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
-                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                         query: gql\`
-    query CategoriesSelect($filter: CategoryFilter) {
+    query CategorySelect($filter: CategoryFilter) {
         categories(filter: $filter) {
             nodes { id name }
         }

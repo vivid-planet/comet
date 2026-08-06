@@ -11,9 +11,9 @@ exports[`AsyncSelect rendered props > generates readonly async select 1`] = `
                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                 
                 loadOptions={async () => {
-                    const { data } = await client.query<GQLCategoriesSelectQuery, GQLCategoriesSelectQueryVariables>({
+                    const { data } = await client.query<GQLCategorySelectQuery, GQLCategorySelectQueryVariables>({
                         query: gql\`
-    query CategoriesSelect {
+    query CategorySelect {
         categories {
             nodes { id name }
         }
