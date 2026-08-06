@@ -49,8 +49,13 @@ export function generateResponsiveVariantCss<TVariantStyles extends VariantStyle
         }
 
         for (const group of groups) {
-            const overridesByBreakpoint = collectOverridesByBreakpoint(variantStyles, group.properties);
-            cssChunks.push(renderMediaQueries({ breakpoints, selector: group.selector(variantName), overridesByBreakpoint }));
+            cssChunks.push(
+                generateResponsiveTokenCss({
+                    breakpoints,
+                    selector: group.selector(variantName),
+                    tokens: toResponsiveTokens(variantStyles, group.properties),
+                }),
+            );
         }
     }
 
@@ -89,11 +94,11 @@ export function generateResponsiveTokenCss({
     return renderMediaQueries({ breakpoints, selector, overridesByBreakpoint });
 }
 
-function collectOverridesByBreakpoint<TVariantStyles extends VariantStylesConstraint>(
+function toResponsiveTokens<TVariantStyles extends VariantStylesConstraint>(
     variantStyles: TVariantStyles,
     properties: ResponsiveVariantProperties<TVariantStyles>,
-): Map<keyof ThemeBreakpoints, string[]> {
-    const overridesByBreakpoint = new Map<keyof ThemeBreakpoints, string[]>();
+): ResponsiveToken[] {
+    const tokens: ResponsiveToken[] = [];
 
     for (const entry of properties) {
         const property: ResponsiveVariantProperty<TVariantStyles> = typeof entry === "object" ? entry : { themeKey: entry };
@@ -102,18 +107,12 @@ function collectOverridesByBreakpoint<TVariantStyles extends VariantStylesConstr
             continue;
         }
 
-        const cssProperties = resolveCssProperties(property);
-
-        for (const { breakpointKey, value: breakpointValue } of getResponsiveOverrides(value)) {
-            const declarations = overridesByBreakpoint.get(breakpointKey) ?? [];
-            for (const cssProperty of cssProperties) {
-                declarations.push(formatDeclaration({ cssProperty, value: breakpointValue, unit: property.unit }));
-            }
-            overridesByBreakpoint.set(breakpointKey, declarations);
+        for (const cssProperty of resolveCssProperties(property)) {
+            tokens.push({ value, cssProperty, unit: property.unit });
         }
     }
 
-    return overridesByBreakpoint;
+    return tokens;
 }
 
 function resolveCssProperties<TVariantStyles>(property: ResponsiveVariantProperty<TVariantStyles>): readonly string[] {
