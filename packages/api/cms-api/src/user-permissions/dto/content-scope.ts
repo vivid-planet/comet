@@ -21,3 +21,12 @@ export class ContentScopeSummaryByDimension {
     @Field(() => GraphQLJSON)
     count: number | "*";
 }
+
+@ObjectType()
+export class ContentScopeDimension {
+    @Field()
+    name: string;
+
+    @Field()
+    label: string;
+}
