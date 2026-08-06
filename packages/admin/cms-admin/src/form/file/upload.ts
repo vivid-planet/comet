@@ -78,6 +78,20 @@ interface ReplaceFileByIdData {
     fileId: string;
 }
 
+/**
+ * `exceptionName` is the class name of the exception thrown by the API (e.g. `CometFileNameAlreadyExistsException`),
+ * which callers can use to show a message specific to the cause.
+ */
+export class FileUploadError extends Error {
+    constructor(
+        message: string,
+        readonly exceptionName?: string,
+    ) {
+        super(message);
+        this.name = "FileUploadError";
+    }
+}
+
 export function replaceById({ apiUrl, data, damBasePath }: Omit<UploadFileParams, "data"> & { data: ReplaceFileByIdData }) {
     const controller = new AbortController();
     const promise = (async () => {
@@ -101,6 +115,14 @@ export function replaceById({ apiUrl, data, damBasePath }: Omit<UploadFileParams
             signal: controller.signal,
         });
         const dataJson = await response.json();
+
+        if (!response.ok) {
+            throw new FileUploadError(
+                typeof dataJson?.message === "string" ? dataJson.message : `Replacing the file failed with status ${response.status}`,
+                typeof dataJson?.error === "string" ? dataJson.error : undefined,
+            );
+        }
+
         return { data: dataJson };
     })();
     return promise;

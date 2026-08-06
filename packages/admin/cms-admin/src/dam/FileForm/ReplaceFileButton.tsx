@@ -6,8 +6,10 @@ import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { useCometConfig } from "../../config/CometConfigContext";
-import { replaceById } from "../../form/file/upload";
+import { FileUploadError, replaceById } from "../../form/file/upload";
 import { useDamBasePath, useDamConfig } from "../config/damConfig";
+import { getDamFileCategory } from "../config/damFileCategory";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
 import type { DamFileDetails } from "./EditFile";
 
@@ -15,11 +17,19 @@ interface ReplaceFileButtonProps {
     file: DamFileDetails;
 }
 
+const replaceFileErrorTitle = <FormattedMessage id="comet.dam.file.replace.errorTitle" defaultMessage="File could not be replaced" />;
+
+const fileExtension = (fileName: string) => {
+    const lastDotIndex = fileName.lastIndexOf(".");
+    return lastDotIndex === -1 ? "" : fileName.slice(lastDotIndex).toLowerCase();
+};
+
 export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const apolloClient = useApolloClient();
     const { apiUrl } = useCometConfig();
     const damConfig = useDamConfig();
     const damBasePath = useDamBasePath();
+    const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -28,13 +38,16 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const errorDialog = useErrorDialog();
     const [replaceLoading, setReplaceLoading] = useState(false);
 
+    const acceptedMimeTypesForReplacement = filteredAcceptedMimeTypes[getDamFileCategory(file.mimetype)];
+
     const { getInputProps } = useDropzone({
         maxSize: maxFileSizeInBytes,
         multiple: false,
-        accept: convertMimetypesToDropzoneAccept([file.mimetype]),
+        accept: convertMimetypesToDropzoneAccept(acceptedMimeTypesForReplacement),
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             if (fileRejections.length > 0) {
                 errorDialog?.showError({
+                    title: replaceFileErrorTitle,
                     userMessage: (
                         <FormattedMessage
                             id="comet.dam.file.replace.fileRejection"
@@ -43,6 +56,12 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                     ),
                     error: fileRejections.toString(),
                 });
+                return;
+            }
+
+            const uploadedFile = acceptedFiles[0];
+            if (uploadedFile === undefined) {
+                return;
             }
 
             try {
@@ -54,7 +73,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 abortControllerRef.current = abortController;
                 const response = await replaceById({
                     apiUrl,
-                    data: { file: acceptedFiles[0], fileId: file.id },
+                    data: { file: uploadedFile, fileId: file.id },
                     damBasePath,
                 });
                 if (response.data) {
@@ -63,21 +82,31 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                         apolloClient.cache.evict({ id: `DamFile:${file.id}` });
                     }
                 }
-                setReplaceLoading(false);
             } catch (error) {
                 if (error instanceof DOMException && error.name === "AbortError") {
-                    setReplaceLoading(false);
                     return;
                 }
+                const message = error instanceof Error ? error.message : String(error);
+
                 errorDialog?.showError({
-                    userMessage: (
-                        <FormattedMessage
-                            id="comet.dam.file.replace.error"
-                            defaultMessage="An error occurred while replacing the file. Please try again later."
-                        />
-                    ),
-                    error: error instanceof Error ? error.message : String(error),
+                    title: replaceFileErrorTitle,
+                    userMessage:
+                        error instanceof FileUploadError && error.exceptionName === "CometFileNameAlreadyExistsException" ? (
+                            <FormattedMessage
+                                id="comet.dam.file.replace.fileNameAlreadyExists"
+                                defaultMessage="This file cannot be replaced by a {newExtension} file because another file with the same name and that file extension already exists in this folder."
+                                values={{ newExtension: fileExtension(uploadedFile.name) }}
+                            />
+                        ) : (
+                            <FormattedMessage
+                                id="comet.dam.file.replace.error"
+                                defaultMessage="An error occurred while replacing the file. Please try again later."
+                            />
+                        ),
+                    error: message,
                 });
+            } finally {
+                setReplaceLoading(false);
             }
         },
     });

@@ -16,6 +16,7 @@ const inflate = promisify(inflateCallback);
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
+import { CometValidationException } from "../../common/errors/validation.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { slugifyFilename } from "../../file-utils/files.utils";
@@ -23,7 +24,9 @@ import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
+import { CometFileNameAlreadyExistsException } from "../common/errors/file-name-already-exists.exception";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
+import { getDamFileCategory } from "../common/mimeTypes/dam-file-category";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
@@ -266,11 +269,16 @@ export class FilesService {
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
-            if (uploadedFile.mimetype !== fileToReplace.mimetype) {
-                throw new Error(
-                    `File cannot be replaced by a file with a different mimetype. Existing mimetype: ${fileToReplace.mimetype}, new mimetype: ${uploadedFile.mimetype}`,
+            const existingCategory = getDamFileCategory(fileToReplace.mimetype);
+            const uploadedCategory = getDamFileCategory(uploadedFile.mimetype);
+
+            if (uploadedCategory !== existingCategory) {
+                throw new CometValidationException(
+                    `File cannot be replaced by a file of a different category. Existing category: ${existingCategory} (${fileToReplace.mimetype}), new category: ${uploadedCategory} (${uploadedFile.mimetype})`,
                 );
             }
+
+            const name = await this.getNameForReplacedFile(fileToReplace, uploadedFile);
 
             const uploadedFileMetadata = await this.getFileMetadataForUpload(uploadedFile);
             const oldAndNewFileAreIdentical = fileToReplace.contentHash === uploadedFileMetadata.contentHash;
@@ -288,13 +296,24 @@ export class FilesService {
                 }
             }
 
-            if (uploadedFileMetadata.image && uploadedFileMetadata.image.width && uploadedFileMetadata.image.height && fileToReplace.image) {
-                fileToReplace.image.width = uploadedFileMetadata.image.width;
-                fileToReplace.image.height = uploadedFileMetadata.image.height;
-                fileToReplace.image.exif = uploadedFileMetadata.exifData;
+            if (uploadedFileMetadata.image && uploadedFileMetadata.image.width && uploadedFileMetadata.image.height) {
+                if (fileToReplace.image) {
+                    fileToReplace.image.width = uploadedFileMetadata.image.width;
+                    fileToReplace.image.height = uploadedFileMetadata.image.height;
+                    fileToReplace.image.exif = uploadedFileMetadata.exifData;
+                } else {
+                    fileToReplace.image = this.entityManager.create(DamFileImage, {
+                        width: uploadedFileMetadata.image.width,
+                        height: uploadedFileMetadata.image.height,
+                        exif: uploadedFileMetadata.exifData,
+                        cropArea: { focalPoint: FocalPoint.SMART },
+                        file: fileToReplace,
+                    });
+                }
             }
 
             Object.assign(fileToReplace, {
+                name,
                 size: uploadedFile.size,
                 mimetype: uploadedFile.mimetype,
                 contentHash: uploadedFileMetadata.contentHash,
@@ -310,6 +329,32 @@ export class FilesService {
         }
 
         return result;
+    }
+
+    private async getNameForReplacedFile(fileToReplace: FileInterface, uploadedFile: FileUploadInput): Promise<string> {
+        const previousExtension = extname(fileToReplace.name);
+        const newExtension = extname(uploadedFile.originalname).toLowerCase();
+
+        if (newExtension === previousExtension.toLowerCase()) {
+            return fileToReplace.name;
+        }
+
+        // fileToReplace.name is already slugified, so only the extension needs to be swapped
+        const name = `${basename(fileToReplace.name, previousExtension)}${newExtension}`;
+        const fileWithSameName = await this.findOneByFilenameAndFolder(
+            { filename: name, folderId: fileToReplace.folder?.id ?? null },
+            fileToReplace.scope,
+        );
+
+        if (fileWithSameName !== null && fileWithSameName.id !== fileToReplace.id) {
+            throw new CometFileNameAlreadyExistsException(
+                `File cannot be replaced because a file named '${name}' already exists in ${
+                    fileToReplace.folder ? `folder '${fileToReplace.folder.name}'` : "the root folder"
+                }`,
+            );
+        }
+
+        return name;
     }
 
     async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {
