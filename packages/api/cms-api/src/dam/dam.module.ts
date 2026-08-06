@@ -1,5 +1,5 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
+import { DynamicModule, Global, Logger, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
@@ -42,6 +42,16 @@ interface DamModuleOptions {
     Scope?: Type<DamScopeInterface>;
     Folder?: Type<FolderInterface>;
     File?: Type<FileInterface>;
+    // When true, only the file/folder upload/download HTTP endpoints and their services are registered. The GraphQL
+    // resolvers, blocks, image serving and dependents resolver — and their dependencies on ImgproxyModule,
+    // UserPermissionsModule and DependenciesModule — are skipped. Use this to provide the plain DAM file endpoints in a
+    // standalone service (e.g. a separate public API microservice) without pulling in the full admin stack.
+    fileOnly?: boolean;
+    // The DAM file/folder endpoints perform scope-based access control only when an access control service is available
+    // (provided by UserPermissionsModule). Set this to true to acknowledge that authorization is handled outside of the
+    // DAM module (e.g. by an authentication guard in front of a standalone service). Without it, the endpoints fail
+    // closed when no access control service is registered.
+    disableScopeAccessControl?: boolean;
 }
 
 @Global()
@@ -51,6 +61,8 @@ export class DamModule {
         Scope,
         Folder = createFolderEntity({ Scope }),
         File = createFileEntity({ Scope, Folder }),
+        fileOnly = false,
+        disableScopeAccessControl = false,
         ...options
     }: DamModuleOptions): DynamicModule {
         const damConfig = {
@@ -60,6 +72,12 @@ export class DamModule {
 
         if (File.name !== FILE_ENTITY) {
             throw new Error(`DamModule: Your File entity must be named ${FILE_ENTITY}`);
+        }
+
+        if (disableScopeAccessControl) {
+            new Logger(DamModule.name).warn(
+                "Scope-based access control is disabled. The DAM file and folder endpoints perform no authorization on their own — make sure they are protected by other means (e.g. an authentication guard).",
+            );
         }
 
         const damConfigProvider: ValueProvider<DamConfig> = {
@@ -74,6 +92,21 @@ export class DamModule {
                 acceptedMimeTypes: damConfig.acceptedMimeTypes ?? damDefaultAcceptedMimetypes,
             }),
         };
+
+        const entitiesModule = MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]);
+
+        if (fileOnly) {
+            return {
+                module: DamModule,
+                imports: [entitiesModule, BlobStorageModule],
+                providers: [damConfigProvider, fileValidationServiceProvider, FilesService, FoldersService],
+                controllers: [
+                    createFilesController({ Scope, damBasePath: damConfig.basePath, disableScopeAccessControl }),
+                    createFoldersController({ damBasePath: damConfig.basePath, disableScopeAccessControl }),
+                ],
+                exports: [entitiesModule, damConfigProvider, FilesService, FoldersService],
+            };
+        }
 
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
         const FilesResolver = createFilesResolver({ File, Folder, Scope });
@@ -102,7 +135,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]), BlobStorageModule, ImgproxyModule],
+            imports: [entitiesModule, BlobStorageModule, ImgproxyModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,
@@ -129,8 +162,8 @@ export class DamModule {
                 DamMediaAlternativeResolver,
             ],
             controllers: [
-                createFilesController({ Scope, damBasePath: damConfig.basePath }),
-                createFoldersController({ damBasePath: damConfig.basePath }),
+                createFilesController({ Scope, damBasePath: damConfig.basePath, disableScopeAccessControl }),
+                createFoldersController({ damBasePath: damConfig.basePath, disableScopeAccessControl }),
                 createImagesController({ damBasePath: damConfig.basePath }),
             ],
             exports: [

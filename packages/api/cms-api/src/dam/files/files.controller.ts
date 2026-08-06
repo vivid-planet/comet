@@ -7,8 +7,10 @@ import {
     Get,
     Headers,
     Inject,
+    InternalServerErrorException,
     Logger,
     NotFoundException,
+    Optional,
     Param,
     Post,
     Res,
@@ -30,7 +32,6 @@ import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.ut
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { calculatePartialRanges, slugifyFilename } from "../../file-utils/files.utils";
-import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
@@ -45,10 +46,19 @@ import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 import { FoldersService } from "./folders.service";
+import { scopesAreEqual } from "./scopes-are-equal.util";
 
 const fileUrl = `:fileId/:filename`;
 
-export function createFilesController({ Scope: PassedScope, damBasePath }: { Scope?: Type<DamScopeInterface>; damBasePath: string }): Type<unknown> {
+export function createFilesController({
+    Scope: PassedScope,
+    damBasePath,
+    disableScopeAccessControl = false,
+}: {
+    Scope?: Type<DamScopeInterface>;
+    damBasePath: string;
+    disableScopeAccessControl?: boolean;
+}): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
     const hasNonEmptyScope = PassedScope != null;
 
@@ -66,10 +76,19 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
             private readonly filesService: FilesService,
             private readonly blobStorageBackendService: BlobStorageBackendService,
-            @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
-            private readonly contentScopeService: ContentScopeService,
             private readonly foldersService: FoldersService,
+            @Optional() @Inject(ACCESS_CONTROL_SERVICE) private accessControlService?: AccessControlServiceInterface,
         ) {}
+
+        // Fail closed: without an access control service the scope checks below would be silently skipped, leaving the
+        // endpoints unauthorized. Require the consuming application to opt out explicitly when it handles authorization itself.
+        private assertScopeAccessControlAvailable(): void {
+            if (!this.accessControlService && !disableScopeAccessControl) {
+                throw new ForbiddenException(
+                    "DAM scope access control is not available. Register an access control service or set `disableScopeAccessControl: true` on the DAM module to handle authorization outside of the DAM module.",
+                );
+            }
+        }
 
         @Post("upload")
         @UseInterceptors(DamUploadFileInterceptor())
@@ -79,6 +98,8 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
+            this.assertScopeAccessControlAvailable();
+
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -87,7 +108,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
+            if (scope && this.accessControlService && !this.accessControlService.isAllowed(user, "dam", scope)) {
                 throw new ForbiddenException();
             }
 
@@ -97,7 +118,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 if (!folder) {
                     throw new BadRequestException(`Folder ${folderId} not found`);
                 }
-                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                if (!scopesAreEqual(folder.scope, scope)) {
                     throw new BadRequestException("Folder scope doesn't match passed scope");
                 }
             }
@@ -118,6 +139,8 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
+            this.assertScopeAccessControlAvailable();
+
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -126,7 +149,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
+            if (scope && this.accessControlService && !this.accessControlService.isAllowed(user, "dam", scope)) {
                 throw new ForbiddenException();
             }
 
@@ -136,7 +159,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 if (!folder) {
                     throw new BadRequestException(`Folder ${folderId} not found`);
                 }
-                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                if (!scopesAreEqual(folder.scope, scope)) {
                     throw new BadRequestException("Folder scope doesn't match passed scope");
                 }
             }
@@ -149,7 +172,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             if (!fileToReplace) {
                 throw new NotFoundException(`File not found`);
             }
-            if (!this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
+            if (this.accessControlService && !this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -170,6 +193,8 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
+            this.assertScopeAccessControlAvailable();
+
             const transformedBody = plainToInstance(ReplaceFileByIdBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -183,7 +208,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             if (!fileToReplace) {
                 throw new NotFoundException(`File ${fileId} not found`);
             }
-            if (!this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
+            if (this.accessControlService && !this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -203,6 +228,8 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
         ): Promise<void> {
+            this.assertScopeAccessControlAvailable();
+
             const file = await this.filesService.findOneById(fileId);
 
             if (file === null) {
@@ -213,7 +240,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            if (file.scope !== undefined && this.accessControlService && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -227,6 +254,8 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
         ): Promise<void> {
+            this.assertScopeAccessControlAvailable();
+
             const file = await this.filesService.findOneById(fileId);
 
             if (file === null) {
@@ -237,7 +266,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            if (file.scope !== undefined && this.accessControlService && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -338,7 +367,8 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                         contentLength,
                     );
                 } catch (err) {
-                    throw new Error(`File-Stream error: (storage.getPartialFile) - ${(err as Error).message}`);
+                    this.logger.error("Failed to stream file from storage (getPartialFile)", err);
+                    throw new InternalServerErrorException("File could not be streamed");
                 }
 
                 stream.on("error", (error) => {
@@ -361,7 +391,8 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 try {
                     stream = await this.blobStorageBackendService.getFile(this.damConfig.filesDirectory, createHashedPath(file.contentHash));
                 } catch (err) {
-                    throw new Error(`File-Stream error: (storage.getFile) - ${(err as Error).message}`);
+                    this.logger.error("Failed to stream file from storage (getFile)", err);
+                    throw new InternalServerErrorException("File could not be streamed");
                 }
 
                 stream.on("error", (error) => {
