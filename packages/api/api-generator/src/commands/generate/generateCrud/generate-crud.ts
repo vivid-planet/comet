@@ -1291,9 +1291,15 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
 
                 //can be null if no relations exist
                 if (content) {
+                    // The nested resolver's imports are resolved relative to the join entity's own module (see
+                    // generateNestedEntityResolver). When the join entity lives in a different module than the entity
+                    // referencing it, write the resolver into the join entity's module so the imports resolve correctly
+                    // and it isn't emitted as a broken duplicate into the referencing module.
+                    const { targetDirectory: nestedTargetDirectory } = buildOptions(prop.targetMeta, generatorOptions);
                     generatedFiles.push({
                         name: `${fileNameSingular}.resolver.ts`,
                         content,
+                        targetDirectory: nestedTargetDirectory,
                         type: "resolver",
                     });
                 }
