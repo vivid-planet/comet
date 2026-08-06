@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/brevo-admin",
     "version": "1.0.0",
+=======
+    "name": "@comet/brevo-admin",
+    "version": "9.3.0",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet/",

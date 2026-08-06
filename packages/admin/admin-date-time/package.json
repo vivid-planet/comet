@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/admin-date-time",
     "version": "1.0.0",
     "description": "Dextinity Admin Date Time component",
+=======
+    "name": "@comet/admin-date-time",
+    "version": "9.3.0",
+    "description": "Comet Admin Date Time component",
+>>>>>>> main
     "repository": {
         "directory": "packages/admin/admin-date-time",
         "type": "git",

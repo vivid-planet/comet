@@ -61,6 +61,8 @@ export type HtmlTextProps<E extends keyof JSX.IntrinsicElements = "td"> = HtmlTe
 
 /**
  * Themed text component for use inside MJML ending tags or outside of the MJML context.
+ * Inside `MjmlRaw` in an `MjmlColumn`, place `HtmlText` in a `<tr>` of its own,
+ * and in a `<td>` too when `element` is not the default `td`.
  */
 export function HtmlText<E extends keyof JSX.IntrinsicElements>(
     props: HtmlTextOwnProps & { element: E } & Omit<ComponentPropsWithoutRef<E>, keyof HtmlTextOwnProps | "element">,

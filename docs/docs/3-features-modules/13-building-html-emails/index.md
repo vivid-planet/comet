@@ -4,8 +4,17 @@ title: Building HTML Emails
 
 `@dextinity/mail-react` lets you build responsive, themed HTML emails using React components. Under the hood it uses [MJML](https://documentation.mjml.io/) to generate cross-client-compatible HTML. On top of the raw MJML components the library provides a theme system, higher-level wrapper components, a style utility layer, and Storybook integration for live previewing emails during development.
 
+<<<<<<< HEAD
 :::tip 🤖 Agent Skill `dextinity-mail-react`
 An agent skill for building HTML emails with `@dextinity/mail-react` is available. It provides AI coding agents with email development best practices, component patterns, and cross-client compatibility guidance. See [Installing Agent Features](../../4-guides/5-installing-agent-features.md) for setup instructions.
+=======
+:::note
+Live component previews are available in our [Storybook](https://storybook.comet-dxp.com/?path=/docs/@comet/mail-react_docs-intro--docs).
+:::
+
+:::tip 🤖 Agent Skill `comet-mail-react`
+An agent skill for building HTML emails with `@comet/mail-react` is available. It provides AI coding agents with email development best practices, component patterns, and cross-client compatibility guidance. See [Installing Agent Features](../../4-guides/5-installing-agent-features.md) for setup instructions.
+>>>>>>> main
 :::
 
 :::info

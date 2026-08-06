@@ -1,5 +1,42 @@
 # @comet/mail-react
 
+## 9.3.0
+
+### Minor Changes
+
+- 80458d2: Add `theme.list` spacing tokens for the lists rendered by the RichText block
+
+    `indent` sets the space before the marker, `markerGap` the space between the marker and the item's text, and `itemSpacing` the space between items. All three accept responsive values.
+
+    ```ts
+    const theme = createTheme({
+        list: {
+            indent: { default: 24, mobile: 16 },
+            markerGap: 12,
+            itemSpacing: 8,
+        },
+    });
+    ```
+
+### Patch Changes
+
+- c010180: Fix `MjmlDivider` breaking the surrounding layout
+
+    A section or column that came after the one holding an `MjmlDivider` rendered outside its wrapper or group instead of inside it. In a section using `disableResponsiveBehavior` (which keeps its columns side-by-side on mobile instead of stacking), the columns' shared wrapper broke, so the following column stacked anyway. In an `MjmlWrapper`, the background stopped after the section holding the divider, so every section below it lost the background.
+
+    `MjmlDivider` now wraps its divider `<table>` in an extra row and cell. The class names stay on the `<table>`, so descendant selectors still match — but a selector using a direct-child combinator that expected the table to sit immediately inside the column will need updating, since there's now a `<tr><td>` in between.
+
+- 1252ae5: Fix inline links losing their color in Outlook on Windows
+
+    `HtmlInlineLink` rendered blue in Outlook on Windows instead of matching the text around it, unless the theme set a base text color. The base text theme now defines one, so links match without any configuration.
+
+    As a result, a text color set through the `MjmlMailRoot` `attributes` slot no longer applies — set it on `theme.text` or on a text variant instead.
+
+- 6c2fd10: Fix inconsistent spacing of rich-text lists across email clients by rendering each list as a table instead of `<ul>` / `<ol>`
+    - `richTextBlock__listItem` is now a `<tr>` instead of an `<li>`, so margin and padding set on it no longer apply. Every row but the last carries `richTextBlock__listItem--itemSpacing`, with the spacing on its cells.
+    - List cells restate the text styles inline, so a rule targeting list text needs `!important`. The cells carry `richTextBlock__listItemMarker` and `richTextBlock__listItemText`.
+    - The table carries a modifier naming its text variant, such as `richTextBlock__list--variantBody`, and one naming its list type, `richTextBlock__list--ordered` or `richTextBlock__list--unordered`.
+
 ## 9.2.2
 
 ## 9.2.1

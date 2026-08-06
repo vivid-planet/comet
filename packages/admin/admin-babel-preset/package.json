@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/admin-babel-preset",
     "version": "1.0.0",
+=======
+    "name": "@comet/admin-babel-preset",
+    "version": "9.3.0",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",

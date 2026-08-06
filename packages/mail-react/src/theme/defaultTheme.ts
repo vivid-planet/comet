@@ -17,6 +17,12 @@ export const defaultTheme: Theme = {
         fontSize: "16px",
         lineHeight: "20px",
         bottomSpacing: "16px",
+        color: "#000000",
+    },
+    list: {
+        indent: 8,
+        markerGap: 12,
+        itemSpacing: 8,
     },
     divider: defaultDividerStyles,
     button: defaultButtonStyles,

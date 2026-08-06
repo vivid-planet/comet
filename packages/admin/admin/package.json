@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/admin",
     "version": "1.0.0",
     "description": "Dextinity Admin package",
+=======
+    "name": "@comet/admin",
+    "version": "9.3.0",
+    "description": "Comet Admin package",
+>>>>>>> main
     "repository": {
         "directory": "packages/admin/admin",
         "type": "git",
@@ -84,7 +90,7 @@
         "@types/history": "^4.7.11",
         "@types/lodash.debounce": "^4.0.9",
         "@types/lodash.isequal": "^4.5.8",
-        "@types/node": "^24.12.4",
+        "@types/node": "^24.13.3",
         "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "@types/react-router": "^5.1.20",
@@ -99,7 +105,7 @@
         "jsdom": "^28.1.0",
         "msw": "^2.10.4",
         "npm-run-all2": "^8.0.4",
-        "playwright": "^1.49.1",
+        "playwright": "^1.62.0",
         "prettier": "^3.6.2",
         "react": "^19.2.6",
         "react-dnd": "^16.0.1",
