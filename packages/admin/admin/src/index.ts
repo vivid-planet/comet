@@ -174,7 +174,11 @@ export { FinalFormNumberInput, type FinalFormNumberInputProps } from "./form/Fin
 export { FinalFormRangeInput, type FinalFormRangeInputClassKey, type FinalFormRangeInputProps } from "./form/FinalFormRangeInput";
 export { FinalFormSearchTextField, type FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
 export { FinalFormSelect, type FinalFormSelectProps } from "./form/FinalFormSelect";
-export { FinalFormToggleButtonGroup, type FinalFormToggleButtonGroupProps } from "./form/FinalFormToggleButtonGroup";
+export {
+    FinalFormToggleButtonGroup,
+    type FinalFormToggleButtonGroupClassKey,
+    type FinalFormToggleButtonGroupProps,
+} from "./form/FinalFormToggleButtonGroup";
 export { FormSection, type FormSectionClassKey, type FormSectionProps } from "./form/FormSection";
 export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, type FinalFormRadioProps } from "./form/Radio";
