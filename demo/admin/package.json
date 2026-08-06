@@ -6,7 +6,8 @@
     "type": "commonjs",
     "scripts": {
         "admin-generator": "rimraf --glob 'src/**/generated' && comet-admin-generator generate",
-        "build": "run-s admin-generator intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",
+        "build": "run-s admin-generator intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build && pnpm run build-server",
+        "build-server": "pnpm --dir server exec tsc --project tsconfig.json",
         "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"pnpm run generate-block-types\"",
@@ -26,7 +27,7 @@
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project .",
         "preview": "pnpm run build && vite preview",
-        "serve": "node server",
+        "serve": "node server/dist/index.js",
         "start": "pnpm check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
     },
     "dependencies": {
