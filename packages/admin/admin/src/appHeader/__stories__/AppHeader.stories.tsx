@@ -35,7 +35,7 @@ function MasterHeader() {
     return (
         <AppHeader>
             <AppHeaderMenuButton />
-            <DextinityLogo variant="primaryNegative" sx={{ fontSize: 34 }} />
+            <DextinityLogo variant="light" sx={{ fontSize: 34 }} />
             <FillSpace />
             <AppHeaderButton startIcon={<Preview />}>Preview</AppHeaderButton>
             <AppHeaderDropdown buttonChildren="Language" startIcon={<Language />}>

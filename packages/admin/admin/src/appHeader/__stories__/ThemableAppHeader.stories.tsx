@@ -33,10 +33,10 @@ export const ThemableAppHeader = {
         return (
             <MuiThemeProvider theme={theme}>
                 <AppHeader position="relative">
-                    <DextinityLogo variant="primaryNegative" sx={{ fontSize: 34 }} />
+                    <DextinityLogo variant="light" sx={{ fontSize: 34 }} />
                 </AppHeader>
                 <AppHeader position="static" color="secondary">
-                    <DextinityLogo variant="primaryNegative" sx={{ fontSize: 34 }} />
+                    <DextinityLogo variant="light" sx={{ fontSize: 34 }} />
                 </AppHeader>
             </MuiThemeProvider>
         );

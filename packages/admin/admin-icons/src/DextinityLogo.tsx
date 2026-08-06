@@ -3,12 +3,13 @@ import { forwardRef } from "react";
 
 import { useUniqueId } from "./useUniqueId";
 
-export type DextinityLogoVariant = "primaryPositive" | "primaryNegative" | "secondaryFlat";
+export type DextinityLogoVariant = "dark" | "light" | "monochrome";
 
 export interface DextinityLogoProps extends SvgIconProps {
     /**
-     * `primaryPositive` for light backgrounds, `primaryNegative` for dark ones. `secondaryFlat` is the
-     * single-color variant: it inherits `currentColor`, so use `color`/`htmlColor` or CSS to set the color.
+     * The color of the wordmark: `dark` for light backgrounds, `light` for dark ones. Both keep the gradient
+     * mark. `monochrome` renders mark and wordmark in a single color inherited from `currentColor`, so use
+     * `color`/`htmlColor` or CSS to set it.
      */
     variant?: DextinityLogoVariant;
 }
@@ -30,17 +31,17 @@ const wordmarkPaths = [
 const markPath =
     "M145 125C145 100.147 124.853 80 100 80H80V170H100C124.853 170 145 149.853 145 125ZM170 125C170 163.66 138.66 195 100 195H55V80H25V225H100C155.228 225 200 180.228 200 125C200 69.7715 155.228 25 100 25H80V55H100C138.66 55 170 86.3401 170 125ZM225 125C225 194.036 169.036 250 100 250H0V55H55V0H100C169.036 2.2552e-06 225 55.9644 225 125Z";
 
-/** The mark as a single self-overlapping path, for the flat variant that has no gradient to shade it. */
-const flatMarkPath =
+/** The mark as a single self-overlapping path, for the monochrome variant that has no gradient to shade it. */
+const monochromeMarkPath =
     "M100 0C169.036 2.2552e-06 225 55.9644 225 125C225 194.036 169.036 250 100 250H0V55H100C138.66 55 170 86.3401 170 125C170 163.66 138.66 195 100 195H55V92.5H80V170H100C124.853 170 145 149.853 145 125C145 100.147 124.853 80 100 80H25V225H100C155.228 225 200 180.228 200 125C200 69.7715 155.228 25 100 25H80V42.5H55V0H100Z";
 
-export const DextinityLogo = forwardRef<SVGSVGElement, DextinityLogoProps>(({ variant = "primaryPositive", sx, ...props }, ref) => {
+export const DextinityLogo = forwardRef<SVGSVGElement, DextinityLogoProps>(({ variant = "dark", sx, ...props }, ref) => {
     // Ids in `defs` are document-global, so each instance needs its own. With the static ids Figma exports,
     // a second logo on the page would take over the first one's gradients.
     const markGradientId = useUniqueId("dextinity-logo-mark");
     const shadowGradientId = useUniqueId("dextinity-logo-shadow");
 
-    const isFlat = variant === "secondaryFlat";
+    const isMonochrome = variant === "monochrome";
 
     return (
         <SvgIcon
@@ -51,7 +52,7 @@ export const DextinityLogo = forwardRef<SVGSVGElement, DextinityLogoProps>(({ va
             {...props}
             ref={ref}
         >
-            {!isFlat && (
+            {!isMonochrome && (
                 <defs>
                     <linearGradient id={markGradientId} x1="0" y1="250" x2="203.75" y2="46.25" gradientUnits="userSpaceOnUse">
                         <stop offset="0.3" stopColor="#403AF2" />
@@ -66,11 +67,11 @@ export const DextinityLogo = forwardRef<SVGSVGElement, DextinityLogoProps>(({ va
                 </defs>
             )}
             {wordmarkPaths.map((path) => (
-                // The flat variant omits `fill` entirely so it inherits `currentColor` from SvgIcon.
-                <path key={path} d={path} fill={isFlat ? undefined : variant === "primaryNegative" ? "white" : "#27292E"} />
+                // The monochrome variant omits `fill` entirely so it inherits `currentColor` from SvgIcon.
+                <path key={path} d={path} fill={isMonochrome ? undefined : variant === "light" ? "white" : "#27292E"} />
             ))}
-            {isFlat ? (
-                <path d={flatMarkPath} />
+            {isMonochrome ? (
+                <path d={monochromeMarkPath} />
             ) : (
                 <>
                     <path d={markPath} fill={`url(#${markGradientId})`} />

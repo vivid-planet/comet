@@ -23,7 +23,7 @@ export const Basic = {
         return (
             <AppHeader position="relative" headerHeight={60}>
                 <AppHeaderMenuButton />
-                <DextinityLogo variant="primaryNegative" sx={{ fontSize: 34 }} />
+                <DextinityLogo variant="light" sx={{ fontSize: 34 }} />
 
                 <FillSpace />
 

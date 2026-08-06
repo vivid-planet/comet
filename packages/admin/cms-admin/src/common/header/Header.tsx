@@ -26,7 +26,7 @@ function Header({ children, logo }: PropsWithChildren<Props>) {
     return (
         <AppHeader>
             <AppHeaderMenuButton />
-            {!isMobile && <LogoWrapper>{logo || <DextinityLogo variant="primaryNegative" sx={{ fontSize: 34 }} />}</LogoWrapper>}
+            {!isMobile && <LogoWrapper>{logo || <DextinityLogo variant="light" sx={{ fontSize: 34 }} />}</LogoWrapper>}
             {!isMobile && <FillSpace />}
             {children}
         </AppHeader>

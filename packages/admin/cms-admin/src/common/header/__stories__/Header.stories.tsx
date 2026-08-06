@@ -30,7 +30,7 @@ const config: Meta<typeof Header> = {
 
 export default config;
 
-/** The default logo is the negative wordmark, since the app header has a dark background. */
+/** The default logo is the `light` wordmark, since the app header has a dark background. */
 export const Default: Story = {
     render: () => <Header />,
 };
@@ -49,7 +49,7 @@ export const CustomLogo: Story = {
     render: () => <Header logo={<DextinityIcon sx={{ fontSize: 32 }} />} />,
 };
 
-/** The flat variant inherits `currentColor`, so it can be tinted to match a custom header color. */
-export const CustomLogoFlat: Story = {
-    render: () => <Header logo={<DextinityLogo variant="secondaryFlat" htmlColor="white" sx={{ fontSize: 30 }} />} />,
+/** The monochrome variant inherits `currentColor`, so it can be tinted to match a custom header color. */
+export const CustomLogoMonochrome: Story = {
+    render: () => <Header logo={<DextinityLogo variant="monochrome" htmlColor="white" sx={{ fontSize: 30 }} />} />,
 };

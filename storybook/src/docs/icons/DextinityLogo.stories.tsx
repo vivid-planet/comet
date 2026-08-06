@@ -21,27 +21,27 @@ const DarkBackground = styled("div")`
     background-color: #141517;
 `;
 
-export const PrimaryPositive = () => (
+export const Dark = () => (
     <LightBackground>
         <DextinityLogo sx={{ fontSize: 50 }} />
     </LightBackground>
 );
 
-export const PrimaryNegative = () => (
+export const Light = () => (
     <DarkBackground>
-        <DextinityLogo variant="primaryNegative" sx={{ fontSize: 50 }} />
+        <DextinityLogo variant="light" sx={{ fontSize: 50 }} />
     </DarkBackground>
 );
 
-/** The flat variant inherits `currentColor`, so `htmlColor` (or CSS `color`) produces the black/grey/white assets. */
-export const SecondaryFlat = () => (
+/** The monochrome variant inherits `currentColor`, so `htmlColor` (or CSS `color`) produces the black/grey/white assets. */
+export const Monochrome = () => (
     <>
         <LightBackground>
-            <DextinityLogo variant="secondaryFlat" htmlColor="black" sx={{ fontSize: 50 }} />
-            <DextinityLogo variant="secondaryFlat" htmlColor="#27292E" sx={{ fontSize: 50 }} />
+            <DextinityLogo variant="monochrome" htmlColor="black" sx={{ fontSize: 50 }} />
+            <DextinityLogo variant="monochrome" htmlColor="#27292E" sx={{ fontSize: 50 }} />
         </LightBackground>
         <DarkBackground>
-            <DextinityLogo variant="secondaryFlat" htmlColor="white" sx={{ fontSize: 50 }} />
+            <DextinityLogo variant="monochrome" htmlColor="white" sx={{ fontSize: 50 }} />
         </DarkBackground>
     </>
 );

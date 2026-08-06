@@ -53,7 +53,7 @@ const AppMenu = () => {
 const Header = () => (
     <AppHeader>
         <AppHeaderMenuButton />
-        <DextinityLogo variant="primaryNegative" sx={{ fontSize: 34 }} />
+        <DextinityLogo variant="light" sx={{ fontSize: 34 }} />
         <FillSpace />
     </AppHeader>
 );
