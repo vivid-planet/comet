@@ -1,6 +1,10 @@
 import { createFetchWithDefaults, createGraphQLFetch } from "@comet/site-nextjs";
 
 export function createGraphQLFetchMiddleware() {
+    if (!process.env.API_BASIC_AUTH_SYSTEM_USER_NAME) {
+        throw new Error("API_BASIC_AUTH_SYSTEM_USER_NAME is not set");
+    }
+
     if (!process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD) {
         throw new Error("API_BASIC_AUTH_SYSTEM_USER_PASSWORD is not set");
     }
@@ -11,7 +15,9 @@ export function createGraphQLFetchMiddleware() {
                 revalidate: 7.5 * 60,
             },
             headers: {
-                authorization: `Basic ${Buffer.from(`system-user:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
+                authorization: `Basic ${Buffer.from(
+                    `${process.env.API_BASIC_AUTH_SYSTEM_USER_NAME}:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`,
+                ).toString("base64")}`,
             },
         }),
         `${process.env.API_URL_INTERNAL}/graphql`,
