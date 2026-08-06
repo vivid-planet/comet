@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 9.3.1
+
+### Patch Changes
+
+- 0f17fbd: Open the `Permissions` tab by default when editing a user in the `UserPermissionsPage`
+
+    Selecting a user now opens the `Permissions` tab instead of `Basic Data`, while the tab order stays unchanged. Users without the `userPermissions` permission (who don't see the `Permissions` tab) continue to open the `Basic Data` tab.
+    - @comet/admin@9.3.1
+    - @comet/admin-date-time@9.3.1
+    - @comet/admin-icons@9.3.1
+    - @comet/admin-rte@9.3.1
+
 ## 9.3.0
 
 ### Minor Changes
