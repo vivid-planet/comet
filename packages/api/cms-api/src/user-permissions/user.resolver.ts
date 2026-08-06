@@ -114,7 +114,8 @@ export class UserResolver {
 
     @ResolveField(() => Int)
     async permissionsCount(@Parent() user: UserPermissionsUser): Promise<number> {
-        return (await this.userService.getPermissions(user)).length;
+        // Count distinct permissions: a permission can be granted both by rule and manually, but must only be counted once.
+        return new Set((await this.userService.getPermissions(user)).map((permission) => permission.permission)).size;
     }
 
     @ResolveField(() => Int)
