@@ -5,6 +5,7 @@ import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { AbstractAccessControlService } from "./access-control.service";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
+import { ContentScopeSummaryByDimension } from "./dto/content-scope";
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs, PermissionFilter } from "./dto/paginated-user-list";
 import { UserPermissionsUser } from "./dto/user";
@@ -117,11 +118,9 @@ export class UserResolver {
         return (await this.userService.getPermissions(user)).length;
     }
 
-    @ResolveField(() => Int)
-    async contentScopesCount(@Parent() user: UserPermissionsUser): Promise<number> {
-        // FIXME: this counts a wildcard content scope ("*") as a single scope and therefore under-reports the number of
-        // scopes a user can access. Replaced by a per-dimension summary in a follow-up pull request.
-        return (await this.userContentScopesLoader.load(user)).length;
+    @ResolveField(() => [ContentScopeSummaryByDimension])
+    async contentScopeSummary(@Parent() user: UserPermissionsUser): Promise<ContentScopeSummaryByDimension[]> {
+        return this.userContentScopesLoader.load(user);
     }
 
     @ResolveField(() => Boolean)

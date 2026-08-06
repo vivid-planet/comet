@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-scalars";
+import { GraphQLJSON, GraphQLJSONObject } from "graphql-scalars";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
 
@@ -10,4 +10,14 @@ export class ContentScopeWithLabel {
 
     @Field(() => GraphQLJSONObject)
     label: { [key in keyof ContentScope]: string };
+}
+
+@ObjectType()
+export class ContentScopeSummaryByDimension {
+    @Field()
+    dimension: string;
+
+    // Number of distinct values the user has for this dimension, or the wildcard "*" if the user has access to any value.
+    @Field(() => GraphQLJSON)
+    count: number | "*";
 }
