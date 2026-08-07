@@ -119,6 +119,8 @@ export class UserResolver {
 
     @ResolveField(() => Int)
     async contentScopesCount(@Parent() user: UserPermissionsUser): Promise<number> {
+        // FIXME: this counts a wildcard content scope ("*") as a single scope and therefore under-reports the number of
+        // scopes a user can access. Replaced by a per-dimension summary in a follow-up pull request.
         return (await this.userContentScopesLoader.load(user)).length;
     }
 
