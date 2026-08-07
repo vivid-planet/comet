@@ -1,8 +1,5 @@
-import { createCompositeBlock, createCompositeBlockTextField, isValidUrl } from "@comet/cms-admin";
+import { createCompositeBlock, createCompositeBlockTextField, validateUrl } from "@comet/cms-admin";
 import { FormattedMessage } from "react-intl";
-
-const validateUrl = (value?: string) =>
-    value && !isValidUrl(value) ? <FormattedMessage id="siteSettings.blocks.invalidUrl" defaultMessage="Invalid URL" /> : undefined;
 
 export const SameAsUrlBlock = createCompositeBlock({
     name: "SameAsUrl",
