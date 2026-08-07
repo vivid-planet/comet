@@ -23,6 +23,8 @@ export const defaultTheme: Theme = {
         indent: 8,
         markerGap: 12,
         itemSpacing: 8,
+        unorderedMarker: "•",
+        orderedMarker: ({ index }) => `${index + 1}.`,
     },
     divider: defaultDividerStyles,
     button: defaultButtonStyles,
