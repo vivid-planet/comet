@@ -5,6 +5,8 @@ import { Header } from "@src/layout/header/Header";
 import { headerFragment } from "@src/layout/header/Header.fragment";
 import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
+import { SiteSettings } from "@src/siteSettings/SiteSettings";
+import { siteSettingsFragment } from "@src/siteSettings/SiteSettings.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { IntlProvider } from "@src/util/IntlProvider";
 import { loadMessages } from "@src/util/loadMessages";
@@ -24,11 +26,13 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
     if (!siteConfig.scope.languages.includes(language)) {
         language = "en";
     }
-    setNotFoundContext({ domain, language });
+    const scope = { domain, language };
+
+    setNotFoundContext(scope);
 
     const graphQLFetch = createGraphQLFetch();
 
-    const { footer, header, topMenu } = await graphQLFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(
+    const { footer, header, topMenu, siteSettings } = await graphQLFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(
         gql`
             query Layout($domain: String!, $language: String!) {
                 footer: footer(scope: { domain: $domain, language: $language }) {
@@ -40,13 +44,17 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
                 topMenu(scope: { domain: $domain, language: $language }) {
                     ...TopMenuPageTreeNode
                 }
+                siteSettings(scope: { domain: $domain, language: $language }) {
+                    ...SiteSettings
+                }
             }
 
             ${footerFragment}
             ${headerFragment}
             ${topMenuPageTreeNodeFragment}
+            ${siteSettingsFragment}
         `,
-        { domain, language },
+        scope,
     );
 
     const messages = await loadMessages(language);
@@ -57,12 +65,13 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
             blockType: "FooterContent",
             graphQLFetch,
             fetch,
-            scope: { domain, language },
+            scope,
         });
     }
 
     return (
         <IntlProvider locale={language} messages={messages}>
+            {siteSettings && <SiteSettings siteSettings={siteSettings} scope={scope} />}
             <TopNavigation data={topMenu} />
             <Header header={header} />
             {children}
