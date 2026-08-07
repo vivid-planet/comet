@@ -26,7 +26,9 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
     if (!siteConfig.scope.languages.includes(language)) {
         language = "en";
     }
-    setNotFoundContext({ domain, language });
+    const scope = { domain, language };
+
+    setNotFoundContext(scope);
 
     const graphQLFetch = createGraphQLFetch();
 
@@ -52,7 +54,7 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
             ${topMenuPageTreeNodeFragment}
             ${siteSettingsFragment}
         `,
-        { domain, language },
+        scope,
     );
 
     const messages = await loadMessages(language);
@@ -63,13 +65,13 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
             blockType: "FooterContent",
             graphQLFetch,
             fetch,
-            scope: { domain, language },
+            scope,
         });
     }
 
     return (
         <IntlProvider locale={language} messages={messages}>
-            {siteSettings && <SiteSettings siteSettings={siteSettings} scope={{ domain, language }} />}
+            {siteSettings && <SiteSettings siteSettings={siteSettings} scope={scope} />}
             <TopNavigation data={topMenu} />
             <Header header={header} />
             {children}
