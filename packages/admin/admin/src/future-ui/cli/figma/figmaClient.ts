@@ -57,18 +57,6 @@ const FIGMA_API_BASE_URL = "https://api.figma.com";
 const RATE_LIMIT_STATUS = 429;
 const SCOPE_DENIED_STATUS = 403;
 
-/** The subset of a `fetch` response the client depends on, so tests can stub it. */
-export interface FigmaResponse {
-    ok: boolean;
-    status: number;
-    headers: { get(name: string): string | null };
-    text(): Promise<string>;
-}
-
-export type FigmaFetch = (url: string, init: { headers: Record<string, string> }) => Promise<FigmaResponse>;
-
-type WaitFn = (milliseconds: number) => Promise<void>;
-
 export interface FigmaFileClient {
     getFile(): Promise<unknown>;
 }
@@ -76,13 +64,11 @@ export interface FigmaFileClient {
 interface FigmaRestClientOptions {
     token: string;
     fileKey: string;
-    fetch?: FigmaFetch;
-    wait?: WaitFn;
 }
 
-const defaultFetch: FigmaFetch = (url, init) => fetch(url, init);
-
-const defaultWait: WaitFn = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+function wait(milliseconds: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -107,7 +93,7 @@ function extractFigmaErrorMessage(body: string): string | null {
     return null;
 }
 
-function retryAfterMilliseconds(response: FigmaResponse): number {
+function retryAfterMilliseconds(response: Response): number {
     const retryAfterSeconds = Number(response.headers.get("Retry-After"));
     return Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds * 1000 : 0;
 }
@@ -115,14 +101,10 @@ function retryAfterMilliseconds(response: FigmaResponse): number {
 export class FigmaRestClient implements FigmaFileClient {
     private readonly token: string;
     private readonly fileKey: string;
-    private readonly fetch: FigmaFetch;
-    private readonly wait: WaitFn;
 
     constructor(options: FigmaRestClientOptions) {
         this.token = options.token;
         this.fileKey = options.fileKey;
-        this.fetch = options.fetch ?? defaultFetch;
-        this.wait = options.wait ?? defaultWait;
     }
 
     getFile(): Promise<unknown> {
@@ -141,12 +123,12 @@ export class FigmaRestClient implements FigmaFileClient {
         throw new FigmaCliError("figma_error", `Figma API request failed with status ${response.status}: ${extractFigmaErrorMessage(body) ?? body}`);
     }
 
-    private async fetchWithRateLimitRetry(url: string): Promise<FigmaResponse> {
+    private async fetchWithRateLimitRetry(url: string): Promise<Response> {
         const response = await this.fetchWithToken(url);
         if (response.status !== RATE_LIMIT_STATUS) {
             return response;
         }
-        await this.wait(retryAfterMilliseconds(response));
+        await wait(retryAfterMilliseconds(response));
         const retriedResponse = await this.fetchWithToken(url);
         if (retriedResponse.status === RATE_LIMIT_STATUS) {
             throw new FigmaCliError("rate_limited", "Figma API rate limit exceeded (429) after one retry");
@@ -154,7 +136,7 @@ export class FigmaRestClient implements FigmaFileClient {
         return retriedResponse;
     }
 
-    private fetchWithToken(url: string): Promise<FigmaResponse> {
-        return this.fetch(url, { headers: { "X-Figma-Token": this.token } });
+    private fetchWithToken(url: string): Promise<Response> {
+        return fetch(url, { headers: { "X-Figma-Token": this.token } });
     }
 }

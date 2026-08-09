@@ -1,42 +1,29 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { type FigmaFetch, type FigmaResponse, FigmaRestClient } from "./figmaClient";
+import { FigmaRestClient } from "./figmaClient";
 
-function figmaResponse({ status, body, headers = {} }: { status: number; body: string; headers?: Record<string, string> }): FigmaResponse {
-    return {
-        ok: status >= 200 && status < 300,
-        status,
-        headers: { get: (name) => headers[name] ?? null },
-        text: async () => body,
-    };
-}
-
-/** A fetch stub that returns the queued responses in order and records each call. */
-function queuedFetch(responses: FigmaResponse[]): { fetch: FigmaFetch; urls: string[] } {
-    const urls: string[] = [];
-    const remaining = [...responses];
-    const fetch: FigmaFetch = async (url) => {
-        urls.push(url);
-        const next = remaining.shift();
-        if (!next) {
-            throw new Error("fetch called more times than expected");
-        }
-        return next;
-    };
-    return { fetch, urls };
-}
+afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+});
 
 describe("FigmaRestClient", () => {
-    it("retries once honoring Retry-After after a 429, then succeeds", async () => {
-        const { fetch, urls } = queuedFetch([
-            figmaResponse({ status: 429, body: "", headers: { "Retry-After": "2" } }),
-            figmaResponse({ status: 200, body: '{"version":"42"}' }),
-        ]);
-        const wait = vi.fn(async () => {});
-        const client = new FigmaRestClient({ token: "test-token", fileKey: "ABC123", fetch, wait });
+    it("retries a rate-limited request once, after the Retry-After delay, then returns the file", async () => {
+        vi.useFakeTimers();
+        const fetchMock = vi
+            .fn<typeof fetch>()
+            .mockResolvedValueOnce(new Response("", { status: 429, headers: { "Retry-After": "2" } }))
+            .mockResolvedValueOnce(new Response('{"version":"42"}', { status: 200 }));
+        vi.stubGlobal("fetch", fetchMock);
 
-        expect(await client.getFile()).toEqual({ version: "42" });
-        expect(urls).toHaveLength(2);
-        expect(wait).toHaveBeenCalledWith(2000);
+        const file = new FigmaRestClient({ token: "test-token", fileKey: "ABC123" }).getFile();
+
+        // One millisecond short of the delay: without this step, an immediate retry would pass too.
+        await vi.advanceTimersByTimeAsync(1999);
+        expect(fetchMock).toHaveBeenCalledOnce();
+
+        await vi.advanceTimersByTimeAsync(1);
+        expect(await file).toEqual({ version: "42" });
+        expect(fetchMock).toHaveBeenCalledTimes(2);
     });
 });
