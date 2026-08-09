@@ -30,13 +30,13 @@ import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.ut
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { calculatePartialRanges, slugifyFilename } from "../../file-utils/files.utils";
-import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
+import { damScopesAreEqual } from "../dam-scopes-are-equal.util";
 import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
@@ -67,7 +67,6 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             private readonly filesService: FilesService,
             private readonly blobStorageBackendService: BlobStorageBackendService,
             @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
-            private readonly contentScopeService: ContentScopeService,
             private readonly foldersService: FoldersService,
         ) {}
 
@@ -97,7 +96,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 if (!folder) {
                     throw new BadRequestException(`Folder ${folderId} not found`);
                 }
-                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                if (!damScopesAreEqual(folder.scope, scope)) {
                     throw new BadRequestException("Folder scope doesn't match passed scope");
                 }
             }
@@ -136,7 +135,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 if (!folder) {
                     throw new BadRequestException(`Folder ${folderId} not found`);
                 }
-                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                if (!damScopesAreEqual(folder.scope, scope)) {
                     throw new BadRequestException("Folder scope doesn't match passed scope");
                 }
             }

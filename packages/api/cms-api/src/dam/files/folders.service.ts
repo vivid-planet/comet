@@ -2,7 +2,6 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import JSZip from "jszip";
-import isEqual from "lodash.isequal";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
@@ -10,6 +9,7 @@ import { CometEntityNotFoundException } from "../../common/errors/entity-not-fou
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
+import { damScopesAreEqual } from "../dam-scopes-are-equal.util";
 import { DamScopeInterface } from "../types";
 import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
 import { UpdateFolderInput } from "./dto/folder.input";
@@ -262,8 +262,7 @@ export class FoldersService {
                 throw new Error("Target folder doesn't exist");
             }
 
-            // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (scope && targetFolder.scope && !isEqual({ ...targetFolder.scope }, scope)) {
+            if (scope && targetFolder.scope && !damScopesAreEqual(targetFolder.scope, scope)) {
                 throw new Error("Scope arg doesn't match folder scope");
             }
         }
@@ -275,8 +274,7 @@ export class FoldersService {
                 throw new Error("Folder doesn't exist");
             }
 
-            // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (scope && folder.scope && !isEqual({ ...folder.scope }, scope)) {
+            if (scope && folder.scope && !damScopesAreEqual(folder.scope, scope)) {
                 throw new Error("Scope arg doesn't match folder scope");
             }
 
