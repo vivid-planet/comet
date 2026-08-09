@@ -1,11 +1,21 @@
+import type { ComponentNode, ComponentSetNode, DevStatusTrait } from "@figma/rest-api-spec";
 import { z } from "zod";
 
 import { FigmaCliError, type FigmaFileClient } from "./figmaClient.js";
 
 const NON_PUBLIC_NAME_PREFIX = "_";
 
-const componentNodeTypeSchema = z.enum(["COMPONENT", "COMPONENT_SET"]);
-const componentDevStatusSchema = z.enum(["READY_FOR_DEV", "COMPLETED"]);
+type FigmaComponentNodeType = ComponentNode["type"] | ComponentSetNode["type"];
+type FigmaDevStatus = NonNullable<DevStatusTrait["devStatus"]>["type"];
+
+const componentNodeTypeSchema = z.enum({ COMPONENT: "COMPONENT", COMPONENT_SET: "COMPONENT_SET" } satisfies Record<
+    FigmaComponentNodeType,
+    FigmaComponentNodeType
+>);
+// Deliberately a subset of Figma's statuses: the ones a designer sets to hand a component over.
+const componentDevStatusSchema = z.enum({ READY_FOR_DEV: "READY_FOR_DEV", COMPLETED: "COMPLETED" } satisfies Partial<
+    Record<FigmaDevStatus, FigmaDevStatus>
+>);
 
 const componentNodeSchema = z.object({
     id: z.string(),

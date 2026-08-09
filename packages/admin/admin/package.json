@@ -74,6 +74,7 @@
         "@comet/eslint-plugin": "workspace:*",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
+        "@figma/rest-api-spec": "^0.41.0",
         "@mui/material": "^7.3.11",
         "@mui/system": "^7.3.11",
         "@mui/x-data-grid": "^8.28.7",
