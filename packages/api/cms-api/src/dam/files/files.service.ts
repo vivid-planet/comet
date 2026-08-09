@@ -8,10 +8,6 @@ import * as hasha from "hasha";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
-import { promisify } from "util";
-import { inflate as inflateCallback } from "zlib";
-
-const inflate = promisify(inflateCallback);
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
@@ -20,12 +16,11 @@ import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { slugifyFilename } from "../../file-utils/files.utils";
 import { FocalPoint } from "../../file-utils/focal-point.enum";
-import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
-import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { contentScopesAreEqual } from "../../user-permissions/content-scopes-are-equal";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
+import { DamDominantColorService } from "../images/dam-dominant-color.service";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { DamScopeInterface } from "../types";
 import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
@@ -127,9 +122,9 @@ export class FilesService {
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
-        private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
         private readonly entityManager: EntityManager,
+        private readonly dominantColorService: DamDominantColorService,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -419,7 +414,7 @@ export class FilesService {
                 const entityManager = this.orm.em.fork();
                 const image = await entityManager.findOneOrFail(DamFileImage, result.image.id);
 
-                this.calculateDominantColor(contentHash).then((dominantColor) => {
+                this.dominantColorService.calculateDominantColor(contentHash).then((dominantColor) => {
                     image.dominantColor = dominantColor;
                     return entityManager.flush();
                 });
@@ -570,80 +565,11 @@ export class FilesService {
         return name;
     }
 
+    /**
+     * @deprecated Use `DamDominantColorService.calculateDominantColor` instead.
+     */
     async calculateDominantColor(contentHash: string): Promise<string | undefined> {
-        const path = this.imgproxyService
-            .builder()
-            .resize(ResizingType.AUTO, 1)
-            .format(Extension.PNG)
-            .generateUrl(
-                `${this.blobStorageBackendService.getBackendFilePathPrefix()}${this.config.filesDirectory}/${createHashedPath(contentHash)}`,
-            );
-
-        const imgUrl = this.imgproxyService.getSignedUrl(path);
-        let imageResponse: Response;
-        try {
-            imageResponse = await fetch(imgUrl);
-        } catch (error) {
-            this.logger.error("Failed to calculate dominant color: imgproxy is not available", error);
-            return undefined;
-        }
-
-        if (!imageResponse.ok) {
-            this.logger.error(`Failed to calculate dominant color: imgproxy returned ${imageResponse.status} ${imageResponse.statusText}`);
-            return undefined;
-        }
-
-        try {
-            const arrayBuffer = await imageResponse.arrayBuffer();
-            const pngBuffer = Buffer.from(arrayBuffer);
-
-            // Parse the dominant color from the 1x1 PNG produced by imgproxy
-            return await this.parsePngPixelColor(pngBuffer);
-        } catch (error) {
-            this.logger.error("Failed to calculate dominant color: could not parse imgproxy response", error);
-            return undefined;
-        }
-    }
-
-    private async parsePngPixelColor(pngBuffer: Buffer): Promise<string | undefined> {
-        // PNG: 8-byte signature, then chunks (4-byte length + 4-byte type + data + 4-byte CRC)
-        let offset = 8;
-        let colorType = -1;
-        let palette: Buffer | undefined;
-
-        while (offset < pngBuffer.length) {
-            const length = pngBuffer.readUInt32BE(offset);
-            const type = pngBuffer.toString("ascii", offset + 4, offset + 8);
-            const data = pngBuffer.subarray(offset + 8, offset + 8 + length);
-
-            if (type === "IHDR") {
-                colorType = data[9];
-            } else if (type === "PLTE") {
-                palette = data;
-            } else if (type === "IDAT") {
-                const decompressed = await inflate(data);
-                // Decompressed scanline: [filter_byte, pixel_data...]
-                let r: number, g: number, b: number;
-                if (colorType === 3 && palette) {
-                    // Indexed color: pixel value is a palette index
-                    const index = decompressed[1] * 3;
-                    [r, g, b] = [palette[index], palette[index + 1], palette[index + 2]];
-                } else if (colorType === 0) {
-                    // Grayscale
-                    const gray = decompressed[1];
-                    [r, g, b] = [gray, gray, gray];
-                } else {
-                    // RGB (type 2) or RGBA (type 6): R, G, B are at bytes 1-3
-                    [r, g, b] = [decompressed[1], decompressed[2], decompressed[3]];
-                }
-                return `#${[r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
-            }
-
-            offset += 12 + length;
-        }
-
-        this.logger.warn("Failed to calculate dominant color: no IDAT chunk found in PNG");
-        return undefined;
+        return this.dominantColorService.calculateDominantColor(contentHash);
     }
 
     async createFileUrl(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<string> {

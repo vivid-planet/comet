@@ -29,6 +29,7 @@ import { createFoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
 import { CalculateDominantImageColorCommand } from "./images/calculateDominantImageColor.command";
+import { DamDominantColorService } from "./images/dam-dominant-color.service";
 import { ImageCropArea } from "./images/entities/image-crop-area.entity";
 import { createImagesController } from "./images/images.controller";
 import { ImagesService } from "./images/images.service";
@@ -114,6 +115,7 @@ export class DamModule {
                 FileLicensesResolver,
                 FoldersResolver,
                 FoldersService,
+                DamDominantColorService,
                 ImagesService,
                 IsAllowedImageSizeConstraint,
                 IsAllowedImageAspectRatioConstraint,
@@ -136,6 +138,7 @@ export class DamModule {
             exports: [
                 FilesService,
                 FoldersService,
+                DamDominantColorService,
                 ImagesService,
                 damConfigProvider,
                 PixelImageBlockTransformerService,
