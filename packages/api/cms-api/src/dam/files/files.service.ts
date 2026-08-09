@@ -1,6 +1,6 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw, Utils } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, Logger, Optional } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
 import { createReadStream } from "fs";
@@ -19,8 +19,8 @@ import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { contentScopesAreEqual } from "../../user-permissions/content-scopes-are-equal";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
-import { DAM_CONFIG } from "../dam.constants";
-import { DamDominantColorService } from "../images/dam-dominant-color.service";
+import { DAM_CONFIG, DAM_DOMINANT_COLOR_CALCULATOR } from "../dam.constants";
+import { DominantColorCalculatorInterface } from "../dominant-color-calculator.interface";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { DamScopeInterface } from "../types";
 import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
@@ -124,7 +124,7 @@ export class FilesService {
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly orm: MikroORM,
         private readonly entityManager: EntityManager,
-        private readonly dominantColorService: DamDominantColorService,
+        @Optional() @Inject(DAM_DOMINANT_COLOR_CALCULATOR) private readonly dominantColorCalculator?: DominantColorCalculatorInterface,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -406,7 +406,8 @@ export class FilesService {
                 ...assignData,
             });
 
-            if (result.image) {
+            if (result.image && this.dominantColorCalculator) {
+                const dominantColorCalculator = this.dominantColorCalculator;
                 // We do not want for our users to await the dominant color calculation. To prevent concurrency issues we must use a separate Unit of
                 // Work. This can be achieved by forking the EntityManager instance.
                 // See https://mikro-orm.io/docs/faq#you-cannot-call-emflush-from-inside-lifecycle-hook-handlers and
@@ -414,7 +415,7 @@ export class FilesService {
                 const entityManager = this.orm.em.fork();
                 const image = await entityManager.findOneOrFail(DamFileImage, result.image.id);
 
-                this.dominantColorService.calculateDominantColor(contentHash).then((dominantColor) => {
+                dominantColorCalculator.calculateDominantColor(contentHash).then((dominantColor) => {
                     image.dominantColor = dominantColor;
                     return entityManager.flush();
                 });
@@ -566,10 +567,11 @@ export class FilesService {
     }
 
     /**
-     * @deprecated Use `DamDominantColorService.calculateDominantColor` instead.
+     * @deprecated Use `DamDominantColorService.calculateDominantColor` instead. Returns `undefined` when `DamImagesModule`,
+     * which provides the imgproxy-backed calculator, is not registered.
      */
     async calculateDominantColor(contentHash: string): Promise<string | undefined> {
-        return this.dominantColorService.calculateDominantColor(contentHash);
+        return this.dominantColorCalculator?.calculateDominantColor(contentHash);
     }
 
     async createFileUrl(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<string> {

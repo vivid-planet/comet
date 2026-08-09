@@ -8,11 +8,12 @@ import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
+import { DominantColorCalculatorInterface } from "../dominant-color-calculator.interface";
 
 const inflate = promisify(inflateCallback);
 
 @Injectable()
-export class DamDominantColorService {
+export class DamDominantColorService implements DominantColorCalculatorInterface {
     private readonly logger = new Logger(DamDominantColorService.name);
 
     constructor(

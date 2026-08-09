@@ -40,7 +40,7 @@ function createServiceWithMockQueryBuilder() {
         null as never, // DAM_CONFIG
         null as never, // orm
         null as never, // entityManager
-        null as never, // dominantColorService
+        null as never, // dominantColorCalculator
     );
 
     const hasFolderConstraint = () =>
