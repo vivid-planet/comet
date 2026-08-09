@@ -7,6 +7,7 @@ import {
     Headers,
     Inject,
     NotFoundException,
+    Optional,
     Param,
     Res,
     Type,
@@ -31,9 +32,11 @@ import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DamConfig } from "../dam.config";
-import { DAM_CONFIG } from "../dam.constants";
+import { DAM_CONFIG, DAM_DISABLE_SCOPE_ACCESS_CONTROL } from "../dam.constants";
 import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
+import { isAllowedToAccessScope } from "../is-allowed-to-access-scope";
+import { DamScopeInterface } from "../types";
 import { HashImageParams, ImageParams } from "./dto/image.params";
 import { ImagesService } from "./images.service";
 
@@ -51,8 +54,18 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
             private readonly imagesService: ImagesService,
             private readonly cacheService: ScaledImagesCacheService,
             @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
-            @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+            @Optional() @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface | undefined,
+            @Inject(DAM_DISABLE_SCOPE_ACCESS_CONTROL) private readonly disableScopeAccessControl: boolean,
         ) {}
+
+        private isAllowed(user: CurrentUser, scope: DamScopeInterface | undefined): boolean {
+            return isAllowedToAccessScope({
+                accessControlService: this.accessControlService,
+                disableScopeAccessControl: this.disableScopeAccessControl,
+                user,
+                scope,
+            });
+        }
 
         @Get(`/preview{/:contentHash}/${focusImageUrl}`)
         async previewFocusCroppedImage(
@@ -74,7 +87,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            if (file.scope !== undefined && !this.isAllowed(user, file.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -104,7 +117,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            if (file.scope !== undefined && !this.isAllowed(user, file.scope)) {
                 throw new ForbiddenException();
             }
 
