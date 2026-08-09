@@ -7,7 +7,7 @@ import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DAM_DISABLE_SCOPE_ACCESS_CONTROL } from "../dam.constants";
-import { isAllowedToAccessScope } from "../is-allowed-to-access-scope";
+import { isAllowedToAccessScope } from "../scope-access-control";
 import { DamScopeInterface } from "../types";
 import { FoldersService } from "./folders.service";
 

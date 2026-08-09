@@ -1,8 +1,10 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Logger, Module, Type, ValueProvider } from "@nestjs/common";
+import { DynamicModule, Global, Inject, Logger, Module, type OnModuleInit, Optional, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { FileValidationService } from "../file-utils/file-validation.service";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
+import type { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { damDefaultAcceptedMimetypes } from "./common/mimeTypes/dam-default-accepted-mimetypes";
 import { DamConfig, damDefaultBasePath } from "./dam.config";
@@ -23,6 +25,7 @@ import { createFoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
 import { ImageCropArea } from "./images/entities/image-crop-area.entity";
+import { assertScopeAccessControlIsConfigured } from "./scope-access-control";
 import { DamScopeInterface } from "./types";
 
 interface DamFilesModuleOptions {
@@ -42,8 +45,26 @@ interface DamFilesModuleOptions {
 
 @Global()
 @Module({})
-export class DamFilesModule {
+export class DamFilesModule implements OnModuleInit {
     private static registered = false;
+
+    constructor(
+        @Inject(DAM_DISABLE_SCOPE_ACCESS_CONTROL) private readonly disableScopeAccessControl: boolean,
+        @Optional() @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService?: AccessControlServiceInterface,
+    ) {}
+
+    onModuleInit(): void {
+        assertScopeAccessControlIsConfigured({
+            accessControlService: this.accessControlService,
+            disableScopeAccessControl: this.disableScopeAccessControl,
+        });
+
+        if (this.disableScopeAccessControl) {
+            new Logger(DamFilesModule.name).warn(
+                "Scope-based access control is disabled (disableScopeAccessControl = true). The DAM will not check scopes on its REST endpoints, and its GraphQL resolvers are only as protected as the guards you register yourself.",
+            );
+        }
+    }
 
     static register({ damConfig: damConfigOptions, Scope, Folder, File, disableScopeAccessControl = false }: DamFilesModuleOptions): DynamicModule {
         // The module is global and declares the DAM file and folder routes. DamModule registers it internally, so registering
@@ -57,12 +78,6 @@ export class DamFilesModule {
 
         if (File.name !== FILE_ENTITY) {
             throw new Error(`DamModule: Your File entity must be named ${FILE_ENTITY}`);
-        }
-
-        if (disableScopeAccessControl) {
-            new Logger(DamFilesModule.name).warn(
-                "Scope-based access control is disabled (disableScopeAccessControl = true). The DAM endpoints will not perform scope checks — make sure they are protected by your own authentication guard.",
-            );
         }
 
         const damConfig: DamConfig = {

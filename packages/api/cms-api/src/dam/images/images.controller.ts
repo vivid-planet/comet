@@ -35,7 +35,7 @@ import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, DAM_DISABLE_SCOPE_ACCESS_CONTROL } from "../dam.constants";
 import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
-import { isAllowedToAccessScope } from "../is-allowed-to-access-scope";
+import { isAllowedToAccessScope } from "../scope-access-control";
 import { DamScopeInterface } from "../types";
 import { HashImageParams, ImageParams } from "./dto/image.params";
 import { ImagesService } from "./images.service";

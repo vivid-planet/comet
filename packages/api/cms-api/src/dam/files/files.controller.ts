@@ -38,7 +38,7 @@ import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, DAM_DISABLE_SCOPE_ACCESS_CONTROL } from "../dam.constants";
-import { isAllowedToAccessScope } from "../is-allowed-to-access-scope";
+import { isAllowedToAccessScope } from "../scope-access-control";
 import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
