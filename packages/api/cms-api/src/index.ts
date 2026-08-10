@@ -192,7 +192,6 @@ export { DamFileImage } from "./dam/files/entities/file-image.entity";
 export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
 export { FilesService } from "./dam/files/files.service";
 export { FoldersService } from "./dam/files/folders.service";
-export { DamDominantColorService } from "./dam/images/dam-dominant-color.service";
 export { ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
 export { ImageCropAreaInput } from "./dam/images/dto/image-crop-area.input";

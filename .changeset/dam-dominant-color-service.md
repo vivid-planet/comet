@@ -2,8 +2,8 @@
 "@comet/cms-api": minor
 ---
 
-Add `DamDominantColorService`
+Deprecate `FilesService.calculateDominantColor`
 
-Computing the dominant color of an image was the only part of `FilesService` that used imgproxy. It now lives in `DamDominantColorService`, which is the only DAM service that depends on `ImgproxyService`.
+Computing the dominant color of an image was the only part of `FilesService` that used imgproxy. It moved to an internal service that `DamImagesModule` provides, so file handling no longer depends on imgproxy.
 
-`FilesService.calculateDominantColor` remains available as a deprecated delegator.
+`FilesService.calculateDominantColor` returns the color when `DamImagesModule` is registered, and `undefined` when it is not.
