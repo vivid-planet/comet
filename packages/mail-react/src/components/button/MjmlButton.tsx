@@ -133,8 +133,6 @@ registerStyles(
     css`
         .mjmlButton--fullWidth a {
             display: block !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
             text-align: center !important;
         }
     `,

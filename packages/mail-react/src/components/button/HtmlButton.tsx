@@ -54,8 +54,6 @@ export function HtmlButton({
 
     const anchorStyle: CSSProperties = {
         display: fullWidth ? "block" : "inline-block",
-        boxSizing: fullWidth ? "border-box" : undefined,
-        width: fullWidth ? "100%" : undefined,
         backgroundColor,
         backgroundImage: getDefaultOrUndefined(mergedStyles.backgroundImage),
         color: getDefaultOrUndefined(mergedStyles.color),
