@@ -1,5 +1,24 @@
 # @comet/admin-date-time
 
+## 10.0.0-beta.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/admin-date-time` to `@dextinity/admin-date-time`
+
+    Update the dependency in `package.json` and all imports.
+
+    **Breaking changes**
+    - Rename the theme component prefix from `CometAdmin` to `DextinityAdmin`. This affects `components` overrides passed to `createDextinityTheme` and the generated CSS class names
+
+### Patch Changes
+
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [085b9ac]
+    - @dextinity/admin-icons@10.0.0-beta.0
+    - @dextinity/admin@10.0.0-beta.0
+
 ## 9.3.0
 
 ### Patch Changes

@@ -28,5 +28,31 @@
     "@dextinity/site-react": "9.3.0",
     "dextinity-storybook": "1.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "add-theme-list-marker-tokens",
+    "kubernetes-dextinity-labels",
+    "mail-react-full-width-button-overflow",
+    "rename-admin-babel-preset-to-dextinity",
+    "rename-admin-color-picker-to-dextinity",
+    "rename-admin-date-time-to-dextinity",
+    "rename-admin-generator-to-dextinity",
+    "rename-admin-icons-to-dextinity",
+    "rename-admin-rte-to-dextinity",
+    "rename-admin-to-dextinity",
+    "rename-agent-features-to-dextinity",
+    "rename-api-generator-to-dextinity",
+    "rename-brevo-admin-to-dextinity",
+    "rename-brevo-api-to-dextinity",
+    "rename-cli-to-dextinity",
+    "rename-cms-admin-to-dextinity",
+    "rename-cms-api-to-dextinity",
+    "rename-eslint-config-to-dextinity",
+    "rename-eslint-plugin-to-dextinity",
+    "rename-mail-react-to-dextinity",
+    "rename-site-nextjs-to-dextinity",
+    "rename-site-react-to-dextinity",
+    "toggle-button-group-field-disabled",
+    "user-content-scopes-count-dataloader",
+    "user-permissions-default-permissions-tab"
+  ]
 }

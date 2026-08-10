@@ -1,5 +1,40 @@
 # @comet/mail-react
 
+## 10.0.0-beta.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/mail-react` to `@dextinity/mail-react`
+
+    Update the dependency in `package.json` and all imports:
+
+    ```diff
+    - import { MjmlPixelImageBlock } from "@comet/mail-react";
+    + import { MjmlPixelImageBlock } from "@dextinity/mail-react";
+    ```
+
+### Minor Changes
+
+- 6a50452: Add `theme.list.unorderedMarker` and `theme.list.orderedMarker` for the markers of the lists the RichText block renders
+
+    Each marker is either a fixed node or a function of the item's zero-based `index` in its own list and that list's `depth`:
+
+    ```tsx
+    const theme = createTheme({
+        list: {
+            unorderedMarker: ({ depth }) => ["▪", "–", "·"][depth % 3],
+            // 97 is the code of "a", so nested items are lettered a., b., c.
+            orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `${String.fromCharCode(97 + index)}.`),
+        },
+    });
+    ```
+
+### Patch Changes
+
+- af14a71: Fix the full-width button overflowing its container in some webmail clients
+
+    A `MjmlButton` or `HtmlButton` with `fullWidth` set rendered wider than the content around it, reaching past the edge of the mail body.
+
 ## 9.3.0
 
 ### Minor Changes
