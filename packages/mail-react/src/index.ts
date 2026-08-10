@@ -47,6 +47,8 @@ export type {
     DividerStyles,
     DividerVariants,
     DividerVariantStyles,
+    ListMarker,
+    ListMarkerOptions,
     TextStyles,
     TextVariants,
     TextVariantStyles,
@@ -57,6 +59,7 @@ export type {
     ThemeButton,
     ThemeColors,
     ThemeDivider,
+    ThemeList,
     ThemeSizes,
     ThemeText,
 } from "./theme/themeTypes.js";

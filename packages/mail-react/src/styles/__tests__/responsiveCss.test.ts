@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { createBreakpoint } from "../../theme/createBreakpoint.js";
 import type { ResponsiveValue } from "../../theme/responsiveValue.js";
 import type { ThemeBreakpoints } from "../../theme/themeTypes.js";
-import { generateResponsiveVariantCss, type ResponsiveVariantProperties } from "../generateResponsiveVariantCss.js";
+import { generateResponsiveVariantCss, type ResponsiveVariantProperties } from "../responsiveCss.js";
 
 const breakpoints: ThemeBreakpoints = { default: createBreakpoint(600), mobile: createBreakpoint(480) };
 const mobileMediaQuery = "@media (max-width: 479px)";

@@ -10,7 +10,7 @@ A Dextinity application consists of multiple processes, such as:
 - [a frontend site application](packages-tools#sitePackage)
 - type generators
 
-We recommend using a process manager to avoid starting all these processes manually. Luckily, the steps in the [installation section](creating-a-project#installation) automatically installed the package: [@vivid-planet/dev-process-manager](https://github.com/vivid-planet/dev-process-manager).
+We recommend using a process manager to avoid starting all these processes manually. Luckily, the steps in the [installation section](creating-a-project#installation) automatically installed the package: [dev-process-manager](https://dev-process-manager.com/).
 
 Executing the following command starts all processes required to run a [Dextinity application](application-structure):
 

@@ -22,8 +22,13 @@ import { slugifyFilename } from "../../file-utils/files.utils";
 import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
+<<<<<<< HEAD
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { DextinityImageResolutionException } from "../common/errors/image-resolution.exception";
+=======
+import { contentScopesAreEqual } from "../../user-permissions/content-scopes-are-equal";
+import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
+>>>>>>> main
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
@@ -129,7 +134,6 @@ export class FilesService {
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
-        private readonly contentScopeService: ContentScopeService,
         private readonly entityManager: EntityManager,
     ) {}
 
@@ -346,8 +350,7 @@ export class FilesService {
         const updatedFiles = [];
 
         for (const file of files) {
-            // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (targetFolder?.scope !== undefined && !this.contentScopeService.scopesAreEqual(file.scope, targetFolder.scope)) {
+            if (targetFolder?.scope !== undefined && !contentScopesAreEqual(file.scope, targetFolder.scope)) {
                 throw new Error("Target folder scope doesn't match file scope");
             }
 

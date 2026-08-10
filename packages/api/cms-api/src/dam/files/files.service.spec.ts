@@ -40,7 +40,6 @@ function createServiceWithMockQueryBuilder() {
         null as never, // DAM_CONFIG
         null as never, // imgproxyService
         null as never, // orm
-        null as never, // contentScopeService
         null as never, // entityManager
     );
 

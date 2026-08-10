@@ -43,10 +43,27 @@ const theme = createTheme({
     sizes: {
         contentIndentation: { default: 40, tablet: 30, mobile: 20 },
     },
+    list: {
+        indent: { default: 24, tablet: 16, mobile: 8 },
+    },
 });
 ```
 
 The `default` key provides the base value (rendered inline). Other keys generate media query overrides automatically.
+
+### List Markers
+
+`list.unorderedMarker` and `list.orderedMarker` set the markers of the lists the RichText block renders: a fixed node, or a function receiving the item's zero-based `index` and the `depth` of its list. Use plain HTML and React elements, not MJML components:
+
+```tsx
+const theme = createTheme({
+    list: {
+        unorderedMarker: ({ depth }) => ["▪", "–", "·"][depth % 3],
+        // 97 is the code of "a", so nested items are lettered a., b., c.
+        orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `${String.fromCharCode(97 + index)}.`),
+    },
+});
+```
 
 ---
 
@@ -279,13 +296,13 @@ Themed text for use inside ending tags (`MjmlText`, `MjmlRaw`) or custom HTML st
 **CSS classes:** `.htmlText`, `.htmlText--{variant}`, `.htmlText--bottomSpacing`.
 
 ```tsx
-<MjmlRaw>
-    <table>
+<MjmlColumn>
+    <MjmlRaw>
         <tr>
-            <HtmlText variant="body">Themed text inside a raw table</HtmlText>
+            <HtmlText variant="body">Themed text in a row of the column's table</HtmlText>
         </tr>
-    </table>
-</MjmlRaw>
+    </MjmlRaw>
+</MjmlColumn>
 
 <MjmlText>
     <HtmlText element="div" variant="caption">Rendered as a div</HtmlText>

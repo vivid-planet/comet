@@ -3,6 +3,7 @@ import type { Renderers, TextBlockRenderFn } from "redraft";
 
 import { HtmlInlineLink } from "../../components/inlineLink/HtmlInlineLink.js";
 import type { RichTextBlockTypeProps, RichTextInlineRenderer, RichTextLinkHrefResolver } from "./common.js";
+import { RichTextList } from "./RichTextList.js";
 
 export type BlockTextProps = PropsWithChildren<
     RichTextBlockTypeProps & {
@@ -88,21 +89,24 @@ function createTextBlockRenderFn({ blockTextComponent: BlockText, blockTypeProps
 }
 
 function createListBlockRenderFn({
-    listElement: ListElement,
+    ordered,
     blockTextComponent: BlockText,
     blockTypeProps,
     lastBlockKey,
-}: CreateBlockRenderFnOptions & { listElement: "ul" | "ol" }): TextBlockRenderFn {
-    return (children, { keys }) => (
-        <BlockText key={keys.join("-")} bottomSpacing={!keys.includes(lastBlockKey)} {...blockTypeProps}>
-            {/* Vertical margins are removed so the spacing between blocks comes from the theme's bottomSpacing alone. */}
-            <ListElement className="richTextBlock__list" style={{ marginTop: 0, marginBottom: 0 }}>
-                {children.map((child, index) => (
-                    <li key={keys[index]} className="richTextBlock__listItem">
-                        {renderWithLineBreaks(child)}
-                    </li>
-                ))}
-            </ListElement>
+}: CreateBlockRenderFnOptions & { ordered: boolean }): TextBlockRenderFn {
+    return (children, { keys, depth }) => (
+        <BlockText
+            key={keys.join("-")}
+            bottomSpacing={false} // The list holds this space itself — applying it here too would double it.
+            {...blockTypeProps}
+        >
+            <RichTextList
+                ordered={ordered}
+                variant={blockTypeProps.variant}
+                bottomSpacing={!keys.includes(lastBlockKey)}
+                depth={depth}
+                items={children.map((child, index) => ({ key: keys[index], content: renderWithLineBreaks(child) }))}
+            />
         </BlockText>
     );
 }
@@ -137,7 +141,7 @@ export function createRichTextRenderers({
 
     for (const listBlockType of listBlockTypes) {
         blocks[listBlockType] = createListBlockRenderFn({
-            listElement: listBlockType === "unordered-list-item" ? "ul" : "ol",
+            ordered: listBlockType === "ordered-list-item",
             blockTextComponent,
             blockTypeProps: blockTypes[listBlockType] ?? {},
             lastBlockKey,

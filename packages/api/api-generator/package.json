@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/api-generator",
     "version": "9.2.2",
     "description": "Dextinity API Generator CLI tool",
+=======
+    "name": "@comet/api-generator",
+    "version": "9.3.0",
+    "description": "Comet API Generator CLI tool",
+>>>>>>> main
     "repository": {
         "directory": "packages/api/api-generator",
         "type": "git",
@@ -50,7 +56,7 @@
         "@mikro-orm/core": "^6.6.14",
         "@mikro-orm/postgresql": "^6.6.14",
         "@nestjs/graphql": "^13.4.0",
-        "@types/node": "^24.12.4",
+        "@types/node": "^24.13.3",
         "@types/pluralize": "^0.0.33",
         "class-validator": "^0.14.3",
         "eslint": "^9.39.4",
