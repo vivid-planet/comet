@@ -173,6 +173,50 @@ describe("createTipTapRichTextBlock with migrateFromDraftJs", () => {
         });
     });
 
+    describe("textBlockStyleMap", () => {
+        const block = createTipTapRichTextBlock(
+            {
+                textBlockStyles: [
+                    { name: "headline450", appliesTo: ["heading-2"] },
+                    { name: "paragraph200", appliesTo: ["paragraph"] },
+                ],
+                migrateFromDraftJs: {
+                    textBlockStyleMap: {
+                        "paragraph-small": "paragraph200",
+                        "headline-450": { textBlockType: "heading-2", textBlockStyle: "headline450" },
+                    },
+                },
+            },
+            "MigratedRichTextTextBlockStyles",
+        );
+
+        it("converts a custom block type to a heading keeping both level and textBlockStyle", () => {
+            const data = block.blockDataFactory({
+                draftContent: {
+                    blocks: [draftBlock({ type: "headline-450", text: "Title" })],
+                    entityMap: {},
+                },
+            });
+            expect(data.tipTapContent).toEqual({
+                type: "doc",
+                content: [{ type: "heading", attrs: { level: 2, textBlockStyle: "headline450" }, content: [{ type: "text", text: "Title" }] }],
+            });
+        });
+
+        it("converts a custom block type to a styled paragraph", () => {
+            const data = block.blockDataFactory({
+                draftContent: {
+                    blocks: [draftBlock({ type: "paragraph-small", text: "small" })],
+                    entityMap: {},
+                },
+            });
+            expect(data.tipTapContent).toEqual({
+                type: "doc",
+                content: [{ type: "paragraph", attrs: { textBlockStyle: "paragraph200" }, content: [{ type: "text", text: "small" }] }],
+            });
+        });
+    });
+
     describe("maxTextBlocks fallback", () => {
         const block = createTipTapRichTextBlock({ maxTextBlocks: 2, migrateFromDraftJs: true }, "MigratedRichTextMaxBlocks");
 
