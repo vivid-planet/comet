@@ -19,12 +19,19 @@ interface DamModuleOptions {
 @Global()
 @Module({})
 export class DamModule {
+    private static registered = false;
+
     static register({
         Scope,
         Folder = createFolderEntity({ Scope }),
         File = createFileEntity({ Scope, Folder }),
         ...options
     }: DamModuleOptions): DynamicModule {
+        if (DamModule.registered) {
+            throw new Error("DamModule has already been registered. Make sure to register it only once in your application.");
+        }
+        DamModule.registered = true;
+
         const damConfig = {
             ...options.damConfig,
             basePath: options.damConfig.basePath ?? "dam",

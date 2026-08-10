@@ -35,7 +35,18 @@ interface DamFilesModuleOptions {
 @Global()
 @Module({})
 export class DamFilesModule {
+    private static registered = false;
+
     static register({ damConfig, Scope, Folder, File }: DamFilesModuleOptions): DynamicModule {
+        // The module is global and declares the DAM file and folder routes. DamModule registers it internally, so registering
+        // both would mount those routes twice.
+        if (DamFilesModule.registered) {
+            throw new Error(
+                "DamFilesModule has already been registered. It is registered by DamModule, so register either DamModule or DamFilesModule, not both.",
+            );
+        }
+        DamFilesModule.registered = true;
+
         if (File.name !== FILE_ENTITY) {
             throw new Error(`DamModule: Your File entity must be named ${FILE_ENTITY}`);
         }

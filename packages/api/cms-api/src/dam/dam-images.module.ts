@@ -17,7 +17,18 @@ interface DamImagesModuleOptions {
 @Global()
 @Module({})
 export class DamImagesModule {
+    private static registered = false;
+
     static register({ damBasePath }: DamImagesModuleOptions): DynamicModule {
+        // The module is global and declares the DAM image routes. DamModule registers it internally, so registering both would
+        // mount those routes twice.
+        if (DamImagesModule.registered) {
+            throw new Error(
+                "DamImagesModule has already been registered. It is registered by DamModule, so register either DamModule or DamImagesModule, not both.",
+            );
+        }
+        DamImagesModule.registered = true;
+
         return {
             module: DamImagesModule,
             providers: [
