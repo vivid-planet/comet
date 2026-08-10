@@ -47,7 +47,7 @@ import ProductsHandmadePage from "@src/products/ProductsPage";
 import { ProductTagsPage as ProductTagsHandmadePage } from "@src/products/tags/ProductTagsPage";
 import { RedirectsPage } from "@src/redirects/RedirectsPage";
 import type { ContentScope } from "@src/site-configs";
-import { EditSiteSettingsPage } from "@src/site-settings/EditSiteSettingsPage";
+import { EditSiteSettingsPage } from "@src/siteSettings/EditSiteSettingsPage";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
