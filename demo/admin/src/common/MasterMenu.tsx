@@ -195,7 +195,7 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                 },
                 {
                     type: "route",
-                    primary: <FormattedMessage id="menu.project-snips.siteSettings" defaultMessage="Site Settings" />,
+                    primary: <FormattedMessage id="menu.project-snips.siteSettings" defaultMessage="Site settings" />,
                     route: {
                         path: "/project-snips/site-settings",
                         component: EditSiteSettingsPage,
