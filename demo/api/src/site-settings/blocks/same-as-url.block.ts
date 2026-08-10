@@ -1,4 +1,5 @@
 import { BlockData, BlockField, BlockInput, blockInputToData, createBlock } from "@comet/cms-api";
+import { Transform } from "class-transformer";
 import { IsUrl, ValidateIf } from "class-validator";
 
 class SameAsUrlBlockData extends BlockData {
@@ -8,6 +9,7 @@ class SameAsUrlBlockData extends BlockData {
 
 class SameAsUrlBlockInput extends BlockInput {
     @BlockField()
+    @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
     @ValidateIf((input: SameAsUrlBlockInput) => Boolean(input.url))
     @IsUrl()
     url: string;

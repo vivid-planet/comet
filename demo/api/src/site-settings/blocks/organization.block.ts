@@ -43,6 +43,7 @@ class OrganizationBlockInput extends BlockInput {
     name: string;
 
     @BlockField()
+    @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
     @ValidateIf((input: OrganizationBlockInput) => Boolean(input.url))
     @IsUrl()
     url: string;
