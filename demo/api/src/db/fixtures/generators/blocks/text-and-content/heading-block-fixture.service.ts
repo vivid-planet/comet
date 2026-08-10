@@ -10,12 +10,13 @@ export class HeadingBlockFixtureService {
     constructor(private readonly richTextBlockFixtureService: RichTextBlockFixtureService) {}
 
     async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof HeadingBlock>> {
-        const possibleTypes = ["h1", "h2", "h3", "h4", "subHeadlineMedium", "subHeadlineSmall"];
+        const possibleHeadlineTypes = ["header-one", "header-two", "header-three", "header-four", "header-five", "header-six"];
 
         const eyebrowBlock = {
             key: faker.string.uuid(),
             text: faker.lorem.words({ min: 3, max: 9 }),
-            type: faker.helpers.arrayElement(possibleTypes),
+            // The eyebrow rich text doesn't support block types, its size follows the headline size
+            type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
             entityRanges: [],
@@ -25,7 +26,7 @@ export class HeadingBlockFixtureService {
         const headingBlock = {
             key: faker.string.uuid(),
             text: faker.lorem.words({ min: 3, max: 9 }),
-            type: faker.helpers.arrayElement(possibleTypes),
+            type: faker.helpers.arrayElement(possibleHeadlineTypes),
             depth: 0,
             inlineStyleRanges: [],
             entityRanges: [],

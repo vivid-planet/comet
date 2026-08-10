@@ -156,6 +156,7 @@
     &--eyebrow600 {
         font-size: 20px;
         line-height: 20px;
+        font-weight: 700;
         margin-bottom: 8px;
 
         @media (min-width: $breakpoint-sm) {
@@ -177,6 +178,7 @@
     &--eyebrow550 {
         font-size: 18px;
         line-height: 18px;
+        font-weight: 700;
         margin-bottom: 4px;
 
         @media (min-width: $breakpoint-sm) {
@@ -198,6 +200,7 @@
     &--eyebrow500 {
         font-size: 16px;
         line-height: 16px;
+        font-weight: 700;
         margin-bottom: 4px;
 
         @media (min-width: $breakpoint-sm) {
@@ -219,6 +222,7 @@
     &--eyebrow450 {
         font-size: 13px;
         line-height: 13px;
+        font-weight: 700;
         margin-bottom: 4px;
 
         @media (min-width: $breakpoint-sm) {
