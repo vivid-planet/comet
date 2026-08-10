@@ -44,6 +44,7 @@ function HtmlBlockText({ bottomSpacing, variant, className, children, ...stylePr
 interface DraftBlock {
     key: string;
     text: string;
+    depth?: number;
 }
 
 function isDraftBlock(block: unknown): block is DraftBlock {
@@ -51,9 +52,11 @@ function isDraftBlock(block: unknown): block is DraftBlock {
         return false;
     }
 
-    const { key, text } = block;
+    const hasStringKey = typeof block.key === "string";
+    const hasStringText = typeof block.text === "string";
+    const hasOptionalNumberDepth = !("depth" in block) || typeof block.depth === "number";
 
-    return typeof key === "string" && typeof text === "string";
+    return hasStringKey && hasStringText && hasOptionalNumberDepth;
 }
 
 function isDraftContent(draftContent: unknown): draftContent is { blocks: DraftBlock[] } {
@@ -64,6 +67,19 @@ function isDraftContent(draftContent: unknown): draftContent is { blocks: DraftB
     const { blocks } = draftContent;
 
     return Array.isArray(blocks) && blocks.every(isDraftBlock);
+}
+
+/** `redraft` throws when the first block is nested, and reports a depth deeper than the level it nests at. */
+function withoutSkippedDepthLevels(blocks: DraftBlock[]): DraftBlock[] {
+    let deepestAllowedDepth = 0;
+
+    return blocks.map((block) => {
+        const depth = Math.min(block.depth ?? 0, deepestAllowedDepth);
+
+        deepestAllowedDepth = depth + 1;
+
+        return { ...block, depth };
+    });
 }
 
 interface RenderRichTextContentOptions {
@@ -88,7 +104,7 @@ function renderRichTextContent({ draftContent, blockTypes, linkTypes, inline, bl
 
     const renderers = createRichTextRenderers({ blockTypes, linkTypes, inline, blockTextComponent, lastBlockKey });
 
-    return redraft({ ...draftContent, blocks: blocksWithText }, renderers);
+    return redraft({ ...draftContent, blocks: withoutSkippedDepthLevels(blocksWithText) }, renderers);
 }
 
 /**
