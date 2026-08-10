@@ -40,7 +40,7 @@ const config = {
             ({
                 docs: {
                     sidebarPath: require.resolve("./sidebars.js"),
-                    editUrl: "https://github.com/vivid-planet/comet/edit/main/docs/",
+                    editUrl: "https://github.com/vivid-planet/dextinity/edit/main/docs/",
                 },
                 blog: {
                     showReadingTime: true,
@@ -74,7 +74,7 @@ const config = {
                         label: "Storybook",
                     },
                     {
-                        href: "https://github.com/vivid-planet/comet",
+                        href: "https://github.com/vivid-planet/dextinity",
                         position: "right",
                         label: "GitHub",
                     },

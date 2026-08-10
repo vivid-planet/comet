@@ -12,7 +12,7 @@ Add an `agent-features.json` file at the project root containing the external re
 
 ```json
 {
-    "repos": ["https://github.com/vivid-planet/comet.git"]
+    "repos": ["https://github.com/vivid-planet/dextinity.git"]
 }
 ```
 
@@ -94,7 +94,7 @@ You can install skills and rules from external git repositories. This allows you
 
 ```json
 {
-    "repos": ["https://github.com/vivid-planet/comet.git", "https://github.com/org/other-features.git#main"]
+    "repos": ["https://github.com/vivid-planet/dextinity.git", "https://github.com/org/other-features.git#main"]
 }
 ```
 
@@ -123,8 +123,8 @@ Installing 1 skill from local skills/...
   Symlinked: code-style
 Installing 1 skill from node_modules some-tool (skills/)...
   Symlinked: tool-docs
-Installing 2 skills from external https://github.com/vivid-planet/comet.git (skills/)...
-  CONFLICT: "code-style" from external https://github.com/vivid-planet/comet.git (skills/) skipped (already installed from a higher-priority source)
+Installing 2 skills from external https://github.com/vivid-planet/dextinity.git (skills/)...
+  CONFLICT: "code-style" from external https://github.com/vivid-planet/dextinity.git (skills/) skipped (already installed from a higher-priority source)
   Copied: api-conventions
 Installing 1 rule from local rules/...
   Symlinked: naming-conventions.md

@@ -339,7 +339,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                             const block = blockConfigNormalized[key].block[0];
 
                             // @TODO: change literal string "Settings" on next line to: <FormattedMessage id="dextinity.blocks.createCompositeBlock.settings" defaultMessage="Settings" />
-                            // when https://github.com/vivid-planet/comet/pull/340 is fixed
+                            // when https://github.com/vivid-planet/dextinity/pull/340 is fixed
                             return (
                                 <StackPage key={key} name={key} title={title ? title : isBlockInterface(block) ? block.displayName : "Settings"}>
                                     {blockAdminComponents[key]}

@@ -7,7 +7,7 @@
     "repository": {
         "directory": "packages/mail-react",
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet"
+        "url": "https://github.com/vivid-planet/dextinity"
     },
     "exports": {
         ".": "./lib/index.js",
