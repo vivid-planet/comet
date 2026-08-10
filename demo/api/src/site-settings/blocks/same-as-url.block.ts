@@ -1,5 +1,5 @@
 import { BlockData, BlockField, BlockInput, blockInputToData, createBlock } from "@comet/cms-api";
-import { IsUrl } from "class-validator";
+import { IsUrl, ValidateIf } from "class-validator";
 
 class SameAsUrlBlockData extends BlockData {
     @BlockField()
@@ -8,6 +8,7 @@ class SameAsUrlBlockData extends BlockData {
 
 class SameAsUrlBlockInput extends BlockInput {
     @BlockField()
+    @ValidateIf((input: SameAsUrlBlockInput) => Boolean(input.url))
     @IsUrl()
     url: string;
 
