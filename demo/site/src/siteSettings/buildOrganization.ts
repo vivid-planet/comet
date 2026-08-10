@@ -1,6 +1,14 @@
-import { generateImageUrl } from "@comet/site-nextjs";
+import { calculateInheritAspectRatio, generateImageUrl } from "@comet/site-nextjs";
 import type { DamImageBlockData, OrganizationBlockData } from "@src/blocks.generated";
+import cometConfig from "@src/comet-config.json" with { type: "json" };
 import type { Organization, WithContext } from "schema-dts";
+
+const validImageWidths = [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes].sort((a, b) => a - b);
+
+function getOptimalAllowedImageWidth(desiredWidth: number): number {
+    const largestValidWidth = validImageWidths[validImageWidths.length - 1];
+    return validImageWidths.find((validWidth) => validWidth >= desiredWidth) ?? largestValidWidth;
+}
 
 function toAbsoluteUrl(url: string, siteUrl: string): string {
     return url.startsWith("http") ? url : new URL(url, siteUrl).toString();
@@ -14,8 +22,9 @@ function buildLogoUrl(logo: DamImageBlockData, siteUrl: string): string | undefi
     }
 
     if ("urlTemplate" in props && props.damFile?.image) {
-        const { width, height } = props.damFile.image;
-        const url = generateImageUrl({ src: props.urlTemplate, width }, width / height);
+        const { image } = props.damFile;
+        const aspectRatio = calculateInheritAspectRatio(image, props.cropArea ?? image.cropArea);
+        const url = generateImageUrl({ src: props.urlTemplate, width: getOptimalAllowedImageWidth(image.width) }, aspectRatio);
         return toAbsoluteUrl(url, siteUrl);
     }
 
