@@ -1,6 +1,6 @@
 import { DynamicModule, Module, Type } from "@nestjs/common";
 
-import { DependentsResolverFactory } from "..";
+import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { FileInterface } from "./files/entities/file.entity";
 
 interface DamDependentsModuleOptions {

@@ -2,9 +2,9 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { damDefaultAcceptedMimetypes } from "..";
 import { FileValidationService } from "../file-utils/file-validation.service";
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
+import { damDefaultAcceptedMimetypes } from "./common/mimeTypes/dam-default-accepted-mimetypes";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
