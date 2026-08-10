@@ -473,3 +473,27 @@ describe("createRichTextBlock — lists", () => {
         expect(renderWithTheme(<HtmlRichTextBlock data={data} />, themeWithDefaultVariant)).toContain("richTextBlock__list--variantBody");
     });
 });
+
+describe("createRichTextBlock — draft depths", () => {
+    const { HtmlRichTextBlock } = createRichTextBlock();
+    const depthMarkerTheme = createTheme({ list: { unorderedMarker: ({ depth }) => `L${String(depth)}` } });
+
+    it("renders content that starts with a nested list item", () => {
+        const data = createBlockData([
+            createDraftBlock({ key: "a", text: "", type: "unordered-list-item" }),
+            createDraftBlock({ key: "b", text: "Item one", type: "unordered-list-item", depth: 1 }),
+        ]);
+
+        expect(renderWithTheme(<HtmlRichTextBlock data={data} />)).toContain("Item one");
+    });
+
+    it("gives the marker the depth of the level its item renders at", () => {
+        const data = createBlockData([
+            createDraftBlock({ key: "a", text: "Item one", type: "unordered-list-item" }),
+            createDraftBlock({ key: "b", text: "Item two", type: "unordered-list-item", depth: 3 }),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, depthMarkerTheme);
+
+        expect(markerTextsInDocumentOrder(markup)).toEqual(["L0", "L1"]);
+    });
+});
