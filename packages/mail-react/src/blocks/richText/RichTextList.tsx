@@ -29,7 +29,7 @@ interface RichTextListProps {
     variant?: VariantName;
     /** When true, the variant's spacing below the block applies below the last item. */
     bottomSpacing?: boolean;
-    /** The nesting level the theme's marker receives. Zero for a list that is not nested. */
+    /** How many lists enclose this one; zero for a list that is not nested. */
     depth: number;
     items: RichTextListItem[];
 }
@@ -73,7 +73,9 @@ export function RichTextList({ ordered, variant, bottomSpacing, depth, items }: 
             className={clsx(
                 "richTextBlock__list",
                 ordered ? "richTextBlock__list--ordered" : "richTextBlock__list--unordered",
-                activeVariant && variantModifier(activeVariant),
+                `richTextBlock__list--depth${String(depth)}`,
+                depth > 0 && "richTextBlock__list--nested",
+                depth === 0 && activeVariant && variantModifier(activeVariant),
             )}
             style={{ borderCollapse: "collapse" }}
         >
