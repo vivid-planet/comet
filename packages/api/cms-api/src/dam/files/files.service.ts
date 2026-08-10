@@ -1,6 +1,6 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw, Utils } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Injectable, Logger, Optional } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, Optional } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
 import { createReadStream } from "fs";
@@ -114,8 +114,6 @@ const withFilesSelect = (
 
 @Injectable()
 export class FilesService {
-    protected readonly logger = new Logger(FilesService.name);
-
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
         @InjectRepository(DamMediaAlternative) private readonly damMediaAlternativesRepository: EntityRepository<DamMediaAlternative>,
