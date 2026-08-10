@@ -4,9 +4,19 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MjmlSection } from "../../../components/section/MjmlSection.js";
 import { registerStyles } from "../../../styles/registerStyles.js";
 import { createTheme } from "../../../theme/createTheme.js";
+import { ThemeProvider } from "../../../theme/ThemeProvider.js";
+import type { Theme } from "../../../theme/themeTypes.js";
 import { css } from "../../../utils/css.js";
 import { createRichTextBlock } from "../createRichTextBlock.js";
-import { exampleBlockData, headlinesOnlyBlockData, highlightBlockData, listSpacingBlockData, listVarietyBlockData } from "./exampleBlockData.js";
+import {
+    bulletedListBlockData,
+    exampleBlockData,
+    headlinesOnlyBlockData,
+    highlightBlockData,
+    listSpacingBlockData,
+    listVarietyBlockData,
+    nestedListBlockData,
+} from "./exampleBlockData.js";
 
 const { HtmlRichTextBlock } = createRichTextBlock();
 
@@ -145,6 +155,92 @@ export const ListSpacingPerVariant: Story = {
                     <tr>
                         <td>
                             <HtmlPerVariantRichTextBlock data={listSpacingBlockData} />
+                        </td>
+                    </tr>
+                </MjmlRaw>
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const listMarkersTheme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: { body: { fontSize: "16px", lineHeight: "24px", bottomSpacing: "16px" } },
+    },
+    list: {
+        unorderedMarker: "▪",
+        // 65 is the code of "A", so the items are lettered A., B., C.
+        orderedMarker: ({ index }) => `${String.fromCharCode(65 + index)}.`,
+    },
+});
+
+const elementMarkerTheme: Theme = {
+    ...listMarkersTheme,
+    list: { ...listMarkersTheme.list, unorderedMarker: <span style={{ color: "#c0392b", fontWeight: 700 }}>➔</span> },
+};
+
+/** The theme sets `list.unorderedMarker` to `▪` and builds `list.orderedMarker` from the item's index. The second list's scoped theme uses a styled element instead of a character. */
+export const ListMarkers: Story = {
+    parameters: {
+        theme: listMarkersTheme,
+    },
+    render: () => (
+        <>
+            <MjmlSection indent>
+                <MjmlColumn>
+                    <MjmlRaw>
+                        <tr>
+                            <td>
+                                <HtmlRichTextBlock data={listSpacingBlockData} />
+                            </td>
+                        </tr>
+                    </MjmlRaw>
+                </MjmlColumn>
+            </MjmlSection>
+            <ThemeProvider theme={elementMarkerTheme}>
+                <MjmlSection indent>
+                    <MjmlColumn>
+                        <MjmlRaw>
+                            <tr>
+                                <td>
+                                    <HtmlRichTextBlock data={bulletedListBlockData} />
+                                </td>
+                            </tr>
+                        </MjmlRaw>
+                    </MjmlColumn>
+                </MjmlSection>
+            </ThemeProvider>
+        </>
+    ),
+};
+
+const bulletLadder = ["▪", "–", "·"];
+
+const depthMarkersTheme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: { body: { fontSize: "16px", lineHeight: "24px", bottomSpacing: "16px" } },
+    },
+    list: {
+        unorderedMarker: ({ depth }) => bulletLadder[depth % bulletLadder.length],
+        // 97 is the code of "a", so nested items are lettered a., b., c.
+        orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `${String.fromCharCode(97 + index)}.`),
+    },
+});
+
+/** Both markers vary by `depth`: the bullets cycle through `▪`, `–`, `·`, and nested numbered items are lettered, each nested list starting again at `a.`. */
+export const ListMarkersPerDepth: Story = {
+    parameters: {
+        theme: depthMarkersTheme,
+    },
+    render: () => (
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlRaw>
+                    <tr>
+                        <td>
+                            <HtmlRichTextBlock data={nestedListBlockData} />
                         </td>
                     </tr>
                 </MjmlRaw>

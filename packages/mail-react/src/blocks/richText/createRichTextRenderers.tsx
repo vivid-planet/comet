@@ -94,7 +94,7 @@ function createListBlockRenderFn({
     blockTypeProps,
     lastBlockKey,
 }: CreateBlockRenderFnOptions & { ordered: boolean }): TextBlockRenderFn {
-    return (children, { keys }) => (
+    return (children, { keys, depth }) => (
         <BlockText
             key={keys.join("-")}
             bottomSpacing={false} // The list holds this space itself — applying it here too would double it.
@@ -104,6 +104,7 @@ function createListBlockRenderFn({
                 ordered={ordered}
                 variant={blockTypeProps.variant}
                 bottomSpacing={!keys.includes(lastBlockKey)}
+                depth={depth}
                 items={children.map((child, index) => ({ key: keys[index], content: renderWithLineBreaks(child) }))}
             />
         </BlockText>

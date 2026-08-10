@@ -34,6 +34,10 @@ const theme = createTheme({
     list: {
         indent: 16,
         markerGap: { default: 12, mobile: 8 },
+        unorderedMarker: "▪",
+        // 97 is the code of "a", so nested items are lettered a), b), c)
+        orderedMarker: ({ index, depth }) =>
+            depth === 0 ? `${index + 1})` : `${String.fromCharCode(97 + index)})`,
     },
     colors: {
         background: {

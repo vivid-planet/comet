@@ -21,6 +21,10 @@ function createBlockData(blocks: Array<Record<string, unknown>>, entityMap: Reco
     return { draftContent: { blocks, entityMap } };
 }
 
+function markerTextsInDocumentOrder(markup: string): string[] {
+    return [...markup.matchAll(/richTextBlock__listItemMarker[^>]*>([^<]*)</g)].map(([, marker]) => marker);
+}
+
 const themeWithVariants = createTheme({
     text: {
         variants: {
@@ -363,6 +367,57 @@ describe("createRichTextBlock — lists", () => {
 
         expect(markup.match(/>1\.</g)).toHaveLength(2);
         expect(markup.match(/>2\.</g)).toHaveLength(1);
+    });
+
+    it("takes the marker of each list kind from the theme", () => {
+        const markerTheme = createTheme({
+            list: { unorderedMarker: "▪", orderedMarker: ({ index }) => `${index + 1})` },
+        });
+        const data = createBlockData([
+            ...createListBlocks("unordered-list-item", ["Bulleted item one", "Bulleted item two"]),
+            ...createListBlocks("ordered-list-item", ["Numbered item one", "Numbered item two", "Numbered item three"]),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, markerTheme);
+
+        expect(markerTextsInDocumentOrder(markup)).toEqual(["▪", "▪", "1)", "2)", "3)"]);
+    });
+
+    it("gives the marker function the nesting level of the item's own list", () => {
+        const markerTheme = createTheme({ list: { unorderedMarker: ({ depth }) => `L${depth}` } });
+        const data = createBlockData([
+            createDraftBlock({ key: "top", text: "Top item", type: "unordered-list-item" }),
+            createDraftBlock({ key: "nested", text: "Nested item", type: "unordered-list-item", depth: 1 }),
+            createDraftBlock({ key: "deep", text: "Deep item", type: "unordered-list-item", depth: 2 }),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, markerTheme);
+
+        expect(markup).toContain(">L0<");
+        expect(markup).toContain(">L1<");
+        expect(markup).toContain(">L2<");
+    });
+
+    it("numbers a nested ordered list from its own first item", () => {
+        const markerTheme = createTheme({
+            list: { orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `${String.fromCharCode(97 + index)}.`) },
+        });
+        const data = createBlockData([
+            createDraftBlock({ key: "top-1", text: "Top one", type: "ordered-list-item" }),
+            createDraftBlock({ key: "nested-1", text: "Nested one", type: "ordered-list-item", depth: 1 }),
+            createDraftBlock({ key: "nested-2", text: "Nested two", type: "ordered-list-item", depth: 1 }),
+            createDraftBlock({ key: "top-2", text: "Top two", type: "ordered-list-item" }),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, markerTheme);
+
+        expect(markerTextsInDocumentOrder(markup)).toEqual(["1.", "a.", "b.", "2."]);
+    });
+
+    it("renders an element marker inside the marker cell", () => {
+        const markerTheme = createTheme({ list: { unorderedMarker: <span style={{ color: "#c0392b" }}>▪</span> } });
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, markerTheme);
+        const markerCell = /<td[^>]*richTextBlock__listItemMarker[^>]*>.*?<\/td>/s.exec(markup)?.[0];
+
+        expect(markerCell).toContain('<span style="color:#c0392b">▪</span>');
     });
 
     // Both cells need the styles because the nearest ancestor with a font size can be MJML's column, at zero.

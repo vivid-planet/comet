@@ -8,9 +8,11 @@ import { generateResponsiveTokenCss } from "../../styles/responsiveCss.js";
 import { defaultTheme } from "../../theme/defaultTheme.js";
 import { getDefaultFromResponsiveValue, getDefaultOrUndefined } from "../../theme/responsiveValue.js";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
-import type { TextVariantStyles, Theme, ThemeText, VariantName } from "../../theme/themeTypes.js";
+import type { ListMarker, ListMarkerOptions, TextVariantStyles, Theme, ThemeText, VariantName } from "../../theme/themeTypes.js";
 
-const unorderedMarker = "•";
+function resolveMarker(marker: ListMarker, options: ListMarkerOptions): ReactNode {
+    return typeof marker === "function" ? marker(options) : marker;
+}
 
 // Variant names come from the consumer, so the `variant` prefix keeps them apart from the package's own modifiers.
 function variantModifier(variantName: string): string {
@@ -27,11 +29,13 @@ interface RichTextListProps {
     variant?: VariantName;
     /** When true, the variant's spacing below the block applies below the last item. */
     bottomSpacing?: boolean;
+    /** The nesting level the theme's marker receives. Zero for a list that is not nested. */
+    depth: number;
     items: RichTextListItem[];
 }
 
 /** Renders one draft-js list as a table, because cell padding is the only list indent Outlook applies reliably. */
-export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTextListProps): ReactNode {
+export function RichTextList({ ordered, variant, bottomSpacing, depth, items }: RichTextListProps): ReactNode {
     const theme = useOptionalTheme();
     const outlookTextStyle = useOutlookTextStyle();
 
@@ -98,7 +102,7 @@ export function RichTextList({ ordered, variant, bottomSpacing, items }: RichTex
                                     whiteSpace: "nowrap", // The full-width text cell squeezes this column, so markers such as `10.` must stay on one line.
                                 }}
                             >
-                                {ordered ? `${index + 1}.` : unorderedMarker}
+                                {resolveMarker(ordered ? list.orderedMarker : list.unorderedMarker, { index, depth })}
                             </td>
                             <td className="richTextBlock__listItemText" width="100%" valign="top" style={cellStyle}>
                                 {item.content}
