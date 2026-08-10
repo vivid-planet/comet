@@ -9,7 +9,7 @@ import { type ComponentType, type HTMLAttributes, type ReactNode, useEffect } fr
 import { FormattedMessage } from "react-intl";
 
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
+import { BlockCategory, type BlockInterface, type LinkBlockInterface, type ReadOnlyBlockRenderInterface } from "../types";
 import { ChildBlocksContext } from "./ChildBlocksContext";
 import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
@@ -458,10 +458,8 @@ const TipTapEditor = ({
     );
 };
 
-type TipTapRichTextBlockInterface = BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> & {
-    /** Renders the block's saved state read-only, without an editing UI. */
-    ReadOnlyComponent: ComponentType<{ state: TipTapRichTextBlockState }>;
-};
+type TipTapRichTextBlockInterface = BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> &
+    ReadOnlyBlockRenderInterface<TipTapRichTextBlockState>;
 
 /**
  * @experimental
