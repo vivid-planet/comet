@@ -1,5 +1,49 @@
 # @comet/admin
 
+## 10.0.0-beta.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/admin` to `@dextinity/admin`
+
+    Update the dependency in `package.json` and all imports:
+
+    ```diff
+    - import { MainContent } from "@comet/admin";
+    + import { MainContent } from "@dextinity/admin";
+    ```
+
+    **Breaking changes**
+    - Rename `createCometTheme` to `createDextinityTheme`
+    - Rename the theme component prefix from `CometAdmin` to `DextinityAdmin`. This affects `components` overrides passed to `createDextinityTheme`, the `name` passed to `useThemeProps` in custom components and the generated CSS class names (`.CometAdminClearInputAdornment-root` -> `.DextinityAdminClearInputAdornment-root`)
+    - Rename the CSS variables from `--comet-admin-*` to `--dextinity-admin-*`, for instance, `--comet-admin-master-layout-content-top-spacing` -> `--dextinity-admin-master-layout-content-top-spacing`
+    - Remove the `CometLogo` component. Use `DextinityLogo` from `@dextinity/admin-icons` instead
+
+### Minor Changes
+
+- 085b9ac: Add `disabled` support to `ToggleButtonGroupField`
+
+    Setting `disabled` on the field was accepted but had no effect — every button stayed clickable. It now disables all buttons, and individual options can be disabled by setting `disabled` on the option. When both are set, the field wins — an option cannot re-enable itself.
+
+    **Example**
+
+    ```tsx
+    <ToggleButtonGroupField
+        name="type"
+        options={[
+            { label: "Address", value: "address" },
+            { label: "Coordinates", value: "coordinates", disabled: true },
+        ]}
+    />
+    ```
+
+    `FinalFormToggleButtonGroup` now also supports `sx`, `className`, `slotProps` and theme customization through `DextinityAdminFinalFormToggleButtonGroup`, with the new `FinalFormToggleButtonGroupClassKey` type describing its slots.
+
+### Patch Changes
+
+- Updated dependencies [f843a5e]
+    - @dextinity/admin-icons@10.0.0-beta.0
+
 ## 9.3.0
 
 ### Patch Changes
