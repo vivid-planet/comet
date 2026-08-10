@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { promisify } from "util";
 import { inflate as inflateCallback } from "zlib";
 
@@ -19,7 +19,7 @@ export class DamDominantColorService implements DominantColorCalculatorInterface
     constructor(
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly imgproxyService: ImgproxyService,
-        @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
+        private readonly blobStorageBackendService: BlobStorageBackendService,
     ) {}
 
     async calculateDominantColor(contentHash: string): Promise<string | undefined> {
