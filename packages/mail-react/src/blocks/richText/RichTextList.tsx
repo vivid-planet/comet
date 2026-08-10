@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import type { CSSProperties, ReactNode } from "react";
 
+import { generateResponsiveTextCss } from "../../components/text/generateResponsiveTextCss.js";
 import { useOutlookTextStyle } from "../../components/text/OutlookTextStyleContext.js";
-import { generateResponsiveTextCss } from "../../components/text/textStyles.js";
 import { registerStyles } from "../../styles/registerStyles.js";
 import { generateResponsiveTokenCss } from "../../styles/responsiveCss.js";
 import { defaultTheme } from "../../theme/defaultTheme.js";
