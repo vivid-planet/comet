@@ -1,5 +1,5 @@
 ---
-"@comet/cms-api": patch
+"@dextinity/cms-api": patch
 ---
 
 Improve performance of the `contentScopesCount` field when querying the users list

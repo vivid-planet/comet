@@ -1,5 +1,5 @@
 ---
-"@comet/mail-react": minor
+"@dextinity/mail-react": minor
 ---
 
 Add `theme.list.unorderedMarker` and `theme.list.orderedMarker` for the markers of the lists the RichText block renders

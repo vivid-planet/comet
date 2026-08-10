@@ -1,5 +1,5 @@
 ---
-"@comet/cms-admin": patch
+"@dextinity/cms-admin": patch
 ---
 
 Open the `Permissions` tab by default when editing a user in the `UserPermissionsPage`

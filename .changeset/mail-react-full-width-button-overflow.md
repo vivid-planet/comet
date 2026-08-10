@@ -1,5 +1,5 @@
 ---
-"@comet/mail-react": patch
+"@dextinity/mail-react": patch
 ---
 
 Fix the full-width button overflowing its container in some webmail clients

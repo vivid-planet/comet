@@ -72,12 +72,12 @@ import { CreateProductInput } from "./create-product.input";
 export class UpdateProductInput extends PartialType(CreateProductInput) {}
 ```
 
-## CometValidationException
+## DextinityValidationException
 
-`CometValidationException` is the exception COMET DXP raises when validation fails. It extends `CometException`, the base class for business-logic errors that should be reported back to the client as a `400 Bad Request` rather than logged as a server error. In addition to a message, it carries the list of `ValidationError`s produced by [class-validator](https://github.com/typestack/class-validator):
+`DextinityValidationException` is the exception Dextinity raises when validation fails. It extends `DextinityException`, the base class for business-logic errors that should be reported back to the client as a `400 Bad Request` rather than logged as a server error. In addition to a message, it carries the list of `ValidationError`s produced by [class-validator](https://github.com/typestack/class-validator):
 
 ```ts
-class CometValidationException extends CometException {
+class DextinityValidationException extends DextinityException {
     constructor(
         message: string,
         readonly errors?: ValidationError[],
@@ -87,11 +87,11 @@ class CometValidationException extends CometException {
 
 ### Automatic validation errors
 
-DTO validation failures are turned into a `CometValidationException` by `ValidationExceptionFactory`. Wire it up as the `exceptionFactory` of a NestJS `ValidationPipe` so that every rejected DTO produces a `CometValidationException` instead of the default `BadRequestException`:
+DTO validation failures are turned into a `DextinityValidationException` by `ValidationExceptionFactory`. Wire it up as the `exceptionFactory` of a NestJS `ValidationPipe` so that every rejected DTO produces a `DextinityValidationException` instead of the default `BadRequestException`:
 
 ```ts
 // main.ts
-import { ExceptionFilter, ValidationExceptionFactory } from "@comet/cms-api";
+import { ExceptionFilter, ValidationExceptionFactory } from "@dextinity/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 
 app.useGlobalFilters(new ExceptionFilter(config.debug));
@@ -105,29 +105,29 @@ app.useGlobalPipes(
 );
 ```
 
-For dynamically typed args (for example a scope or an input whose type is only known at runtime), use `DynamicDtoValidationPipe` from `@comet/cms-api`, which is a `ValidationPipe` preconfigured with `ValidationExceptionFactory`.
+For dynamically typed args (for example a scope or an input whose type is only known at runtime), use `DynamicDtoValidationPipe` from `@dextinity/cms-api`, which is a `ValidationPipe` preconfigured with `ValidationExceptionFactory`.
 
 ### Throwing it manually
 
-Throw a `CometValidationException` from a resolver or service for validation rules that can't be expressed with decorators — for example a uniqueness check that requires a database lookup:
+Throw a `DextinityValidationException` from a resolver or service for validation rules that can't be expressed with decorators — for example a uniqueness check that requires a database lookup:
 
 ```ts
-import { CometValidationException } from "@comet/cms-api";
+import { DextinityValidationException } from "@dextinity/cms-api";
 
 if (!(await this.redirectService.isRedirectSourceAvailable(input.source, scope))) {
-    throw new CometValidationException("Validation failed");
+    throw new DextinityValidationException("Validation failed");
 }
 ```
 
 ### Error response
 
-The `ExceptionFilter` catches every `CometException` and converts it into a `400 Bad Request`. For a `CometValidationException`, the collected `ValidationError`s are exposed under `validationErrors`:
+The `ExceptionFilter` catches every `DextinityException` and converts it into a `400 Bad Request`. For a `DextinityValidationException`, the collected `ValidationError`s are exposed under `validationErrors`:
 
 ```json
 {
     "statusCode": 400,
     "message": "Validation failed",
-    "error": "CometValidationException",
+    "error": "DextinityValidationException",
     "validationErrors": [{ "property": "source" }]
 }
 ```

@@ -30,7 +30,7 @@ after the system genuinely can't express what you need.
    same way.
 
 This holds **even when a project's design deliberately differs** from the current library defaults —
-a permanent design decision, not a gap a later library upgrade will close. Prefer the Comet component
+a permanent design decision, not a gap a later library upgrade will close. Prefer the Dextinity component
 or token, and apply that project-specific difference by configuring the theme — not by re-styling
 individual components. Add custom styling only when explicitly instructed, or when no component, prop,
 or token can produce the result.
@@ -492,9 +492,9 @@ import { Delete } from "@dextinity/admin-icons";
 <Delete fontSize="small" color="error" />;
 ```
 
-## Customizing an existing Comet Admin component
+## Customizing an existing Dextinity Admin component
 
-When a Comet Admin component needs to look or behave differently than its defaults, customize it
+When a Dextinity Admin component needs to look or behave differently than its defaults, customize it
 through the mechanisms it already supports: the component's own props, a per-slot `slotProps` prop,
 and theme-level `styleOverrides` and `defaultProps`. A _slot_ is a named inner element of a component;
 only `root` is universal — a component lists its own slot names on its props type. Which mechanism you
@@ -513,9 +513,9 @@ restyling it.
 
 ### Appearance
 
-To change how a Comet component looks, configure the theme rather than the component itself — the core
-principle's rule for a project-specific design difference. `createCometTheme`'s `components` map takes
-a `CometAdmin*` key (MUI components use their `Mui*` key); `styleOverrides` restyles a component's
+To change how a Dextinity component looks, configure the theme rather than the component itself — the core
+principle's rule for a project-specific design difference. `createDextinityTheme`'s `components` map takes
+a `DextinityAdmin*` key (MUI components use their `Mui*` key); `styleOverrides` restyles a component's
 slots and `defaultProps` sets default prop values, such as swapping an icon through `iconMapping`.
 Both apply to every instance, so the deviation stays consistent and is defined in one reviewable place.
 
@@ -532,9 +532,9 @@ const HighlightedContentOverflow = styled(ContentOverflow)`
 `;
 
 // Prefer — configure the theme, applied to every instance
-const theme = createCometTheme({
+const theme = createDextinityTheme({
     components: {
-        CometAdminContentOverflow: {
+        DextinityAdminContentOverflow: {
             styleOverrides: {
                 root: ({ theme }) => ({ backgroundColor: theme.palette.grey[50] }),
             },

@@ -452,7 +452,7 @@ export const TipTapToolbar = ({
                         <ToolbarButton
                             editor={editor}
                             icon={RteUnderlined}
-                            tooltip={<FormattedMessage id="comet.blocks.tipTapRichText.underline.tooltip" defaultMessage="Underline" />}
+                            tooltip={<FormattedMessage id="dextintiy.blocks.tipTapRichText.underline.tooltip" defaultMessage="Underline" />}
                             isActive="underline"
                             onToggle={() => editor.chain().focus().toggleUnderline().run()}
                         />

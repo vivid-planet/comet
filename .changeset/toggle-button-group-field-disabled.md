@@ -1,5 +1,5 @@
 ---
-"@comet/admin": minor
+"@dextinity/admin": minor
 ---
 
 Add `disabled` support to `ToggleButtonGroupField`
@@ -18,4 +18,4 @@ Setting `disabled` on the field was accepted but had no effect — every button 
 />
 ```
 
-`FinalFormToggleButtonGroup` now also supports `sx`, `className`, `slotProps` and theme customization through `CometAdminFinalFormToggleButtonGroup`, with the new `FinalFormToggleButtonGroupClassKey` type describing its slots.
+`FinalFormToggleButtonGroup` now also supports `sx`, `className`, `slotProps` and theme customization through `DextinityAdminFinalFormToggleButtonGroup`, with the new `FinalFormToggleButtonGroupClassKey` type describing its slots.
