@@ -1,0 +1,18 @@
+{
+    "name": "@comet/agent-features",
+    "version": "8.28.2",
+    "description": "Agent features (skills) for Comet projects",
+    "repository": {
+        "directory": "packages/agent-features",
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet"
+    },
+    "license": "BSD-2-Clause",
+    "files": [
+        "skills/**"
+    ],
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    }
+}
