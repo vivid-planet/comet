@@ -28,7 +28,7 @@ export const UserPermissionsPage = () => {
                     <MainContent fullHeight>
                         <UserPermissionsUserGrid
                             rowAction={(params) => (
-                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id} subUrl="permissions">
+                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                     <Edit />
                                 </IconButton>
                             )}
@@ -42,14 +42,14 @@ export const UserPermissionsPage = () => {
                             <MainContent>
                                 <RouterTabs>
                                     <RouterTab
-                                        path=""
+                                        path={isAllowed("userPermissions") ? "/basic-data" : ""}
                                         label={<FormattedMessage id="dextinity.userPermissions.basicData" defaultMessage="Basic Data" />}
                                     >
                                         <UserPermissionsUserPageBasicDataPanel userId={userId} />
                                     </RouterTab>
                                     {isAllowed("userPermissions") && (
                                         <RouterTab
-                                            path="/permissions"
+                                            path=""
                                             label={<FormattedMessage id="dextinity.userPermissions.permissions" defaultMessage="Permissions" />}
                                         >
                                             <UserPermissionsUserPagePermissionsPanel userId={userId} />

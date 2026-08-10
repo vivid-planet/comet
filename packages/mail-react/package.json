@@ -1,6 +1,6 @@
 {
     "name": "@dextinity/mail-react",
-    "version": "9.2.2",
+    "version": "9.3.0",
     "description": "Utilities for building HTML emails with React",
     "license": "BSD-2-Clause",
     "type": "module",
@@ -62,7 +62,7 @@
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.4",
         "npm-run-all2": "^8.0.4",
-        "playwright": "^1.49.1",
+        "playwright": "^1.62.0",
         "prettier": "^3.6.2",
         "react": "^19.2.6",
         "react-dom": "^19.2.6",

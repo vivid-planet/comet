@@ -16,7 +16,7 @@ Two rules hold across every `@dextinity/*` core package in the project, before a
 - **Pinned versions only.** Every core `@dextinity/*` entry must be an exact version (e.g. `8.21.0`), never a range (`^8.21.0`, `~8.21.0`, `>=…`). If you see a caret or tilde on a core package, the project is in a broken state — stop and tell the user.
 - **All core packages on the same version.** Every core `@dextinity/*` package in the project must be pinned to the same version across every `package.json`. There is no supported mix-and-match.
 
-These rules apply only to the core set (packages released together from the Dextinity monorepo). Satellite packages like `@comet/dev-process-manager` are out of scope — see Step 1.
+These rules apply only to the core set (packages released together from the Dextinity monorepo). Any other `@dextinity/*` package a project happens to depend on is out of scope — see Step 1.
 
 ## When to use
 
@@ -60,8 +60,8 @@ grep -n '"@dextinity/' package.json api/package.json admin/package.json \
 
 Notes:
 
-- Not every `@dextinity/*` package follows the core release cadence. Packages that live outside the core monorepo (for example `@comet/dev-process-manager`) may use a different versioning scheme (often `^x.y.z`). **Only** bump packages whose current version matches the core Dextinity version (the one shared by `@dextinity/cms-api`, `@dextinity/admin`, `@dextinity/site-nextjs`, etc.). Leave the others untouched.
-- Use the invariants to tell core from satellite: core packages are all pinned to the same exact version, with no caret or tilde. Anything with a range or a different version is not core — verify before touching it.
+- Not every `@dextinity/*` dependency you find follows the core release cadence. **Only** bump packages whose current version matches the core Dextinity version (the one shared by `@dextinity/cms-api`, `@dextinity/admin`, `@dextinity/site-nextjs`, etc.). Leave the others untouched.
+- Use the invariants to tell core from non-core: core packages are all pinned to the same exact version, with no caret or tilde. Anything with a range or a different version is not core — verify before touching it.
 - If you find core packages on different versions, or any core package using a range (`^`, `~`), the project violates the invariants. Stop and tell the user — don't paper over it by bumping.
 
 Confirm the **current major** from the version string (e.g. `8.20.4` → major `8`).
@@ -100,7 +100,7 @@ grep -n '<OLD_VERSION>' package.json api/package.json admin/package.json \
 
 If every match is a `@dextinity/*` line, you can safely edit each file. If there are non-`@dextinity` matches, edit the `@dextinity` lines individually.
 
-**Do not touch** packages like `@comet/dev-process-manager` that don't share the core version — see Step 1.
+**Do not touch** `@dextinity/*` packages that don't share the core version — see Step 1.
 
 ---
 
@@ -181,11 +181,11 @@ Tell the user:
 
 ## Common pitfalls
 
-| Pitfall                                                       | How to avoid                                                                                        |
-| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Picking a canary/beta as "newest"                             | Filter out any version containing `-` in Step 2.                                                    |
-| Bumping `@comet/dev-process-manager` (or similar) by accident | Only bump packages pinned to the shared core version — see Step 1.                                  |
-| Forgetting the root `package.json`                            | The repo root has its own `package.json` with `@dextinity/cli`. Always include it in the grep.      |
-| Assuming "up to date" means the install did nothing           | It means the lockfile already satisfies the new range. Verify with `grep` against the lockfile.     |
-| Running installs in parallel in a sandbox                     | If `&` backgrounding fails, just run the installs sequentially. Takes a bit longer, works reliably. |
-| Crossing a major version                                      | This skill is minor/patch only. Stop and warn the user.                                             |
+| Pitfall                                               | How to avoid                                                                                        |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Picking a canary/beta as "newest"                     | Filter out any version containing `-` in Step 2.                                                    |
+| Bumping a non-core `@dextinity/*` package by accident | Only bump packages pinned to the shared core version — see Step 1.                                  |
+| Forgetting the root `package.json`                    | The repo root has its own `package.json` with `@dextinity/cli`. Always include it in the grep.      |
+| Assuming "up to date" means the install did nothing   | It means the lockfile already satisfies the new range. Verify with `grep` against the lockfile.     |
+| Running installs in parallel in a sandbox             | If `&` backgrounding fails, just run the installs sequentially. Takes a bit longer, works reliably. |
+| Crossing a major version                              | This skill is minor/patch only. Stop and warn the user.                                             |

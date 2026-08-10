@@ -3,6 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { createTheme } from "../../../theme/createTheme.js";
+import { defaultTheme } from "../../../theme/defaultTheme.js";
+import { getDefaultFromResponsiveValue } from "../../../theme/responsiveValue.js";
 import { ThemeProvider } from "../../../theme/ThemeProvider.js";
 import type { RichTextBlockData } from "../common.js";
 import { createRichTextBlock } from "../createRichTextBlock.js";
@@ -17,6 +19,10 @@ function createDraftBlock(overrides: { key: string; text: string; type?: string;
 
 function createBlockData(blocks: Array<Record<string, unknown>>, entityMap: Record<string, unknown> = {}): RichTextBlockData {
     return { draftContent: { blocks, entityMap } };
+}
+
+function markerTextsInDocumentOrder(markup: string): string[] {
+    return [...markup.matchAll(/richTextBlock__listItemMarker[^>]*>([^<]*)</g)].map(([, marker]) => marker);
 }
 
 const themeWithVariants = createTheme({
@@ -303,26 +309,167 @@ describe("createRichTextBlock — links", () => {
 describe("createRichTextBlock — lists", () => {
     const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock();
 
-    it("groups consecutive unordered list items into one list within one text component", () => {
-        const data = createBlockData([
-            createDraftBlock({ key: "a", text: "Item one", type: "unordered-list-item" }),
-            createDraftBlock({ key: "b", text: "Item two", type: "unordered-list-item" }),
-        ]);
+    function createListBlocks(type: "unordered-list-item" | "ordered-list-item", texts: string[]) {
+        return texts.map((text, index) => createDraftBlock({ key: `${type}-${String(index)}`, text, type }));
+    }
+
+    it("renders consecutive items as one table, one row per item", () => {
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one", "Item two"]));
         const markup = renderWithTheme(<MjmlRichTextBlock data={data} />);
 
         expect(markup.match(/<mj-text/g)).toHaveLength(1);
-        expect(markup.match(/<ul/g)).toHaveLength(1);
-        expect(markup.match(/<li/g)).toHaveLength(2);
+        expect(markup.match(/<tr/g)).toHaveLength(2);
+        expect(markup.match(/richTextBlock__listItemMarker/g)).toHaveLength(2);
+        expect(markup.match(/richTextBlock__listItemText/g)).toHaveLength(2);
     });
 
-    it("renders ordered list items as an ol with element class names", () => {
+    it("spaces the items through their rows, and puts the block's bottom spacing below the last one", () => {
         const data = createBlockData([
-            createDraftBlock({ key: "a", text: "Item one", type: "ordered-list-item" }),
-            createDraftBlock({ key: "b", text: "Item two", type: "ordered-list-item" }),
+            ...createListBlocks("unordered-list-item", ["Item one", "Item two", "Item three"]),
+            createDraftBlock({ key: "p", text: "A closing paragraph" }),
+        ]);
+        const rows = renderWithTheme(<HtmlRichTextBlock data={data} />).split("<tr");
+
+        expect(rows[1]).toContain("richTextBlock__listItem--itemSpacing");
+        expect(rows[1]).toMatch(/padding-bottom:\d+px/);
+        expect(rows[3]).not.toContain("richTextBlock__listItem--itemSpacing");
+        expect(rows[3]).toContain("richTextBlock__listItem--blockSpacing");
+        expect(rows[3]).toMatch(/padding-bottom:\d+px/);
+        expect(rows[0]).not.toContain("htmlText--bottomSpacing");
+    });
+
+    it("keeps an item's inline markup inside its text cell", () => {
+        const data = createBlockData(
+            [
+                createDraftBlock({
+                    key: "a",
+                    text: "line one\nour website",
+                    type: "unordered-list-item",
+                    entityRanges: [{ offset: 9, length: 11, key: 0 }],
+                }),
+            ],
+            { "0": { type: "LINK", mutability: "MUTABLE", data: { block: { type: "external", props: { targetUrl: "https://example.com" } } } } },
+        );
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />);
+        const textCell = /<td[^>]*richTextBlock__listItemText[^>]*>.*?<\/td>/s.exec(markup)?.[0];
+
+        expect(textCell).toContain("line one<br/>");
+        expect(textCell).toContain('href="https://example.com"');
+    });
+
+    it("numbers ordered items, restarting after an interrupting paragraph", () => {
+        const data = createBlockData([
+            ...createListBlocks("ordered-list-item", ["First list, item one", "First list, item two"]),
+            createDraftBlock({ key: "p", text: "An interrupting paragraph" }),
+            createDraftBlock({ key: "second", text: "Second list, item one", type: "ordered-list-item" }),
         ]);
         const markup = renderWithTheme(<HtmlRichTextBlock data={data} />);
 
-        expect(markup.match(/<ol class="richTextBlock__list"/g)).toHaveLength(1);
-        expect(markup.match(/<li class="richTextBlock__listItem"/g)).toHaveLength(2);
+        expect(markup.match(/>1\.</g)).toHaveLength(2);
+        expect(markup.match(/>2\.</g)).toHaveLength(1);
+    });
+
+    it("takes the marker of each list kind from the theme", () => {
+        const markerTheme = createTheme({
+            list: { unorderedMarker: "▪", orderedMarker: ({ index }) => `${index + 1})` },
+        });
+        const data = createBlockData([
+            ...createListBlocks("unordered-list-item", ["Bulleted item one", "Bulleted item two"]),
+            ...createListBlocks("ordered-list-item", ["Numbered item one", "Numbered item two", "Numbered item three"]),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, markerTheme);
+
+        expect(markerTextsInDocumentOrder(markup)).toEqual(["▪", "▪", "1)", "2)", "3)"]);
+    });
+
+    it("gives the marker function the nesting level of the item's own list", () => {
+        const markerTheme = createTheme({ list: { unorderedMarker: ({ depth }) => `L${depth}` } });
+        const data = createBlockData([
+            createDraftBlock({ key: "top", text: "Top item", type: "unordered-list-item" }),
+            createDraftBlock({ key: "nested", text: "Nested item", type: "unordered-list-item", depth: 1 }),
+            createDraftBlock({ key: "deep", text: "Deep item", type: "unordered-list-item", depth: 2 }),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, markerTheme);
+
+        expect(markup).toContain(">L0<");
+        expect(markup).toContain(">L1<");
+        expect(markup).toContain(">L2<");
+    });
+
+    it("numbers a nested ordered list from its own first item", () => {
+        const markerTheme = createTheme({
+            list: { orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `${String.fromCharCode(97 + index)}.`) },
+        });
+        const data = createBlockData([
+            createDraftBlock({ key: "top-1", text: "Top one", type: "ordered-list-item" }),
+            createDraftBlock({ key: "nested-1", text: "Nested one", type: "ordered-list-item", depth: 1 }),
+            createDraftBlock({ key: "nested-2", text: "Nested two", type: "ordered-list-item", depth: 1 }),
+            createDraftBlock({ key: "top-2", text: "Top two", type: "ordered-list-item" }),
+        ]);
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, markerTheme);
+
+        expect(markerTextsInDocumentOrder(markup)).toEqual(["1.", "a.", "b.", "2."]);
+    });
+
+    it("renders an element marker inside the marker cell", () => {
+        const markerTheme = createTheme({ list: { unorderedMarker: <span style={{ color: "#c0392b" }}>▪</span> } });
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, markerTheme);
+        const markerCell = /<td[^>]*richTextBlock__listItemMarker[^>]*>.*?<\/td>/s.exec(markup)?.[0];
+
+        expect(markerCell).toContain('<span style="color:#c0392b">▪</span>');
+    });
+
+    // Both cells need the styles because the nearest ancestor with a font size can be MJML's column, at zero.
+    it("copies the surrounding text styles onto both cells of an item", () => {
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+        const markup = renderWithTheme(<MjmlRichTextBlock data={data} />);
+
+        expect(markup.match(/font-family:/g)).toHaveLength(2);
+        expect(markup).toContain("mso-line-height-rule:exactly");
+    });
+
+    it("renders the items unstyled when no theme is set", () => {
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+        const markup = renderToStaticMarkup(<MjmlRichTextBlock data={data} />);
+
+        expect(markup).toContain("Item one");
+        expect(markup).not.toContain("font-family");
+    });
+
+    it("takes the spacing of the marker and of the items from the theme", () => {
+        const spaciousTheme = createTheme({ list: { indent: 40, markerGap: 24, itemSpacing: 20 } });
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one", "Item two"]));
+        const rows = renderWithTheme(<HtmlRichTextBlock data={data} />, spaciousTheme).split("<tr");
+
+        expect(rows[1]).toContain("padding-left:40px");
+        expect(rows[1]).toContain("padding-right:24px");
+        expect(rows[1]).toContain("padding-bottom:20px");
+    });
+
+    it("falls back to the default theme's spacing when no theme is set", () => {
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+        const markup = renderToStaticMarkup(<MjmlRichTextBlock data={data} />);
+        const { indent, markerGap } = defaultTheme.list;
+
+        expect(markup).toContain(`padding-left:${String(getDefaultFromResponsiveValue(indent))}px`);
+        expect(markup).toContain(`padding-right:${String(getDefaultFromResponsiveValue(markerGap))}px`);
+    });
+
+    it("adds the modifier naming the list's type", () => {
+        const unorderedData = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+        const orderedData = createBlockData(createListBlocks("ordered-list-item", ["Item one"]));
+
+        expect(renderWithTheme(<HtmlRichTextBlock data={unorderedData} />)).toContain("richTextBlock__list--unordered");
+        expect(renderWithTheme(<HtmlRichTextBlock data={orderedData} />)).toContain("richTextBlock__list--ordered");
+    });
+
+    it("adds the variant modifier for the variant its items render with", () => {
+        const { HtmlRichTextBlock: HtmlVariantRichTextBlock } = createRichTextBlock({ blockTypes: { "unordered-list-item": { variant: "body" } } });
+        const themeWithDefaultVariant = createTheme({ text: { defaultVariant: "body", variants: { body: { fontSize: "16px" } } } });
+        const data = createBlockData(createListBlocks("unordered-list-item", ["Item one"]));
+
+        expect(renderWithTheme(<HtmlVariantRichTextBlock data={data} />, themeWithVariants)).toContain("richTextBlock__list--variantBody");
+        expect(renderWithTheme(<HtmlRichTextBlock data={data} />, themeWithDefaultVariant)).toContain("richTextBlock__list--variantBody");
     });
 });

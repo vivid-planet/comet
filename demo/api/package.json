@@ -104,7 +104,7 @@
         "@types/cookie-parser": "^1.4.10",
         "@types/express": "^5.0.6",
         "@types/inquirer": "^8.2.12",
-        "@types/node": "^24.12.4",
+        "@types/node": "^24.13.3",
         "@types/react": "^19.2.15",
         "@types/react-dom": "^19.2.3",
         "@types/response-time": "^2.3.9",

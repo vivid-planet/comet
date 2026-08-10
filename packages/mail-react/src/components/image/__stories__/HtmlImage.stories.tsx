@@ -32,7 +32,11 @@ export const Default: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlImage {...args} src={`https://picsum.photos/seed/html-image/${args.width}/${args.height}`} />
+                    <tr>
+                        <td>
+                            <HtmlImage {...args} src={`https://picsum.photos/seed/html-image/${args.width}/${args.height}`} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>
@@ -48,7 +52,11 @@ export const FullWidth: Story = {
         <MjmlSection>
             <MjmlColumn>
                 <MjmlRaw>
-                    <HtmlImage {...args} src={`https://picsum.photos/seed/html-image-full-width/${args.width}/${args.height}`} />
+                    <tr>
+                        <td>
+                            <HtmlImage {...args} src={`https://picsum.photos/seed/html-image-full-width/${args.width}/${args.height}`} />
+                        </td>
+                    </tr>
                 </MjmlRaw>
             </MjmlColumn>
         </MjmlSection>

@@ -12,6 +12,7 @@ export type HtmlImageProps = ComponentProps<"img">;
  *
  * Use within raw HTML context — HTML-only emails or
  * [MJML ending tags](https://documentation.mjml.io/#ending-tags) like `MjmlRaw`.
+ * Inside `MjmlRaw` in an `MjmlColumn`, place `HtmlImage` in a `<tr>` and `<td>` of its own.
  * For MJML context, use `MjmlImage`.
  */
 export function HtmlImage({ className, ...restProps }: HtmlImageProps): ReactNode {

@@ -10,7 +10,7 @@ That brings the development setup closer to the production setup as it requires 
 1. Install package
 
 ```bash
-npm i @comet/dev-oidc-provider
+npm i dev-oidc-provider
 ```
 
 2. Add configuration variables to `.env`
@@ -18,8 +18,8 @@ npm i @comet/dev-oidc-provider
 ```env
 # idp
 IDP_PORT=8080
-IDP_CLIENT_ID=comet-oidc-client
-IDP_CLIENT_SECRET=comet-oidc-secret
+IDP_CLIENT_ID=dev-oidc-client
+IDP_CLIENT_SECRET=dev-oidc-secret
 IDP_SSO_URL=http://${DEV_DOMAIN:-localhost}:${IDP_PORT}
 IDP_JWKS_URI=http://${DEV_DOMAIN:-localhost}:${IDP_PORT}/jwks
 IDP_END_SESSION_ENDPOINT=http://${DEV_DOMAIN:-localhost}:${IDP_PORT}/session/end
@@ -30,7 +30,7 @@ IDP_END_SESSION_ENDPOINT=http://${DEV_DOMAIN:-localhost}:${IDP_PORT}/session/end
 It might be possible that you have to alter the implementation of the `userProvider`-callback according to your `staticUsers`.
 
 ```ts
-import { defineConfig } from "@comet/dev-oidc-provider";
+import { defineConfig } from "dev-oidc-provider";
 import { staticUsers } from "./api/src/auth/static-users";
 
 export default defineConfig({

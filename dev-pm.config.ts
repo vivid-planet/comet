@@ -1,4 +1,4 @@
-import { defineConfig } from "@comet/dev-process-manager";
+import { defineConfig } from "dev-process-manager";
 
 const packageFolderMapping = {
     "@dextinity/admin": "packages/admin/admin",

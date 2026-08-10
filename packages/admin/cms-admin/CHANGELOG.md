@@ -1,5 +1,21 @@
 # @comet/cms-admin
 
+## 9.3.0
+
+### Minor Changes
+
+- 924b66c: Add `underline` support to `createTipTapRichTextBlock`
+
+    The `underline` inline style is now part of the `supports` list and can be toggled via a new toolbar button. The underline mark is validated by the API, rendered as `<u>` by `renderTipTapRichText`, and the DraftJS migration maps the `UNDERLINE` inline style to it when supported. Per default it is disabled, pass a `supports` list with `underline` to enable it.
+
+### Patch Changes
+
+- Updated dependencies [7b2d8db]
+    - @comet/admin@9.3.0
+    - @comet/admin-date-time@9.3.0
+    - @comet/admin-rte@9.3.0
+    - @comet/admin-icons@9.3.0
+
 ## 9.2.2
 
 ### Patch Changes

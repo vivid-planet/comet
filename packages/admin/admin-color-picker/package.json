@@ -1,6 +1,6 @@
 {
     "name": "@dextinity/admin-color-picker",
-    "version": "9.2.2",
+    "version": "9.3.0",
     "description": "Dextinity Admin Color Picker component",
     "repository": {
         "directory": "packages/admin/admin-color-picker",
