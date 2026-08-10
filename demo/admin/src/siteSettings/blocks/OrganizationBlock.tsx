@@ -3,6 +3,12 @@ import { FormattedMessage } from "react-intl";
 
 import { SameAsUrlBlock } from "./SameAsUrlBlock";
 
+function validateName(name?: string) {
+    if (!name?.trim()) {
+        return <FormattedMessage id="siteSettings.blocks.organization.name.required" defaultMessage="Required" />;
+    }
+}
+
 const SameAsUrlListBlock = createListBlock({
     name: "SameAsUrlList",
     displayName: <FormattedMessage id="siteSettings.blocks.sameAs.displayName" defaultMessage="Same as" />,
@@ -19,6 +25,7 @@ export const OrganizationBlock = createCompositeBlock({
             block: createCompositeBlockTextField({
                 label: <FormattedMessage id="siteSettings.blocks.organization.name" defaultMessage="Name" />,
                 required: true,
+                validate: validateName,
             }),
             hiddenInSubroute: true,
         },

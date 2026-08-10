@@ -11,6 +11,7 @@ import {
     DamImageBlock,
     ExtractBlockInput,
 } from "@comet/cms-api";
+import { Transform } from "class-transformer";
 import { IsNotEmpty, IsString, IsUrl, ValidateIf } from "class-validator";
 
 import { SameAsUrlBlock } from "./same-as-url.block";
@@ -36,6 +37,7 @@ class OrganizationBlockData extends BlockData {
 
 class OrganizationBlockInput extends BlockInput {
     @BlockField()
+    @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
     @IsString()
     @IsNotEmpty()
     name: string;
