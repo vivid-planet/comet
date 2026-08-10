@@ -1,4 +1,5 @@
-const ddsFigmaFileUrl = "https://www.figma.com/design/xAe7acdpccDSRCrfeOdAg3/DDS---Dextinity-Admin-UI---V-0.1";
+/** The shared DDS Figma file every future-ui component links to — the single source of its file key. */
+export const ddsFigmaFileUrl = "https://www.figma.com/design/xAe7acdpccDSRCrfeOdAg3/DDS---Dextinity-Admin-UI---V-0.1";
 
 /**
  * Builds the `@storybook/addon-designs` `design` parameter for a frame in the
