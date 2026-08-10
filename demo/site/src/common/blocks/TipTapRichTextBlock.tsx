@@ -82,12 +82,18 @@ const markMapping: Record<string, TipTapMarkHandler> = {
     },
 };
 
-const TipTapRichTextBlock = withPreview(
-    ({ data }: PropsWithData<TipTapRichTextBlockData>) => {
+interface TipTapRichTextBlockProps extends PropsWithData<TipTapRichTextBlockData> {
+    disableLastBottomSpacing?: boolean;
+}
+
+export const TipTapRichTextBlock = withPreview(
+    ({ data, disableLastBottomSpacing }: TipTapRichTextBlockProps) => {
         const content = data.tipTapContent as TipTapNode;
+        const rendered = renderTipTapRichText({ content, nodeMapping, markMapping });
+
         return (
             <PreviewSkeleton title="RichText" type="rows" hasContent={hasTipTapRichTextContent(content)}>
-                {renderTipTapRichText({ content, nodeMapping, markMapping })}
+                {disableLastBottomSpacing ? <div className={styles.disableLastBottomSpacing}>{rendered}</div> : rendered}
             </PreviewSkeleton>
         );
     },

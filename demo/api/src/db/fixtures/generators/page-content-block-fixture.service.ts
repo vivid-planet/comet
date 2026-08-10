@@ -66,8 +66,8 @@ export class PageContentBlockFixtureService {
 
         type SupportedBlocks = (typeof blocks)[number]["type"];
 
-        // TODO add fixtures for newsDetail and newsList
-        const fixtures: Record<Exclude<SupportedBlocks, "newsDetail" | "newsList">, [BlockCategory, BlockFixture]> = {
+        // TODO add fixtures for newsDetail, newsList and tipTapTable
+        const fixtures: Record<Exclude<SupportedBlocks, "newsDetail" | "newsList" | "tipTapTable">, [BlockCategory, BlockFixture]> = {
             accordion: ["layout", this.accordionBlockFixtureService],
             columns: ["layout", this.columnsBlockFixtureService],
             contentGroup: ["layout", this.contentGroupBlockFixtureService],
