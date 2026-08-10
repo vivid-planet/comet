@@ -460,7 +460,7 @@ const TipTapEditor = ({
 
 type TipTapRichTextBlockInterface = BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> & {
     /** Renders the block's saved state read-only, without an editing UI. */
-    RenderReadOnly: ComponentType<{ state: TipTapRichTextBlockState }>;
+    ReadOnlyComponent: ComponentType<{ state: TipTapRichTextBlockState }>;
 };
 
 /**
@@ -550,7 +550,7 @@ export const createTipTapRichTextBlock = (options?: TipTapRichTextBlockFactoryOp
 
         AdminComponent: ({ state, updateState }) => <TipTapEditor state={state} updateState={updateState} {...sharedEditorProps} />,
 
-        RenderReadOnly: ({ state }) => <TipTapEditor state={state} updateState={() => {}} {...sharedEditorProps} readOnly />,
+        ReadOnlyComponent: ({ state }) => <TipTapEditor state={state} updateState={() => {}} {...sharedEditorProps} readOnly />,
 
         previewContent: (state) => {
             const text = getPlainTextFromContent(state.tipTapContent);
