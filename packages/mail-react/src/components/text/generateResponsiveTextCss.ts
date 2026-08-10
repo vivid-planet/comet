@@ -1,4 +1,4 @@
-import { generateResponsiveVariantCss, type ResponsiveVariantProperties } from "../../styles/generateResponsiveVariantCss.js";
+import { generateResponsiveVariantCss, type ResponsiveVariantProperties } from "../../styles/responsiveCss.js";
 import type { TextVariantStyles, Theme } from "../../theme/themeTypes.js";
 
 const textStyleProperties: ResponsiveVariantProperties<TextVariantStyles> = [

@@ -2,8 +2,8 @@ import { type IMjmlGroupProps, type IMjmlSectionProps, MjmlGroup, MjmlSection as
 import clsx from "clsx";
 import type { ReactNode } from "react";
 
-import { generateResponsiveTokenCss } from "../../styles/generateResponsiveVariantCss.js";
 import { registerStyles } from "../../styles/registerStyles.js";
+import { generateResponsiveTokenCss } from "../../styles/responsiveCss.js";
 import { getDefaultFromResponsiveValue } from "../../theme/responsiveValue.js";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
 import type { Theme } from "../../theme/themeTypes.js";

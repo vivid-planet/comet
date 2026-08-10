@@ -3,8 +3,8 @@ import type { CSSProperties, ReactNode } from "react";
 
 import { generateResponsiveTextCss } from "../../components/text/generateResponsiveTextCss.js";
 import { useOutlookTextStyle } from "../../components/text/OutlookTextStyleContext.js";
-import { generateResponsiveTokenCss } from "../../styles/generateResponsiveVariantCss.js";
 import { registerStyles } from "../../styles/registerStyles.js";
+import { generateResponsiveTokenCss } from "../../styles/responsiveCss.js";
 import { defaultTheme } from "../../theme/defaultTheme.js";
 import { getDefaultFromResponsiveValue, getDefaultOrUndefined } from "../../theme/responsiveValue.js";
 import { useOptionalTheme } from "../../theme/ThemeProvider.js";
