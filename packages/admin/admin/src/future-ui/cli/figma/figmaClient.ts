@@ -1,37 +1,4 @@
-type FigmaErrorCode = "auth_missing" | "scope_denied" | "rate_limited" | "figma_error";
-
-export class FigmaCliError extends Error {
-    readonly code: FigmaErrorCode;
-
-    constructor(code: FigmaErrorCode, message: string) {
-        super(message);
-        this.name = "FigmaCliError";
-        this.code = code;
-    }
-}
-
-export function isFigmaCliError(error: unknown): error is FigmaCliError {
-    return error instanceof FigmaCliError;
-}
-
-export const exitCode = {
-    ok: 0,
-    error: 1,
-    auth: 3,
-    rateLimit: 4,
-};
-
-export function exitCodeForError(code: FigmaErrorCode): number {
-    switch (code) {
-        case "auth_missing":
-            return exitCode.auth;
-        case "rate_limited":
-            return exitCode.rateLimit;
-        case "scope_denied":
-        case "figma_error":
-            return exitCode.error;
-    }
-}
+import { FigmaCliError } from "./figmaCliError.js";
 
 const FIGMA_FILE_KEY_PATTERN = /\/(?:file|design)\/([^/?#]+)/;
 
@@ -56,6 +23,7 @@ export function resolveFigmaToken(): string {
 const FIGMA_API_BASE_URL = "https://api.figma.com";
 const RATE_LIMIT_STATUS = 429;
 const SCOPE_DENIED_STATUS = 403;
+const DEPTH_INCLUDING_VARIANT_PROPERTIES = 1;
 
 export interface FigmaFileClient {
     getFile(): Promise<unknown>;
@@ -109,6 +77,10 @@ export class FigmaRestClient implements FigmaFileClient {
 
     getFile(): Promise<unknown> {
         return this.request(`/v1/files/${this.fileKey}`);
+    }
+
+    getFileNodes(nodeId: string): Promise<unknown> {
+        return this.request(`/v1/files/${this.fileKey}/nodes?ids=${encodeURIComponent(nodeId)}&depth=${DEPTH_INCLUDING_VARIANT_PROPERTIES}`);
     }
 
     private async request(path: string): Promise<unknown> {

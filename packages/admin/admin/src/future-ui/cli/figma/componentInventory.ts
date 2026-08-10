@@ -1,7 +1,8 @@
 import type { ComponentNode, ComponentSetNode, DevStatusTrait } from "@figma/rest-api-spec";
 import { z } from "zod";
 
-import { FigmaCliError, type FigmaFileClient } from "./figmaClient.js";
+import type { FigmaFileClient } from "./figmaClient.js";
+import { FigmaCliError } from "./figmaCliError.js";
 
 const NON_PUBLIC_NAME_PREFIX = "_";
 
