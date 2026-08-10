@@ -4,7 +4,7 @@ import { pickersInputBaseClasses, TimePicker as MuiTimePicker, type TimePickerPr
 import { type ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { ClearInputAdornment as BaseClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -15,7 +15,7 @@ export type TimePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdorn
 
 export type TimePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiTimePicker;
-    clearInputAdornment: typeof CometClearInputAdornment;
+    clearInputAdornment: typeof BaseClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
@@ -69,7 +69,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminTimePicker",
+        name: "DextinityAdminTimePicker",
     });
     const [open, setOpen] = useState(false);
     const intl = useIntl();
@@ -120,7 +120,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
                                         ...slotProps?.openPickerAdornment?.slotProps,
                                         openPickerButton: {
                                             "aria-label": intl.formatMessage({
-                                                id: "comet.timePicker.openPicker",
+                                                id: "dextinity.timePicker.openPicker",
                                                 defaultMessage: "Open time picker",
                                             }),
                                             ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
@@ -163,24 +163,24 @@ const Root = createComponentSlot(MuiTimePicker)<TimePickerClassKey>({
     }
 `);
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<TimePickerClassKey>({
+const ClearInputAdornment = createComponentSlot(BaseClearInputAdornment)<TimePickerClassKey>({
     componentName: "TimePicker",
     slotName: "clearInputAdornment",
 })();
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminTimePicker: TimePickerProps;
+        DextinityAdminTimePicker: TimePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminTimePicker: TimePickerClassKey;
+        DextinityAdminTimePicker: TimePickerClassKey;
     }
 
     interface Components {
-        CometAdminTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimePicker"];
+        DextinityAdminTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminTimePicker"];
         };
     }
 }

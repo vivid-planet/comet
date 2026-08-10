@@ -202,7 +202,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             }}
         >
             <StyledDialogTitle>
-                <FormattedMessage id="comet.pages.pageTreeSelect.label" defaultMessage="Select Page" />
+                <FormattedMessage id="dextinity.pages.pageTreeSelect.label" defaultMessage="Select Page" />
                 <CloseButton onClick={onClose} color="inherit">
                     <Close />
                 </CloseButton>
@@ -260,7 +260,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
                         }}
                         startIcon={<Delete />}
                     >
-                        <FormattedMessage id="comet.pages.pageTreeSelect.removeSelection" defaultMessage="Remove Selection" />
+                        <FormattedMessage id="dextinity.pages.pageTreeSelect.removeSelection" defaultMessage="Remove Selection" />
                     </Button>
                 )}
             </StyledDialogAction>
@@ -323,7 +323,7 @@ const Row = memo(({ index, style, data: { pages, selectedPage, toggleExpand, onS
                 <PageVisibility>
                     <PageVisibilityIcon visibility={page.visibility} />
                     <FormattedMessage
-                        id="comet.pages.pages.page.visibility"
+                        id="dextinity.pages.pages.page.visibility"
                         defaultMessage="{visibility, select, visible {Published} hidden {Unpublished} archived {Archived} other {unknown}}"
                         values={{
                             visibility: page.visibility === "Published" ? "visible" : page.visibility === "Unpublished" ? "hidden" : "archived",

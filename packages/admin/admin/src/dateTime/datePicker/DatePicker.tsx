@@ -4,7 +4,7 @@ import { DatePicker as MuiDatePicker, type DatePickerProps as MuiDatePickerProps
 import { type ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { ClearInputAdornment as BaseClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -15,7 +15,7 @@ export type DatePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdorn
 
 export type DatePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiDatePicker;
-    clearInputAdornment: typeof CometClearInputAdornment;
+    clearInputAdornment: typeof BaseClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
@@ -69,7 +69,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminDatePicker",
+        name: "DextinityAdminDatePicker",
     });
     const [open, setOpen] = useState(false);
     const intl = useIntl();
@@ -121,7 +121,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
                                         ...slotProps?.openPickerAdornment?.slotProps,
                                         openPickerButton: {
                                             "aria-label": intl.formatMessage({
-                                                id: "comet.datePicker.openPicker",
+                                                id: "dextinity.datePicker.openPicker",
                                                 defaultMessage: "Open date picker",
                                             }),
                                             ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
@@ -164,24 +164,24 @@ const Root = createComponentSlot(MuiDatePicker)<DatePickerClassKey>({
     }
 `);
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DatePickerClassKey>({
+const ClearInputAdornment = createComponentSlot(BaseClearInputAdornment)<DatePickerClassKey>({
     componentName: "DatePicker",
     slotName: "clearInputAdornment",
 })();
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminDatePicker: DatePickerProps;
+        DextinityAdminDatePicker: DatePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminDatePicker: DatePickerClassKey;
+        DextinityAdminDatePicker: DatePickerClassKey;
     }
 
     interface Components {
-        CometAdminDatePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDatePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDatePicker"];
+        DextinityAdminDatePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminDatePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminDatePicker"];
         };
     }
 }

@@ -46,7 +46,7 @@ export function PageList({ items, showBackButton, onItemClick, onBackClick, site
                 ))}
                 {items.length === 0 && (
                     <ListItem>
-                        <FormattedMessage id="comet.pages.pageList.noItems" defaultMessage="No items" />
+                        <FormattedMessage id="dextinity.pages.pageList.noItems" defaultMessage="No items" />
                     </ListItem>
                 )}
             </ScrollableListSection>

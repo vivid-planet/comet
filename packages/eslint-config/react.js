@@ -4,18 +4,18 @@ import globals from "globals";
 import formatJs from "eslint-plugin-formatjs";
 import graphqlPlugin from "@graphql-eslint/eslint-plugin";
 import react from "eslint-plugin-react";
-import cometPlugin from "@dextinity/eslint-plugin";
+import dextinityPlugin from "@dextinity/eslint-plugin";
 import reactHooks from "eslint-plugin-react-hooks";
 
-const cometAdminImportsRestrictedFromMuiMaterial = ["Alert", "Button", "Dialog", "Tooltip"];
+const dextinityAdminImportsRestrictedFromMuiMaterial = ["Alert", "Button", "Dialog", "Tooltip"];
 
 export const restrictedImportPaths = [
-    ...cometAdminImportsRestrictedFromMuiMaterial.map((name) => ({
+    ...dextinityAdminImportsRestrictedFromMuiMaterial.map((name) => ({
         name: "@mui/material",
         importNames: [name],
         message: `Please use ${name} from @dextinity/admin instead`,
     })),
-    ...cometAdminImportsRestrictedFromMuiMaterial.map((name) => ({
+    ...dextinityAdminImportsRestrictedFromMuiMaterial.map((name) => ({
         name: `@mui/material/${name}`,
         message: `Please use ${name} from @dextinity/admin instead`,
     })),
@@ -152,7 +152,7 @@ const config = [
     },
     {
         plugins: {
-            "@dextinity": cometPlugin,
+            "@dextinity": dextinityPlugin,
         },
         rules: {
             "@dextinity/no-private-sibling-import": "error",

@@ -38,7 +38,7 @@ export function WarningActions({ sourceInfo, scope }: Props) {
                 `Cannot load URL because no implementation of DependencyInterface for ${sourceInfo.rootEntityName} was provided via the DependenciesConfig`,
             );
         }
-        return <FormattedMessage id="comet.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
+        return <FormattedMessage id="dextinity.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
     }
 
     const loadUrl = async () => {

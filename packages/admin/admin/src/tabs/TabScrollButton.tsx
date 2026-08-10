@@ -40,7 +40,7 @@ export interface TabScrollButtonProps extends ButtonBaseProps {
 export function TabScrollButton(inProps: TabScrollButtonProps) {
     const { orientation, direction, ...restProps } = useThemeProps({
         props: inProps,
-        name: "CometAdminTabScrollButton",
+        name: "DextinityAdminTabScrollButton",
     });
 
     const ownerState: OwnerState = {
@@ -56,17 +56,17 @@ export function TabScrollButton(inProps: TabScrollButtonProps) {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminTabScrollButton: TabScrollButtonClassKey;
+        DextinityAdminTabScrollButton: TabScrollButtonClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminTabScrollButton: TabScrollButtonProps;
+        DextinityAdminTabScrollButton: TabScrollButtonProps;
     }
 
     interface Components {
-        CometAdminTabScrollButton?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminTabScrollButton"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTabScrollButton"];
+        DextinityAdminTabScrollButton?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminTabScrollButton"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminTabScrollButton"];
         };
     }
 }

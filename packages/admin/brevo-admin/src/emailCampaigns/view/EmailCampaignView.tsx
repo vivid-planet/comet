@@ -68,7 +68,7 @@ export function EmailCampaignView({ id, EmailCampaignContentBlock }: EmailCampai
                     </IconButton>
                 </ToolbarItem>
                 <ToolbarTitleItem>
-                    <FormattedMessage id="cometBrevoModule.emailCampaigns.EmailCampaign" defaultMessage="Email Campaign" />
+                    <FormattedMessage id="dextinity.emailCampaigns.EmailCampaign" defaultMessage="Email Campaign" />
                 </ToolbarTitleItem>
                 <ToolbarFillSpace />
             </Toolbar>

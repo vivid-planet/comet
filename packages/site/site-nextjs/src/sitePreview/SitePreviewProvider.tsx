@@ -15,7 +15,7 @@ const SitePreview = ({ children }: PropsWithChildren) => {
     useEffect(() => {
         function sendUpstreamMessage() {
             const message: SitePreviewIFrameLocationMessage = {
-                cometType: SitePreviewIFrameMessageType.SitePreviewLocation,
+                dextinityType: SitePreviewIFrameMessageType.SitePreviewLocation,
                 data: { search: searchParams.toString(), pathname },
             };
             sendSitePreviewIFrameMessage(message);

@@ -44,7 +44,7 @@ export const UploadFilesButton = ({ folderId, filter }: UploadFilesButtonProps) 
                 }}
                 responsive
             >
-                <FormattedMessage id="comet.pages.dam.uploadFiles" defaultMessage="Upload files" />
+                <FormattedMessage id="dextinity.pages.dam.uploadFiles" defaultMessage="Upload files" />
             </Button>
             <input type="file" hidden {...getInputProps()} ref={fileInputRef} />
             {fileUploadDialogs}

@@ -35,7 +35,7 @@ export const SendManagerWrapper = ({ scope, children }: PropsWithChildren<SendMa
             <Typography>
                 <Alert severity="error">
                     <FormattedMessage
-                        id="cometBrevoModule.emailCampaigns.configNotDefined"
+                        id="dextinity.emailCampaigns.configNotDefined"
                         defaultMessage="Brevo configuration is not defined. Please ask an administrator to set it up before sending email campaigns."
                     />
                 </Alert>

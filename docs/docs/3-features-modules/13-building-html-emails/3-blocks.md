@@ -29,14 +29,14 @@ import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@dextinity/mail-re
 
 ### Configuration
 
-Both blocks read `validSizes` and `baseUrl` from `config.pixelImageBlock`. In a typical Dextinity project, `validSizes` is the union of `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`; `baseUrl` is the API URL.
+Both blocks read `validSizes` and `baseUrl` from `config.pixelImageBlock`. In a typical Dextinity project, `validSizes` is the union of `dextinityConfig.images.imageSizes` and `dextinityConfig.images.deviceSizes`; `baseUrl` is the API URL.
 
 ```tsx title="src/emails/WelcomeEmail.tsx"
 import { MjmlMailRoot, type Config } from "@dextinity/mail-react";
 
 const config: Config = {
     pixelImageBlock: {
-        validSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
+        validSizes: [...dextinityConfig.images.imageSizes, ...dextinityConfig.images.deviceSizes],
         baseUrl: process.env.API_URL,
     },
 };

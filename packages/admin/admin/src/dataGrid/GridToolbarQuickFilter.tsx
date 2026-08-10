@@ -25,7 +25,9 @@ export function GridToolbarQuickFilter({ placeholder }: GridToolbarQuickFilterPr
                     <InputBase
                         {...other}
                         inputRef={ref}
-                        placeholder={placeholder ?? intl.formatMessage({ id: "comet.dataGrid.quickFilter.placeholder", defaultMessage: "Search..." })}
+                        placeholder={
+                            placeholder ?? intl.formatMessage({ id: "dextinity.dataGrid.quickFilter.placeholder", defaultMessage: "Search..." })
+                        }
                         size="small"
                         slotProps={{
                             input: {

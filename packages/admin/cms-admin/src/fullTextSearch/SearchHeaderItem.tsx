@@ -89,7 +89,7 @@ export function SearchHeaderItem() {
                             </Box>
                         ) : results.length === 0 ? (
                             <Typography variant="body2" color="text.secondary" sx={{ p: 2 }}>
-                                <FormattedMessage id="comet.fullTextSearch.noResults" defaultMessage="No results found" />
+                                <FormattedMessage id="dextinity.fullTextSearch.noResults" defaultMessage="No results found" />
                             </Typography>
                         ) : (
                             <List disablePadding>

@@ -27,7 +27,7 @@ export const CopyPasteMenuItem = ({ page }: Props) => {
                     await writeToClipboard(pagesClipboard);
                 }}
             >
-                <FormattedMessage id="comet.pages.pages.page.copy" defaultMessage="Copy" />
+                <FormattedMessage id="dextinity.pages.pages.page.copy" defaultMessage="Copy" />
             </RowActionsItem>
             <RowActionsItem
                 icon={<Paste />}
@@ -38,7 +38,7 @@ export const CopyPasteMenuItem = ({ page }: Props) => {
                     }
                 }}
             >
-                <FormattedMessage id="comet.pages.pages.page.paste" defaultMessage="Paste" />
+                <FormattedMessage id="dextinity.pages.pages.page.paste" defaultMessage="Paste" />
             </RowActionsItem>
         </>
     );

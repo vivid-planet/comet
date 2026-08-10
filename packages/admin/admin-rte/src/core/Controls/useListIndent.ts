@@ -110,7 +110,7 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       disabled: !canIndentRight,
                       onButtonClick: handleListIndentRightClick,
                       icon: RteIndentIncrease,
-                      tooltipText: intl.formatMessage({ id: "comet.rte.controls.listIndent.right.tooltip", defaultMessage: "Tab" }),
+                      tooltipText: intl.formatMessage({ id: "dextinity.rte.controls.listIndent.right.tooltip", defaultMessage: "Tab" }),
                   },
                   {
                       name: "list-indent-left",
@@ -118,7 +118,7 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       disabled: !canIndentLeft,
                       onButtonClick: handleListIndentLeftClick,
                       icon: RteIndentDecrease,
-                      tooltipText: intl.formatMessage({ id: "comet.rte.controls.listIndent.left.tooltip", defaultMessage: "Shift+Tab" }),
+                      tooltipText: intl.formatMessage({ id: "dextinity.rte.controls.listIndent.left.tooltip", defaultMessage: "Shift+Tab" }),
                   },
               ]
             : [];

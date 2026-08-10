@@ -3,7 +3,7 @@ import { createContext, type PropsWithChildren, type ReactNode, useContext } fro
 export interface PixelImageBlockConfig {
     /**
      * Image widths supported by the API, used to pick a render width.
-     * Generally derived from `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`.
+     * Generally derived from `dextinityConfig.images.imageSizes` and `dextinityConfig.images.deviceSizes`.
      */
     validSizes: number[];
     /**

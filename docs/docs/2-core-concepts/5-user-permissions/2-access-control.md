@@ -67,14 +67,14 @@ Also, try to avoid using the `@GetCurrentUser` decorator (which often leads to u
 
 :::
 
-### @DisableCometGuards
+### @DisableDextinityGuards
 
-`@DisableCometGuards()` disables the global auth guards (`CometAuthGuard`, `UserPermissionsGuard`). This may be used if a different authentication method is desired (e.g., basic authentication) for a specific handler or class in combination with a custom guard.
+`@DisableDextinityGuards()` disables the global auth guards (`DextinityAuthGuard`, `UserPermissionsGuard`). This may be used if a different authentication method is desired (e.g., basic authentication) for a specific handler or class in combination with a custom guard.
 
 e.g.:
 
 ```typescript
-@DisableCometGuards()
+@DisableDextinityGuards()
 @UseGuards(MyCustomGuard)
 async handlerThatUsesACustomGuard(): {
     ...

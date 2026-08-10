@@ -31,7 +31,10 @@ export function createEmailCampaignsPage({ EmailCampaignContentBlock }: CreateEm
         return (
             <ConfigVerification scope={scope}>
                 <Stack
-                    topLevelTitle={intl.formatMessage({ id: "cometBrevoModule.emailCampaigns.emailCampaigns", defaultMessage: "Email campaigns" })}
+                    topLevelTitle={intl.formatMessage({
+                        id: "dextinity.emailCampaigns.emailCampaigns",
+                        defaultMessage: "Email campaigns",
+                    })}
                 >
                     <StackSwitch>
                         <StackPage name="grid">
@@ -46,7 +49,7 @@ export function createEmailCampaignsPage({ EmailCampaignContentBlock }: CreateEm
                         <StackPage
                             name="edit"
                             title={intl.formatMessage({
-                                id: "cometBrevoModule.emailCampaigns.editEmailCampaign",
+                                id: "dextinity.emailCampaigns.editEmailCampaign",
                                 defaultMessage: "Edit email campaign",
                             })}
                         >
@@ -57,7 +60,7 @@ export function createEmailCampaignsPage({ EmailCampaignContentBlock }: CreateEm
                         <StackPage
                             name="add"
                             title={intl.formatMessage({
-                                id: "cometBrevoModule.emailCampaigns.addEmailCampaign",
+                                id: "dextinity.emailCampaigns.addEmailCampaign",
                                 defaultMessage: "Add email campaign",
                             })}
                         >

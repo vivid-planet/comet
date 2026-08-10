@@ -42,7 +42,10 @@ function createBrevoTestContactsPage({
         return (
             <ConfigVerification scope={scope}>
                 <Stack
-                    topLevelTitle={intl.formatMessage({ id: "cometBrevoModule.brevoContacts.brevoTestContacts", defaultMessage: "Test Contacts" })}
+                    topLevelTitle={intl.formatMessage({
+                        id: "dextinity.brevoContacts.brevoTestContacts",
+                        defaultMessage: "Test Contacts",
+                    })}
                 >
                     <StackSwitch>
                         <StackPage name="grid">
@@ -55,7 +58,7 @@ function createBrevoTestContactsPage({
                         </StackPage>
                         <StackPage
                             name="edit"
-                            title={intl.formatMessage({ id: "cometBrevoModule.brevoContacts.editBrevoContact", defaultMessage: "Edit contact" })}
+                            title={intl.formatMessage({ id: "dextinity.brevoContacts.editBrevoContact", defaultMessage: "Edit contact" })}
                         >
                             {(selectedId) => (
                                 <BrevoTestContactForm
@@ -69,7 +72,7 @@ function createBrevoTestContactsPage({
                         </StackPage>
                         <StackPage
                             name="add"
-                            title={intl.formatMessage({ id: "cometBrevoModule.brevoContacts.addBrevoContact", defaultMessage: "Add contact" })}
+                            title={intl.formatMessage({ id: "dextinity.brevoContacts.addBrevoContact", defaultMessage: "Add contact" })}
                         >
                             <BrevoTestContactForm
                                 additionalFormFields={additionalFormFields}

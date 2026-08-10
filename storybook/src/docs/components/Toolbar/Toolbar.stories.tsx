@@ -8,6 +8,7 @@ import {
     FinalFormSaveSplitButton,
     FinalFormSearchTextField,
     MainContent,
+    messages,
     SaveButton,
     SplitButton,
     StackApiContext,
@@ -22,7 +23,7 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@dextinity/admin";
-import { ChevronLeft, CometColor, Search } from "@dextinity/admin-icons";
+import { ChevronLeft, DextinityIcon, Search } from "@dextinity/admin-icons";
 import { Autocomplete, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
@@ -311,7 +312,7 @@ export const CustomTitleH2 = {
             <Toolbar>
                 <ToolbarItem>
                     <>
-                        <CometColor fontSize="large" />
+                        <DextinityIcon fontSize="large" />
                         <Typography variant="h2">Custom Title H2</Typography>
                     </>
                 </ToolbarItem>
@@ -433,7 +434,7 @@ export const FinalFormSearchCustomIcon = {
                                         name="query"
                                         type="text"
                                         component={FinalFormSearchTextField}
-                                        icon={<CometColor />}
+                                        icon={<DextinityIcon />}
                                         placeholder="Dextinity Search"
                                     />
                                 </ToolbarItem>
@@ -534,7 +535,7 @@ export const Save = () => {
                         }, 1000);
                     }}
                 >
-                    <FormattedMessage id="comet.save" defaultMessage="Save" />
+                    <FormattedMessage {...messages.save} />
                 </SaveButton>
             </ToolbarActions>
         </Toolbar>
@@ -616,7 +617,7 @@ export const SaveSplitButton = () => {
                             }, 1000);
                         }}
                     >
-                        <FormattedMessage id="comet.save" defaultMessage="Save" />
+                        <FormattedMessage {...messages.save} />
                     </SaveButton>
                     <SaveButton
                         loading={saving}
@@ -627,7 +628,7 @@ export const SaveSplitButton = () => {
                             }, 1000);
                         }}
                     >
-                        <FormattedMessage id="comet.saveAndGoBack" defaultMessage="Save and Go Back" />
+                        <FormattedMessage {...messages.saveAndGoBack} />
                     </SaveButton>
                 </SplitButton>
             </ToolbarActions>

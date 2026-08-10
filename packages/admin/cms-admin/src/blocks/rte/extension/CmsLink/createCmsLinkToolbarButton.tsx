@@ -121,12 +121,12 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
                 <DialogTitle>
                     {linkEntity ? (
                         <FormattedMessage
-                            id="comet.rteExtensions.cmsLink.editLink"
+                            id="dextinity.rteExtensions.cmsLink.editLink"
                             defaultMessage='Edit link "{link}"'
                             values={{ link: selectedText }}
                         />
                     ) : (
-                        <FormattedMessage id="comet.rteExtensions.cmsLink.insertLink" defaultMessage="Insert link" />
+                        <FormattedMessage id="dextinity.rteExtensions.cmsLink.insertLink" defaultMessage="Insert link" />
                     )}
                 </DialogTitle>
                 <DialogContent>
@@ -137,7 +137,7 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
                     <ButtonContainer>
                         {linkEntity && (
                             <DeleteButton onClick={handleRemove}>
-                                <FormattedMessage id="comet.rteExtensions.cmsLink.removeLink" defaultMessage="Delete Link" />
+                                <FormattedMessage id="dextinity.rteExtensions.cmsLink.removeLink" defaultMessage="Delete Link" />
                             </DeleteButton>
                         )}
                         <OkayButton onClick={handleUpdate} />

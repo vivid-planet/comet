@@ -29,7 +29,7 @@ export function FeaturesButtonGroup(inProps: IProps) {
         maxVisible,
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminRteFeaturesButtonGroup" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminRteFeaturesButtonGroup" });
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleMoreOptionsClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -75,7 +75,7 @@ export function FeaturesButtonGroup(inProps: IProps) {
                 <>
                     <ButtonWrapper {...slotProps?.buttonWrapper}>
                         <Tooltip
-                            title={<FormattedMessage id="comet.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
+                            title={<FormattedMessage id="dextinity.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
                             placement="top"
                         >
                             <span>
@@ -151,12 +151,12 @@ const ListItemIcon = createComponentSlot(MuiListItemIcon)<RteFeaturesButtonGroup
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminRteFeaturesButtonGroup: RteFeaturesButtonGroupClassKey;
+        DextinityAdminRteFeaturesButtonGroup: RteFeaturesButtonGroupClassKey;
     }
 
     interface Components {
-        CometAdminRteFeaturesButtonGroup?: {
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteFeaturesButtonGroup"];
+        DextinityAdminRteFeaturesButtonGroup?: {
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminRteFeaturesButtonGroup"];
         };
     }
 }

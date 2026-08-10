@@ -75,7 +75,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
         max = "23:59",
         slotProps,
         ...inputWithPopperProps
-    } = useThemeProps({ props: inProps, name: "CometAdminLegacyTimePicker" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminLegacyTimePicker" });
     const intl = useIntl();
     const focusedItemRef = useRef<HTMLLIElement>(null);
 
@@ -97,7 +97,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
     return (
         <Root
             value={dateValue ? intl.formatTime(dateValue, formatOptions) : ""}
-            placeholder={placeholder ?? intl.formatMessage({ id: "comet.timePicker.select", defaultMessage: "Select" })}
+            placeholder={placeholder ?? intl.formatMessage({ id: "dextinity.timePicker.select", defaultMessage: "Select" })}
             startAdornment={
                 <StartAdornment position="start" disablePointerEvents {...slotProps?.startAdornment}>
                     <Time />
@@ -166,17 +166,17 @@ export const TimePicker = (inProps: TimePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminLegacyTimePicker: TimePickerClassKey;
+        DextinityAdminLegacyTimePicker: TimePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminLegacyTimePicker: TimePickerProps;
+        DextinityAdminLegacyTimePicker: TimePickerProps;
     }
 
     interface Components {
-        CometAdminLegacyTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminLegacyTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminLegacyTimePicker"];
+        DextinityAdminLegacyTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminLegacyTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminLegacyTimePicker"];
         };
     }
 }

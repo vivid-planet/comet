@@ -8,7 +8,7 @@ interface Props {
 }
 
 const BlockAdminComponentRoot = (props: PropsWithChildren<Props>) => {
-    const { children, title = <FormattedMessage id="comet.blocks" defaultMessage="Blocks" /> } = props;
+    const { children, title = <FormattedMessage id="dextinity.blocks" defaultMessage="Blocks" /> } = props;
 
     return (
         <Stack topLevelTitle={title}>
@@ -30,7 +30,7 @@ const BlockAdminComponentRoot = (props: PropsWithChildren<Props>) => {
 export { BlockAdminComponentRoot };
 
 const ChildrenContainer = styled("div")`
-    .CometAdminRte-root > .CometAdminRteToolbar-root {
+    .DextinityAdminRte-root > .DextinityAdminRteToolbar-root {
         top: 70px;
     }
 `;

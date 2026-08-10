@@ -21,7 +21,7 @@ function VisibilityToggle({ showOnlyVisible, onChange }: Props) {
             onClick={handleToggleVisibilityClick}
             selected={!showOnlyVisible}
             title={intl.formatMessage({
-                id: "comet.preview.showOnlyVisible",
+                id: "dextinity.preview.showOnlyVisible",
                 defaultMessage: "Show only visible blocks",
             })}
         >

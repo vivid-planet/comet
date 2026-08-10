@@ -1,7 +1,7 @@
 {
     "name": "@dextinity/cli",
-    "version": "1.0.0",
-    "description": "A collection of CLI tools for Comet projects",
+    "version": "9.2.2",
+    "description": "A collection of CLI tools for Dextinity projects",
     "repository": {
         "directory": "packages/cli",
         "type": "git",

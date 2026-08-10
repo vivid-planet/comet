@@ -109,17 +109,17 @@ Common commands:
 
 ### Admin (`packages/admin/`)
 
-| Package                         | Description                                                                               |
-| ------------------------------- | ----------------------------------------------------------------------------------------- |
-| `@dextinity/admin`              | Core admin components and framework (React, MUI, Apollo, Final Form)                      |
-| `@dextinity/admin-babel-preset` | Shared Babel preset for transpiling admin packages                                        |
-| `@dextinity/admin-color-picker` | Color picker form field component                                                         |
-| `@dextinity/admin-date-time`    | Date/time picker form field components                                                    |
-| `@dextinity/admin-icons`        | SVG icon library as React components                                                      |
-| `@dextinity/admin-rte`          | Rich text editor component (Draft.js-based)                                               |
-| `@dextinity/admin-generator`    | CLI tool that generates admin CRUD UIs from GraphQL schemas (`comet-admin-generator` bin) |
-| `@dextinity/cms-admin`          | Admin UI for CMS features (pages, blocks, content management)                             |
-| `@dextinity/brevo-admin`        | Admin UI for Brevo email/marketing integration                                            |
+| Package                         | Description                                                                                   |
+| ------------------------------- | --------------------------------------------------------------------------------------------- |
+| `@dextinity/admin`              | Core admin components and framework (React, MUI, Apollo, Final Form)                          |
+| `@dextinity/admin-babel-preset` | Shared Babel preset for transpiling admin packages                                            |
+| `@dextinity/admin-color-picker` | Color picker form field component                                                             |
+| `@dextinity/admin-date-time`    | Date/time picker form field components                                                        |
+| `@dextinity/admin-icons`        | SVG icon library as React components                                                          |
+| `@dextinity/admin-rte`          | Rich text editor component (Draft.js-based)                                                   |
+| `@dextinity/admin-generator`    | CLI tool that generates admin CRUD UIs from GraphQL schemas (`dextinity-admin-generator` bin) |
+| `@dextinity/cms-admin`          | Admin UI for CMS features (pages, blocks, content management)                                 |
+| `@dextinity/brevo-admin`        | Admin UI for Brevo email/marketing integration                                                |
 
 ### API (`packages/api/`)
 
@@ -127,7 +127,7 @@ Common commands:
 | -------------------------- | ------------------------------------------------------------------------------------------ |
 | `@dextinity/cms-api`       | NestJS/GraphQL API for CMS features (file uploads, translations, blocks, S3/Azure storage) |
 | `@dextinity/brevo-api`     | NestJS integration for the Brevo email/marketing service                                   |
-| `@dextinity/api-generator` | CLI tool that generates TypeScript types from GraphQL schemas (`comet-api-generator` bin)  |
+| `@dextinity/api-generator` | CLI tool that generates TypeScript types from GraphQL schemas (`dextinity-api-generator` bin)  |
 
 ### Site (`packages/site/`)
 
@@ -138,12 +138,12 @@ Common commands:
 
 ### Utilities
 
-| Package                    | Description                                                |
-| -------------------------- | ---------------------------------------------------------- |
-| `@dextinity/cli`           | Central CLI entry point for Comet projects (`dextinity` bin) |
-| `@dextinity/eslint-config` | Shared ESLint configurations                               |
-| `@dextinity/eslint-plugin` | Custom ESLint rules for Comet projects                     |
-| `@dextinity/mail-react`    | Utilities for building HTML emails with React (MJML-based) |
+| Package                    | Description                                                      |
+| -------------------------- | ---------------------------------------------------------------- |
+| `@dextinity/cli`           | Central CLI entry point for Dextinity projects (`dextinity` bin) |
+| `@dextinity/eslint-config` | Shared ESLint configurations                                     |
+| `@dextinity/eslint-plugin` | Custom ESLint rules for Dextinity projects                       |
+| `@dextinity/mail-react`    | Utilities for building HTML emails with React (MJML-based)       |
 
 ### Docs & Storybook
 
@@ -188,7 +188,7 @@ Fix description here
 
 ### admin-generator
 
-The source for generated files are \*.cometGen.tsx config files. Modify those and re-run `admin-generator` for changes.
+The source for generated files are \*.dextinityGen.tsx config files. Modify those and re-run `admin-generator` for changes.
 
 ### api-generator
 

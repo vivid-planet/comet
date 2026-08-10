@@ -30,7 +30,7 @@ export const DamUploadFooter = ({ open, folderName }: DamFooterProps) => {
             <AlignTextAndImage>
                 <UploadIcon />
                 <FormattedMessage
-                    id="comet.dam.footer.dropFilesHereToUpload"
+                    id="dextinity.dam.footer.dropFilesHereToUpload"
                     defaultMessage="Drop files here to upload them to the folder: <strong>{folderName}</strong>"
                     values={{
                         strong: (chunks) => (

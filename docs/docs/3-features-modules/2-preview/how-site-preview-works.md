@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
 
 1. Reads the `jwt` query parameter.
 2. Verifies the JWT signature using `SITE_PREVIEW_SECRET`.
-3. Stores the preview parameters (scope, preview data, user ID) in an `HttpOnly` cookie named `__comet_site_preview` as a new, longer-lived JWT (valid for 1 day).
+3. Stores the preview parameters (scope, preview data, user ID) in an `HttpOnly` cookie named `__dextinity_site_preview` as a new, longer-lived JWT (valid for 1 day).
 4. Enables [Next.js Draft Mode](https://nextjs.org/docs/app/building-your-application/configuring/draft-mode).
 5. Redirects to the `path` contained in the JWT.
 
@@ -92,7 +92,7 @@ export async function getSiteConfigForHost(host: string) {
 }
 ```
 
-`previewParams()` reads and verifies the `__comet_site_preview` cookie and returns the `{ scope, previewData }` stored during the handshake. This is how a single preview domain can serve previews for multiple sites/scopes without any URL-based routing.
+`previewParams()` reads and verifies the `__dextinity_site_preview` cookie and returns the `{ scope, previewData }` stored during the handshake. This is how a single preview domain can serve previews for multiple sites/scopes without any URL-based routing.
 
 ### 5. Site Renders in Preview Mode
 
@@ -130,7 +130,7 @@ Admin opens iframe:
   ▼
 Site /site-preview route (sitePreviewRoute)
   │  Verifies JWT
-  │  Sets __comet_site_preview cookie { scope, previewData, userId } — valid 1 day
+  │  Sets __dextinity_site_preview cookie { scope, previewData, userId } — valid 1 day
   │  Enables Next.js Draft Mode
   │  Redirects to <path>
   ▼
@@ -144,7 +144,7 @@ Editor sees unpublished / invisible content in the iframe
 
 ## Security Considerations
 
-- The initial JWT is valid for only **10 seconds** to limit the window for replay attacks. The `__comet_site_preview` cookie JWT is valid for **1 day**, matching the editor's working session.
+- The initial JWT is valid for only **10 seconds** to limit the window for replay attacks. The `__dextinity_site_preview` cookie JWT is valid for **1 day**, matching the editor's working session.
 - The cookie is `HttpOnly` and `SameSite=Lax` to prevent access from JavaScript and limit CSRF exposure.
 - The `/site-preview` route validates that the redirect path is a relative path (starts with `/` and not `//`) to prevent open redirect vulnerabilities.
 - The `SITE_PREVIEW_SECRET` must be kept confidential and should be a strong random value. It is shared between the API and the site.

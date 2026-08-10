@@ -13,7 +13,7 @@ export interface RteLinkControlsProps
         }> {}
 
 function StyledLinkControls(inProps: RteLinkControlsProps) {
-    const props = useThemeProps({ props: inProps, name: "CometAdminRteLinkControls" });
+    const props = useThemeProps({ props: inProps, name: "DextinityAdminRteLinkControls" });
     const {
         options: { supports: supportedThings, overwriteLinkButton, overwriteLinksRemoveButton },
         slotProps,
@@ -62,17 +62,17 @@ export default (p: IControlProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminRteLinkControls: RteLinkControlsProps;
+        DextinityAdminRteLinkControls: RteLinkControlsProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminRteLinkControls: RteLinkControlsClassKey;
+        DextinityAdminRteLinkControls: RteLinkControlsClassKey;
     }
 
     interface Components {
-        CometAdminRteLinkControls?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminRteLinkControls"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteLinkControls"];
+        DextinityAdminRteLinkControls?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminRteLinkControls"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminRteLinkControls"];
         };
     }
 }

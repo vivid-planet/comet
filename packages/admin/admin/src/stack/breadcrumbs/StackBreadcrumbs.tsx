@@ -91,7 +91,12 @@ export interface StackBreadcrumbsProps
 }
 
 export function StackBreadcrumbs(inProps: StackBreadcrumbsProps) {
-    const { separator, overflowLinkText = ". . .", slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminStackBreadcrumbs" });
+    const {
+        separator,
+        overflowLinkText = ". . .",
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "DextinityAdminStackBreadcrumbs" });
     const stackApi = useStackApi();
     const { palette } = useTheme();
     const breadcrumbsRef = useRef<HTMLDivElement>(null);
@@ -140,17 +145,17 @@ export function StackBreadcrumbs(inProps: StackBreadcrumbsProps) {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminStackBreadcrumbs: StackBreadcrumbsClassKey;
+        DextinityAdminStackBreadcrumbs: StackBreadcrumbsClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminStackBreadcrumbs: StackBreadcrumbsProps;
+        DextinityAdminStackBreadcrumbs: StackBreadcrumbsProps;
     }
 
     interface Components {
-        CometAdminStackBreadcrumbs?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminStackBreadcrumbs"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminStackBreadcrumbs"];
+        DextinityAdminStackBreadcrumbs?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminStackBreadcrumbs"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminStackBreadcrumbs"];
         };
     }
 }

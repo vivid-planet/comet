@@ -227,7 +227,7 @@ export function ContentScopeSelect({
                                         </InputAdornment>
                                     }
                                     placeholder={intl.formatMessage({
-                                        id: "contentScopeSelect.searchInput.placeholder",
+                                        id: "dextinity.contentScopeSelect.searchInput.placeholder",
                                         defaultMessage: "Search...",
                                     })}
                                     value={searchValue}
@@ -303,7 +303,7 @@ export function ContentScopeSelect({
                         })}
                         {filteredOptions.length === 0 && (
                             <ListItem>
-                                <FormattedMessage id="contentScopeSelect.list.noOptions" defaultMessage="No options" />
+                                <FormattedMessage id="dextinity.contentScopeSelect.list.noOptions" defaultMessage="No options" />
                             </ListItem>
                         )}
                     </List>

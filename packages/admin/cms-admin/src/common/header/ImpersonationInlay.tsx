@@ -11,7 +11,7 @@ export function ImpersonationInlay() {
 
     return (
         <Root>
-            <Chip color="primary" label={<FormattedMessage id="comet.impersonation.inlay.title" defaultMessage="Impersonation Mode" />} />
+            <Chip color="primary" label={<FormattedMessage id="dextinity.impersonation.inlay.title" defaultMessage="Impersonation Mode" />} />
             <TextContainer>
                 <Name variant="h6">{user.name}</Name>
                 <SingleLineTypography variant="body2">{user.email}</SingleLineTypography>

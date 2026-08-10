@@ -101,7 +101,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
                         <UndoSnackbar
                             message={
                                 <FormattedMessage
-                                    id="comet.blocks.list.blockDeleted"
+                                    id="dextinity.blocks.list.blockDeleted"
                                     defaultMessage="{count, plural, one {block} other {# blocks}} deleted"
                                     values={{ count: blocksToRemove.length }}
                                 />

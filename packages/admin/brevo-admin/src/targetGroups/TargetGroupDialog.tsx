@@ -49,7 +49,7 @@ export function TargetGroupDialog({ scope }: TargetGroupDialogProps): ReactEleme
                         fullWidth
                         name="title"
                         component={FinalFormInput}
-                        label={<FormattedMessage id="cometBrevoModule.targetGroup.title" defaultMessage="Title" />}
+                        label={<FormattedMessage id="dextinity.targetGroup.title" defaultMessage="Title" />}
                     />
                 );
             }}

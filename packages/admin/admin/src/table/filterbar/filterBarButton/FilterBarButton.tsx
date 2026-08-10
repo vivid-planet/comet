@@ -97,7 +97,7 @@ export function FilterBarButton(inProps: FilterBarButtonProps) {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminFilterBarButton",
+        name: "DextinityAdminFilterBarButton",
     });
 
     const hasDirtyFields = !!(numberDirtyFields && numberDirtyFields > 0);
@@ -119,17 +119,17 @@ export function FilterBarButton(inProps: FilterBarButtonProps) {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFilterBarButton: FilterBarButtonClassKey;
+        DextinityAdminFilterBarButton: FilterBarButtonClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBarButton: FilterBarButtonProps;
+        DextinityAdminFilterBarButton: FilterBarButtonProps;
     }
 
     interface Components {
-        CometAdminFilterBarButton?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarButton"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarButton"];
+        DextinityAdminFilterBarButton?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFilterBarButton"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFilterBarButton"];
         };
     }
 }

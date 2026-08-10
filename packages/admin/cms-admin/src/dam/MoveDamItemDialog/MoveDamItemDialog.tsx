@@ -158,7 +158,7 @@ const MoveDamItemDialogInner = ({
             maxWidth="lg"
         >
             <DialogTitle>
-                <FormattedMessage id="comet.dam.moveDamItemDialog.selectTargetFolder" defaultMessage="Select target folder" />
+                <FormattedMessage id="dextinity.dam.moveDamItemDialog.selectTargetFolder" defaultMessage="Select target folder" />
             </DialogTitle>
             <DialogContent sx={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
                 <div
@@ -210,7 +210,7 @@ const MoveDamItemDialogInner = ({
                     }}
                     disabled={selectedId === undefined}
                 >
-                    <FormattedMessage id="comet.dam.moveDamItemDialog.startOver" defaultMessage="Start over" />
+                    <FormattedMessage id="dextinity.dam.moveDamItemDialog.startOver" defaultMessage="Start over" />
                 </Button>
                 <SaveButton
                     startIcon={<Move />}
@@ -223,7 +223,7 @@ const MoveDamItemDialogInner = ({
                     hasErrors={hasErrors}
                 >
                     <FormattedMessage
-                        id="comet.dam.moveDamItemDialog.moveItems"
+                        id="dextinity.dam.moveDamItemDialog.moveItems"
                         defaultMessage="Move {num, plural, one {item} other {items}}"
                         values={{
                             num: damItemsToMove.length,

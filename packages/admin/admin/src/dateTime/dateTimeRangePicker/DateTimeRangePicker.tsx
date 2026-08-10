@@ -4,7 +4,7 @@ import type { DateTimeRangePickerProps as MuiDateTimeRangePickerProps } from "@m
 import { type ComponentType, lazy, type ReactNode, Suspense, useState } from "react";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment as CometClearInputAdornment } from "../../common/ClearInputAdornment";
+import { ClearInputAdornment as BaseClearInputAdornment } from "../../common/ClearInputAdornment";
 import { OpenPickerAdornment } from "../../common/OpenPickerAdornment";
 import { ReadOnlyAdornment } from "../../common/ReadOnlyAdornment";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -23,7 +23,7 @@ export type DateTimeRangePickerClassKey = "root" | "clearInputAdornment" | "read
 
 export type DateTimeRangePickerProps = ThemedComponentBaseProps<{
     root: ComponentType<MuiDateTimeRangePickerProps>;
-    clearInputAdornment: typeof CometClearInputAdornment;
+    clearInputAdornment: typeof BaseClearInputAdornment;
     readOnlyAdornment: typeof ReadOnlyAdornment;
     openPickerAdornment: typeof OpenPickerAdornment;
 }> & {
@@ -77,7 +77,7 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminDateTimeRangePicker",
+        name: "DextinityAdminDateTimeRangePicker",
     });
     const intl = useIntl();
 
@@ -140,7 +140,7 @@ export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
                                             ...slotProps?.openPickerAdornment?.slotProps,
                                             openPickerButton: {
                                                 "aria-label": intl.formatMessage({
-                                                    id: "comet.dateTimeRangePicker.openPicker",
+                                                    id: "dextinity.dateTimeRangePicker.openPicker",
                                                     defaultMessage: "Open date time range picker",
                                                 }),
                                                 ...slotProps?.openPickerAdornment?.slotProps?.openPickerButton,
@@ -192,24 +192,24 @@ const LazyRoot = lazy(async () => {
     };
 });
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DateTimeRangePickerClassKey>({
+const ClearInputAdornment = createComponentSlot(BaseClearInputAdornment)<DateTimeRangePickerClassKey>({
     componentName: "DateTimeRangePicker",
     slotName: "clearInputAdornment",
 })();
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminDateTimeRangePicker: DateTimeRangePickerProps;
+        DextinityAdminDateTimeRangePicker: DateTimeRangePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminDateTimeRangePicker: DateTimeRangePickerClassKey;
+        DextinityAdminDateTimeRangePicker: DateTimeRangePickerClassKey;
     }
 
     interface Components {
-        CometAdminDateTimeRangePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDateTimeRangePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDateTimeRangePicker"];
+        DextinityAdminDateTimeRangePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminDateTimeRangePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminDateTimeRangePicker"];
         };
     }
 }

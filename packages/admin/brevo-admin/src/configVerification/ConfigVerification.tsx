@@ -29,10 +29,7 @@ export function ConfigVerification({ scope, children }: PropsWithChildren<Config
         return (
             <MainContent>
                 <Alert severity="error">
-                    <FormattedMessage
-                        id="cometBrevoModule.missingConfig"
-                        defaultMessage="Missing brevo config! Configure brevo via the config page."
-                    />
+                    <FormattedMessage id="dextinity.missingConfig" defaultMessage="Missing brevo config! Configure brevo via the config page." />
                 </Alert>
             </MainContent>
         );
