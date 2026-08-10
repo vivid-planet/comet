@@ -42,25 +42,15 @@ export const UserPermissionsPage = () => {
                             <MainContent>
                                 <RouterTabs>
                                     <RouterTab
-<<<<<<< HEAD
-                                        path=""
-                                        label={<FormattedMessage id="dextinity.userPermissions.basicData" defaultMessage="Basic Data" />}
-=======
                                         path={isAllowed("userPermissions") ? "/basic-data" : ""}
-                                        label={<FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />}
->>>>>>> main
+                                        label={<FormattedMessage id="dextinity.userPermissions.basicData" defaultMessage="Basic Data" />}
                                     >
                                         <UserPermissionsUserPageBasicDataPanel userId={userId} />
                                     </RouterTab>
                                     {isAllowed("userPermissions") && (
                                         <RouterTab
-<<<<<<< HEAD
-                                            path="/permissions"
-                                            label={<FormattedMessage id="dextinity.userPermissions.permissions" defaultMessage="Permissions" />}
-=======
                                             path=""
-                                            label={<FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />}
->>>>>>> main
+                                            label={<FormattedMessage id="dextinity.userPermissions.permissions" defaultMessage="Permissions" />}
                                         >
                                             <UserPermissionsUserPagePermissionsPanel userId={userId} />
                                         </RouterTab>

@@ -22,13 +22,8 @@ import { slugifyFilename } from "../../file-utils/files.utils";
 import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
-<<<<<<< HEAD
-import { ContentScopeService } from "../../user-permissions/content-scope.service";
-import { DextinityImageResolutionException } from "../common/errors/image-resolution.exception";
-=======
 import { contentScopesAreEqual } from "../../user-permissions/content-scopes-are-equal";
-import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
->>>>>>> main
+import { DextinityImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";

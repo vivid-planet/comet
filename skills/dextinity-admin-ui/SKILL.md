@@ -29,18 +29,11 @@ after the system genuinely can't express what you need.
 3. **Consistency.** Every screen built from the same components and tokens looks and behaves the
    same way.
 
-<<<<<<< HEAD:skills/dextinity-admin-ui/SKILL.md
-This holds **even when a project's design deliberately differs** from the current library
-defaults: prefer the Dextinity component or token, and apply that project-specific difference by
-configuring the theme — not by re-styling individual components. Add custom styling only when
-explicitly instructed, or when no component, prop, or token can produce the result.
-=======
 This holds **even when a project's design deliberately differs** from the current library defaults —
 a permanent design decision, not a gap a later library upgrade will close. Prefer the Comet component
 or token, and apply that project-specific difference by configuring the theme — not by re-styling
 individual components. Add custom styling only when explicitly instructed, or when no component, prop,
 or token can produce the result.
->>>>>>> main:skills/comet-admin-ui/SKILL.md
 
 ## Decision framework
 

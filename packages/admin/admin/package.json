@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
     "name": "@dextinity/admin",
-    "version": "9.2.2",
-    "description": "Dextinity Admin package",
-=======
-    "name": "@comet/admin",
     "version": "9.3.0",
-    "description": "Comet Admin package",
->>>>>>> main
+    "description": "Dextinity Admin package",
     "repository": {
         "directory": "packages/admin/admin",
         "type": "git",

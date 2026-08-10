@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
     "name": "@dextinity/cli",
-    "version": "9.2.2",
-    "description": "A collection of CLI tools for Dextinity projects",
-=======
-    "name": "@comet/cli",
     "version": "9.3.0",
-    "description": "A collection of CLI tools for Comet projects",
->>>>>>> main
+    "description": "A collection of CLI tools for Dextinity projects",
     "repository": {
         "directory": "packages/cli",
         "type": "git",

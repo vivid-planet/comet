@@ -59,15 +59,8 @@
         "setup:download-oauth2-proxy": "dotenv -- sh -c 'pnpm exec dextinity download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
     },
     "devDependencies": {
-<<<<<<< HEAD
-        "@changesets/cli": "^2.31.0",
-        "@dextinity/cli": "workspace:*",
-        "@comet/dev-oidc-provider": "^1.2.1",
-        "@comet/dev-process-manager": "^3.1.0",
-=======
         "@changesets/cli": "^2.31.1",
-        "@comet/cli": "workspace:*",
->>>>>>> main
+        "@dextinity/cli": "workspace:*",
         "@formatjs/cli": "^6.7.2",
         "@types/node": "^24.13.3",
         "dev-oidc-provider": "^2.0.0",

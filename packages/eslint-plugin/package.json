@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
     "name": "@dextinity/eslint-plugin",
-    "version": "9.2.2",
-    "description": "A set of ESLint rules and configurations for Dextinity projects",
-=======
-    "name": "@comet/eslint-plugin",
     "version": "9.3.0",
-    "description": "A set of ESLint rules and configurations for Comet projects",
->>>>>>> main
+    "description": "A set of ESLint rules and configurations for Dextinity projects",
     "type": "commonjs",
     "main": "lib/index.js",
     "license": "BSD-2-Clause",

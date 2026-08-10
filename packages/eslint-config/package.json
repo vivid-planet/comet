@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
     "name": "@dextinity/eslint-config",
-    "version": "9.2.2",
-    "description": "A set of ESLint configurations for Dextinity projects",
-=======
-    "name": "@comet/eslint-config",
     "version": "9.3.0",
-    "description": "A set of ESLint configurations for Comet projects",
->>>>>>> main
+    "description": "A set of ESLint configurations for Dextinity projects",
     "repository": {
         "directory": "packages/eslint-config",
         "type": "git",
@@ -49,15 +43,9 @@
     },
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
-<<<<<<< HEAD
         "@dextinity/eslint-plugin": "workspace:*",
-        "@eslint/eslintrc": "^3.3.5",
-        "@eslint/js": "^9.39.4",
-=======
-        "@comet/eslint-plugin": "workspace:*",
         "@eslint/eslintrc": "^3.3.6",
         "@eslint/js": "^9.39.5",
->>>>>>> main
         "@graphql-eslint/eslint-plugin": "^4.4.0",
         "@next/eslint-plugin-next": "^16.2.10",
         "eslint-config-prettier": "^10.1.8",
