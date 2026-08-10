@@ -58,6 +58,8 @@ export function RichTextList({ ordered, variant, bottomSpacing, depth, items }: 
     };
 
     const itemSpacing = getDefaultFromResponsiveValue(list.itemSpacing);
+    const isNestedLevel = depth > 0;
+
     const markerCellPadding: CSSProperties = {
         paddingLeft: getDefaultFromResponsiveValue(list.indent),
         paddingRight: getDefaultFromResponsiveValue(list.markerGap),
@@ -81,15 +83,22 @@ export function RichTextList({ ordered, variant, bottomSpacing, depth, items }: 
         >
             <tbody>
                 {items.map((item, index) => {
+                    const isFirstItem = index === 0;
                     const isLastItem = index === items.length - 1;
+                    const spacingAbove = isFirstItem && isNestedLevel ? itemSpacing : undefined;
                     const spacingBelow = isLastItem ? blockSpacing : itemSpacing;
-                    const cellStyle: CSSProperties = { ...fontStyle, ...(spacingBelow !== undefined && { paddingBottom: spacingBelow }) };
+                    const cellStyle: CSSProperties = {
+                        ...fontStyle,
+                        ...(spacingAbove !== undefined && { paddingTop: spacingAbove }),
+                        ...(spacingBelow !== undefined && { paddingBottom: spacingBelow }),
+                    };
 
                     return (
                         <tr
                             key={item.key}
                             className={clsx(
                                 "richTextBlock__listItem",
+                                spacingAbove !== undefined && "richTextBlock__listItem--itemSpacingAbove",
                                 !isLastItem && "richTextBlock__listItem--itemSpacing",
                                 isLastItem && blockSpacing !== undefined && "richTextBlock__listItem--blockSpacing",
                             )}
@@ -144,6 +153,11 @@ function generateResponsiveListSpacingCss(theme: Theme): string {
             breakpoints: theme.breakpoints,
             selector: ".richTextBlock__listItem--itemSpacing > td",
             tokens: [{ value: theme.list.itemSpacing, cssProperty: "padding-bottom", unit: "px" }],
+        }),
+        generateResponsiveTokenCss({
+            breakpoints: theme.breakpoints,
+            selector: ".richTextBlock__listItem--itemSpacingAbove > td",
+            tokens: [{ value: theme.list.itemSpacing, cssProperty: "padding-top", unit: "px" }],
         }),
     ]
         .filter(Boolean)
