@@ -71,6 +71,17 @@ export const Default: Story = {
     },
 };
 
+const ReadOnlyBlock = createTipTapRichTextBlock({
+    textBlockStyles: [
+        {
+            name: "intro",
+            label: "Intro Text",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 20, fontStyle: "italic" }} {...props} />,
+        },
+    ],
+});
+
 const readOnlyState: TipTapRichTextBlockState = {
     tipTapContent: {
         type: "doc",
@@ -82,6 +93,7 @@ const readOnlyState: TipTapRichTextBlockState = {
             },
             {
                 type: "paragraph",
+                attrs: { textBlockStyle: "intro" },
                 content: [
                     { type: "text", text: "This content is rendered " },
                     { type: "text", marks: [{ type: "bold" }], text: "read-only" },
@@ -95,7 +107,7 @@ const readOnlyState: TipTapRichTextBlockState = {
 export const ReadOnly: Story = {
     render: () => (
         <StoryWrapper state={readOnlyState}>
-            <TipTapRichTextBlock.RenderReadOnly state={readOnlyState} />
+            <ReadOnlyBlock.RenderReadOnly state={readOnlyState} />
         </StoryWrapper>
     ),
     play: async ({ canvas, canvasElement, step }) => {
@@ -108,6 +120,20 @@ export const ReadOnly: Story = {
                 { timeout: 5000 },
             );
         });
+
+        await step(
+            "The block's own text block style is applied — this needs the block's textBlockStyles reaching the read-only renderer",
+            async () => {
+                await waitFor(
+                    () => {
+                        const styledElement = canvasElement.querySelector('[data-text-block-style="intro"]');
+                        expect(styledElement).not.toBeNull();
+                        expect(styledElement).toHaveStyle({ fontStyle: "italic" });
+                    },
+                    { timeout: 3000 },
+                );
+            },
+        );
 
         await step("No element is editable", async () => {
             for (const element of Array.from(canvasElement.querySelectorAll("[contenteditable]"))) {
