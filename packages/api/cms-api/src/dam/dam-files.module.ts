@@ -5,7 +5,7 @@ import { TypeMetadataStorage } from "@nestjs/graphql";
 import { FileValidationService } from "../file-utils/file-validation.service";
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { damDefaultAcceptedMimetypes } from "./common/mimeTypes/dam-default-accepted-mimetypes";
-import { DamConfig } from "./dam.config";
+import { DamConfig, damDefaultBasePath } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
@@ -26,7 +26,7 @@ import { ImageCropArea } from "./images/entities/image-crop-area.entity";
 import { DamScopeInterface } from "./types";
 
 interface DamFilesModuleOptions {
-    damConfig: DamConfig;
+    damConfig: Omit<DamConfig, "basePath"> & { basePath?: string };
     Scope?: Type<DamScopeInterface>;
     Folder: Type<FolderInterface>;
     File: Type<FileInterface>;
@@ -37,7 +37,7 @@ interface DamFilesModuleOptions {
 export class DamFilesModule {
     private static registered = false;
 
-    static register({ damConfig, Scope, Folder, File }: DamFilesModuleOptions): DynamicModule {
+    static register({ damConfig: damConfigOptions, Scope, Folder, File }: DamFilesModuleOptions): DynamicModule {
         // The module is global and declares the DAM file and folder routes. DamModule registers it internally, so registering
         // both would mount those routes twice.
         if (DamFilesModule.registered) {
@@ -50,6 +50,11 @@ export class DamFilesModule {
         if (File.name !== FILE_ENTITY) {
             throw new Error(`DamModule: Your File entity must be named ${FILE_ENTITY}`);
         }
+
+        const damConfig: DamConfig = {
+            ...damConfigOptions,
+            basePath: damConfigOptions.basePath ?? damDefaultBasePath,
+        };
 
         const damConfigProvider: ValueProvider<DamConfig> = {
             provide: DAM_CONFIG,

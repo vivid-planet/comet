@@ -1,6 +1,6 @@
 import { DynamicModule, Global, Module, Type } from "@nestjs/common";
 
-import { DamConfig } from "./dam.config";
+import { DamConfig, damDefaultBasePath } from "./dam.config";
 import { DamBlocksModule } from "./dam-blocks.module";
 import { DamDependentsModule } from "./dam-dependents.module";
 import { DamFilesModule } from "./dam-files.module";
@@ -34,7 +34,7 @@ export class DamModule {
 
         const damConfig = {
             ...options.damConfig,
-            basePath: options.damConfig.basePath ?? "dam",
+            basePath: options.damConfig.basePath ?? damDefaultBasePath,
         };
 
         return {
