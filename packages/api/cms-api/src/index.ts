@@ -183,10 +183,7 @@ export { damDefaultAcceptedMimetypes } from "./dam/common/mimeTypes/dam-default-
 export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
-export { DamBlocksModule } from "./dam/dam-blocks.module";
-export { DamDependentsModule } from "./dam/dam-dependents.module";
 export { DamFilesModule } from "./dam/dam-files.module";
-export { DamImagesModule } from "./dam/dam-images.module";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
 export { DamFileAiContentType } from "./dam/files/entities/ai-content-type.enum";
