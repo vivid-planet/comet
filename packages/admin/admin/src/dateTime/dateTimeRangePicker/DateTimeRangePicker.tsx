@@ -59,7 +59,7 @@ export type DateTimeRangePickerProps = ThemedComponentBaseProps<{
  * It provides two text fields with a calendar icon that opens a date-time range picker dialog. The component handles
  * Date objects and includes features like clearing, read-only state, and customizable icons.
  *
- * - [Storybook](https://storybook.comet-dxp.com/?path=/docs/@dextinity/admin_components-datetime-datetimerangepicker--docs)
+ * - [Storybook](https://cms-storybook.dextinity.com/?path=/docs/@dextinity/admin_components-datetime-datetimerangepicker--docs)
  * - [MUI X DateTimeRangePicker Documentation](https://mui.com/x/react-date-pickers/date-time-range-picker/)
  */
 export const DateTimeRangePicker = (inProps: DateTimeRangePickerProps) => {
