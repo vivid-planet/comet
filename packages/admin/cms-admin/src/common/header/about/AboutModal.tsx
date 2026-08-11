@@ -15,6 +15,7 @@ import type { ReactElement } from "react";
 import { FormattedDate, FormattedMessage } from "react-intl";
 
 import { version } from "../../..";
+import { useCometConfig } from "../../../config/CometConfigContext";
 import { useBuildInformation } from "./build-information/useBuildInformation";
 
 interface AboutModalProps {
@@ -25,6 +26,7 @@ interface AboutModalProps {
 
 export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo sx={{ width: "300px", height: "84px" }} /> }: AboutModalProps) {
     const buildInformation = useBuildInformation();
+    const { licenseUrl } = useCometConfig();
 
     return (
         <Modal open={open} onClose={onClose} closeAfterTransition BackdropComponent={Backdrop}>
@@ -70,6 +72,13 @@ export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo s
                         {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message,react/jsx-no-literals */}
                         <Typography>www.vivid-planet.com</Typography>
                     </Link>
+                    {licenseUrl && (
+                        <Link href={licenseUrl} target="_blank" underline="hover" marginTop={2}>
+                            <Typography>
+                                <FormattedMessage id="comet.about.dialog.license" defaultMessage="License information" />
+                            </Typography>
+                        </Link>
+                    )}
                 </DialogContent>
             </Dialog>
         </Modal>
