@@ -2,7 +2,7 @@
 
 Comet-specific conventions for the site layer. All site blocks live in `{BlockName}Block.tsx` (PascalCase) under `site/src/`, typically `documents/pages/blocks/` or `common/blocks/`.
 
-Skip site block creation when the project has no `site` directory.
+Skip site block creation when the project has no site package (see [Step 2](../SKILL.md#step-2--discover-the-project) for how to detect one).
 
 ---
 
