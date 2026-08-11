@@ -35,5 +35,7 @@ describe("generateRichTextListStyles", () => {
         expect(styles).toContain("padding-right: 6px !important");
         expect(styles).toContain(".richTextBlock__listItem--itemSpacing > td");
         expect(styles).toContain("padding-bottom: 4px !important");
+        expect(styles).toContain(".richTextBlock__listItem--itemSpacingAbove > td");
+        expect(styles).toContain("padding-top: 4px !important");
     });
 });

@@ -542,6 +542,16 @@ describe("createRichTextBlock — nested lists", () => {
         expect(markup.match(/richTextBlock__list--variantBody/g)).toHaveLength(1);
     });
 
+    it("puts the item spacing above a nested level's first item, and only there", () => {
+        const data = createBlockData(createNestedListBlocks([0, 1, 1]));
+        const rows = renderWithTheme(<HtmlRichTextBlock data={data} />).split("<tr");
+
+        expect(rows[1]).not.toContain("richTextBlock__listItem--itemSpacingAbove");
+        expect(rows[2]).toContain("richTextBlock__listItem--itemSpacingAbove");
+        expect(rows[3]).not.toContain("richTextBlock__listItem--itemSpacingAbove");
+        expect(rows[3]).not.toMatch(/padding-top:\d+px/);
+    });
+
     it("leaves the spacing below a nested level to the item enclosing it", () => {
         const themeWithBlockSpacing = createTheme({
             text: { defaultVariant: "body", variants: { body: { fontSize: "16px", bottomSpacing: "16px" } } },
