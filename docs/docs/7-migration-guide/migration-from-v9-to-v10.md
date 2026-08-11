@@ -49,12 +49,11 @@ That makes this migration mechanical but wide: it touches nearly every file that
 | `@comet/site-nextjs`        | `@dextinity/site-nextjs`        |
 | `@comet/site-react`         | `@dextinity/site-react`         |
 
-The two development tools that used to live in the `@comet` scope moved out of it entirely and got a new major of their own:
+:::note Not part of this migration
 
-| v9                           | v10                      |
-| ---------------------------- | ------------------------ |
-| `@comet/dev-process-manager` | `dev-process-manager` v4 |
-| `@comet/dev-oidc-provider`   | `dev-oidc-provider` v2   |
+`@comet/dev-process-manager` and `@comet/dev-oidc-provider` left the `@comet` scope in releases of their own (`dev-process-manager` v4 and `dev-oidc-provider` v2). They are development tools that aren't part of v10, so switching to them is optional and can happen in a separate change. **They have no `@dextinity/*` counterpart** — keep that in mind when replacing the scope in [Replace the `@comet/*` dependencies and imports](#replace-the-comet-dependencies-and-imports).
+
+:::
 
 ### Renamed binaries, files and config
 
@@ -121,37 +120,6 @@ Then, install the updated dependencies:
 
 ```sh
 npm install
-```
-
-### Migrate to `dev-process-manager` and `dev-oidc-provider`
-
-`@comet/dev-process-manager` and `@comet/dev-oidc-provider` were moved out of the `@comet` scope. The config API is unchanged — only the package names and the imports in the config files change.
-
-```diff title="package.json"
-{
-    "devDependencies": {
--       "@comet/dev-process-manager": "^3.1.0",
--       "@comet/dev-oidc-provider": "^1.2.1",
-+       "dev-process-manager": "^4.0.0",
-+       "dev-oidc-provider": "^2.0.0",
-    }
-}
-```
-
-```diff title="dev-pm.config.ts"
-- import { defineConfig } from "@comet/dev-process-manager";
-+ import { defineConfig } from "dev-process-manager";
-```
-
-```diff title="dev-oidc-provider.config.mts"
-- import { defineConfig } from "@comet/dev-oidc-provider";
-+ import { defineConfig } from "dev-oidc-provider";
-```
-
-The `dev-pm` and `dev-oidc-provider` **binary names are unchanged**, so scripts like `dev-pm start @dev` keep working. Only places that reference the package names need updating — `package.json` scripts invoking them via `npx`, `install.sh`, CI workflows, `docker-compose.yml` and READMEs:
-
-```sh
-git grep -n -E "@comet/dev-(process-manager|oidc-provider)"
 ```
 
 ### Rename the `comet` CLI binary to `dextinity`
@@ -303,6 +271,16 @@ Subpath imports keep their shape:
 - import { sitePreviewRoute } from "@comet/site-nextjs/server";
 + import { sitePreviewRoute } from "@dextinity/site-nextjs/server";
 ```
+
+:::caution
+
+`@comet/dev-process-manager` and `@comet/dev-oidc-provider` have **no `@dextinity/*` counterpart** — a blanket scope replacement turns them into packages that don't exist and breaks `npm install`. If your project still depends on them, restore them afterwards or exclude them from the replacement:
+
+```sh
+git grep -l "@comet/" -- <package> | xargs perl -pi -e 's{\@comet/(?!dev-)}{\@dextinity/}g'
+```
+
+:::
 
 Afterwards, reinstall so the lockfile is rewritten:
 
@@ -1003,6 +981,7 @@ Expected remaining hits:
 
 - Existing database migrations under `api/src/db/migrations/`
 - `comet-dxp.com/*` labels in Helm charts, if you didn't migrate them
+- `@comet/dev-process-manager` and `@comet/dev-oidc-provider`, which are out of scope for v10
 - Project-owned names that merely contain the word
 - Changelog and archived documentation entries
 
