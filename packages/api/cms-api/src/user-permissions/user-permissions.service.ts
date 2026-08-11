@@ -78,7 +78,7 @@ export class UserPermissionsService {
         return uniqWith(contentScopesWithLabel, (value: ContentScopeWithLabel, other: ContentScopeWithLabel) => isEqual(value.scope, other.scope));
     }
 
-    async getAvailableContentScopeDimensions(): Promise<ContentScopeDimension[]> {
+    async getAvailableContentScopeDimensions(availableContentScopes?: ContentScopeWithLabel[]): Promise<ContentScopeDimension[]> {
         if (this.options.availableContentScopeDimensions) {
             const dimensions =
                 typeof this.options.availableContentScopeDimensions === "function"
@@ -91,7 +91,8 @@ export class UserPermissionsService {
         }
 
         // Derive the dimensions from the keys of the available content scopes when not explicitly configured
-        const dimensionNames = new Set((await this.getAvailableContentScopes()).flatMap((contentScope) => Object.keys(contentScope.scope)));
+        const contentScopes = availableContentScopes ?? (await this.getAvailableContentScopes());
+        const dimensionNames = new Set(contentScopes.flatMap((contentScope) => Object.keys(contentScope.scope)));
         return [...dimensionNames].map((name) => ({ name, label: camelCaseToHumanReadable(name) }));
     }
 
@@ -150,11 +151,12 @@ export class UserPermissionsService {
     }
 
     async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
-        const availableContentScopes = (await this.getAvailableContentScopes()).map((cs) => cs.scope);
+        const availableContentScopesWithLabel = await this.getAvailableContentScopes();
+        const availableContentScopes = availableContentScopesWithLabel.map((cs) => cs.scope);
         const enumerableDimensions = this.getEnumerableDimensions(availableContentScopes);
         const allowedDimensions = new Set([
             ...enumerableDimensions,
-            ...(await this.getAvailableContentScopeDimensions()).map((dimension) => dimension.name),
+            ...(await this.getAvailableContentScopeDimensions(availableContentScopesWithLabel)).map((dimension) => dimension.name),
         ]);
         for (const scope of contentScopes) {
             for (const dimension of Object.keys(scope)) {
