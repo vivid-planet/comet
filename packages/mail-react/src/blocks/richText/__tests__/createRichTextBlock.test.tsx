@@ -1,7 +1,11 @@
+import { MjmlColumn } from "@faire/mjml-react";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
+import { MjmlMailRoot } from "../../../components/mailRoot/MjmlMailRoot.js";
+import { MjmlSection } from "../../../components/section/MjmlSection.js";
+import { renderMailHtml } from "../../../server/renderMailHtml.js";
 import { createTheme } from "../../../theme/createTheme.js";
 import { defaultTheme } from "../../../theme/defaultTheme.js";
 import { getDefaultFromResponsiveValue } from "../../../theme/responsiveValue.js";
@@ -495,5 +499,58 @@ describe("createRichTextBlock — draft depths", () => {
         const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, depthMarkerTheme);
 
         expect(markerTextsInDocumentOrder(markup)).toEqual(["L0", "L1"]);
+    });
+});
+
+describe("createRichTextBlock — nested lists", () => {
+    const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock();
+
+    function createNestedListBlocks(depths: number[]): Array<Record<string, unknown>> {
+        return depths.map((depth, index) =>
+            createDraftBlock({ key: `nested-${String(index)}`, text: `Level ${String(depth + 1)}`, type: "unordered-list-item", depth }),
+        );
+    }
+
+    it("renders every level inside one text component, leaving no unprocessed MJML tag in the compiled mail", () => {
+        const data = createBlockData(createNestedListBlocks([0, 1]));
+        const { html } = renderMailHtml(
+            <MjmlMailRoot>
+                <MjmlSection indent>
+                    <MjmlColumn>
+                        <MjmlRichTextBlock data={data} />
+                    </MjmlColumn>
+                </MjmlSection>
+            </MjmlMailRoot>,
+        );
+
+        expect(html).toContain("Level 2");
+        expect(html.match(/richTextBlock__text/g)).toHaveLength(1);
+        expect(html).not.toContain("<mj-");
+    });
+
+    it("names each level's nesting depth, marks the nested ones and leaves the variant modifier to the outermost level", () => {
+        const themeWithDefaultVariant = createTheme({ text: { defaultVariant: "body", variants: { body: { fontSize: "16px" } } } });
+        const data = createBlockData(createNestedListBlocks([0, 1, 2]));
+        const markup = renderWithTheme(<HtmlRichTextBlock data={data} />, themeWithDefaultVariant);
+
+        expect(markup.match(/richTextBlock__list--depth\d+/g)).toEqual([
+            "richTextBlock__list--depth0",
+            "richTextBlock__list--depth1",
+            "richTextBlock__list--depth2",
+        ]);
+        expect(markup.match(/richTextBlock__list--nested/g)).toHaveLength(2);
+        expect(markup.match(/richTextBlock__list--variantBody/g)).toHaveLength(1);
+    });
+
+    it("leaves the spacing below a nested level to the item enclosing it", () => {
+        const themeWithBlockSpacing = createTheme({
+            text: { defaultVariant: "body", variants: { body: { fontSize: "16px", bottomSpacing: "16px" } } },
+        });
+        const data = createBlockData(createNestedListBlocks([0, 1, 0]));
+        const rows = renderWithTheme(<HtmlRichTextBlock data={data} />, themeWithBlockSpacing).split("<tr");
+
+        expect(rows[1]).toContain("richTextBlock__listItem--itemSpacing");
+        expect(rows[2]).not.toContain("richTextBlock__listItem--blockSpacing");
+        expect(rows[2]).not.toMatch(/padding-bottom:\d+px/);
     });
 });
