@@ -1,0 +1,47 @@
+---
+title: External link options
+---
+
+The `ExternalLinkBlock` offers the options "Open in new window" and "No follow" in addition to the URL.
+Not every application needs them: an internal tool that is embedded in an iframe may always want to open external links in a new tab, and an application that isn't indexed by search engines has no use for `rel="nofollow"`.
+
+Both options can be disabled per project via the `blocks` config of the `CometConfigProvider`:
+
+```tsx title="App.tsx"
+<CometConfigProvider
+    /* Other config... */
+    blocks={{
+        externalLink: {
+            showOpenInNewWindow: false,
+            showNoFollow: false,
+        },
+    }}
+>
+    {/* Other providers... */}
+</CometConfigProvider>
+```
+
+A disabled option is hidden in the Admin, in every place the `ExternalLinkBlock` is used (`LinkBlock`, rich text links, redirects etc.).
+Already saved values aren't changed.
+
+:::info
+
+The options are hidden in the Admin only. The API still accepts and stores both values.
+
+:::
+
+## Always open external links in a new tab
+
+Hiding the "Open in new window" option doesn't change how the link is rendered on the Site: the saved value is still used.
+To open all external links in a new tab, pass `target="_blank"` to the `ExternalLinkBlock`:
+
+```tsx title="LinkBlock.tsx"
+const supportedBlocks: SupportedBlocks = {
+    external: ({ children, ...props }) => (
+        <ExternalLinkBlock data={props} target="_blank">
+            {children}
+        </ExternalLinkBlock>
+    ),
+    /* Other link blocks... */
+};
+```

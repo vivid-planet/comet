@@ -4,6 +4,7 @@ import { FormattedMessage } from "react-intl";
 import type { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
 import { isLinkTarget } from "../validation/isLinkTarget";
 import { validateLinkTarget } from "../validation/validateLinkTarget";
+import { useBlocksConfig } from "./config/BlocksConfigContext";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
@@ -59,6 +60,8 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
     },
 
     AdminComponent: ({ state, updateState }) => {
+        const { externalLink: { showOpenInNewWindow = true, showNoFollow = true } = {} } = useBlocksConfig();
+
         return (
             <SelectPreviewComponent>
                 <BlocksFinalForm
@@ -75,20 +78,24 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         validate={(url) => validateLinkTarget(url)}
                         disableContentTranslation
                     />
-                    <CheckboxField
-                        label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
-                        name="openInNewWindow"
-                    />
-                    <CheckboxField
-                        label={<FormattedMessage id="comet.blocks.link.external.noFollow" defaultMessage="No follow" />}
-                        name="noFollow"
-                        helperText={
-                            <FormattedMessage
-                                id="comet.blocks.link.external.noFollow.helperText"
-                                defaultMessage='Adds rel="nofollow" to the link, telling search engines not to follow it. Use for sponsored, paid, user-generated or untrusted links so that no SEO authority is passed to the target.'
-                            />
-                        }
-                    />
+                    {showOpenInNewWindow && (
+                        <CheckboxField
+                            label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
+                            name="openInNewWindow"
+                        />
+                    )}
+                    {showNoFollow && (
+                        <CheckboxField
+                            label={<FormattedMessage id="comet.blocks.link.external.noFollow" defaultMessage="No follow" />}
+                            name="noFollow"
+                            helperText={
+                                <FormattedMessage
+                                    id="comet.blocks.link.external.noFollow.helperText"
+                                    defaultMessage='Adds rel="nofollow" to the link, telling search engines not to follow it. Use for sponsored, paid, user-generated or untrusted links so that no SEO authority is passed to the target.'
+                                />
+                            }
+                        />
+                    )}
                 </BlocksFinalForm>
             </SelectPreviewComponent>
         );

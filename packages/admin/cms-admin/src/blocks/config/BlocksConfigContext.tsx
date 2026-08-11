@@ -12,6 +12,20 @@ export type BlocksConfig = {
      * @returns {boolean} True if the block is supported in the current scope.
      */
     isBlockSupported?: (block: BlockInterface, scope: ContentScope) => boolean;
+
+    externalLink?: {
+        /**
+         * Controls whether the "Open in new window" option is shown in the External Link block.
+         * Defaults to `true`.
+         */
+        showOpenInNewWindow?: boolean;
+
+        /**
+         * Controls whether the "No follow" option is shown in the External Link block.
+         * Defaults to `true`.
+         */
+        showNoFollow?: boolean;
+    };
 };
 
 const BlocksConfigContext = createContext<BlocksConfig>({});
