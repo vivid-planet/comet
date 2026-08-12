@@ -1,6 +1,5 @@
 {
     "name": "comet-demo-admin-server",
-    "version": "1.0.0",
     "private": true,
     "description": "Comet Admin Demo Server Application",
     "type": "commonjs",
