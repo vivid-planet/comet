@@ -36,11 +36,11 @@ export class WelcomeEmailFixtureService {
 const greeting = {
     draftContent: {
         blocks: [
-            { key: "welcome", text: "Welcome to Dextinity", type: "header-one", depth: 0, inlineStyleRanges: [], entityRanges: [], data: {} },
+            { key: "welcome", text: "Welcome to Dextinity", type: "title", depth: 0, inlineStyleRanges: [], entityRanges: [], data: {} },
             {
                 key: "intro",
                 text: "Your account is ready. We are glad to have you on board.",
-                type: "unstyled",
+                type: "copy",
                 depth: 0,
                 inlineStyleRanges: [],
                 entityRanges: [],
@@ -54,11 +54,11 @@ const greeting = {
 const nextSteps = {
     draftContent: {
         blocks: [
-            { key: "next-steps", text: "What happens next", type: "header-two", depth: 0, inlineStyleRanges: [], entityRanges: [], data: {} },
+            { key: "next-steps", text: "What happens next", type: "header", depth: 0, inlineStyleRanges: [], entityRanges: [], data: {} },
             {
                 key: "next-steps-text",
                 text: "Sign in to the admin to edit this mail. Every change shows up in the preview beside the form.",
-                type: "unstyled",
+                type: "copy",
                 depth: 0,
                 inlineStyleRanges: [],
                 entityRanges: [],
