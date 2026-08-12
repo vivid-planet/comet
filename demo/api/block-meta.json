@@ -1070,9 +1070,11 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
+                                "image": "MailImage",
+                                "button": "MailButton",
                                 "divider": "MailDivider",
-                                "salutation": "EmailCampaignSalutation",
-                                "image": "NewsletterImage"
+                                "spacer": "MailSpacer",
+                                "salutation": "EmailCampaignSalutation"
                             },
                             "nullable": false
                         }
@@ -1107,9 +1109,11 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
+                                "image": "MailImage",
+                                "button": "MailButton",
                                 "divider": "MailDivider",
-                                "salutation": "EmailCampaignSalutation",
-                                "image": "NewsletterImage"
+                                "spacer": "MailSpacer",
+                                "salutation": "EmailCampaignSalutation"
                             },
                             "nullable": false
                         }
