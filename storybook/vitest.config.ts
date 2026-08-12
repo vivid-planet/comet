@@ -5,7 +5,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
     test: {
         reporters: ["default", "junit"],
-        outputFile: { junit: "./junit-storybook.xml" },
+        outputFile: { junit: "./junit.xml" },
         projects: [
             {
                 plugins: [storybookTest({ configDir: ".storybook" })],
