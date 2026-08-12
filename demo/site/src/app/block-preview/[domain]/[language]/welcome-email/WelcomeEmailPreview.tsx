@@ -1,0 +1,59 @@
+"use client";
+
+import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
+import type { WelcomeEmailContentBlockData } from "@src/blocks.generated";
+import { RenderedMailForBlockPreview } from "@src/mail/components/RenderedMailForBlockPreview";
+import type { ContentScope } from "@src/site-configs";
+import { withBlockPreview } from "@src/util/blockPreview";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
+import { renderWelcomeEmailAsMjml } from "@src/welcomeEmail/util/renderWelcomeEmailAsMjml";
+import { useEffect, useState } from "react";
+import type { IntlConfig } from "react-intl";
+
+const cachingFetch = createFetchInMemoryCache(fetch);
+
+function isContentScope(value: unknown): value is ContentScope {
+    return typeof value === "object" && value !== null && "domain" in value && "language" in value;
+}
+
+interface WelcomeEmailPreviewProps {
+    language: string;
+    messages: IntlConfig["messages"];
+}
+
+function WelcomeEmailPreviewComponent({ language, messages }: WelcomeEmailPreviewProps) {
+    const iFrameBridge = useIFrameBridge();
+    const [blockData, setBlockData] = useState<WelcomeEmailContentBlockData>();
+
+    const scope = isContentScope(iFrameBridge.contentScope) ? iFrameBridge.contentScope : undefined;
+
+    useEffect(() => {
+        async function load() {
+            if (!iFrameBridge.block || !scope) {
+                setBlockData(undefined);
+                return;
+            }
+            const graphQLFetch = createGraphQLFetch({ fetch: cachingFetch });
+            const newData = await recursivelyLoadBlockData({
+                blockType: "WelcomeEmailContent",
+                blockData: iFrameBridge.block,
+                graphQLFetch,
+                fetch: cachingFetch,
+                scope,
+            });
+            setBlockData(newData);
+        }
+        load();
+    }, [iFrameBridge.block, scope]);
+
+    if (blockData === undefined) {
+        return null;
+    }
+
+    const mjmlContent = renderWelcomeEmailAsMjml(blockData, { locale: language, messages });
+
+    return <RenderedMailForBlockPreview mjmlContent={mjmlContent} />;
+}
+
+export const WelcomeEmailPreview = withBlockPreview(WelcomeEmailPreviewComponent);
