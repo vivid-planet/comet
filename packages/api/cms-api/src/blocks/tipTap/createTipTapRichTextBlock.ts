@@ -32,6 +32,7 @@ import { SoftHyphen } from "./extensions/SoftHyphen";
 import { TextBlockStyleHeading } from "./extensions/TextBlockStyleHeading";
 import { TextBlockStyleParagraph } from "./extensions/TextBlockStyleParagraph";
 import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
+import type { TextBlockStyleMapping } from "./migrations/convertDraftJsToTipTap";
 
 export type TipTapSupports =
     | "bold"
@@ -140,14 +141,15 @@ export interface CreateTipTapRichTextBlockOptions {
      * to build the target schema, validates the converted document, and falls back to a
      * stripped-down plain-text-paragraph document if validation fails.
      *
-     * Pass an object with `textBlockStyleMap` to map DraftJS custom block types (e.g.
-     * `paragraph-small` from a DraftJS `blocktypeMap`) to TipTap paragraph `textBlockStyle`
-     * attribute values.
+     * Pass an object with `textBlockStyleMap` to map DraftJS block types (e.g. `paragraph-small`
+     * from a DraftJS `blocktypeMap`) to TipTap `textBlockStyle` attribute values. Use the
+     * `{ textBlockType, textBlockStyle }` form to also set the text block type, for instance to
+     * convert a DraftJS block type that was rendered as `<h2>` into a TipTap heading with level 2.
      *
      * Pass an object with `inlineStyleMap` to map DraftJS custom inline style names (e.g.
      * `highlight` from a DraftJS `customInlineStyles`) to TipTap `inlineStyle` mark type values.
      */
-    migrateFromDraftJs?: boolean | { textBlockStyleMap?: Record<string, string>; inlineStyleMap?: Record<string, string> };
+    migrateFromDraftJs?: boolean | { textBlockStyleMap?: Record<string, string | TextBlockStyleMapping>; inlineStyleMap?: Record<string, string> };
 }
 
 function buildExtensions(
