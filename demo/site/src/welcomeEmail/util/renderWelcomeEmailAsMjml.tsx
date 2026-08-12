@@ -1,4 +1,4 @@
-import { renderToMjml } from "@comet/mail-react";
+import { type Config, renderToMjml } from "@comet/mail-react";
 import type { WelcomeEmailContentBlockData } from "@src/blocks.generated";
 import { MailRoot } from "@src/mail/components/MailRoot";
 import { WelcomeEmailContentBlock } from "@src/welcomeEmail/blocks/WelcomeEmailContentBlock";
@@ -9,12 +9,12 @@ interface IntlProviderValues {
     messages: IntlConfig["messages"];
 }
 
-export function renderWelcomeEmailAsMjml(blockData: WelcomeEmailContentBlockData, intlProviderValues: IntlProviderValues) {
+export function renderWelcomeEmailAsMjml(blockData: WelcomeEmailContentBlockData, intlProviderValues: IntlProviderValues, config: Config) {
     const { locale, messages } = intlProviderValues;
 
     return renderToMjml(
         <IntlProvider messages={messages} locale={locale}>
-            <MailRoot>
+            <MailRoot config={config}>
                 <WelcomeEmailContentBlock content={blockData} />
             </MailRoot>
         </IntlProvider>,

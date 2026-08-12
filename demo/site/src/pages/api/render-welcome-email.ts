@@ -1,4 +1,5 @@
 import type { WelcomeEmailContentBlockData } from "@src/blocks.generated";
+import { getMailConfig } from "@src/mail/util/getMailConfig";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { loadMessages } from "@src/util/loadMessages";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
@@ -60,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     const messages = await loadMessages(scope.language);
-    const mjml = renderWelcomeEmailAsMjml(content, { locale: scope.language, messages });
+    const mjml = renderWelcomeEmailAsMjml(content, { locale: scope.language, messages }, getMailConfig(scope));
     const { html } = mjml2html(mjml, { validationLevel: "soft" });
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");

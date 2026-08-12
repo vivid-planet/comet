@@ -1,12 +1,11 @@
-import { MjmlColumn, MjmlDivider } from "@comet/mail-react";
-import { IndentedSectionGroup } from "@src/mail/components/IndentedSectionGroup";
+import { MjmlColumn, MjmlDivider, MjmlSection } from "@comet/mail-react";
 
 export const MailDividerBlock = () => {
     return (
-        <IndentedSectionGroup>
+        <MjmlSection indent>
             <MjmlColumn>
                 <MjmlDivider />
             </MjmlColumn>
-        </IndentedSectionGroup>
+        </MjmlSection>
     );
 };

@@ -1,6 +1,6 @@
-import { getEmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
 import { renderMailContentAsMjml } from "@src/brevo/util/renderMailContentAsMjml";
 import { replaceMailHtmlPlaceholders } from "@src/brevo/util/replaceMailHtmlPlaceholders";
+import { getMailConfig } from "@src/mail/util/getMailConfig";
 import { loadMessages } from "@src/util/loadMessages";
 import mjml2html from "mjml";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { content, scope } = validationResult.data;
     const messages = await loadMessages(scope.language);
 
-    const mjml = renderMailContentAsMjml(content, { locale: scope.language, messages }, getEmailCampaignConfig(scope));
+    const mjml = renderMailContentAsMjml(content, { locale: scope.language, messages }, getMailConfig(scope));
     const { html } = mjml2html(mjml, { validationLevel: "soft" });
     const outputHtml = replaceMailHtmlPlaceholders(html, "mail");
 
