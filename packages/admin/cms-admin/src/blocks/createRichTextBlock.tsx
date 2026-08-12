@@ -95,15 +95,10 @@ export interface RichTextBlockFactoryOptions {
     tags?: Array<MessageDescriptor | string>;
 }
 
-export type RichTextBlock = BlockInterface<RichTextBlockData, RichTextBlockState> & ReadOnlyBlockRenderInterface<RichTextBlockState>;
-
-type RichTextBlockWithOutput = BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput> &
+export type RichTextBlock = BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput> &
     ReadOnlyBlockRenderInterface<RichTextBlockState>;
 
-export const createRichTextBlock = (
-    options: RichTextBlockFactoryOptions,
-    override?: (block: RichTextBlockWithOutput) => RichTextBlockWithOutput,
-): RichTextBlockWithOutput => {
+export const createRichTextBlock = (options: RichTextBlockFactoryOptions, override?: (block: RichTextBlock) => RichTextBlock): RichTextBlock => {
     const CmsLinkToolbarButton = createCmsLinkToolbarButton({ link: options.link });
     const defaultRteOptions: IRteOptions = {
         supports: [
