@@ -31,7 +31,7 @@
         "lint:tsc": "tsc --noEmit",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
         "test": "pnpm run test:unit",
-        "test:unit": "vitest --run --passWithNoTests",
+        "test:unit": "vitest --run",
         "test:watch": "vitest --watch"
     },
     "dependencies": {

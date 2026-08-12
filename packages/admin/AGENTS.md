@@ -52,14 +52,18 @@ All packages use **Vitest** as the test framework.
 
 ### Which packages have tests
 
-| Package              | Test Environment | Setup File       |
-| -------------------- | ---------------- | ---------------- |
-| `@comet/admin`       | jsdom            | vitest.setup.ts  |
-| `@comet/admin-rte`   | jsdom            | —                |
-| `@comet/admin-generator` | node (default) | —            |
-| `@comet/cms-admin`   | jsdom            | vitest.setup.ts  |
+| Package                     | Test Environment | Setup File      |
+| --------------------------- | ---------------- | --------------- |
+| `@comet/admin`              | jsdom            | vitest.setup.ts |
+| `@comet/admin-color-picker` | jsdom            | —               |
+| `@comet/admin-date-time`    | jsdom            | —               |
+| `@comet/admin-icons`        | jsdom            | —               |
+| `@comet/admin-rte`          | jsdom            | —               |
+| `@comet/admin-generator`    | node (default)   | —               |
+| `@comet/brevo-admin`        | jsdom            | —               |
+| `@comet/cms-admin`          | jsdom            | vitest.setup.ts |
 
-The remaining packages (`admin-babel-preset`, `admin-color-picker`, `admin-date-time`, `admin-icons`, `brevo-admin`) do not have tests.
+`admin-babel-preset` has no tests — it only exports a Babel config.
 
 ### Running tests
 
@@ -84,5 +88,6 @@ cd admin-generator && pnpm run test:updateSnapshot
 
 - Test files are co-located with source code, typically in the same directory or a `__tests__/` subdirectory
 - File naming: `*.test.ts(x)` or `*.spec.ts(x)`
-- Packages testing React components (`admin`, `admin-rte`, `cms-admin`) use the `jsdom` environment and `@testing-library/react`
+- Packages testing React components use the `jsdom` environment and `@testing-library/react`
 - `admin-generator` tests use snapshot testing to verify generated output
+- Test files are excluded from the published output via the `ignore` option in `.babelrc.json` and the `exclude` option in `tsconfig.build.json`

@@ -25,7 +25,7 @@
     "scripts": {
         "build": "pnpm run clean && run-p build:babel build:types",
         "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
-        "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
+        "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
@@ -37,7 +37,10 @@
         "lint:tsc": "tsc --noEmit",
         "start": "run-p start:babel start:types",
         "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib -w",
-        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
+        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
+        "test": "pnpm run test:unit",
+        "test:unit": "vitest --run",
+        "test:watch": "vitest --watch"
     },
     "dependencies": {
         "@comet/admin": "workspace:*",
@@ -57,6 +60,7 @@
         "@types/react-dom": "^19.2.3",
         "eslint": "^9.39.4",
         "final-form": "^4.20.10",
+        "jsdom": "^28.1.0",
         "npm-run-all2": "^8.0.4",
         "prettier": "^3.6.2",
         "react": "^19.2.6",
@@ -64,7 +68,8 @@
         "react-final-form": "^6.5.9",
         "react-intl": "^7.1.11",
         "rimraf": "^6.1.2",
-        "typescript": "^5.9.3"
+        "typescript": "^5.9.3",
+        "vitest": "^4.1.8"
     },
     "peerDependencies": {
         "@mui/material": "^7.0.0",
