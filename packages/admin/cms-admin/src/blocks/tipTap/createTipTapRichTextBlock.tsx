@@ -1,5 +1,6 @@
 import { greyPalette } from "@comet/admin";
 import { Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { Extension } from "@tiptap/core";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
@@ -9,7 +10,7 @@ import { type ComponentType, type HTMLAttributes, type ReactNode, useEffect } fr
 import { FormattedMessage } from "react-intl";
 
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
+import { BlockCategory, type BlockInterface, type LinkBlockInterface, type ReadOnlyBlockRenderInterface } from "../types";
 import { ChildBlocksContext } from "./ChildBlocksContext";
 import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
@@ -318,6 +319,16 @@ async function translateTextNodesAsync(content: JSONContent, translate: (text: s
     return result;
 }
 
+const ReadOnlyContent = styled("div")({
+    ".tiptap > :first-child, .tiptap > :first-child > :first-child": {
+        marginTop: 0,
+    },
+
+    ".tiptap > :last-child, .tiptap > :last-child > :last-child": {
+        marginBottom: 0,
+    },
+});
+
 const TipTapEditor = ({
     state,
     updateState,
@@ -436,7 +447,7 @@ const TipTapEditor = ({
             <InlineStyleContext.Provider value={inlineStyles}>
                 <ChildBlocksContext.Provider value={childBlocksByKey}>
                     {readOnly ? (
-                        editorNode
+                        <ReadOnlyContent>{editorNode}</ReadOnlyContent>
                     ) : (
                         <Box sx={{ border: `1px solid ${greyPalette[100]}`, borderTopWidth: 0, backgroundColor: "white", borderRadius: "2px" }}>
                             <TipTapToolbar
@@ -458,10 +469,8 @@ const TipTapEditor = ({
     );
 };
 
-type TipTapRichTextBlockInterface = BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> & {
-    /** Renders the block's saved state read-only, without an editing UI. */
-    ReadOnlyComponent: ComponentType<{ state: TipTapRichTextBlockState }>;
-};
+type TipTapRichTextBlockInterface = BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> &
+    ReadOnlyBlockRenderInterface<TipTapRichTextBlockState>;
 
 /**
  * @experimental
