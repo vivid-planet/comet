@@ -224,12 +224,12 @@ const depthMarkersTheme = createTheme({
     },
     list: {
         unorderedMarker: ({ depth }) => bulletLadder[depth % bulletLadder.length],
-        // 97 is the code of "a", so nested items are lettered a., b., c.
-        orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `${String.fromCharCode(97 + index)}.`),
+        // 65 is the code of "A", so nested items are lettered ItemA., ItemB., ItemC.
+        orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `Item${String.fromCharCode(65 + index)}.`),
     },
 });
 
-/** Both markers vary by `depth`: the bullets cycle through `▪`, `–`, `·`, and nested numbered items are lettered, each nested list starting again at `a.`. */
+/** Both markers vary by `depth`: the bullets cycle through `▪`, `–`, `·`, and nested numbered items are lettered, each nested list starting again at `A.`. */
 export const ListMarkersPerDepth: Story = {
     parameters: {
         theme: depthMarkersTheme,

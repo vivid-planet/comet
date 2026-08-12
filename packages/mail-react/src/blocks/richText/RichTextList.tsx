@@ -19,6 +19,15 @@ function variantModifier(variantName: string): string {
     return `richTextBlock__list--variant${variantName.charAt(0).toUpperCase()}${variantName.slice(1)}`;
 }
 
+// MJML wraps every child of a column in a `<td>` with `word-break: break-word`, and this cell inherits it. That lets a
+// browser shrink the cell to one character wide, so the full-width text cell next to it pushes the marker onto two
+// lines. `word-break: normal` undoes it; `white-space: nowrap` alone does not, because Outlook on the web strips
+// `white-space` from inline styles.
+const markerCellNoLineBreak: CSSProperties = {
+    whiteSpace: "nowrap",
+    wordBreak: "normal",
+};
+
 interface RichTextListItem {
     key: string;
     content: ReactNode;
@@ -110,7 +119,7 @@ export function RichTextList({ ordered, variant, bottomSpacing, depth, items }: 
                                 style={{
                                     ...cellStyle,
                                     ...markerCellPadding,
-                                    whiteSpace: "nowrap", // The full-width text cell squeezes this column, so markers such as `10.` must stay on one line.
+                                    ...markerCellNoLineBreak,
                                 }}
                             >
                                 {resolveMarker(ordered ? list.orderedMarker : list.unorderedMarker, { index, depth })}
