@@ -78,7 +78,7 @@ export class UserPermissionsService {
         return uniqWith(contentScopesWithLabel, (value: ContentScopeWithLabel, other: ContentScopeWithLabel) => isEqual(value.scope, other.scope));
     }
 
-    async getAvailableContentScopeDimensions(availableContentScopes?: ContentScopeWithLabel[]): Promise<ContentScopeDimension[]> {
+    async getAvailableContentScopeDimensions(): Promise<ContentScopeDimension[]> {
         if (this.options.availableContentScopeDimensions) {
             const dimensions =
                 typeof this.options.availableContentScopeDimensions === "function"
@@ -91,8 +91,7 @@ export class UserPermissionsService {
         }
 
         // Derive the dimensions from the keys of the available content scopes when not explicitly configured
-        const contentScopes = availableContentScopes ?? (await this.getAvailableContentScopes());
-        const dimensionNames = new Set(contentScopes.flatMap((contentScope) => Object.keys(contentScope.scope)));
+        const dimensionNames = new Set((await this.getAvailableContentScopes()).flatMap((contentScope) => Object.keys(contentScope.scope)));
         return [...dimensionNames].map((name) => ({ name, label: camelCaseToHumanReadable(name) }));
     }
 
@@ -148,42 +147,6 @@ export class UserPermissionsService {
             throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
         }
         return this.userService.findUsers(args);
-    }
-
-    async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
-        const availableContentScopesWithLabel = await this.getAvailableContentScopes();
-        const availableContentScopes = availableContentScopesWithLabel.map((cs) => cs.scope);
-        const enumerableDimensions = this.getEnumerableDimensions(availableContentScopes);
-        const allowedDimensions = new Set([
-            ...enumerableDimensions,
-            ...(await this.getAvailableContentScopeDimensions(availableContentScopesWithLabel)).map((dimension) => dimension.name),
-        ]);
-        for (const scope of contentScopes) {
-            for (const dimension of Object.keys(scope)) {
-                if (!allowedDimensions.has(dimension)) {
-                    throw new Error(`ContentScope has unknown dimension "${dimension}": ${JSON.stringify(scope)}.`);
-                }
-            }
-            if (!this.matchesAvailableContentScope(scope, availableContentScopes, enumerableDimensions)) {
-                throw new Error(`ContentScope does not exist: ${JSON.stringify(scope)}.`);
-            }
-        }
-    }
-
-    private getEnumerableDimensions(availableContentScopes: ContentScope[]): Set<string> {
-        return new Set(availableContentScopes.flatMap((scope) => Object.keys(scope)));
-    }
-
-    /**
-     * A content scope is valid if the part built from the enumerable dimensions (the dimensions present in the available content
-     * scopes) matches an available content scope. Dimensions that are not part of the available content scopes (e.g. an optional
-     * dimension with too many values to enumerate) may hold any value.
-     */
-    private matchesAvailableContentScope(scope: ContentScope, availableContentScopes: ContentScope[], enumerableDimensions: Set<string>): boolean {
-        const enumerableScope = Object.fromEntries(
-            Object.entries(scope as Record<string, unknown>).filter(([dimension]) => enumerableDimensions.has(dimension)),
-        );
-        return availableContentScopes.some((availableContentScope) => isEqual(availableContentScope, enumerableScope));
     }
 
     async warmupHasPermissionCache() {
@@ -261,7 +224,6 @@ export class UserPermissionsService {
         includeContentScopesManual: boolean;
         representAllContentScopesAsWildcard?: boolean;
     }): Promise<ContentScope[]> {
-        const enumerableDimensions = this.getEnumerableDimensions(availableContentScopes);
         const contentScopes: ContentScope[] = [];
 
         if (this.accessControlService.getContentScopesForUser) {
@@ -286,9 +248,7 @@ export class UserPermissionsService {
         if (includeContentScopesManual) {
             const entity = await this.contentScopeRepository.findOne({ userId: user.id });
             if (entity) {
-                contentScopes.push(
-                    ...entity.contentScopes.filter((value) => this.matchesAvailableContentScope(value, availableContentScopes, enumerableDimensions)),
-                );
+                contentScopes.push(...entity.contentScopes);
             }
         }
 
