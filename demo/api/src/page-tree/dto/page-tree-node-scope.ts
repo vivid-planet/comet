@@ -3,8 +3,8 @@ import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 
 @Embeddable()
-@ObjectType("PageTreeNodeScope") // name must not be changed in the app
-@InputType("PageTreeNodeScopeInput") // name must not be changed in the app
+@ObjectType("PageTreeNodeScope")
+@InputType("PageTreeNodeScopeInput")
 export class PageTreeNodeScope {
     @Property({ columnType: "text" })
     @Field()
