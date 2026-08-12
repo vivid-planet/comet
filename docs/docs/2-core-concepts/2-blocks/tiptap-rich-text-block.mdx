@@ -202,6 +202,20 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
 });
 ```
 
+A mapped block type keeps its text block type: `header-two` still becomes a heading with level 2, only with the mapped `textBlockStyle` applied. If the Draft.js block type doesn't carry that information — a custom block type such as `headline450` that was rendered as `<h2>` — pass a `{ textBlockType, textBlockStyle }` object to set the text block type explicitly, so the semantic tag isn't lost:
+
+```ts title="tip-tap-rich-text.block.ts"
+export const TipTapRichTextBlock = createTipTapRichTextBlock({
+    textBlockStyles: [{ name: "headline450", appliesTo: ["heading-2"] }],
+    migrateFromDraftJs: {
+        // highlight-next-line
+        textBlockStyleMap: { headline450: { textBlockType: "heading-2", textBlockStyle: "headline450" } },
+    },
+});
+```
+
+`textBlockType` accepts `paragraph` and `heading-1` … `heading-6`. Both parts are optional: pass only `textBlockType` to change the tag without applying a style, or only `textBlockStyle` (equivalent to the plain string form) to keep the text block type derived from the Draft.js block type.
+
 #### Migration versioning
 
 `migrateFromDraftJs` reserves **version 1** for the injected Draft.js → TipTap migration. Your own [block migrations](./5-migrations.mdx) must therefore start at **version 2**:
