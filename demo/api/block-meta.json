@@ -1735,9 +1735,105 @@
         ]
     },
     {
+        "name": "MailButton",
+        "fields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "ExternalLink",
+                "nullable": false
+            },
+            {
+                "name": "variant",
+                "kind": "Enum",
+                "enum": [
+                    "filled",
+                    "outlined"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "align",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "ExternalLink",
+                "nullable": false
+            },
+            {
+                "name": "variant",
+                "kind": "Enum",
+                "enum": [
+                    "filled",
+                    "outlined"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "align",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "MailDivider",
         "fields": [],
         "inputFields": []
+    },
+    {
+        "name": "MailImage",
+        "fields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "fullWidth",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "fullWidth",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ]
     },
     {
         "name": "MailLink",
@@ -1809,6 +1905,33 @@
                 "name": "title",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "MailSpacer",
+        "fields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "small",
+                    "medium",
+                    "large"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "small",
+                    "medium",
+                    "large"
+                ],
+                "nullable": false
             }
         ]
     },
@@ -4159,7 +4282,10 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "MailDivider"
+                                "image": "MailImage",
+                                "button": "MailButton",
+                                "divider": "MailDivider",
+                                "spacer": "MailSpacer"
                             },
                             "nullable": false
                         }
@@ -4194,7 +4320,10 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "MailDivider"
+                                "image": "MailImage",
+                                "button": "MailButton",
+                                "divider": "MailDivider",
+                                "spacer": "MailSpacer"
                             },
                             "nullable": false
                         }
