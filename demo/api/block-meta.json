@@ -1070,7 +1070,7 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "EmailCampaignDivider",
+                                "divider": "MailDivider",
                                 "salutation": "EmailCampaignSalutation",
                                 "image": "NewsletterImage"
                             },
@@ -1107,7 +1107,7 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "EmailCampaignDivider",
+                                "divider": "MailDivider",
                                 "salutation": "EmailCampaignSalutation",
                                 "image": "NewsletterImage"
                             },
@@ -1118,11 +1118,6 @@
                 "nullable": false
             }
         ]
-    },
-    {
-        "name": "EmailCampaignDivider",
-        "fields": [],
-        "inputFields": []
     },
     {
         "name": "EmailCampaignSalutation",
@@ -1738,6 +1733,11 @@
                 "nullable": false
             }
         ]
+    },
+    {
+        "name": "MailDivider",
+        "fields": [],
+        "inputFields": []
     },
     {
         "name": "Media",

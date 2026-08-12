@@ -1,6 +1,6 @@
 import { MjmlColumn, MjmlText, type PropsWithData } from "@comet/mail-react";
 import type { RichTextBlockData } from "@src/blocks.generated";
-import { IndentedSectionGroup } from "@src/brevo/components/IndentedSectionGroup";
+import { IndentedSectionGroup } from "@src/mail/components/IndentedSectionGroup";
 import type { FC } from "react";
 import { FormattedMessage } from "react-intl";
 

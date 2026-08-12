@@ -10,7 +10,7 @@ import {
     MjmlText,
     MjmlTitle,
 } from "@comet/mail-react";
-import { theme } from "@src/brevo/util/theme";
+import { theme } from "@src/mail/theme";
 import type { FC, PropsWithChildren } from "react";
 
 import { indentedSectionGroupStyles } from "./IndentedSectionGroup";
@@ -38,7 +38,7 @@ const outlookFontFixStyles = (
     `}</MjmlStyle>
 );
 
-export const Root: FC<Props> = ({ children, title }) => {
+export const MailRoot: FC<Props> = ({ children, title }) => {
     return (
         <Mjml>
             <MjmlHead>

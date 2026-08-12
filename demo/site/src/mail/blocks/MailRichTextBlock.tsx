@@ -1,8 +1,8 @@
 import { MjmlColumn, type PropsWithData } from "@comet/mail-react";
 import { ExternalLinkBlock } from "@comet/site-nextjs";
 import type { ExternalLinkBlockData, RichTextBlockData } from "@src/blocks.generated";
-import { IndentedSectionGroup } from "@src/brevo/components/IndentedSectionGroup";
-import { Typography, type TypographyProps } from "@src/brevo/components/Typography";
+import { IndentedSectionGroup } from "@src/mail/components/IndentedSectionGroup";
+import { Typography, type TypographyProps } from "@src/mail/components/Typography";
 import { type FC, isValidElement } from "react";
 import redraft, { type Renderers, type TextBlockRenderFn } from "redraft";
 
@@ -45,7 +45,7 @@ const defaultRichTextRenderers: Renderers = {
     },
 };
 
-export const EmailCampaignRichTextBlock: FC<PropsWithData<RichTextBlockData>> = ({ data }) => {
+export const MailRichTextBlock: FC<PropsWithData<RichTextBlockData>> = ({ data }) => {
     const rendered = redraft(data.draftContent, defaultRichTextRenderers);
 
     return (
