@@ -81,7 +81,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminFutureDateRangePicker",
+        name: "CometAdminDateRangePicker",
     });
     const intl = useIntl();
 
