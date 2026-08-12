@@ -8,7 +8,7 @@ import type { ContentScope } from "@src/site-configs";
 import { withBlockPreview } from "@src/util/blockPreview";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
-import { renderWelcomeEmailAsMjml } from "@src/welcomeEmail/util/renderWelcomeEmailAsMjml";
+import { WelcomeEmailMail } from "@src/welcomeEmail/WelcomeEmailMail";
 import { useEffect, useState } from "react";
 import type { IntlConfig } from "react-intl";
 
@@ -53,9 +53,7 @@ function WelcomeEmailPreviewComponent({ language, messages, config }: WelcomeEma
         return null;
     }
 
-    const mjmlContent = renderWelcomeEmailAsMjml(blockData, { locale: language, messages }, config);
-
-    return <RenderedMailForBlockPreview mjmlContent={mjmlContent} />;
+    return <RenderedMailForBlockPreview mail={<WelcomeEmailMail content={blockData} config={config} locale={language} messages={messages} />} />;
 }
 
 export const WelcomeEmailPreview = withBlockPreview(WelcomeEmailPreviewComponent);
