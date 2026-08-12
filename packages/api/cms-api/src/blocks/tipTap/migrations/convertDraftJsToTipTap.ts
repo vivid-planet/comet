@@ -74,6 +74,11 @@ interface ConvertOptions {
      * Matched ranges become `{ type: "inlineStyle", attrs: { type: <mappedValue> } }`.
      */
     inlineStyleMap?: Record<string, string>;
+    /**
+     * Limits the nesting depth of the generated lists. Draft.js list items that are indented deeper
+     * are placed on the deepest allowed level instead.
+     */
+    listLevelMax?: number;
 }
 
 const INLINE_STYLE_TO_MARK: Record<string, { mark: string; supports: TipTapSupports }> = {
@@ -280,6 +285,18 @@ function makeListItem(inlineContent: JSONContent[]): JSONContent {
     };
 }
 
+type ListType = "orderedList" | "bulletList";
+
+const LIST_BLOCK_TYPE_TO_LIST: Record<string, { listType: ListType; supports: TipTapSupports }> = {
+    "unordered-list-item": { listType: "bulletList", supports: "unordered-list" },
+    "ordered-list-item": { listType: "orderedList", supports: "ordered-list" },
+};
+
+interface OpenList {
+    type: ListType;
+    items: JSONContent[];
+}
+
 function normalizeTextBlockStyleMapping(mapping: string | TextBlockStyleMapping | undefined): TextBlockStyleMapping | undefined {
     if (mapping === undefined) {
         return undefined;
@@ -297,42 +314,68 @@ export function convertDraftJsToTipTap(draftContent: DraftJsContent | undefined 
     const textBlockStyleMap = options.textBlockStyleMap ?? {};
     const inlineStyleMap = options.inlineStyleMap ?? {};
     const entityMap = draftContent.entityMap ?? {};
+    const maxListLevels = options.listLevelMax !== undefined ? Math.max(options.listLevelMax, 1) : undefined;
 
     const topLevel: JSONContent[] = [];
 
-    let currentListType: "orderedList" | "bulletList" | null = null;
-    let currentListItems: JSONContent[] = [];
+    // Draft.js stores list nesting as a flat sequence of list items carrying a `depth`, while TipTap
+    // nests a sub-list inside the `listItem` it belongs to. The stack holds the lists that are
+    // currently open, from the outermost level to the level the previous list item was placed on.
+    const openLists: OpenList[] = [];
 
-    const flushList = () => {
-        if (currentListType && currentListItems.length > 0) {
-            topLevel.push({ type: currentListType, content: currentListItems });
+    const closeDeepestList = () => {
+        const closedList = openLists.pop();
+        if (!closedList || closedList.items.length === 0) {
+            return;
         }
-        currentListType = null;
-        currentListItems = [];
+
+        const list: JSONContent = { type: closedList.type, content: closedList.items };
+        const parentList = openLists[openLists.length - 1];
+        if (parentList) {
+            const parentItem = parentList.items[parentList.items.length - 1];
+            parentItem.content = [...(parentItem.content ?? []), list];
+        } else {
+            topLevel.push(list);
+        }
+    };
+
+    const flushLists = () => {
+        while (openLists.length > 0) {
+            closeDeepestList();
+        }
+    };
+
+    const addListItem = (listType: ListType, depth: number, inlineContent: JSONContent[]) => {
+        // A list item may only be indented one level deeper than its predecessor, no matter how
+        // large the gap in Draft.js is. `listLevelMax` limits the nesting further.
+        let level = Math.min(Math.max(depth, 0), openLists.length);
+        if (maxListLevels !== undefined) {
+            level = Math.min(level, maxListLevels - 1);
+        }
+
+        while (openLists.length > level + 1) {
+            closeDeepestList();
+        }
+        if (openLists.length === level + 1 && openLists[level].type !== listType) {
+            closeDeepestList();
+        }
+        if (openLists.length === level) {
+            openLists.push({ type: listType, items: [] });
+        }
+
+        openLists[openLists.length - 1].items.push(makeListItem(inlineContent));
     };
 
     for (const block of draftContent.blocks) {
         const inlineContent = buildInlineContent(block, entityMap, supports, hasLink, inlineStyleMap);
 
-        if (block.type === "unordered-list-item" && supports.has("unordered-list")) {
-            if (currentListType !== "bulletList") {
-                flushList();
-                currentListType = "bulletList";
-            }
-            currentListItems.push(makeListItem(inlineContent));
+        const listMapping = LIST_BLOCK_TYPE_TO_LIST[block.type];
+        if (listMapping && supports.has(listMapping.supports)) {
+            addListItem(listMapping.listType, block.depth ?? 0, inlineContent);
             continue;
         }
 
-        if (block.type === "ordered-list-item" && supports.has("ordered-list")) {
-            if (currentListType !== "orderedList") {
-                flushList();
-                currentListType = "orderedList";
-            }
-            currentListItems.push(makeListItem(inlineContent));
-            continue;
-        }
-
-        flushList();
+        flushLists();
 
         const mapping = normalizeTextBlockStyleMapping(textBlockStyleMap[block.type]);
         const headingLevel =
@@ -346,7 +389,7 @@ export function convertDraftJsToTipTap(draftContent: DraftJsContent | undefined 
         );
     }
 
-    flushList();
+    flushLists();
 
     if (topLevel.length === 0) {
         return makeEmptyDoc();

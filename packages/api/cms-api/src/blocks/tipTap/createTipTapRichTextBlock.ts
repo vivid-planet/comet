@@ -33,6 +33,7 @@ import { TextBlockStyleHeading } from "./extensions/TextBlockStyleHeading";
 import { TextBlockStyleParagraph } from "./extensions/TextBlockStyleParagraph";
 import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
 import type { TextBlockStyleMapping } from "./migrations/convertDraftJsToTipTap";
+import { getListNestingDepth } from "./tipTapValidation";
 
 export type TipTapSupports =
     | "bold"
@@ -137,9 +138,9 @@ export interface CreateTipTapRichTextBlockOptions {
      * Enables best-effort migration of DraftJS-based RichTextBlock data
      * (`{ draftContent: { blocks, entityMap } }`) into TipTap data.
      *
-     * The migration uses the `supports`, `textBlockStyles`, `link`, and `maxTextBlocks` options
-     * to build the target schema, validates the converted document, and falls back to a
-     * stripped-down plain-text-paragraph document if validation fails.
+     * The migration uses the `supports`, `textBlockStyles`, `link`, `maxTextBlocks`, and
+     * `listLevelMax` options to build the target schema, validates the converted document, and
+     * falls back to a stripped-down plain-text-paragraph document if validation fails.
      *
      * Pass an object with `textBlockStyleMap` to map DraftJS block types (e.g. `paragraph-small`
      * from a DraftJS `blocktypeMap`) to TipTap `textBlockStyle` attribute values. Use the
@@ -320,28 +321,6 @@ function collectPlaceholderNames(content: JSONContent): string[] {
     }
 
     return names;
-}
-
-function getListNestingDepth(content: JSONContent, currentDepth = 0): number {
-    if (!content || typeof content !== "object") {
-        return 0;
-    }
-
-    const isListNode = content.type === "bulletList" || content.type === "orderedList";
-    const depth = isListNode ? currentDepth + 1 : currentDepth;
-
-    if (!Array.isArray(content.content)) {
-        return depth;
-    }
-
-    let maxDepth = depth;
-    for (const child of content.content) {
-        const childDepth = getListNestingDepth(child, depth);
-        if (childDepth > maxDepth) {
-            maxDepth = childDepth;
-        }
-    }
-    return maxDepth;
 }
 
 function getTextBlockTypeFromNode(node: JSONContent): TipTapTextBlockType | undefined {
@@ -575,6 +554,7 @@ export function createTipTapRichTextBlock(
                       supports,
                       link: LinkBlock,
                       maxTextBlocks,
+                      listLevelMax,
                       textBlockStyleMap: draftJsTextBlockStyleMap,
                       inlineStyleMap: draftJsInlineStyleMap,
                   }),
