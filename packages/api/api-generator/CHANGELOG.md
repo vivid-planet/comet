@@ -1,5 +1,11 @@
 # @comet/api-generator
 
+## 8.30.0
+
+### Patch Changes
+
+- @comet/cms-api@8.30.0
+
 ## 8.29.0
 
 ### Patch Changes

@@ -1,5 +1,7 @@
 # @comet/cli
 
+## 8.30.0
+
 ## 8.29.0
 
 ### Minor Changes
