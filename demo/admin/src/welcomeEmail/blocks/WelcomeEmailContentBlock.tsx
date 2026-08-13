@@ -1,4 +1,4 @@
-import { createBlocksBlock } from "@comet/cms-admin";
+import { createBlocksBlock } from "@dextinity/cms-admin";
 import { MailDividerBlock } from "@src/mail/blocks/MailDividerBlock";
 import { MailRichTextBlock } from "@src/mail/blocks/MailRichTextBlock";
 

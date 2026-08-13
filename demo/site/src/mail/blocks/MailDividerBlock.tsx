@@ -1,4 +1,4 @@
-import { MjmlColumn, MjmlDivider, MjmlSection } from "@comet/mail-react";
+import { MjmlColumn, MjmlDivider, MjmlSection } from "@dextinity/mail-react";
 
 export const MailDividerBlock = () => {
     return (

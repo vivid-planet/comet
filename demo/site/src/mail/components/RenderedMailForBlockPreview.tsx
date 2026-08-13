@@ -11,7 +11,7 @@ export const RenderedMailForBlockPreview: FC<Props> = ({ mail, transformHtml }) 
 
     useEffect(() => {
         (async () => {
-            const { renderMailHtml } = await import("@comet/mail-react/client");
+            const { renderMailHtml } = await import("@dextinity/mail-react/client");
             const { html, mjmlWarnings } = renderMailHtml(mail);
 
             if (process.env.NODE_ENV === "development" && mjmlWarnings.length) {

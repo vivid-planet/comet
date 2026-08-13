@@ -1,4 +1,4 @@
-import { createTableBlock } from "@comet/cms-admin";
+import { createTableBlock } from "@dextinity/cms-admin";
 import { FormattedMessage } from "react-intl";
 
 import { TipTapRichTextBlock } from "./TipTapRichTextBlock";

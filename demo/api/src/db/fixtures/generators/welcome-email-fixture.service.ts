@@ -36,7 +36,7 @@ export class WelcomeEmailFixtureService {
 const greeting = {
     draftContent: {
         blocks: [
-            { key: "welcome", text: "Welcome to Comet", type: "header-one", depth: 0, inlineStyleRanges: [], entityRanges: [], data: {} },
+            { key: "welcome", text: "Welcome to Dextinity", type: "header-one", depth: 0, inlineStyleRanges: [], entityRanges: [], data: {} },
             {
                 key: "intro",
                 text: "Your account is ready. We are glad to have you on board.",

@@ -1,4 +1,4 @@
-import type { Config } from "@comet/mail-react";
+import type { Config } from "@dextinity/mail-react";
 import type { EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignContentBlock } from "@src/brevo/blocks/EmailCampaignContentBlock";
 import { MailRoot } from "@src/mail/components/MailRoot";

@@ -1,4 +1,4 @@
-import { createTableBlock } from "@comet/cms-api";
+import { createTableBlock } from "@dextinity/cms-api";
 
 import { TipTapRichTextBlock } from "./tip-tap-rich-text.block";
 

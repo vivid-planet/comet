@@ -12,8 +12,8 @@ import {
     ToolbarTitleItem,
     Tooltip,
     useSnackbarApi,
-} from "@comet/admin";
-import { OpenNewTabAlternative, Send } from "@comet/admin-icons";
+} from "@dextinity/admin";
+import { OpenNewTabAlternative, Send } from "@dextinity/admin-icons";
 import {
     BlockAdminComponentRoot,
     BlockPreviewWithTabs,
@@ -26,7 +26,7 @@ import {
     useContentScopeConfig,
     useSaveConflictQuery,
     useSiteConfig,
-} from "@comet/cms-admin";
+} from "@dextinity/cms-admin";
 import { Snackbar } from "@mui/material";
 import type { WelcomeEmailContentBlockInput } from "@src/blocks.generated";
 import isEqual from "lodash.isequal";
