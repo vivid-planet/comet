@@ -1,5 +1,27 @@
 # @comet/brevo-admin
 
+## 10.0.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/brevo-admin` to `@dextinity/brevo-admin`
+
+    Update the dependency in `package.json` and all imports.
+
+    **Breaking changes**
+    - Resolve the configuration via `DextinityConfigProvider` instead of `CometConfigProvider`
+
+### Patch Changes
+
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+    - @dextinity/admin-date-time@10.0.0
+    - @dextinity/admin-icons@10.0.0
+    - @dextinity/admin@10.0.0
+    - @dextinity/cms-admin@10.0.0
+
 ## 10.0.0-beta.0
 
 ### Major Changes
