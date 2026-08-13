@@ -1,5 +1,53 @@
 # @comet/cms-admin
 
+## 9.4.0
+
+### Minor Changes
+
+- ca88ec6: Add `ReadOnlyBlockRenderInterface`
+
+    A block that implements the interface provides a `ReadOnlyComponent` that renders its state without an editing UI. Rich text blocks implement it:
+
+    ```tsx
+    const RichTextBlock = createRichTextBlock({ link: LinkBlock });
+
+    <RichTextBlock.ReadOnlyComponent state={state} />;
+    ```
+
+- ca88ec6: Accept any rich text block in `createTableBlock`, such as TipTap
+
+    The `richText` option accepts any block that implements `ReadOnlyBlockRenderInterface`:
+
+    ```ts
+    const TipTapRichTextBlock = createTipTapRichTextBlock(...);
+
+    createTableBlock({ richText: TipTapRichTextBlock, name: "TipTapTable" });
+    ```
+
+- 71d6a95: Add read-only rendering to the TipTap rich text block
+
+    `createTipTapRichTextBlock` now returns a `ReadOnlyComponent` that renders saved content without an editing UI, for showing the content where it must not be editable.
+
+    ```tsx
+    const RichTextBlock = createTipTapRichTextBlock();
+
+    <RichTextBlock.ReadOnlyComponent state={state} />;
+    ```
+
+### Patch Changes
+
+- 4e27111: Rename the TipTap block type dropdown's `Default` entry to `Paragraph`, after the HTML tag it produces
+- 0f17fbd: Open the `Permissions` tab by default when editing a user in the `UserPermissionsPage`
+
+    Selecting a user now opens the `Permissions` tab instead of `Basic Data`, while the tab order stays unchanged. Users without the `userPermissions` permission (who don't see the `Permissions` tab) continue to open the `Basic Data` tab.
+
+- Updated dependencies [bf1ff64]
+- Updated dependencies [085b9ac]
+    - @comet/admin@9.4.0
+    - @comet/admin-date-time@9.4.0
+    - @comet/admin-rte@9.4.0
+    - @comet/admin-icons@9.4.0
+
 ## 9.3.0
 
 ### Minor Changes

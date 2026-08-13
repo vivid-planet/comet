@@ -1,5 +1,14 @@
 # @comet/api-generator
 
+## 9.4.0
+
+### Patch Changes
+
+- Updated dependencies [0dac371]
+- Updated dependencies [14d481e]
+- Updated dependencies [8c6be74]
+    - @comet/cms-api@9.4.0
+
 ## 9.3.0
 
 ### Patch Changes

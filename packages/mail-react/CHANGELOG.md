@@ -1,5 +1,44 @@
 # @comet/mail-react
 
+## 9.4.0
+
+### Minor Changes
+
+- 6a50452: Add `theme.list.unorderedMarker` and `theme.list.orderedMarker` for the markers of the lists the RichText block renders
+
+    Each marker is either a fixed node or a function of the item's zero-based `index` in its own list and that list's `depth`:
+
+    ```tsx
+    const theme = createTheme({
+        list: {
+            unorderedMarker: ({ depth }) => ["▪", "–", "·"][depth % 3],
+            // 97 is the code of "a", so nested items are lettered a., b., c.
+            orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `${String.fromCharCode(97 + index)}.`),
+        },
+    });
+    ```
+
+- 706e44e: Fix the stray `mj-text` tag and spacing in the RichText block's nested lists
+
+    A nested level rendered a literal `mj-text` tag into the compiled mail, and the text variant's block spacing fell below that level's last item instead of below the whole list.
+
+    A nested table no longer carries the variant modifier — scope such a rule to the outermost list's variant, which reaches every level. Two new modifiers name a level directly: `richTextBlock__list--depth<Level>` and `richTextBlock__list--nested`.
+
+- b5ab577: Space rich-text list items evenly at every nesting level
+
+    `list.itemSpacing` now also applies above a nested level's first item, on the row's `richTextBlock__listItem--itemSpacingAbove` class.
+
+### Patch Changes
+
+- e60e17b: Fix crash in the RichText block when it starts with a nested list item
+
+    An editor produces this by pressing Tab on the first item of a list, or by clearing the text of the item above a nested one.
+
+- d1f2040: Fix the RichText block's ordered list markers (e.g. `10.`) breaking over two lines in Outlook on the web
+- af14a71: Fix the full-width button overflowing its container in some webmail clients
+
+    A `MjmlButton` or `HtmlButton` with `fullWidth` set rendered wider than the content around it, reaching past the edge of the mail body.
+
 ## 9.3.0
 
 ### Minor Changes

@@ -1,5 +1,34 @@
 # @comet/admin
 
+## 9.4.0
+
+### Minor Changes
+
+- 085b9ac: Add `disabled` support to `ToggleButtonGroupField`
+
+    Setting `disabled` on the field was accepted but had no effect — every button stayed clickable. It now disables all buttons, and individual options can be disabled by setting `disabled` on the option. When both are set, the field wins — an option cannot re-enable itself.
+
+    **Example**
+
+    ```tsx
+    <ToggleButtonGroupField
+        name="type"
+        options={[
+            { label: "Address", value: "address" },
+            { label: "Coordinates", value: "coordinates", disabled: true },
+        ]}
+    />
+    ```
+
+    `FinalFormToggleButtonGroup` now also supports `sx`, `className`, `slotProps` and theme customization through `CometAdminFinalFormToggleButtonGroup`, with the new `FinalFormToggleButtonGroupClassKey` type describing its slots.
+
+### Patch Changes
+
+- bf1ff64: Apply theme customizations for `DateRangePicker`
+
+    `defaultProps` and `styleOverrides` defined for `CometAdminDateRangePicker` had no effect, as the component read its theme props from `CometAdminFutureDateRangePicker`.
+    - @comet/admin-icons@9.4.0
+
 ## 9.3.0
 
 ### Patch Changes

@@ -1,5 +1,38 @@
 # @comet/cms-api
 
+## 9.4.0
+
+### Patch Changes
+
+- 0dac371: Keep the list nesting when migrating Draft.js content to TipTap
+
+    The `migrateFromDraftJs` option of `createTipTapRichTextBlock` ignored the `depth` of Draft.js list items, so nested lists were flattened into a single list. The migration now converts the `depth` into nested TipTap lists.
+
+    Nesting is limited by the block's `listLevelMax` option: list items that are indented deeper are placed on the deepest allowed level instead of being dropped.
+
+- 14d481e: Keep the text block type when the Draft.js → TipTap migration maps a block type to a `textBlockStyle`
+
+    A Draft.js block type listed in `migrateFromDraftJs.textBlockStyleMap` was always converted to a paragraph, so a `header-two` block mapped to a `headline450` style lost its heading tag and was rendered with whatever tag the style defaults to. Mapped header types now keep their heading level and only receive the mapped `textBlockStyle`.
+
+    For custom Draft.js block types that were rendered as a heading (e.g. a `headline450` block type rendered as `<h2>`), the target text block type can now be set explicitly by passing an object instead of a style name:
+
+    **Example**
+
+    ```ts
+    createTipTapRichTextBlock({
+        textBlockStyles: [{ name: "headline450", appliesTo: ["heading-2"] }],
+        migrateFromDraftJs: {
+            textBlockStyleMap: { headline450: { textBlockType: "heading-2", textBlockStyle: "headline450" } },
+        },
+    });
+    ```
+
+    `textBlockType` accepts `paragraph` and `heading-1` … `heading-6`, and both properties are optional.
+
+- 8c6be74: Improve performance of the `contentScopesCount` field when querying the users list
+
+    When resolving `contentScopesCount` for a list of users, the available content scopes were recomputed (and deduplicated) once per row. They are now resolved a single time per request through a request-scoped `DataLoader`, which noticeably speeds up the users list when many content scopes are configured.
+
 ## 9.3.0
 
 ### Minor Changes
