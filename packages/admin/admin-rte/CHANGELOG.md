@@ -1,6 +1,5 @@
 # @comet/admin-rte
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -20,7 +19,7 @@
 - Updated dependencies [085b9ac]
     - @dextinity/admin-icons@10.0.0-beta.0
     - @dextinity/admin@10.0.0-beta.0
-=======
+
 ## 9.5.0
 
 ### Patch Changes
@@ -36,7 +35,6 @@
 - Updated dependencies [085b9ac]
     - @comet/admin@9.4.0
     - @comet/admin-icons@9.4.0
->>>>>>> main
 
 ## 9.3.0
 

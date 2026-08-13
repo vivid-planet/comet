@@ -1,6 +1,5 @@
 # @comet/brevo-api
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -20,7 +19,7 @@
 - Updated dependencies [f843a5e]
 - Updated dependencies [8c6be74]
     - @dextinity/cms-api@10.0.0-beta.0
-=======
+
 ## 9.5.0
 
 ### Patch Changes
@@ -37,7 +36,6 @@
 - Updated dependencies [14d481e]
 - Updated dependencies [8c6be74]
     - @comet/cms-api@9.4.0
->>>>>>> main
 
 ## 9.3.0
 

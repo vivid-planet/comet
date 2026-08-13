@@ -1,17 +1,5 @@
-<<<<<<< HEAD
 import { CopyToClipboardButton } from "@dextinity/admin";
-import {
-    BlockAdminComponentPaper,
-    BlockAdminComponentSection,
-    type BlockInterface,
-    type BlockState,
-    createRichTextBlock,
-    ExternalLinkBlock,
-} from "@dextinity/cms-admin";
-=======
-import { CopyToClipboardButton } from "@comet/admin";
-import { BlockAdminComponentPaper, BlockAdminComponentSection, type BlockInterface, type BlockState } from "@comet/cms-admin";
->>>>>>> main
+import { BlockAdminComponentPaper, BlockAdminComponentSection, type BlockInterface, type BlockState } from "@dextinity/cms-admin";
 import { Box, List, ListItem, ListItemText } from "@mui/material";
 import type { RichTextBlockData } from "@src/blocks.generated";
 import { MailRichTextBlock } from "@src/mail/blocks/MailRichTextBlock";

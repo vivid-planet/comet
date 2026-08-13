@@ -1,6 +1,5 @@
 # @comet/admin-babel-preset
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -13,11 +12,10 @@
     - "presets": ["@comet/admin-babel-preset"]
     + "presets": ["@dextinity/admin-babel-preset"]
     ```
-=======
+
 ## 9.5.0
 
 ## 9.4.0
->>>>>>> main
 
 ## 9.3.0
 

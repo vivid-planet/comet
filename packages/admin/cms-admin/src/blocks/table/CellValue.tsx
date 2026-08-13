@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import { RteReadOnly } from "@dextinity/admin-rte";
-=======
->>>>>>> main
 import { alpha, styled } from "@mui/material/styles";
 
 import { useTableBlockContext } from "./TableBlockContext";

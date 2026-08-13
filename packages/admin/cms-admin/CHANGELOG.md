@@ -1,6 +1,5 @@
 # @comet/cms-admin
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -20,7 +19,6 @@
 
 ### Patch Changes
 
-=======
 ## 9.5.0
 
 ### Patch Changes
@@ -67,29 +65,16 @@
 ### Patch Changes
 
 - 4e27111: Rename the TipTap block type dropdown's `Default` entry to `Paragraph`, after the HTML tag it produces
->>>>>>> main
 - 0f17fbd: Open the `Permissions` tab by default when editing a user in the `UserPermissionsPage`
 
     Selecting a user now opens the `Permissions` tab instead of `Basic Data`, while the tab order stays unchanged. Users without the `userPermissions` permission (who don't see the `Permissions` tab) continue to open the `Basic Data` tab.
 
-<<<<<<< HEAD
-- Updated dependencies [f843a5e]
-- Updated dependencies [f843a5e]
-- Updated dependencies [f843a5e]
-- Updated dependencies [f843a5e]
-- Updated dependencies [085b9ac]
-    - @dextinity/admin-date-time@10.0.0-beta.0
-    - @dextinity/admin-icons@10.0.0-beta.0
-    - @dextinity/admin-rte@10.0.0-beta.0
-    - @dextinity/admin@10.0.0-beta.0
-=======
 - Updated dependencies [bf1ff64]
 - Updated dependencies [085b9ac]
     - @comet/admin@9.4.0
     - @comet/admin-date-time@9.4.0
     - @comet/admin-rte@9.4.0
     - @comet/admin-icons@9.4.0
->>>>>>> main
 
 ## 9.3.0
 

@@ -1,10 +1,5 @@
-<<<<<<< HEAD:demo/site/src/brevo/blocks/EmailCampaignRichTextBlock.tsx
-import { MjmlColumn, type PropsWithData } from "@dextinity/mail-react";
+import { MjmlColumn, MjmlSection, MjmlText, type MjmlTextProps, type PropsWithData } from "@dextinity/mail-react";
 import { ExternalLinkBlock } from "@dextinity/site-nextjs";
-=======
-import { MjmlColumn, MjmlSection, MjmlText, type MjmlTextProps, type PropsWithData } from "@comet/mail-react";
-import { ExternalLinkBlock } from "@comet/site-nextjs";
->>>>>>> main:demo/site/src/mail/blocks/MailRichTextBlock.tsx
 import type { ExternalLinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { type FC, isValidElement } from "react";
 import redraft, { type Renderers, type TextBlockRenderFn } from "redraft";

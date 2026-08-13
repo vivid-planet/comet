@@ -1,6 +1,5 @@
 # @comet/admin-generator
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -30,7 +29,7 @@
     - @dextinity/admin-icons@10.0.0-beta.0
     - @dextinity/admin@10.0.0-beta.0
     - @dextinity/cms-admin@10.0.0-beta.0
-=======
+
 ## 9.5.0
 
 ### Patch Changes
@@ -53,7 +52,6 @@
     - @comet/admin@9.4.0
     - @comet/cms-admin@9.4.0
     - @comet/admin-icons@9.4.0
->>>>>>> main
 
 ## 9.3.0
 

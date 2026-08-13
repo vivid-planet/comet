@@ -1,6 +1,5 @@
 # @comet/admin
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -19,7 +18,7 @@
     - Rename the theme component prefix from `CometAdmin` to `DextinityAdmin`. This affects `components` overrides passed to `createDextinityTheme`, the `name` passed to `useThemeProps` in custom components and the generated CSS class names (`.CometAdminClearInputAdornment-root` -> `.DextinityAdminClearInputAdornment-root`)
     - Rename the CSS variables from `--comet-admin-*` to `--dextinity-admin-*`, for instance, `--comet-admin-master-layout-content-top-spacing` -> `--dextinity-admin-master-layout-content-top-spacing`
     - Remove the `CometLogo` component. Use `DextinityLogo` from `@dextinity/admin-icons` instead
-=======
+
 ## 9.5.0
 
 ### Patch Changes
@@ -27,7 +26,6 @@
 - @comet/admin-icons@9.5.0
 
 ## 9.4.0
->>>>>>> main
 
 ### Minor Changes
 
@@ -47,14 +45,6 @@
     />
     ```
 
-<<<<<<< HEAD
-    `FinalFormToggleButtonGroup` now also supports `sx`, `className`, `slotProps` and theme customization through `DextinityAdminFinalFormToggleButtonGroup`, with the new `FinalFormToggleButtonGroupClassKey` type describing its slots.
-
-### Patch Changes
-
-- Updated dependencies [f843a5e]
-    - @dextinity/admin-icons@10.0.0-beta.0
-=======
     `FinalFormToggleButtonGroup` now also supports `sx`, `className`, `slotProps` and theme customization through `CometAdminFinalFormToggleButtonGroup`, with the new `FinalFormToggleButtonGroupClassKey` type describing its slots.
 
 ### Patch Changes
@@ -63,7 +53,6 @@
 
     `defaultProps` and `styleOverrides` defined for `CometAdminDateRangePicker` had no effect, as the component read its theme props from `CometAdminFutureDateRangePicker`.
     - @comet/admin-icons@9.4.0
->>>>>>> main
 
 ## 9.3.0
 

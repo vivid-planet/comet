@@ -1,6 +1,5 @@
 # @comet/cms-api
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -43,7 +42,7 @@
     ```
 
 ### Patch Changes
-=======
+
 ## 9.5.0
 
 ### Minor Changes
@@ -96,7 +95,6 @@
     ```
 
     `textBlockType` accepts `paragraph` and `heading-1` … `heading-6`, and both properties are optional.
->>>>>>> main
 
 - 8c6be74: Improve performance of the `contentScopesCount` field when querying the users list
 

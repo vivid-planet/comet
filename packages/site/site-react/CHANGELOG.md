@@ -1,6 +1,5 @@
 # @comet/site-react
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -12,11 +11,10 @@
     **Breaking changes**
     - Rename the `cometType` property of iframe messages to `dextinityType`. A matching `@dextinity/cms-admin` version is required
     - Rename the window property of `useLocalStorageCookieApi` from `window.cometLocalStorageCookieApi` to `window.dextinityLocalStorageCookieApi` and its localStorage key from `comet-dev-cookie-api-consented-cookies` to `dextinity-dev-cookie-api-consented-cookies`. Previously consented cookies are therefore reset in local development
-=======
+
 ## 9.5.0
 
 ## 9.4.0
->>>>>>> main
 
 ## 9.3.0
 

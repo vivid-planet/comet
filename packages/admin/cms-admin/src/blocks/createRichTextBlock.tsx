@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { htmlToState, type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@dextinity/admin-rte";
-=======
-import { htmlToState, type IRteOptions, makeRteApi, pasteAndFilterText, Rte, RteReadOnly, stateToHtml } from "@comet/admin-rte";
->>>>>>> main
+import { htmlToState, type IRteOptions, makeRteApi, pasteAndFilterText, Rte, RteReadOnly, stateToHtml } from "@dextinity/admin-rte";
 import {
     BlockMapBuilder,
     convertFromHTML,

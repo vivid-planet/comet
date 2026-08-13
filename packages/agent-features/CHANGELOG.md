@@ -1,6 +1,5 @@
 # @comet/agent-features
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -11,11 +10,10 @@
 
     **Breaking changes**
     - Rename the skills to Dextinity: `comet-admin-ui` -> `dextinity-admin-ui`, `comet-block` -> `dextinity-block`, `comet-core-admin-component-authoring` -> `dextinity-core-admin-component-authoring`, `comet-mail-react` -> `dextinity-mail-react`, `comet-major-migration` -> `dextinity-major-migration` and `comet-minor-update` -> `dextinity-minor-update`. Rerun `dextinity install-agent-features` and remove the previously installed skills
-=======
+
 ## 9.5.0
 
 ## 9.4.0
->>>>>>> main
 
 ## 9.3.0
 

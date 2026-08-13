@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { MjmlColumn, MjmlImage, MjmlSection, type PropsWithData } from "@dextinity/mail-react";
+import { MjmlColumn, MjmlImage, MjmlSection, type PropsWithData, useConfig } from "@dextinity/mail-react";
 import { calculateInheritAspectRatio, generateImageUrl } from "@dextinity/site-nextjs";
-=======
-import { MjmlColumn, MjmlImage, MjmlSection, type PropsWithData, useConfig } from "@comet/mail-react";
-import { calculateInheritAspectRatio, generateImageUrl } from "@comet/site-nextjs";
->>>>>>> main
 import type { NewsletterImageBlockData } from "@src/blocks.generated";
 
 interface NewsletterImageBlockProps extends PropsWithData<NewsletterImageBlockData> {

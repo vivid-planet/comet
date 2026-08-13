@@ -1,11 +1,7 @@
 "use client";
 
-<<<<<<< HEAD
+import type { Config } from "@dextinity/mail-react";
 import { createFetchInMemoryCache, useIFrameBridge } from "@dextinity/site-nextjs";
-=======
-import type { Config } from "@comet/mail-react";
-import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
->>>>>>> main
 import type { EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignMail } from "@src/brevo/EmailCampaignMail";
 import { replaceMailHtmlPlaceholders } from "@src/brevo/util/replaceMailHtmlPlaceholders";

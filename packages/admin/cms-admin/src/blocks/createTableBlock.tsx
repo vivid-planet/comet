@@ -115,13 +115,8 @@ export const createTableBlock = <RichText extends RichTextBlockInterface = RichT
     const TableBlock: TableBlock<RichText> = {
         ...createBlockSkeleton(),
 
-<<<<<<< HEAD
-        name: "Table",
-        displayName: <FormattedMessage id="dextinity.blocks.table.displayName" defaultMessage="Table" />,
-=======
         name,
-        displayName: <FormattedMessage id="comet.blocks.table.displayName" defaultMessage="Table" />,
->>>>>>> main
+        displayName: <FormattedMessage id="dextinity.blocks.table.displayName" defaultMessage="Table" />,
         category: BlockCategory.TextAndContent,
 
         defaultValues: getInitialTableState,

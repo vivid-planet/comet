@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
     "name": "@dextinity/site-nextjs",
     "version": "10.0.0-beta.0",
     "description": "Dextinity Site Next.js package",
-=======
-    "name": "@comet/site-nextjs",
-    "version": "9.5.0",
-    "description": "Comet Site Next.js package",
->>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/dextinity",

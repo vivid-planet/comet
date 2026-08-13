@@ -1,6 +1,5 @@
 # @comet/eslint-config
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -21,7 +20,7 @@
 
 - Updated dependencies [f843a5e]
     - @dextinity/eslint-plugin@10.0.0-beta.0
-=======
+
 ## 9.5.0
 
 ### Patch Changes
@@ -33,7 +32,6 @@
 ### Patch Changes
 
 - @comet/eslint-plugin@9.4.0
->>>>>>> main
 
 ## 9.3.0
 

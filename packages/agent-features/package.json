@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
     "name": "@dextinity/agent-features",
     "version": "10.0.0-beta.0",
     "description": "Agent features (skills and rules) for Dextinity projects",
-=======
-    "name": "@comet/agent-features",
-    "version": "9.5.0",
-    "description": "Agent features (skills and rules) for Comet projects",
->>>>>>> main
     "repository": {
         "directory": "packages/agent-features",
         "type": "git",

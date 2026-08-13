@@ -1,6 +1,5 @@
 # @comet/eslint-plugin
 
-<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -11,11 +10,10 @@
 
     **Breaking changes**
     - Register the plugin under the `@dextinity` namespace instead of `@comet`. Rule names change accordingly, for instance, `@comet/no-private-sibling-import` -> `@dextinity/no-private-sibling-import`
-=======
+
 ## 9.5.0
 
 ## 9.4.0
->>>>>>> main
 
 ## 9.3.0
 

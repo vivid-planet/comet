@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
     "name": "@dextinity/admin-color-picker",
     "version": "10.0.0-beta.0",
     "description": "Dextinity Admin Color Picker component",
-=======
-    "name": "@comet/admin-color-picker",
-    "version": "9.5.0",
-    "description": "Comet Admin Color Picker component",
->>>>>>> main
     "repository": {
         "directory": "packages/admin/admin-color-picker",
         "type": "git",
