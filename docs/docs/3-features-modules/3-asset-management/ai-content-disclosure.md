@@ -39,6 +39,26 @@ Editors mark an asset in the DAM file settings via the **AI content** field, whi
 
 The field is shown for **image, video and audio assets only**, since a deep fake is image, audio or video content. Other file types (e.g. SVGs, documents) cannot constitute a deep fake — in particular, a vector SVG cannot appear photorealistic, so it falls outside the disclosure obligation.
 
+#### Restricting the available AI content types
+
+By default, editors can choose between both types.
+Projects that only need one of them can restrict the selection via `aiContentTypes` in the DAM config:
+
+```tsx
+// In App.tsx
+<CometConfigProvider
+    dam={{
+        // Other DAM config
+        aiContentTypes: ["Generated"],
+    }}
+>
+```
+
+Pass an empty array to hide the **AI content** field entirely.
+
+Assets that already have an AI content type set keep it selectable, even if the type isn't configured.
+This way, existing values aren't changed silently when an editor saves such an asset.
+
 ### Disclosure on the site
 
 When a marked asset is rendered, `PixelImageBlock` (`@comet/site-nextjs`) and `DamVideoBlock` (`@comet/site-react`) automatically render:

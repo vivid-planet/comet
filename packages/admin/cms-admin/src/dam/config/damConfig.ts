@@ -1,12 +1,18 @@
 import type { ReactNode } from "react";
 
 import { useCometConfig } from "../../config/CometConfigContext";
+import type { DamFileAiContentType } from "../FileForm/aiContentType";
 
 export interface DamConfig {
     acceptedMimeTypes?: string[];
     scopeParts?: string[];
     enableLicenseFeature?: boolean;
     requireLicense?: boolean;
+    /**
+     * AI content types editors can choose from in the DAM file settings. Defaults to all types.
+     * Pass an empty array to hide the AI content field entirely.
+     */
+    aiContentTypes?: readonly DamFileAiContentType[];
     additionalToolbarItems?: ReactNode;
     importSources?: Record<string, { label: ReactNode }>;
     contentGeneration?: {

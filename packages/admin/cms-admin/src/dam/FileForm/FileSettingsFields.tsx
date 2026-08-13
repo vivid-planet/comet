@@ -14,6 +14,7 @@ import { useDamConfig } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
+import { aiContentTypeLabels, getSelectableAiContentTypes } from "./aiContentType";
 import { CropSettingsFields } from "./CropSettingsFields";
 import type { DamFileDetails, EditFileFormValues } from "./EditFile";
 import type { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
@@ -52,6 +53,10 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
     const damConfig = useDamConfig();
     const formApi = useForm();
     const { contentGeneration } = useDamConfig();
+    const selectableAiContentTypes = getSelectableAiContentTypes({
+        configuredAiContentTypes: damConfig.aiContentTypes,
+        currentAiContentType: file.aiContentType,
+    });
     const contentScope = useContentScope();
     const language = useContentLanguage(contentScope);
 
@@ -186,7 +191,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                     }
                 />
             </FormSection>
-            {supportsAiContentType && (
+            {supportsAiContentType && selectableAiContentTypes.length > 0 && (
                 <FormSection title={<FormattedMessage id="comet.dam.file.aiContent" defaultMessage="AI content" />}>
                     <SelectField
                         name="aiContentType"
@@ -206,14 +211,10 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                                 value: "",
                                 label: <FormattedMessage id="comet.dam.file.aiContentType.no" defaultMessage="No" />,
                             },
-                            {
-                                value: "Generated",
-                                label: <FormattedMessage id="comet.dam.file.aiContentType.generated" defaultMessage="AI generated" />,
-                            },
-                            {
-                                value: "Modified",
-                                label: <FormattedMessage id="comet.dam.file.aiContentType.modified" defaultMessage="AI modified" />,
-                            },
+                            ...selectableAiContentTypes.map((aiContentType) => ({
+                                value: aiContentType,
+                                label: aiContentTypeLabels[aiContentType],
+                            })),
                         ]}
                     />
                 </FormSection>
