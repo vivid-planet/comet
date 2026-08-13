@@ -2,9 +2,9 @@
 "@dextinity/cli": minor
 ---
 
-Add `TipTapNode` type to `generate-block-types` output and use it for TipTap rich text fields
+Add `TipTapNode` type to `generate-block-types` output and use it for TipTap rich text blocks
 
-Fields of TipTap rich text blocks were typed as `unknown`, forcing consumers to cast the content before rendering it.
+TipTap rich text blocks were typed as `unknown`, forcing consumers to cast the content before rendering it.
 They are now typed as `TipTapNode`, which is generated into `blocks.generated.ts` (together with `TipTapMark`) whenever a TipTap rich text block is used.
 
 **Example**
