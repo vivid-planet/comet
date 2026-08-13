@@ -28,7 +28,33 @@ function containsUnknownMarks(json: any, schema: Schema): boolean {
     return false;
 }
 
-export function isValidTipTapContentSync(value: unknown, schema: Schema, { maxTextBlocks }: { maxTextBlocks?: number } = {}): boolean {
+export function getListNestingDepth(content: TipTapContent, currentDepth = 0): number {
+    if (typeof content !== "object" || content === null) {
+        return 0;
+    }
+
+    const isListNode = content.type === "bulletList" || content.type === "orderedList";
+    const depth = isListNode ? currentDepth + 1 : currentDepth;
+
+    if (!Array.isArray(content.content)) {
+        return depth;
+    }
+
+    let maxDepth = depth;
+    for (const child of content.content) {
+        const childDepth = getListNestingDepth(child, depth);
+        if (childDepth > maxDepth) {
+            maxDepth = childDepth;
+        }
+    }
+    return maxDepth;
+}
+
+export function isValidTipTapContentSync(
+    value: unknown,
+    schema: Schema,
+    { maxTextBlocks, listLevelMax }: { maxTextBlocks?: number; listLevelMax?: number } = {},
+): boolean {
     if (typeof value !== "object" || value === null) {
         return false;
     }
@@ -44,6 +70,10 @@ export function isValidTipTapContentSync(value: unknown, schema: Schema, { maxTe
             if (Array.isArray(content) && content.length > maxTextBlocks) {
                 return false;
             }
+        }
+
+        if (listLevelMax !== undefined && getListNestingDepth(value as TipTapContent) > listLevelMax) {
+            return false;
         }
 
         return true;

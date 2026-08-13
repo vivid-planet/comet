@@ -366,7 +366,7 @@ export const TipTapToolbar = ({
                             sx={selectSx}
                         >
                             <MenuItem value="paragraph" dense>
-                                <FormattedMessage id="dextinity.blocks.tipTapRichText.textBlockType.default" defaultMessage="Default" />
+                                <FormattedMessage id="dextinity.blocks.tipTapRichText.textBlockType.paragraph" defaultMessage="Paragraph" />
                             </MenuItem>
                             {([1, 2, 3, 4, 5, 6] as const).map((level) => (
                                 <MenuItem key={level} value={String(level)} dense>

@@ -94,21 +94,34 @@ function createListBlockRenderFn({
     blockTypeProps,
     lastBlockKey,
 }: CreateBlockRenderFnOptions & { ordered: boolean }): TextBlockRenderFn {
-    return (children, { keys, depth }) => (
-        <BlockText
-            key={keys.join("-")}
-            bottomSpacing={false} // The list holds this space itself — applying it here too would double it.
-            {...blockTypeProps}
-        >
-            <RichTextList
-                ordered={ordered}
-                variant={blockTypeProps.variant}
-                bottomSpacing={!keys.includes(lastBlockKey)}
-                depth={depth}
-                items={children.map((child, index) => ({ key: keys[index], content: renderWithLineBreaks(child) }))}
-            />
-        </BlockText>
-    );
+    return (children, { keys, depth }) => {
+        const items = children.map((child, index) => ({ key: keys[index], content: renderWithLineBreaks(child) }));
+        const key = keys.join("-");
+
+        // MJML does not process the content of an ending tag, so a text component inside another one stays in the compiled mail as a
+        // literal `mj-text` tag.
+        const isInsideTextComponent = depth > 0;
+
+        if (isInsideTextComponent) {
+            return <RichTextList key={key} depth={depth} ordered={ordered} items={items} />;
+        }
+
+        return (
+            <BlockText
+                key={key}
+                bottomSpacing={false} // The list holds this space itself — applying it here too would double it.
+                {...blockTypeProps}
+            >
+                <RichTextList
+                    ordered={ordered}
+                    variant={blockTypeProps.variant}
+                    bottomSpacing={!keys.includes(lastBlockKey)}
+                    depth={depth}
+                    items={items}
+                />
+            </BlockText>
+        );
+    };
 }
 
 const listBlockTypes = ["unordered-list-item", "ordered-list-item"];

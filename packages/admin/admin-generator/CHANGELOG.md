@@ -30,6 +30,29 @@
     - @dextinity/admin@10.0.0-beta.0
     - @dextinity/cms-admin@10.0.0-beta.0
 
+## 9.5.0
+
+### Patch Changes
+
+- @comet/admin@9.5.0
+- @comet/admin-icons@9.5.0
+- @comet/cms-admin@9.5.0
+
+## 9.4.0
+
+### Patch Changes
+
+- Updated dependencies [bf1ff64]
+- Updated dependencies [ca88ec6]
+- Updated dependencies [ca88ec6]
+- Updated dependencies [4e27111]
+- Updated dependencies [71d6a95]
+- Updated dependencies [085b9ac]
+- Updated dependencies [0f17fbd]
+    - @comet/admin@9.4.0
+    - @comet/cms-admin@9.4.0
+    - @comet/admin-icons@9.4.0
+
 ## 9.3.0
 
 ### Patch Changes

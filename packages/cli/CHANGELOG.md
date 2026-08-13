@@ -16,6 +16,10 @@
         + "generate-block-types": "dextinity generate-block-types"
         ```
 
+## 9.5.0
+
+## 9.4.0
+
 ## 9.3.0
 
 ## 9.2.2

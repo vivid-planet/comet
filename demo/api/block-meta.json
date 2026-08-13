@@ -697,7 +697,8 @@
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "table": "Table"
+                                "table": "Table",
+                                "tipTapTable": "TipTapTable"
                             },
                             "nullable": false
                         }
@@ -742,7 +743,8 @@
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "table": "Table"
+                                "table": "Table",
+                                "tipTapTable": "TipTapTable"
                             },
                             "nullable": false
                         }
@@ -1068,7 +1070,7 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "EmailCampaignDivider",
+                                "divider": "MailDivider",
                                 "salutation": "EmailCampaignSalutation",
                                 "image": "NewsletterImage"
                             },
@@ -1105,7 +1107,7 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "EmailCampaignDivider",
+                                "divider": "MailDivider",
                                 "salutation": "EmailCampaignSalutation",
                                 "image": "NewsletterImage"
                             },
@@ -1116,11 +1118,6 @@
                 "nullable": false
             }
         ]
-    },
-    {
-        "name": "EmailCampaignDivider",
-        "fields": [],
-        "inputFields": []
     },
     {
         "name": "EmailCampaignSalutation",
@@ -1738,6 +1735,11 @@
         ]
     },
     {
+        "name": "MailDivider",
+        "fields": [],
+        "inputFields": []
+    },
+    {
         "name": "Media",
         "fields": [
             {
@@ -2238,6 +2240,7 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapTable": "TipTapTable",
                                 "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex",
@@ -2306,6 +2309,7 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapTable": "TipTapTable",
                                 "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex",
@@ -3849,6 +3853,153 @@
         ]
     },
     {
+        "name": "TipTapTable",
+        "fields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "cellValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "Block",
+                                        "block": "TipTapRichText",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "cellValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "Block",
+                                        "block": "TipTapRichText",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "VimeoVideo",
         "fields": [
             {
@@ -3904,6 +4055,79 @@
                 "name": "vimeoIdentifier",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "WelcomeEmailContent",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "text": "RichText",
+                                "divider": "MailDivider"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "text": "RichText",
+                                "divider": "MailDivider"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
             }
         ]
     },

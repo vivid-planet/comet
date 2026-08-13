@@ -11,6 +11,10 @@
     **Breaking changes**
     - Register the plugin under the `@dextinity` namespace instead of `@comet`. Rule names change accordingly, for instance, `@comet/no-private-sibling-import` -> `@dextinity/no-private-sibling-import`
 
+## 9.5.0
+
+## 9.4.0
+
 ## 9.3.0
 
 ## 9.2.2

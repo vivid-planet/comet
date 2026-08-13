@@ -59,8 +59,8 @@ const getDateRangeValue = (value: DateRange | undefined): [Date | null, Date | n
 };
 
 /**
- * The DateRangePicker component allows users to select a date range from a calendar interface. It provides two
- * text fields with a calendar icon that opens a date range picker dialog. The component handles ISO 8601 date strings
+ * The DateRangePicker component allows users to select a date range from a calendar interface. It provides a single
+ * text field with a calendar icon that opens a date range picker dialog. The component handles ISO 8601 date strings
  * and includes features like clearing, read-only state, and customizable icons.
  *
  * - [Storybook](https://cms-storybook.dextinity.com/?path=/docs/@dextinity/admin_components-datetime-daterangepicker--docs)
@@ -81,7 +81,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "DextinityAdminFutureDateRangePicker",
+        name: "DextinityAdminDateRangePicker",
     });
     const intl = useIntl();
 

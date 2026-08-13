@@ -25,6 +25,23 @@
 - Updated dependencies [8c6be74]
     - @dextinity/cms-api@10.0.0-beta.0
 
+## 9.5.0
+
+### Patch Changes
+
+- Updated dependencies [4eadaf5]
+- Updated dependencies [4eadaf5]
+    - @comet/cms-api@9.5.0
+
+## 9.4.0
+
+### Patch Changes
+
+- Updated dependencies [0dac371]
+- Updated dependencies [14d481e]
+- Updated dependencies [8c6be74]
+    - @comet/cms-api@9.4.0
+
 ## 9.3.0
 
 ### Patch Changes

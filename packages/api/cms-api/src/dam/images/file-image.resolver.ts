@@ -2,9 +2,9 @@ import { Args, Context, Int, Parent, ResolveField, Resolver } from "@nestjs/grap
 import { IncomingMessage } from "http";
 
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
-import { ImagesService } from "../images/images.service";
-import { DamFileImage } from "./entities/file-image.entity";
-import { FilesService } from "./files.service";
+import { DamFileImage } from "../files/entities/file-image.entity";
+import { FilesService } from "../files/files.service";
+import { ImagesService } from "./images.service";
 
 @Resolver(() => DamFileImage)
 @RequiredPermission(["dam"])

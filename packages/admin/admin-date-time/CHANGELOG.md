@@ -19,6 +19,22 @@
     - @dextinity/admin-icons@10.0.0-beta.0
     - @dextinity/admin@10.0.0-beta.0
 
+## 9.5.0
+
+### Patch Changes
+
+- @comet/admin@9.5.0
+- @comet/admin-icons@9.5.0
+
+## 9.4.0
+
+### Patch Changes
+
+- Updated dependencies [bf1ff64]
+- Updated dependencies [085b9ac]
+    - @comet/admin@9.4.0
+    - @comet/admin-icons@9.4.0
+
 ## 9.3.0
 
 ### Patch Changes
