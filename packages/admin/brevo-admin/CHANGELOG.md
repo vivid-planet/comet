@@ -1,5 +1,14 @@
 # @comet/brevo-admin
 
+## 8.30.1
+
+### Patch Changes
+
+- @comet/admin@8.30.1
+- @comet/admin-date-time@8.30.1
+- @comet/admin-icons@8.30.1
+- @comet/cms-admin@8.30.1
+
 ## 8.30.0
 
 ### Patch Changes
