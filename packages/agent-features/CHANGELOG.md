@@ -1,5 +1,7 @@
 # @comet/agent-features
 
+## 8.30.1
+
 ## 8.30.0
 
 ### Minor Changes
