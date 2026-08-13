@@ -715,6 +715,6 @@ More information on how to integrate and work with Dextinity's block preview can
 
 ## Further Reading / Information
 
-- [Dextinity Starter - Next Site - Blueprint for new Dextinity Projects](https://github.com/vivid-planet/comet-starter/tree/main/site)
-- [Dextinity Starter - Page Tree Node Query](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/Page.tsx)
-- [Dextinity Starter - Rendering blocks with Blocks Block](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/blocks/PageContentBlock.tsx)
+- [Dextinity Starter - Next Site - Blueprint for new Dextinity Projects](https://github.com/vivid-planet/dextinity-starter/tree/main/site)
+- [Dextinity Starter - Page Tree Node Query](https://github.com/vivid-planet/dextinity-starter/blob/main/site/src/documents/pages/Page.tsx)
+- [Dextinity Starter - Rendering blocks with Blocks Block](https://github.com/vivid-planet/dextinity-starter/blob/main/site/src/documents/pages/blocks/PageContentBlock.tsx)
