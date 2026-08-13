@@ -1,5 +1,18 @@
 # @comet/admin-babel-preset
 
+## 10.0.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/admin-babel-preset` to `@dextinity/admin-babel-preset`
+
+    Update the dependency in `package.json` and the preset name in your Babel configuration:
+
+    ```diff
+    - "presets": ["@comet/admin-babel-preset"]
+    + "presets": ["@dextinity/admin-babel-preset"]
+    ```
+
 ## 10.0.0-beta.0
 
 ### Major Changes
