@@ -1,5 +1,5 @@
 import { MjmlText } from "@comet/mail-react";
-import { theme } from "@src/brevo/util/theme";
+import { theme } from "@src/mail/theme";
 import type { ComponentProps, ReactNode } from "react";
 
 type Variant = "body" | "headline";

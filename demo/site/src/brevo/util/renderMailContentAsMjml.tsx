@@ -1,8 +1,8 @@
 import { renderToMjml } from "@comet/mail-react";
 import type { EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignContentBlock } from "@src/brevo/blocks/EmailCampaignContentBlock";
-import { Root } from "@src/brevo/components/Root";
 import type { EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
+import { MailRoot } from "@src/mail/components/MailRoot";
 import { type IntlConfig, IntlProvider } from "react-intl";
 
 interface IntlProviderValues {
@@ -19,9 +19,9 @@ export function renderMailContentAsMjml(
 
     return renderToMjml(
         <IntlProvider messages={messages} locale={locale}>
-            <Root>
+            <MailRoot>
                 <EmailCampaignContentBlock content={blockData} config={config} />
-            </Root>
+            </MailRoot>
         </IntlProvider>,
     );
 }

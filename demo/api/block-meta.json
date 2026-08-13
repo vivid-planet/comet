@@ -1070,7 +1070,7 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "EmailCampaignDivider",
+                                "divider": "MailDivider",
                                 "salutation": "EmailCampaignSalutation",
                                 "image": "NewsletterImage"
                             },
@@ -1107,7 +1107,7 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "EmailCampaignDivider",
+                                "divider": "MailDivider",
                                 "salutation": "EmailCampaignSalutation",
                                 "image": "NewsletterImage"
                             },
@@ -1118,11 +1118,6 @@
                 "nullable": false
             }
         ]
-    },
-    {
-        "name": "EmailCampaignDivider",
-        "fields": [],
-        "inputFields": []
     },
     {
         "name": "EmailCampaignSalutation",
@@ -1738,6 +1733,11 @@
                 "nullable": false
             }
         ]
+    },
+    {
+        "name": "MailDivider",
+        "fields": [],
+        "inputFields": []
     },
     {
         "name": "Media",
@@ -4055,6 +4055,79 @@
                 "name": "vimeoIdentifier",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "WelcomeEmailContent",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "text": "RichText",
+                                "divider": "MailDivider"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "text": "RichText",
+                                "divider": "MailDivider"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
             }
         ]
     },
