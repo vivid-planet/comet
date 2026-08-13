@@ -1,5 +1,6 @@
 "use client";
 
+import type { Config } from "@comet/mail-react";
 import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
 import type { WelcomeEmailContentBlockData } from "@src/blocks.generated";
 import { RenderedMailForBlockPreview } from "@src/mail/components/RenderedMailForBlockPreview";
@@ -7,7 +8,7 @@ import type { ContentScope } from "@src/site-configs";
 import { withBlockPreview } from "@src/util/blockPreview";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
-import { renderWelcomeEmailAsMjml } from "@src/welcomeEmail/util/renderWelcomeEmailAsMjml";
+import { WelcomeEmailMail } from "@src/welcomeEmail/WelcomeEmailMail";
 import { useEffect, useState } from "react";
 import type { IntlConfig } from "react-intl";
 
@@ -20,9 +21,10 @@ function isContentScope(value: unknown): value is ContentScope {
 interface WelcomeEmailPreviewProps {
     language: string;
     messages: IntlConfig["messages"];
+    config: Config;
 }
 
-function WelcomeEmailPreviewComponent({ language, messages }: WelcomeEmailPreviewProps) {
+function WelcomeEmailPreviewComponent({ language, messages, config }: WelcomeEmailPreviewProps) {
     const iFrameBridge = useIFrameBridge();
     const [blockData, setBlockData] = useState<WelcomeEmailContentBlockData>();
 
@@ -51,9 +53,7 @@ function WelcomeEmailPreviewComponent({ language, messages }: WelcomeEmailPrevie
         return null;
     }
 
-    const mjmlContent = renderWelcomeEmailAsMjml(blockData, { locale: language, messages });
-
-    return <RenderedMailForBlockPreview mjmlContent={mjmlContent} />;
+    return <RenderedMailForBlockPreview mail={<WelcomeEmailMail content={blockData} config={config} locale={language} messages={messages} />} />;
 }
 
 export const WelcomeEmailPreview = withBlockPreview(WelcomeEmailPreviewComponent);

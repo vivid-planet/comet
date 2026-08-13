@@ -1,28 +1,26 @@
-import { type FC, useEffect, useState } from "react";
+import { type FC, type ReactElement, useEffect, useState } from "react";
 
 interface Props {
-    mjmlContent: string;
+    mail: ReactElement;
     /** Applied to the rendered HTML, for mails whose placeholders need substituting before display. */
     transformHtml?: (html: string) => string;
 }
 
-export const RenderedMailForBlockPreview: FC<Props> = ({ mjmlContent, transformHtml }) => {
+export const RenderedMailForBlockPreview: FC<Props> = ({ mail, transformHtml }) => {
     const [mailHtml, setMailHtml] = useState<string>("");
 
     useEffect(() => {
         (async () => {
-            const { default: mjml2htmlBrowser } = await import("mjml-browser");
-            const { html: mjmlHtml, errors } = mjml2htmlBrowser(mjmlContent);
+            const { renderMailHtml } = await import("@comet/mail-react/client");
+            const { html, mjmlWarnings } = renderMailHtml(mail);
 
-            if (process.env.NODE_ENV === "development") {
-                if (errors.length) {
-                    console.error(`${errors.length} MJML render errors:`, errors);
-                }
+            if (process.env.NODE_ENV === "development" && mjmlWarnings.length) {
+                console.warn(`${mjmlWarnings.length} MJML warnings`, mjmlWarnings);
             }
 
-            setMailHtml(transformHtml ? transformHtml(mjmlHtml) : mjmlHtml);
+            setMailHtml(transformHtml ? transformHtml(html) : html);
         })();
-    }, [mjmlContent, transformHtml]);
+    }, [mail, transformHtml]);
 
     return <span dangerouslySetInnerHTML={{ __html: mailHtml }} />;
 };

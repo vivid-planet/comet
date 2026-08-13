@@ -1,9 +1,10 @@
+import { renderMailHtml } from "@comet/mail-react/server";
 import type { WelcomeEmailContentBlockData } from "@src/blocks.generated";
+import { getMailConfig } from "@src/mail/util/getMailConfig";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { loadMessages } from "@src/util/loadMessages";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
-import { renderWelcomeEmailAsMjml } from "@src/welcomeEmail/util/renderWelcomeEmailAsMjml";
-import mjml2html from "mjml";
+import { WelcomeEmailMail } from "@src/welcomeEmail/WelcomeEmailMail";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -60,8 +61,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     const messages = await loadMessages(scope.language);
-    const mjml = renderWelcomeEmailAsMjml(content, { locale: scope.language, messages });
-    const { html } = mjml2html(mjml, { validationLevel: "soft" });
+    const { html, mjmlWarnings } = renderMailHtml(
+        <WelcomeEmailMail content={content} config={getMailConfig(scope)} locale={scope.language} messages={messages} />,
+    );
+
+    if (process.env.NODE_ENV === "development" && mjmlWarnings.length) {
+        console.warn(`${mjmlWarnings.length} MJML warnings`, mjmlWarnings);
+    }
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.setHeader("Cache-Control", "no-store");

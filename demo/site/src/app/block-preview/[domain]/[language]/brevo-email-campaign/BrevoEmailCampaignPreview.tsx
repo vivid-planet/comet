@@ -1,9 +1,9 @@
 "use client";
 
+import type { Config } from "@comet/mail-react";
 import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
 import type { EmailCampaignContentBlockData } from "@src/blocks.generated";
-import type { EmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
-import { renderMailContentAsMjml } from "@src/brevo/util/renderMailContentAsMjml";
+import { EmailCampaignMail } from "@src/brevo/EmailCampaignMail";
 import { replaceMailHtmlPlaceholders } from "@src/brevo/util/replaceMailHtmlPlaceholders";
 import { RenderedMailForBlockPreview } from "@src/mail/components/RenderedMailForBlockPreview";
 import type { ContentScope } from "@src/site-configs";
@@ -20,7 +20,7 @@ const replacePlaceholdersForPreview = (html: string) => replaceMailHtmlPlacehold
 interface BrevoEmailCampaignPreviewProps {
     language: string;
     messages: IntlConfig["messages"];
-    config: EmailCampaignConfig;
+    config: Config;
 }
 
 function BrevoEmailCampaignPreviewComponent({ language, messages, config }: BrevoEmailCampaignPreviewProps) {
@@ -51,9 +51,12 @@ function BrevoEmailCampaignPreviewComponent({ language, messages, config }: Brev
         return null;
     }
 
-    const mjmlContent = renderMailContentAsMjml(blockData, { locale: language, messages }, config);
-
-    return <RenderedMailForBlockPreview mjmlContent={mjmlContent} transformHtml={replacePlaceholdersForPreview} />;
+    return (
+        <RenderedMailForBlockPreview
+            mail={<EmailCampaignMail content={blockData} config={config} locale={language} messages={messages} />}
+            transformHtml={replacePlaceholdersForPreview}
+        />
+    );
 }
 
 export const BrevoEmailCampaignPreview = withBlockPreview(BrevoEmailCampaignPreviewComponent);

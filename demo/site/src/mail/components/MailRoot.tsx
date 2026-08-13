@@ -1,21 +1,9 @@
-import {
-    css,
-    Mjml,
-    MjmlAttributes,
-    MjmlBody,
-    MjmlConditionalComment,
-    MjmlHead,
-    MjmlSection,
-    MjmlStyle,
-    MjmlText,
-    MjmlTitle,
-} from "@comet/mail-react";
+import { type Config, css, MjmlConditionalComment, MjmlMailRoot, MjmlStyle, MjmlTitle } from "@comet/mail-react";
 import { theme } from "@src/mail/theme";
 import type { FC, PropsWithChildren } from "react";
 
-import { indentedSectionGroupStyles } from "./IndentedSectionGroup";
-
 type Props = PropsWithChildren<{
+    config: Config;
     title?: string;
 }>;
 
@@ -38,19 +26,19 @@ const outlookFontFixStyles = (
     `}</MjmlStyle>
 );
 
-export const MailRoot: FC<Props> = ({ children, title }) => {
+export const MailRoot: FC<Props> = ({ children, config, title }) => {
     return (
-        <Mjml>
-            <MjmlHead>
-                <MjmlAttributes>
-                    <MjmlText padding={0} />
-                    <MjmlSection padding={0} />
-                </MjmlAttributes>
-                {!!title && <MjmlTitle>{title}</MjmlTitle>}
-                {indentedSectionGroupStyles}
-                <MjmlConditionalComment condition="if mso">{outlookFontFixStyles}</MjmlConditionalComment>
-            </MjmlHead>
-            <MjmlBody width={theme.mailSize.contentWidth}>{children}</MjmlBody>
-        </Mjml>
+        <MjmlMailRoot
+            theme={theme}
+            config={config}
+            head={
+                <>
+                    {!!title && <MjmlTitle>{title}</MjmlTitle>}
+                    <MjmlConditionalComment condition="if mso">{outlookFontFixStyles}</MjmlConditionalComment>
+                </>
+            }
+        >
+            {children}
+        </MjmlMailRoot>
     );
 };

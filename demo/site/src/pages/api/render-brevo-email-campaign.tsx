@@ -1,8 +1,8 @@
-import { getEmailCampaignConfig } from "@src/brevo/util/getEmailCampaignConfig";
-import { renderMailContentAsMjml } from "@src/brevo/util/renderMailContentAsMjml";
+import { renderMailHtml } from "@comet/mail-react/server";
+import { EmailCampaignMail } from "@src/brevo/EmailCampaignMail";
 import { replaceMailHtmlPlaceholders } from "@src/brevo/util/replaceMailHtmlPlaceholders";
+import { getMailConfig } from "@src/mail/util/getMailConfig";
 import { loadMessages } from "@src/util/loadMessages";
-import mjml2html from "mjml";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -27,8 +27,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { content, scope } = validationResult.data;
     const messages = await loadMessages(scope.language);
 
-    const mjml = renderMailContentAsMjml(content, { locale: scope.language, messages }, getEmailCampaignConfig(scope));
-    const { html } = mjml2html(mjml, { validationLevel: "soft" });
+    const { html, mjmlWarnings } = renderMailHtml(
+        <EmailCampaignMail content={content} config={getMailConfig(scope)} locale={scope.language} messages={messages} />,
+    );
+
+    if (process.env.NODE_ENV === "development" && mjmlWarnings.length) {
+        console.warn(`${mjmlWarnings.length} MJML warnings`, mjmlWarnings);
+    }
+
     const outputHtml = replaceMailHtmlPlaceholders(html, "mail");
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");
