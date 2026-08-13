@@ -1,4 +1,4 @@
-import { greyPalette } from "@comet/admin";
+import { greyPalette } from "@dextinity/admin";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Extension } from "@tiptap/core";
@@ -499,7 +499,7 @@ export const createTipTapRichTextBlock = (options?: TipTapRichTextBlockFactoryOp
 
         name: "TipTapRichText",
 
-        displayName: <FormattedMessage id="comet.blocks.tipTapRichText" defaultMessage="Rich Text (TipTap)" />,
+        displayName: <FormattedMessage id="dextinity.blocks.tipTapRichText" defaultMessage="Rich Text (TipTap)" />,
 
         defaultValues: () => ({ tipTapContent: emptyContent }),
 

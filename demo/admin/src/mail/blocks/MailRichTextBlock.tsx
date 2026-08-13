@@ -1,4 +1,4 @@
-import { createRichTextBlock, ExternalLinkBlock } from "@comet/cms-admin";
+import { createRichTextBlock, ExternalLinkBlock } from "@dextinity/cms-admin";
 
 export const MailRichTextBlock = createRichTextBlock({
     link: ExternalLinkBlock,

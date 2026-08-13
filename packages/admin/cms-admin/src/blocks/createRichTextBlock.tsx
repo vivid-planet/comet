@@ -1,4 +1,4 @@
-import { htmlToState, type IRteOptions, makeRteApi, pasteAndFilterText, Rte, RteReadOnly, stateToHtml } from "@comet/admin-rte";
+import { htmlToState, type IRteOptions, makeRteApi, pasteAndFilterText, Rte, RteReadOnly, stateToHtml } from "@dextinity/admin-rte";
 import {
     BlockMapBuilder,
     convertFromHTML,
@@ -136,7 +136,7 @@ export const createRichTextBlock = (options: RichTextBlockFactoryOptions, overri
 
         name: "RichText",
 
-        displayName: <FormattedMessage id="comet.blocks.richtext" defaultMessage="Rich Text" />,
+        displayName: <FormattedMessage id="dextinity.blocks.richtext" defaultMessage="Rich Text" />,
 
         defaultValues: () => ({ editorState: createEmptyState() }),
 

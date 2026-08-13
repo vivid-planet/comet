@@ -16,7 +16,7 @@ import { OutgoingHttpHeaders } from "http";
 import mime from "mime";
 import { PassThrough, Readable } from "stream";
 
-import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
+import { DisableDextinityGuards } from "../../auth/decorators/disable-dextinity-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { ScaledImagesCacheService } from "../../blob-storage/cache/scaled-images-cache.service";
@@ -113,7 +113,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
             });
         }
 
-        @DisableCometGuards()
+        @DisableDextinityGuards()
         @Get(`/:hash{/:contentHash}/${focusImageUrl}`)
         async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
             if (!this.isValidHash(params) || params.cropArea.focalPoint === FocalPoint.SMART) {
@@ -134,7 +134,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
             });
         }
 
-        @DisableCometGuards()
+        @DisableDextinityGuards()
         @Get(`/:hash{/:contentHash}/${smartImageUrl}`)
         async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
             if (!this.isValidHash(params) || params.cropArea.focalPoint !== FocalPoint.SMART) {

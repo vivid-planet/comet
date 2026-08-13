@@ -1,4 +1,4 @@
-import { MailerService, RequiredPermission } from "@comet/cms-api";
+import { MailerService, RequiredPermission } from "@dextinity/cms-api";
 import { Inject } from "@nestjs/common";
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
@@ -7,7 +7,7 @@ import { CONFIG } from "@src/config/config.module";
 import { WelcomeEmailScope } from "./dto/welcome-email-scope";
 import { WelcomeEmail } from "./entities/welcome-email.entity";
 
-const testMailRecipient = "welcome-email-test@comet-dxp.com";
+const testMailRecipient = "welcome-email-test@dextinity.com";
 
 @Resolver(() => WelcomeEmail)
 @RequiredPermission(["pageTree"])

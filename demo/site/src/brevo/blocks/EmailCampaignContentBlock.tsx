@@ -1,4 +1,4 @@
-import { BlocksBlock, type SupportedBlocks } from "@comet/mail-react";
+import { BlocksBlock, type SupportedBlocks } from "@dextinity/mail-react";
 import type { EmailCampaignContentBlockData } from "@src/blocks.generated";
 import { EmailCampaignSalutationBlock } from "@src/brevo/blocks/EmailCampaignSalutationBlock";
 import { NewsletterImageBlock } from "@src/brevo/blocks/NewsletterImageBlock";

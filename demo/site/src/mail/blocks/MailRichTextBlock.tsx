@@ -1,5 +1,5 @@
-import { MjmlColumn, MjmlSection, MjmlText, type MjmlTextProps, type PropsWithData } from "@comet/mail-react";
-import { ExternalLinkBlock } from "@comet/site-nextjs";
+import { MjmlColumn, MjmlSection, MjmlText, type MjmlTextProps, type PropsWithData } from "@dextinity/mail-react";
+import { ExternalLinkBlock } from "@dextinity/site-nextjs";
 import type { ExternalLinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { type FC, isValidElement } from "react";
 import redraft, { type Renderers, type TextBlockRenderFn } from "redraft";

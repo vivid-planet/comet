@@ -23,11 +23,11 @@ import { OutgoingHttpHeaders } from "http";
 import { basename, extname } from "path";
 import { Readable } from "stream";
 
-import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
+import { DisableDextinityGuards } from "../../auth/decorators/disable-dextinity-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
-import { CometValidationException } from "../../common/errors/validation.exception";
+import { DextinityValidationException } from "../../common/errors/validation.exception";
 import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { calculatePartialRanges, slugifyFilename } from "../../file-utils/files.utils";
 import { contentScopesAreEqual } from "../../user-permissions/content-scopes-are-equal";
@@ -82,7 +82,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
             if (errors.length > 0) {
-                throw new CometValidationException("Validation failed", errors);
+                throw new DextinityValidationException("Validation failed", errors);
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
@@ -121,7 +121,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
             if (errors.length > 0) {
-                throw new CometValidationException("Validation failed", errors);
+                throw new DextinityValidationException("Validation failed", errors);
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
@@ -175,7 +175,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             const { fileId, ...restBody } = transformedBody;
 
             if (errors.length > 0) {
-                throw new CometValidationException("Validation failed", errors);
+                throw new DextinityValidationException("Validation failed", errors);
             }
 
             const fileToReplace = await this.filesService.findOneById(fileId);
@@ -244,7 +244,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, private" } }); // Local caches only (1 year)
         }
 
-        @DisableCometGuards()
+        @DisableDextinityGuards()
         @Get(`/download/:hash{/:contentHash}/${fileUrl}`)
         async downloadFile(
             @Param() { hash, contentHash, ...params }: HashFileParams,
@@ -269,7 +269,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, s-maxage=86400, public" } }); // Public cache, 1 year for browsers, 1 day for proxies/cdn's
         }
 
-        @DisableCometGuards()
+        @DisableDextinityGuards()
         @Get(`/:hash{/:contentHash}/${fileUrl}`)
         async hashedFileUrl(
             @Param() { hash, contentHash, ...params }: HashFileParams,

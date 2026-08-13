@@ -1,5 +1,35 @@
 # @comet/admin-generator
 
+## 10.0.0-beta.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/admin-generator` to `@dextinity/admin-generator`
+
+    Update the dependency in `package.json` and all imports.
+
+    **Breaking changes**
+    - Rename the `comet-admin-generator` binary to `dextinity-admin-generator`:
+
+        ```diff
+        - "generate-admin": "comet-admin-generator generate"
+        + "generate-admin": "dextinity-admin-generator generate"
+        ```
+
+    - Rename the config file suffix from `.cometGen.tsx` to `.dextinityGen.tsx`. The default file pattern is now `src/**/*.dextinityGen.{ts,tsx}`
+    - Change the header of generated files. Rerun the generator to update them
+
+### Patch Changes
+
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [085b9ac]
+- Updated dependencies [0f17fbd]
+    - @dextinity/admin-icons@10.0.0-beta.0
+    - @dextinity/admin@10.0.0-beta.0
+    - @dextinity/cms-admin@10.0.0-beta.0
+
 ## 9.5.0
 
 ### Patch Changes

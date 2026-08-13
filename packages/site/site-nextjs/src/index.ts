@@ -1,4 +1,4 @@
-import "@comet/site-react/css";
+import "@dextinity/site-react/css";
 
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { SeoBlock } from "./blocks/factories/SeoBlock";
@@ -94,4 +94,4 @@ export {
     type VideoPreviewImageProps,
     withPreview,
     type WithPreviewProps,
-} from "@comet/site-react";
+} from "@dextinity/site-react";

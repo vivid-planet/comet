@@ -1,5 +1,5 @@
-import { NewsletterImageBlock } from "@comet/brevo-api";
-import { createBlocksBlock } from "@comet/cms-api";
+import { NewsletterImageBlock } from "@dextinity/brevo-api";
+import { createBlocksBlock } from "@dextinity/cms-api";
 import { MailDividerBlock } from "@src/mail/blocks/mail-divider.block";
 import { MailRichTextBlock } from "@src/mail/blocks/mail-rich-text.block";
 

@@ -46,7 +46,7 @@ export function FinalFormToggleButtonGroup<FieldValue = unknown>(
         disabled,
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminFinalFormToggleButtonGroup" });
+    } = useThemeProps({ props: inProps, name: "DextinityAdminFinalFormToggleButtonGroup" });
 
     return (
         <Root ownerState={{ optionsPerRow }} {...slotProps?.root} {...restProps}>
@@ -146,17 +146,17 @@ const Label = createComponentSlot(Typography)<FinalFormToggleButtonGroupClassKey
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFinalFormToggleButtonGroup: FinalFormToggleButtonGroupProps<unknown>;
+        DextinityAdminFinalFormToggleButtonGroup: FinalFormToggleButtonGroupProps<unknown>;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminFinalFormToggleButtonGroup: FinalFormToggleButtonGroupClassKey;
+        DextinityAdminFinalFormToggleButtonGroup: FinalFormToggleButtonGroupClassKey;
     }
 
     interface Components {
-        CometAdminFinalFormToggleButtonGroup?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFinalFormToggleButtonGroup"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormToggleButtonGroup"];
+        DextinityAdminFinalFormToggleButtonGroup?: {
+            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFinalFormToggleButtonGroup"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFinalFormToggleButtonGroup"];
         };
     }
 }

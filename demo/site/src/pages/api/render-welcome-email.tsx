@@ -1,4 +1,4 @@
-import { renderMailHtml } from "@comet/mail-react/server";
+import { renderMailHtml } from "@dextinity/mail-react/server";
 import type { WelcomeEmailContentBlockData } from "@src/blocks.generated";
 import { getMailConfig } from "@src/mail/util/getMailConfig";
 import { createGraphQLFetch } from "@src/util/graphQLClient";

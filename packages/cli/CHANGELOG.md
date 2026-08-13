@@ -1,5 +1,21 @@
 # @comet/cli
 
+## 10.0.0-beta.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/cli` to `@dextinity/cli`
+
+    Update the dependency in `package.json`.
+
+    **Breaking changes**
+    - Rename the `comet` binary to `dextinity`:
+
+        ```diff
+        - "generate-block-types": "comet generate-block-types"
+        + "generate-block-types": "dextinity generate-block-types"
+        ```
+
 ## 9.5.0
 
 ## 9.4.0

@@ -294,7 +294,7 @@ type Build {
   id: ID!
 
   """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  Human readable label provided by dextinity.com/label (or the legacy comet-dxp.com/label) annotation. Use name as fallback if not present
   """
   label: String
   name: String
@@ -307,7 +307,7 @@ type BuildTemplate {
   id: ID!
 
   """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  Human readable label provided by dextinity.com/label (or the legacy comet-dxp.com/label) annotation. Use name as fallback if not present
   """
   label: String
   name: String!
@@ -770,7 +770,7 @@ type KubernetesCronJob {
   id: ID!
 
   """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  Human readable label provided by dextinity.com/label (or the legacy comet-dxp.com/label) annotation. Use name as fallback if not present
   """
   label: String
   lastJobRun: KubernetesJob
@@ -785,7 +785,7 @@ type KubernetesJob {
   id: ID!
 
   """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  Human readable label provided by dextinity.com/label (or the legacy comet-dxp.com/label) annotation. Use name as fallback if not present
   """
   label: String
   name: String!

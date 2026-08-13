@@ -1,4 +1,4 @@
-import { type Config, css, MjmlConditionalComment, MjmlMailRoot, MjmlStyle, MjmlTitle } from "@comet/mail-react";
+import { type Config, css, MjmlConditionalComment, MjmlMailRoot, MjmlStyle, MjmlTitle } from "@dextinity/mail-react";
 import { theme } from "@src/mail/theme";
 import type { FC, PropsWithChildren } from "react";
 

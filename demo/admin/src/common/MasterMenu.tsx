@@ -1,11 +1,11 @@
-import { Assets, Dashboard, Data, Mail, PageTree, Snips, Wrench } from "@comet/admin-icons";
+import { Assets, Dashboard, Data, Mail, PageTree, Snips, Wrench } from "@dextinity/admin-icons";
 import {
     BrevoConfigPage,
     createBrevoContactsPage,
     createBrevoTestContactsPage,
     createEmailCampaignsPage,
     createTargetGroupsPage,
-} from "@comet/brevo-admin";
+} from "@dextinity/brevo-admin";
 import {
     ContentScopeIndicator,
     CronJobsPage,
@@ -19,7 +19,7 @@ import {
     PublisherPage,
     UserPermissionsPage,
     WarningsPage,
-} from "@comet/cms-admin";
+} from "@dextinity/cms-admin";
 import { type BrevoContactConfig, getBrevoContactConfig } from "@src/brevo/brevoModuleConfig/brevoContactsPageAttributesConfig";
 import { additionalFormConfig } from "@src/brevo/brevoModuleConfig/targetGroupFormConfig";
 import { EmailCampaignContentBlock } from "@src/brevo/emailCampaigns/blocks/EmailCampaignContentBlock";

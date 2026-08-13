@@ -1,4 +1,4 @@
-import { BlocksBlock, type SupportedBlocks } from "@comet/mail-react";
+import { BlocksBlock, type SupportedBlocks } from "@dextinity/mail-react";
 import type { WelcomeEmailContentBlockData } from "@src/blocks.generated";
 import { MailDividerBlock } from "@src/mail/blocks/MailDividerBlock";
 import { MailRichTextBlock } from "@src/mail/blocks/MailRichTextBlock";

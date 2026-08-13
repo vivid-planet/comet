@@ -1,5 +1,5 @@
-import { MainContent, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
-import { Edit } from "@comet/admin-icons";
+import { MainContent, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackSwitch, StackToolbar } from "@dextinity/admin";
+import { Edit } from "@dextinity/admin-icons";
 import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { useRouteMatch } from "react-router";
@@ -21,7 +21,7 @@ export const UserPermissionsPage = () => {
     useContentScopeConfig({ redirectPathAfterChange: location });
 
     return (
-        <Stack topLevelTitle={<FormattedMessage id="comet.userPermissions.title" defaultMessage="User Permissions" />}>
+        <Stack topLevelTitle={<FormattedMessage id="dextinity.userPermissions.title" defaultMessage="User Permissions" />}>
             <StackSwitch>
                 <StackPage name="table">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
@@ -35,7 +35,7 @@ export const UserPermissionsPage = () => {
                         />
                     </MainContent>
                 </StackPage>
-                <StackPage name="edit" title={<FormattedMessage id="comet.userPermissions.edit" defaultMessage="User" />}>
+                <StackPage name="edit" title={<FormattedMessage id="dextinity.userPermissions.edit" defaultMessage="User" />}>
                     {(userId) => (
                         <>
                             <UserPermissionsUserPageToolbar userId={userId} />
@@ -43,14 +43,14 @@ export const UserPermissionsPage = () => {
                                 <RouterTabs>
                                     <RouterTab
                                         path={isAllowed("userPermissions") ? "/basic-data" : ""}
-                                        label={<FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />}
+                                        label={<FormattedMessage id="dextinity.userPermissions.basicData" defaultMessage="Basic Data" />}
                                     >
                                         <UserPermissionsUserPageBasicDataPanel userId={userId} />
                                     </RouterTab>
                                     {isAllowed("userPermissions") && (
                                         <RouterTab
                                             path=""
-                                            label={<FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />}
+                                            label={<FormattedMessage id="dextinity.userPermissions.permissions" defaultMessage="Permissions" />}
                                         >
                                             <UserPermissionsUserPagePermissionsPanel userId={userId} />
                                         </RouterTab>

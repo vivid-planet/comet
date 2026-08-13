@@ -1,4 +1,4 @@
-import type { Config } from "@comet/mail-react";
+import type { Config } from "@dextinity/mail-react";
 import type { WelcomeEmailContentBlockData } from "@src/blocks.generated";
 import { MailRoot } from "@src/mail/components/MailRoot";
 import { WelcomeEmailContentBlock } from "@src/welcomeEmail/blocks/WelcomeEmailContentBlock";

@@ -9,7 +9,7 @@ describe("DateRangePicker", () => {
     test("Should apply defaultProps defined in the theme", async () => {
         const theme = createTheme({
             components: {
-                CometAdminDateRangePicker: {
+                DextinityAdminDateRangePicker: {
                     defaultProps: {
                         disabled: true,
                     },

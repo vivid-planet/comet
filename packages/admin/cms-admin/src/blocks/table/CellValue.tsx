@@ -55,11 +55,11 @@ const RteContentWrapper = styled("div")(({ theme }) => ({
     // The data grid sets a line height as tall as the row, which cell content inherits.
     lineHeight: "normal",
 
-    ".CometAdminRteBlockElement-root:first-child, .MuiTypography-root:first-child": {
+    ".DextinityAdminRteBlockElement-root:first-child, .MuiTypography-root:first-child": {
         marginTop: 0,
     },
 
-    ".CometAdminRteBlockElement-root:last-child, .MuiTypography-root:last-child": {
+    ".DextinityAdminRteBlockElement-root:last-child, .MuiTypography-root:last-child": {
         marginBottom: 0,
     },
 }));

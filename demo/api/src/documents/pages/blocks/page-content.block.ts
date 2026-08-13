@@ -1,4 +1,4 @@
-import { AnchorBlock, BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock, DamImageBlock } from "@comet/cms-api";
+import { AnchorBlock, BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock, DamImageBlock } from "@dextinity/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { ContactFormBlock } from "@src/common/blocks/contact-form.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";

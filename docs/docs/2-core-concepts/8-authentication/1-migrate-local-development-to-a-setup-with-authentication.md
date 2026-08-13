@@ -2,7 +2,7 @@
 title: Migrate local development to a setup with authentication
 ---
 
-This guide helps to add local authentication in a project, like the [current implementation the Comet DXP Starter](https://github.com/vivid-planet/comet-starter/pull/1201) uses.
+This guide helps to add local authentication in a project, like the [current implementation the Dextinity Starter](https://github.com/vivid-planet/comet-starter/pull/1201) uses.
 That brings the development setup closer to the production setup as it requires real authentication, thus reducing the risk of environment-specific bugs.
 
 ## Add Auth-Server
@@ -72,7 +72,7 @@ export default defineConfig({
 
 ```diff package.json
        "setup:ci": "npm run setup-project-files",
-+      "setup:download-oauth2-proxy": "dotenv -- sh -c 'npx @comet/cli download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
++      "setup:download-oauth2-proxy": "dotenv -- sh -c 'npx @dextinity/cli download-oauth2-proxy -v $OAUTH2_PROXY_VERSION'"
 ```
 
 ```diff install.sh

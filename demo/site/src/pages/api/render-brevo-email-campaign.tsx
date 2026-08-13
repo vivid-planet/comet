@@ -1,4 +1,4 @@
-import { renderMailHtml } from "@comet/mail-react/server";
+import { renderMailHtml } from "@dextinity/mail-react/server";
 import { EmailCampaignMail } from "@src/brevo/EmailCampaignMail";
 import { replaceMailHtmlPlaceholders } from "@src/brevo/util/replaceMailHtmlPlaceholders";
 import { getMailConfig } from "@src/mail/util/getMailConfig";
