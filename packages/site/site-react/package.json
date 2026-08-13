@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/site-react",
     "version": "10.0.0-beta.0",
     "description": "Dextinity Site React package",
+=======
+    "name": "@comet/site-react",
+    "version": "9.5.0",
+    "description": "Comet Site React package",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/dextinity",

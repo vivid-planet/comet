@@ -1,18 +1,22 @@
+<<<<<<< HEAD
 import { MjmlColumn, MjmlImage, MjmlSection, type PropsWithData } from "@dextinity/mail-react";
 import { calculateInheritAspectRatio, generateImageUrl } from "@dextinity/site-nextjs";
+=======
+import { MjmlColumn, MjmlImage, MjmlSection, type PropsWithData, useConfig } from "@comet/mail-react";
+import { calculateInheritAspectRatio, generateImageUrl } from "@comet/site-nextjs";
+>>>>>>> main
 import type { NewsletterImageBlockData } from "@src/blocks.generated";
 
 interface NewsletterImageBlockProps extends PropsWithData<NewsletterImageBlockData> {
     desktopRenderWidth?: number;
     contentWidth?: number;
-    validSizes: number[];
-    baseUrl: string;
 }
 
-export const NewsletterImageBlock = ({ data, desktopRenderWidth = 600, contentWidth = 600, validSizes, baseUrl }: NewsletterImageBlockProps) => {
+export const NewsletterImageBlock = ({ data, desktopRenderWidth = 600, contentWidth = 600 }: NewsletterImageBlockProps) => {
+    const { pixelImageBlock } = useConfig();
     const { damFile, cropArea, urlTemplate } = data.image;
 
-    if (!damFile?.image) {
+    if (!damFile?.image || !pixelImageBlock) {
         return null;
     }
 
@@ -21,7 +25,7 @@ export const NewsletterImageBlock = ({ data, desktopRenderWidth = 600, contentWi
 
     const imageUrl: string = generateImageUrl(
         {
-            width: getOptimalAllowedImageWidth(validSizes, desktopRenderWidth, contentWidth),
+            width: getOptimalAllowedImageWidth(pixelImageBlock.validSizes, desktopRenderWidth, contentWidth),
             src: urlTemplate,
         },
         usedAspectRatio,
@@ -33,7 +37,7 @@ export const NewsletterImageBlock = ({ data, desktopRenderWidth = 600, contentWi
         <MjmlSection>
             <MjmlColumn>
                 <MjmlImage
-                    src={isAbsoluteUrl(imageUrl) ? imageUrl : `${baseUrl}${imageUrl}`}
+                    src={isAbsoluteUrl(imageUrl) ? imageUrl : `${pixelImageBlock.baseUrl}${imageUrl}`}
                     // @ts-expect-error mjml-react expects a boolean but mjml2html requires "true" as string
                     fluidOnMobile="true"
                     cssClass="image-block"

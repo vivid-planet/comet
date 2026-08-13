@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/admin-icons",
     "version": "10.0.0-beta.0",
     "description": "A collection of icons for Dextinity Admin",
+=======
+    "name": "@comet/admin-icons",
+    "version": "9.5.0",
+    "description": "A collection of icons for Comet Admin",
+>>>>>>> main
     "repository": {
         "directory": "packages/admin/admin-icons",
         "type": "git",

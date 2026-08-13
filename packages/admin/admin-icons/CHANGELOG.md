@@ -1,5 +1,6 @@
 # @comet/admin-icons
 
+<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -20,6 +21,11 @@
     - <CometDigitalExperienceLogo width={132} height={30} />
     + <DextinityLogo sx={{ fontSize: 30 }} />
     ```
+=======
+## 9.5.0
+
+## 9.4.0
+>>>>>>> main
 
 ## 9.3.0
 

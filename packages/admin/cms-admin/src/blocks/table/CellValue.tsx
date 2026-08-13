@@ -1,20 +1,25 @@
+<<<<<<< HEAD
 import { RteReadOnly } from "@dextinity/admin-rte";
+=======
+>>>>>>> main
 import { alpha, styled } from "@mui/material/styles";
 
-import type { RichTextBlockState } from "../createRichTextBlock";
+import { useTableBlockContext } from "./TableBlockContext";
 
 type Props = {
     highlighted: boolean;
     recentlyPasted: boolean;
-    value: RichTextBlockState;
+    value: unknown;
 };
 
 export const CellValue = ({ highlighted, recentlyPasted, value }: Props) => {
+    const { RichTextBlock } = useTableBlockContext();
+
     return (
         <CellValueContainer $highlighted={highlighted} $recentlyPasted={recentlyPasted}>
             <RteContentWrapper>
                 <RteContent>
-                    <RteReadOnly value={value.editorState} />
+                    <RichTextBlock.ReadOnlyComponent state={value} />
                 </RteContent>
             </RteContentWrapper>
         </CellValueContainer>
@@ -51,6 +56,8 @@ const RteContentWrapper = styled("div")(({ theme }) => ({
     flexDirection: "column",
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
+    // The data grid sets a line height as tall as the row, which cell content inherits.
+    lineHeight: "normal",
 
     ".DextinityAdminRteBlockElement-root:first-child, .MuiTypography-root:first-child": {
         marginTop: 0,

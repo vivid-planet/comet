@@ -1,17 +1,20 @@
+<<<<<<< HEAD:demo/site/src/brevo/blocks/EmailCampaignRichTextBlock.tsx
 import { MjmlColumn, type PropsWithData } from "@dextinity/mail-react";
 import { ExternalLinkBlock } from "@dextinity/site-nextjs";
+=======
+import { MjmlColumn, MjmlSection, MjmlText, type MjmlTextProps, type PropsWithData } from "@comet/mail-react";
+import { ExternalLinkBlock } from "@comet/site-nextjs";
+>>>>>>> main:demo/site/src/mail/blocks/MailRichTextBlock.tsx
 import type { ExternalLinkBlockData, RichTextBlockData } from "@src/blocks.generated";
-import { IndentedSectionGroup } from "@src/brevo/components/IndentedSectionGroup";
-import { Typography, type TypographyProps } from "@src/brevo/components/Typography";
 import { type FC, isValidElement } from "react";
 import redraft, { type Renderers, type TextBlockRenderFn } from "redraft";
 
-function createTextBlockRenderFn(props: TypographyProps): TextBlockRenderFn {
+function createTextBlockRenderFn(props: MjmlTextProps): TextBlockRenderFn {
     return (children, { keys }) =>
         children.map((child, index) => (
-            <Typography key={keys[index]} {...props}>
+            <MjmlText key={keys[index]} bottomSpacing {...props}>
                 {child}
-            </Typography>
+            </MjmlText>
         ));
 }
 
@@ -21,13 +24,13 @@ const defaultRichTextRenderers: Renderers = {
         ITALIC: (children, { key }) => <i key={key}>{children}</i>,
     },
     blocks: {
-        unstyled: createTextBlockRenderFn({ variant: "body" }),
-        "header-one": createTextBlockRenderFn({ variant: "headline", fontSize: 26 }),
-        "header-two": createTextBlockRenderFn({ variant: "headline", fontSize: 24 }),
-        "header-three": createTextBlockRenderFn({ variant: "headline", fontSize: 22 }),
-        "header-four": createTextBlockRenderFn({ variant: "headline", fontSize: 20 }),
-        "header-five": createTextBlockRenderFn({ variant: "headline", fontSize: 18 }),
-        "header-six": createTextBlockRenderFn({ variant: "headline", fontSize: 16, fontWeight: "600" }),
+        unstyled: createTextBlockRenderFn({ variant: "copy" }),
+        "header-one": createTextBlockRenderFn({ variant: "title" }),
+        "header-two": createTextBlockRenderFn({ variant: "header" }),
+        "header-three": createTextBlockRenderFn({ variant: "header" }),
+        "header-four": createTextBlockRenderFn({ variant: "header" }),
+        "header-five": createTextBlockRenderFn({ variant: "header" }),
+        "header-six": createTextBlockRenderFn({ variant: "header" }),
     },
     /**
      * Entities receive children and the entity data
@@ -45,12 +48,12 @@ const defaultRichTextRenderers: Renderers = {
     },
 };
 
-export const EmailCampaignRichTextBlock: FC<PropsWithData<RichTextBlockData>> = ({ data }) => {
+export const MailRichTextBlock: FC<PropsWithData<RichTextBlockData>> = ({ data }) => {
     const rendered = redraft(data.draftContent, defaultRichTextRenderers);
 
     return (
-        <IndentedSectionGroup>
+        <MjmlSection indent>
             <MjmlColumn>{rendered}</MjmlColumn>
-        </IndentedSectionGroup>
+        </MjmlSection>
     );
 };

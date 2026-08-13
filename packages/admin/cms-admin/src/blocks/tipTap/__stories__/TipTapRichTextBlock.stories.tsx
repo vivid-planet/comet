@@ -53,9 +53,9 @@ export const Default: Story = {
                 { timeout: 5000 },
             );
 
-            // Heading select shows "Default"
+            // Block type select shows "Paragraph"
             expect(canvas.getByRole("combobox")).toBeInTheDocument();
-            expect(canvas.getByText("Default")).toBeInTheDocument();
+            expect(canvas.getByText("Paragraph")).toBeInTheDocument();
 
             // Toolbar has buttons (undo, redo, bold, italic, strike, more, ol, ul, indent, dedent, nbsp, shy)
             const buttons = canvas.getAllByRole("button");
@@ -67,6 +67,84 @@ export const Default: Story = {
             // First two buttons are undo and redo
             expect(buttons[0]).toBeDisabled();
             expect(buttons[1]).toBeDisabled();
+        });
+    },
+};
+
+const ReadOnlyBlock = createTipTapRichTextBlock({
+    textBlockStyles: [
+        {
+            name: "intro",
+            label: "Intro Text",
+            appliesTo: ["paragraph"],
+            element: (props: HTMLAttributes<HTMLElement>) => <p style={{ fontSize: 20, fontStyle: "italic" }} {...props} />,
+        },
+    ],
+});
+
+const readOnlyState: TipTapRichTextBlockState = {
+    tipTapContent: {
+        type: "doc",
+        content: [
+            {
+                type: "heading",
+                attrs: { level: 1 },
+                content: [{ type: "text", text: "Read-only content" }],
+            },
+            {
+                type: "paragraph",
+                attrs: { textBlockStyle: "intro" },
+                content: [
+                    { type: "text", text: "This content is rendered " },
+                    { type: "text", marks: [{ type: "bold" }], text: "read-only" },
+                    { type: "text", text: "." },
+                ],
+            },
+        ],
+    },
+};
+
+export const ReadOnly: Story = {
+    render: () => (
+        <StoryWrapper state={readOnlyState}>
+            <ReadOnlyBlock.ReadOnlyComponent state={readOnlyState} />
+        </StoryWrapper>
+    ),
+    play: async ({ canvas, canvasElement, step }) => {
+        await step("Saved content renders", async () => {
+            await waitFor(
+                () => {
+                    expect(canvas.getByRole("heading", { level: 1, name: "Read-only content" })).toBeInTheDocument();
+                    expect(canvas.getByText("read-only")).toBeInTheDocument();
+                },
+                { timeout: 5000 },
+            );
+        });
+
+        await step(
+            "The block's own text block style is applied — this needs the block's textBlockStyles reaching the read-only renderer",
+            async () => {
+                await waitFor(
+                    () => {
+                        const styledElement = canvasElement.querySelector('[data-text-block-style="intro"]');
+                        expect(styledElement).not.toBeNull();
+                        expect(styledElement).toHaveStyle({ fontStyle: "italic" });
+                    },
+                    { timeout: 3000 },
+                );
+            },
+        );
+
+        await step("No element is editable", async () => {
+            for (const element of Array.from(canvasElement.querySelectorAll("[contenteditable]"))) {
+                expect(element).toHaveAttribute("contenteditable", "false");
+            }
+        });
+
+        await step("No editing toolbar is rendered", async () => {
+            // The editor keeps its textbox role when read-only, so the toolbar's absence is the tell.
+            expect(canvas.queryByRole("combobox")).not.toBeInTheDocument();
+            expect(canvas.queryAllByRole("button")).toHaveLength(0);
         });
     },
 };
@@ -141,7 +219,7 @@ export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
     render: () => <TextBlockStylesStory />,
     play: async ({ canvas, userEvent, step }) => {
         await step("Editor is ready with text block style dropdown", async () => {
-            // Both heading select and text block style select show "Default"
+            // Block type select shows "Paragraph", text block style select shows "Default"
             await waitFor(
                 () => {
                     const comboboxes = canvas.getAllByRole("combobox");
@@ -150,8 +228,9 @@ export const TextBlockStyles: StoryObj<typeof TextBlockStylesStory> = {
                 { timeout: 5000 },
             );
 
-            const defaults = canvas.getAllByText("Default");
-            expect(defaults.length).toBeGreaterThanOrEqual(2);
+            const comboboxes = canvas.getAllByRole("combobox");
+            expect(comboboxes[0]).toHaveTextContent("Paragraph");
+            expect(comboboxes[1]).toHaveTextContent("Default");
         });
 
         await step("Select text block style 'Intro Text'", async () => {

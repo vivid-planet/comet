@@ -1,5 +1,6 @@
 # @comet/site-nextjs
 
+<<<<<<< HEAD
 ## 10.0.0-beta.0
 
 ### Major Changes
@@ -16,6 +17,19 @@
 
 - Updated dependencies [f843a5e]
     - @dextinity/site-react@10.0.0-beta.0
+=======
+## 9.5.0
+
+### Patch Changes
+
+- @comet/site-react@9.5.0
+
+## 9.4.0
+
+### Patch Changes
+
+- @comet/site-react@9.4.0
+>>>>>>> main
 
 ## 9.3.0
 

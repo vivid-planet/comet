@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/admin-rte",
     "version": "10.0.0-beta.0",
     "description": "Dextinity Admin Rich Text Editor component",
+=======
+    "name": "@comet/admin-rte",
+    "version": "9.5.0",
+    "description": "Comet Admin Rich Text Editor component",
+>>>>>>> main
     "repository": {
         "directory": "packages/admin/admin-rte",
         "type": "git",

@@ -19,6 +19,15 @@ function variantModifier(variantName: string): string {
     return `richTextBlock__list--variant${variantName.charAt(0).toUpperCase()}${variantName.slice(1)}`;
 }
 
+// MJML wraps every child of a column in a `<td>` with `word-break: break-word`, and this cell inherits it. That lets a
+// browser shrink the cell to one character wide, so the full-width text cell next to it pushes the marker onto two
+// lines. `word-break: normal` undoes it; `white-space: nowrap` alone does not, because Outlook on the web strips
+// `white-space` from inline styles.
+const markerCellNoLineBreak: CSSProperties = {
+    whiteSpace: "nowrap",
+    wordBreak: "normal",
+};
+
 interface RichTextListItem {
     key: string;
     content: ReactNode;
@@ -29,7 +38,7 @@ interface RichTextListProps {
     variant?: VariantName;
     /** When true, the variant's spacing below the block applies below the last item. */
     bottomSpacing?: boolean;
-    /** The nesting level the theme's marker receives. Zero for a list that is not nested. */
+    /** How many lists enclose this one; zero for a list that is not nested. */
     depth: number;
     items: RichTextListItem[];
 }
@@ -58,6 +67,8 @@ export function RichTextList({ ordered, variant, bottomSpacing, depth, items }: 
     };
 
     const itemSpacing = getDefaultFromResponsiveValue(list.itemSpacing);
+    const isNestedLevel = depth > 0;
+
     const markerCellPadding: CSSProperties = {
         paddingLeft: getDefaultFromResponsiveValue(list.indent),
         paddingRight: getDefaultFromResponsiveValue(list.markerGap),
@@ -73,21 +84,30 @@ export function RichTextList({ ordered, variant, bottomSpacing, depth, items }: 
             className={clsx(
                 "richTextBlock__list",
                 ordered ? "richTextBlock__list--ordered" : "richTextBlock__list--unordered",
-                activeVariant && variantModifier(activeVariant),
+                `richTextBlock__list--depth${String(depth)}`,
+                depth > 0 && "richTextBlock__list--nested",
+                depth === 0 && activeVariant && variantModifier(activeVariant),
             )}
             style={{ borderCollapse: "collapse" }}
         >
             <tbody>
                 {items.map((item, index) => {
+                    const isFirstItem = index === 0;
                     const isLastItem = index === items.length - 1;
+                    const spacingAbove = isFirstItem && isNestedLevel ? itemSpacing : undefined;
                     const spacingBelow = isLastItem ? blockSpacing : itemSpacing;
-                    const cellStyle: CSSProperties = { ...fontStyle, ...(spacingBelow !== undefined && { paddingBottom: spacingBelow }) };
+                    const cellStyle: CSSProperties = {
+                        ...fontStyle,
+                        ...(spacingAbove !== undefined && { paddingTop: spacingAbove }),
+                        ...(spacingBelow !== undefined && { paddingBottom: spacingBelow }),
+                    };
 
                     return (
                         <tr
                             key={item.key}
                             className={clsx(
                                 "richTextBlock__listItem",
+                                spacingAbove !== undefined && "richTextBlock__listItem--itemSpacingAbove",
                                 !isLastItem && "richTextBlock__listItem--itemSpacing",
                                 isLastItem && blockSpacing !== undefined && "richTextBlock__listItem--blockSpacing",
                             )}
@@ -99,7 +119,7 @@ export function RichTextList({ ordered, variant, bottomSpacing, depth, items }: 
                                 style={{
                                     ...cellStyle,
                                     ...markerCellPadding,
-                                    whiteSpace: "nowrap", // The full-width text cell squeezes this column, so markers such as `10.` must stay on one line.
+                                    ...markerCellNoLineBreak,
                                 }}
                             >
                                 {resolveMarker(ordered ? list.orderedMarker : list.unorderedMarker, { index, depth })}
@@ -142,6 +162,11 @@ function generateResponsiveListSpacingCss(theme: Theme): string {
             breakpoints: theme.breakpoints,
             selector: ".richTextBlock__listItem--itemSpacing > td",
             tokens: [{ value: theme.list.itemSpacing, cssProperty: "padding-bottom", unit: "px" }],
+        }),
+        generateResponsiveTokenCss({
+            breakpoints: theme.breakpoints,
+            selector: ".richTextBlock__listItem--itemSpacingAbove > td",
+            tokens: [{ value: theme.list.itemSpacing, cssProperty: "padding-top", unit: "px" }],
         }),
     ]
         .filter(Boolean)

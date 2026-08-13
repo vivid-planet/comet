@@ -187,3 +187,8 @@ export interface LinkBlockInterface<
 > {
     url2State?: (url: string) => State | false;
 }
+
+export interface ReadOnlyBlockRenderInterface<State = unknown> {
+    /** Renders the block's state without an editing UI. */
+    ReadOnlyComponent(props: { state: State }): ReactNode;
+}

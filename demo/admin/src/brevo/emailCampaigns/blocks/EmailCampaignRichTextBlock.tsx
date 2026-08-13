@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { CopyToClipboardButton } from "@dextinity/admin";
 import {
     BlockAdminComponentPaper,
@@ -7,8 +8,13 @@ import {
     createRichTextBlock,
     ExternalLinkBlock,
 } from "@dextinity/cms-admin";
+=======
+import { CopyToClipboardButton } from "@comet/admin";
+import { BlockAdminComponentPaper, BlockAdminComponentSection, type BlockInterface, type BlockState } from "@comet/cms-admin";
+>>>>>>> main
 import { Box, List, ListItem, ListItemText } from "@mui/material";
 import type { RichTextBlockData } from "@src/blocks.generated";
+import { MailRichTextBlock } from "@src/mail/blocks/MailRichTextBlock";
 import { FormattedMessage } from "react-intl";
 
 const placeholders = [
@@ -18,19 +24,12 @@ const placeholders = [
     },
 ];
 
-const BaseRichTextBlock = createRichTextBlock({
-    link: ExternalLinkBlock,
-    rte: {
-        supports: ["bold", "italic", "header-one", "header-two", "header-three", "header-four", "header-five", "header-six", "link", "links-remove"],
-    },
-});
-
-export const EmailCampaignRichTextBlock: BlockInterface<RichTextBlockData, BlockState<typeof BaseRichTextBlock>> = {
-    ...BaseRichTextBlock,
+export const EmailCampaignRichTextBlock: BlockInterface<RichTextBlockData, BlockState<typeof MailRichTextBlock>> = {
+    ...MailRichTextBlock,
     AdminComponent: (rteAdminComponentProps) => (
         <>
             <BlockAdminComponentSection>
-                <BaseRichTextBlock.AdminComponent {...rteAdminComponentProps} />
+                <MailRichTextBlock.AdminComponent {...rteAdminComponentProps} />
             </BlockAdminComponentSection>
             <BlockAdminComponentSection
                 title={<FormattedMessage id="richText.placeholder.info" defaultMessage="Placeholders available in the text" />}

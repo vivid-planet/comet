@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/cms-admin",
     "version": "10.0.0-beta.0",
     "description": "Dextinity CMS Admin package",
+=======
+    "name": "@comet/cms-admin",
+    "version": "9.5.0",
+    "description": "Comet CMS Admin package",
+>>>>>>> main
     "repository": {
         "directory": "packages/admin/cms-admin",
         "type": "git",

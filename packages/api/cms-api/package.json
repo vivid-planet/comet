@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
     "name": "@dextinity/cms-api",
     "version": "10.0.0-beta.0",
     "description": "Dextinity CMS API package",
+=======
+    "name": "@comet/cms-api",
+    "version": "9.5.0",
+    "description": "Comet CMS API package",
+>>>>>>> main
     "repository": {
         "directory": "packages/api/cms-api",
         "type": "git",
