@@ -12,6 +12,11 @@
         "skills/**",
         "rules/**"
     ],
+    "scripts": {
+        "build": "node build.js",
+        "clean": "node build.js --clean",
+        "prepack": "pnpm run build"
+    },
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
