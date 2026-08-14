@@ -1,25 +1,13 @@
-import type { ErrorModel } from "@getbrevo/brevo";
-import { IncomingMessage } from "http";
+import { BrevoError } from "@getbrevo/brevo";
 
-export function isErrorFromBrevo(error: unknown): error is { response: IncomingMessage; body: ErrorModel } {
-    return (
-        typeof error === "object" &&
-        error !== null &&
-        "response" in error &&
-        error.response instanceof IncomingMessage &&
-        "body" in error &&
-        typeof error.body === "object" &&
-        error.body !== null &&
-        "code" in error.body &&
-        typeof error.body.code === "string" &&
-        "message" in error.body &&
-        typeof error.body.message === "string"
-    );
+export function isErrorFromBrevo(error: unknown): error is BrevoError {
+    return error instanceof BrevoError;
 }
 
 export function handleBrevoError(error: unknown): never {
     if (isErrorFromBrevo(error)) {
-        throw new Error(error.body.message);
+        const message = (error.body as { message?: string } | undefined)?.message ?? error.message;
+        throw new Error(message);
     } else {
         throw error;
     }

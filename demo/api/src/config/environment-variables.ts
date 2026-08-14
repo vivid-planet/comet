@@ -1,4 +1,4 @@
-import { BlobStorageConfig, IsUndefinable } from "@comet/cms-api";
+import { BlobStorageConfig, IsUndefinable } from "@dextinity/cms-api";
 import { PrivateSiteConfig } from "@src/site-configs";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEmail, IsIn, IsInt, IsOptional, IsString, IsUrl, Length, MinLength, ValidateIf } from "class-validator";
@@ -61,6 +61,9 @@ export class EnvironmentVariables {
     @Type(() => Number)
     @IsInt()
     API_PORT: number;
+
+    @IsString()
+    CORS_ALLOWED_ORIGIN: string;
 
     @IsString()
     IMGPROXY_SALT: string;

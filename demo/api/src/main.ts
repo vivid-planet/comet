@@ -6,7 +6,7 @@ if (process.env.TRACING == "production") {
     require("./tracing.dev");
 }
 
-import { CdnGuard, ExceptionFilter, ValidationExceptionFactory } from "@comet/cms-api";
+import { CdnGuard, ExceptionFilter, ValidationExceptionFactory } from "@dextinity/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import type { NestExpressApplication } from "@nestjs/platform-express";
@@ -33,6 +33,12 @@ async function bootstrap(): Promise<void> {
     useContainer(app.select(appModule), { fallbackOnErrors: true });
 
     app.setGlobalPrefix("api");
+    app.enableCors({
+        origin: config.corsAllowedOrigin,
+        methods: ["GET", "POST"],
+        credentials: false,
+        maxAge: 600,
+    });
 
     app.useGlobalFilters(new ExceptionFilter(config.debug));
     app.useGlobalPipes(

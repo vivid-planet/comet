@@ -697,7 +697,8 @@
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "table": "Table"
+                                "table": "Table",
+                                "tipTapTable": "TipTapTable"
                             },
                             "nullable": false
                         }
@@ -742,7 +743,8 @@
                                 "richtext": "StandaloneRichText",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "table": "Table"
+                                "table": "Table",
+                                "tipTapTable": "TipTapTable"
                             },
                             "nullable": false
                         }
@@ -959,6 +961,15 @@
                             "nullable": true
                         },
                         {
+                            "name": "aiContentType",
+                            "kind": "Enum",
+                            "enum": [
+                                "Generated",
+                                "Modified"
+                            ],
+                            "nullable": true
+                        },
+                        {
                             "name": "archived",
                             "kind": "Boolean",
                             "nullable": false
@@ -1059,7 +1070,7 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "EmailCampaignDivider",
+                                "divider": "MailDivider",
                                 "salutation": "EmailCampaignSalutation",
                                 "image": "NewsletterImage"
                             },
@@ -1096,7 +1107,7 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "text": "RichText",
-                                "divider": "EmailCampaignDivider",
+                                "divider": "MailDivider",
                                 "salutation": "EmailCampaignSalutation",
                                 "image": "NewsletterImage"
                             },
@@ -1107,11 +1118,6 @@
                 "nullable": false
             }
         ]
-    },
-    {
-        "name": "EmailCampaignDivider",
-        "fields": [],
-        "inputFields": []
     },
     {
         "name": "EmailCampaignSalutation",
@@ -1729,6 +1735,84 @@
         ]
     },
     {
+        "name": "MailDivider",
+        "fields": [],
+        "inputFields": []
+    },
+    {
+        "name": "MailLink",
+        "fields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "external": "ExternalLink",
+                                "phone": "PhoneLink"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "external": "ExternalLink",
+                                "phone": "PhoneLink"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "Media",
         "fields": [
             {
@@ -2229,6 +2313,7 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapTable": "TipTapTable",
                                 "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex",
@@ -2297,6 +2382,7 @@
                                 "textImage": "TextImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "table": "Table",
+                                "tipTapTable": "TipTapTable",
                                 "tipTapRichText": "TipTapRichText",
                                 "productList": "ProductList",
                                 "pageTreeIndex": "PageTreeIndex",
@@ -2383,6 +2469,15 @@
                         {
                             "name": "altText",
                             "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "aiContentType",
+                            "kind": "Enum",
+                            "enum": [
+                                "Generated",
+                                "Modified"
+                            ],
                             "nullable": true
                         },
                         {
@@ -2618,6 +2713,64 @@
                 ],
                 "nullable": false,
                 "array": true
+            }
+        ]
+    },
+    {
+        "name": "ProductPrice",
+        "fields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "product",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "price",
+                            "kind": "Number",
+                            "nullable": true
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "ProductTeaser",
+        "fields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "productId",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -3752,14 +3905,169 @@
         "fields": [
             {
                 "name": "tipTapContent",
-                "kind": "Json",
-                "nullable": false
+                "kind": "TipTapRichTextBlock",
+                "nullable": false,
+                "childBlocks": {
+                    "productPrice": "ProductPrice",
+                    "productTeaser": "ProductTeaser"
+                }
             }
         ],
         "inputFields": [
             {
                 "name": "tipTapContent",
-                "kind": "Json",
+                "kind": "TipTapRichTextBlock",
+                "nullable": false,
+                "childBlocks": {
+                    "productPrice": "ProductPrice",
+                    "productTeaser": "ProductTeaser"
+                }
+            }
+        ]
+    },
+    {
+        "name": "TipTapTable",
+        "fields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "cellValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "Block",
+                                        "block": "TipTapRichText",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "cellValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "Block",
+                                        "block": "TipTapRichText",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
                 "nullable": false
             }
         ]
@@ -3820,6 +4128,79 @@
                 "name": "vimeoIdentifier",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "WelcomeEmailContent",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "text": "RichText",
+                                "divider": "MailDivider"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "text": "RichText",
+                                "divider": "MailDivider"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
             }
         ]
     },

@@ -1,11 +1,13 @@
 import { gql } from "@apollo/client";
-import { Field } from "@comet/admin";
-import { Video } from "@comet/admin-icons";
+import { Field } from "@dextinity/admin";
+import { Video } from "@dextinity/admin-icons";
 import { Box } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import type { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
+import { useVideoPerformanceWarning } from "../dam/config/damConfig";
+import { VideoPerformanceWarningAlert } from "../dam/VideoPerformanceWarningAlert";
 import { FileField } from "../form/file/FileField";
 import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
@@ -24,7 +26,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     name: "DamVideo",
 
-    displayName: <FormattedMessage id="comet.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
+    displayName: <FormattedMessage id="dextinity.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
 
     defaultValues: () => ({ showControls: true, previewImage: PixelImageBlock.defaultValues() }),
 
@@ -116,10 +118,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     AdminComponent: ({ state, updateState }) => {
         const isInPaper = useBlockAdminComponentPaper();
+        const { isVideoTooLarge } = useVideoPerformanceWarning();
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
                 <BlocksFinalForm onSubmit={updateState} initialValues={state}>
+                    {state.damFile && isVideoTooLarge(state.damFile) && <VideoPerformanceWarningAlert sx={{ marginBottom: 2 }} />}
                     <Field
                         name="damFile"
                         component={FileField}
@@ -128,7 +132,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                         preview={<Video fontSize="large" color="primary" />}
                     />
                     <VideoOptionsFields />
-                    <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
+                    <BlockAdminComponentSection title={<FormattedMessage id="dextinity.blocks.video.previewImage" defaultMessage="Preview Image" />}>
                         <PixelImageBlock.AdminComponent
                             state={state.previewImage}
                             updateState={(setStateAction) => {
@@ -155,5 +159,5 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
         return contents;
     },
-    tags: [defineMessage({ id: "damVideoBlock.tag.video", defaultMessage: "Video" })],
+    tags: [defineMessage({ id: "dextinity.damVideoBlock.tag.video", defaultMessage: "Video" })],
 };

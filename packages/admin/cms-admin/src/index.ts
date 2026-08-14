@@ -101,6 +101,7 @@ export type {
     BlockPreviewStateInterface,
     BlockState,
     LinkBlockInterface,
+    ReadOnlyBlockRenderInterface,
     ReplaceDependencyObject,
     RootBlockInterface,
 } from "./blocks/types";
@@ -131,8 +132,8 @@ export { PageName } from "./common/PageName";
 export { SignOutButton } from "./common/signOutButton/SignOutButton";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
-export type { CometConfig } from "./config/CometConfigContext";
-export { CometConfigProvider, useCometConfig } from "./config/CometConfigContext";
+export type { DextinityConfig } from "./config/DextinityConfigContext";
+export { DextinityConfigProvider, useDextinityConfig } from "./config/DextinityConfigContext";
 export { useContentLanguage } from "./contentLanguage/useContentLanguage";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";
 export { ContentScopeSelect } from "./contentScope/ContentScopeSelect";

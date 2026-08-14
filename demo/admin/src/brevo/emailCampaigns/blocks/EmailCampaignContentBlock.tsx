@@ -1,14 +1,14 @@
-import { NewsletterImageBlock } from "@comet/brevo-admin";
-import { createBlocksBlock } from "@comet/cms-admin";
+import { NewsletterImageBlock } from "@dextinity/brevo-admin";
+import { createBlocksBlock } from "@dextinity/cms-admin";
 import { EmailCampaignRichTextBlock } from "@src/brevo/emailCampaigns/blocks/EmailCampaignRichTextBlock";
+import { MailDividerBlock } from "@src/mail/blocks/MailDividerBlock";
 
-import { EmailCampaignDividerBlock } from "./EmailCampaignDividerBlock";
 import { EmailCampaignSalutationBlock } from "./EmailCampaignSalutationBlock";
 
 export const EmailCampaignContentBlock = createBlocksBlock({
     name: "EmailCampaignContent",
     supportedBlocks: {
-        divider: EmailCampaignDividerBlock,
+        divider: MailDividerBlock,
         text: EmailCampaignRichTextBlock,
         salutation: EmailCampaignSalutationBlock,
         image: NewsletterImageBlock,
