@@ -8,13 +8,14 @@
         "url": "https://github.com/vivid-planet/dextinity"
     },
     "license": "BSD-2-Clause",
+    "type": "module",
     "files": [
         "skills/**",
         "rules/**"
     ],
     "scripts": {
-        "build": "node build.js",
-        "clean": "node build.js --clean",
+        "build": "node build.ts",
+        "clean": "node build.ts --clean",
         "prepack": "pnpm run build"
     },
     "publishConfig": {
