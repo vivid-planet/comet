@@ -1,12 +1,12 @@
 // The skills and rules must stay at the repository root: `install-agent-features` sparse-checks-out `skills/` and `rules/` from there when
 // this repository is referenced as an external source. Symlinking them into this package isn't an option because pnpm doesn't follow
 // symlinked directories when packing (since v11), so they are copied in instead.
-const fs = require("node:fs");
-const path = require("node:path");
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 const directories = ["skills", "rules"];
 
-const packageDir = __dirname;
+const packageDir = import.meta.dirname;
 const repoRoot = path.resolve(packageDir, "../..");
 const cleanOnly = process.argv.includes("--clean");
 
