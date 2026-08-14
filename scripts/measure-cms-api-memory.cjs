@@ -1,6 +1,6 @@
 /**
- * Measures the base memory cost of loading @comet/cms-api, i.e. the memory a consumer pays
- * just by `require("@comet/cms-api")` before instantiating anything. This is the dominant
+ * Measures the base memory cost of loading @dextinity/cms-api, i.e. the memory a consumer pays
+ * just by `require("@dextinity/cms-api")` before instantiating anything. This is the dominant
  * factor in the API's startup memory (loading dependencies, not DI instantiation).
  *
  * It spawns several isolated worker processes (fresh module cache, forced GC) and reports the

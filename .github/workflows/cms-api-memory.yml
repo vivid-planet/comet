@@ -1,6 +1,6 @@
 name: CMS API Memory
 
-# Guards the base memory of @comet/cms-api: importing the package eagerly loads its dependency
+# Guards the base memory of @dextinity/cms-api: importing the package eagerly loads its dependency
 # graph, which dominates the API's startup memory and time. This compares the PR against the base
 # branch and comments if the base memory grew notably (usually a newly added eager import that
 # should be lazy-loaded instead) or dropped notably. The comment is removed once the change is
@@ -43,7 +43,7 @@ jobs:
                   build-packages: "false"
 
             - name: Build cms-api (PR)
-              run: pnpm --filter '@comet/cms-api' run build
+              run: pnpm --filter '@dextinity/cms-api' run build
 
             - name: Measure cms-api base memory (PR)
               run: node scripts/measure-cms-api-memory.cjs > pr-memory.json
@@ -62,7 +62,7 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Build cms-api (base)
-              run: pnpm --filter '@comet/cms-api' run build
+              run: pnpm --filter '@dextinity/cms-api' run build
 
             - name: Measure cms-api base memory (base)
               run: node "$RUNNER_TEMP/measure-cms-api-memory.cjs" > base-memory.json
@@ -100,8 +100,8 @@ jobs:
 
                       const increasedBody =
                           `${marker}\n` +
-                          `### ⚠️ \`@comet/cms-api\` base memory increased by ${fmt(heapPct)}\n\n` +
-                          `Loading \`@comet/cms-api\` (\`require("@comet/cms-api")\`) now uses **${fmt(heapPct)}** more heap than \`${baseRef}\` (threshold: +${increaseThreshold}%).\n\n` +
+                          `### ⚠️ \`@dextinity/cms-api\` base memory increased by ${fmt(heapPct)}\n\n` +
+                          `Loading \`@dextinity/cms-api\` (\`require("@dextinity/cms-api")\`) now uses **${fmt(heapPct)}** more heap than \`${baseRef}\` (threshold: +${increaseThreshold}%).\n\n` +
                           table +
                           `\nThis usually means a new dependency is **imported eagerly** at module load time. ` +
                           `Since this memory is paid by every consumer on startup (and by the migration init container), please consider **lazy-loading** it:\n\n` +
@@ -111,8 +111,8 @@ jobs:
 
                       const decreasedBody =
                           `${marker}\n` +
-                          `### 📉 \`@comet/cms-api\` base memory decreased by ${Math.abs(heapPct).toFixed(1)}%\n\n` +
-                          `Loading \`@comet/cms-api\` (\`require("@comet/cms-api")\`) now uses **${fmt(heapPct)}** heap versus \`${baseRef}\` (threshold: -${decreaseThreshold}%). Nice.\n\n` +
+                          `### 📉 \`@dextinity/cms-api\` base memory decreased by ${Math.abs(heapPct).toFixed(1)}%\n\n` +
+                          `Loading \`@dextinity/cms-api\` (\`require("@dextinity/cms-api")\`) now uses **${fmt(heapPct)}** heap versus \`${baseRef}\` (threshold: -${decreaseThreshold}%). Nice.\n\n` +
                           table +
                           measuredNote;
 
