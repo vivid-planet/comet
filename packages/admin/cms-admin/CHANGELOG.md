@@ -1,5 +1,15 @@
 # @comet/cms-admin
 
+## 10.0.1
+
+### Patch Changes
+
+- Updated dependencies [48748b0]
+    - @dextinity/admin@10.0.1
+    - @dextinity/admin-date-time@10.0.1
+    - @dextinity/admin-rte@10.0.1
+    - @dextinity/admin-icons@10.0.1
+
 ## 10.0.0
 
 ### Major Changes
