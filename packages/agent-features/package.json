@@ -15,8 +15,7 @@
     ],
     "scripts": {
         "build": "node build.ts",
-        "clean": "node build.ts --clean",
-        "prepack": "pnpm run build"
+        "clean": "node build.ts --clean"
     },
     "publishConfig": {
         "access": "public",
