@@ -31,6 +31,6 @@ junit-storybook.xml
 .claude/settings.local.json
 .github/instructions/
 
-# Build output of @dextinity/agent-features (copied from the skills/ and rules/ folders at the repository root)
+# Build output of @comet/agent-features (copied from the skills/ and rules/ folders at the repository root)
 /packages/agent-features/skills/
 /packages/agent-features/rules/
