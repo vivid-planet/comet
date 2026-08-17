@@ -1,9 +1,9 @@
-name: Release
+name: Release (v9)
 
 on:
     push:
         branches:
-            - main
+            - v9.x.x
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -12,7 +12,7 @@ jobs:
         name: Release
         runs-on: ubuntu-latest
         concurrency:
-            group: release
+            group: release-v9
             cancel-in-progress: true
         steps:
             - name: Checkout Repo
@@ -30,7 +30,8 @@ jobs:
               uses: dotansimha/changesets-action@v1.5.2
               with:
                   version: pnpm run version
-                  publish: pnpm run publish
+                  publish: pnpm run publish --tag=stable-v9
+                  title: "Version Packages (v9)"
                   createGithubReleases: aggregate
                   githubReleaseName: "${{ env.PUBLISHED_VERSION }}"
                   githubTagName: "v${{ env.PUBLISHED_VERSION }}"
