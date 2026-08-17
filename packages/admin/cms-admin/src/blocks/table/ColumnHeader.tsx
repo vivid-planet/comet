@@ -1,5 +1,5 @@
-import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
-import { Add, Copy, Delete, DensityStandard, DragIndicator, Duplicate, Paste, PinLeft, PinRight, Remove } from "@comet/admin-icons";
+import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@dextinity/admin";
+import { Add, Copy, Delete, DensityStandard, DragIndicator, Duplicate, Paste, PinLeft, PinRight, Remove } from "@dextinity/admin-icons";
 import { ButtonBase, Divider, Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { GridColumnHeaderParams } from "@mui/x-data-grid";
@@ -35,11 +35,11 @@ type Props = GridColumnHeaderParams & {
 };
 
 const columnSizes: Record<ColumnSize, ReactNode> = {
-    extraSmall: <FormattedMessage id="comet.tableBlock.columnSize.extraSmall" defaultMessage="Extra small" />,
-    small: <FormattedMessage id="comet.tableBlock.columnSize.small" defaultMessage="Small" />,
-    standard: <FormattedMessage id="comet.tableBlock.columnSize.standard" defaultMessage="Standard" />,
-    large: <FormattedMessage id="comet.tableBlock.columnSize.large" defaultMessage="Large" />,
-    extraLarge: <FormattedMessage id="comet.tableBlock.columnSize.extraLarge" defaultMessage="Extra large" />,
+    extraSmall: <FormattedMessage id="dextinity.tableBlock.columnSize.extraSmall" defaultMessage="Extra small" />,
+    small: <FormattedMessage id="dextinity.tableBlock.columnSize.small" defaultMessage="Small" />,
+    standard: <FormattedMessage id="dextinity.tableBlock.columnSize.standard" defaultMessage="Standard" />,
+    large: <FormattedMessage id="dextinity.tableBlock.columnSize.large" defaultMessage="Large" />,
+    extraLarge: <FormattedMessage id="dextinity.tableBlock.columnSize.extraLarge" defaultMessage="Extra large" />,
 };
 
 export const ColumnHeader = ({ columnSize, highlighted, state, updateState, columnIndex, field: columnId, addToRecentlyPastedIds }: Props) => {
@@ -84,7 +84,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                 snackbarApi.showSnackbar(
                     <Snackbar autoHideDuration={5000}>
                         <Alert severity="error">
-                            <FormattedMessage id="comet.tableBlock.failedToDuplicateColumn" defaultMessage="Failed to duplicate column" />
+                            <FormattedMessage id="dextinity.tableBlock.failedToDuplicateColumn" defaultMessage="Failed to duplicate column" />
                         </Alert>
                     </Snackbar>,
                 );
@@ -103,7 +103,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
             snackbarApi.showSnackbar(
                 <Snackbar autoHideDuration={5000}>
                     <Alert severity="error">
-                        <FormattedMessage id="comet.tableBlock.failedToCopyColumn" defaultMessage="Failed to copy column" />
+                        <FormattedMessage id="dextinity.tableBlock.failedToCopyColumn" defaultMessage="Failed to copy column" />
                     </Alert>
                 </Snackbar>,
             );
@@ -148,7 +148,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                             componentsProps: {
                                 iconButton: {
                                     "aria-label": intl.formatMessage({
-                                        id: "comet.tableBlock.openColumnOptions",
+                                        id: "dextinity.tableBlock.openColumnOptions",
                                         defaultMessage: "Open column options",
                                     }),
                                 },
@@ -157,7 +157,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                     }}
                 >
                     <RowActionsMenu
-                        text={<FormattedMessage id="comet.tableBlock.columnWidth" defaultMessage="Column width" />}
+                        text={<FormattedMessage id="dextinity.tableBlock.columnWidth" defaultMessage="Column width" />}
                         icon={<DensityStandard />}
                     >
                         {Object.entries(columnSizes).map(([size, label]) => (
@@ -174,9 +174,9 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                     </RowActionsMenu>
                     <RowActionsItem icon={highlighted ? <Remove /> : <Add />} onClick={handleToggleColumnHighlight}>
                         {highlighted ? (
-                            <FormattedMessage id="comet.tableBlock.removeHighlighting" defaultMessage="Remove highlighting" />
+                            <FormattedMessage id="dextinity.tableBlock.removeHighlighting" defaultMessage="Remove highlighting" />
                         ) : (
-                            <FormattedMessage id="comet.tableBlock.highlightColumn" defaultMessage="Highlight column" />
+                            <FormattedMessage id="dextinity.tableBlock.highlightColumn" defaultMessage="Highlight column" />
                         )}
                     </RowActionsItem>
                     <Divider />
@@ -186,7 +186,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                             handleInsertColumnAtIndex(columnIndex);
                         }}
                     >
-                        <FormattedMessage id="comet.tableBlock.insertColumnLeft" defaultMessage="Insert column left" />
+                        <FormattedMessage id="dextinity.tableBlock.insertColumnLeft" defaultMessage="Insert column left" />
                     </RowActionsItem>
                     <RowActionsItem
                         icon={<PinRight />}
@@ -194,21 +194,21 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                             handleInsertColumnAtIndex(columnIndex + 1);
                         }}
                     >
-                        <FormattedMessage id="comet.tableBlock.insertColumnRight" defaultMessage="Insert column right" />
+                        <FormattedMessage id="dextinity.tableBlock.insertColumnRight" defaultMessage="Insert column right" />
                     </RowActionsItem>
                     <Divider />
                     <RowActionsItem icon={<Copy />} onClick={handleCopyColumnToClipboard}>
-                        <FormattedMessage id="comet.tableBlock.copyColumn" defaultMessage="Copy" />
+                        <FormattedMessage id="dextinity.tableBlock.copyColumn" defaultMessage="Copy" />
                     </RowActionsItem>
                     <RowActionsItem icon={<Paste />} onClick={pasteColumnFromClipboard}>
-                        <FormattedMessage id="comet.tableBlock.pasteColumn" defaultMessage="Paste" />
+                        <FormattedMessage id="dextinity.tableBlock.pasteColumn" defaultMessage="Paste" />
                     </RowActionsItem>
                     <RowActionsItem icon={<Duplicate />} onClick={handleDuplicateColumn}>
-                        <FormattedMessage id="comet.tableBlock.duplicateColumn" defaultMessage="Duplicate" />
+                        <FormattedMessage id="dextinity.tableBlock.duplicateColumn" defaultMessage="Duplicate" />
                     </RowActionsItem>
                     <Divider />
                     <RowActionsItem icon={<Delete />} onClick={handleDeleteColumn}>
-                        <FormattedMessage id="comet.tableBlock.deleteColumn" defaultMessage="Delete" />
+                        <FormattedMessage id="dextinity.tableBlock.deleteColumn" defaultMessage="Delete" />
                     </RowActionsItem>
                 </RowActionsMenu>
             </RowActionsMenu>

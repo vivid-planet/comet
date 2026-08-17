@@ -1,4 +1,4 @@
-import { Dialog, OkayButton, useStackApi } from "@comet/admin";
+import { Dialog, OkayButton, useStackApi } from "@dextinity/admin";
 import { DialogActions } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -116,7 +116,7 @@ export const createTableBlock = <RichText extends RichTextBlockInterface = RichT
         ...createBlockSkeleton(),
 
         name,
-        displayName: <FormattedMessage id="comet.blocks.table.displayName" defaultMessage="Table" />,
+        displayName: <FormattedMessage id="dextinity.blocks.table.displayName" defaultMessage="Table" />,
         category: BlockCategory.TextAndContent,
 
         defaultValues: getInitialTableState,
@@ -188,7 +188,7 @@ export const createTableBlock = <RichText extends RichTextBlockInterface = RichT
                                 open={showDialog}
                                 maxWidth="xl"
                                 onClose={closeTableBlock}
-                                title={intl.formatMessage({ id: "comet.blocks.table.displayName", defaultMessage: "Table" })}
+                                title={intl.formatMessage({ id: "dextinity.blocks.table.displayName", defaultMessage: "Table" })}
                                 PaperProps={{ sx: { height: "100%", maxHeight: 880 } }}
                                 sx={(theme) => ({ zIndex: theme.zIndex.modal - 2 })}
                             >

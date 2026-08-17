@@ -5,7 +5,7 @@ import {
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
     PageTreeService,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { CreateRequestContext, EntityManager, MikroORM } from "@mikro-orm/postgresql";
 import { Inject, Logger } from "@nestjs/common";
 import { Config } from "@src/config/config";
@@ -166,7 +166,7 @@ export class FixturesCommand extends CommandRunner {
                             parentId: level > 0 ? faker.helpers.arrayElement(pages[level - 1]).id : undefined,
                             attachedDocument: { id: pageId, type: "Page" },
                             userGroup: UserGroup.all,
-                        } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
+                        } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/dextinity/pull/1515#issue-2042001589
                         PageTreeNodeCategory.mainNavigation,
                         {
                             domain,

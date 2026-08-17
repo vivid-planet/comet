@@ -1,5 +1,70 @@
 # @comet/brevo-admin
 
+## 10.0.1
+
+### Patch Changes
+
+- Updated dependencies [48748b0]
+    - @dextinity/admin@10.0.1
+    - @dextinity/admin-date-time@10.0.1
+    - @dextinity/cms-admin@10.0.1
+    - @dextinity/admin-icons@10.0.1
+
+## 10.0.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/brevo-admin` to `@dextinity/brevo-admin`
+
+    Update the dependency in `package.json` and all imports.
+
+    **Breaking changes**
+    - Resolve the configuration via `DextinityConfigProvider` instead of `CometConfigProvider`
+
+### Patch Changes
+
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+    - @dextinity/admin-date-time@10.0.0
+    - @dextinity/admin-icons@10.0.0
+    - @dextinity/admin@10.0.0
+    - @dextinity/cms-admin@10.0.0
+
+## 10.0.0-beta.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/brevo-admin` to `@dextinity/brevo-admin`
+
+    Update the dependency in `package.json` and all imports.
+
+    **Breaking changes**
+    - Resolve the configuration via `DextinityConfigProvider` instead of `CometConfigProvider`
+
+### Patch Changes
+
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [f843a5e]
+- Updated dependencies [085b9ac]
+- Updated dependencies [0f17fbd]
+    - @dextinity/admin-date-time@10.0.0-beta.0
+    - @dextinity/admin-icons@10.0.0-beta.0
+    - @dextinity/admin@10.0.0-beta.0
+    - @dextinity/cms-admin@10.0.0-beta.0
+
+## 9.5.0
+
+### Patch Changes
+
+- @comet/admin@9.5.0
+- @comet/admin-date-time@9.5.0
+- @comet/admin-icons@9.5.0
+- @comet/cms-admin@9.5.0
+
 ## 9.4.0
 
 ### Patch Changes

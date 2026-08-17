@@ -1,4 +1,4 @@
-import type { ExtractBlockInputFactoryProps } from "@comet/cms-api";
+import type { ExtractBlockInputFactoryProps } from "@dextinity/cms-api";
 import type { LinkBlock } from "@src/common/blocks/link.block";
 import { faker } from "@src/db/fixtures/faker";
 import type { LinkBlockFixtureService } from "@src/db/fixtures/generators/blocks/navigation/link-block-fixture.service";

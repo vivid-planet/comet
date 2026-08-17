@@ -1,5 +1,115 @@
 # @comet/cms-api
 
+## 10.0.1
+
+## 10.0.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/cms-api` to `@dextinity/cms-api`
+
+    Update the dependency in `package.json` and all imports.
+
+    **Breaking changes**
+    - Rename `CometException` and its subclasses: `CometValidationException` -> `DextinityValidationException`, `CometEntityNotFoundException` -> `DextinityEntityNotFoundException`, `CometImageResolutionException` -> `DextinityImageResolutionException`. The error codes returned by the API change accordingly, so a matching `@dextinity/cms-admin` version is required
+    - Rename `CometAuthGuard` to `DextinityAuthGuard` and the `@DisableCometGuards()` decorator to `@DisableDextinityGuards()`
+    - Rename the database tables `CometFileUpload`, `CometUserPermission` and `CometUserContentScopes` to `DextinityFileUpload`, `DextinityUserPermission` and `DextinityUserContentScopes`. A migration is shipped with the package, so running the migrations is sufficient
+    - Rename the site preview cookie from `__comet_site_preview` to `__dextinity_site_preview` and the impersonation cookie from `comet-impersonate-user-id` to `dextinity-impersonate-user-id`
+
+### Minor Changes
+
+- 86f90cb: Support `dextinity.com/*` Kubernetes labels and annotations
+
+    The Builds, Cron Jobs and Kubernetes modules now read the labels and annotations of Kubernetes resources with the `dextinity.com` prefix:
+
+    | Previously                      | Now                             |
+    | ------------------------------- | ------------------------------- |
+    | `comet-dxp.com/instance`        | `dextinity.com/instance`        |
+    | `comet-dxp.com/parent-cron-job` | `dextinity.com/parent-cron-job` |
+    | `comet-dxp.com/label`           | `dextinity.com/label`           |
+    | `comet-dxp.com/builder`         | `dextinity.com/builder`         |
+    | `comet-dxp.com/trigger`         | `dextinity.com/trigger`         |
+    | `comet-dxp.com/content-scope`   | `dextinity.com/content-scope`   |
+
+    The `comet-dxp.com` prefix is still supported, so existing Helm charts keep working without changes.
+    Resources are expected to use one prefix or the other: if no resource matches the `dextinity.com` labels, the `comet-dxp.com` ones are used instead.
+
+    **Example**
+
+    ```yaml
+    metadata:
+        annotations:
+            dextinity.com/label: "Demo Cron Job"
+            dextinity.com/content-scope: '{ "domain": "main", "language": "en" }'
+    ```
+
+## 10.0.0-beta.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/cms-api` to `@dextinity/cms-api`
+
+    Update the dependency in `package.json` and all imports.
+
+    **Breaking changes**
+    - Rename `CometException` and its subclasses: `CometValidationException` -> `DextinityValidationException`, `CometEntityNotFoundException` -> `DextinityEntityNotFoundException`, `CometImageResolutionException` -> `DextinityImageResolutionException`. The error codes returned by the API change accordingly, so a matching `@dextinity/cms-admin` version is required
+    - Rename `CometAuthGuard` to `DextinityAuthGuard` and the `@DisableCometGuards()` decorator to `@DisableDextinityGuards()`
+    - Rename the database tables `CometFileUpload`, `CometUserPermission` and `CometUserContentScopes` to `DextinityFileUpload`, `DextinityUserPermission` and `DextinityUserContentScopes`. A migration is shipped with the package, so running the migrations is sufficient
+    - Rename the site preview cookie from `__comet_site_preview` to `__dextinity_site_preview` and the impersonation cookie from `comet-impersonate-user-id` to `dextinity-impersonate-user-id`
+
+### Minor Changes
+
+- 86f90cb: Support `dextinity.com/*` Kubernetes labels and annotations
+
+    The Builds, Cron Jobs and Kubernetes modules now read the labels and annotations of Kubernetes resources with the `dextinity.com` prefix:
+
+    | Previously                      | Now                             |
+    | ------------------------------- | ------------------------------- |
+    | `comet-dxp.com/instance`        | `dextinity.com/instance`        |
+    | `comet-dxp.com/parent-cron-job` | `dextinity.com/parent-cron-job` |
+    | `comet-dxp.com/label`           | `dextinity.com/label`           |
+    | `comet-dxp.com/builder`         | `dextinity.com/builder`         |
+    | `comet-dxp.com/trigger`         | `dextinity.com/trigger`         |
+    | `comet-dxp.com/content-scope`   | `dextinity.com/content-scope`   |
+
+    The `comet-dxp.com` prefix is still supported, so existing Helm charts keep working without changes.
+    Resources are expected to use one prefix or the other: if no resource matches the `dextinity.com` labels, the `comet-dxp.com` ones are used instead.
+
+    **Example**
+
+    ```yaml
+    metadata:
+        annotations:
+            dextinity.com/label: "Demo Cron Job"
+            dextinity.com/content-scope: '{ "domain": "main", "language": "en" }'
+    ```
+
+### Patch Changes
+
+## 9.5.0
+
+### Minor Changes
+
+- 4eadaf5: Deprecate `FilesService.calculateDominantColor`
+
+    Computing the dominant color of an image was the only part of `FilesService` that used imgproxy. It moved to an internal service that `DamImagesModule` provides, so file handling no longer depends on imgproxy.
+
+    `FilesService.calculateDominantColor` returns the color when `DamImagesModule` is registered, and `undefined` when it is not.
+
+- 4eadaf5: Split `DamModule` into composable sub-modules
+
+    `DamModule` is now a facade composing four sub-modules: `DamFilesModule` (file and folder storage, upload and serving), `DamImagesModule` (image scaling via imgproxy, dominant color), `DamBlocksModule` (block transformers) and `DamDependentsModule` (the `dependents` field on `DamFile`). `DamModule.register()` keeps its signature and still composes all four.
+
+    `DamModule` and its sub-modules now throw when they are registered more than once in the same process. A second registration would mount the DAM routes twice and add the `dependents` field to the file type again, so it never worked as intended.
+
+    Projects that only need DAM file upload and storage can register `DamFilesModule` on its own, without `ImgproxyModule` and without `DependenciesModule`:
+
+    ```ts
+    DamFilesModule.register({ damConfig, Scope: DamScope, File: DamFile, Folder: DamFolder });
+    ```
+
+    In that setup, `FilesService` receives no dominant color calculator, so uploads skip the color and `FilesService.calculateDominantColor` returns `undefined`.
+
 ## 9.4.0
 
 ### Patch Changes

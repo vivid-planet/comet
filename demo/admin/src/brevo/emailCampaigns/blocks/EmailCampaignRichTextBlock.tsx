@@ -1,5 +1,5 @@
-import { CopyToClipboardButton } from "@comet/admin";
-import { BlockAdminComponentPaper, BlockAdminComponentSection, type BlockInterface, type BlockState } from "@comet/cms-admin";
+import { CopyToClipboardButton } from "@dextinity/admin";
+import { BlockAdminComponentPaper, BlockAdminComponentSection, type BlockInterface, type BlockState } from "@dextinity/cms-admin";
 import { Box, List, ListItem, ListItemText } from "@mui/material";
 import type { RichTextBlockData } from "@src/blocks.generated";
 import { MailRichTextBlock } from "@src/mail/blocks/MailRichTextBlock";
@@ -8,7 +8,7 @@ import { FormattedMessage } from "react-intl";
 const placeholders = [
     {
         placeholder: "{{SALUTATION}}",
-        helper: <FormattedMessage id="cometBrevoModule.richText.placeholder.salutation" defaultMessage="Dear Mr./Ms. LASTNAME" />,
+        helper: <FormattedMessage id="richText.placeholder.salutation" defaultMessage="Dear Mr./Ms. LASTNAME" />,
     },
 ];
 
@@ -20,7 +20,7 @@ export const EmailCampaignRichTextBlock: BlockInterface<RichTextBlockData, Block
                 <MailRichTextBlock.AdminComponent {...rteAdminComponentProps} />
             </BlockAdminComponentSection>
             <BlockAdminComponentSection
-                title={<FormattedMessage id="cometBrevoModule.richText.placeholder.info" defaultMessage="Placeholders available in the text" />}
+                title={<FormattedMessage id="richText.placeholder.info" defaultMessage="Placeholders available in the text" />}
             >
                 <BlockAdminComponentPaper disablePadding>
                     <List>

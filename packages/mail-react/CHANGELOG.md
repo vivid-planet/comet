@@ -1,5 +1,35 @@
 # @comet/mail-react
 
+## 10.0.1
+
+## 10.0.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/mail-react` to `@dextinity/mail-react`
+
+    Update the dependency in `package.json` and all imports:
+
+    ```diff
+    - import { MjmlPixelImageBlock } from "@comet/mail-react";
+    + import { MjmlPixelImageBlock } from "@dextinity/mail-react";
+    ```
+
+## 10.0.0-beta.0
+
+### Major Changes
+
+- f843a5e: Rename `@comet/mail-react` to `@dextinity/mail-react`
+
+    Update the dependency in `package.json` and all imports:
+
+    ```diff
+    - import { MjmlPixelImageBlock } from "@comet/mail-react";
+    + import { MjmlPixelImageBlock } from "@dextinity/mail-react";
+    ```
+
+## 9.5.0
+
 ## 9.4.0
 
 ### Minor Changes

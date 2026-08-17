@@ -29,7 +29,7 @@ export type TextVariantStyles = { [K in keyof TextStyleMap]?: ResponsiveValue<Te
  * Defines the variants available on the `MjmlText` component.
  *
  * ```ts
- * declare module "@comet/mail-react" {
+ * declare module "@dextinity/mail-react" {
  *     interface TextVariants {
  *         heading: true;
  *         body: true;
@@ -98,7 +98,7 @@ export type DividerVariantStyles = { [K in keyof DividerStyleMap]?: ResponsiveVa
  * Defines the variants available on the `MjmlDivider` and `HtmlDivider` components.
  *
  * ```ts
- * declare module "@comet/mail-react" {
+ * declare module "@dextinity/mail-react" {
  *     interface DividerVariants {
  *         thin: true;
  *         thick: true;
@@ -157,7 +157,7 @@ export type ButtonVariantStyles = { [K in keyof ButtonStyleMap]?: ResponsiveValu
  * Defines the variants available on the `MjmlButton` and `HtmlButton` components.
  *
  * ```ts
- * declare module "@comet/mail-react" {
+ * declare module "@dextinity/mail-react" {
  *     interface ButtonVariants {
  *         primary: true;
  *         secondary: true;
@@ -231,7 +231,7 @@ export interface ThemeColors {
 }
 
 /**
- * The root theme object that holds all design tokens for `@comet/mail-react`.
+ * The root theme object that holds all design tokens for `@dextinity/mail-react`.
  *
  * Every sub-interface is declared as an `interface` so consumers can
  * extend the theme at any level via TypeScript module augmentation.

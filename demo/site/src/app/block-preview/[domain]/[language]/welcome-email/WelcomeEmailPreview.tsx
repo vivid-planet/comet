@@ -1,7 +1,7 @@
 "use client";
 
-import type { Config } from "@comet/mail-react";
-import { createFetchInMemoryCache, useIFrameBridge } from "@comet/site-nextjs";
+import type { Config } from "@dextinity/mail-react";
+import { createFetchInMemoryCache, useIFrameBridge } from "@dextinity/site-nextjs";
 import type { WelcomeEmailContentBlockData } from "@src/blocks.generated";
 import { RenderedMailForBlockPreview } from "@src/mail/components/RenderedMailForBlockPreview";
 import type { ContentScope } from "@src/site-configs";

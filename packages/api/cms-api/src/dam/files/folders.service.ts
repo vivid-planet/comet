@@ -5,7 +5,7 @@ import JSZip from "jszip";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
-import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
+import { DextinityEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { contentScopesAreEqual } from "../../user-permissions/content-scopes-are-equal";
 import { DamConfig } from "../dam.config";
@@ -196,7 +196,7 @@ export class FoldersService {
     async updateById(id: string, data: UpdateFolderInput): Promise<FolderInterface> {
         const folder = await this.findOneById(id);
         if (!folder) {
-            throw new CometEntityNotFoundException();
+            throw new DextinityEntityNotFoundException();
         }
         return this.updateByEntity(folder, data);
     }

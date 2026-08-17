@@ -25,7 +25,6 @@ export { SplitButtonContext, type SplitButtonContextOptions } from "./common/but
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export type { ClearInputAdornmentClassKey } from "./common/ClearInputAdornment";
 export { ClearInputAdornment, type ClearInputAdornmentProps } from "./common/ClearInputAdornment";
-export { CometLogo } from "./common/CometLogo";
 export { DeleteDialog } from "./common/DeleteDialog";
 export { Dialog, type DialogClassKey, type DialogProps } from "./common/Dialog";
 export { FieldSet, type FieldSetClassKey, type FieldSetProps } from "./common/FieldSet";
@@ -322,7 +321,7 @@ export { Tab, Tabs, type TabsClassKey, type TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, type TabScrollButtonClassKey, type TabScrollButtonProps } from "./tabs/TabScrollButton";
 export { breakpointsOptions, breakpointValues } from "./theme/breakpointsOptions";
 export { errorPalette, greyPalette, infoPalette, primaryPalette, successPalette, warningPalette } from "./theme/colors";
-export { createCometTheme } from "./theme/createCometTheme";
+export { createDextinityTheme } from "./theme/createDextinityTheme";
 export { paletteOptions } from "./theme/paletteOptions";
 export { shadows } from "./theme/shadows";
 export { createTypographyOptions } from "./theme/typographyOptions";
