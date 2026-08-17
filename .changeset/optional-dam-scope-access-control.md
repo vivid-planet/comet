@@ -1,5 +1,5 @@
 ---
-"@comet/cms-api": minor
+"@dextinity/cms-api": minor
 ---
 
 Make the DAM's scope-based access control optional
