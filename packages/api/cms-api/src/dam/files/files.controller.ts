@@ -9,7 +9,6 @@ import {
     Inject,
     Logger,
     NotFoundException,
-    Optional,
     Param,
     Post,
     Res,
@@ -34,11 +33,9 @@ import { calculatePartialRanges, slugifyFilename } from "../../file-utils/files.
 import { contentScopesAreEqual } from "../../user-permissions/content-scopes-are-equal";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DamConfig } from "../dam.config";
-import { DAM_CONFIG, DAM_DISABLE_SCOPE_ACCESS_CONTROL } from "../dam.constants";
-import { isAllowedToAccessScope } from "../scope-access-control";
+import { DAM_CONFIG } from "../dam.constants";
+import { DamScopeAccessControlService } from "../scope-access-control.service";
 import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
@@ -68,19 +65,9 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
             private readonly filesService: FilesService,
             private readonly blobStorageBackendService: BlobStorageBackendService,
-            @Optional() @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface | undefined,
             private readonly foldersService: FoldersService,
-            @Inject(DAM_DISABLE_SCOPE_ACCESS_CONTROL) private readonly disableScopeAccessControl: boolean,
+            private readonly scopeAccessControl: DamScopeAccessControlService,
         ) {}
-
-        private isAllowed(user: CurrentUser, scope: DamScopeInterface | undefined): boolean {
-            return isAllowedToAccessScope({
-                accessControlService: this.accessControlService,
-                disableScopeAccessControl: this.disableScopeAccessControl,
-                user,
-                scope,
-            });
-        }
 
         @Post("upload")
         @UseInterceptors(DamUploadFileInterceptor())
@@ -98,7 +85,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.isAllowed(user, scope)) {
+            if (scope && !this.scopeAccessControl.isAllowed(user, scope)) {
                 throw new ForbiddenException();
             }
 
@@ -137,7 +124,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.isAllowed(user, scope)) {
+            if (scope && !this.scopeAccessControl.isAllowed(user, scope)) {
                 throw new ForbiddenException();
             }
 
@@ -160,7 +147,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             if (!fileToReplace) {
                 throw new NotFoundException(`File not found`);
             }
-            if (!this.isAllowed(user, fileToReplace.scope)) {
+            if (!this.scopeAccessControl.isAllowed(user, fileToReplace.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -194,7 +181,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
             if (!fileToReplace) {
                 throw new NotFoundException(`File ${fileId} not found`);
             }
-            if (!this.isAllowed(user, fileToReplace.scope)) {
+            if (!this.scopeAccessControl.isAllowed(user, fileToReplace.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -224,7 +211,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            if (file.scope !== undefined && !this.isAllowed(user, file.scope)) {
+            if (file.scope !== undefined && !this.scopeAccessControl.isAllowed(user, file.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -248,7 +235,7 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            if (file.scope !== undefined && !this.isAllowed(user, file.scope)) {
+            if (file.scope !== undefined && !this.scopeAccessControl.isAllowed(user, file.scope)) {
                 throw new ForbiddenException();
             }
 

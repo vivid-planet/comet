@@ -1,14 +1,10 @@
-import { Controller, ForbiddenException, Get, Inject, NotFoundException, Optional, Param, Res, Type } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, NotFoundException, Param, Res, Type } from "@nestjs/common";
 import { Response } from "express";
 
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
-import { DAM_DISABLE_SCOPE_ACCESS_CONTROL } from "../dam.constants";
-import { isAllowedToAccessScope } from "../scope-access-control";
-import { DamScopeInterface } from "../types";
+import { DamScopeAccessControlService } from "../scope-access-control.service";
 import { FoldersService } from "./folders.service";
 
 export const createFoldersController = ({ damBasePath }: { damBasePath: string }): Type<unknown> => {
@@ -16,18 +12,8 @@ export const createFoldersController = ({ damBasePath }: { damBasePath: string }
     class FoldersController {
         constructor(
             private readonly foldersService: FoldersService,
-            @Optional() @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface | undefined,
-            @Inject(DAM_DISABLE_SCOPE_ACCESS_CONTROL) private readonly disableScopeAccessControl: boolean,
+            private readonly scopeAccessControl: DamScopeAccessControlService,
         ) {}
-
-        private isAllowed(user: CurrentUser, scope: DamScopeInterface | undefined): boolean {
-            return isAllowedToAccessScope({
-                accessControlService: this.accessControlService,
-                disableScopeAccessControl: this.disableScopeAccessControl,
-                user,
-                scope,
-            });
-        }
 
         @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in method
         @Get("/:folderId/zip")
@@ -37,7 +23,7 @@ export const createFoldersController = ({ damBasePath }: { damBasePath: string }
                 throw new NotFoundException("Folder not found");
             }
 
-            if (folder.scope && !this.isAllowed(user, folder.scope)) {
+            if (folder.scope && !this.scopeAccessControl.isAllowed(user, folder.scope)) {
                 throw new ForbiddenException("The current user is not allowed to access this scope and download this folder.");
             }
 

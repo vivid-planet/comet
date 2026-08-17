@@ -1,10 +1,8 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Inject, Module, type OnModuleInit, Optional, Type, ValueProvider } from "@nestjs/common";
+import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { FileValidationService } from "../file-utils/file-validation.service";
-import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
-import type { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { damDefaultAcceptedMimetypes } from "./common/mimeTypes/dam-default-accepted-mimetypes";
 import { DamConfig, damDefaultBasePath } from "./dam.config";
@@ -25,7 +23,7 @@ import { createFoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
 import { ImageCropArea } from "./images/entities/image-crop-area.entity";
-import { assertScopeAccessControlIsConfigured } from "./scope-access-control";
+import { DamScopeAccessControlService } from "./scope-access-control.service";
 import { DamScopeInterface } from "./types";
 
 interface DamFilesModuleOptions {
@@ -45,20 +43,8 @@ interface DamFilesModuleOptions {
 
 @Global()
 @Module({})
-export class DamFilesModule implements OnModuleInit {
+export class DamFilesModule {
     private static registered = false;
-
-    constructor(
-        @Inject(DAM_DISABLE_SCOPE_ACCESS_CONTROL) private readonly disableScopeAccessControl: boolean,
-        @Optional() @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService?: AccessControlServiceInterface,
-    ) {}
-
-    onModuleInit(): void {
-        assertScopeAccessControlIsConfigured({
-            accessControlService: this.accessControlService,
-            disableScopeAccessControl: this.disableScopeAccessControl,
-        });
-    }
 
     static register({ damConfig: damConfigOptions, Scope, Folder, File, disableScopeAccessControl = false }: DamFilesModuleOptions): DynamicModule {
         // The module is global and declares the DAM file and folder routes. DamModule registers it internally, so registering
@@ -138,12 +124,13 @@ export class DamFilesModule implements OnModuleInit {
                 HasValidFilenameConstraint,
                 FileWarningService,
                 DamMediaAlternativeResolver,
+                DamScopeAccessControlService,
             ],
             controllers: [
                 createFilesController({ Scope, damBasePath: damConfig.basePath }),
                 createFoldersController({ damBasePath: damConfig.basePath }),
             ],
-            exports: [FilesService, FoldersService, DamItemsService, damConfigProvider, disableScopeAccessControlProvider],
+            exports: [FilesService, FoldersService, DamItemsService, damConfigProvider, DamScopeAccessControlService],
         };
     }
 }
