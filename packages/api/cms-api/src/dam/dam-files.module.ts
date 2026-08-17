@@ -1,5 +1,5 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Inject, Logger, Module, type OnModuleInit, Optional, Type, ValueProvider } from "@nestjs/common";
+import { DynamicModule, Global, Inject, Module, type OnModuleInit, Optional, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { FileValidationService } from "../file-utils/file-validation.service";
@@ -58,12 +58,6 @@ export class DamFilesModule implements OnModuleInit {
             accessControlService: this.accessControlService,
             disableScopeAccessControl: this.disableScopeAccessControl,
         });
-
-        if (this.disableScopeAccessControl) {
-            new Logger(DamFilesModule.name).warn(
-                "Scope-based access control is disabled (disableScopeAccessControl = true). The DAM will not check scopes on its REST endpoints, and its GraphQL resolvers are only as protected as the guards you register yourself.",
-            );
-        }
     }
 
     static register({ damConfig: damConfigOptions, Scope, Folder, File, disableScopeAccessControl = false }: DamFilesModuleOptions): DynamicModule {
