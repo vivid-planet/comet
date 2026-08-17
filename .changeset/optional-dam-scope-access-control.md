@@ -4,7 +4,7 @@
 
 Make the DAM's scope-based access control optional
 
-The DAM controllers required an `AccessControlService`, so `DamFilesModule` couldn't be registered without `UserPermissionsModule`. The service is now optional, and the endpoints fail closed with `403 Forbidden` when it is missing.
+The DAM controllers required an `AccessControlService`, so `DamFilesModule` couldn't be registered without `UserPermissionsModule`. The service is optional now. A DAM that has neither the service nor the option below refuses to start, because its GraphQL resolvers would serve requests unguarded.
 
 Pass `disableScopeAccessControl` to run the DAM behind your own authentication guard, without any scope checks:
 
