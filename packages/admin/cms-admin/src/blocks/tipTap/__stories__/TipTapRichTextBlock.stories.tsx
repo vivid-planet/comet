@@ -1131,7 +1131,7 @@ function findStickyAncestor(element: HTMLElement): HTMLElement {
 export const StickyToolbar: StoryObj<typeof StickyToolbarStory> = {
     render: () => <StickyToolbarStory />,
     play: async ({ canvas, canvasElement, step }) => {
-        const scrollContainer = canvasElement.querySelector('[data-testid="scroll-container"]') as HTMLElement;
+        const getScrollContainer = () => canvasElement.querySelector('[data-testid="scroll-container"]') as HTMLElement | null;
 
         await step("Editor is ready and the container has more content than fits", async () => {
             await waitFor(
@@ -1142,10 +1142,13 @@ export const StickyToolbar: StoryObj<typeof StickyToolbarStory> = {
             );
 
             await waitFor(() => {
-                expect(scrollContainer.scrollHeight).toBeGreaterThan(scrollContainer.clientHeight);
+                const scrollContainer = getScrollContainer();
+                expect(scrollContainer).not.toBeNull();
+                expect(scrollContainer!.scrollHeight).toBeGreaterThan(scrollContainer!.clientHeight);
             });
         });
 
+        const scrollContainer = getScrollContainer()!;
         const undoButton = canvas.getAllByRole("button")[0];
         const toolbar = findStickyAncestor(undoButton);
         const firstParagraph = canvas.getByText("Paragraph 1: enough text to make the container scroll past the toolbar.");
