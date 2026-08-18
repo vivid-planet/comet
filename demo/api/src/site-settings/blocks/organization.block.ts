@@ -45,7 +45,7 @@ class OrganizationBlockInput extends BlockInput {
     @BlockField()
     @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
     @ValidateIf((input: OrganizationBlockInput) => Boolean(input.url))
-    @IsUrl()
+    @IsUrl({ protocols: ["http", "https"], require_protocol: true })
     url: string;
 
     @ChildBlockInput(DamImageBlock)

@@ -234,7 +234,6 @@ export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
 export { isLinkTarget } from "./validation/isLinkTarget";
 export { validateLinkTarget } from "./validation/validateLinkTarget";
-export { validateUrl } from "./validation/validateUrl";
 export { LatestWarningsDashboardWidget } from "./warnings/LatestWarningsDashboardWidget";
 export { WarningsPage } from "./warnings/WarningsPage";
 import packageJson from "../package.json";

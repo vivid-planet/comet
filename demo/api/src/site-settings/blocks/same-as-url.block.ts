@@ -11,7 +11,7 @@ class SameAsUrlBlockInput extends BlockInput {
     @BlockField()
     @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
     @ValidateIf((input: SameAsUrlBlockInput) => Boolean(input.url))
-    @IsUrl()
+    @IsUrl({ protocols: ["http", "https"], require_protocol: true })
     url: string;
 
     transformToBlockData(): SameAsUrlBlockData {
