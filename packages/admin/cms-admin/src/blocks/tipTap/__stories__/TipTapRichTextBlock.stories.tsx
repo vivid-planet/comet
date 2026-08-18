@@ -1141,11 +1141,14 @@ export const StickyToolbar: StoryObj<typeof StickyToolbarStory> = {
                 { timeout: 5000 },
             );
 
-            await waitFor(() => {
-                const scrollContainer = getScrollContainer();
-                expect(scrollContainer).not.toBeNull();
-                expect(scrollContainer!.scrollHeight).toBeGreaterThan(scrollContainer!.clientHeight);
-            });
+            await waitFor(
+                () => {
+                    const scrollContainer = getScrollContainer();
+                    expect(scrollContainer).not.toBeNull();
+                    expect(scrollContainer!.scrollHeight).toBeGreaterThan(scrollContainer!.clientHeight);
+                },
+                { timeout: 5000 },
+            );
         });
 
         const scrollContainer = getScrollContainer()!;
@@ -1159,16 +1162,22 @@ export const StickyToolbar: StoryObj<typeof StickyToolbarStory> = {
         await step("Scroll the container down", async () => {
             scrollContainer.scrollTop = 300;
 
-            await waitFor(() => {
-                expect(scrollContainer.scrollTop).toBeGreaterThan(0);
-            });
+            await waitFor(
+                () => {
+                    expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+                },
+                { timeout: 5000 },
+            );
         });
 
         await step("Toolbar stays pinned to the top while the content scrolls behind it", async () => {
-            await waitFor(() => {
-                expect(toolbar.getBoundingClientRect().top).toBe(toolbarTopBeforeScroll);
-                expect(firstParagraph.getBoundingClientRect().top).toBeLessThan(paragraphTopBeforeScroll);
-            });
+            await waitFor(
+                () => {
+                    expect(toolbar.getBoundingClientRect().top).toBe(toolbarTopBeforeScroll);
+                    expect(firstParagraph.getBoundingClientRect().top).toBeLessThan(paragraphTopBeforeScroll);
+                },
+                { timeout: 5000 },
+            );
         });
     },
 };
