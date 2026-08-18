@@ -1,9 +1,9 @@
-import { calculateInheritAspectRatio, generateImageUrl } from "@comet/site-nextjs";
+import { calculateInheritAspectRatio, generateImageUrl } from "@dextinity/site-nextjs";
 import type { DamImageBlockData, OrganizationBlockData } from "@src/blocks.generated";
-import cometConfig from "@src/comet-config.json" with { type: "json" };
+import dextinityConfig from "@src/dextinity-config.json" with { type: "json" };
 import type { Organization, WithContext } from "schema-dts";
 
-const validImageWidths = [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes].sort((a, b) => a - b);
+const validImageWidths = [...dextinityConfig.images.imageSizes, ...dextinityConfig.images.deviceSizes].sort((a, b) => a - b);
 
 function getOptimalAllowedImageWidth(desiredWidth: number): number {
     const largestValidWidth = validImageWidths[validImageWidths.length - 1];

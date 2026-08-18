@@ -1,4 +1,4 @@
-import { createCompositeBlock, createCompositeBlockTextField, createListBlock, DamImageBlock, validateUrl } from "@comet/cms-admin";
+import { createCompositeBlock, createCompositeBlockTextField, createListBlock, DamImageBlock, validateUrl } from "@dextinity/cms-admin";
 import { FormattedMessage } from "react-intl";
 
 import { SameAsUrlBlock } from "./SameAsUrlBlock";

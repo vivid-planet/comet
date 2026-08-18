@@ -1,4 +1,4 @@
-import { JsonLd } from "@comet/site-nextjs";
+import { JsonLd } from "@dextinity/site-nextjs";
 import type { ContentScope } from "@src/site-configs";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";

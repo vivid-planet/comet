@@ -1,4 +1,4 @@
-import { BlockData, BlockField, BlockInput, blockInputToData, createBlock } from "@comet/cms-api";
+import { BlockData, BlockField, BlockInput, blockInputToData, createBlock } from "@dextinity/cms-api";
 import { Transform } from "class-transformer";
 import { IsUrl, ValidateIf } from "class-validator";
 

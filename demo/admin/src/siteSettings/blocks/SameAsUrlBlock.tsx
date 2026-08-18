@@ -1,4 +1,4 @@
-import { createCompositeBlock, createCompositeBlockTextField, validateUrl } from "@comet/cms-admin";
+import { createCompositeBlock, createCompositeBlockTextField, validateUrl } from "@dextinity/cms-admin";
 import { FormattedMessage } from "react-intl";
 
 export const SameAsUrlBlock = createCompositeBlock(

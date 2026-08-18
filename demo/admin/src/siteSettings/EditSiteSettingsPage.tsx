@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { FillSpace, MainContent, SaveButton, Toolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, MainContent, SaveButton, Toolbar, ToolbarActions, ToolbarTitleItem } from "@dextinity/admin";
 import {
     BlockAdminComponentRoot,
     type BlockState,
@@ -8,7 +8,7 @@ import {
     useContentScope,
     useContentScopeConfig,
     useSaveConflictQuery,
-} from "@comet/cms-admin";
+} from "@dextinity/cms-admin";
 import type { OrganizationBlockInput } from "@src/blocks.generated";
 import isEqual from "lodash.isequal";
 import { type JSX, useEffect, useState } from "react";

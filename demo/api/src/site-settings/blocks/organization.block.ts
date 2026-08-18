@@ -10,7 +10,7 @@ import {
     createListBlock,
     DamImageBlock,
     ExtractBlockInput,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { Transform } from "class-transformer";
 import { IsNotEmpty, IsString, IsUrl, ValidateIf } from "class-validator";
 
