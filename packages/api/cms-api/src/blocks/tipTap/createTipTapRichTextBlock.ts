@@ -32,10 +32,13 @@ import { SoftHyphen } from "./extensions/SoftHyphen";
 import { TextBlockStyleHeading } from "./extensions/TextBlockStyleHeading";
 import { TextBlockStyleParagraph } from "./extensions/TextBlockStyleParagraph";
 import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
+import type { TextBlockStyleMapping } from "./migrations/convertDraftJsToTipTap";
+import { getListNestingDepth } from "./tipTapValidation";
 
 export type TipTapSupports =
     | "bold"
     | "italic"
+    | "underline"
     | "strike"
     | "sub"
     | "sup"
@@ -135,18 +138,19 @@ export interface CreateTipTapRichTextBlockOptions {
      * Enables best-effort migration of DraftJS-based RichTextBlock data
      * (`{ draftContent: { blocks, entityMap } }`) into TipTap data.
      *
-     * The migration uses the `supports`, `textBlockStyles`, `link`, and `maxTextBlocks` options
-     * to build the target schema, validates the converted document, and falls back to a
-     * stripped-down plain-text-paragraph document if validation fails.
+     * The migration uses the `supports`, `textBlockStyles`, `link`, `maxTextBlocks`, and
+     * `listLevelMax` options to build the target schema, validates the converted document, and
+     * falls back to a stripped-down plain-text-paragraph document if validation fails.
      *
-     * Pass an object with `textBlockStyleMap` to map DraftJS custom block types (e.g.
-     * `paragraph-small` from a DraftJS `blocktypeMap`) to TipTap paragraph `textBlockStyle`
-     * attribute values.
+     * Pass an object with `textBlockStyleMap` to map DraftJS block types (e.g. `paragraph-small`
+     * from a DraftJS `blocktypeMap`) to TipTap `textBlockStyle` attribute values. Use the
+     * `{ textBlockType, textBlockStyle }` form to also set the text block type, for instance to
+     * convert a DraftJS block type that was rendered as `<h2>` into a TipTap heading with level 2.
      *
      * Pass an object with `inlineStyleMap` to map DraftJS custom inline style names (e.g.
      * `highlight` from a DraftJS `customInlineStyles`) to TipTap `inlineStyle` mark type values.
      */
-    migrateFromDraftJs?: boolean | { textBlockStyleMap?: Record<string, string>; inlineStyleMap?: Record<string, string> };
+    migrateFromDraftJs?: boolean | { textBlockStyleMap?: Record<string, string | TextBlockStyleMapping>; inlineStyleMap?: Record<string, string> };
 }
 
 function buildExtensions(
@@ -165,6 +169,7 @@ function buildExtensions(
         StarterKit.configure({
             bold: supports.includes("bold") ? {} : false,
             italic: supports.includes("italic") ? {} : false,
+            underline: supports.includes("underline") ? {} : false,
             strike: supports.includes("strike") ? {} : false,
             heading: supports.includes("heading") ? (hasTextBlockStyles ? false : {}) : false,
             paragraph: hasTextBlockStyles ? false : undefined,
@@ -316,28 +321,6 @@ function collectPlaceholderNames(content: JSONContent): string[] {
     }
 
     return names;
-}
-
-function getListNestingDepth(content: JSONContent, currentDepth = 0): number {
-    if (!content || typeof content !== "object") {
-        return 0;
-    }
-
-    const isListNode = content.type === "bulletList" || content.type === "orderedList";
-    const depth = isListNode ? currentDepth + 1 : currentDepth;
-
-    if (!Array.isArray(content.content)) {
-        return depth;
-    }
-
-    let maxDepth = depth;
-    for (const child of content.content) {
-        const childDepth = getListNestingDepth(child, depth);
-        if (childDepth > maxDepth) {
-            maxDepth = childDepth;
-        }
-    }
-    return maxDepth;
 }
 
 function getTextBlockTypeFromNode(node: JSONContent): TipTapTextBlockType | undefined {
@@ -571,6 +554,7 @@ export function createTipTapRichTextBlock(
                       supports,
                       link: LinkBlock,
                       maxTextBlocks,
+                      listLevelMax,
                       textBlockStyleMap: draftJsTextBlockStyleMap,
                       inlineStyleMap: draftJsInlineStyleMap,
                   }),

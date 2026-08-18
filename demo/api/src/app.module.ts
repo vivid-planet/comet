@@ -1,4 +1,4 @@
-import { BrevoModule } from "@comet/brevo-api";
+import { BrevoModule } from "@dextinity/brevo-api";
 import {
     AccessLogModule,
     AzureAiTranslatorModule,
@@ -22,7 +22,7 @@ import {
     SentryModule,
     UserPermissionsModule,
     WarningsModule,
-} from "@comet/cms-api";
+} from "@dextinity/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
@@ -71,6 +71,7 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
 import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
 import { SiteSettingsModule } from "./site-settings/site-settings.module";
 import { StatusModule } from "./status/status.module";
+import { WelcomeEmailModule } from "./welcome-email/welcome-email.module";
 
 @Module({})
 export class AppModule {
@@ -216,6 +217,7 @@ export class AppModule {
                 MenusModule,
                 FooterModule,
                 SiteSettingsModule,
+                WelcomeEmailModule,
                 PredefinedPagesModule,
                 CronJobsModule,
                 MailerModule.register(config.mailer),
