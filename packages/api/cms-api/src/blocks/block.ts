@@ -1,5 +1,6 @@
 import type { Type } from "@nestjs/common";
 import { type ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
+import { IsEmpty } from "class-validator";
 import type { WarningSeverity as WarningSeverityEnum } from "src/warnings/entities/warning-severity.enum";
 
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
@@ -179,6 +180,12 @@ export interface BlockInputInterface<
 
 export type SimpleBlockInputInterface<BlockType extends BlockDataInterface = BlockDataInterface> = BlockInputInterface<BlockType, undefined>;
 export abstract class BlockInput<BlockType extends BlockDataInterface = BlockDataInterface> implements BlockInputInterface<BlockType, undefined> {
+    // class-validator rejects values whose class has no validation metadata at all (`forbidUnknownValues`, enabled by default since v0.14).
+    // Block inputs without fields, e.g., a link block variant that only marks a type, would therefore fail validation.
+    // This marker registers metadata for every block input via inheritance. It is never assigned, so it doesn't end up in the block data.
+    @IsEmpty()
+    readonly unknownValuesMarker?: never;
+
     abstract transformToBlockData(): BlockType;
 
     toPlain(): CreateToPlainReturn<this> {
