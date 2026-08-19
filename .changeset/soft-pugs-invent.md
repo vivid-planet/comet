@@ -17,7 +17,7 @@ Previously, "Replace File" only accepted a file with the exact same mimetype, so
 
 SVG images and pixel images remain separate categories.
 
-The file's URL and its usages stay unchanged. Only the extension of the file's name is adjusted to match the new file (for instance, `photo.jpg` becomes `photo.webp`). If a file with that name already exists in the same folder, the API rejects the replacement with a `DextinityFileNameAlreadyExistsException` and the Admin explains how to resolve the conflict.
+The file's usages stay unchanged. Only the extension of the file's name is adjusted to match the new file (for instance, `photo.jpg` becomes `photo.webp`). If a file with that name already exists in the same folder, a counter is appended to keep the name unique (for instance, `photo-2.webp`), and the Admin shows a snackbar informing about the new name.
 
 The new `getDamFileCategory` helper is exported from both packages:
 

@@ -78,15 +78,8 @@ interface ReplaceFileByIdData {
     fileId: string;
 }
 
-/**
- * `exceptionName` is the class name of the exception thrown by the API (e.g. `DextinityFileNameAlreadyExistsException`),
- * which callers can use to show a message specific to the cause.
- */
 export class FileUploadError extends Error {
-    constructor(
-        message: string,
-        readonly exceptionName?: string,
-    ) {
+    constructor(message: string) {
         super(message);
         this.name = "FileUploadError";
     }
@@ -119,7 +112,6 @@ export function replaceById({ apiUrl, data, damBasePath }: Omit<UploadFileParams
         if (!response.ok) {
             throw new FileUploadError(
                 typeof dataJson?.message === "string" ? dataJson.message : `Replacing the file failed with status ${response.status}`,
-                typeof dataJson?.error === "string" ? dataJson.error : undefined,
             );
         }
 

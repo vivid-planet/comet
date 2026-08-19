@@ -18,7 +18,6 @@ import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { slugifyFilename } from "../../file-utils/files.utils";
 import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { contentScopesAreEqual } from "../../user-permissions/content-scopes-are-equal";
-import { DextinityFileNameAlreadyExistsException } from "../common/errors/file-name-already-exists.exception";
 import { DextinityImageResolutionException } from "../common/errors/image-resolution.exception";
 import { getDamFileCategory } from "../common/mimeTypes/dam-file-category";
 import { DamConfig } from "../dam.config";
@@ -322,18 +321,15 @@ export class FilesService {
         }
 
         // fileToReplace.name is already slugified, so only the extension needs to be swapped
-        const name = `${basename(fileToReplace.name, previousExtension)}${newExtension}`;
-        const fileWithSameName = await this.findOneByFilenameAndFolder(
-            { filename: name, folderId: fileToReplace.folder?.id ?? null },
-            fileToReplace.scope,
-        );
+        const nameWithoutExtension = basename(fileToReplace.name, previousExtension);
+        const folderId = fileToReplace.folder?.id ?? null;
 
-        if (fileWithSameName !== null && fileWithSameName.id !== fileToReplace.id) {
-            throw new DextinityFileNameAlreadyExistsException(
-                `File cannot be replaced because a file named '${name}' already exists in ${
-                    fileToReplace.folder ? `folder '${fileToReplace.folder.name}'` : "the root folder"
-                }`,
-            );
+        let name = `${nameWithoutExtension}${newExtension}`;
+        let counter = 1;
+
+        while ((await this.findOneByFilenameAndFolder({ filename: name, folderId }, fileToReplace.scope)) !== null) {
+            counter++;
+            name = `${nameWithoutExtension}-${counter}${newExtension}`;
         }
 
         return name;
