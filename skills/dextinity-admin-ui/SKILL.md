@@ -27,7 +27,7 @@ directly (e.g. `import { Button, MainContent } from "@dextinity/admin"`).
 This holds **even when a project's design deliberately differs** from the current library defaults.
 Such a difference is a permanent design decision, and no later upgrade removes it. Apply it as the
 Customizing section below describes. Add custom styling only when explicitly instructed, or when no
-step of the framework below applies.
+component, prop, or token can produce the result.
 
 ## Decision framework
 
@@ -39,9 +39,9 @@ Before writing any styling or markup, work down this list and stop at the first 
    on `Paper`, `variant` on `Button`, `spacing` on `Stack`.
 3. **Is there a theme value for this?** Read spacing, colors, and shadows from the theme
    instead of hard-coding pixels, hex colors, or shadow strings.
-4. **Is there a helper for this?** User-facing text, numbers, and dates use the i18n helpers.
-   Never hard-code them.
-5. **Only then, custom-style** — with `styled()`, as the next section describes.
+4. **Is there a helper for this?** In a project with `react-intl`, user-facing text, numbers, and
+   dates use the i18n helpers rather than hard-coded values.
+5. **Only then, custom-style** — with `styled()`, as Styling and theme describes below.
 
 ## Styling and theme
 
@@ -49,7 +49,8 @@ Before writing any styling or markup, work down this list and stop at the first 
 
 When you do need custom styling, write it with `styled()` from `@mui/material/styles` and give the
 result a name that says what it is. Styling in `sx` props or inline `style` mixes the look into the
-markup. Layout, styling, and logic then sit in one place, and the diff is harder to follow.
+markup. You then read layout, styling, and logic in the same lines, and the diff is harder to
+follow.
 
 ```tsx
 // Avoid — sx and inline style mixed into the markup
@@ -278,8 +279,8 @@ queries.
 Do not use `Grid` or `Stack` to lay out form fields. Dextinity stacks them vertically at full width,
 grouped with `FieldSet` or `FormSection`, described under Components below.
 
-`sx` is fine here for a single layout property that no `Stack` or `Grid` prop covers, such as
-`flexGrow`.
+`sx` is fine here for the occasional layout property that no `Stack` or `Grid` prop covers, such as
+`flexGrow`. On your own markup it is not for visual styling, which goes through `styled()`.
 
 ### Page structure: `MainContent`, `Toolbar`, and their parts
 
@@ -441,7 +442,8 @@ Show status, loading, dialogs, and tooltips through the components rather than a
 `action`, and an `onClose`. `Loading` renders the standard spinner. Its `behavior` prop (`auto`,
 `fillParent`, `fillParentAbsolute`, `fillPageHeight`) sets whether it renders inline, fills its
 parent, or fills the page. Use `Dialog` and `Tooltip` from `@dextinity/admin` — Dextinity's own
-wrappers, not MUI's directly. For a short confirmation, call `showSnackbar()` from
+wrappers, not MUI's directly. For a confirmation that disappears on its own, call `showSnackbar()`
+from
 `useSnackbarApi()` with a snackbar element: Dextinity's `UndoSnackbar`, or a MUI `Snackbar` wrapping
 an `Alert`. Mount `SnackbarProvider` near the app root.
 
