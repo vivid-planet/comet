@@ -13,7 +13,7 @@ Previously, "Replace File" only accepted a file with the exact same mimetype, so
 | `svgImage`   | SVG                  |
 | `audio`      | MP3, OGG, WAV        |
 | `video`      | MP4, WebM, QuickTime |
-| `other`      | PDF, DOCX, VTT, ZIP  |
+| `document`   | PDF, DOCX, VTT, ZIP  |
 
 SVG images and pixel images remain separate categories.
 

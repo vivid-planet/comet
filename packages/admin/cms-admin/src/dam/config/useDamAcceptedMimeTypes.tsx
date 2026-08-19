@@ -24,7 +24,7 @@ export const useDamAcceptedMimeTypes = (): UseDamAcceptedMimeTypesApi => {
             pixelImage: filterByCategory(allAcceptedMimeTypes, "pixelImage"),
             audio: filterByCategory(allAcceptedMimeTypes, "audio"),
             video: filterByCategory(allAcceptedMimeTypes, "video"),
-            other: filterByCategory(allAcceptedMimeTypes, "other"),
+            document: filterByCategory(allAcceptedMimeTypes, "document"),
             pdf: allAcceptedMimeTypes.filter((mimeType) => mimeType === "application/pdf"),
             captions: allAcceptedMimeTypes.filter((mimeType) => mimeType === "text/vtt"),
         },
