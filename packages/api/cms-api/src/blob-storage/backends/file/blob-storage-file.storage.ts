@@ -70,13 +70,9 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
                     stream.end();
                 }
             }),
-            await fs.promises.writeFile(
-                `${this.path}/${folderName}/${fileName}-${this.headersFile}`,
-                JSON.stringify({ "content-type": contentType }),
-                {
-                    encoding: "utf-8",
-                },
-            ),
+            fs.promises.writeFile(`${this.path}/${folderName}/${fileName}-${this.headersFile}`, JSON.stringify({ "content-type": contentType }), {
+                encoding: "utf-8",
+            }),
         ]);
     }
 
@@ -105,8 +101,8 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
 
     async removeFile(folderName: string, fileName: string): Promise<void> {
         await Promise.all([
-            await fs.promises.rm(`${this.path}/${folderName}/${fileName}`, { force: true }),
-            await fs.promises.rm(`${this.path}/${folderName}/${fileName}-${this.headersFile}`, { force: true }),
+            fs.promises.rm(`${this.path}/${folderName}/${fileName}`, { force: true }),
+            fs.promises.rm(`${this.path}/${folderName}/${fileName}-${this.headersFile}`, { force: true }),
         ]);
     }
 

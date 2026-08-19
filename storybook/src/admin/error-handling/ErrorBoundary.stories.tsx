@@ -12,11 +12,6 @@ const ViewWithNoError = () => {
 
 const ViewWithError = () => {
     throw new Error("Some error occurred");
-    return (
-        <div>
-            <Typography>Error</Typography>
-        </div>
-    );
 };
 
 export default {

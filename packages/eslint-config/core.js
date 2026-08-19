@@ -1,15 +1,14 @@
+import dextinityPlugin from "@dextinity/eslint-plugin";
 import eslint from "@eslint/js";
+import prettierConfig from "eslint-config-prettier";
+import importPlugin from "eslint-plugin-import";
+import { configs as eslintPluginJsonc } from "eslint-plugin-jsonc";
+import packageJson from "eslint-plugin-package-json";
+import prettierPlugin from "eslint-plugin-prettier/recommended";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import unusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
 import tseslint from "typescript-eslint";
-import prettierConfig from "eslint-config-prettier";
-import prettierPlugin from "eslint-plugin-prettier/recommended";
-import unusedImports from "eslint-plugin-unused-imports";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
-import { configs as eslintPluginJsonc } from "eslint-plugin-jsonc";
-import dextinityPlugin from "@dextinity/eslint-plugin";
-import importPlugin from "eslint-plugin-import";
-import js from "@eslint/js";
-import packageJson from "eslint-plugin-package-json";
 
 export const restrictedImportPatterns = [
     {
@@ -20,7 +19,6 @@ export const restrictedImportPatterns = [
 
 /** @type {import('eslint')} */
 const config = [
-    js.configs.recommended,
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
     {

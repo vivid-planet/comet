@@ -31,7 +31,7 @@ Run the appropriate checks after every change and fix all reported errors.
 
 ### Post-Change Workflow
 
-After making changes to any package (`packages/*`) or the demo project (`demo/*`), run `lint:fix` to auto-fix ESLint and Prettier issues:
+After making changes to any package (`packages/*`) or the demo project (`demo/*`), run `lint:fix` to auto-fix Oxlint and Oxfmt issues:
 
 ```bash
 # Fix a single package (from the package folder or repo root)
@@ -49,10 +49,12 @@ pnpm run lint:fix
 
 Every package and demo service exposes these scripts:
 
-- `lint:fix` — runs `lint:fix:eslint` and `lint:fix:prettier` in parallel (plus `lint:fix:style` in `demo/site`)
-- `lint:fix:eslint` — runs ESLint with `--fix` (also applies Prettier formatting via `eslint-plugin-prettier`)
-- `lint:fix:prettier` — runs Prettier with `--write` for any remaining formatting issues
+- `lint:fix` — runs `lint:fix:oxlint` and `lint:fix:oxfmt` in parallel (plus `lint:fix:style` in `demo/site`)
+- `lint:fix:oxlint` — runs Oxlint with `--fix`
+- `lint:fix:oxfmt` — runs Oxfmt, which formats the package in place
 - `lint:fix:style` — runs Stylelint with `--fix` (`demo/site` only)
+
+Linting is configured per package in `oxlint.config.mjs`, formatting repository-wide in `.oxfmtrc.json`.
 
 The root-level `lint:fix` runs all workspace `lint:fix` scripts recursively, then formats root-level config files.
 
@@ -61,10 +63,10 @@ The root-level `lint:fix` runs all workspace `lint:fix` scripts recursively, the
 Run from the `docs/` folder:
 
 ```bash
-# Auto-fix ESLint + Prettier issues
+# Auto-fix Oxlint + Oxfmt issues
 pnpm run lint:fix
 
-# Verify all checks pass: prettier, eslint
+# Verify all checks pass: oxfmt, oxlint
 pnpm run lint
 ```
 
@@ -123,11 +125,11 @@ Common commands:
 
 ### API (`packages/api/`)
 
-| Package                    | Description                                                                                |
-| -------------------------- | ------------------------------------------------------------------------------------------ |
-| `@dextinity/cms-api`       | NestJS/GraphQL API for CMS features (file uploads, translations, blocks, S3/Azure storage) |
-| `@dextinity/brevo-api`     | NestJS integration for the Brevo email/marketing service                                   |
-| `@dextinity/api-generator` | CLI tool that generates TypeScript types from GraphQL schemas (`dextinity-api-generator` bin)  |
+| Package                    | Description                                                                                   |
+| -------------------------- | --------------------------------------------------------------------------------------------- |
+| `@dextinity/cms-api`       | NestJS/GraphQL API for CMS features (file uploads, translations, blocks, S3/Azure storage)    |
+| `@dextinity/brevo-api`     | NestJS integration for the Brevo email/marketing service                                      |
+| `@dextinity/api-generator` | CLI tool that generates TypeScript types from GraphQL schemas (`dextinity-api-generator` bin) |
 
 ### Site (`packages/site/`)
 
@@ -141,8 +143,8 @@ Common commands:
 | Package                    | Description                                                      |
 | -------------------------- | ---------------------------------------------------------------- |
 | `@dextinity/cli`           | Central CLI entry point for Dextinity projects (`dextinity` bin) |
-| `@dextinity/eslint-config` | Shared ESLint configurations                                     |
-| `@dextinity/eslint-plugin` | Custom ESLint rules for Dextinity projects                       |
+| `@dextinity/eslint-config` | Shared Oxlint and ESLint configurations                          |
+| `@dextinity/eslint-plugin` | Custom lint rules for Dextinity projects (Oxlint and ESLint)     |
 | `@dextinity/mail-react`    | Utilities for building HTML emails with React (MJML-based)       |
 
 ### Docs & Storybook

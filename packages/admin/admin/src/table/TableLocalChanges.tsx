@@ -17,7 +17,7 @@ export async function submitChangesWithMutation(options: {
         await options.client.mutate({
             mutation: options.updateMutation,
             variables: {
-                ...(options.variables || {}),
+                ...options.variables,
                 id,
                 body: options.changes[id],
             },

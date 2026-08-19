@@ -1,0 +1,41 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "printWidth": 150,
+    "tabWidth": 4,
+    "trailingComma": "all",
+    "semi": true,
+    "ignorePatterns": [
+        // Build output and other generated files, formatted by the tool that generates them.
+        "**/*.generated.ts",
+        "**/.docusaurus/**",
+        "**/.next/**",
+        "**/block-meta.json",
+        "**/db/migrations/**",
+        "**/dist/**",
+        "**/lang-compiled/**",
+        "**/lang-extracted/**",
+        "**/mikro-orm/migrations/**",
+        "**/public/**",
+        "**/schema.gql",
+        "demo/admin/schema.json",
+        "demo/admin/src/fragmentTypes.json",
+        "docs/build/**",
+
+        // Templates with placeholders that aren't valid syntax.
+        ".changeset/pre.json",
+        ".github/pull_request_template.md",
+
+        // Oxfmt indents raw HTML blocks inside list items one space further on every run (as of 0.63.0), so
+        // formatting this file never converges.
+        "docs/docs/7-migration-guide/migration-from-v7-to-v8.md",
+    ],
+    "overrides": [
+        {
+            // The documentation is written in narrower columns than the code.
+            "files": ["docs/docs/**"],
+            "options": {
+                "printWidth": 100,
+            },
+        },
+    ],
+}

@@ -57,7 +57,7 @@ const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
 
 declare module "@dextinity/cms-admin" {
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type, no-unused-vars
     interface ContentScope extends BaseContentScope {}
 
     export interface PermissionOverrides {

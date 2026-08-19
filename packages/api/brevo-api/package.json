@@ -1,18 +1,22 @@
 {
     "name": "@dextinity/brevo-api",
     "version": "10.0.1",
+    "license": "BSD-2-Clause",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/dextinity",
         "directory": "packages/api/brevo-api"
     },
-    "license": "BSD-2-Clause",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
-    "sideEffects": false,
     "files": [
         "lib/*"
     ],
+    "sideEffects": false,
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    },
     "scripts": {
         "build": "$npm_execpath run clean && tsc -p tsconfig.build.json",
         "clean": "rimraf lib",
@@ -21,13 +25,13 @@
         "generate-block-meta:watch": "chokidar \"src/\" -c \"$npm_execpath generate-block-meta\"",
         "generate-schema": "ts-node generate-schema.ts",
         "generate-schema:watch": "chokidar \"src/\" -c \"$npm_execpath generate-schema\"",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint": "run-p lint:oxfmt lint:oxlint lint:tsc",
         "lint:ci": "pnpm run lint",
-        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
-        "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
-        "lint:fix:eslint": "pnpm run lint:eslint --fix",
-        "lint:fix:prettier": "pnpm run lint:prettier --write",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:fix": "run-p lint:fix:oxlint lint:fix:oxfmt",
+        "lint:fix:oxfmt": "pnpm exec oxfmt",
+        "lint:fix:oxlint": "pnpm run lint:oxlint --fix",
+        "lint:oxfmt": "pnpm exec oxfmt --check",
+        "lint:oxlint": "oxlint --max-warnings 0 src/",
         "lint:tsc": "tsc --noEmit",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
         "test": "pnpm run test:unit",
@@ -68,10 +72,10 @@
         "@types/inquirer": "^8.2.12",
         "@types/lodash.isequal": "^4.5.8",
         "chokidar-cli": "^2.1.0",
-        "eslint": "^9.39.4",
         "express": "^5.2.1",
         "graphql": "^16.14.2",
-        "prettier": "^3.4.2",
+        "oxfmt": "^0.63.0",
+        "oxlint": "^1.78.0",
         "reflect-metadata": "^0.2.2",
         "rimraf": "^3.0.2",
         "rxjs": "^7.8.2",
@@ -93,9 +97,5 @@
         "graphql": "^16.6.0",
         "reflect-metadata": "^0.2.0",
         "rxjs": "^7.0.0"
-    },
-    "publishConfig": {
-        "access": "public",
-        "registry": "https://registry.npmjs.org"
     }
 }

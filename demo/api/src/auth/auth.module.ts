@@ -36,29 +36,27 @@ export class AuthModule {
                     useClass: DextinityAuthGuard,
                 },
                 ...createAuthGuardProviders(
-                    ...[
-                        createBasicAuthService({
-                            username: SYSTEM_USER_NAME,
-                            password: config.auth.systemUserPassword,
+                    createBasicAuthService({
+                        username: SYSTEM_USER_NAME,
+                        password: config.auth.systemUserPassword,
+                    }),
+                    createSitePreviewAuthService({ sitePreviewSecret: config.sitePreviewSecret }),
+                    createJwtAuthService({
+                        verifyOptions: {
+                            audience: config.auth.idpClientId,
+                        },
+                        jwksOptions: {
+                            jwksUri: config.auth.idpJwksUri,
+                        },
+                        convertJwtToUser: (jwt) => ({
+                            id: jwt.sub,
+                            name: jwt.name,
+                            email: jwt.email,
+                            isAdmin: jwt.isAdmin,
                         }),
-                        createSitePreviewAuthService({ sitePreviewSecret: config.sitePreviewSecret }),
-                        createJwtAuthService({
-                            verifyOptions: {
-                                audience: config.auth.idpClientId,
-                            },
-                            jwksOptions: {
-                                jwksUri: config.auth.idpJwksUri,
-                            },
-                            convertJwtToUser: (jwt) => ({
-                                id: jwt.sub,
-                                name: jwt.name,
-                                email: jwt.email,
-                                isAdmin: jwt.isAdmin,
-                            }),
-                        }),
-                        // Additionally, set a static user as fallback that is always authenticated. Used when bypassing OAuth2-Proxy through http://localhost:8001.
-                        createStaticUserAuthService({ staticUser: staticUsers[0] }),
-                    ],
+                    }),
+                    // Additionally, set a static user as fallback that is always authenticated. Used when bypassing OAuth2-Proxy through http://localhost:8001.
+                    createStaticUserAuthService({ staticUser: staticUsers[0] }),
                 ),
             ],
             exports: [AccessControlService, UserService],

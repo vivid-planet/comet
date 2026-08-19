@@ -22,7 +22,6 @@ import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import { format, resolveConfig } from "prettier";
 import type { ComponentType, JSX, ReactElement } from "react";
 import type { FormattedMessage, MessageDescriptor } from "react-intl";
 
@@ -31,6 +30,7 @@ import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
 import type { UsableFields, UsableFormFields } from "./generateGrid/usableFields";
 import type { ColumnVisibleOption } from "./utils/columnVisibility";
+import { formatWithOxfmt } from "./utils/formatWithOxfmt";
 import { writeGenerated } from "./utils/writeGenerated";
 
 export type FormattedMessageElement = ReactElement<MessageDescriptor, typeof FormattedMessage>;
@@ -399,9 +399,8 @@ async function runGenerate(filePattern = "src/**/*.dextinityGen.{ts,tsx}") {
         console.log(`Formatting ${writtenFiles.length} generated files...`);
         await Promise.all(
             writtenFiles.map(async (filepath) => {
-                const [content, options] = await Promise.all([readFile(filepath, "utf-8"), resolveConfig(filepath)]);
-                const formatted = await format(content, { ...options, filepath });
-                await writeFile(filepath, formatted);
+                const content = await readFile(filepath, "utf-8");
+                await writeFile(filepath, await formatWithOxfmt(filepath, content));
             }),
         );
     }

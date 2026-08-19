@@ -1,12 +1,12 @@
 {
     "name": "root",
     "private": true,
+    "description": "Dextinity Monorepo",
+    "license": "BSD-2-Clause",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/dextinity"
     },
-    "description": "Dextinity Monorepo",
-    "license": "BSD-2-Clause",
     "scripts": {
         "create-site-configs-env": "dotenv -e .env.secrets -e .env.local -e .env -- pnpm exec dextinity inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
         "build:storybook": "pnpm --recursive --filter '@dextinity/*admin*' --filter '@dextinity/eslint-plugin' --filter '@dextinity/cli' run build && pnpm --filter dextinity-storybook run build-storybook",
@@ -36,9 +36,10 @@
         "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",
         "lint:ci": "pnpm lint:root && pnpm --recursive run lint:ci && pnpm lint:knip",
         "lint:fix": "pnpm --recursive run lint:fix && pnpm lint:fix:root",
-        "lint:fix:root": "pnpm exec prettier --write './!(demo|docs|packages|storybook)/**/*.{ts,js,json,md,yml,yaml}'",
-        "lint:root": "pnpm exec prettier --check './!(demo|docs|packages|storybook)/**/*.{ts,js,json,md,yml,yaml}'",
-        "lint:eslint": "pnpm --recursive run lint:eslint",
+        "lint:fix:root": "pnpm exec oxfmt . '!demo' '!docs' '!packages' '!storybook'",
+        "lint:root": "pnpm exec oxfmt --check . '!demo' '!docs' '!packages' '!storybook'",
+        "lint:oxlint": "pnpm --recursive run lint:oxlint",
+        "lint:oxfmt": "pnpm --recursive run lint:oxfmt",
         "lint:tsc": "pnpm --recursive run lint:tsc",
         "lint:knip": "pnpm --recursive run api-generator && pnpm --recursive run gql:types && pnpm --recursive run build-server && knip --exports --files --dependencies --tags=-knipignore --no-gitignore --exclude enumMembers",
         "start-oidc-provider": "dotenv -- dev-oidc-provider",
@@ -71,13 +72,13 @@
         "lint-staged": "^16.4.0",
         "npm-run-all2": "^8.0.4",
         "open-cli": "^8.0.0",
-        "prettier": "^3.6.2",
+        "oxfmt": "^0.63.0",
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3"
     },
-    "packageManager": "pnpm@11.21.0",
     "engines": {
         "node": "24",
         "pnpm": "11.21.0"
-    }
+    },
+    "packageManager": "pnpm@11.21.0"
 }

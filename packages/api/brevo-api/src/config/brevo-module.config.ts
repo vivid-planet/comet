@@ -6,6 +6,9 @@ import type { BrevoContactAttributesInterface, EmailCampaignScopeInterface } fro
 
 import type { BlacklistedContactsInterface } from "../blacklisted-contacts/entity/blacklisted-contacts.entity.factory";
 import type { BrevoEmailImportLogInterface } from "../brevo-email-import-log/entity/brevo-email-import-log.entity.factory";
+// `src/types` above is the same module as `../types`. Merging the two imports makes the types resolvable in the
+// published declaration files, which changes the public API of this package — that needs a fix of its own.
+// eslint-disable-next-line import/no-duplicates
 import type { BrevoContactFilterAttributesInterface } from "../types";
 
 interface FrontendConfig {

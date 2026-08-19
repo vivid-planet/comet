@@ -69,7 +69,7 @@ export function generateFormField({
 
     const gqlDocuments: GQLDocumentConfigMap = {};
     const hooksCode = "";
-    let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
+    const finalFormConfig: GenerateFieldsReturn["finalFormConfig"] = undefined;
 
     let validateCode = "";
     if (config.validate) {

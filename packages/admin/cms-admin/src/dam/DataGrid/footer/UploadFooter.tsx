@@ -36,7 +36,7 @@ export const DamUploadFooter = ({ open, folderName }: DamFooterProps) => {
                         strong: (chunks) => (
                             <strong>
                                 {/*Otherwise there is no whitespace between other text and strong*/}
-                                &nbsp;
+                                {"\u00a0"}
                                 {chunks}
                             </strong>
                         ),

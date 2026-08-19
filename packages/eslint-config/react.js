@@ -1,11 +1,12 @@
-import coreConfig, { restrictedImportPatterns } from "./core.js";
 import reactIntlFormatPlugin from "@calm/eslint-plugin-react-intl";
-import globals from "globals";
-import formatJs from "eslint-plugin-formatjs";
-import graphqlPlugin from "@graphql-eslint/eslint-plugin";
-import react from "eslint-plugin-react";
 import dextinityPlugin from "@dextinity/eslint-plugin";
+import graphqlPlugin from "@graphql-eslint/eslint-plugin";
+import formatJs from "eslint-plugin-formatjs";
+import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
+import globals from "globals";
+
+import coreConfig, { restrictedImportPatterns } from "./core.js";
 
 const dextinityAdminImportsRestrictedFromMuiMaterial = ["Alert", "Button", "Dialog", "Tooltip"];
 

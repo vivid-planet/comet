@@ -51,6 +51,7 @@ const iconsWithSearchTerms = Object.keys(imports)
     })
     .map((key) => ({
         name: key,
+        // eslint-disable-next-line import/namespace -- the icons are looked up by name on purpose
         Icon: imports[key as keyof typeof imports],
         searchTerms: (imports as any)[`${key}SearchTerms`] || "",
     }));

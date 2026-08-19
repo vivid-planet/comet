@@ -1,5 +1,6 @@
-import coreConfig, { restrictedImportPatterns } from "./core.js";
 import globals from "globals";
+
+import coreConfig, { restrictedImportPatterns } from "./core.js";
 
 export const restrictedImportPaths = [
     {

@@ -129,7 +129,7 @@ export const createRichTextBlock = (options: RichTextBlockFactoryOptions, overri
         overwriteLinkButton: CmsLinkToolbarButton,
     };
     const LinkBlock = options.link;
-    const rteOptions = { ...defaultRteOptions, ...(options.rte ?? {}) };
+    const rteOptions = { ...defaultRteOptions, ...options.rte };
 
     const RichTextBlock: BlockInterface<RichTextBlockData, RichTextBlockState> & ReadOnlyBlockRenderInterface<RichTextBlockState> = {
         ...createBlockSkeleton(),

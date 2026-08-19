@@ -81,7 +81,7 @@ export function createColumnsBlock<T extends BlockInterface>(
     const useListBlockAdminComponent = createUseListBlockAdminComponent({ block: contentBlock });
 
     function createEmptyColumns(number: number): ListBlockItem<T>[] {
-        return new Array(number).fill(undefined).map(() => ({
+        return Array.from({ length: number }).map(() => ({
             key: uuid(),
             props: contentBlock.defaultValues(),
             selected: false,

@@ -1,8 +1,9 @@
 import { Command } from "commander";
 import { readFile, writeFile } from "fs/promises";
-import { format, resolveConfig } from "prettier";
+import { resolve } from "path";
 
 import type { BlockMeta, BlockMetaField } from "../BlockMeta";
+import { formatWithOxfmt } from "../format-with-oxfmt";
 
 let content = "";
 
@@ -133,10 +134,7 @@ const generateBlockTypes = new Command("generate-block-types")
 
         content += generateAllBlockNames(blockMeta);
 
-        const prettierOptions = await resolveConfig(process.cwd());
-        content = await format(content, { ...prettierOptions, parser: "typescript" });
-
-        await writeFile(options.outputFile, content);
+        await writeFile(options.outputFile, await formatWithOxfmt(resolve(options.outputFile), content));
     });
 
 export { generateBlockTypes };

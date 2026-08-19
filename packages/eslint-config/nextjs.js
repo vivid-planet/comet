@@ -1,9 +1,10 @@
-import coreConfig, { restrictedImportPatterns } from "./core.js";
 import graphqlPlugin from "@graphql-eslint/eslint-plugin";
+import nextPlugin from "@next/eslint-plugin-next";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
-import nextPlugin from "@next/eslint-plugin-next";
+
+import coreConfig, { restrictedImportPatterns } from "./core.js";
 
 export const restrictedImportPaths = [
     {

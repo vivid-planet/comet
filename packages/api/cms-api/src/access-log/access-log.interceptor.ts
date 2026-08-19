@@ -65,9 +65,7 @@ export class AccessLogInterceptor implements NestInterceptor {
             requestData.push(`ip: ${ipAddress}`);
             this.pushUserToRequestData(user, requestData);
 
-            requestData.push(
-                ...[`method: ${httpRequest.method}`, `route: ${httpRequest.route.path}`, `params: ${JSON.stringify(httpRequest.params)}`],
-            );
+            requestData.push(`method: ${httpRequest.method}`, `route: ${httpRequest.route.path}`, `params: ${JSON.stringify(httpRequest.params)}`);
         }
 
         if (!ignored) {

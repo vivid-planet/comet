@@ -5,14 +5,13 @@ import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { useRef, useState } from "react";
 import { useIntl } from "react-intl";
 
-export interface DatePickerNavigationProps
-    extends ThemedComponentBaseProps<{
-        root: "div";
-        selectMonthButton: typeof Button;
-        selectYearButton: typeof Button;
-        selectMonthMenu: typeof Menu;
-        selectYearMenu: typeof Menu;
-    }> {
+export interface DatePickerNavigationProps extends ThemedComponentBaseProps<{
+    root: "div";
+    selectMonthButton: typeof Button;
+    selectYearButton: typeof Button;
+    selectMonthMenu: typeof Menu;
+    selectYearMenu: typeof Menu;
+}> {
     focusedDate: Date;
     changeShownDate: (value: number, mode: "setYear" | "setMonth" | "monthOffset") => void;
     minDate: Date;
@@ -57,7 +56,7 @@ export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
                     anchorEl={monthSelectRef.current}
                     {...slotProps?.selectMonthMenu}
                 >
-                    {new Array(12).fill(null).map((_, month: number) => (
+                    {Array.from({ length: 12 }).map((_, month: number) => (
                         <MenuItem
                             selected={month === focusedDate.getMonth()}
                             key={month}
@@ -87,7 +86,7 @@ export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
                     anchorEl={yearSelectRef.current}
                     {...slotProps?.selectYearMenu}
                 >
-                    {new Array(maxDate.getFullYear() - minDate.getFullYear() + 1).fill(maxDate.getFullYear()).map((val, i) => {
+                    {Array.from({ length: maxDate.getFullYear() - minDate.getFullYear() + 1 }, () => maxDate.getFullYear()).map((val, i) => {
                         const year = val - i;
                         return (
                             <MenuItem

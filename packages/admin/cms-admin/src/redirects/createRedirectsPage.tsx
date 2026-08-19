@@ -15,14 +15,14 @@ import { RedirectsGrid } from "./RedirectsGrid";
 
 const RedirectsInternalLinkBlock: typeof InternalLinkBlock = {
     ...InternalLinkBlock,
-    previewContent: (state) => [...(state.targetPage?.path ? [{ type: "text" as const, content: state.targetPage.path }] : [])],
+    previewContent: (state) => (state.targetPage?.path ? [{ type: "text" as const, content: state.targetPage.path }] : []),
     icon: (state) => state.targetPage && <Document color="primary" />,
     dynamicDisplayName: (state) => state.targetPage?.name ?? InternalLinkBlock.displayName,
 };
 
 const RedirectsExternalLinkBlock: typeof ExternalLinkBlock = {
     ...ExternalLinkBlock,
-    previewContent: (state) => [...(state.targetUrl ? [{ type: "text" as const, content: ExternalLinkBlock.displayName }] : [])],
+    previewContent: (state) => (state.targetUrl ? [{ type: "text" as const, content: ExternalLinkBlock.displayName }] : []),
     icon: (state) => state.targetUrl && <LinkExternal color="primary" />,
     dynamicDisplayName: (state) => state.targetUrl ?? ExternalLinkBlock.displayName,
 };

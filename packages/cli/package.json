@@ -2,34 +2,38 @@
     "name": "@dextinity/cli",
     "version": "10.0.1",
     "description": "A collection of CLI tools for Dextinity projects",
-    "repository": {
-        "directory": "packages/cli",
-        "type": "git",
-        "url": "https://github.com/vivid-planet/dextinity"
-    },
     "license": "BSD-2-Clause",
-    "type": "commonjs",
-    "main": "lib/index.js",
-    "typings": "lib/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/dextinity",
+        "directory": "packages/cli"
+    },
     "bin": {
         "dextinity": "bin/dextinity.js"
     },
-    "sideEffects": false,
     "files": [
         "bin/**/*.js",
         "lib/*"
     ],
+    "type": "commonjs",
+    "sideEffects": false,
+    "main": "lib/index.js",
+    "typings": "lib/index.d.ts",
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    },
     "scripts": {
         "build": "pnpm run clean && tsc -p tsconfig.build.json",
         "clean": "rimraf lib",
         "dev": "tsc --watch",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint": "run-p lint:oxfmt lint:oxlint lint:tsc",
         "lint:ci": "pnpm run lint",
-        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
-        "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
-        "lint:fix:eslint": "pnpm run lint:eslint --fix",
-        "lint:fix:prettier": "pnpm run lint:prettier --write",
-        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
+        "lint:fix": "run-p lint:fix:oxlint lint:fix:oxfmt",
+        "lint:fix:oxfmt": "pnpm exec oxfmt",
+        "lint:fix:oxlint": "pnpm run lint:oxlint --fix",
+        "lint:oxfmt": "pnpm exec oxfmt --check",
+        "lint:oxlint": "oxlint --max-warnings 0 src/",
         "lint:tsc": "tsc",
         "test": "pnpm run test:unit",
         "test:unit": "vitest --run",
@@ -38,24 +42,23 @@
     "dependencies": {
         "commander": "^9.5.0",
         "js-yaml": "^4.1.1",
-        "prettier": "^3.6.2",
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
         "@dextinity/eslint-config": "workspace:*",
         "@types/js-yaml": "^4.0.9",
         "@types/node": "^24.13.3",
-        "eslint": "^9.39.4",
         "npm-run-all2": "^8.0.4",
+        "oxfmt": "^0.63.0",
+        "oxlint": "^1.78.0",
         "rimraf": "^6.1.2",
         "typescript": "^5.9.3",
         "vitest": "^4.1.8"
     },
+    "peerDependencies": {
+        "oxfmt": ">=0.63.0"
+    },
     "engines": {
         "node": ">=22.0.0"
-    },
-    "publishConfig": {
-        "access": "public",
-        "registry": "https://registry.npmjs.org"
     }
 }

@@ -109,7 +109,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
                 paper: {
                     ...slotProps?.root?.slotProps?.paper,
                     sx: {
-                        ...(slotProps?.root?.slotProps?.paper?.sx ?? {}),
+                        ...slotProps?.root?.slotProps?.paper?.sx,
                         minWidth: 110,
                         height: 280,
                         overflowY: "auto",

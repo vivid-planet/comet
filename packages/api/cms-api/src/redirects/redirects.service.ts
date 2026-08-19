@@ -49,7 +49,7 @@ export class RedirectsService {
         if (query) {
             return {
                 $or: [{ source: { $ilike: `%${query}%` } }],
-                $and: [...Object.entries(filterConditions).map(([key, value]) => ({ [key]: value }))],
+                $and: Object.entries(filterConditions).map(([key, value]) => ({ [key]: value })),
             };
         } else {
             return filterConditions;

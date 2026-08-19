@@ -5,7 +5,6 @@ import { type ErrorInfo, useState } from "react";
 
 const ThrowingView = () => {
     throw new Error("Some error occurred");
-    return null;
 };
 
 const HealthyView = () => {

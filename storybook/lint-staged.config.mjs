@@ -3,7 +3,7 @@
  * @type {import('lint-staged').Configuration}
  */
 export default {
-    "*.{ts,tsx,js,jsx,json,css,scss,md}": () => "pnpm lint:eslint",
-    "*.{ts,tsx}": () => "pnpm lint:tsc",
-    "*.{ts,js,json,md,yml,yaml}": () => "pnpm lint:prettier",
+    "{src,.storybook}/**/*.{ts,tsx,js,jsx}": () => "pnpm lint:oxlint",
+    "src/**/*.{ts,tsx}": () => "pnpm lint:tsc",
+    "**/*.{ts,tsx,js,jsx,mjs,cjs,mts,json,css,scss,md,mdx,yml,yaml}": () => "pnpm lint:oxfmt",
 };

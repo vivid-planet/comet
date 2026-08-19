@@ -11,11 +11,11 @@ import {
 import { CLIHelper } from "@mikro-orm/cli";
 import type { MikroORM } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
-import { format, resolveConfig } from "prettier";
 
 import { buildOptions } from "./generateCrud/build-options";
 import { generateCrud } from "./generateCrud/generate-crud";
 import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
+import { formatWithOxfmt } from "./utils/format-with-oxfmt";
 import { writeGeneratedFiles } from "./utils/write-generated-files";
 /**
  * Generate mode for the generator.
@@ -79,9 +79,8 @@ export const generateFiles = async (
             console.log(`Formatting ${writtenFiles.length} generated files...`);
             await Promise.all(
                 writtenFiles.map(async (filepath) => {
-                    const [content, options] = await Promise.all([readFile(filepath, "utf-8"), resolveConfig(filepath)]);
-                    const formatted = await format(content, { ...options, filepath });
-                    await writeFile(filepath, formatted);
+                    const content = await readFile(filepath, "utf-8");
+                    await writeFile(filepath, await formatWithOxfmt(filepath, content));
                 }),
             );
         }

@@ -1,6 +1,6 @@
 import type { FieldRenderProps } from "react-final-form";
 
-import { DatePicker as DatePicker, type DatePickerProps as DatePickerProps } from "./DatePicker";
+import { DatePicker, type DatePickerProps } from "./DatePicker";
 
 export type FinalFormDatePickerProps = DatePickerProps;
 

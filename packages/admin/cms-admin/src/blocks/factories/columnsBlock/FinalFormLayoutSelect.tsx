@@ -74,7 +74,7 @@ export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: P
             {sections.map((section, i) => [
                 ...(hasMultipleSections
                     ? [
-                          i > 0 ? <SectionDivider /> : null,
+                          i > 0 ? <SectionDivider key={`divider-${section.name}`} /> : null,
                           <ListSubheader key={`section-${section.name}`}>
                               <Typography variant="body2" fontWeight="bold" color="text.primary">
                                   {section.label}

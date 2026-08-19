@@ -51,7 +51,7 @@ export function HtmlDivider({
         fontSize: 0,
         backgroundColor,
         backgroundImage,
-        ...{ msoLineHeightRule: "exactly" },
+        msoLineHeightRule: "exactly",
         ...style,
     };
 

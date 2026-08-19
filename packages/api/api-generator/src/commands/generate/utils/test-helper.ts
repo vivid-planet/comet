@@ -1,21 +1,13 @@
 import * as process from "node:process";
 
 import type { Permission } from "@dextinity/cms-api";
-import { format, type Options, resolveConfig } from "prettier";
 import { Project, type SourceFile } from "ts-morph";
 
+import { formatWithOxfmt } from "./format-with-oxfmt";
 import type { GeneratedFile } from "./write-generated-files";
 
-let options: Options | null;
 export async function formatSource(sourceCode: string): Promise<string> {
-    if (!options) {
-        options = await resolveConfig(process.cwd());
-    }
-
-    return format(sourceCode, {
-        ...options,
-        filepath: "test.ts",
-    });
+    return formatWithOxfmt(`${process.cwd()}/test.ts`, sourceCode);
 }
 
 export async function formatGeneratedFiles(files: GeneratedFile[]): Promise<GeneratedFile[]> {

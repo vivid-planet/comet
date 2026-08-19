@@ -306,11 +306,10 @@ export const ErrorLoadingOptions: Story = {
                     return (
                         <>
                             <AsyncSelectField
-                                loadOptions={async () => {
+                                loadOptions={async (): Promise<string[]> => {
                                     // simulate loading
                                     await new Promise((resolve) => setTimeout(resolve, 500));
                                     throw Error("Error loading options");
-                                    return [];
                                 }}
                                 getOptionLabel={(option) => {
                                     return option;
@@ -350,11 +349,10 @@ export const ErrorLoadingOptionsWithCustomErrorText: Story = {
                     return (
                         <>
                             <AsyncSelectField
-                                loadOptions={async () => {
+                                loadOptions={async (): Promise<string[]> => {
                                     // simulate loading
                                     await new Promise((resolve) => setTimeout(resolve, 500));
                                     throw Error("Error loading options");
-                                    return [];
                                 }}
                                 getOptionLabel={(option) => {
                                     return option;

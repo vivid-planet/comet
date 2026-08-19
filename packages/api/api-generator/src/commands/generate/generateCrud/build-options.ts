@@ -123,11 +123,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
 
     const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
 
-    const positionGroupPropNames: string[] = hasPositionProp
-        ? (generatorOptions.position?.groupByFields ?? [
-              ...(scopeProp ? [scopeProp.name] : []), // if there is a scope prop it's effecting position-group, if not groupByFields should be used
-          ])
-        : [];
+    const positionGroupPropNames: string[] = hasPositionProp ? (generatorOptions.position?.groupByFields ?? (scopeProp ? [scopeProp.name] : [])) : [];
     const positionGroupProps = hasPositionProp ? metadata.props.filter((prop) => positionGroupPropNames.includes(prop.name)) : [];
 
     const scopedEntity = Reflect.getMetadata(SCOPED_ENTITY_METADATA_KEY, metadata.class);

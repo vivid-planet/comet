@@ -184,15 +184,13 @@ export const createUsePage: CreateUsePage =
             const [saveError, setSaveError] = useState<"invalid" | "conflict" | "error" | undefined>();
 
             const generateOutput = (ps: PS): Output => {
-                return {
-                    ...Object.entries(rootBlocks).reduce(
-                        (a, [key, value]) => ({
-                            ...a,
-                            [key]: value.state2Output(ps.document?.[key]),
-                        }),
-                        {},
-                    ),
-                };
+                return Object.entries(rootBlocks).reduce(
+                    (a, [key, value]) => ({
+                        ...a,
+                        [key]: value.state2Output(ps.document?.[key]),
+                    }),
+                    {},
+                );
             };
 
             let hasChanges: boolean | undefined = undefined;
@@ -299,16 +297,13 @@ export const createUsePage: CreateUsePage =
                             variables: {
                                 pageId: pageState.document.id,
                                 lastUpdatedAt: data?.page?.document?.updatedAt,
-                                input: {
-                                    ...Object.entries(rootBlocks).reduce(
-                                        (a, [key, value]) => ({
-                                            ...a,
-                                            [key]: value.state2Output(pageState.document?.[key]),
-                                        }),
-                                        {},
-                                    ),
-                                    // stage: pageState.document.stage ? StageBlock.state2Output(pageState.document.stage) : null, refactor stage to optional block
-                                },
+                                input: Object.entries(rootBlocks).reduce(
+                                    (a, [key, value]) => ({
+                                        ...a,
+                                        [key]: value.state2Output(pageState.document?.[key]),
+                                    }),
+                                    {},
+                                ),
                                 attachedPageTreeNodeId: pageId,
                             } as GQLUpdatePageMutationVariables,
                             refetchQueries: [getQuery],

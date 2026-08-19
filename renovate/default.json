@@ -22,6 +22,10 @@
             "matchPackageNames": ["/^prettier/"]
         },
         {
+            "groupName": "oxc",
+            "matchPackageNames": ["oxfmt", "oxlint"]
+        },
+        {
             "groupName": "typescript",
             "matchPackageNames": ["/typescript/"]
         },

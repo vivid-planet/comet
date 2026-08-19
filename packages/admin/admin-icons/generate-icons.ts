@@ -2,7 +2,20 @@ import { pascalCase, pascalCaseTransformMerge } from "change-case";
 import { Presets, SingleBar } from "cli-progress";
 import { XMLBuilder, XMLParser } from "fast-xml-parser";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
+import { format } from "oxfmt";
 import * as path from "path";
+
+// `src/generated` is in .gitignore, which makes Oxfmt skip it. The generated files are therefore formatted here,
+// with the options of the repository's `.oxfmtrc.jsonc`.
+const formatOptions = { printWidth: 150, tabWidth: 4 };
+
+async function writeFormattedFile(filePath: string, sourceText: string) {
+    const { code, errors } = await format(filePath, sourceText, formatOptions);
+    if (errors.length > 0) {
+        throw new Error(`Failed to format ${filePath}:\n${errors.map((error) => error.message).join("\n")}`);
+    }
+    writeFileSync(filePath, code);
+}
 
 type Icon = {
     name: string;
@@ -107,12 +120,12 @@ const writeComponent = async (icon: Icon, svgString: string) => {
         export const ${icon.componentName}SearchTerms = "${searchTerms}";
     `;
     if (icon.componentName != null && component != null) {
-        writeFileSync(`src/generated/${icon.componentName}.tsx`, component);
+        await writeFormattedFile(`src/generated/${icon.componentName}.tsx`, component);
     }
 };
 
 const writeGeneratedTypesFile = async (icons: Icon[]) => {
-    writeFileSync(
+    await writeFormattedFile(
         `src/generated/GeneratedIconName.ts`,
         `export type GeneratedIconName = ${icons.map((icon) => `"${icon.componentName}"`).join(" | ")};`,
     );
@@ -126,7 +139,7 @@ const writeIndexFile = async (icons: Icon[]) => {
     const indexFile = await exports.join("\n");
 
     if (indexFile != null) {
-        writeFileSync(`src/generated/index.ts`, indexFile);
+        await writeFormattedFile(`src/generated/index.ts`, indexFile);
     }
 };
 
