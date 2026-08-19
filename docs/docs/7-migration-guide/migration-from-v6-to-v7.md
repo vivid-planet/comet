@@ -198,9 +198,10 @@ Use this occasion to check if all operations decorated with this decorator **sho
 
     // news-link-block-transformer.service.ts
     @Injectable()
-    class NewsLinkBlockTransformerService
-        implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse>
-    {
+    class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<
+        NewsLinkBlockData,
+        TransformResponse
+    > {
         // Use dependency injection here
         constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
 

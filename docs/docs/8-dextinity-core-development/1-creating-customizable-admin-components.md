@@ -64,11 +64,10 @@ The props type of Dextinity Admin components must extend `ThemedComponentBasePro
 As a generic, an object must be passed in with the slot's name as the keys and the type of their base element or component as values.
 
 ```tsx
-export interface MyComponentProps
-    extends ThemedComponentBaseProps<{
-        root: "div";
-        title: typeof Typography;
-    }> {
+export interface MyComponentProps extends ThemedComponentBaseProps<{
+    root: "div";
+    title: typeof Typography;
+}> {
     variant?: "primary" | "secondary";
     children?: React.ReactNode;
 }
@@ -127,10 +126,12 @@ const Root = createComponentSlot("div")<MyComponentClassKey, OwnerState>({
     slotName: "root",
 })(
     ({ theme, ownerState }) => css`
-        ${ownerState.highlighted &&
-        css`
-            background-color: ${theme.palette.primary.main};
-        `}
+        ${
+            ownerState.highlighted &&
+            css`
+                background-color: ${theme.palette.primary.main};
+            `
+        }
     `,
 );
 

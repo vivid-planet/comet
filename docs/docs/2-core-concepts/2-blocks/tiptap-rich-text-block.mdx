@@ -209,7 +209,9 @@ export const TipTapRichTextBlock = createTipTapRichTextBlock({
     textBlockStyles: [{ name: "headline450", appliesTo: ["heading-2"] }],
     migrateFromDraftJs: {
         // highlight-next-line
-        textBlockStyleMap: { headline450: { textBlockType: "heading-2", textBlockStyle: "headline450" } },
+        textBlockStyleMap: {
+            headline450: { textBlockType: "heading-2", textBlockStyle: "headline450" },
+        },
     },
 });
 ```

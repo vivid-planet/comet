@@ -43,12 +43,12 @@ function App() {
 
 **Props:**
 
-| Prop                         | Type                                         | Default | Description                                                         |
-| ---------------------------- | -------------------------------------------- | ------- | ------------------------------------------------------------------- |
-| `enabled`                    | `boolean`                                    |         | Enables the translation feature                                     |
-| `translate`                  | `(text: string) => Promise<string>`          |         | Translates a single text                                            |
-| `batchTranslate`             | `(texts: string[]) => Promise<string[]>`     |         | Translates multiple texts at once (falls back to sequential `translate` calls if not provided) |
-| `showApplyTranslationDialog` | `boolean`                                    |         | Shows a confirmation dialog with the translation before applying it |
+| Prop                         | Type                                     | Default | Description                                                                                    |
+| ---------------------------- | ---------------------------------------- | ------- | ---------------------------------------------------------------------------------------------- |
+| `enabled`                    | `boolean`                                |         | Enables the translation feature                                                                |
+| `translate`                  | `(text: string) => Promise<string>`      |         | Translates a single text                                                                       |
+| `batchTranslate`             | `(texts: string[]) => Promise<string[]>` |         | Translates multiple texts at once (falls back to sequential `translate` calls if not provided) |
+| `showApplyTranslationDialog` | `boolean`                                |         | Shows a confirmation dialog with the translation before applying it                            |
 
 ## Field-level translation
 
@@ -69,11 +69,7 @@ Some fields should not be translated (e.g., URLs, identifiers, technical values)
 **For text inputs**, use the `disableContentTranslation` prop:
 
 ```tsx
-<Field
-    name="youtubeIdentifier"
-    component={FinalFormInput}
-    disableContentTranslation
-/>
+<Field name="youtubeIdentifier" component={FinalFormInput} disableContentTranslation />
 ```
 
 **For the rich text editor**, pass `disableContentTranslation` in the options:
@@ -152,7 +148,7 @@ const usePage = createUsePage({
 });
 
 export const EditPage = ({ id }: Props) => {
-    const { pageState, translateContent, pageSaveButton, /* ... */ } = usePage({ pageId: id });
+    const { pageState, translateContent, pageSaveButton /* ... */ } = usePage({ pageId: id });
 
     return (
         <Toolbar>
@@ -204,11 +200,11 @@ export class AppModule {}
 
 **Configuration:**
 
-| Option     | Type     | Description                          |
-| ---------- | -------- | ------------------------------------ |
-| `endpoint` | `string` | Azure Translator service endpoint    |
-| `key`      | `string` | API key for the translation service  |
-| `region`   | `string` | Azure region                         |
+| Option     | Type     | Description                         |
+| ---------- | -------- | ----------------------------------- |
+| `endpoint` | `string` | Azure Translator service endpoint   |
+| `key`      | `string` | API key for the translation service |
+| `region`   | `string` | Azure region                        |
 
 :::tip
 

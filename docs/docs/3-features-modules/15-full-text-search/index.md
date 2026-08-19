@@ -126,27 +126,33 @@ The optional `scope` parameter restricts results to a specific content scope.
 
 Block content is indexed by extracting all text from the block tree and weighting it by heading level:
 
-| HTML heading | PostgreSQL weight |
-| ------------ | ----------------- |
-| `h1`         | A (highest)       |
-| `h2`         | B                 |
-| `h3`         | C                 |
-| `h4`–`h6`, other text | D (lowest) |
+| HTML heading          | PostgreSQL weight |
+| --------------------- | ----------------- |
+| `h1`                  | A (highest)       |
+| `h2`                  | B                 |
+| `h3`                  | C                 |
+| `h4`–`h6`, other text | D (lowest)        |
 
 Pass block data directly to `entityToMikroOrmFullText` as additional arguments after the weighted fields object:
 
 ```typescript
 entityToMikroOrmFullText(
     { A: news.title, D: news.slug }, // plain text fields with explicit weights
-    news.content,                    // block data — text extracted and weighted automatically
-    news.teaser,                     // additional blocks can be added
-)
+    news.content, // block data — text extracted and weighted automatically
+    news.teaser, // additional blocks can be added
+);
 ```
 
 Text extraction works by traversing the block tree depth-first and calling `searchText()` on each visible block. Built-in blocks such as `createRichTextBlock` already implement this method. For custom blocks, implement `searchText()` on the `BlockData` class to return the text that should be indexed:
 
 ```typescript title="teaser.block.ts"
-import { BlockData, BlockInput, SearchText, blockInputToData, createBlock } from "@dextinity/cms-api";
+import {
+    BlockData,
+    BlockInput,
+    SearchText,
+    blockInputToData,
+    createBlock,
+} from "@dextinity/cms-api";
 
 class TeaserBlockData extends BlockData {
     @BlockField()
@@ -173,7 +179,13 @@ Child blocks do not need to collect their children's text manually — the trave
 `@dextinity/cms-admin` exports a ready-to-use `SearchHeaderItem` component. Add it to your application's `Header`:
 
 ```tsx title="MasterHeader.tsx"
-import { BuildEntry, ContentScopeControls, Header, SearchHeaderItem, UserHeaderItem } from "@dextinity/cms-admin";
+import {
+    BuildEntry,
+    ContentScopeControls,
+    Header,
+    SearchHeaderItem,
+    UserHeaderItem,
+} from "@dextinity/cms-admin";
 
 const MasterHeader = () => {
     return (
@@ -237,11 +249,15 @@ export class SiteFullTextSearchResolver {
             where.scopes = { $contains: [{ ...scope }] };
         }
 
-        const [matches, totalCount] = await this.entityManager.findAndCount(EntityInfoFullTextObject, where, {
-            offset,
-            limit,
-            populate: ["entityInfo"],
-        });
+        const [matches, totalCount] = await this.entityManager.findAndCount(
+            EntityInfoFullTextObject,
+            where,
+            {
+                offset,
+                limit,
+                populate: ["entityInfo"],
+            },
+        );
 
         return new PaginatedEntityInfo(
             matches.map((match) => match.entityInfo),
@@ -278,7 +294,11 @@ class FullTextSearchBlockInput extends BlockInput {
     }
 }
 
-export const FullTextSearchBlock = createBlock(FullTextSearchBlockData, FullTextSearchBlockInput, "FullTextSearch");
+export const FullTextSearchBlock = createBlock(
+    FullTextSearchBlockData,
+    FullTextSearchBlockInput,
+    "FullTextSearch",
+);
 ```
 
 Add it to your page content block's `supportedBlocks` map:

@@ -222,10 +222,6 @@ import { MjmlMailRoot, useConfig, type Config } from "@dextinity/mail-react";
 const config: Config = { assetBaseUrl: process.env.ASSET_BASE_URL };
 
 function WelcomeEmail() {
-    return (
-        <MjmlMailRoot config={config}>
-            {/* descendants can call useConfig() */}
-        </MjmlMailRoot>
-    );
+    return <MjmlMailRoot config={config}>{/* descendants can call useConfig() */}</MjmlMailRoot>;
 }
 ```

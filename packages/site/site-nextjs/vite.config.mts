@@ -29,9 +29,7 @@ export default defineConfig({
                     // We include @dextinity/site-react in the build. There are two reasons
                     //      1. we want to include the css from @dextinity/site-react/css in the generated css file
                     //      2. we want to avoid false-positive edge runtime errors in next when using methods from @dextinity/site-react in the middleware
-                    !source.startsWith("@dextinity/site-react") &&
-                    !source.startsWith(".") &&
-                    !source.startsWith("/")
+                    !source.startsWith("@dextinity/site-react") && !source.startsWith(".") && !source.startsWith("/")
                 );
             },
             output: {

@@ -63,8 +63,10 @@ interface RichTextBlockDataInterface extends BlockDataInterface {
     draftContent: RawDraftContentState;
 }
 
-interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputInterface>
-    extends BlockInputInterface<BlockDataInterface, { draftContent: DraftJsFactoryProps<LinkBlockInput> }> {
+interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputInterface> extends BlockInputInterface<
+    BlockDataInterface,
+    { draftContent: DraftJsFactoryProps<LinkBlockInput> }
+> {
     draftContent: DraftJsInput<LinkBlockInput>;
 }
 

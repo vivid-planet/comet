@@ -65,15 +65,14 @@ export type TimeRange = {
     end: string;
 };
 
-export interface TimeRangePickerProps
-    extends ThemedComponentBaseProps<{
-        root: "div";
-        startFormControl: typeof FormControl;
-        endFormControl: typeof FormControl;
-        startTimePicker: typeof TimePickerBase;
-        endTimePicker: typeof TimePickerBase;
-        separator: typeof Typography;
-    }> {
+export interface TimeRangePickerProps extends ThemedComponentBaseProps<{
+    root: "div";
+    startFormControl: typeof FormControl;
+    endFormControl: typeof FormControl;
+    startTimePicker: typeof TimePickerBase;
+    endTimePicker: typeof TimePickerBase;
+    separator: typeof Typography;
+}> {
     onChange?: (timeRange?: TimeRange) => void;
     value?: TimeRange;
     formatOptions?: FormatDateOptions;

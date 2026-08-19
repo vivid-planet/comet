@@ -7,7 +7,8 @@ import type { IControlProps } from "../../types";
 import { Root, type RteToolbarClassKey, Slot } from "./Toolbar.styles";
 
 interface RteToolbarProps
-    extends IControlProps,
+    extends
+        IControlProps,
         ThemedComponentBaseProps<{
             root: "div";
             slot: "div";

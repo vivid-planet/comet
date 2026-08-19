@@ -5,12 +5,16 @@ title: Rendering
 In Storybook, the decorator handles MJML-to-HTML conversion automatically. When rendering the final HTML to send, use the `renderMailHtml` function:
 
 ```tsx title="src/emails/MyEmail.tsx"
-import { MjmlMailRoot, MjmlSection, MjmlColumn, MjmlText, createTheme } from "@dextinity/mail-react";
+import {
+    MjmlMailRoot,
+    MjmlSection,
+    MjmlColumn,
+    MjmlText,
+    createTheme,
+} from "@dextinity/mail-react";
 import { renderMailHtml } from "@dextinity/mail-react/server";
 
-const theme = createTheme({
-    /* your project theme */
-});
+const theme = createTheme({/* your project theme */});
 
 const { html, mjmlWarnings } = renderMailHtml(
     <MjmlMailRoot theme={theme}>

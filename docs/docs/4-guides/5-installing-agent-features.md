@@ -94,7 +94,10 @@ You can install skills and rules from external git repositories. This allows you
 
 ```json
 {
-    "repos": ["https://github.com/vivid-planet/dextinity.git", "https://github.com/org/other-features.git#main"]
+    "repos": [
+        "https://github.com/vivid-planet/dextinity.git",
+        "https://github.com/org/other-features.git#main"
+    ]
 }
 ```
 
@@ -134,14 +137,14 @@ Installing 1 rule from local rules/...
 
 Items are installed into:
 
-| Directory               | Content | Used by                                      |
-| ----------------------- | ------- | -------------------------------------------- |
-| `.agents/skills/`       | Skills  | Most agents |
-| `.claude/skills/`       | Skills  | Claude Code                                  |
-| `.agents/rules/`        | Rules   | Cloud agents                                 |
-| `.claude/rules/`        | Rules   | Claude Code                                  |
-| `.cursor/rules/`        | Rules   | Cursor                                       |
-| `.github/instructions/` | Rules   | GitHub Copilot                               |
+| Directory               | Content | Used by        |
+| ----------------------- | ------- | -------------- |
+| `.agents/skills/`       | Skills  | Most agents    |
+| `.claude/skills/`       | Skills  | Claude Code    |
+| `.agents/rules/`        | Rules   | Cloud agents   |
+| `.claude/rules/`        | Rules   | Claude Code    |
+| `.cursor/rules/`        | Rules   | Cursor         |
+| `.github/instructions/` | Rules   | GitHub Copilot |
 
 Existing items in these directories are overwritten when an item with the same name is installed. Items not managed by the command are left untouched.
 

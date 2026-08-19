@@ -720,10 +720,7 @@ describe("convertDraftJsToTipTap", () => {
         });
 
         it("keeps atom characters as plain text when feature is not in supports", () => {
-            const result = convertDraftJsToTipTap(
-                { blocks: [makeBlock({ type: "unstyled", text: "a b­c" })], entityMap: {} },
-                { supports: ["bold"] },
-            );
+            const result = convertDraftJsToTipTap({ blocks: [makeBlock({ type: "unstyled", text: "a b­c" })], entityMap: {} }, { supports: ["bold"] });
             expect(result.content?.[0].content).toEqual([{ type: "text", text: "a b­c" }]);
         });
 

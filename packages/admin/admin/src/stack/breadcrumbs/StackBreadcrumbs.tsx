@@ -74,18 +74,17 @@ export const BackButtonSeparator = createComponentSlot("div")<StackBreadcrumbsCl
     `,
 );
 
-export interface StackBreadcrumbsProps
-    extends ThemedComponentBaseProps<{
-        root: "div";
-        breadcrumbs: "div";
-        listItem: "div";
-        link: typeof Link;
-        disabledLink: typeof Typography;
-        overflowLink: typeof Link;
-        separator: "div";
-        backButton: typeof Link;
-        backButtonSeparator: "div";
-    }> {
+export interface StackBreadcrumbsProps extends ThemedComponentBaseProps<{
+    root: "div";
+    breadcrumbs: "div";
+    listItem: "div";
+    link: typeof Link;
+    disabledLink: typeof Typography;
+    overflowLink: typeof Link;
+    separator: "div";
+    backButton: typeof Link;
+    backButtonSeparator: "div";
+}> {
     separator?: ReactNode;
     overflowLinkText?: ReactNode;
 }

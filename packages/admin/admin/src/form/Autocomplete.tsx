@@ -25,9 +25,9 @@ const MultipleInputBase = styled(InputBase, {
 })<{ endAdornmentWidth: number }>(
     ({ endAdornmentWidth }) => css`
         .${autocompleteClasses.root}
-            &.${autocompleteClasses.inputRoot},
-            .${autocompleteClasses.root}.${autocompleteClasses.hasPopupIcon}
-            &.${autocompleteClasses.inputRoot} {
+        &.${autocompleteClasses.inputRoot},
+        .${autocompleteClasses.root}.${autocompleteClasses.hasPopupIcon}
+        &.${autocompleteClasses.inputRoot} {
             padding-right: ${endAdornmentWidth}px;
         }
     `,

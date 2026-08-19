@@ -17,7 +17,8 @@ import getRteTheme from "../utils/getRteTheme";
 import useBlockTypes, { type BlockTypesApi } from "./useBlockTypes";
 
 interface Props
-    extends ThemedComponentBaseProps<{
+    extends
+        ThemedComponentBaseProps<{
             root: typeof FormControl;
             select: typeof MuiSelect;
         }>,

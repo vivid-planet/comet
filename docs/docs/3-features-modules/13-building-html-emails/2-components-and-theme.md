@@ -132,7 +132,13 @@ export const MyStory: StoryObj = {
 When rendering emails outside Storybook, wrap your content in `MjmlMailRoot` yourself and use `renderMailHtml` to convert the React tree to HTML — see [Rendering](./4-rendering.md) for full details.
 
 ```tsx title="src/emails/WelcomeEmail.tsx"
-import { MjmlColumn, MjmlMailRoot, MjmlSection, MjmlText, createTheme } from "@dextinity/mail-react";
+import {
+    MjmlColumn,
+    MjmlMailRoot,
+    MjmlSection,
+    MjmlText,
+    createTheme,
+} from "@dextinity/mail-react";
 
 const theme = createTheme({
     colors: { background: { body: "#EAEAEA" } },

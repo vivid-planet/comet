@@ -26,12 +26,12 @@ query SitePreviewJwt($scope: JSONObject!, $path: String!, $includeInvisible: Boo
 
 The `SitePreviewResolver` (in `@dextinity/cms-api`) signs a short-lived JWT (valid for 10 seconds) using a shared secret (`SITE_PREVIEW_SECRET`). The token payload contains:
 
-| Field                        | Description                                    |
-| ---------------------------- | ---------------------------------------------- |
-| `scope`                      | The content scope (e.g. `{ domain, language }`) |
-| `path`                       | The path the preview should open at (e.g. `/`) |
-| `userId`                     | The ID of the currently logged-in editor        |
-| `previewData.includeInvisible` | Whether invisible blocks should be shown       |
+| Field                          | Description                                     |
+| ------------------------------ | ----------------------------------------------- |
+| `scope`                        | The content scope (e.g. `{ domain, language }`) |
+| `path`                         | The path the preview should open at (e.g. `/`)  |
+| `userId`                       | The ID of the currently logged-in editor        |
+| `previewData.includeInvisible` | Whether invisible blocks should be shown        |
 
 ### 2. Admin Navigates the IFrame to the `/site-preview` Route
 

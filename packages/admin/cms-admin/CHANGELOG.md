@@ -1400,9 +1400,7 @@
     const MediaGalleryBlock = createCompositeBlock({
         name: "MediaGallery",
         displayName: "Media Gallery",
-        blocks: {
-            /* ... */
-        },
+        blocks: {/* ... */},
         tags: [defineMessage({ id: "mediaGallery.tag.slider", defaultMessage: "Slider" })],
         /* ... */
     });

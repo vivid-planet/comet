@@ -311,7 +311,13 @@ Each component requires two props:
         ) {
             item: damFile(id: $id) {
                 id
-                dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh, filter: $filter, sort: $sort) {
+                dependents(
+                    offset: $offset
+                    limit: $limit
+                    forceRefresh: $forceRefresh
+                    filter: $filter
+                    sort: $sort
+                ) {
                     nodes {
                         rootGraphqlObjectType
                         rootId

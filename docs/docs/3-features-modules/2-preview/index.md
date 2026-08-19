@@ -81,12 +81,7 @@ If you [followed the guide to create your first block](/docs/core-concepts/block
 In section "[Part three - Adding the block to the site](/docs/core-concepts/blocks/your-first-block#partThree)," the function `withPreview(...)` is wrapped around the block-specific code. So to get the preview working with all its features, simply wrap the `withPreview()` function over each block and give it an expressive label!
 
 ```tsx title="HeadlineBlock.tsx"
-export const HeadlineBlock = withPreview(
-    {
-        /* Block-specific code */
-    },
-    { label: "Headline" },
-);
+export const HeadlineBlock = withPreview({/* Block-specific code */}, { label: "Headline" });
 ```
 
 ### That's all it takes! We have taken care of everything else.

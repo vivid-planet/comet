@@ -17,7 +17,9 @@ function SyncFields<TSourceFieldValue, TTargetFieldValue>({
         <Field name={targetField} subscription={{}}>
             {(
                 // No subscription. We only use Field to get to the change function
-                { input: { onChange } },
+                {
+                    input: { onChange },
+                },
             ) => (
                 <OnChangeField name={sourceField}>
                     {(value) => {
