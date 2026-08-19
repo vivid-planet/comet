@@ -78,7 +78,7 @@ interface ReplaceFileByIdData {
     fileId: string;
 }
 
-export class FileUploadError extends Error {
+class FileUploadError extends Error {
     constructor(message: string) {
         super(message);
         this.name = "FileUploadError";
