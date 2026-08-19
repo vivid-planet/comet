@@ -10,9 +10,6 @@ colors, shadows, typography, breakpoints) and a library of ready-made components
 and types are available in the consuming project through the installed packages — import them
 directly (e.g. `import { Button, MainContent } from "@dextinity/admin"`).
 
-Build admin UI by composing what the design system already provides. Add custom styling only
-after the system genuinely can't express what you need.
-
 ## Core principle
 
 **Prefer Dextinity's theme values, components, and helpers over custom styling.** Three reasons:
@@ -28,10 +25,9 @@ after the system genuinely can't express what you need.
    same way.
 
 This holds **even when a project's design deliberately differs** from the current library defaults —
-a permanent design decision, not a gap a later library upgrade will close. Prefer the Dextinity
-component or token there too, and apply the difference as the Customizing section below describes.
-Add custom styling only when explicitly instructed, or when no component, prop, or token can
-produce the result.
+a permanent design decision, not a gap a later library upgrade will close. Apply that difference as
+the Customizing section below describes. Add custom styling only when explicitly instructed, or when
+no component, prop, or token can produce the result.
 
 ## Decision framework
 
@@ -53,8 +49,7 @@ Before writing any styling or markup, work down this list and stop at the first 
 
 When you do need custom styling, write it with `styled()` from `@mui/material/styles` and give the
 result a name that says what it is. Styling in `sx` props or inline `style` mixes the look into the
-markup, so layout, styling, and logic blur together and the diff is harder to follow. A named
-styled component keeps the markup declarative and the styling in one place.
+markup, so layout, styling, and logic blur together and the diff is harder to follow.
 
 ```tsx
 // Avoid — sx and inline style mixed into the markup
@@ -73,9 +68,8 @@ const Panel = styled("div")`
 
 ### Spacing and color: theme tokens, not hard-coded values
 
-Read spacing and color from the theme instead of typing pixels and hex codes. The theme is the
-single place those values are defined, so reading from it keeps every screen consistent and lets a
-theme change reach all of them at once. Dextinity's spacing base is `5px` — `theme.spacing(1)` is `5px`,
+Read spacing and color from the theme instead of typing pixels and hex codes, so a theme change
+reaches every screen at once. Dextinity's spacing base is `5px` — `theme.spacing(1)` is `5px`,
 `theme.spacing(2)` is `10px` — and it takes up to four arguments for top, right, bottom, and left.
 
 ```tsx
@@ -145,8 +139,7 @@ components and compose them, each keeping its own styled parts at the bottom. Mo
 separate `*.sc.ts` sibling only when you are asked to, or when the styles grow but the component
 cannot be split logically. A `*.sc.ts` file is private to its equally-named component
 (`FooButton.sc.ts` belongs to `FooButton.tsx`). Don't import one component's `*.sc.ts` from another:
-that couples them through styling neither owns. When styling is shared, give it a single owner — a
-reusable component (below).
+that couples them through styling neither owns.
 
 When the same styled component is used by several components, it is no longer a styled part of any
 one of them. Promote it to its own reusable component: one export per file, named exactly as that
@@ -232,10 +225,9 @@ To arrange children and the space between them, use MUI's `Stack` (one-dimension
 `@mui/material`. Both apply spacing from the theme through props, so you never hand-write the
 gaps. Use `Box` with manual `margin` only when neither fits.
 
-Pure layout — arranging children and the gaps between them — is fine inline through these props
-and needs no `styled()`. Anything beyond that (padding inside an element, background, borders,
-and other visual styling) goes through the theme and `styled()`, as in the styling section
-above.
+Layout of this kind is fine inline through these props and needs no `styled()`. Anything beyond it
+(padding inside an element, background, borders, and other visual styling) goes through the theme
+and `styled()`, as in the styling section above.
 
 ```tsx
 // Avoid — Box with hand-written margins between children
@@ -419,13 +411,11 @@ to copy text with a confirmation.
 
 ### Date and time: pickers from `@dextinity/admin`, not raw inputs
 
-Enter dates and times through the picker components rather than a plain text input or an MUI picker
-configured by hand. `@dextinity/admin` exports `DatePicker`, `DateTimePicker`, and `TimePicker` (with
-`DateRangePicker` and `DateTimeRangePicker` for ranges), plus `DatePickerField` and siblings for use
-as Final Form fields. Each picker
-manages its own value format — `DatePicker`, for example, reads and writes an ISO `YYYY-MM-DD`
-string — so you don't parse or format dates by hand. The pickers need MUI X's `LocalizationProvider`
-at the app root, set up once with `AdapterDateFns`; pass `adapterLocale` to localize.
+Use the picker components rather than a plain text input or an MUI picker configured by hand.
+`@dextinity/admin` exports `DatePicker`, `DateTimePicker`, and `TimePicker` (with `DateRangePicker`
+and `DateTimeRangePicker` for ranges), plus `DatePickerField` and siblings for use as Final Form
+fields. Each picker manages its own value format — `DatePicker`, for example, reads and writes an
+ISO `YYYY-MM-DD` string — so you don't parse or format dates by hand.
 
 ```tsx
 // Avoid — a plain text input used as a date field
