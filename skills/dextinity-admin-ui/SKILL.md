@@ -1,6 +1,6 @@
 ---
 name: dextinity-admin-ui
-description: Building or editing admin UI in a project that uses @dextinity/admin and its sibling packages — pages, dashboards, dialogs, widgets, layouts, or component styling. Use even for small UI changes, to build with Dextinity's theme, components, and helpers instead of custom sx/styled CSS, hard-coded values, or Box layouts.
+description: Building or editing admin UI in a project that uses @dextinity/admin and its sibling packages — pages, dashboards, forms and form fields, data grids, toolbars, dialogs, buttons, alerts and snackbars, widgets, layouts, component styling, and icons. Also for translating admin text, formatting numbers and dates with react-intl, deciding where a component's styled parts live, and changing how a Dextinity component looks or behaves through slotProps or the theme. Use even for small UI changes, to build with Dextinity's theme, components, and helpers instead of custom sx/styled CSS, hard-coded values, or Box layouts.
 ---
 
 # Building admin UIs with @dextinity/admin
