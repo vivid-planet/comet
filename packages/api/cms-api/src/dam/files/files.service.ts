@@ -263,7 +263,14 @@ export class FilesService {
             const existingCategory = getDamFileCategory(fileToReplace.mimetype);
             const uploadedCategory = getDamFileCategory(uploadedFile.mimetype);
 
-            if (uploadedCategory !== existingCategory) {
+            if (existingCategory === "document") {
+                // Files in the "document" category serve varying purposes: a VTT file is a video's subtitles, a PDF is a download.
+                if (uploadedFile.mimetype !== fileToReplace.mimetype) {
+                    throw new DextinityValidationException(
+                        `File cannot be replaced by a file of a different mimetype. Existing mimetype: ${fileToReplace.mimetype}, new mimetype: ${uploadedFile.mimetype}`,
+                    );
+                }
+            } else if (uploadedCategory !== existingCategory) {
                 throw new DextinityValidationException(
                     `File cannot be replaced by a file of a different category. Existing category: ${existingCategory} (${fileToReplace.mimetype}), new category: ${uploadedCategory} (${uploadedFile.mimetype})`,
                 );
