@@ -288,20 +288,10 @@ export class FilesService {
                 }
             }
 
-            if (uploadedFileMetadata.image && uploadedFileMetadata.image.width && uploadedFileMetadata.image.height) {
-                if (fileToReplace.image) {
-                    fileToReplace.image.width = uploadedFileMetadata.image.width;
-                    fileToReplace.image.height = uploadedFileMetadata.image.height;
-                    fileToReplace.image.exif = uploadedFileMetadata.exifData;
-                } else {
-                    fileToReplace.image = this.entityManager.create(DamFileImage, {
-                        width: uploadedFileMetadata.image.width,
-                        height: uploadedFileMetadata.image.height,
-                        exif: uploadedFileMetadata.exifData,
-                        cropArea: { focalPoint: FocalPoint.SMART },
-                        file: fileToReplace,
-                    });
-                }
+            if (uploadedFileMetadata.image && uploadedFileMetadata.image.width && uploadedFileMetadata.image.height && fileToReplace.image) {
+                fileToReplace.image.width = uploadedFileMetadata.image.width;
+                fileToReplace.image.height = uploadedFileMetadata.image.height;
+                fileToReplace.image.exif = uploadedFileMetadata.exifData;
             }
 
             Object.assign(fileToReplace, {
