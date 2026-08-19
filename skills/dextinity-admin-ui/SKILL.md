@@ -128,7 +128,7 @@ const Title = styled("h2")`
 ## Organizing styled components
 
 By default, define a component's styled parts at the bottom of its own file, below the component
-that uses them:
+that uses them, so a reader meets what the component renders before how it looks:
 
 ```
 imports → types → component → styled components
@@ -387,7 +387,8 @@ come from `@mui/material`; `FieldSet` and `FormSection` from `@dextinity/admin`.
 
 ### Buttons: `Button` variants and action buttons, not hand-styled buttons
 
-Give `Button` a `variant` rather than styling a button by hand or setting MUI's `color` directly.
+Give `Button` a `variant` rather than styling a button by hand. The variant controls the button's
+color, which is why `Button` deprecates MUI's `color` prop.
 The variants are `primary`, `secondary`, `outlined`, `destructive`, `success`, `textLight`, and
 `textDark`. For common actions, prefer the specialized buttons: `SaveButton`, `CancelButton`,
 `DeleteButton`, and `OkayButton` each carry a suitable variant, an icon, and a translated label.
