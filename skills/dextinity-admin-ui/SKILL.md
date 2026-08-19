@@ -6,10 +6,9 @@ description: Building or editing admin UI in a project that uses @dextinity/admi
 # Building admin UIs with @dextinity/admin
 
 `@dextinity/admin` and its sibling packages ship a design system: a theme (spacing,
-colors, shadows, typography, breakpoints) and a library of ready-made components. For
-internationalization, Dextinity recommends `react-intl` (the default) to translate text, numbers, and
-dates. The components and types are available in the consuming project through the installed
-packages — import them directly (e.g. `import { Button, MainContent } from "@dextinity/admin"`).
+colors, shadows, typography, breakpoints) and a library of ready-made components. The components
+and types are available in the consuming project through the installed packages — import them
+directly (e.g. `import { Button, MainContent } from "@dextinity/admin"`).
 
 Build admin UI by composing what the design system already provides. Add custom styling only
 after the system genuinely can't express what you need.
@@ -19,8 +18,7 @@ after the system genuinely can't express what you need.
 **Prefer Dextinity's theme values, components, and helpers over custom styling.** Three reasons:
 
 1. **Reviewability.** When styling lives in the theme and in components, the markup stays
-   declarative and diffs stay small. A component that mixes `sx`, inline `style`, and `styled()`
-   is hard to read and hard to review — the layout, the styling, and the logic blur together.
+   declarative and diffs stay small.
 2. **Automatic upgrades.** A project's visual design is often built against a _future_ version of
    the design system, so it won't fully match what the currently installed components and theme
    produce. That gap is expected — it is not a reason to add custom styling to force the match.
@@ -30,10 +28,10 @@ after the system genuinely can't express what you need.
    same way.
 
 This holds **even when a project's design deliberately differs** from the current library defaults —
-a permanent design decision, not a gap a later library upgrade will close. Prefer the Dextinity component
-or token, and apply that project-specific difference by configuring the theme — not by re-styling
-individual components. Add custom styling only when explicitly instructed, or when no component, prop,
-or token can produce the result.
+a permanent design decision, not a gap a later library upgrade will close. Prefer the Dextinity
+component or token there too, and apply the difference as the Customizing section below describes.
+Add custom styling only when explicitly instructed, or when no component, prop, or token can
+produce the result.
 
 ## Decision framework
 
@@ -41,16 +39,13 @@ Before writing any styling or markup, work down this list and stop at the first 
 
 1. **Is there a component for this?** Use it rather than assembling the same thing from
    `Box` + CSS (page structure, cards, toolbars, dialogs, alerts, buttons, …).
-2. **Is there a prop for this?** Props apply the correct theme values with no CSS — e.g.
-   `elevation` / `square` on `Paper` and `Card`, `variant` on `Button` and `Typography`,
-   `spacing` on `Stack` and `Grid`.
+2. **Is there a prop for this?** Props apply the correct theme values with no CSS — `elevation`
+   on `Paper`, `variant` on `Button`, `spacing` on `Stack`.
 3. **Is there a theme value for this?** Read spacing, colors, and shadows from the theme
-   (`theme.spacing(n)`, `theme.palette.*`, `theme.shadows[n]`) instead of hard-coding pixels,
-   hex colors, or shadow strings.
+   instead of hard-coding pixels, hex colors, or shadow strings.
 4. **Is there a helper for this?** User-facing text, numbers, and dates go through the i18n
-   helpers (`FormattedMessage`, `FormattedNumber`, `FormattedDate`), never hard-coded.
-5. **Only then, custom-style** — using `styled()` (not `sx` or inline `style`) and reading
-   values from the theme.
+   helpers, never hard-coded.
+5. **Only then, custom-style** — with `styled()`, as the next section describes.
 
 ## Styling and theme
 
@@ -289,10 +284,10 @@ For responsive behaviour, pass a per-breakpoint object to these props (`size` on
 queries.
 
 Don't use `Grid` or `Stack` to lay out form fields: Dextinity stacks them vertically at full width,
-grouped with `FieldSet` or `FormSection`.
+grouped with `FieldSet` or `FormSection`, described under Components below.
 
-`sx` is fine for an occasional layout property that no `Stack` or `Grid` prop covers, such as
-`flexGrow`. On your own markup, it is not for visual styling — that goes through `styled()`.
+`sx` is fine here for a single layout property that no `Stack` or `Grid` prop covers, such as
+`flexGrow`.
 
 ### Page structure: `MainContent`, `Toolbar`, and their parts
 
@@ -376,11 +371,11 @@ borders, and a title. `FieldSet` (from `@dextinity/admin`) is a collapsible titl
 form's fields in it. Inside a dialog or sidebar, group fields with `FormSection` instead, a lighter
 titled section with a divider. For a dashboard widget, if the project uses `@dextinity/cms-admin` (most
 do), use its ready-made `DashboardWidgetRoot` rather than building one by hand; when you compose a
-container yourself, build it from MUI's `Card` (with `CardHeader` and `CardContent`) or `Paper`, with
-`Typography` for text and `Grid` for layout — Dextinity themes `Card`, `Paper`, and `Typography`, so they
-carry the right elevation, radius, and type scale without custom CSS, while `Grid` takes its spacing
-from the theme. `Card`, `CardHeader`, `CardContent`, `Paper`, `Typography`, and `Grid` come from
-`@mui/material`; `FieldSet` and `FormSection` from `@dextinity/admin`.
+container yourself, build it from `Card` (with `CardHeader` and `CardContent`) or `Paper`, with
+`Typography` for text and `Grid` for layout. Dextinity themes `Card`, `Paper`, and `Typography`, so
+they carry the right elevation, radius, and type scale without custom CSS, while `Grid` takes its
+spacing from the theme. `Card`, `CardHeader`, `CardContent`, `Paper`, `Typography`, and `Grid`
+come from `@mui/material`; `FieldSet` and `FormSection` from `@dextinity/admin`.
 
 ```tsx
 // Avoid — a Box hand-styled into a titled, bordered panel
@@ -513,17 +508,16 @@ restyling it.
 
 ### Appearance
 
-To change how a Dextinity component looks, configure the theme rather than the component itself — the core
-principle's rule for a project-specific design difference. `createDextinityTheme`'s `components` map takes
-a `DextinityAdmin*` key (MUI components use their `Mui*` key); `styleOverrides` restyles a component's
-slots and `defaultProps` sets default prop values, such as swapping an icon through `iconMapping`.
-Both apply to every instance, so the deviation stays consistent and is defined in one reviewable place.
+To change how a Dextinity component looks, configure the theme rather than the component itself.
+`createDextinityTheme`'s `components` map takes a `DextinityAdmin*` key (MUI components use their
+`Mui*` key); `styleOverrides` restyles a component's slots and `defaultProps` sets default prop
+values, such as swapping an icon through `iconMapping`. Both apply to every instance, so one entry
+carries the difference across the project.
 
 Styling a single instance directly is the rare exception — for a change genuinely specific to that
-instance, or when you're explicitly told to. Which tool you use is then the same as anywhere else:
-`sx` (or `slotProps.<slot>.sx` for a slot) for small layout, `styled()` for other custom styling, per
-the styling section above. Use this only for a true single-instance change; a difference that recurs
-belongs in the theme, not repeated on each instance.
+instance, or when you're explicitly told to. Use `sx` for small layout and `styled()` for other
+custom styling, with `slotProps.<slot>.sx` to reach a slot. A difference that recurs belongs in the
+theme, not repeated on each instance.
 
 ```tsx
 // Avoid — a styled() wrapper for a design difference that belongs in the theme
