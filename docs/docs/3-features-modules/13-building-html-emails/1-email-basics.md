@@ -10,7 +10,7 @@ For researching support across clients, [Can I email](https://www.caniemail.com/
 
 ## MJML Fundamentals
 
-[MJML](https://documentation.mjml.io/) is a markup language that compiles to cross-client-compatible HTML emails. `@comet/mail-react` exposes MJML tags as React components (e.g., `MjmlSection`, `MjmlText`, `MjmlColumn`) and adds a theme system and higher-level components on top. You write JSX, the library converts it to MJML, and MJML generates the final HTML.
+[MJML](https://documentation.mjml.io/) is a markup language that compiles to cross-client-compatible HTML emails. `@dextinity/mail-react` exposes MJML tags as React components (e.g., `MjmlSection`, `MjmlText`, `MjmlColumn`) and adds a theme system and higher-level components on top. You write JSX, the library converts it to MJML, and MJML generates the final HTML.
 
 MJML enforces a **section → column → content** nesting hierarchy. Content components (`MjmlText`, `MjmlImage`, `MjmlButton`, etc.) must always be placed inside `MjmlSection > MjmlColumn`. Placing them elsewhere produces MJML validation warnings and broken layouts. The MJML Warnings panel in Storybook surfaces these issues during development.
 
@@ -36,9 +36,27 @@ Once you enter an ending tag, you are in **HTML-land for the entire subtree**. N
 
 When you need to drop into raw HTML outside of a text context — for example, to build a custom table layout — use `MjmlRaw` (or `MjmlTable` for table shorthand). These are escape hatches for cases where MJML components can't achieve the desired layout, and should generally be a last resort.
 
-`@comet/mail-react` provides both MJML-level and HTML-level text components to work across this boundary. See [Theme & Base Components](./2-components-and-theme.md#text) for all available text components and their usage.
+`@dextinity/mail-react` provides both MJML-level and HTML-level text components to work across this boundary. See [Theme & Base Components](./2-components-and-theme.md#text) for all available text components and their usage.
 
 ## Common Pitfalls
+
+### Start Raw Content Inside a Column With `<tr>`
+
+`mj-column` wraps every child in its own `<tr><td>` — except `MjmlRaw` content, which goes straight into the column's table unwrapped. A `<table>`, `<div>`, or `<img>` in that position ends up outside the column's table instead, and MJML reports no error. This covers the `Html*` components. Open with a `<tr>` and put your markup in a `<td>`:
+
+```tsx
+<MjmlColumn>
+    <MjmlRaw>
+        <tr>
+            <td>{/* your raw markup */}</td>
+        </tr>
+    </MjmlRaw>
+</MjmlColumn>
+```
+
+`HtmlText` is the exception: it renders the `<td>` itself, so a surrounding `<tr>` is all it needs — unless its `element` prop renders something else, which needs a `<td>` again. `MjmlDivider` supplies both the row and the cell — use it instead of a hand-wrapped `HtmlDivider` whenever you are in an `MjmlColumn`.
+
+The rule applies to `MjmlColumn` and `MjmlHero`. `MjmlSection` and `MjmlWrapper` already place their children inside a shared cell, so any root element is safe there.
 
 ### Avoid Block-Level HTML Elements Inside Ending Tags
 

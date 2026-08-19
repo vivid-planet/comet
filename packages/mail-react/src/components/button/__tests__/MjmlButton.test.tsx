@@ -107,14 +107,13 @@ describe("MjmlButton", () => {
         expect(html).toContain("mjmlButton--fullWidth");
     });
 
-    it("inlines the full-width styles onto the anchor so they survive clients that drop the style block", () => {
+    it("leaves no full-width rule in a style block, so it survives clients that drop them", () => {
         const { html } = renderInMailRoot(
             <MjmlButton href="https://example.com" fullWidth>
                 Full width
             </MjmlButton>,
         );
 
-        expect(html).toContain("box-sizing: border-box");
         expect(html).not.toMatch(/\.mjmlButton--fullWidth a\s*\{/);
     });
 

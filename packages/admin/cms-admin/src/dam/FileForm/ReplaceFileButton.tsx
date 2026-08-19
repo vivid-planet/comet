@@ -1,11 +1,11 @@
 import { useApolloClient } from "@apollo/client";
-import { Button, useErrorDialog } from "@comet/admin";
-import { ThreeDotSaving, Upload } from "@comet/admin-icons";
+import { Button, useErrorDialog } from "@dextinity/admin";
+import { ThreeDotSaving, Upload } from "@dextinity/admin-icons";
 import { useRef, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
-import { useCometConfig } from "../../config/CometConfigContext";
+import { useDextinityConfig } from "../../config/DextinityConfigContext";
 import { FileUploadError, replaceById } from "../../form/file/upload";
 import { useDamBasePath, useDamConfig } from "../config/damConfig";
 import { getDamFileCategory } from "../config/damFileCategory";
@@ -17,7 +17,7 @@ interface ReplaceFileButtonProps {
     file: DamFileDetails;
 }
 
-const replaceFileErrorTitle = <FormattedMessage id="comet.dam.file.replace.errorTitle" defaultMessage="File could not be replaced" />;
+const replaceFileErrorTitle = <FormattedMessage id="dextinity.dam.file.replace.errorTitle" defaultMessage="File could not be replaced" />;
 
 const fileExtension = (fileName: string) => {
     const lastDotIndex = fileName.lastIndexOf(".");
@@ -26,7 +26,7 @@ const fileExtension = (fileName: string) => {
 
 export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const apolloClient = useApolloClient();
-    const { apiUrl } = useCometConfig();
+    const { apiUrl } = useDextinityConfig();
     const damConfig = useDamConfig();
     const damBasePath = useDamBasePath();
     const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
@@ -50,7 +50,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                     title: replaceFileErrorTitle,
                     userMessage: (
                         <FormattedMessage
-                            id="comet.dam.file.replace.fileRejection"
+                            id="dextinity.dam.file.replace.fileRejection"
                             defaultMessage="The selected file could not be uploaded because it doesn't meet the required criteria. Please choose a valid file to replace the existing one."
                         />
                     ),
@@ -91,15 +91,15 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 errorDialog?.showError({
                     title: replaceFileErrorTitle,
                     userMessage:
-                        error instanceof FileUploadError && error.exceptionName === "CometFileNameAlreadyExistsException" ? (
+                        error instanceof FileUploadError && error.exceptionName === "DextinityFileNameAlreadyExistsException" ? (
                             <FormattedMessage
-                                id="comet.dam.file.replace.fileNameAlreadyExists"
+                                id="dextinity.dam.file.replace.fileNameAlreadyExists"
                                 defaultMessage="This file cannot be replaced by a {newExtension} file because another file with the same name and that file extension already exists in this folder."
                                 values={{ newExtension: fileExtension(uploadedFile.name) }}
                             />
                         ) : (
                             <FormattedMessage
-                                id="comet.dam.file.replace.error"
+                                id="dextinity.dam.file.replace.error"
                                 defaultMessage="An error occurred while replacing the file. Please try again later."
                             />
                         ),
@@ -121,7 +121,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                     fileInputRef.current?.click();
                 }}
             >
-                <FormattedMessage id="comet.dam.file.replaceFile" defaultMessage="Replace File" />
+                <FormattedMessage id="dextinity.dam.file.replaceFile" defaultMessage="Replace File" />
             </Button>
             <input type="file" hidden {...getInputProps()} ref={fileInputRef} />
         </>

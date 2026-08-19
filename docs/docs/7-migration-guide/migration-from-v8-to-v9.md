@@ -12,7 +12,7 @@ This migration guide is designed to be executed by an AI coding agent (e.g., Cla
 **Sample prompt to get started:**
 
 ```
-Migrate this project from Comet v8 to v9. Follow the migration guide at https://docs.comet-dxp.com/docs/migration-guide/migration-from-v8-to-v9 step by step. Work through each section sequentially, making the required changes and running any verification commands. Commit after each major section.
+Migrate this project from Comet v8 to v9. Follow the migration guide at https://cms-docs.dextinity.com/docs/migration-guide/migration-from-v8-to-v9 step by step. Work through each section sequentially, making the required changes and running any verification commands. Commit after each major section.
 ```
 
 :::

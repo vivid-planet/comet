@@ -1,12 +1,12 @@
-# @comet/mail-react
+# @dextinity/mail-react
 
-Single-package solution for building HTML emails with React and MJML. Consumers install only `@comet/mail-react` (plus `react`) — never `@faire/mjml-react` directly.
+Single-package solution for building HTML emails with React and MJML. Consumers install only `@dextinity/mail-react` (plus `react`) — never `@faire/mjml-react` directly.
 
 The package:
 
 - re-exports all `@faire/mjml-react` MJML components (with prop types renamed to drop the `I` prefix);
 - extends some of them with extra props and features;
-- adds new components and utilities — block factories (`BlocksBlock`, `ListBlock`, `OneOfBlock`, `OptionalBlock`) for rendering Comet CMS block data, and a `css()` tagged template literal for IDE syntax highlighting.
+- adds new components and utilities — block factories (`BlocksBlock`, `ListBlock`, `OneOfBlock`, `OptionalBlock`) for rendering Dextinity CMS block data, and a `css()` tagged template literal for IDE syntax highlighting.
 
 Some components also ship in an `Html` variant for use inside MJML ending tags. These variants are additive — separate components alongside the `Mjml` versions, with their own API.
 
@@ -59,7 +59,7 @@ Features substantial enough to live in their own directory should have a `README
 
 ### What is a feature
 
-A feature is any self-contained unit of behavior worth describing on its own — a component (`InlineLink`), a utility (`css` helper), an addon (the Storybook addon), or the package itself. Features nest: this README documents `@comet/mail-react` as a feature, and the components inside it are features in their own right.
+A feature is any self-contained unit of behavior worth describing on its own — a component (`InlineLink`), a utility (`css` helper), an addon (the Storybook addon), or the package itself. Features nest: this README documents `@dextinity/mail-react` as a feature, and the components inside it are features in their own right.
 
 A feature README describes **only its own feature**. It does not describe parent features that contain it, nor sub-features it contains — each of those has its own README.
 
@@ -105,7 +105,7 @@ Feature READMEs (this one included) should stay current. Update them in the same
 Two artifacts document how to _use_ this package, for two readers:
 
 - **Docs** — [docs/docs/3-features-modules/13-building-html-emails/](../../docs/docs/3-features-modules/13-building-html-emails/) — for people building emails with the package.
-- **Agent skill** — [skills/comet-mail-react/SKILL.md](../../skills/comet-mail-react/SKILL.md) — the same guidance for AI agents working in a project that uses this package.
+- **Agent skill** — [skills/dextinity-mail-react/SKILL.md](../../skills/dextinity-mail-react/SKILL.md) — the same guidance for AI agents working in a project that uses this package.
 
 Both teach the same things: what the package is for, how to build emails with it, the patterns to reach for, and the email-client pitfalls — markup that's fine in a browser can render wrong in clients like Outlook. They differ in one respect — an agent already has the package's types and TSDoc in its project, so the skill doesn't restate type signatures, prop lists, or defaults; those live in the types and TSDoc, and it spends its words on everything they can't convey on their own.
 

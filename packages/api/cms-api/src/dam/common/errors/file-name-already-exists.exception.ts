@@ -1,3 +1,3 @@
-import { CometException } from "../../../common/errors/comet.exception";
+import { DextinityException } from "../../../common/errors/dextinity.exception";
 
-export class CometFileNameAlreadyExistsException extends CometException {}
+export class DextinityFileNameAlreadyExistsException extends DextinityException {}

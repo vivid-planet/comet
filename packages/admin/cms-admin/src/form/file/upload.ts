@@ -79,7 +79,7 @@ interface ReplaceFileByIdData {
 }
 
 /**
- * `exceptionName` is the class name of the exception thrown by the API (e.g. `CometFileNameAlreadyExistsException`),
+ * `exceptionName` is the class name of the exception thrown by the API (e.g. `DextinityFileNameAlreadyExistsException`),
  * which callers can use to show a message specific to the cause.
  */
 export class FileUploadError extends Error {

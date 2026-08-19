@@ -2,9 +2,21 @@ import { MjmlColumn } from "@faire/mjml-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { MjmlSection } from "../../../components/section/MjmlSection.js";
+import { registerStyles } from "../../../styles/registerStyles.js";
 import { createTheme } from "../../../theme/createTheme.js";
+import { ThemeProvider } from "../../../theme/ThemeProvider.js";
+import type { Theme } from "../../../theme/themeTypes.js";
+import { css } from "../../../utils/css.js";
 import { createRichTextBlock } from "../createRichTextBlock.js";
-import { exampleBlockData, headlinesOnlyBlockData, highlightBlockData } from "./exampleBlockData.js";
+import {
+    bulletedListBlockData,
+    exampleBlockData,
+    headlinesOnlyBlockData,
+    highlightBlockData,
+    listSpacingBlockData,
+    listVarietyBlockData,
+    nestedListBlockData,
+} from "./exampleBlockData.js";
 
 const { MjmlRichTextBlock } = createRichTextBlock();
 
@@ -67,6 +79,163 @@ export const WithVariants: Story = {
         <MjmlSection indent>
             <MjmlColumn>
                 <MjmlVariantsRichTextBlock data={exampleBlockData} />
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const listVarietyTheme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: {
+            body: { fontSize: { default: "16px", mobile: "14px" }, lineHeight: { default: "24px", mobile: "20px" }, bottomSpacing: "16px" },
+        },
+    },
+});
+
+/** Lists render as a table, not as `<ul>` / `<ol>`, so their spacing is consistent across email clients. */
+export const ListVariety: Story = {
+    parameters: {
+        theme: listVarietyTheme,
+    },
+    render: () => (
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlRichTextBlock data={listVarietyBlockData} />
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const listSpacingTheme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: { body: { fontSize: "16px", lineHeight: "24px", bottomSpacing: "16px" } },
+    },
+    list: {
+        indent: { default: 40, mobile: 8 },
+        markerGap: { default: 24, mobile: 4 },
+        itemSpacing: { default: 20, mobile: 4 },
+    },
+});
+
+/** List spacing comes from `theme.list`, and every token accepts a value per breakpoint. Resize the preview below 420px to see the mobile values. */
+export const ListSpacing: Story = {
+    parameters: {
+        theme: listSpacingTheme,
+    },
+    render: () => (
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlRichTextBlock data={listSpacingBlockData} />
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const { MjmlRichTextBlock: MjmlPerVariantRichTextBlock } = createRichTextBlock({
+    blockTypes: {
+        "unordered-list-item": { variant: "copyDefault" },
+        "ordered-list-item": { variant: "copyLarge" },
+    },
+});
+
+const perVariantListSpacingTheme = createTheme({
+    text: {
+        variants: {
+            copyDefault: { fontSize: "16px", lineHeight: "24px", bottomSpacing: "24px" },
+            copyLarge: { fontSize: "20px", lineHeight: "28px", bottomSpacing: "24px" },
+        },
+    },
+    list: { itemSpacing: 8 },
+});
+
+registerStyles(
+    css`
+        .perVariantListSpacingSection .richTextBlock__list--variantCopyLarge .richTextBlock__listItem--itemSpacing > td {
+            padding-bottom: 24px !important;
+        }
+    `,
+    { inline: true },
+);
+
+/** The theme's `list.itemSpacing` applies to every list the block renders. A single list departs from it through a rule scoped to its text variant, since the variant is what a list carries. */
+export const ListSpacingPerVariant: Story = {
+    parameters: {
+        theme: perVariantListSpacingTheme,
+    },
+    render: () => (
+        <MjmlSection indent className="perVariantListSpacingSection">
+            <MjmlColumn>
+                <MjmlPerVariantRichTextBlock data={listSpacingBlockData} />
+            </MjmlColumn>
+        </MjmlSection>
+    ),
+};
+
+const listMarkersTheme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: { body: { fontSize: "16px", lineHeight: "24px", bottomSpacing: "16px" } },
+    },
+    list: {
+        unorderedMarker: "▪",
+        // 65 is the code of "A", so the items are lettered A., B., C.
+        orderedMarker: ({ index }) => `${String.fromCharCode(65 + index)}.`,
+    },
+});
+
+const elementMarkerTheme: Theme = {
+    ...listMarkersTheme,
+    list: { ...listMarkersTheme.list, unorderedMarker: <span style={{ color: "#c0392b", fontWeight: 700 }}>➔</span> },
+};
+
+/** The theme sets `list.unorderedMarker` to `▪` and builds `list.orderedMarker` from the item's index. The second list's scoped theme uses a styled element instead of a character. */
+export const ListMarkers: Story = {
+    parameters: {
+        theme: listMarkersTheme,
+    },
+    render: () => (
+        <>
+            <MjmlSection indent>
+                <MjmlColumn>
+                    <MjmlRichTextBlock data={listSpacingBlockData} />
+                </MjmlColumn>
+            </MjmlSection>
+            <ThemeProvider theme={elementMarkerTheme}>
+                <MjmlSection indent>
+                    <MjmlColumn>
+                        <MjmlRichTextBlock data={bulletedListBlockData} />
+                    </MjmlColumn>
+                </MjmlSection>
+            </ThemeProvider>
+        </>
+    ),
+};
+
+const bulletLadder = ["▪", "–", "·"];
+
+const depthMarkersTheme = createTheme({
+    text: {
+        defaultVariant: "body",
+        variants: { body: { fontSize: "16px", lineHeight: "24px", bottomSpacing: "16px" } },
+    },
+    list: {
+        unorderedMarker: ({ depth }) => bulletLadder[depth % bulletLadder.length],
+        // 65 is the code of "A", so nested items are lettered ItemA., ItemB., ItemC.
+        orderedMarker: ({ index, depth }) => (depth === 0 ? `${index + 1}.` : `Item${String.fromCharCode(65 + index)}.`),
+    },
+});
+
+/** Both markers vary by `depth`: the bullets cycle through `▪`, `–`, `·`, and nested numbered items are lettered, each nested list starting again at `A.`. */
+export const ListMarkersPerDepth: Story = {
+    parameters: {
+        theme: depthMarkersTheme,
+    },
+    render: () => (
+        <MjmlSection indent>
+            <MjmlColumn>
+                <MjmlRichTextBlock data={nestedListBlockData} />
             </MjmlColumn>
         </MjmlSection>
     ),

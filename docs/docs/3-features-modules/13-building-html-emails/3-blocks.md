@@ -2,10 +2,10 @@
 title: Blocks
 ---
 
-`@comet/mail-react` ships basic block components to render Comet CMS block data types. Where the [base components](./2-components-and-theme.md) handle generic layout and typography, block components are tied to specific `*BlockData` shapes from the CMS schema.
+`@dextinity/mail-react` ships basic block components to render Dextinity CMS block data types. Where the [base components](./2-components-and-theme.md) handle generic layout and typography, block components are tied to specific `*BlockData` shapes from the CMS schema.
 
 :::info
-For background on the broader Comet block system — what blocks are, how they're authored, and how block data flows from API to admin to site — see [Blocks](../../2-core-concepts/2-blocks/index.md) in the core concepts.
+For background on the broader Dextinity block system — what blocks are, how they're authored, and how block data flows from API to admin to site — see [Blocks](../../2-core-concepts/2-blocks/index.md) in the core concepts.
 :::
 
 ## Pixel-image blocks
@@ -17,8 +17,10 @@ Two components render `PixelImageBlockData` from the CMS — one for MJML contex
 | `MjmlPixelImageBlock` | re-exported `MjmlImage` | an `MjmlColumn` (standard MJML layout model)                                      |
 | `HtmlPixelImageBlock` | raw `<img>`             | raw HTML or [MJML ending tags](./1-email-basics.md#ending-tags) such as `MjmlRaw` |
 
+Inside `MjmlRaw` in an `MjmlColumn`, `HtmlPixelImageBlock` needs its own `<tr>` and `<td>` — see [Start Raw Content Inside a Column With `<tr>`](./1-email-basics.md#start-raw-content-inside-a-column-with-tr).
+
 ```tsx
-import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@comet/mail-react";
+import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@dextinity/mail-react";
 
 <MjmlSection indent>
     <MjmlColumn>
@@ -29,14 +31,14 @@ import { MjmlColumn, MjmlPixelImageBlock, MjmlSection } from "@comet/mail-react"
 
 ### Configuration
 
-Both blocks read `validSizes` and `baseUrl` from `config.pixelImageBlock`. In a typical Comet project, `validSizes` is the union of `cometConfig.images.imageSizes` and `cometConfig.images.deviceSizes`; `baseUrl` is the API URL.
+Both blocks read `validSizes` and `baseUrl` from `config.pixelImageBlock`. In a typical Dextinity project, `validSizes` is the union of `dextinityConfig.images.imageSizes` and `dextinityConfig.images.deviceSizes`; `baseUrl` is the API URL.
 
 ```tsx title="src/emails/WelcomeEmail.tsx"
-import { MjmlMailRoot, type Config } from "@comet/mail-react";
+import { MjmlMailRoot, type Config } from "@dextinity/mail-react";
 
 const config: Config = {
     pixelImageBlock: {
-        validSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
+        validSizes: [...dextinityConfig.images.imageSizes, ...dextinityConfig.images.deviceSizes],
         baseUrl: process.env.API_URL,
     },
 };
@@ -81,10 +83,12 @@ The `createRichTextBlock` factory creates components that render `RichTextBlockD
 | `MjmlRichTextBlock` | `MjmlText`                  | an `MjmlColumn` (standard MJML layout model)                                      |
 | `HtmlRichTextBlock` | `HtmlText` (`<div>`)        | raw HTML or [MJML ending tags](./1-email-basics.md#ending-tags) such as `MjmlRaw` |
 
+Inside `MjmlRaw` in an `MjmlColumn`, `HtmlRichTextBlock` needs its own `<tr>` and `<td>` — see [Start Raw Content Inside a Column With `<tr>`](./1-email-basics.md#start-raw-content-inside-a-column-with-tr).
+
 Call the factory once — at the top level of a file, not inside a component — and export the returned components:
 
 ```tsx title="src/emails/blocks/richText.ts"
-import { createRichTextBlock } from "@comet/mail-react";
+import { createRichTextBlock } from "@dextinity/mail-react";
 
 export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
     blockTypes: {
@@ -111,7 +115,7 @@ The `blockTypes` option maps the application's draft block types to the styling 
 
 The factory works without any configuration: `createRichTextBlock()` renders every draft block with the base `theme.text` styles, as do block types missing from `blockTypes`. This makes the block usable before any text variants exist in the theme.
 
-Style values in `blockTypes` don't support responsive values — define a theme variant for responsive styling, or set a `className` and register responsive CSS via `registerStyles`.
+Style values in `blockTypes` don't support responsive values — define a theme variant for responsive styling, or set a `className` and register responsive CSS via `registerStyles`. For a list block type, such a rule has to target `.<className> .richTextBlock__listItemText`, because the list's cells carry their own font styles.
 
 ### Link types
 
@@ -145,7 +149,7 @@ export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
 });
 ```
 
-The same option renders **custom** inline styles an application adds to its RTE via `customInlineStyles` on `IRteOptions` (see `@comet/admin-rte`). The style name you configure there — for example `HIGHLIGHT` — is stored verbatim in the content's inline style ranges but carries no styling of its own, so the email defines how it looks:
+The same option renders **custom** inline styles an application adds to its RTE via `customInlineStyles` on `IRteOptions` (see `@dextinity/admin-rte`). The style name you configure there — for example `HIGHLIGHT` — is stored verbatim in the content's inline style ranges but carries no styling of its own, so the email defines how it looks:
 
 ```tsx
 export const { MjmlRichTextBlock, HtmlRichTextBlock } = createRichTextBlock({
@@ -182,7 +186,10 @@ export const {
 ### Rendering behavior
 
 - Each draft block renders as its own text component; spacing between blocks comes from the theme's `bottomSpacing`, and the last block gets none.
-- List items render flat as `<ul>` / `<ol>` inside one text component per list; nesting by draft depth isn't supported.
+- Each list renders as a table inside one text component, with a row per item, a marker cell and a text cell — the indent and the marker gap are cell padding, which is the only spacing Outlook on Windows applies reliably.
+- List spacing comes from the theme's `list.indent` (before the marker), `list.markerGap` (between the marker and the text) and `list.itemSpacing` (between items, and above a nested level's first item), all responsive and all applying to every list the block renders. To override it, register a rule scoped to a list's type, depth or variant modifier with `{ inline: true }`, which has MJML write the declaration into the cell's `style` attribute at compile time so it also reaches Outlook.
+- The markers come from the theme's `list.unorderedMarker` and `list.orderedMarker`, each either a fixed node (`unorderedMarker: "▪"`) or a function receiving the item's `index`, counting from zero within its own list, and `depth`, the nesting level of that list.
+- A marker must be a plain HTML element, not an MJML component. A marker wider than the others widens the marker column and moves the text edge with it.
 - Headings are styled text, not semantic `<h1>` elements, matching the text components' design.
 - Empty draft blocks are skipped; when the data contains no text at all, the block renders nothing.
-- Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, and `richTextBlock__link` class names for targeting with [registerStyles](./2-components-and-theme.md).
+- Rendered elements carry `richTextBlock__text`, `richTextBlock__list`, `richTextBlock__listItem`, `richTextBlock__listItemMarker`, `richTextBlock__listItemText`, and `richTextBlock__link` class names for targeting with [registerStyles](./2-components-and-theme.md). The list table also carries `richTextBlock__list--ordered` or `richTextBlock__list--unordered`, and `richTextBlock__list--depth<Level>` naming its nesting level, counting the outermost as zero, with `richTextBlock__list--nested` on every level below that one. Only the outermost table names the text variant its items render with, such as `richTextBlock__list--variantBody`, and a rule scoped to that modifier applies to the nested levels as well. The rows carry `richTextBlock__listItem--itemSpacing`, or `richTextBlock__listItem--blockSpacing` on the last row when spacing follows the list, and `richTextBlock__listItem--itemSpacingAbove` on a nested level's first row, which carries the item spacing as `padding-top`. The cells restate the text styles inline, so a rule targeting list text needs `!important`.

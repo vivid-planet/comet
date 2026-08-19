@@ -1,6 +1,6 @@
 ---
-"@comet/cms-admin": minor
-"@comet/cms-api": minor
+"@dextinity/cms-admin": minor
+"@dextinity/cms-api": minor
 ---
 
 DAM: Allow replacing a file with a file of the same category instead of the same mimetype
@@ -17,12 +17,12 @@ Previously, "Replace File" only accepted a file with the exact same mimetype, so
 
 SVG images and pixel images remain separate categories.
 
-The file's URL and its usages stay unchanged. Only the extension of the file's name is adjusted to match the new file (for instance, `photo.jpg` becomes `photo.webp`). If a file with that name already exists in the same folder, the API rejects the replacement with a `CometFileNameAlreadyExistsException` and the Admin explains how to resolve the conflict.
+The file's URL and its usages stay unchanged. Only the extension of the file's name is adjusted to match the new file (for instance, `photo.jpg` becomes `photo.webp`). If a file with that name already exists in the same folder, the API rejects the replacement with a `DextinityFileNameAlreadyExistsException` and the Admin explains how to resolve the conflict.
 
 The new `getDamFileCategory` helper is exported from both packages:
 
 ```ts
-import { getDamFileCategory } from "@comet/cms-api"; // or "@comet/cms-admin"
+import { getDamFileCategory } from "@dextinity/cms-api"; // or "@dextinity/cms-admin"
 
 getDamFileCategory("image/webp"); // "pixelImage"
 getDamFileCategory("image/svg+xml"); // "svgImage"
