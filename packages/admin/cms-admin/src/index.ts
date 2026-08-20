@@ -15,6 +15,8 @@ export { type BlocksConfig, BlocksConfigProvider, useBlocksConfig } from "./bloc
 export { type BlockContext } from "./blocks/context/BlockContext";
 export { BlockContextProvider } from "./blocks/context/BlockContextProvider";
 export { useBlockContext } from "./blocks/context/useBlockContext";
+export type { DamVideoBlockFactoryOptions, DamVideoBlockState } from "./blocks/createDamVideoBlock";
+export { createDamVideoBlock } from "./blocks/createDamVideoBlock";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
 export type { RichTextBlockFactoryOptions } from "./blocks/createRichTextBlock";
@@ -57,6 +59,7 @@ export { createCompositeBlockSelectField } from "./blocks/helpers/createComposit
 export { createCompositeBlockSwitchField } from "./blocks/helpers/createCompositeBlockSwitchField";
 export { createCompositeBlockTextField } from "./blocks/helpers/createCompositeBlockTextField";
 export { decomposeUpdateStateAction } from "./blocks/helpers/decomposeUpdateStateAction";
+export type { VideoOptionsSupports } from "./blocks/helpers/VideoOptionsFields";
 export { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
 export { HoverPreviewComponent } from "./blocks/iframebridge/HoverPreviewComponent";
 export { IFrameBridgeContext, IFrameBridgeProvider } from "./blocks/iframebridge/IFrameBridge";
