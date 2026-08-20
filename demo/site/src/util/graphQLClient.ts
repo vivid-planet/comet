@@ -25,6 +25,10 @@ export function createGraphQLFetch({ fetch: passedFetch }: { fetch?: Fetch } = {
         );
     } else {
         // Server-side rendering
+        if (!process.env.API_BASIC_AUTH_SYSTEM_USER_NAME) {
+            throw new Error("API_BASIC_AUTH_SYSTEM_USER_NAME is not set");
+        }
+
         if (!process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD) {
             throw new Error("API_BASIC_AUTH_SYSTEM_USER_PASSWORD is not set");
         }
@@ -44,7 +48,9 @@ export function createGraphQLFetch({ fetch: passedFetch }: { fetch?: Fetch } = {
             createFetchWithDefaults(createFetchWithDefaultNextRevalidate(passedFetch || fetch, 7.5 * 60), {
                 cache: "force-cache",
                 headers: {
-                    authorization: `Basic ${Buffer.from(`system-user:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
+                    authorization: `Basic ${Buffer.from(
+                        `${process.env.API_BASIC_AUTH_SYSTEM_USER_NAME}:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`,
+                    ).toString("base64")}`,
                     ...convertPreviewDataToHeaders(previewData),
                 },
             }),

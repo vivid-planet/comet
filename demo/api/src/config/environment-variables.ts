@@ -48,6 +48,9 @@ export class EnvironmentVariables {
     POST_LOGOUT_REDIRECT_URI: string;
 
     @IsString()
+    BASIC_AUTH_SYSTEM_USER_NAME: string;
+
+    @IsString()
     @MinLength(16)
     BASIC_AUTH_SYSTEM_USER_PASSWORD: string;
 
