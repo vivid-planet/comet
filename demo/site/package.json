@@ -1,6 +1,5 @@
 {
     "name": "dextinity-demo-site",
-    "version": "1.0.0",
     "private": true,
     "description": "Dextinity Site Demo Application",
     "type": "commonjs",
