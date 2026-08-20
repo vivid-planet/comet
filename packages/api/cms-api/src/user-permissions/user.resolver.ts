@@ -1,5 +1,5 @@
 import { Logger } from "@nestjs/common";
-import { Args, Int, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
@@ -9,7 +9,6 @@ import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs, PermissionFilter } from "./dto/paginated-user-list";
 import { UserPermissionsUser } from "./dto/user";
 import { User } from "./interfaces/user";
-import { UserContentScopesLoaderService } from "./user-content-scopes-loader.service";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ObjectType()
@@ -20,10 +19,7 @@ class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(Us
 export class UserResolver {
     private readonly logger = new Logger(UserResolver.name);
 
-    constructor(
-        private readonly userService: UserPermissionsService,
-        private readonly userContentScopesLoader: UserContentScopesLoaderService,
-    ) {}
+    constructor(private readonly userService: UserPermissionsService) {}
 
     @Query(() => UserPermissionsUser)
     async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<UserPermissionsUser> {
@@ -110,18 +106,6 @@ export class UserResolver {
             }
         }
         return false;
-    }
-
-    @ResolveField(() => Int)
-    async permissionsCount(@Parent() user: UserPermissionsUser): Promise<number> {
-        return (await this.userService.getPermissions(user)).length;
-    }
-
-    @ResolveField(() => Int)
-    async contentScopesCount(@Parent() user: UserPermissionsUser): Promise<number> {
-        // FIXME: this counts a wildcard content scope ("*") as a single scope and therefore under-reports the number of
-        // scopes a user can access. Replaced by a per-dimension summary in a follow-up pull request.
-        return (await this.userContentScopesLoader.load(user)).length;
     }
 
     @ResolveField(() => Boolean)

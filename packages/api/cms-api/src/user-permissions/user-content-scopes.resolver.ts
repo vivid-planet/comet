@@ -43,8 +43,13 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        const contentScopes = await this.userService.getContentScopes(await this.userService.findUserOrThrow(userId), !skipManual);
-        return (await this.userService.getAvailableContentScopes())
+        const availableContentScopes = await this.userService.getAvailableContentScopes();
+        const contentScopes = await this.userService.filterContentScopesForUser({
+            user: await this.userService.findUserOrThrow(userId),
+            availableContentScopes: availableContentScopes.map((availableContentScope) => availableContentScope.scope),
+            includeContentScopesManual: !skipManual,
+        });
+        return availableContentScopes
             .filter((availableContentScope) => contentScopes.some((contentScope) => isEqual(contentScope, availableContentScope.scope)))
             .map((availableContentScope) => availableContentScope.scope);
     }

@@ -205,20 +205,7 @@ export class UserPermissionsService {
             .sort((a, b) => availablePermissions.indexOf(a.permission) - availablePermissions.indexOf(b.permission));
     }
 
-    async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[]> {
-        const availableContentScopes = (await this.getAvailableContentScopes()).map((cs) => cs.scope);
-        return this.filterContentScopesForUser({ user, availableContentScopes, includeContentScopesManual });
-    }
-
-    // Resolves the content scopes for many users while computing the (shared) available content scopes only once.
-    // Used by the request-scoped UserContentScopesLoaderService so the contentScopesCount field resolver doesn't
-    // recompute the full available-scope list once per returned user.
-    async getContentScopesForUsers(users: User[], includeContentScopesManual = true): Promise<ContentScope[][]> {
-        const availableContentScopes = (await this.getAvailableContentScopes()).map((cs) => cs.scope);
-        return Promise.all(users.map((user) => this.filterContentScopesForUser({ user, availableContentScopes, includeContentScopesManual })));
-    }
-
-    private async filterContentScopesForUser({
+    async filterContentScopesForUser({
         user,
         availableContentScopes,
         includeContentScopesManual,

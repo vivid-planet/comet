@@ -2310,12 +2310,10 @@ enum UserPermissionSource {
 }
 
 type UserPermissionsUser {
-  contentScopesCount: Int!
   email: String!
   id: String!
   impersonationAllowed: Boolean!
   name: String!
-  permissionsCount: Int!
 }
 
 input UserPermissionsUserFilter {
