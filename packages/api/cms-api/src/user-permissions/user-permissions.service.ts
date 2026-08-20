@@ -5,11 +5,11 @@ import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
 import { Request } from "express";
 import isEqual from "lodash.isequal";
-import uniqWith from "lodash.uniqwith";
 import getUuid from "uuid-by-string";
 
 import { AbstractAccessControlService } from "./access-control.service";
 import { DisablePermissionCheck, REQUIRED_PERMISSION_METADATA_KEY, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
+import { deduplicateByContentScope } from "./deduplicate-by-content-scope";
 import { ContentScopeWithLabel } from "./dto/content-scope";
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
@@ -75,7 +75,7 @@ export class UserPermissionsService {
                     ]),
                 ),
             }));
-        return uniqWith(contentScopesWithLabel, (value: ContentScopeWithLabel, other: ContentScopeWithLabel) => isEqual(value.scope, other.scope));
+        return deduplicateByContentScope(contentScopesWithLabel, (cs) => cs.scope);
     }
 
     async getAvailablePermissions(): Promise<Permission[]> {
@@ -245,7 +245,7 @@ export class UserPermissionsService {
             }
         }
 
-        return uniqWith(contentScopes, isEqual);
+        return deduplicateByContentScope(contentScopes, (scope) => scope);
     }
 
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
@@ -290,7 +290,10 @@ export class UserPermissionsService {
                 const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
                 const existingPermission = acc.find((p) => p.permission === userPermission.permission);
                 if (existingPermission) {
-                    existingPermission.contentScopes = uniqWith([...existingPermission.contentScopes, ...contentScopes], isEqual);
+                    existingPermission.contentScopes = deduplicateByContentScope(
+                        [...existingPermission.contentScopes, ...contentScopes],
+                        (scope) => scope,
+                    );
                 } else {
                     acc.push({
                         permission: userPermission.permission,
