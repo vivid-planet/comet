@@ -69,6 +69,7 @@ import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
+import { SiteSettingsModule } from "./site-settings/site-settings.module";
 import { StatusModule } from "./status/status.module";
 import { WelcomeEmailModule } from "./welcome-email/welcome-email.module";
 
@@ -215,6 +216,7 @@ export class AppModule {
                 NewsModule,
                 MenusModule,
                 FooterModule,
+                SiteSettingsModule,
                 WelcomeEmailModule,
                 PredefinedPagesModule,
                 CronJobsModule,
