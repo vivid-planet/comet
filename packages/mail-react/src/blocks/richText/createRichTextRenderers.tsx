@@ -2,11 +2,13 @@ import type { ComponentType, PropsWithChildren, ReactNode } from "react";
 import type { Renderers, TextBlockRenderFn } from "redraft";
 
 import { HtmlInlineLink } from "../../components/inlineLink/HtmlInlineLink.js";
-import type { RichTextBlockTypeProps, RichTextInlineRenderer, RichTextLinkHrefResolver } from "./common.js";
+import type { RichTextBlockTypeProps, RichTextInlineRenderer, RichTextLinkHrefResolver, RichTextListKind } from "./common.js";
 import { RichTextList } from "./RichTextList.js";
 
+type BlockTypeTextProps = Omit<RichTextBlockTypeProps, "list">;
+
 export type BlockTextProps = PropsWithChildren<
-    RichTextBlockTypeProps & {
+    BlockTypeTextProps & {
         /** Whether the theme's spacing below the text applies — set for every draft block except the last. */
         bottomSpacing: boolean;
     }
@@ -75,7 +77,7 @@ function renderWithLineBreaks(node: ReactNode): ReactNode {
 
 interface CreateBlockRenderFnOptions {
     blockTextComponent: ComponentType<BlockTextProps>;
-    blockTypeProps: RichTextBlockTypeProps;
+    blockTypeProps: BlockTypeTextProps;
     lastBlockKey: string;
 }
 
@@ -124,7 +126,10 @@ function createListBlockRenderFn({
     };
 }
 
-const listBlockTypes = ["unordered-list-item", "ordered-list-item"];
+const builtInListKinds: Record<string, RichTextListKind> = {
+    "unordered-list-item": "unordered",
+    "ordered-list-item": "ordered",
+};
 
 interface CreateRichTextRenderersOptions {
     blockTypes: Record<string, RichTextBlockTypeProps>;
@@ -144,21 +149,15 @@ export function createRichTextRenderers({
     const blocks: Renderers["blocks"] = {};
 
     // "unstyled" is redraft's blockFallback: registering it makes every block type the caller did not configure render with base theme styles.
-    for (const blockType of new Set(["unstyled", ...Object.keys(blockTypes)])) {
-        if (listBlockTypes.includes(blockType)) {
-            continue;
-        }
+    for (const blockType of new Set(["unstyled", ...Object.keys(builtInListKinds), ...Object.keys(blockTypes)])) {
+        // `list` selects the renderer; the text component must not receive it.
+        const { list, ...blockTypeProps } = blockTypes[blockType] ?? {};
+        const listKind = list ?? builtInListKinds[blockType];
 
-        blocks[blockType] = createTextBlockRenderFn({ blockTextComponent, blockTypeProps: blockTypes[blockType] ?? {}, lastBlockKey });
-    }
-
-    for (const listBlockType of listBlockTypes) {
-        blocks[listBlockType] = createListBlockRenderFn({
-            ordered: listBlockType === "ordered-list-item",
-            blockTextComponent,
-            blockTypeProps: blockTypes[listBlockType] ?? {},
-            lastBlockKey,
-        });
+        blocks[blockType] =
+            listKind === undefined
+                ? createTextBlockRenderFn({ blockTextComponent, blockTypeProps, lastBlockKey })
+                : createListBlockRenderFn({ ordered: listKind === "ordered", blockTextComponent, blockTypeProps, lastBlockKey });
     }
 
     return {

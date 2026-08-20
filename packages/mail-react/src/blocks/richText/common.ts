@@ -10,8 +10,10 @@ export interface RichTextBlockData {
 
 export type RichTextBlockProps = PropsWithData<RichTextBlockData>;
 
+export type RichTextListKind = "unordered" | "ordered";
+
 /**
- * Styling for all draft blocks of one type, applied on top of the base theme text styles.
+ * Styling and list kind for all draft blocks of one type, on top of the base theme text styles.
  *
  * Style props accept plain values only. For responsive styling, use a theme
  * variant, or set a `className` and register responsive CSS via `registerStyles`.
@@ -24,6 +26,8 @@ export type RichTextBlockTypeProps = Omit<TextStyles, "bottomSpacing"> & {
      */
     variant?: VariantName;
     className?: string;
+    /** Renders every draft block of this type as a list of this kind. */
+    list?: RichTextListKind;
 };
 
 /**
@@ -42,10 +46,11 @@ export type RichTextInlineRenderer = (children: ReactNode, options: { key: strin
 
 export interface CreateRichTextBlockOptions<TLinkTypes extends Record<string, unknown> = Record<string, unknown>> {
     /**
-     * Maps draft block types (e.g. `"header-one"`, `"paragraph-standard"`) to the
-     * styling of the text component that renders them.
+     * Maps draft block types (e.g. `"header-one"`, `"paragraph-standard"`) to how
+     * they render.
      *
-     * Unmapped block types render with the base theme text styles.
+     * Unmapped block types render as paragraphs with the base theme text styles,
+     * apart from `unordered-list-item` and `ordered-list-item`.
      */
     blockTypes?: Record<string, RichTextBlockTypeProps>;
     /**
