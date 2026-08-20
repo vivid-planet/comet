@@ -331,6 +331,9 @@ export const TipTapToolbar = ({
             sx={{
                 display: "flex",
                 flexWrap: "wrap",
+                position: "sticky",
+                top: 0,
+                zIndex: 2,
                 borderTop: `1px solid ${greyPalette[100]}`,
                 backgroundColor: muiGreyPalette[100],
                 px: "6px",
