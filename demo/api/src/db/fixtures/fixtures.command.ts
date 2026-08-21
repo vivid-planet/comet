@@ -24,12 +24,14 @@ import slugify from "slugify";
 
 import { DocumentGeneratorService } from "./generators/document-generator.service";
 import { DraftJsMigrationPageFixtureService } from "./generators/draft-js-migration-page-fixture.service";
+import { DraftJsTableStressTestPageFixtureService } from "./generators/draft-js-table-stress-test-page-fixture.service";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
 import { NewsFixtureService } from "./generators/news-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
+import { TipTapTableStressTestPageFixtureService } from "./generators/tip-tap-table-stress-test-page-fixture.service";
 import { VideoFixtureService } from "./generators/video-fixture.service";
 import { WelcomeEmailFixtureService } from "./generators/welcome-email-fixture.service";
 
@@ -69,6 +71,8 @@ export class FixturesCommand extends CommandRunner {
         private readonly videoFixtureService: VideoFixtureService,
         private readonly newsFixtureService: NewsFixtureService,
         private readonly draftJsMigrationPageFixtureService: DraftJsMigrationPageFixtureService,
+        private readonly draftJsTableStressTestPageFixtureService: DraftJsTableStressTestPageFixtureService,
+        private readonly tipTapTableStressTestPageFixtureService: TipTapTableStressTestPageFixtureService,
         private readonly welcomeEmailFixtureService: WelcomeEmailFixtureService,
     ) {
         super();
@@ -145,6 +149,10 @@ export class FixturesCommand extends CommandRunner {
         this.logger.log("Generate DraftJS Migration Demo Page...");
         await this.draftJsMigrationPageFixtureService.execute();
         this.logger.log("DraftJS Migration Demo Page created");
+
+        this.logger.log("Generate Table Stress Test Pages...");
+        await this.tipTapTableStressTestPageFixtureService.execute();
+        await this.draftJsTableStressTestPageFixtureService.execute();
 
         this.logger.log("Generate Lorem Ispum Fixtures...");
         const NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT = 0; // Increase number to generate lorum ipsum fixtures

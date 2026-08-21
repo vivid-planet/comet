@@ -54,6 +54,7 @@ import { TipTapRichTextBlockFixtureService } from "./generators/blocks/text-and-
 import { TipTapTableBlockFixtureService } from "./generators/blocks/text-and-content/tip-tap-table-block-fixture.service";
 import { DocumentGeneratorService } from "./generators/document-generator.service";
 import { DraftJsMigrationPageFixtureService } from "./generators/draft-js-migration-page-fixture.service";
+import { DraftJsTableStressTestPageFixtureService } from "./generators/draft-js-table-stress-test-page-fixture.service";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ImageFileFixtureService } from "./generators/image-file-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
@@ -65,6 +66,7 @@ import { RedirectsFixtureService } from "./generators/redirects-fixture.service"
 import { SeoBlockFixtureService } from "./generators/seo-block-fixture.service";
 import { StageBlockFixtureService } from "./generators/stage-block-fixture.service";
 import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.service";
+import { TipTapTableStressTestPageFixtureService } from "./generators/tip-tap-table-stress-test-page-fixture.service";
 import { VideoFixtureService } from "./generators/video-fixture.service";
 import { WelcomeEmailFixtureService } from "./generators/welcome-email-fixture.service";
 
@@ -91,6 +93,7 @@ import { WelcomeEmailFixtureService } from "./generators/welcome-email-fixture.s
         DamVideoBlockFixtureService,
         DocumentGeneratorService,
         DraftJsMigrationPageFixtureService,
+        DraftJsTableStressTestPageFixtureService,
         FileUploadsFixtureService,
         FullWidthImageBlockFixtureService,
         HeadingBlockFixtureService,
@@ -131,6 +134,7 @@ import { WelcomeEmailFixtureService } from "./generators/welcome-email-fixture.s
         TableBlockFixtureService,
         TipTapRichTextBlockFixtureService,
         TipTapTableBlockFixtureService,
+        TipTapTableStressTestPageFixtureService,
         WelcomeEmailFixtureService,
     ],
 })
