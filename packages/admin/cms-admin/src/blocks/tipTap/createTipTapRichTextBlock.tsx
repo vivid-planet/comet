@@ -10,7 +10,13 @@ import { type ComponentType, type HTMLAttributes, type ReactNode, useEffect } fr
 import { FormattedMessage } from "react-intl";
 
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockCategory, type BlockInterface, type LinkBlockInterface, type ReadOnlyBlockRenderInterface } from "../types";
+import {
+    BlockCategory,
+    type BlockInterface,
+    type LinkBlockInterface,
+    type ReadOnlyBlockRenderInterface,
+    type ReadOnlyRenderableAdminComponent,
+} from "../types";
 import { ChildBlocksContext } from "./ChildBlocksContext";
 import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
@@ -469,7 +475,11 @@ const TipTapEditor = ({
     );
 };
 
-type TipTapRichTextBlockInterface = BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput> &
+type TipTapRichTextBlockInterface = Omit<
+    BlockInterface<TipTapRichTextBlockData, TipTapRichTextBlockState, TipTapRichTextBlockInput>,
+    "AdminComponent"
+> &
+    ReadOnlyRenderableAdminComponent<TipTapRichTextBlockState> &
     ReadOnlyBlockRenderInterface<TipTapRichTextBlockState>;
 
 /**
@@ -557,8 +567,13 @@ export const createTipTapRichTextBlock = (options?: TipTapRichTextBlockFactoryOp
             };
         },
 
-        AdminComponent: ({ state, updateState }) => <TipTapEditor state={state} updateState={updateState} {...sharedEditorProps} />,
+        AdminComponent: ({ state, updateState, readOnly }) => (
+            <TipTapEditor state={state} updateState={updateState ?? (() => {})} {...sharedEditorProps} readOnly={readOnly} />
+        ),
 
+        /**
+         * @deprecated Render `AdminComponent` with `readOnly` instead.
+         */
         ReadOnlyComponent: ({ state }) => <TipTapEditor state={state} updateState={() => {}} {...sharedEditorProps} readOnly />,
 
         previewContent: (state) => {

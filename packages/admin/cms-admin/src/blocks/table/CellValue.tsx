@@ -15,7 +15,7 @@ export const CellValue = ({ highlighted, recentlyPasted, value }: Props) => {
         <CellValueContainer $highlighted={highlighted} $recentlyPasted={recentlyPasted}>
             <RteContentWrapper>
                 <RteContent>
-                    <RichTextBlock.ReadOnlyComponent state={value} />
+                    <RichTextBlock.AdminComponent state={value} readOnly />
                 </RteContent>
             </RteContentWrapper>
         </CellValueContainer>

@@ -188,7 +188,22 @@ export interface LinkBlockInterface<
     url2State?: (url: string) => State | false;
 }
 
+/**
+ * @deprecated Render `AdminComponent` with `readOnly` instead. See `ReadOnlyRenderableAdminComponent`.
+ */
 export interface ReadOnlyBlockRenderInterface<State = unknown> {
-    /** Renders the block's state without an editing UI. */
+    /**
+     * Renders the block's state without an editing UI.
+     *
+     * @deprecated Render `AdminComponent` with `readOnly` instead.
+     */
     ReadOnlyComponent(props: { state: State }): ReactNode;
+}
+
+/** Lets a block's own `AdminComponent` render the state without an editing UI when `readOnly` is set. */
+export interface ReadOnlyRenderableAdminComponent<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    State = any,
+> {
+    AdminComponent(props: { state: State; updateState?: Dispatch<SetStateAction<State>>; readOnly?: boolean }): ReactNode;
 }

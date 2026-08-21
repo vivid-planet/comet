@@ -107,7 +107,7 @@ const readOnlyState: TipTapRichTextBlockState = {
 export const ReadOnly: Story = {
     render: () => (
         <StoryWrapper state={readOnlyState}>
-            <ReadOnlyBlock.ReadOnlyComponent state={readOnlyState} />
+            <ReadOnlyBlock.AdminComponent state={readOnlyState} readOnly />
         </StoryWrapper>
     ),
     play: async ({ canvas, canvasElement, step }) => {

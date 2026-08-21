@@ -102,6 +102,7 @@ export type {
     BlockState,
     LinkBlockInterface,
     ReadOnlyBlockRenderInterface,
+    ReadOnlyRenderableAdminComponent,
     ReplaceDependencyObject,
     RootBlockInterface,
 } from "./blocks/types";

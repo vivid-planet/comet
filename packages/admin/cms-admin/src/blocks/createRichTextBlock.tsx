@@ -17,7 +17,13 @@ import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
-import { BlockCategory, type BlockInterface, type LinkBlockInterface, type ReadOnlyBlockRenderInterface } from "./types";
+import {
+    BlockCategory,
+    type BlockInterface,
+    type LinkBlockInterface,
+    type ReadOnlyBlockRenderInterface,
+    type ReadOnlyRenderableAdminComponent,
+} from "./types";
 
 export interface RichTextBlockState {
     editorState: EditorState;
@@ -95,7 +101,8 @@ export interface RichTextBlockFactoryOptions {
     tags?: Array<MessageDescriptor | string>;
 }
 
-export type RichTextBlock = BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput> &
+export type RichTextBlock = Omit<BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput>, "AdminComponent"> &
+    ReadOnlyRenderableAdminComponent<RichTextBlockState> &
     ReadOnlyBlockRenderInterface<RichTextBlockState>;
 
 export const createRichTextBlock = (options: RichTextBlockFactoryOptions, override?: (block: RichTextBlock) => RichTextBlock): RichTextBlock => {
@@ -131,7 +138,9 @@ export const createRichTextBlock = (options: RichTextBlockFactoryOptions, overri
     const LinkBlock = options.link;
     const rteOptions = { ...defaultRteOptions, ...(options.rte ?? {}) };
 
-    const RichTextBlock: BlockInterface<RichTextBlockData, RichTextBlockState> & ReadOnlyBlockRenderInterface<RichTextBlockState> = {
+    const RichTextBlock: Omit<BlockInterface<RichTextBlockData, RichTextBlockState>, "AdminComponent"> &
+        ReadOnlyRenderableAdminComponent<RichTextBlockState> &
+        ReadOnlyBlockRenderInterface<RichTextBlockState> = {
         ...createBlockSkeleton(),
 
         name: "RichText",
@@ -144,6 +153,9 @@ export const createRichTextBlock = (options: RichTextBlockFactoryOptions, overri
 
         tags: options.tags,
 
+        /**
+         * @deprecated Render `AdminComponent` with `readOnly` instead.
+         */
         ReadOnlyComponent: ({ state }) => <RteReadOnly value={state.editorState} />,
 
         input2State: ({ draftContent }) => {
@@ -187,7 +199,13 @@ export const createRichTextBlock = (options: RichTextBlockFactoryOptions, overri
             };
         },
 
-        AdminComponent: ({ state, updateState }) => {
+        AdminComponent: ({ state, updateState, readOnly }) => {
+            if (readOnly) {
+                return <RteReadOnly value={state.editorState} />;
+            }
+
+            const updateBlockState = updateState ?? (() => {});
+
             return (
                 <SelectPreviewComponent>
                     <Rte
@@ -201,7 +219,7 @@ export const createRichTextBlock = (options: RichTextBlockFactoryOptions, overri
 
                                     if (nextEditorState) {
                                         // Paste is from one Draft.js instance to another -> update directly
-                                        updateState({ editorState: nextEditorState });
+                                        updateBlockState({ editorState: nextEditorState });
                                         return "handled";
                                     }
 
@@ -233,7 +251,7 @@ export const createRichTextBlock = (options: RichTextBlockFactoryOptions, overri
 
                                         const newEditorState = EditorState.push(state.editorState, nextContent, "insert-fragment");
 
-                                        updateState({ editorState: newEditorState });
+                                        updateBlockState({ editorState: newEditorState });
                                         return "handled";
                                     }
 
@@ -243,7 +261,7 @@ export const createRichTextBlock = (options: RichTextBlockFactoryOptions, overri
                         }}
                         value={state.editorState}
                         onChange={(c: EditorState) => {
-                            updateState((prevState) => ({
+                            updateBlockState((prevState) => ({
                                 ...prevState,
                                 editorState: c,
                             }));

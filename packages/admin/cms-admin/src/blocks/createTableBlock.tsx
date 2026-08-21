@@ -19,10 +19,10 @@ import {
     type BlockOutputApi,
     type BlockPreviewContext,
     type BlockState,
-    type ReadOnlyBlockRenderInterface,
+    type ReadOnlyRenderableAdminComponent,
 } from "./types";
 
-type RichTextBlockInterface = BlockInterface & ReadOnlyBlockRenderInterface;
+type RichTextBlockInterface = BlockInterface & ReadOnlyRenderableAdminComponent;
 
 export type TableBlockFactoryOptions<RichText extends RichTextBlockInterface = RichTextBlock> = {
     richText: RichText;
