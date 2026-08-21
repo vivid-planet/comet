@@ -103,3 +103,36 @@ export const WithoutAutoplay: StoryObj<typeof WithoutAutoplayStory> = {
         });
     },
 };
+
+const WithoutVideoOptionsBlock = createDamVideoBlock({ supports: [] });
+
+function WithoutVideoOptionsStory() {
+    const [state, setState] = useState<DamVideoBlockState>(WithoutVideoOptionsBlock.defaultValues());
+
+    return (
+        <StoryWrapper state={state}>
+            <WithoutVideoOptionsBlock.AdminComponent state={state} updateState={setState} />
+        </StoryWrapper>
+    );
+}
+
+export const WithoutVideoOptions: StoryObj<typeof WithoutVideoOptionsStory> = {
+    render: () => <WithoutVideoOptionsStory />,
+    play: async ({ canvas, step }) => {
+        await step("Only the file can be chosen, no video option is offered", async () => {
+            await waitFor(() => {
+                expect(canvas.getByRole("button", { name: "Choose file" })).toBeInTheDocument();
+            });
+
+            expect(canvas.queryAllByRole("checkbox")).toHaveLength(0);
+        });
+
+        await step("The preview image is unaffected, it isn't a video option", async () => {
+            expect(canvas.getByRole("button", { name: "Choose image" })).toBeInTheDocument();
+        });
+
+        await step("showControls stays enabled by default, so the video is usable without any option set", async () => {
+            expect(readState(canvas)).toMatchObject({ showControls: true });
+        });
+    },
+};
