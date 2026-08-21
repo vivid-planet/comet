@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl";
 
 export type VideoOptionsSupports = "autoplay" | "loop" | "showControls";
 
-export const defaultVideoOptionsSupports: VideoOptionsSupports[] = ["autoplay", "loop", "showControls"];
+const defaultVideoOptionsSupports: VideoOptionsSupports[] = ["autoplay", "loop", "showControls"];
 
 type VideoOptionsFieldsProps = {
     /**

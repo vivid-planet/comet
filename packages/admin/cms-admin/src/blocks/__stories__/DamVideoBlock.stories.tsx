@@ -68,7 +68,7 @@ export const Default: Story = {
     },
 };
 
-const WithoutAutoplayBlock = createDamVideoBlock({ supports: ["loop", "showControls"] });
+const WithoutAutoplayBlock = createDamVideoBlock({ supports: ["loop", "showControls", "previewImage"] });
 
 function WithoutAutoplayStory() {
     const [state, setState] = useState<DamVideoBlockState>(WithoutAutoplayBlock.defaultValues());
@@ -104,35 +104,32 @@ export const WithoutAutoplay: StoryObj<typeof WithoutAutoplayStory> = {
     },
 };
 
-const WithoutVideoOptionsBlock = createDamVideoBlock({ supports: [] });
+const FileOnlyBlock = createDamVideoBlock({ supports: [] });
 
-function WithoutVideoOptionsStory() {
-    const [state, setState] = useState<DamVideoBlockState>(WithoutVideoOptionsBlock.defaultValues());
+function FileOnlyStory() {
+    const [state, setState] = useState<DamVideoBlockState>(FileOnlyBlock.defaultValues());
 
     return (
         <StoryWrapper state={state}>
-            <WithoutVideoOptionsBlock.AdminComponent state={state} updateState={setState} />
+            <FileOnlyBlock.AdminComponent state={state} updateState={setState} />
         </StoryWrapper>
     );
 }
 
-export const WithoutVideoOptions: StoryObj<typeof WithoutVideoOptionsStory> = {
-    render: () => <WithoutVideoOptionsStory />,
+export const FileOnly: StoryObj<typeof FileOnlyStory> = {
+    render: () => <FileOnlyStory />,
     play: async ({ canvas, step }) => {
-        await step("Only the file can be chosen, no video option is offered", async () => {
+        await step("Only the video file can be chosen", async () => {
             await waitFor(() => {
                 expect(canvas.getByRole("button", { name: "Choose file" })).toBeInTheDocument();
             });
 
             expect(canvas.queryAllByRole("checkbox")).toHaveLength(0);
+            expect(canvas.queryByRole("button", { name: "Choose image" })).not.toBeInTheDocument();
         });
 
-        await step("The preview image is unaffected, it isn't a video option", async () => {
-            expect(canvas.getByRole("button", { name: "Choose image" })).toBeInTheDocument();
-        });
-
-        await step("showControls stays enabled by default, so the video is usable without any option set", async () => {
-            expect(readState(canvas)).toMatchObject({ showControls: true });
+        await step("The preview image stays part of the data, it is only hidden from the editor", async () => {
+            expect(readState(canvas).previewImage).toEqual(FileOnlyBlock.defaultValues().previewImage);
         });
     },
 };
