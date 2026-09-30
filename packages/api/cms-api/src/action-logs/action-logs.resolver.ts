@@ -4,7 +4,7 @@ import { BadRequestException, ForbiddenException, Inject } from "@nestjs/common"
 import { Args, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
+import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "../common/filter/mikro-orm";
 import {
     DisablePermissionCheck,
     REQUIRED_PERMISSION_METADATA_KEY,
@@ -44,7 +44,7 @@ export class ActionLogsResolver {
     @Query(() => PaginatedActionLogs)
     @RequiredPermission(DisablePermissionCheck, { skipScopeCheck: true })
     async actionLogs(
-        @Args() { entity, scope, search, filter, offset, limit, sort }: ActionLogsArgs,
+        @Args() { entity, scope, filter, offset, limit, sort }: ActionLogsArgs,
         @GetCurrentUser() user: CurrentUser | SystemUser,
     ): Promise<PaginatedActionLogs> {
         this.checkPermission(entity, scope, user);
@@ -68,10 +68,6 @@ export class ActionLogsResolver {
                 },
             ],
         });
-
-        if (search) {
-            andFilters.push(searchToMikroOrmQuery(search, ["userId"]));
-        }
 
         if (filter) {
             andFilters.push(filtersToMikroOrmQuery(filter));
