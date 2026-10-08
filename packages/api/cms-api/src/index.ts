@@ -302,6 +302,7 @@ export { type ContentScopeDimension, type ContentScopeWithLabel } from "./user-p
 export { registerAdditionalPermissions } from "./user-permissions/user-permissions.types";
 export {
     AccessControlServiceInterface,
+    CombinedPermission,
     ContentScopesForUser,
     Permission,
     PermissionForUser,
