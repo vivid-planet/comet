@@ -16,4 +16,4 @@ They now require the permission passed to the factory, so access follows the per
 
 The `dependencies` permission is removed. The `scope` field of `Dependency` no longer checks a permission, because the field that returns the `Dependency` already does.
 
-A user with the permission of an entity can see all its dependents and dependencies, also those in content scopes the user has no access to.
+A user with the permission of an entity can see all its dependents and dependencies, also those the user has no permission for or that are in content scopes the user has no access to.

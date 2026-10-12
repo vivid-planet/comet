@@ -425,7 +425,7 @@ The `dependencies` permission is removed. The `dependencies` and `dependents` fi
 
 Remove `dependencies` from the rules in your `AccessControlService`. The API ignores `dependencies` permissions that are still assigned to users in the database.
 
-A user with the permission of an entity can see all its dependents and dependencies, also those in content scopes the user has no access to. For example, a user with the `dam` permission sees the pages of all scopes that use a file.
+A user with the permission of an entity can see all its dependents and dependencies, also those the user has no permission for or that are in content scopes the user has no access to. For example, a user with only the `dam` permission sees the names of all news and pages that use a file, in all scopes.
 
 ### Verify the API still starts
 
