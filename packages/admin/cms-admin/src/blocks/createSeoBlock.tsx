@@ -168,7 +168,6 @@ export function createSeoBlock(
                                 generateSeoTag={generateSeoTag}
                                 multiline
                                 rows={3}
-                                rowsMax={5}
                                 component={FinalFormInput}
                                 fullWidth
                             />
@@ -198,7 +197,6 @@ export function createSeoBlock(
                                 generateSeoTag={generateSeoTag}
                                 multiline={true}
                                 rows={3}
-                                rowsMax={5}
                                 component={FinalFormInput}
                                 fullWidth
                             />
