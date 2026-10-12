@@ -10,6 +10,7 @@ type ComponentDifference =
     | { kind: "CHANGED_TYPE"; prop: string; figmaType: PropType; codeType: PropType }
     | { kind: "CHANGED_OPTIONS"; prop: string; onlyInFigma: string[]; onlyInCode: string[] }
     | { kind: "CHANGED_DEFAULT"; prop: string; figmaDefault: PropDefault; codeDefault?: PropDefault }
+    | { kind: "COMPONENT_ONLY_IN_FIGMA"; figmaName: string; nodeId: string }
     | { kind: "LINKED_NODE_NOT_IN_FIGMA"; nodeId: string }
     | { kind: "UNLINKED_COMPONENT"; figmaName: string; nodeId: string };
 
@@ -80,6 +81,12 @@ interface FigmaComponent {
     nodeId: string;
 }
 
+interface ComponentDifferenceReport {
+    component: string;
+    nodeId?: string;
+    differences: ComponentDifference[];
+}
+
 interface FigmaDesigns {
     inventory: FigmaComponent[];
     targetsByNodeId: ReadonlyMap<string, ComponentDescription>;
@@ -110,4 +117,40 @@ export function findImplementedComponentDifferences({
         return [{ kind: "LINKED_NODE_NOT_IN_FIGMA", nodeId: implemented.nodeId }];
     }
     return compareProps(target.props, implemented.props);
+}
+
+function reportImplementedComponent(implemented: ImplementedComponent, figmaDesigns: FigmaDesigns): ComponentDifferenceReport {
+    return {
+        component: implemented.component,
+        nodeId: implemented.nodeId,
+        differences: findImplementedComponentDifferences({ implemented, ...figmaDesigns }),
+    };
+}
+
+function findMatchedNodeIds(implementedComponents: ImplementedComponent[], inventory: FigmaComponent[]): Set<string> {
+    const matchedNodeIds = implementedComponents.flatMap((implemented) => {
+        const nodeId = implemented.nodeId ?? findFigmaComponentWithSameName(implemented, inventory)?.nodeId;
+        return nodeId === undefined ? [] : [nodeId];
+    });
+    return new Set(matchedNodeIds);
+}
+
+function reportFigmaComponentWithoutCode(figmaComponent: FigmaComponent): ComponentDifferenceReport {
+    return {
+        component: figmaComponent.name,
+        nodeId: figmaComponent.nodeId,
+        differences: [{ kind: "COMPONENT_ONLY_IN_FIGMA", figmaName: figmaComponent.name, nodeId: figmaComponent.nodeId }],
+    };
+}
+
+export function findAllComponentDifferences({
+    implementedComponents,
+    ...figmaDesigns
+}: { implementedComponents: ImplementedComponent[] } & FigmaDesigns): ComponentDifferenceReport[] {
+    const matchedNodeIds = findMatchedNodeIds(implementedComponents, figmaDesigns.inventory);
+    const figmaComponentsWithoutCode = figmaDesigns.inventory.filter((figmaComponent) => !matchedNodeIds.has(figmaComponent.nodeId));
+    return [
+        ...implementedComponents.map((implemented) => reportImplementedComponent(implemented, figmaDesigns)),
+        ...figmaComponentsWithoutCode.map(reportFigmaComponentWithoutCode),
+    ];
 }
