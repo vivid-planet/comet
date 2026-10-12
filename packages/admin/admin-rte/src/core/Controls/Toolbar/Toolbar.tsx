@@ -16,16 +16,20 @@ interface RteToolbarProps
 }
 
 export function Toolbar(inProps: RteToolbarProps) {
-    const { children, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "DextinityAdminRteToolbar" });
+    const { children, slotProps, editorState, setEditorState, options, editorRef, disabled, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "DextinityAdminRteToolbar",
+    });
+    const controlProps: IControlProps = { editorState, setEditorState, options, editorRef, disabled };
 
     const childrenElements = children
         .filter((c) => {
             const Comp = c;
-            return Comp(restProps) !== null; // filter out unused control components
+            return Comp(controlProps) !== null; // filter out unused control components
         })
         .map((c) => {
             const Comp = c;
-            return createElement(Comp, restProps);
+            return createElement(Comp, controlProps);
         });
 
     return (
