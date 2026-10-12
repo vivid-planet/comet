@@ -115,10 +115,10 @@ describe("getOutputImageExtension", () => {
     });
 
     it("returns the original format when the original format is requested, even if the client accepts a modern format", () => {
-        expect(getOutputImageExtension({ accept: "image/webp,image/*", mimetype: "image/png", format: ImageFormat.ORIGINAL })).toBe("png");
+        expect(getOutputImageExtension({ accept: "image/webp,image/*", mimetype: "image/png", format: ImageFormat.original })).toBe("png");
     });
 
     it("falls back to JPEG when the original format is requested but isn't a basic web format", () => {
-        expect(getOutputImageExtension({ accept: "image/webp,image/*", mimetype: "image/tiff", format: ImageFormat.ORIGINAL })).toBe("jpg");
+        expect(getOutputImageExtension({ accept: "image/webp,image/*", mimetype: "image/tiff", format: ImageFormat.original })).toBe("jpg");
     });
 });

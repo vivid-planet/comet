@@ -226,7 +226,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
                     `${this.blobStorageBackendService.getBackendFilePathPrefix()}${this.config.filesDirectory}/${createHashedPath(file.contentHash)}`,
                 );
 
-            if (format !== ImageFormat.ORIGINAL) {
+            if (format !== ImageFormat.original) {
                 res.vary("Accept");
             }
 

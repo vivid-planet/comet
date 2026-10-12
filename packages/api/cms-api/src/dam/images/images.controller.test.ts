@@ -101,7 +101,7 @@ describe.each(handlers)("ImagesController.$name", ({ name, cropParams }) => {
         const { controller, cacheService } = createControllerWithCachedImage(pngFile);
         const res = createMockResponse();
 
-        await controller[name](createParams(ImageFormat.ORIGINAL), MODERN_ACCEPT_HEADER, res);
+        await controller[name](createParams(ImageFormat.original), MODERN_ACCEPT_HEADER, res);
 
         expect(cacheService.get).toHaveBeenCalledWith(pngFile.contentHash, expect.stringContaining("/format:png/"));
         expect(res.vary).not.toHaveBeenCalled();

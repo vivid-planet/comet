@@ -13,7 +13,7 @@ async function getFormatValidationErrors(format: string) {
 
 describe("ImageParams.format", () => {
     it("accepts the original format", async () => {
-        expect(await getFormatValidationErrors(ImageFormat.ORIGINAL)).toHaveLength(0);
+        expect(await getFormatValidationErrors(ImageFormat.original)).toHaveLength(0);
     });
 
     it("rejects an unknown format", async () => {

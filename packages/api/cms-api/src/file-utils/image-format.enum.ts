@@ -1,3 +1,3 @@
 export enum ImageFormat {
-    ORIGINAL = "original",
+    original = "original",
 }

@@ -90,6 +90,6 @@ export function getSupportedMimeType(options: string[], accept = ""): string | u
 }
 
 export function getOutputImageExtension({ accept, mimetype, format }: { accept: string; mimetype: string; format?: ImageFormat }): Extension {
-    const modernMimeType = format === ImageFormat.ORIGINAL ? undefined : getSupportedMimeType(MODERN_TYPES, accept);
+    const modernMimeType = format === ImageFormat.original ? undefined : getSupportedMimeType(MODERN_TYPES, accept);
     return (mime.getExtension(modernMimeType ?? getSupportedMimeType(BASIC_TYPES, mimetype) ?? "") as Extension) || Extension.JPG;
 }
