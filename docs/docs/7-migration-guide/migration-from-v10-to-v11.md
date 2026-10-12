@@ -412,9 +412,9 @@ If your project has to keep its own consumer, handle the new kind wherever you s
   }
 ```
 
-### Pass the required permission to `DependenciesResolverFactory` and `DependentsResolverFactory`
+### Replace the `dependencies` permission with the permission of the entity
 
-The `dependencies` and `dependents` field resolvers created by the factories no longer require the `dependencies` permission. Pass the permission that guards the entity instead, usually the one of its resolver:
+The `dependencies` permission is removed. The `dependencies` and `dependents` field resolvers created by `DependenciesResolverFactory` and `DependentsResolverFactory` require the permission passed to the factory instead. Pass the permission that guards the entity, usually the one of its resolver:
 
 ```diff title="api/src/news/news.module.ts"
 - DependenciesResolverFactory.create(News),
@@ -422,6 +422,10 @@ The `dependencies` and `dependents` field resolvers created by the factories no 
 + DependenciesResolverFactory.create({ entity: News, requiredPermission: "news" }),
 + DependentsResolverFactory.create({ entity: News, requiredPermission: "news" }),
 ```
+
+Remove `dependencies` from the rules in your `AccessControlService`. The API ignores `dependencies` permissions that are still assigned to users in the database.
+
+A user with the permission of an entity can see all its dependents and dependencies, also those in content scopes the user has no access to. For example, a user with the `dam` permission sees the pages of all scopes that use a file.
 
 ### Verify the API still starts
 

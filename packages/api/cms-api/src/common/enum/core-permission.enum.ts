@@ -8,7 +8,6 @@ export enum CorePermission {
     prelogin = "prelogin",
     impersonation = "impersonation",
     fileUploads = "fileUploads",
-    dependencies = "dependencies",
     warnings = "warnings",
     sitePreview = "sitePreview",
     blockPreview = "blockPreview",

@@ -3,14 +3,14 @@ import { ModuleRef } from "@nestjs/core";
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
-import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { DisablePermissionCheck, RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { getScopesForScopedEntity } from "../user-permissions/get-scopes-for-scoped-entity";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { Dependency } from "./dto/dependency";
 
 @Resolver(() => Dependency)
-@RequiredPermission("dependencies")
+@RequiredPermission(DisablePermissionCheck)
 export class DependencyResolver {
     constructor(
         private readonly entityManager: EntityManager,

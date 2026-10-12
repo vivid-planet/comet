@@ -13,3 +13,7 @@ They now require the permission passed to the factory, so access follows the per
 + DependenciesResolverFactory.create({ entity: News, requiredPermission: "news" }),
 + DependentsResolverFactory.create({ entity: News, requiredPermission: "news" }),
 ```
+
+The `dependencies` permission is removed. The `scope` field of `Dependency` no longer checks a permission, because the field that returns the `Dependency` already does.
+
+A user with the permission of an entity can see all its dependents and dependencies, also those in content scopes the user has no access to.

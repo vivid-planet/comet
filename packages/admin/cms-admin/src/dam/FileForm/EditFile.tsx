@@ -28,7 +28,6 @@ import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DependentsList } from "../../dependencies/DependentsList";
 import type { GQLDamFileAiContentType, GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
-import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
 import { useDamConfig, useVideoPerformanceWarning } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { ArchivedTag } from "../DataGrid/tags/ArchivedTag";
@@ -120,7 +119,6 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
     const damConfig = useDamConfig();
     const { isVideoTooLarge } = useVideoPerformanceWarning();
     const apolloClient = useApolloClient();
-    const isAllowed = useUserPermissionCheck();
 
     const onSubmit = useCallback(
         async (values: EditFileFormValues) => {
@@ -290,7 +288,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                {isAllowed("dependencies") && Object.keys(entityDependencyMap).length > 0 && (
+                                {Object.keys(entityDependencyMap).length > 0 && (
                                     <RouterTab
                                         key="dependents"
                                         label={intl.formatMessage({ id: "dextinity.dam.file.dependents", defaultMessage: "Dependents" })}
