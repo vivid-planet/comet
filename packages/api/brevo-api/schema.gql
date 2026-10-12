@@ -19,7 +19,6 @@ enum Permission {
   prelogin
   impersonation
   fileUploads
-  dependencies
   warnings
   sitePreview
   blockPreview
