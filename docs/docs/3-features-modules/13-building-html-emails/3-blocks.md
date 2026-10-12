@@ -70,16 +70,6 @@ By default, the rendered aspect ratio comes from the DAM crop area. The `aspectR
 <MjmlPixelImageBlock data={pixelImageData} width={536} aspectRatio="16x9" />
 ```
 
-### Image format
-
-By default, the API delivers a modern format like WebP when the `Accept` header of the image request allows it. In emails, an image proxy often makes that request, not the email client that displays the image. The `disableModernImageFormats` prop always requests the image in its original format. Originals that aren't JPEG, PNG or GIF are delivered as JPEG.
-
-```tsx
-<MjmlPixelImageBlock data={pixelImageData} width={536} disableModernImageFormats />
-```
-
-The prop adds a `format:original` segment to the image URL, so it requires a URL template from the Dextinity DAM image route. It throws for any other URL template.
-
 ### Responsive scaling
 
 On viewports narrower than the default body width, both blocks automatically scale the rendered image to fit its container.

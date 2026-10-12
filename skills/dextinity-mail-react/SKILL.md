@@ -415,14 +415,6 @@ Without `aspectRatio`, the rendered ratio comes from the DAM crop area. Pass `as
 <MjmlPixelImageBlock data={pixelImageData} width={536} aspectRatio="16x9" />
 ```
 
-#### Image format
-
-The API delivers a modern format like WebP when the `Accept` header of the image request allows it. In emails, an image proxy often makes that request, not the email client that displays the image. Pass `disableModernImageFormats` to always request the original format — originals that aren't JPEG, PNG or GIF are delivered as JPEG. It only works with URL templates from the Dextinity DAM image route and throws for any other template.
-
-```tsx
-<MjmlPixelImageBlock data={pixelImageData} width={536} disableModernImageFormats />
-```
-
 When `data.damFile?.image` is absent, both blocks render nothing — no element, no error. Render a placeholder at the call site if you need one.
 
 ### Rich-text blocks

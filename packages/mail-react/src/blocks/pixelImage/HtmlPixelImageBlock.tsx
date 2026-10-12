@@ -20,17 +20,10 @@ export function HtmlPixelImageBlock({
     width,
     largestPossibleRenderWidth,
     aspectRatio,
-    disableModernImageFormats,
     className,
     ...imgProps
 }: HtmlPixelImageBlockProps): ReactNode {
-    const imageData = usePixelImageBlockData({
-        data,
-        defaultRenderWidth: width,
-        largestPossibleRenderWidth,
-        aspectRatio,
-        disableModernImageFormats,
-    });
+    const imageData = usePixelImageBlockData({ data, defaultRenderWidth: width, largestPossibleRenderWidth, aspectRatio });
 
     if (!imageData) {
         return null;

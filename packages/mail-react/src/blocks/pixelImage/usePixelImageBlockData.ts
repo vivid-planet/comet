@@ -7,7 +7,6 @@ interface UsePixelImageBlockDataProps {
     defaultRenderWidth: number;
     largestPossibleRenderWidth?: number;
     aspectRatio?: number | string;
-    disableModernImageFormats?: boolean;
 }
 
 interface PixelImageBlockData {
@@ -23,7 +22,6 @@ export function usePixelImageBlockData({
     defaultRenderWidth,
     largestPossibleRenderWidth: passedLargestPossibleRenderWidth,
     aspectRatio: passedAspectRatio,
-    disableModernImageFormats = false,
 }: UsePixelImageBlockDataProps): PixelImageBlockData | null {
     const theme = useTheme();
     const { validSizes, baseUrl } = usePixelImageBlockConfig();
@@ -37,11 +35,7 @@ export function usePixelImageBlockData({
     const aspectRatio = passedAspectRatio !== undefined ? parseAspectRatio(passedAspectRatio) : calculateAspectRatio(damFile.image, usedCropArea);
 
     const optimalWidth = getOptimalAllowedImageWidth(validSizes, defaultRenderWidth, largestPossibleRenderWidth);
-    const resolvedImageUrl = generateImageUrl(
-        disableModernImageFormats ? requestOriginalImageFormat(urlTemplate) : urlTemplate,
-        optimalWidth,
-        aspectRatio,
-    );
+    const resolvedImageUrl = generateImageUrl(requestOriginalImageFormat(urlTemplate), optimalWidth, aspectRatio);
 
     return {
         imageUrl: isAbsoluteUrl(resolvedImageUrl) ? resolvedImageUrl : `${baseUrl}${resolvedImageUrl}`,
@@ -52,16 +46,12 @@ export function usePixelImageBlockData({
     };
 }
 
-const resizeSegment = "/resize:$resizeWidth:$resizeHeight/";
+const damImageResizeSegment = "/resize:$resizeWidth:$resizeHeight/";
 
+// Outlook can't display WebP, and CDNs ignore `Vary: Accept`, so a WebP image negotiated for another client may be served to Outlook.
+// URL templates from outside the DAM image route don't contain the resize segment and stay unchanged.
 function requestOriginalImageFormat(urlTemplate: string): string {
-    if (!urlTemplate.includes(resizeSegment)) {
-        throw new Error(
-            `\`disableModernImageFormats\` requires a URL template from the Dextinity DAM image route containing \`${resizeSegment}\`, got \`${urlTemplate}\`.`,
-        );
-    }
-
-    return urlTemplate.replace(resizeSegment, `${resizeSegment}format:original/`);
+    return urlTemplate.replace(damImageResizeSegment, `${damImageResizeSegment}format:original/`);
 }
 
 function isAbsoluteUrl(url: string): boolean {

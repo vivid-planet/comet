@@ -12,22 +12,14 @@ interface CaptureOptions {
     defaultRenderWidth: number;
     largestPossibleRenderWidth?: number;
     aspectRatio?: number | string;
-    disableModernImageFormats?: boolean;
     config: Config;
 }
 
-function captureUsePixelImageData({
-    data,
-    defaultRenderWidth,
-    largestPossibleRenderWidth,
-    aspectRatio,
-    disableModernImageFormats,
-    config,
-}: CaptureOptions) {
+function captureUsePixelImageData({ data, defaultRenderWidth, largestPossibleRenderWidth, aspectRatio, config }: CaptureOptions) {
     const captured: { value: ReturnType<typeof usePixelImageBlockData> | undefined } = { value: undefined };
 
     function Probe() {
-        captured.value = usePixelImageBlockData({ data, defaultRenderWidth, largestPossibleRenderWidth, aspectRatio, disableModernImageFormats });
+        captured.value = usePixelImageBlockData({ data, defaultRenderWidth, largestPossibleRenderWidth, aspectRatio });
         return null;
     }
 
@@ -232,22 +224,19 @@ describe("usePixelImageBlockData — aspectRatio override", () => {
     });
 });
 
-describe("usePixelImageBlockData — disableModernImageFormats", () => {
+describe("usePixelImageBlockData — image format", () => {
     it("requests the original image format so the API doesn't negotiate a modern format via the Accept header", () => {
-        const result = expectNonNull(
-            captureUsePixelImageData({ data: smartImageData, defaultRenderWidth: 200, disableModernImageFormats: true, config }),
-        );
+        const result = expectNonNull(captureUsePixelImageData({ data: smartImageData, defaultRenderWidth: 200, config }));
         expect(result.imageUrl).toBe(`${baseUrl}/dam/images/abc/resize:640:320/format:original/photo.jpg`);
     });
 
-    it("throws when the URL template doesn't come from the Dextinity DAM image route", () => {
+    it("leaves a URL template from outside the DAM image route unchanged", () => {
         const customTemplateData: PixelImageBlockData = {
             ...smartImageData,
             urlTemplate: "https://cdn.example.com/$resizeWidth/$resizeHeight/photo.jpg",
         };
-        expect(() =>
-            captureUsePixelImageData({ data: customTemplateData, defaultRenderWidth: 200, disableModernImageFormats: true, config }),
-        ).toThrow(/disableModernImageFormats/);
+        const result = expectNonNull(captureUsePixelImageData({ data: customTemplateData, defaultRenderWidth: 200, config }));
+        expect(result.imageUrl).toBe("https://cdn.example.com/640/320/photo.jpg");
     });
 });
 

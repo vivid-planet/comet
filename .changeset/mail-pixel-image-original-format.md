@@ -1,15 +1,11 @@
 ---
-"@dextinity/mail-react": minor
+"@dextinity/mail-react": patch
 ---
 
-Add `disableModernImageFormats` prop to `MjmlPixelImageBlock` and `HtmlPixelImageBlock`
+Fix broken images in classic Outlook for Windows in `MjmlPixelImageBlock` and `HtmlPixelImageBlock`
 
-By default, the API delivers a modern image format like WebP when the `Accept` header of the image request allows it.
-In emails, an image proxy often makes that request, not the email client that displays the image.
-Set `disableModernImageFormats` to always request the image in its original format:
-
-```tsx
-<MjmlPixelImageBlock data={data} width={600} disableModernImageFormats />
-```
+Classic Outlook for Windows can't display WebP.
+The API chooses WebP when the `Accept` header of the image request allows it, and CDNs that ignore `Vary: Accept` then serve the cached WebP image to every email client.
+Both blocks now request DAM images in their original format.
 
 Requires `@dextinity/cms-api` with support for the `format:original` image URL segment.
