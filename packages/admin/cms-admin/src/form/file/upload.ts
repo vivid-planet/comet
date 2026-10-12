@@ -96,8 +96,17 @@ function getErrorMessage(data: unknown): string | undefined {
 }
 
 async function parseResponseBody(response: Response): Promise<unknown> {
+    const text = await response.text();
     const isJson = response.headers.get("content-type")?.includes("application/json") ?? false;
-    return isJson ? response.json() : response.text();
+    if (!isJson) {
+        return text;
+    }
+    // A proxy or failing server can send an empty or malformed body with a JSON content type
+    try {
+        return JSON.parse(text);
+    } catch {
+        return text;
+    }
 }
 
 interface ReplaceFileByIdData {

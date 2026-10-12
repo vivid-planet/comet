@@ -54,4 +54,13 @@ describe.each([
             response: { status: 502, data: "Bad Gateway" },
         });
     });
+
+    it("throws with the HTTP status on a malformed JSON error response", async () => {
+        mockFetchResponse("", { status: 500, contentType: "application/json" });
+
+        await expect(uploadFunction()).rejects.toMatchObject({
+            message: "Uploading the file failed with status 500",
+            response: { status: 500, data: "" },
+        });
+    });
 });
