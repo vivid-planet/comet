@@ -171,20 +171,10 @@ function applyMarks({
     }, children);
 }
 
-// Content converted from DraftJS before soft line breaks became hardBreak nodes keeps them as
-// newlines within the text.
-function renderTextWithLineBreaks({ text, path }: { text: string; path: string }): ReactNode {
-    if (!text.includes("\n")) {
-        return text;
-    }
-
-    return text.split("\n").flatMap((line, index) => (index === 0 ? [line] : [<br key={`${path}-break-${String(index)}`} />, line]));
-}
-
 function renderInlineNodeContent({ node, path, context }: { node: TipTapNode; path: string; context: RenderContext }): ReactNode {
     switch (node.type) {
         case "text":
-            return renderTextWithLineBreaks({ text: node.text ?? "", path });
+            return node.text ?? "";
         case "hardBreak":
             return <br key={path} />;
         case "nonBreakingSpace":
