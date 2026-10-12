@@ -2,16 +2,20 @@ import { Stack, StackPage, StackSwitch, SubRoute } from "@dextinity/admin";
 import { createMemoryHistory } from "history";
 import type { ReactNode } from "react";
 import { Route, Router } from "react-router";
+import scrollIntoView from "scroll-into-view-if-needed";
 import { cleanup, fireEvent, render, screen } from "test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { HoverPreviewComponent } from "./HoverPreviewComponent";
 import { IFrameBridgeContext } from "./IFrameBridge";
 
-const sendHoverComponent = vi.fn();
-const iFrameBridge = { iFrameReady: true, hoveredSiteRoute: null, sendHoverComponent } as unknown as IFrameBridgeContext;
+vi.mock("scroll-into-view-if-needed", () => ({ default: vi.fn() }));
 
-function renderOnEditPage(children: ReactNode) {
+const sendHoverComponent = vi.fn();
+
+function renderOnEditPage(children: ReactNode, { hoveredSiteRoute = null }: { hoveredSiteRoute?: string | null } = {}) {
+    const iFrameBridge = { iFrameReady: true, hoveredSiteRoute, sendHoverComponent } as unknown as IFrameBridgeContext;
+
     render(
         <Router history={createMemoryHistory({ initialEntries: ["/page/edit"] })}>
             <Route path="/page/edit">
@@ -38,6 +42,7 @@ describe("HoverPreviewComponent", () => {
     afterEach(() => {
         cleanup();
         vi.clearAllMocks();
+        vi.useRealTimers();
     });
 
     it("sends the route of a block list entry", () => {
@@ -70,5 +75,23 @@ describe("HoverPreviewComponent", () => {
         fireEvent.mouseOver(screen.getByText("Link form"));
 
         expect(sendHoverComponent).toHaveBeenCalledWith("/page/edit#external");
+    });
+
+    it("scrolls to a block list entry hovered in the preview", () => {
+        vi.useFakeTimers();
+        renderOnEditPage(<BlockList blockKey="block-key" />, { hoveredSiteRoute: "/page/edit/block-key/blocks#headline" });
+
+        vi.advanceTimersByTime(500);
+
+        expect(scrollIntoView).toHaveBeenCalledWith(screen.getByText("Block list entry").parentElement, expect.anything());
+    });
+
+    it("doesn't scroll to a block list entry while another block is hovered in the preview", () => {
+        vi.useFakeTimers();
+        renderOnEditPage(<BlockList blockKey="block-key" />, { hoveredSiteRoute: "/page/edit/other-block-key/blocks" });
+
+        vi.advanceTimersByTime(500);
+
+        expect(scrollIntoView).not.toHaveBeenCalled();
     });
 });
