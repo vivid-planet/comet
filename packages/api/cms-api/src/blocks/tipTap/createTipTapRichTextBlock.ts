@@ -812,7 +812,6 @@ export function createTipTapRichTextBlock(
         if (hasChildBlocks) {
             tipTapContent = mapCmsBlockNodesData(tipTapContent, (blockType, data) => childBlocks[blockType].blockDataFactory(data));
         }
-        // Runs after the migrations, so content converted from DraftJS gets its default styles here too.
         tipTapContent = applyDefaultTextBlockStyles(tipTapContent, resolvedOptions);
         return plainToInstance(TipTapRichTextBlockData, { tipTapContent });
     };
