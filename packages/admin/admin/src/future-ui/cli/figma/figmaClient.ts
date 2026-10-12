@@ -79,8 +79,9 @@ export class FigmaRestClient implements FigmaFileClient {
         return this.request(`/v1/files/${this.fileKey}`);
     }
 
-    getFileNodes(nodeId: string): Promise<unknown> {
-        return this.request(`/v1/files/${this.fileKey}/nodes?ids=${encodeURIComponent(nodeId)}&depth=${DEPTH_INCLUDING_VARIANT_PROPERTIES}`);
+    getFileNodes(nodeIds: string[]): Promise<unknown> {
+        const ids = nodeIds.map(encodeURIComponent).join(",");
+        return this.request(`/v1/files/${this.fileKey}/nodes?ids=${ids}&depth=${DEPTH_INCLUDING_VARIANT_PROPERTIES}`);
     }
 
     private async request(path: string): Promise<unknown> {
