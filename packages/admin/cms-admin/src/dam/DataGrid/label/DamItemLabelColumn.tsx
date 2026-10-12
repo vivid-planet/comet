@@ -40,7 +40,7 @@ export interface RenderDamLabelOptions {
     matches?: TextMatch[];
     filterApi: IFilterApi<DamFilter>;
     showLicenseWarnings?: boolean;
-    isSearching: boolean;
+    showPath: boolean;
 }
 
 interface DamItemLabelColumnProps {
@@ -114,7 +114,7 @@ export const DamItemLabelColumn = ({
                     matches: matches.get(item.id),
                     filterApi,
                     showLicenseWarnings: damConfig.enableLicenseFeature,
-                    isSearching,
+                    showPath: isSearching,
                 })
             ) : (
                 <StyledStackLink

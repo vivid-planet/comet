@@ -31,9 +31,9 @@ type FileLabelProps = {
     onChooseFile: (fileId: string) => void;
 } & RenderDamLabelOptions;
 
-const FileLabel = ({ file, onChooseFile, matches, showLicenseWarnings, isSearching }: FileLabelProps) => (
+const FileLabel = ({ file, onChooseFile, matches, showLicenseWarnings, showPath }: FileLabelProps) => (
     <TableRowButton disableRipple={true} variant="textDark" onClick={() => onChooseFile(file.id)} fullWidth>
-        <DamItemLabel asset={file} matches={matches} showLicenseWarnings={showLicenseWarnings} showPath={isSearching} />
+        <DamItemLabel asset={file} matches={matches} showLicenseWarnings={showLicenseWarnings} showPath={showPath} />
     </TableRowButton>
 );
 
