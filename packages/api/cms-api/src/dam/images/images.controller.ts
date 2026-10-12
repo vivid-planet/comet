@@ -13,7 +13,6 @@ import {
 } from "@nestjs/common";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
-import mime from "mime";
 import { PassThrough, Readable } from "stream";
 
 import { DisableDextinityGuards } from "../../auth/decorators/disable-dextinity-guards.decorator";
@@ -22,9 +21,9 @@ import { BlobStorageBackendService } from "../../blob-storage/backends/blob-stor
 import { ScaledImagesCacheService } from "../../blob-storage/cache/scaled-images-cache.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { FocalPoint } from "../../file-utils/focal-point.enum";
-import { BASIC_TYPES, MODERN_TYPES } from "../../file-utils/images.constants";
-import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "../../file-utils/images.util";
-import { Extension, Gravity, ResizingType } from "../../imgproxy/imgproxy.enum";
+import { ImageFormat } from "../../file-utils/image-format.enum";
+import { getCenteredPosition, getMaxDimensionsFromArea, getOutputImageExtension } from "../../file-utils/images.util";
+import { Gravity, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
@@ -36,8 +35,9 @@ import { DamScopeAccessControlService } from "../scope-access-control.service";
 import { HashImageParams, ImageParams } from "./dto/image.params";
 import { ImagesService } from "./images.service";
 
-const smartImageUrl = `:fileId/crop\\::focalPoint/resize\\::resizeWidth\\::resizeHeight/:filename`;
-const focusImageUrl = `:fileId/crop\\::cropWidth\\::cropHeight\\::focalPoint\\::cropX\\::cropY/resize\\::resizeWidth\\::resizeHeight/:filename`;
+// Like the resize dimensions, the format isn't signed by the hash: it only chooses the encoding of the signed crop.
+const smartImageUrl = `:fileId/crop\\::focalPoint/resize\\::resizeWidth\\::resizeHeight{/format\\::format}/:filename`;
+const focusImageUrl = `:fileId/crop\\::cropWidth\\::cropHeight\\::focalPoint\\::cropX\\::cropY/resize\\::resizeWidth\\::resizeHeight{/format\\::format}/:filename`;
 
 export const createImagesController = ({ damBasePath }: { damBasePath: string }): Type<unknown> => {
     @Controller(`${damBasePath}/images`)
@@ -160,7 +160,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
 
         private async pipeCroppedImage(
             file: FileInterface,
-            { cropArea, resizeWidth, resizeHeight, focalPoint }: ImageParams,
+            { cropArea, resizeWidth, resizeHeight, focalPoint, format }: ImageParams,
             accept: string,
             res: Response,
             headers?: OutgoingHttpHeaders,
@@ -221,16 +221,14 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
                 .builder()
                 .crop(cropWidth, cropHeight, cropGravity, cropOffsetX, cropOffsetY)
                 .resize(ResizingType.AUTO, resizeWidth)
-                .format(
-                    (mime.getExtension(
-                        getSupportedMimeType(MODERN_TYPES, accept) ?? getSupportedMimeType(BASIC_TYPES, file.mimetype) ?? "",
-                    ) as Extension) || Extension.JPG,
-                )
+                .format(getOutputImageExtension({ accept, mimetype: file.mimetype, format }))
                 .generateUrl(
                     `${this.blobStorageBackendService.getBackendFilePathPrefix()}${this.config.filesDirectory}/${createHashedPath(file.contentHash)}`,
                 );
 
-            res.vary("Accept");
+            if (format !== ImageFormat.ORIGINAL) {
+                res.vary("Accept");
+            }
 
             const cache = await this.cacheService.get(file.contentHash, path);
             if (!cache) {

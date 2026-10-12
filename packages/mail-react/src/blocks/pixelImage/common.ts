@@ -16,4 +16,12 @@ export type PixelImageBlockBaseProps = {
      * @example "16x9"
      */
     aspectRatio?: number | string;
+    /**
+     * Request the image in its original format instead of a modern format like WebP.
+     * Originals that aren't JPEG, PNG or GIF are delivered as JPEG.
+     *
+     * By default, the API delivers a modern format when the `Accept` header of the image request allows it.
+     * In emails, an image proxy often makes that request, not the email client that displays the image.
+     */
+    disableModernImageFormats?: boolean;
 };

@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import { FocalPoint } from "../focal-point.enum";
-import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "../images.util";
+import { ImageFormat } from "../image-format.enum";
+import { getCenteredPosition, getMaxDimensionsFromArea, getOutputImageExtension, getSupportedMimeType } from "../images.util";
 
 describe("getMaxDimensionsFromArea", () => {
     it("returns full area for 1:1 aspect ratio in a square area", () => {
@@ -105,5 +106,19 @@ describe("getSupportedMimeType", () => {
     it("picks the best match from a comma-separated accept header", () => {
         const result = getSupportedMimeType(["image/webp", "image/jpeg"], "image/jpeg, image/webp");
         expect(["image/jpeg", "image/webp"]).toContain(result);
+    });
+});
+
+describe("getOutputImageExtension", () => {
+    it("returns a modern format when the client accepts it", () => {
+        expect(getOutputImageExtension({ accept: "image/webp,image/*", mimetype: "image/png" })).toBe("webp");
+    });
+
+    it("returns the original format when the original format is requested, even if the client accepts a modern format", () => {
+        expect(getOutputImageExtension({ accept: "image/webp,image/*", mimetype: "image/png", format: ImageFormat.ORIGINAL })).toBe("png");
+    });
+
+    it("falls back to JPEG when the original format is requested but isn't a basic web format", () => {
+        expect(getOutputImageExtension({ accept: "image/webp,image/*", mimetype: "image/tiff", format: ImageFormat.ORIGINAL })).toBe("jpg");
     });
 });

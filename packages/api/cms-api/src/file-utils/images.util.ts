@@ -1,6 +1,10 @@
 import { mediaType } from "@hapi/accept";
+import mime from "mime";
 
+import { Extension } from "../imgproxy/imgproxy.enum";
 import { FocalPoint } from "./focal-point.enum";
+import { ImageFormat } from "./image-format.enum";
+import { BASIC_TYPES, MODERN_TYPES } from "./images.constants";
 
 interface ImageDimensions {
     width: number;
@@ -83,4 +87,9 @@ export function getSupportedMimeType(options: string[], accept = ""): string | u
         return undefined;
     }
     return accept.includes(mimeType) ? mimeType : undefined;
+}
+
+export function getOutputImageExtension({ accept, mimetype, format }: { accept: string; mimetype: string; format?: ImageFormat }): Extension {
+    const modernMimeType = format === ImageFormat.ORIGINAL ? undefined : getSupportedMimeType(MODERN_TYPES, accept);
+    return (mime.getExtension(modernMimeType ?? getSupportedMimeType(BASIC_TYPES, mimetype) ?? "") as Extension) || Extension.JPG;
 }

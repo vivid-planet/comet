@@ -7,6 +7,7 @@ interface UsePixelImageBlockDataProps {
     defaultRenderWidth: number;
     largestPossibleRenderWidth?: number;
     aspectRatio?: number | string;
+    disableModernImageFormats?: boolean;
 }
 
 interface PixelImageBlockData {
@@ -22,6 +23,7 @@ export function usePixelImageBlockData({
     defaultRenderWidth,
     largestPossibleRenderWidth: passedLargestPossibleRenderWidth,
     aspectRatio: passedAspectRatio,
+    disableModernImageFormats = false,
 }: UsePixelImageBlockDataProps): PixelImageBlockData | null {
     const theme = useTheme();
     const { validSizes, baseUrl } = usePixelImageBlockConfig();
@@ -35,7 +37,11 @@ export function usePixelImageBlockData({
     const aspectRatio = passedAspectRatio !== undefined ? parseAspectRatio(passedAspectRatio) : calculateAspectRatio(damFile.image, usedCropArea);
 
     const optimalWidth = getOptimalAllowedImageWidth(validSizes, defaultRenderWidth, largestPossibleRenderWidth);
-    const resolvedImageUrl = generateImageUrl(urlTemplate, optimalWidth, aspectRatio);
+    const resolvedImageUrl = generateImageUrl(
+        disableModernImageFormats ? requestOriginalImageFormat(urlTemplate) : urlTemplate,
+        optimalWidth,
+        aspectRatio,
+    );
 
     return {
         imageUrl: isAbsoluteUrl(resolvedImageUrl) ? resolvedImageUrl : `${baseUrl}${resolvedImageUrl}`,
@@ -44,6 +50,18 @@ export function usePixelImageBlockData({
         alt: damFile.altText,
         title: damFile.title,
     };
+}
+
+const resizeSegment = "/resize:$resizeWidth:$resizeHeight/";
+
+function requestOriginalImageFormat(urlTemplate: string): string {
+    if (!urlTemplate.includes(resizeSegment)) {
+        throw new Error(
+            `\`disableModernImageFormats\` requires a URL template from the Dextinity DAM image route containing \`${resizeSegment}\`, got \`${urlTemplate}\`.`,
+        );
+    }
+
+    return urlTemplate.replace(resizeSegment, `${resizeSegment}format:original/`);
 }
 
 function isAbsoluteUrl(url: string): boolean {
