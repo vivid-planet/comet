@@ -70,8 +70,8 @@ export class PageTreeModule {
             PageTreeNodeUpdateInput,
             PaginatedPageTreeNodes,
         });
-        const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
-        const PageTreeDependenciesResolver = DependenciesResolverFactory.create(PageTreeNode);
+        const PageTreeDependentsResolver = DependentsResolverFactory.create({ entity: PageTreeNode, requiredPermission: "pageTree" });
+        const PageTreeDependenciesResolver = DependenciesResolverFactory.create({ entity: PageTreeNode, requiredPermission: "pageTree" });
 
         const PageTreeFullTextResolver = options.fullText
             ? createFullTextResolver({

@@ -83,14 +83,14 @@ async function generateSchema(): Promise<void> {
         Documents: [Page],
         PaginatedPageTreeNodes,
     }); // no scope
-    const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
+    const PageTreeDependentsResolver = DependentsResolverFactory.create({ entity: PageTreeNode, requiredPermission: "pageTree" });
 
     const AuthResolver = createAuthResolver({});
-    const RedirectsDependenciesResolver = DependenciesResolverFactory.create(RedirectEntity);
+    const RedirectsDependenciesResolver = DependenciesResolverFactory.create({ entity: RedirectEntity, requiredPermission: "pageTree" });
 
     const Folder = createFolderEntity();
     const File = createFileEntity({ Folder });
-    const FileDependentsResolver = DependentsResolverFactory.create(File);
+    const FileDependentsResolver = DependentsResolverFactory.create({ entity: File, requiredPermission: "dam" });
 
     // Required to force the generation of the FileUpload type in the schema
     @Resolver(() => FileUpload)

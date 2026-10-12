@@ -10,6 +10,11 @@ import { WelcomeEmailTestMailResolver } from "./welcome-email-test-mail.resolver
 
 @Module({
     imports: [MikroOrmModule.forFeature([WelcomeEmail, WelcomeEmailScope])],
-    providers: [WelcomeEmailsService, WelcomeEmailResolver, WelcomeEmailTestMailResolver, DependenciesResolverFactory.create(WelcomeEmail)],
+    providers: [
+        WelcomeEmailsService,
+        WelcomeEmailResolver,
+        WelcomeEmailTestMailResolver,
+        DependenciesResolverFactory.create({ entity: WelcomeEmail, requiredPermission: "pageTree" }),
+    ],
 })
 export class WelcomeEmailModule {}

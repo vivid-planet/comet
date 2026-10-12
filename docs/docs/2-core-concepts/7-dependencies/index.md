@@ -278,8 +278,8 @@ If you want to query the dependencies or dependents of an entity, use the factor
     // ...
     providers: [
         // ...
-        DependenciesResolverFactory.create(News),
-        DependentsResolverFactory.create(News),
+        DependenciesResolverFactory.create({ entity: News, requiredPermission: "news" }),
+        DependentsResolverFactory.create({ entity: News, requiredPermission: "news" }),
     ],
 })
 export class NewsModule {}

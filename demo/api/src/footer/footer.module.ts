@@ -9,6 +9,6 @@ import { FootersService } from "./generated/footers.service";
 
 @Module({
     imports: [MikroOrmModule.forFeature([Footer, FooterScope])],
-    providers: [FootersService, FooterResolver, DependenciesResolverFactory.create(Footer)],
+    providers: [FootersService, FooterResolver, DependenciesResolverFactory.create({ entity: Footer, requiredPermission: "pageTree" })],
 })
 export class FooterModule {}

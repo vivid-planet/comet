@@ -7,6 +7,6 @@ import { PagesResolver } from "./pages.resolver";
 
 @Module({
     imports: [MikroOrmModule.forFeature([Page])],
-    providers: [PagesResolver, DependenciesResolverFactory.create(Page)],
+    providers: [PagesResolver, DependenciesResolverFactory.create({ entity: Page, requiredPermission: "pageTree" })],
 })
 export class PagesModule {}

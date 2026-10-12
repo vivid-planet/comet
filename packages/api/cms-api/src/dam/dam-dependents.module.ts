@@ -23,7 +23,7 @@ export class DamDependentsModule {
 
         return {
             module: DamDependentsModule,
-            providers: [DependentsResolverFactory.create(File)],
+            providers: [DependentsResolverFactory.create({ entity: File, requiredPermission: "dam" })],
         };
     }
 }

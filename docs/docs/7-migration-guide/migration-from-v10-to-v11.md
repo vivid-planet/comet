@@ -412,6 +412,17 @@ If your project has to keep its own consumer, handle the new kind wherever you s
   }
 ```
 
+### Pass the required permission to `DependenciesResolverFactory` and `DependentsResolverFactory`
+
+The `dependencies` and `dependents` field resolvers created by the factories no longer require the `dependencies` permission. Pass the permission that guards the entity instead, usually the one of its resolver:
+
+```diff title="api/src/news/news.module.ts"
+- DependenciesResolverFactory.create(News),
+- DependentsResolverFactory.create(News),
++ DependenciesResolverFactory.create({ entity: News, requiredPermission: "news" }),
++ DependentsResolverFactory.create({ entity: News, requiredPermission: "news" }),
+```
+
 ### Verify the API still starts
 
 Type checks don't catch a broken NestJS module graph or entity metadata that fails discovery. Verify the AppModule still resolves and the generated artifacts are up to date:
