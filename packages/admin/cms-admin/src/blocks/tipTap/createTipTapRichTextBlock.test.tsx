@@ -424,10 +424,10 @@ describe("createTipTapRichTextBlock", () => {
 });
 
 describe("isTipTapRichTextEmpty", () => {
-    const doc = (...content: JSONContent[]): TipTapRichTextBlockState => ({ tipTapContent: { type: "doc", content } });
+    const doc = (...content: JSONContent[]): JSONContent => ({ type: "doc", content });
 
     it("should treat the default value of a block as empty", () => {
-        expect(isTipTapRichTextEmpty(createTipTapRichTextBlock().defaultValues())).toBe(true);
+        expect(isTipTapRichTextEmpty(createTipTapRichTextBlock().defaultValues().tipTapContent)).toBe(true);
     });
 
     it("should treat several text blocks without text as empty", () => {
