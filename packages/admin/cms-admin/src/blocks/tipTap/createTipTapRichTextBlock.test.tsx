@@ -7,6 +7,7 @@ import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../
 import {
     buildTipTapExtensions,
     createTipTapRichTextBlock,
+    isTipTapRichTextEmpty,
     resolveTipTapOptions,
     type TipTapRichTextBlockFactoryOptions,
     type TipTapRichTextBlockState,
@@ -419,5 +420,30 @@ describe("createTipTapRichTextBlock", () => {
 
             await expect(translateBlockContent(block, state, corruptingTranslate)).rejects.toThrow(/placeholder id/);
         });
+    });
+});
+
+describe("isTipTapRichTextEmpty", () => {
+    const doc = (...content: JSONContent[]): TipTapRichTextBlockState => ({ tipTapContent: { type: "doc", content } });
+
+    it("should treat the default value of a block as empty", () => {
+        expect(isTipTapRichTextEmpty(createTipTapRichTextBlock().defaultValues())).toBe(true);
+    });
+
+    it("should treat several text blocks without text as empty", () => {
+        expect(isTipTapRichTextEmpty(doc({ type: "textBlock", attrs: { textBlock: "heading-1" } }, { type: "textBlock" }))).toBe(true);
+    });
+
+    it("should not treat a document with text in a nested list item as empty", () => {
+        const listItem: JSONContent = { type: "listItem", content: [{ type: "textBlock", content: [{ type: "text", text: "item" }] }] };
+        expect(isTipTapRichTextEmpty(doc({ type: "textBlock" }, { type: "bulletList", content: [listItem] }))).toBe(false);
+    });
+
+    it("should not treat a document with only whitespace as empty, like isRichTextEmpty", () => {
+        expect(isTipTapRichTextEmpty(doc({ type: "textBlock", content: [{ type: "text", text: " " }] }))).toBe(false);
+    });
+
+    it("should not treat a document with only a child block as empty", () => {
+        expect(isTipTapRichTextEmpty(doc({ type: "cmsBlock", attrs: { blockType: "image", data: {} } }))).toBe(false);
     });
 });
