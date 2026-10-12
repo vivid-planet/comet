@@ -135,7 +135,7 @@ export default defineConfig({
             group: ["mail-react"],
         },
         {
-            name: "mail-react-storybook",
+            name: "storybook-dextinity-mail-react",
             script: "pnpm --filter @dextinity/mail-react run storybook",
             group: ["storybook", "docs"],
         },
@@ -276,7 +276,7 @@ export default defineConfig({
             name: "storybook",
             script: "pnpm --filter dextinity-storybook run storybook",
             group: ["storybook", "docs"],
-            waitOn: ["tcp:26646", "tcp:26647", "tcp:6066"], // storybook-dextinity-admin, storybook-dextinity-cms-admin, mail-react-storybook
+            waitOn: ["tcp:26646", "tcp:26647", "tcp:6066"], // storybook-dextinity-admin, storybook-dextinity-cms-admin, storybook-dextinity-mail-react
         },
         {
             name: "docs",
