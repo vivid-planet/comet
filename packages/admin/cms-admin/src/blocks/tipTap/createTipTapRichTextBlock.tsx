@@ -441,8 +441,11 @@ function collectCmsBlockNodes(content: JSONContent): Array<{ blockType: string; 
     return results;
 }
 
+const hasContent = (content: JSONContent): boolean =>
+    isCmsBlockNode(content) || (content.type === "textBlock" ? (content.content?.length ?? 0) > 0 : (content.content ?? []).some(hasContent));
+
 export function isTipTapRichTextEmpty(blockState: TipTapRichTextBlockState): boolean {
-    return getPlainTextFromContent(blockState.tipTapContent).length === 0 && collectCmsBlockNodes(blockState.tipTapContent).length === 0;
+    return !hasContent(blockState.tipTapContent);
 }
 
 function collectLinkMarksData(content: JSONContent): unknown[] {

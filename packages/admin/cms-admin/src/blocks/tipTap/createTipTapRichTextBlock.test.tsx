@@ -443,6 +443,10 @@ describe("isTipTapRichTextEmpty", () => {
         expect(isTipTapRichTextEmpty(doc({ type: "textBlock", content: [{ type: "text", text: " " }] }))).toBe(false);
     });
 
+    it.each(["nonBreakingSpace", "softHyphen"])("should not treat a document with only a %s as empty", (type) => {
+        expect(isTipTapRichTextEmpty(doc({ type: "textBlock", content: [{ type }] }))).toBe(false);
+    });
+
     it("should not treat a document with only a child block as empty", () => {
         expect(isTipTapRichTextEmpty(doc({ type: "cmsBlock", attrs: { blockType: "image", data: {} } }))).toBe(false);
     });
