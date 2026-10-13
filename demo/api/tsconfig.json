@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "baseUrl": "./",
         "emitDecoratorMetadata": true,
         "esModuleInterop": true,
         "experimentalDecorators": true,
@@ -11,10 +10,11 @@
         "moduleResolution": "nodenext",
         "outDir": "./dist",
         "paths": {
-            "@src/*": ["src/*"]
+            "@src/*": ["./src/*"]
         },
         "removeComments": true,
         "resolveJsonModule": true,
+        "rootDir": ".",
         "skipLibCheck": true,
         "sourceMap": true,
         "strict": true,

@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "inlineSources": true,
+        "rootDir": "./src",
         "sourceRoot": "/dist"
     },
     "exclude": ["**/*.stories.tsx", "**/*.stories.ts"],
