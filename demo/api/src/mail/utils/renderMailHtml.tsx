@@ -4,7 +4,7 @@ import { type ReactElement } from "react";
 
 export const renderMailHtml = (mail: ReactElement) => {
     const mjmlString = renderToMjml(mail);
-    const { html, errors } = mjml2html(mjmlString, { validationLevel: "soft" });
+    const { html, errors } = mjml2html(mjmlString, { validationLevel: "soft", ignoreIncludes: true });
 
     if (process.env.NODE_ENV === "development" && errors.length > 0) {
         console.error(`${errors.length} MJML errors`, errors);
