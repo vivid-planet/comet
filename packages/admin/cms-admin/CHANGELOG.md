@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 8.32.2
+
+### Patch Changes
+
+- 7e8f1af: Don't read files into memory before uploading them to the DAM
+
+    Previously, every file was fully loaded into the browser's memory before the upload started, which could cause high memory usage and a delay before the upload progress was shown for large files.
+    - @comet/admin@8.32.2
+    - @comet/admin-date-time@8.32.2
+    - @comet/admin-icons@8.32.2
+    - @comet/admin-rte@8.32.2
+
 ## 8.32.1
 
 ### Patch Changes
