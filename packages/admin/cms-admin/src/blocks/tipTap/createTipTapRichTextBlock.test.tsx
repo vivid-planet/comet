@@ -107,11 +107,14 @@ describe("createTipTapRichTextBlock", () => {
                     resolvedOptions: resolveTipTapOptions(options),
                     inlineStyles: [],
                     placeholders: [],
-                    childBlocks: {},
+                    childBlocks: options.childBlocks ?? {},
                     maxTextBlocks: options.maxTextBlocks,
                 }),
             });
         }
+
+        const pressKey = (editor: Editor, key: string) =>
+            editor.view.someProp("handleKeyDown", (handleKeyDown) => handleKeyDown(editor.view, new KeyboardEvent("keydown", { key })));
 
         const listItem = (text: string): JSONContent => ({
             type: "listItem",
@@ -123,12 +126,42 @@ describe("createTipTapRichTextBlock", () => {
             expect(editor.schema.topNodeType.contentMatch.defaultType?.name).toBe("textBlock");
         });
 
-        it.each(["orderedList", "bulletList"])("should end content ending with an %s with an empty default text block", (listType) => {
+        it.each(["orderedList", "bulletList"])("should not add an empty text block after an %s at the end of the content", (listType) => {
             const editor = createEditor();
 
             editor.commands.setContent({ type: "doc", content: [{ type: listType, content: [listItem("item")] }] });
 
-            expect(editor.state.doc.lastChild?.toJSON()).toEqual({ type: "textBlock", attrs: { textBlock: "paragraph" } });
+            expect(editor.getJSON().content?.map((node) => node.type)).toEqual([listType]);
+        });
+
+        it.each(["orderedList", "bulletList"])(
+            "should delete an empty text block after an %s at the end of the content with Backspace",
+            (listType) => {
+                const editor = createEditor();
+                editor.commands.setContent({
+                    type: "doc",
+                    content: [
+                        { type: listType, content: [listItem("item")] },
+                        { type: "textBlock", attrs: { textBlock: "paragraph" } },
+                    ],
+                });
+                editor.commands.setTextSelection(editor.state.doc.content.size - 1);
+
+                pressKey(editor, "Backspace");
+
+                expect(editor.getJSON().content).toEqual([expect.objectContaining({ type: listType, content: [listItem("item")] })]);
+            },
+        );
+
+        it.each(["orderedList", "bulletList"])("should leave an %s at the end of the content with Enter in its empty last item", (listType) => {
+            const editor = createEditor();
+            editor.commands.setContent({ type: "doc", content: [{ type: listType, content: [listItem("item")] }] });
+            editor.commands.setTextSelection(editor.state.doc.content.size - 3);
+
+            pressKey(editor, "Enter");
+            pressKey(editor, "Enter");
+
+            expect(editor.getJSON().content?.map((node) => node.type)).toEqual([listType, "textBlock"]);
         });
 
         it("should leave a single empty default text block after deleting all content", () => {
@@ -160,36 +193,43 @@ describe("createTipTapRichTextBlock", () => {
             expect(editor.getJSON()).toEqual({ type: "doc", content: [{ type: "textBlock", attrs: { textBlock: "heading-2" } }] });
         });
 
-        const toggleList = (editor: Editor, listType: "orderedList" | "bulletList") =>
-            listType === "orderedList" ? editor.commands.toggleOrderedList() : editor.commands.toggleBulletList();
-
         const paragraph = (text: string): JSONContent => ({
             type: "textBlock",
             attrs: { textBlock: "paragraph" },
             content: [{ type: "text", text }],
         });
 
-        it.each(["orderedList", "bulletList"] as const)(
-            "should not add an empty text block after the %s when it would exceed maxTextBlocks",
-            (listType) => {
-                const editor = createEditor({ maxTextBlocks: 2 });
-                editor.commands.setContent({ type: "doc", content: [paragraph("first"), paragraph("second")] });
-                editor.commands.setTextSelection(editor.state.doc.content.size - 1);
+        const childBlock: BlockInterface = {
+            ...createBlockSkeleton(),
+            name: "Child",
+            displayName: "Child",
+            category: BlockCategory.Other,
+            defaultValues: () => ({}),
+            AdminComponent: () => null,
+            previewContent: () => [],
+        };
 
-                toggleList(editor, listType);
-
-                expect(editor.getJSON().content?.map((node) => node.type)).toEqual(["textBlock", listType]);
-            },
-        );
-
-        it.each(["orderedList", "bulletList"] as const)("should add an empty text block after the %s below maxTextBlocks", (listType) => {
-            const editor = createEditor({ maxTextBlocks: 2 });
-            editor.commands.setContent({ type: "doc", content: [paragraph("first")] });
+        const insertChildBlockAtEnd = (editor: Editor) => {
             editor.commands.setTextSelection(editor.state.doc.content.size - 1);
+            editor.commands.insertCmsBlock({ blockType: "child", data: {} });
+        };
 
-            toggleList(editor, listType);
+        it("should not add an empty text block after a child block when it would exceed maxTextBlocks", () => {
+            const editor = createEditor({ maxTextBlocks: 2, childBlocks: { child: { block: childBlock, display: "block" } } });
+            editor.commands.setContent({ type: "doc", content: [paragraph("first")] });
 
-            expect(editor.getJSON().content?.map((node) => node.type)).toEqual([listType, "textBlock"]);
+            insertChildBlockAtEnd(editor);
+
+            expect(editor.getJSON().content?.map((node) => node.type)).toEqual(["textBlock", "cmsBlock"]);
+        });
+
+        it("should add an empty text block after a child block below maxTextBlocks", () => {
+            const editor = createEditor({ maxTextBlocks: 3, childBlocks: { child: { block: childBlock, display: "block" } } });
+            editor.commands.setContent({ type: "doc", content: [paragraph("first")] });
+
+            insertChildBlockAtEnd(editor);
+
+            expect(editor.getJSON().content?.map((node) => node.type)).toEqual(["textBlock", "cmsBlock", "textBlock"]);
         });
     });
 
