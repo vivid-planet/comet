@@ -247,12 +247,12 @@ describe("createTipTapRichTextBlock", () => {
             expect(
                 previewContent([
                     textBlock([
-                        { type: "text", text: "Some " },
-                        { type: "text", marks: [{ type: "bold" }], text: "bold" },
-                        { type: "text", text: " text" },
+                        { type: "text", text: "un" },
+                        { type: "text", marks: [{ type: "bold" }], text: "believ" },
+                        { type: "text", text: "able" },
                     ]),
                 ]),
-            ).toEqual([{ type: "text", content: "Some bold text" }]);
+            ).toEqual([{ type: "text", content: "unbelievable" }]);
         });
 
         it("should skip empty lines instead of adding extra spaces", () => {
