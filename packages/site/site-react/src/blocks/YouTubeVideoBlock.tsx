@@ -90,11 +90,14 @@ export const YouTubeVideoBlock = withPreview(
         searchParams.append("rel", "0");
         searchParams.append("enablejsapi", "1");
 
-        if (autoplay || (hasPreviewImage && !showPreviewImage)) {
+        const hasPreviewImageBeenHidden = hasPreviewImage && !showPreviewImage;
+
+        if (autoplay || hasPreviewImageBeenHidden) {
             searchParams.append("autoplay", "1");
         }
 
-        if (autoplay) {
+        // browsers only allow unmuted autoplay after a user interaction, which the click on the preview image provides
+        if (autoplay && !hasPreviewImageBeenHidden) {
             searchParams.append("mute", "1");
         }
 
