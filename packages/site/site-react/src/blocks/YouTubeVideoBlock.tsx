@@ -54,7 +54,6 @@ export const YouTubeVideoBlock = withPreview(
         const [iframeElement, setIframeElement] = useState<HTMLIFrameElement | null>(null);
         const iframeRef = setIframeElement;
         const inViewRef = useRef<HTMLDivElement>(null);
-        const isInViewRef = useRef<boolean | null>(null);
 
         const pauseYouTubeVideo = useCallback(() => {
             iframeElement?.contentWindow?.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
@@ -66,8 +65,6 @@ export const YouTubeVideoBlock = withPreview(
 
         const handleInView = useCallback(
             (inView: boolean) => {
-                isInViewRef.current = inView;
-
                 if (!isHandledManually) {
                     if (inView && autoplay) {
                         playYouTubeVideo();
@@ -123,11 +120,12 @@ export const YouTubeVideoBlock = withPreview(
         };
 
         const handleIframeLoad = () => {
-            // YouTube discards commands sent before the player has initialized, which is always the case for
-            // the viewport report that arrives right after mount. Re-send the pause once the player can receive it.
-            if (!isHandledManually && isInViewRef.current === false) {
+            // YouTube discards commands sent before the player has initialized, so anything that happened while
+            // the iframe was loading never arrived. Apply the intended state once the player can receive it.
+            if (isPlaying) {
+                playYouTubeVideo();
+            } else {
                 pauseYouTubeVideo();
-                setIsPlaying(false);
             }
         };
 
