@@ -516,9 +516,10 @@ export function buildTipTapExtensions({
             code: false,
             codeBlock: false,
             link: false,
-            // A text block is directly editable (Enter at its end already creates the next one), so it
-            // doesn't need TrailingNode's own empty paragraph the way a trailing atom node (e.g. a child block) does.
-            trailingNode: { notAfter: ["textBlock"] },
+            // Enter at the end of a text block creates the next one, and Enter in an empty last list item
+            // leaves the list, so only a trailing atom node (e.g. a child block) needs TrailingNode's empty
+            // text block. After a list, it couldn't be deleted: TrailingNode adds it again right away.
+            trailingNode: { notAfter: ["textBlock", "orderedList", "bulletList"] },
         }),
         createTextBlock({ ...resolvedOptions, hasTextBlockStyles: hasStyles, styled }),
         ...(hasParagraph ? [TextBlockListItem] : []),
