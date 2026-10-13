@@ -282,7 +282,6 @@ export default defineConfig({
             name: "docs",
             script: "pnpm --filter dextinity-docs start",
             group: ["docs"],
-            waitOn: ["tcp:26638"], // storybook
         },
         {
             name: "storybook-dextinity-admin",
