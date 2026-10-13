@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === "development" && mjmlWarnings.length) {
 - **`html`** — the final HTML string ready for sending
 - **`mjmlWarnings`** — an array of MJML validation warnings (collected, not thrown)
 
-There is no decorator outside Storybook, so you must wrap your content in [`MjmlMailRoot`](./2-components-and-theme.md#mjmlmailroot) yourself. Optional MJML options can be passed as a second argument and are forwarded to the underlying MJML compiler.
+There is no decorator outside Storybook, so you must wrap your content in [`MjmlMailRoot`](./2-components-and-theme.md#mjmlmailroot) yourself. Optional MJML options can be passed as a second argument and are forwarded to the underlying MJML compiler. The server `renderMailHtml` turns off `mj-include` by default, because an include can read files on the server into the mail. To use `mj-include`, pass `{ ignoreIncludes: false }`.
 
 ### MJML Warnings
 
