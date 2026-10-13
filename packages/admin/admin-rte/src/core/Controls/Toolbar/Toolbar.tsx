@@ -1,7 +1,7 @@
 import type { ThemedComponentBaseProps } from "@dextinity/admin";
 import type { ComponentsOverrides, Theme } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import { createElement, type JSX } from "react";
+import type { JSX } from "react";
 
 import type { IControlProps } from "../../types";
 import { Root, type RteToolbarClassKey, Slot } from "./Toolbar.styles";
@@ -29,7 +29,7 @@ export function Toolbar(inProps: RteToolbarProps) {
         })
         .map((c) => {
             const Comp = c;
-            return createElement(Comp, controlProps);
+            return <Comp {...controlProps} />;
         });
 
     return (
