@@ -8,9 +8,14 @@ import { useDebounceCallback } from "usehooks-ts";
 import styles from "./IFrameBridge.module.scss";
 import { type AdminMessage, AdminMessageType, type IFrameMessage, IFrameMessageType } from "./IFrameMessage";
 import { PreviewOverlay } from "./PreviewOverlay";
-import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement, PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT } from "./utils";
+import {
+    getCombinedPositioningOfElements,
+    getRecursiveChildrenOfPreviewElement,
+    PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT,
+    removePreviewElementFromList,
+} from "./utils";
 
-type PreviewElement = {
+export type PreviewElement = {
     element: HTMLElement;
     adminRoute: string;
     label: string;
@@ -284,7 +289,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
 
     const removePreviewElement = useCallback(
         (element: PreviewElement) => {
-            setPreviewElements((prev) => prev.filter((el) => el.adminRoute !== element.adminRoute));
+            setPreviewElements((prev) => removePreviewElementFromList(prev, element));
         },
         [setPreviewElements],
     );
