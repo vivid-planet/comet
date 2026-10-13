@@ -92,8 +92,7 @@ export const YouTubeVideoBlock = withPreview(
 
         const hasPreviewImageBeenHidden = hasPreviewImage && !showPreviewImage;
 
-        // start playing the video when the preview image has been hidden
-        if (hasPreviewImageBeenHidden) {
+        if (autoplay || hasPreviewImageBeenHidden) {
             searchParams.append("autoplay", "1");
         }
 
@@ -121,6 +120,16 @@ export const YouTubeVideoBlock = withPreview(
             setShowPreviewImage(false);
             setIsPlaying(true);
             setIsHandledManually(true);
+        };
+
+        const handleIframeLoad = () => {
+            // YouTube discards commands sent before the player has initialized, so anything that happened while
+            // the iframe was loading never arrived. Apply the intended state once the player can receive it.
+            if (isPlaying) {
+                playYouTubeVideo();
+            } else {
+                pauseYouTubeVideo();
+            }
         };
 
         const handlePlayPauseClick = () => {
@@ -168,8 +177,10 @@ export const YouTubeVideoBlock = withPreview(
                             ref={iframeRef}
                             className={styles.youtubeContainer}
                             allow="autoplay"
+                            loading="lazy"
                             referrerPolicy="strict-origin-when-cross-origin"
                             src={youtubeUrl.toString()}
+                            onLoad={handleIframeLoad}
                         />
                     </div>
                 )}
