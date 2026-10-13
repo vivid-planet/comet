@@ -22,6 +22,7 @@ alwaysApply: false
 
 - Write a comment only for what the code can't show, for instance why a workaround is necessary or a hidden constraint. Never repeat what the code does.
 - Before you add a comment, try to make the code show it: rename a variable, extract a function, or replace a value with a named constant.
+- Put a comment on the most specific code it explains: at the end of its line for a short note, directly above it for a longer one. Put it above a group only when it explains the group as a whole.
 
 ## Control flow
 
