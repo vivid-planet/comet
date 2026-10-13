@@ -13,6 +13,12 @@ peerDependencyRules:
         react-final-form>react: "19"
         react-final-form-arrays>react: "19"
 
+# Imports `vitest` without declaring it, so it would resolve to whichever version pnpm hoists.
+packageExtensions:
+    "@golevelup/ts-vitest":
+        peerDependencies:
+            vitest: "*"
+
 overrides:
     "@apollo/server-plugin-landing-page-graphql-playground>@apollo/server": "^5.1.0"
     "@types/mjml-core": "4.15.2"
