@@ -66,7 +66,10 @@ const Select = createComponentSlot(MuiSelect)<RteBlockTypeControlsClassKey>({
 );
 
 function StyledBlockTypesControls(inProps: Props) {
-    const { disabled, blockTypes, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "DextinityAdminRteBlockTypeControls" });
+    const { disabled, blockTypes, editorRef, editorState, setEditorState, options, slotProps, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "DextinityAdminRteBlockTypeControls",
+    });
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
 
     const blockTypesListItems: Array<{ name: string; label: ReactNode }> = dropdownFeatures.map((c) => ({ name: c.name, label: c.label }));
