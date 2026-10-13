@@ -7,8 +7,6 @@ sidebar_position: -5
 
 The goal of names is to help developers understand the code without having to read the detailed implementation.
 
-Try to avoid comments as descriptions, as they may not always be up to date with the code.
-
 :::warning Bad
 
 ```ts
@@ -78,6 +76,13 @@ const isComplete = true;
 ```
 
 :::
+
+## Comments
+
+Write a comment only for what the code can't show, for instance why a workaround is necessary or a hidden constraint.
+Never write a comment that repeats what the code does.
+Before you add a comment, try to make the code show it: rename a variable, extract a function, or replace a value with a named constant.
+A comment can go stale when the code changes, so prefer code that shows the fact.
 
 ## Avoid Non-Obvious Abbreviations
 
