@@ -4,11 +4,9 @@ on:
     pull_request:
         paths:
             - docs/**
-            - storybook/**
     push:
         paths:
             - docs/**
-            - storybook/**
         branches:
             - main
             - next

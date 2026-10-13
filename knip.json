@@ -21,7 +21,7 @@
             "project": []
         },
         "docs": {
-            "ignore": ["./docs/**/*.mdx", "./src/components/StorybookAdminComponentDocsIframe.tsx", ".docusaurus/**"],
+            "ignore": ["./docs/**/*.mdx", ".docusaurus/**"],
             "ignoreDependencies": ["@algolia/client-search", "search-insights"]
         },
         "packages/admin/admin-babel-preset": {
