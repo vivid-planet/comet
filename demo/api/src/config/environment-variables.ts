@@ -135,9 +135,9 @@ export class EnvironmentVariables {
     @IsEmail({}, { each: true })
     MAILER_SEND_ALL_MAILS_BCC?: string[];
 
+    @IsUndefinable()
     @IsString()
-    @ValidateIf(() => process.env.NODE_ENV === "production")
-    CDN_ORIGIN_CHECK_SECRET: string;
+    CDN_ORIGIN_CHECK_SECRET?: string;
 
     @ValidateIf((variables: EnvironmentVariables) => Boolean(variables.AZURE_AI_TRANSLATOR_KEY || variables.AZURE_AI_TRANSLATOR_REGION))
     @IsUrl()
