@@ -69,12 +69,12 @@ const buildResponse = (filter?: MockFilter) => {
     return { __typename: "PaginatedActionLogs", nodes, totalCount: nodes.length };
 };
 
-export const actionLogsHandlers = [
-    graphql.query("ActionLogs", ({ variables }) =>
+export const actionLogsHandlers = ["ActionLogs", "ActionLogDialog"].map((operationName) =>
+    graphql.query(operationName, ({ variables }) =>
         HttpResponse.json({
             data: {
                 actionLogs: buildResponse(variables.filter as MockFilter | undefined),
             },
         }),
     ),
-];
+);
