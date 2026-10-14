@@ -72,7 +72,7 @@ jobs:
               run: node "$RUNNER_TEMP/measure-cms-api-memory.cjs" > base-memory.json
 
             - name: Compare and comment
-              uses: actions/github-script@v7
+              uses: actions/github-script@v9
               with:
                   script: |
                       const fs = require("fs");
