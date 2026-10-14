@@ -1915,6 +1915,10 @@ describe("createTipTapRichTextBlock searchText", () => {
         ]);
     });
 
+    it("joins the text around a non-breaking space with a space", () => {
+        expect(searchText([textBlock("paragraph", [text("First"), { type: "nonBreakingSpace" }, text("Second")])])).toEqual(["First Second"]);
+    });
+
     it("returns no entry for an empty text block", () => {
         expect(searchText([textBlock("paragraph", []), textBlock("paragraph", [text("Text")])])).toEqual(["Text"]);
     });

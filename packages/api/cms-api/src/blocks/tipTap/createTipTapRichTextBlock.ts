@@ -646,6 +646,9 @@ function joinText(node: JSONContent): string {
     if (node.type === "hardBreak") {
         return "\n";
     }
+    if (node.type === "nonBreakingSpace") {
+        return " ";
+    }
     return (node.text ?? "") + (node.content ?? []).map(joinText).join("");
 }
 
