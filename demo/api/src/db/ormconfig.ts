@@ -4,16 +4,6 @@ import { DataloaderType, TextType, Type } from "@mikro-orm/core";
 import { defineConfig, EntityCaseNamingStrategy } from "@mikro-orm/postgresql";
 import path from "path";
 
-function getSslConfig() {
-    if (process.env.POSTGRESQL_USE_SSL !== "true") {
-        return false;
-    }
-    if (process.env.POSTGRESQL_CA_CERT) {
-        return { rejectUnauthorized: true, ca: process.env.POSTGRESQL_CA_CERT };
-    }
-    return true;
-}
-
 export const ormConfig = createOrmConfig(
     defineConfig({
         host: process.env.POSTGRESQL_HOST,
@@ -24,7 +14,7 @@ export const ormConfig = createOrmConfig(
             .trim(),
         dbName: process.env.POSTGRESQL_DB,
         driverOptions: {
-            connection: { ssl: getSslConfig() },
+            connection: { ssl: process.env.POSTGRESQL_USE_SSL === "true" ? { rejectUnauthorized: true, ca: process.env.POSTGRESQL_CA_CERT } : false },
         },
         namingStrategy: EntityCaseNamingStrategy,
         debug: false,
