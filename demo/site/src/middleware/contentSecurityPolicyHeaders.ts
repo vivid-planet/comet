@@ -25,7 +25,12 @@ const contentSecurityPolicyDirectives: ContentSecurityPolicyDirective[] = [
 
 if (process.env.NODE_ENV === "development") {
     contentSecurityPolicyDirectives.push({ directive: "script-src", values: ["'unsafe-eval'"] });
-} else {
+}
+
+// Only skip the upgrade to https when the site itself is served over plain http: local development
+// and http preview environments. An unset SITE_URL keeps the upgrade, so that a deployment which
+// does not set it is never silently downgraded.
+if (!process.env.SITE_URL?.startsWith("http://")) {
     contentSecurityPolicyDirectives.push({ directive: "upgrade-insecure-requests", values: [] });
 }
 
