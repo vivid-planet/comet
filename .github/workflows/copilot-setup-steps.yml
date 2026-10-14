@@ -30,28 +30,28 @@ jobs:
         # If you do not check out your code, Copilot will do this for you.
         steps:
             - name: Checkout code
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: "Library: Clone translations"
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   repository: vivid-planet/dextinity-lang
                   path: "demo/admin/lang/dextinity-lang"
 
             - name: "Demo Admin: Clone translations"
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   repository: vivid-planet/dextinity-demo-lang
                   path: "demo/admin/lang/dextinity-demo-lang"
 
             - name: "Demo Site: Clone translations"
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   repository: vivid-planet/dextinity-demo-lang
                   path: "demo/site/lang/dextinity-demo-lang"
 
             - name: "Demo Api: Clone translations"
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   repository: vivid-planet/dextinity-demo-lang
                   path: "demo/api/lang/dextinity-demo-lang"
