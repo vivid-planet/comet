@@ -1,0 +1,329 @@
+alerts:
+    - rule: DEPLOYMENT_FAILED
+    - rule: DOMAIN_FAILED
+domains:
+    - domain: admin.demo.digitalocean.dextinity.com
+      type: PRIMARY
+ingress:
+    rules:
+        - component:
+              name: admin
+          match:
+              path:
+                  prefix: /admin-do-not-use
+        - component:
+              name: oauth2-proxy
+          match:
+              path:
+                  prefix: /
+        - component:
+              name: api
+          match:
+              path:
+                  prefix: /public-api
+name: dextinity-demo-cms
+region: fra
+services:
+    - dockerfile_path: demo/.digitalocean/api.Dockerfile
+      source_dir: /
+      github:
+          branch: main
+          deploy_on_push: false
+          repo: vivid-planet/dextinity
+      envs:
+          - key: SERVER_HOST
+            scope: RUN_TIME
+            value: "0.0.0.0"
+          - key: API_PORT
+            scope: RUN_TIME
+            value: "4000"
+          - key: HELM_RELEASE
+            scope: RUN_TIME
+            value: dextinity-demo
+          - key: POSTGRESQL_HOST
+            scope: RUN_TIME
+            value: db-postgresql-fra1-74967-do-user-15310175-0.l.db.ondigitalocean.com
+          - key: POSTGRESQL_PORT
+            scope: RUN_TIME
+            value: "25060"
+          - key: POSTGRESQL_DB
+            scope: RUN_TIME
+            value: db_demo
+          - key: POSTGRESQL_USER
+            scope: RUN_TIME
+            value: demo
+          - key: POSTGRESQL_PWD
+            scope: RUN_TIME
+            type: SECRET
+            value: ${POSTGRESQL_PWD_BASE64}
+          - key: POSTGRESQL_USE_SSL
+            scope: RUN_TIME
+            value: "true"
+          - key: POSTGRESQL_CA_CERT
+            scope: RUN_TIME
+            value: |-
+                -----BEGIN CERTIFICATE-----
+                MIIEQTCCAqmgAwIBAgIUFbJ/dvvfKgsSSRZ1WB3LZ5OiEWQwDQYJKoZIhvcNAQEM
+                BQAwOjE4MDYGA1UEAwwvYjNjZTRjMWYtZWUyOS00MDQ4LWE2ZmItZTFlNDU0MTIy
+                MTk1IFByb2plY3QgQ0EwHhcNMjMxMjA0MTQ1NDIxWhcNMzMxMjAxMTQ1NDIxWjA6
+                MTgwNgYDVQQDDC9iM2NlNGMxZi1lZTI5LTQwNDgtYTZmYi1lMWU0NTQxMjIxOTUg
+                UHJvamVjdCBDQTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKRtK5Ud
+                nFGKdoyjGssagR9vMRQw73tpuNeZG4OmewPwKdgDhsjH+ZLfgJOI2wSoclBkWFQj
+                dIg0GuXkFVwO4SZ0a/7uBtJLYh9z8U4N14pOa+xrBISE7zshGjJjKjHhbCT7VYhc
+                l6OK2CZZzXZk+xoh5o1JwLxkc1l2rzG5l3CrZnL43L93h6KEGY4VWe8QBoxqUCxG
+                2aDuyYpqjlHJhS4imRxbJ9R++t3UBPVpaebU4jwWw91DujYD86LMmq9WEVNfnrno
+                8SNNYRS6ojay/WUphKTfK3VqwUw7OGAIHxAzQPc6nx8mdNa++Y51J6IOL4O7bBp5
+                gxb46TVlHeH0GXZEu+m2AUnPT8tmPgzHzDAI7UQ2NN2kTxrUGZ2aV/f1lxIhij6o
+                sfwoSJZzt98dvp02Cg9zqgXxxyv04YUeK7PDoS9aP7uXrj81dLl84MIdbqJOZNd1
+                XwfIhu0hKlAi2H5PuPBwn++aJ9Htjhbte4Bp2QJF6hcqfW0chpZPupQOmwIDAQAB
+                oz8wPTAdBgNVHQ4EFgQUZm7RuycpRchnPp3PzsK3vPORT4AwDwYDVR0TBAgwBgEB
+                /wIBADALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQEMBQADggGBABmGDsdgEKDGS4wU
+                v+170Nl3JFDySE3DwcYEUFQCm9/gLW6dpHV5S5Vghiq3oTtmUAB/atXYjS6FlFTx
+                lWkyW4j9m9YbbzW+SX5rPiO01Hu3sUae0s2kjRWpFnoZWirphCS4JZ24wLtWBkyl
+                1pthVhUg4qh4zOfeWvVmd8MENkieFf0mhWyY2gvbcvPgYRrsVoNDzm72vvRnhjtG
+                81+MMudCLUKtYg+oNIbBwzu2JZ2tdr6lrxTCwlnepyPAQfxF3oC7FbxfMirf/Rp+
+                eibIi9DYfjschlTe0BW1afYn1cradTsH0uFrSV6UCYjhN7aYCLYBJoL+c/raEA0u
+                avwdD47sHsIhse+1HjF2VRVPDP+ZGTvqkAuiLAXEi4eht0rluX/j/Rnc+peq21al
+                bamtaNx6H7l4QlXegUXaxxAmeW2FR5nBUb2tiFBF70KA+rl4hRa7FuxcPmkNOtRO
+                EokFG4nQ9lh/mN5vpkdxCA438Ur3yBqzaSI1NvGpb8/8gBG0Gg==
+                -----END CERTIFICATE-----
+          - key: API_URL
+            scope: RUN_TIME
+            value: https://admin.demo.digitalocean.dextinity.com/public-api/api
+          - key: ADMIN_URL
+            scope: RUN_TIME
+            value: https://admin.demo.digitalocean.dextinity.com
+          - key: CORS_ALLOWED_ORIGIN
+            scope: RUN_TIME
+            value: demo\.digitalocean\.dextinity\.com
+          - key: IDP_CLIENT_ID
+            scope: RUN_TIME
+            value: ${IDP_CLIENT_ID}
+          - key: IDP_JWKS_URI
+            scope: RUN_TIME
+            value: https://login.vivid-planet.cloud/oauth/v2/keys
+          - key: IDP_END_SESSION_ENDPOINT
+            scope: RUN_TIME
+            value: https://login.vivid-planet.cloud/oidc/v1/end_session
+          - key: POST_LOGOUT_REDIRECT_URI
+            scope: RUN_TIME
+            value: https://admin.demo.digitalocean.dextinity.com/oauth2/sign_out?rd=%2F
+          - key: BASIC_AUTH_SYSTEM_USER_PASSWORD
+            scope: RUN_TIME
+            type: SECRET
+            value: ${API_BASIC_AUTH_SYSTEM_USER_PASSWORD}
+          - key: SITE_PREVIEW_SECRET
+            scope: RUN_TIME
+            type: SECRET
+            value: ${SITE_PREVIEW_SECRET}
+          - key: PRIVATE_SITE_CONFIGS
+            scope: RUN_TIME
+            value: "{{ site://configs/private/digitalocean }}"
+          - key: IMGPROXY_URL
+            scope: RUN_TIME
+            value: https://comet-starter-imgproxy-ovgzu.ondigitalocean.app
+          - key: IMGPROXY_KEY
+            scope: RUN_TIME
+            type: SECRET
+            value: ${IMGPROXY_KEY}
+          - key: IMGPROXY_SALT
+            scope: RUN_TIME
+            type: SECRET
+            value: ${IMGPROXY_SALT}
+          - key: DAM_SECRET
+            scope: RUN_TIME
+            type: SECRET
+            value: ${DAM_SECRET}
+          - key: FILE_UPLOADS_DOWNLOAD_SECRET
+            scope: RUN_TIME
+            type: SECRET
+            value: ${FILE_UPLOADS_DOWNLOAD_SECRET}
+          - key: BLOB_STORAGE_DRIVER
+            scope: RUN_TIME
+            value: s3
+          - key: BLOB_STORAGE_DIRECTORY_PREFIX
+            scope: RUN_TIME
+            value: demo
+          - key: S3_REGION
+            scope: RUN_TIME
+            value: fra1
+          - key: S3_ENDPOINT
+            scope: RUN_TIME
+            value: https://fra1.digitaloceanspaces.com
+          - key: S3_BUCKET
+            scope: RUN_TIME
+            value: dextinity-starter
+          - key: S3_ACCESS_KEY_ID
+            scope: RUN_TIME
+            type: SECRET
+            value: ${S3_ACCESS_KEY_ID}
+          - key: S3_SECRET_ACCESS_KEY
+            scope: RUN_TIME
+            type: SECRET
+            value: ${S3_SECRET_ACCESS_KEY}
+          - key: MAILER_HOST
+            scope: RUN_TIME
+            value: mailpit
+          - key: MAILER_PORT
+            scope: RUN_TIME
+            value: "1025"
+          # The API requires these, but the Brevo features aren't meant to work on this deployment
+          - key: BREVO_API_KEY
+            scope: RUN_TIME
+            type: SECRET
+            value: ${BREVO_API_KEY}
+          - key: BREVO_ECG_RTR_LIST_API_KEY
+            scope: RUN_TIME
+            type: SECRET
+            value: ${BREVO_ECG_RTR_LIST_API_KEY}
+          - key: BREVO_CAMPAIGN_BASIC_AUTH_USERNAME
+            scope: RUN_TIME
+            value: brevo
+          - key: BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD
+            scope: RUN_TIME
+            type: SECRET
+            value: ${BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD}
+      health_check:
+          http_path: /api/status/liveness
+      http_port: 4000
+      instance_count: 1
+      instance_size_slug: apps-s-1vcpu-1gb
+      name: api
+    - envs:
+          - key: OAUTH2_PROXY_CLIENT_ID
+            scope: RUN_TIME
+            value: ${IDP_CLIENT_ID}
+          - key: OAUTH2_PROXY_CLIENT_SECRET
+            scope: RUN_TIME
+            type: SECRET
+            value: ${OAUTH2_PROXY_CLIENT_SECRET}
+          - key: OAUTH2_PROXY_COOKIE_SECRET
+            scope: RUN_TIME
+            type: SECRET
+            value: ${OAUTH2_PROXY_COOKIE_SECRET}
+          # Provider
+          - key: OAUTH2_PROXY_CODE_CHALLENGE_METHOD
+            scope: RUN_TIME
+            value: S256
+          - key: OAUTH2_PROXY_OIDC_ISSUER_URL
+            scope: RUN_TIME
+            value: https://login.vivid-planet.cloud
+          - key: OAUTH2_PROXY_PROVIDER
+            scope: RUN_TIME
+            value: oidc
+          - key: OAUTH2_PROXY_SCOPE
+            scope: RUN_TIME
+            value: openid profile email offline_access
+          # Cookie, shared with the site's oauth2-proxy so one login covers admin, site and preview
+          - key: OAUTH2_PROXY_COOKIE_DOMAINS
+            scope: RUN_TIME
+            value: .demo.digitalocean.dextinity.com
+          - key: OAUTH2_PROXY_COOKIE_SAMESITE
+            scope: RUN_TIME
+            value: lax
+          - key: OAUTH2_PROXY_COOKIE_REFRESH
+            scope: RUN_TIME
+            value: 55m
+          # Header
+          - key: OAUTH2_PROXY_PASS_ACCESS_TOKEN
+            scope: RUN_TIME
+            value: "true"
+          - key: OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER
+            scope: RUN_TIME
+            value: "true"
+          # Logging
+          - key: OAUTH2_PROXY_AUTH_LOGGING
+            scope: RUN_TIME
+            value: "true"
+          - key: OAUTH2_PROXY_REQUEST_LOGGING
+            scope: RUN_TIME
+            value: "false"
+          - key: OAUTH2_PROXY_SILENCE_PING_LOGGING
+            scope: RUN_TIME
+            value: "true"
+          - key: OAUTH2_PROXY_STANDARD_LOGGING
+            scope: RUN_TIME
+            value: "false"
+          # Proxy
+          - key: OAUTH2_PROXY_API_ROUTES
+            scope: RUN_TIME
+            value: /api
+          - key: OAUTH2_PROXY_EMAIL_DOMAINS
+            scope: RUN_TIME
+            value: vivid-planet.com
+          - key: OAUTH2_PROXY_SKIP_AUTH_PREFLIGHT
+            scope: RUN_TIME
+            value: "true"
+          - key: OAUTH2_PROXY_SKIP_AUTH_ROUTES
+            scope: RUN_TIME
+            value: "^/api/status/"
+          - key: OAUTH2_PROXY_SKIP_JWT_BEARER_TOKENS
+            scope: RUN_TIME
+            value: "true"
+          - key: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
+            scope: RUN_TIME
+            value: "true"
+          - key: OAUTH2_PROXY_WHITELIST_DOMAINS
+            scope: RUN_TIME
+            value: login.vivid-planet.cloud,.demo.digitalocean.dextinity.com
+          - key: OAUTH2_PROXY_HTTP_ADDRESS
+            scope: RUN_TIME
+            value: 0.0.0.0:4180
+          # Upstream
+          - key: OAUTH2_PROXY_UPSTREAMS
+            scope: RUN_TIME
+            value: http://admin:80,http://api:80/api/,http://mailpit:8025/mailpit/
+      http_port: 4180
+      image:
+          registry: dkarnutsch
+          registry_type: DOCKER_HUB
+          repository: oauth2-proxy
+          tag: latest
+      instance_count: 1
+      instance_size_slug: apps-s-1vcpu-0.5gb
+      name: oauth2-proxy
+    - dockerfile_path: demo/.digitalocean/admin.Dockerfile
+      source_dir: /
+      github:
+          branch: main
+          deploy_on_push: false
+          repo: vivid-planet/dextinity
+      envs:
+          - key: SERVER_HOST
+            scope: RUN_TIME
+            value: "0.0.0.0"
+          - key: ADMIN_PORT
+            scope: RUN_TIME
+            value: "3000"
+          - key: ADMIN_URL
+            scope: RUN_TIME
+            value: https://admin.demo.digitalocean.dextinity.com
+          - key: API_URL_INTERNAL
+            scope: RUN_TIME
+            value: http://api:80/api
+          - key: PREVIEW_URL
+            scope: RUN_TIME
+            value: https://preview.demo.digitalocean.dextinity.com
+          - key: PUBLIC_SITE_CONFIGS
+            scope: RUN_TIME
+            value: "{{ site://configs/public/digitalocean }}"
+      http_port: 3000
+      instance_count: 1
+      instance_size_slug: apps-s-1vcpu-0.5gb
+      name: admin
+    # Catches every mail the demo sends; its web UI is at /mailpit behind the oauth2-proxy
+    - envs:
+          - key: MP_WEBROOT
+            scope: RUN_TIME
+            value: /mailpit
+      image:
+          registry: axllent
+          registry_type: DOCKER_HUB
+          repository: mailpit
+          tag: latest
+      instance_count: 1
+      instance_size_slug: apps-s-1vcpu-0.5gb
+      internal_ports:
+          - 1025
+          - 8025
+      name: mailpit
