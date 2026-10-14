@@ -48,6 +48,9 @@ services:
           - key: PREVIEW_DOMAIN
             scope: RUN_TIME
             value: preview.demo.digitalocean.dextinity.com
+      # Without an http_port, App Platform would check the default port 8080
+      health_check:
+          port: 3000
       instance_count: 1
       instance_size_slug: apps-s-1vcpu-1gb
       internal_ports:

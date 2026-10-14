@@ -321,6 +321,9 @@ services:
           registry_type: DOCKER_HUB
           repository: mailpit
           tag: latest
+      # Without an http_port, App Platform would check the default port 8080
+      health_check:
+          port: 8025
       instance_count: 1
       instance_size_slug: apps-s-1vcpu-0.5gb
       internal_ports:
