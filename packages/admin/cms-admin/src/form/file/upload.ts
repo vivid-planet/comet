@@ -78,7 +78,6 @@ async function uploadOrReplaceByFilenameAndFolder<ResponseData>(
     return { data: dataJson };
 }
 
-// Mirrors the axios error shape (`error.response.data`) that consumers like `useDamFileUpload` rely on
 class UploadFileError extends Error {
     readonly response: { status: number; data: unknown };
 
