@@ -2057,8 +2057,8 @@ importers:
         specifier: workspace:*
         version: link:../cms-api
       '@fast-csv/parse':
-        specifier: ^5.0.7
-        version: 5.0.7
+        specifier: ^5.0.8
+        version: 5.0.8
       '@getbrevo/brevo':
         specifier: ^5.0.4
         version: 5.0.4
@@ -2184,8 +2184,8 @@ importers:
         specifier: ^12.34.0
         version: 12.34.0(supports-color@8.1.1)
       '@fast-csv/parse':
-        specifier: ^5.0.7
-        version: 5.0.7
+        specifier: ^5.0.8
+        version: 5.0.8
       '@golevelup/nestjs-discovery':
         specifier: ^5.0.1
         version: 5.0.1(@nestjs/common@11.2.7(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.2.7)
@@ -5286,9 +5286,6 @@ packages:
 
   '@fast-csv/parse@4.3.6':
     resolution: {integrity: sha512-uRsLYksqpbDmWaSmzvJcuApSEe38+6NQZBUsuAyMZKqHxH0g1wcJgsKUvN3WC8tewaqFjBMMGrkHmC+T7k8LvA==}
-
-  '@fast-csv/parse@5.0.7':
-    resolution: {integrity: sha512-MeuDeQj0DVmIGWky8STaKtvj232Gpq8kjrOGplHJ99Os7OO5CetVfXvUGqX/3GHYFOUsz6FK8isWtDY2XTFNWw==}
 
   '@fast-csv/parse@5.0.8':
     resolution: {integrity: sha512-i2R1TWa2tgRn9YEsNplzdCv0z8J1O85nUIqPdAQtQOheZ+Pw/3AhekI27Yp095r7qSJK0l8KwphK8WzB3aCtog==}
@@ -22584,12 +22581,6 @@ snapshots:
       lodash.isfunction: 3.0.9
       lodash.isnil: 4.0.0
       lodash.isundefined: 3.0.1
-      lodash.uniq: 4.5.0
-
-  '@fast-csv/parse@5.0.7':
-    dependencies:
-      lodash.escaperegexp: 4.1.2
-      lodash.groupby: 4.6.0
       lodash.uniq: 4.5.0
 
   '@fast-csv/parse@5.0.8': {}
