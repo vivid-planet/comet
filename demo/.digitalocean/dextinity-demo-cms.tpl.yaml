@@ -46,7 +46,7 @@ services:
             value: ""
           - key: POSTGRESQL_HOST
             scope: RUN_TIME
-            value: db-postgresql-fra1-74967-do-user-15310175-0.l.db.ondigitalocean.com
+            value: ${POSTGRESQL_HOST}
           - key: POSTGRESQL_PORT
             scope: RUN_TIME
             value: "25060"
@@ -101,7 +101,7 @@ services:
             value: "{{ site://configs/private/digitalocean }}"
           - key: IMGPROXY_URL
             scope: RUN_TIME
-            value: https://comet-starter-imgproxy-ovgzu.ondigitalocean.app
+            value: https://imgproxy.demo.digitalocean.dextinity.com
           - key: IMGPROXY_KEY
             scope: RUN_TIME
             type: SECRET
@@ -132,7 +132,7 @@ services:
             value: https://fra1.digitaloceanspaces.com
           - key: S3_BUCKET
             scope: RUN_TIME
-            value: dextinity-starter
+            value: dextinity-demo
           - key: S3_ACCESS_KEY_ID
             scope: RUN_TIME
             type: SECRET

@@ -26,10 +26,25 @@ jobs:
                       pnpm exec dextinity inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.digitalocean/dextinity-demo-$app.tpl.yaml -o demo/.digitalocean/dextinity-demo-$app.yaml --base64
                   done
 
+            - name: Update DigitalOcean dextinity-demo-imgproxy Deployment
+              uses: digitalocean/app_action/deploy@v2
+              env:
+                  IMGPROXY_KEY: ${{ secrets.DEMO_IMGPROXY_KEY }}
+                  IMGPROXY_SALT: ${{ secrets.DEMO_IMGPROXY_SALT }}
+                  S3_ACCESS_KEY_ID: ${{ secrets.DEMO_S3_ACCESS_KEY_ID }}
+                  S3_SECRET_ACCESS_KEY: ${{ secrets.DEMO_S3_SECRET_ACCESS_KEY }}
+              with:
+                  token: ${{ secrets.DIGITALOCEAN_API_KEY }}
+                  project_id: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}
+                  print_deploy_logs: true
+                  print_build_logs: true
+                  app_spec_location: demo/.digitalocean/dextinity-demo-imgproxy.yaml
+
             - name: Update DigitalOcean dextinity-demo-cms Deployment
               uses: digitalocean/app_action/deploy@v2
               env:
                   IDP_CLIENT_ID: ${{ vars.DEMO_IDP_CLIENT_ID }}
+                  POSTGRESQL_HOST: ${{ vars.DEMO_POSTGRESQL_HOST }}
                   POSTGRESQL_PWD_BASE64: ${{ secrets.DEMO_POSTGRESQL_PWD_BASE64 }}
                   S3_ACCESS_KEY_ID: ${{ secrets.DEMO_S3_ACCESS_KEY_ID }}
                   S3_SECRET_ACCESS_KEY: ${{ secrets.DEMO_S3_SECRET_ACCESS_KEY }}
@@ -46,6 +61,7 @@ jobs:
                   BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD: ${{ secrets.DEMO_BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD }}
               with:
                   token: ${{ secrets.DIGITALOCEAN_API_KEY }}
+                  project_id: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}
                   print_deploy_logs: true
                   print_build_logs: true
                   app_spec_location: demo/.digitalocean/dextinity-demo-cms.yaml
@@ -59,6 +75,7 @@ jobs:
                   API_BASIC_AUTH_SYSTEM_USER_PASSWORD: ${{ secrets.DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD }}
               with:
                   token: ${{ secrets.DIGITALOCEAN_API_KEY }}
+                  project_id: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}
                   print_deploy_logs: true
                   print_build_logs: true
                   app_spec_location: demo/.digitalocean/dextinity-demo-site.yaml
