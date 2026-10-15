@@ -2515,9 +2515,6 @@ importers:
       globals:
         specifier: ^15.15.0
         version: 15.15.0
-      npm-run-all2:
-        specifier: ^9.0.3
-        version: 9.0.3
       typescript-eslint:
         specifier: ^8.71.0
         version: 8.71.0(eslint@9.39.5(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@5.9.3)
@@ -2525,6 +2522,9 @@ importers:
       eslint:
         specifier: ^9.39.5
         version: 9.39.5(jiti@2.7.0)(supports-color@8.1.1)
+      npm-run-all2:
+        specifier: ^9.0.3
+        version: 9.0.3
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
