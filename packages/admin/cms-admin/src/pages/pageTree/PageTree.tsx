@@ -100,8 +100,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
 
     const queries = client.getObservableQueries();
     const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === "Pages") as
-        | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
-        | undefined;
+        ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables> | undefined;
 
     useEffect(() => {
         if (pagesQuery) {
