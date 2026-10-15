@@ -1,0 +1,5 @@
+.git
+**/node_modules
+demo/.docker-compose/*.env
+demo/.docker-compose/docker-compose.yml
+demo/.docker-compose/letsencrypt

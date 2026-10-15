@@ -1,0 +1,112 @@
+name: Deploy Demo
+
+on:
+    push:
+        branches:
+            - main
+    # Only until the deployment has been set up, then the demo only deploys from main
+    pull_request:
+        branches:
+            - main
+    workflow_dispatch:
+
+# There's only one Droplet, so deployments run one after another instead of being cancelled halfway
+concurrency:
+    group: ${{ github.workflow }}
+
+jobs:
+    deploy:
+        name: Deploy Demo
+        # Only the pull request that sets up the deployment, which can't come from a fork, because those get no secrets
+        if: github.repository == 'vivid-planet/dextinity' && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'chore/deploy-demo-digitalocean'))
+        runs-on: ubuntu-latest
+        env:
+            NAME: dextinity-demo
+            COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  ref: ${{ env.COMMIT }}
+
+            - uses: ./.github/actions/setup
+
+            - name: Generate the Docker Compose configuration
+              run: pnpm exec dextinity inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.docker-compose/docker-compose.tpl.yml -o demo/.docker-compose/docker-compose.yml --base64
+
+            - name: Write the secrets
+              working-directory: demo/.docker-compose
+              env:
+                  IDP_CLIENT_ID: ${{ vars.DEMO_IDP_CLIENT_ID }}
+                  POSTGRESQL_PASSWORD: ${{ secrets.DEMO_POSTGRESQL_PASSWORD }}
+                  IMGPROXY_KEY: ${{ secrets.DEMO_IMGPROXY_KEY }}
+                  IMGPROXY_SALT: ${{ secrets.DEMO_IMGPROXY_SALT }}
+                  DAM_SECRET: ${{ secrets.DEMO_DAM_SECRET }}
+                  FILE_UPLOADS_DOWNLOAD_SECRET: ${{ secrets.DEMO_FILE_UPLOADS_DOWNLOAD_SECRET }}
+                  API_BASIC_AUTH_SYSTEM_USER_PASSWORD: ${{ secrets.DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD }}
+                  SITE_PREVIEW_SECRET: ${{ secrets.DEMO_SITE_PREVIEW_SECRET }}
+                  OAUTH2_PROXY_CLIENT_SECRET: ${{ secrets.DEMO_OAUTH2_PROXY_CLIENT_SECRET }}
+                  OAUTH2_PROXY_COOKIE_SECRET: ${{ secrets.DEMO_OAUTH2_PROXY_COOKIE_SECRET }}
+              run: |
+                  umask 077
+                  echo "IDP_CLIENT_ID=$IDP_CLIENT_ID" > .env
+                  echo "POSTGRES_PASSWORD=$POSTGRESQL_PASSWORD" > postgres.secrets.env
+                  echo "IMGPROXY_KEY=$IMGPROXY_KEY" > imgproxy.secrets.env
+                  echo "IMGPROXY_SALT=$IMGPROXY_SALT" >> imgproxy.secrets.env
+                  {
+                      echo "POSTGRESQL_PWD=$(printf '%s' "$POSTGRESQL_PASSWORD" | base64 -w0)"
+                      echo "IMGPROXY_KEY=$IMGPROXY_KEY"
+                      echo "IMGPROXY_SALT=$IMGPROXY_SALT"
+                      echo "DAM_SECRET=$DAM_SECRET"
+                      echo "FILE_UPLOADS_DOWNLOAD_SECRET=$FILE_UPLOADS_DOWNLOAD_SECRET"
+                      echo "BASIC_AUTH_SYSTEM_USER_PASSWORD=$API_BASIC_AUTH_SYSTEM_USER_PASSWORD"
+                      echo "SITE_PREVIEW_SECRET=$SITE_PREVIEW_SECRET"
+                  } > api.secrets.env
+                  echo "API_BASIC_AUTH_SYSTEM_USER_PASSWORD=$API_BASIC_AUTH_SYSTEM_USER_PASSWORD" > site.secrets.env
+                  echo "OAUTH2_PROXY_CLIENT_SECRET=$OAUTH2_PROXY_CLIENT_SECRET" > oauthproxy.secrets.env
+                  echo "OAUTH2_PROXY_COOKIE_SECRET=$OAUTH2_PROXY_COOKIE_SECRET" >> oauthproxy.secrets.env
+
+            - uses: digitalocean/action-doctl@v2
+              with:
+                  token: ${{ secrets.DIGITALOCEAN_API_KEY }}
+
+            - name: Create the project and the Droplet if they don't exist
+              env:
+                  SSH_PRIVATE_KEY: ${{ secrets.DEMO_DROPLET_SSH_PRIVATE_KEY }}
+              run: |
+                  install -d -m 700 ~/.ssh
+                  echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+                  chmod 600 ~/.ssh/id_ed25519
+                  ssh-keygen -y -f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
+                  fingerprint=$(ssh-keygen -E md5 -lf ~/.ssh/id_ed25519.pub | awk '{ print $2 }' | sed 's/^MD5://')
+                  doctl compute ssh-key get "$fingerprint" > /dev/null 2>&1 || doctl compute ssh-key import "$NAME-deploy" --public-key-file ~/.ssh/id_ed25519.pub
+
+                  project_id=$(doctl projects list --format ID,Name --no-header | awk -v name="$NAME" '$2 == name { print $1 }')
+                  if [ -z "$project_id" ]; then
+                      project_id=$(doctl projects create --name "$NAME" --purpose "Web Application" --environment Development --format ID --no-header)
+                  fi
+
+                  if ! doctl compute droplet list --format Name --no-header | grep -qx "$NAME"; then
+                      doctl compute droplet create "$NAME" --image ubuntu-24-04-x64 --size s-2vcpu-4gb --region fra1 \
+                          --ssh-keys "$fingerprint" --user-data-file demo/.docker-compose/cloud-init.yml --project-id "$project_id" --wait
+                  fi
+
+                  echo "DROPLET_IP=$(doctl compute droplet list --format Name,PublicIPv4 --no-header | awk -v name="$NAME" '$1 == name { print $2 }')" >> "$GITHUB_ENV"
+
+            - name: Deploy to the Droplet
+              run: |
+                  ssh_options="-o StrictHostKeyChecking=accept-new -o ServerAliveInterval=60"
+                  # A new Droplet needs a moment until it accepts SSH connections
+                  for attempt in $(seq 1 30); do ssh $ssh_options "root@$DROPLET_IP" true && break; sleep 10; done
+                  ssh $ssh_options "root@$DROPLET_IP" "cloud-init status --wait > /dev/null
+                      set -e
+                      mkdir -p /opt/dextinity && cd /opt/dextinity
+                      if [ ! -d .git ]; then git init --quiet; git remote add origin https://github.com/${{ github.repository }}.git; fi
+                      git fetch --quiet --depth 1 origin $COMMIT
+                      git checkout --quiet --force FETCH_HEAD"
+                  scp $ssh_options demo/.docker-compose/docker-compose.yml demo/.docker-compose/.env demo/.docker-compose/*.secrets.env "root@$DROPLET_IP:/opt/dextinity/demo/.docker-compose/"
+                  # The images are built one after another so the build fits into the Droplet's memory
+                  ssh $ssh_options "root@$DROPLET_IP" "set -e
+                      cd /opt/dextinity/demo/.docker-compose
+                      for service in api admin site; do docker compose build \$service; done
+                      docker compose up --detach --remove-orphans
+                      docker image prune --force"

@@ -6,7 +6,9 @@ COPY --chown=1001:0 ./ ./
 
 # The demo depends on the packages in this repository, so they're built before the demo itself.
 # CI=true makes copy-project-files copy instead of symlink and skip the local .env files.
-RUN npm install --global --prefix "$HOME/.local" "$(node -p 'require("./package.json").packageManager')" && \
+# The uploads volume takes over the ownership of this folder, so the API can write the DAM files into it.
+RUN mkdir "$HOME/uploads" && \
+    npm install --global --prefix "$HOME/.local" "$(node -p 'require("./package.json").packageManager')" && \
     export PATH="$HOME/.local/bin:$PATH" CI=true && \
     pnpm install --frozen-lockfile --filter root --filter "dextinity-demo-api..." && \
     node copy-project-files.js && \

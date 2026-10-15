@@ -1,0 +1,181 @@
+services:
+    traefik:
+        image: "traefik:v3.7"
+        restart: "on-failure"
+        command:
+            - "--accessLog=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false" # services need to be exposed by setting traefik.enable=true
+            - "--entryPoints.web.address=:80"
+            - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
+            - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
+            - "--entryPoints.websecure.address=:443"
+            - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+            - "--certificatesresolvers.myresolver.acme.email=postmaster@dextinity.com"
+            - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - "./letsencrypt:/letsencrypt"
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+    postgres:
+        image: "postgres:16"
+        restart: "on-failure"
+        environment:
+            POSTGRES_DB: db_demo
+            POSTGRES_USER: demo
+        env_file: "postgres.secrets.env"
+        volumes:
+            - "postgres:/var/lib/postgresql/data"
+
+    imgproxy:
+        image: darthsim/imgproxy:v3
+        restart: "on-failure"
+        environment:
+            IMGPROXY_MAX_SRC_RESOLUTION: 70
+            IMGPROXY_LOCAL_FILESYSTEM_ROOT: "/uploads"
+        env_file: "imgproxy.secrets.env"
+        volumes:
+            - "uploads:/uploads:ro"
+
+    # Catches every mail the demo sends, its web UI is at /mailpit behind the admin's oauth2-proxy
+    mailpit:
+        image: axllent/mailpit:latest
+        restart: "on-failure"
+        environment:
+            MP_WEBROOT: /mailpit
+
+    oauthproxy:
+        image: "dkarnutsch/oauth2-proxy:latest"
+        restart: "on-failure"
+        environment: &oauthproxy-environment
+            OAUTH2_PROXY_CLIENT_ID: "${IDP_CLIENT_ID}"
+            # Provider
+            OAUTH2_PROXY_CODE_CHALLENGE_METHOD: "S256"
+            OAUTH2_PROXY_OIDC_ISSUER_URL: "https://login.vivid-planet.cloud"
+            OAUTH2_PROXY_PROVIDER: "oidc"
+            OAUTH2_PROXY_SCOPE: "openid profile email offline_access"
+            # Cookie, shared with the site's oauth2-proxy so one login covers admin, site and preview
+            OAUTH2_PROXY_COOKIE_DOMAINS: ".demo.digitalocean.dextinity.com"
+            OAUTH2_PROXY_COOKIE_SAMESITE: "lax"
+            OAUTH2_PROXY_COOKIE_REFRESH: "55m"
+            # Header
+            OAUTH2_PROXY_PASS_ACCESS_TOKEN: "true"
+            OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER: "true"
+            # Logging
+            OAUTH2_PROXY_AUTH_LOGGING: "true"
+            OAUTH2_PROXY_REQUEST_LOGGING: "false"
+            OAUTH2_PROXY_SILENCE_PING_LOGGING: "true"
+            OAUTH2_PROXY_STANDARD_LOGGING: "false"
+            # Proxy
+            OAUTH2_PROXY_API_ROUTES: "/api"
+            OAUTH2_PROXY_EMAIL_DOMAINS: "vivid-planet.com"
+            OAUTH2_PROXY_SKIP_AUTH_PREFLIGHT: "true"
+            OAUTH2_PROXY_SKIP_AUTH_ROUTES: "^/api/status/"
+            OAUTH2_PROXY_SKIP_JWT_BEARER_TOKENS: "true"
+            OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: "true"
+            OAUTH2_PROXY_WHITELIST_DOMAINS: "login.vivid-planet.cloud,.demo.digitalocean.dextinity.com"
+            OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180" # allow access from outside the container
+            # Upstream
+            OAUTH2_PROXY_UPSTREAMS: "http://admin:3000,http://api:4000/api/,http://mailpit:8025/mailpit/"
+        env_file: "oauthproxy.secrets.env"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.oauthproxy.rule=Host(`admin.demo.digitalocean.dextinity.com`)"
+            - "traefik.http.routers.oauthproxy.entrypoints=websecure"
+            - "traefik.http.routers.oauthproxy.tls.certresolver=myresolver"
+            - "traefik.http.services.oauthproxy.loadbalancer.server.port=4180"
+
+    # Keeps the site internal like the admin
+    siteoauthproxy:
+        image: "dkarnutsch/oauth2-proxy:latest"
+        restart: "on-failure"
+        environment:
+            <<: *oauthproxy-environment
+            # The API renders Brevo campaigns through this route and authenticates with basic auth instead
+            OAUTH2_PROXY_SKIP_AUTH_ROUTES: "^/api/render-brevo-email-campaign"
+            OAUTH2_PROXY_UPSTREAMS: "http://site:3000"
+        env_file: "oauthproxy.secrets.env"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.site.rule=Host(`demo.digitalocean.dextinity.com`) || Host(`secondary.demo.digitalocean.dextinity.com`) || Host(`preview.demo.digitalocean.dextinity.com`)"
+            - "traefik.http.routers.site.entrypoints=websecure"
+            - "traefik.http.routers.site.tls.certresolver=myresolver"
+            - "traefik.http.services.site.loadbalancer.server.port=4180"
+
+    api:
+        build:
+            context: ../..
+            dockerfile: demo/.docker-compose/Api.Dockerfile
+        restart: "on-failure"
+        depends_on:
+            - postgres
+        environment:
+            NODE_ENV: production
+            SERVER_HOST: "0.0.0.0"
+            API_PORT: "4000"
+            # Required in production. The demo runs without Kubernetes and without a CDN, whose check is off while the secret is empty.
+            HELM_RELEASE: dextinity-demo
+            CDN_ORIGIN_CHECK_SECRET: ""
+            POSTGRESQL_HOST: postgres
+            POSTGRESQL_PORT: "5432"
+            POSTGRESQL_DB: db_demo
+            POSTGRESQL_USER: demo
+            POSTGRESQL_USE_SSL: "false"
+            API_URL: https://admin.demo.digitalocean.dextinity.com/api
+            ADMIN_URL: https://admin.demo.digitalocean.dextinity.com
+            CORS_ALLOWED_ORIGIN: demo\.digitalocean\.dextinity\.com
+            IMGPROXY_URL: http://imgproxy:8080
+            BLOB_STORAGE_DRIVER: file
+            FILE_STORAGE_PATH: /opt/app-root/src/uploads
+            BLOB_STORAGE_DIRECTORY_PREFIX: demo
+            MAILER_HOST: mailpit
+            MAILER_PORT: "1025"
+            PRIVATE_SITE_CONFIGS: "{{ site://configs/private/digitalocean }}"
+            IDP_CLIENT_ID: "${IDP_CLIENT_ID}"
+            IDP_JWKS_URI: https://login.vivid-planet.cloud/oauth/v2/keys
+            IDP_END_SESSION_ENDPOINT: https://login.vivid-planet.cloud/oidc/v1/end_session
+            POST_LOGOUT_REDIRECT_URI: https://admin.demo.digitalocean.dextinity.com/oauth2/sign_out?rd=%2F
+            # Required by the API, but the Brevo features aren't used on this deployment
+            BREVO_API_KEY: not-used
+            BREVO_ECG_RTR_LIST_API_KEY: not-used
+            BREVO_CAMPAIGN_BASIC_AUTH_USERNAME: brevo
+            BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD: not-used
+        env_file: "api.secrets.env"
+        volumes:
+            - "uploads:/opt/app-root/src/uploads"
+
+    admin:
+        build:
+            context: ../..
+            dockerfile: demo/.docker-compose/Admin.Dockerfile
+        restart: "on-failure"
+        environment:
+            NODE_ENV: production
+            SERVER_HOST: "0.0.0.0"
+            ADMIN_PORT: "3000"
+            ADMIN_URL: https://admin.demo.digitalocean.dextinity.com
+            API_URL_INTERNAL: http://api:4000/api
+            PREVIEW_URL: https://preview.demo.digitalocean.dextinity.com
+            PUBLIC_SITE_CONFIGS: "{{ site://configs/public/digitalocean }}"
+
+    site:
+        build:
+            context: ../..
+            dockerfile: demo/.docker-compose/Site.Dockerfile
+        restart: "on-failure"
+        environment:
+            NODE_ENV: production
+            SERVER_HOST: "0.0.0.0"
+            SITE_PORT: "3000"
+            ADMIN_URL: https://admin.demo.digitalocean.dextinity.com
+            API_URL_INTERNAL: http://api:4000/api
+            PUBLIC_SITE_CONFIGS: "{{ site://configs/public/digitalocean }}"
+            PREVIEW_DOMAIN: preview.demo.digitalocean.dextinity.com
+        env_file: "site.secrets.env"
+
+volumes:
+    postgres:
+    uploads:
