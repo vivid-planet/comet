@@ -24,7 +24,7 @@ ingress:
 name: dextinity-demo-cms
 region: fra
 services:
-    - dockerfile_path: demo/.digitalocean/api.Dockerfile
+    - dockerfile_path: demo/.digitalocean/Api.Dockerfile
       source_dir: /
       github:
           branch: main
@@ -282,7 +282,7 @@ services:
       instance_count: 1
       instance_size_slug: apps-s-1vcpu-0.5gb
       name: oauth2-proxy
-    - dockerfile_path: demo/.digitalocean/admin.Dockerfile
+    - dockerfile_path: demo/.digitalocean/Admin.Dockerfile
       source_dir: /
       github:
           branch: main

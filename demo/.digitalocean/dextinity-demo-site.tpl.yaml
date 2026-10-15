@@ -19,7 +19,7 @@ name: dextinity-demo-site
 region: fra
 services:
     # Only reachable through the oauth2-proxy, so the site is internal like the admin
-    - dockerfile_path: demo/.digitalocean/site.Dockerfile
+    - dockerfile_path: demo/.digitalocean/Site.Dockerfile
       source_dir: /
       github:
           branch: main
