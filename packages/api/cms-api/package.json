@@ -104,7 +104,7 @@
         "@types/mime": "^2.0.3",
         "@types/mime-db": "^1.43.6",
         "@types/multer": "^2.3.0",
-        "@types/node": "^24.19.1",
+        "@types/node": "^24.19.2",
         "@types/probe-image-size": "^7.2.5",
         "@types/request-ip": "^0.0.41",
         "aws-sdk-client-mock": "^4.1.0",
@@ -112,7 +112,7 @@
         "class-transformer": "^0.5.1",
         "class-validator": "^0.15.1",
         "eslint": "^9.39.5",
-        "express": "^5.2.1",
+        "express": "^5.3.0",
         "graphql": "^16.14.2",
         "nest-commander": "^3.21.0",
         "npm-run-all2": "^9.0.3",
@@ -121,7 +121,7 @@
         "rxjs": "^7.8.2",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",
-        "unplugin-swc": "^1.6.0",
+        "unplugin-swc": "^2.0.0",
         "vitest": "^5.0.4"
     },
     "peerDependencies": {
