@@ -60,7 +60,7 @@
         "@dextinity/eslint-config": "workspace:*",
         "@dextinity/mail-react": "workspace:*",
         "@faker-js/faker": "^10.6.0",
-        "@graphql-mocks/network-msw": "^0.4.4",
+        "@graphql-mocks/network-msw": "^0.5.0",
         "@storybook/addon-docs": "^10.6.1",
         "@storybook/addon-vitest": "10.6.1",
         "@storybook/react-vite": "^10.6.1",
