@@ -10,7 +10,7 @@ Deploys the demo for internal use, the same way the [Starter](https://github.com
 
 Admin and site require a login with a `vivid-planet.com` account. Both oauth2-proxies share their cookie on `.demo.digitalocean.dextinity.com`, so one login covers all domains. Every mail the demo sends ends up in Mailpit at `https://admin.demo.digitalocean.dextinity.com/mailpit/`.
 
-The images are built with Dockerfiles based on the Starter's [Docker Compose deployment](https://github.com/vivid-planet/dextinity-starter/tree/main/.docker-compose). Unlike the Starter's, they build from the repository root, because the demo depends on the packages in this repository rather than on released versions.
+Like the Starter's, the components are built with App Platform's Node.js buildpack. Unlike the Starter's, they build from the repository root, because the demo depends on the packages in this repository rather than on released versions.
 
 ## One-time setup
 

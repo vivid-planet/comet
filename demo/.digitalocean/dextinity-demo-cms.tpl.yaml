@@ -24,7 +24,15 @@ ingress:
 name: dextinity-demo-cms
 region: fra
 services:
-    - dockerfile_path: demo/.digitalocean/Api.Dockerfile
+    # Built from the repository root, because the demo depends on the packages in this repository rather than on released versions.
+    # CI=true makes copy-project-files copy instead of symlink and skip the local .env files.
+    - build_command: |-
+          CI=true node copy-project-files.js &&
+          pnpm --filter "dextinity-demo-api^..." run build &&
+          ./demo/api/intl-update.sh &&
+          pnpm --filter dextinity-demo-api run build
+      environment_slug: node-js
+      run_command: cd demo/api && node dist/console.js migrate && node dist/main
       source_dir: /
       github:
           branch: main
@@ -63,10 +71,10 @@ services:
           - key: POSTGRESQL_USE_SSL
             scope: RUN_TIME
             value: "true"
-          # The database cluster's certificate is signed by its own CA
+          # The database cluster's certificate is signed by its own CA. Relative to the API's working directory, demo/api.
           - key: NODE_EXTRA_CA_CERTS
             scope: RUN_TIME
-            value: /opt/app-root/src/demo/.digitalocean/digitalocean-postgresql-ca.crt
+            value: ../.digitalocean/digitalocean-postgresql-ca.crt
           - key: API_URL
             scope: RUN_TIME
             value: https://admin.demo.digitalocean.dextinity.com/public-api/api
@@ -259,7 +267,13 @@ services:
       instance_count: 1
       instance_size_slug: apps-s-1vcpu-0.5gb
       name: oauth2-proxy
-    - dockerfile_path: demo/.digitalocean/Admin.Dockerfile
+    - build_command: |-
+          CI=true node copy-project-files.js &&
+          pnpm --filter "dextinity-demo-admin^..." run build &&
+          ./demo/admin/intl-update.sh &&
+          pnpm --filter dextinity-demo-admin run build
+      environment_slug: node-js
+      run_command: cd demo/admin && node server
       source_dir: /
       github:
           branch: main
