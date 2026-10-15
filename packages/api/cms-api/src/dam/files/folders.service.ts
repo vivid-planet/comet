@@ -326,9 +326,8 @@ export class FoldersService {
             `select "folder_with_row_number".row_number
                 from "${FOLDER_TABLE_NAME}" as "folder"
                 join (${subQb.getFormattedQuery()}) as "folder_with_row_number" ON folder_with_row_number.id = folder.id
-                where "folder"."id" = ?
+                where "folder"."id" = ${folderId}
             `,
-            [folderId],
         );
 
         if (result.rows.length === 0) {
