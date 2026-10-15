@@ -14,7 +14,7 @@ export const ormConfig = createOrmConfig(
             .trim(),
         dbName: process.env.POSTGRESQL_DB,
         driverOptions: {
-            connection: { ssl: process.env.POSTGRESQL_USE_SSL === "true" ? { rejectUnauthorized: true, ca: process.env.POSTGRESQL_CA_CERT } : false },
+            connection: { ssl: process.env.POSTGRESQL_USE_SSL === "true" },
         },
         namingStrategy: EntityCaseNamingStrategy,
         debug: false,
