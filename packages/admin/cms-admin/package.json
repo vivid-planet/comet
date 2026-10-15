@@ -57,7 +57,7 @@
         "@tiptap/pm": "^3.31.4",
         "@tiptap/react": "^3.31.4",
         "@tiptap/starter-kit": "^3.31.4",
-        "change-case": "^4.1.2",
+        "change-case": "^5.4.4",
         "class-validator": "^0.15.1",
         "date-fns": "^4.4.0",
         "final-form-arrays": "^3.1.0",
@@ -80,7 +80,7 @@
         "slugify": "^1.6.9",
         "use-debounce": "^10.1.1",
         "uuid": "^11.1.1",
-        "zod": "^4.6.5"
+        "zod": "^4.6.6"
     },
     "devDependencies": {
         "@apollo/client": "^3.14.1",
@@ -146,7 +146,7 @@
         "storybook": "^10.6.1",
         "storybook-addon-tag-badges": "^3.1.0",
         "typescript": "5.9.3",
-        "vite": "^7.3.6",
+        "vite": "^7.3.7",
         "vite-tsconfig-paths": "^6.1.1",
         "vitest": "^5.0.4"
     },
