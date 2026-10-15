@@ -109,7 +109,7 @@
         "@types/response-time": "^2.3.9",
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
-        "dotenv-cli": "^9.0.0",
+        "dotenv-cli": "^11.0.0",
         "eslint": "^9.39.5",
         "eslint-plugin-storybook": "^10.6.1",
         "npm-run-all2": "^9.0.3",
