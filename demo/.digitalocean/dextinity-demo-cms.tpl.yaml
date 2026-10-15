@@ -35,7 +35,7 @@ services:
       run_command: cd demo/api && node dist/console.js migrate && node dist/main
       source_dir: /
       github:
-          branch: main
+          branch: ${DEPLOY_BRANCH}
           deploy_on_push: false
           repo: vivid-planet/dextinity
       envs:
@@ -276,7 +276,7 @@ services:
       run_command: cd demo/admin && node server
       source_dir: /
       github:
-          branch: main
+          branch: ${DEPLOY_BRANCH}
           deploy_on_push: false
           repo: vivid-planet/dextinity
       envs:

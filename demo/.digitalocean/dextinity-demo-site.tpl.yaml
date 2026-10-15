@@ -29,7 +29,7 @@ services:
       run_command: cd demo/site && node dist/server.js
       source_dir: /
       github:
-          branch: main
+          branch: ${DEPLOY_BRANCH}
           deploy_on_push: false
           repo: vivid-planet/dextinity
       envs:
