@@ -63,7 +63,7 @@
         "@vitest/browser-playwright": "4.1.11",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.5",
-        "npm-run-all2": "^8.0.4",
+        "npm-run-all2": "^9.0.3",
         "playwright": "^1.63.0",
         "prettier": "^3.6.2",
         "react": "^19.3.0",
