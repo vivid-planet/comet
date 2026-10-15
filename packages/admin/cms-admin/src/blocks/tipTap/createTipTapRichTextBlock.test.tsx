@@ -2,6 +2,7 @@ import { Editor, type JSONContent } from "@tiptap/core";
 import { describe, expect, it, vi } from "vitest";
 
 import { render } from "../../testing/test-utils";
+import type { BlockContext } from "../context/BlockContext";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "../types";
 import {
@@ -193,6 +194,31 @@ describe("createTipTapRichTextBlock", () => {
             expect(editor.getJSON()).toEqual({ type: "doc", content: [{ type: "textBlock", attrs: { textBlock: "heading-2" } }] });
         });
 
+        it("should drop a style the new text block doesn't offer when no text block has a defaultStyle", () => {
+            const style = { name: "copy100", label: "Copy 100", element: (props: TipTapTextBlockElementProps) => <p {...props} /> };
+            const editor = createEditor({
+                textBlocks: [
+                    { name: "paragraph", label: "Paragraph", tag: "p", styles: [style] },
+                    { name: "heading-1", label: "Heading 1", tag: "h1" },
+                ],
+            });
+            editor.commands.setContent({
+                type: "doc",
+                content: [
+                    { type: "textBlock", attrs: { textBlock: "paragraph", textBlockStyle: "copy100" }, content: [{ type: "text", text: "Title" }] },
+                    { type: "textBlock", attrs: { textBlock: "paragraph" }, content: [{ type: "text", text: "Copy" }] },
+                ],
+            });
+            editor.commands.setTextSelection(1);
+
+            editor.commands.updateAttributes("textBlock", { textBlock: "heading-1" });
+
+            expect(editor.getJSON().content?.map((node) => node.attrs)).toEqual([
+                { textBlock: "heading-1", textBlockStyle: null },
+                { textBlock: "paragraph", textBlockStyle: null },
+            ]);
+        });
+
         const paragraph = (text: string): JSONContent => ({
             type: "textBlock",
             attrs: { textBlock: "paragraph" },
@@ -255,6 +281,58 @@ describe("createTipTapRichTextBlock", () => {
 
             expect(editor.getJSON().content).toEqual([paragraph("first"), paragraph("second")]);
             expect(updateState).toHaveBeenLastCalledWith({ tipTapContent: { type: "doc", content: [paragraph("first"), paragraph("second")] } });
+        });
+    });
+
+    describe("previewContent", () => {
+        const block = createTipTapRichTextBlock({});
+        const previewContent = (content: JSONContent[]) => block.previewContent({ tipTapContent: { type: "doc", content } }, {} as BlockContext);
+        const textBlock = (content: JSONContent[]): JSONContent => ({ type: "textBlock", attrs: { textBlock: "paragraph" }, content });
+
+        it("should separate text blocks with a space instead of joining them directly", () => {
+            expect(previewContent([textBlock([{ type: "text", text: "First" }]), textBlock([{ type: "text", text: "Second" }])])).toEqual([
+                { type: "text", content: "First Second" },
+            ]);
+        });
+
+        it("should separate list items with a space", () => {
+            const listItem = (text: string): JSONContent => ({ type: "listItem", content: [textBlock([{ type: "text", text }])] });
+            expect(previewContent([{ type: "bulletList", content: [listItem("First"), listItem("Second")] }])).toEqual([
+                { type: "text", content: "First Second" },
+            ]);
+        });
+
+        it("should replace a hard break with a space", () => {
+            expect(previewContent([textBlock([{ type: "text", text: "First" }, { type: "hardBreak" }, { type: "text", text: "Second" }])])).toEqual([
+                { type: "text", content: "First Second" },
+            ]);
+        });
+
+        it("should keep the marked parts of a line together", () => {
+            expect(
+                previewContent([
+                    textBlock([
+                        { type: "text", text: "un" },
+                        { type: "text", marks: [{ type: "bold" }], text: "believ" },
+                        { type: "text", text: "able" },
+                    ]),
+                ]),
+            ).toEqual([{ type: "text", content: "unbelievable" }]);
+        });
+
+        it("should skip empty lines instead of adding extra spaces", () => {
+            expect(
+                previewContent([
+                    textBlock([{ type: "text", text: "First" }]),
+                    textBlock([]),
+                    textBlock([{ type: "text", text: "  " }]),
+                    textBlock([{ type: "text", text: "Second" }]),
+                ]),
+            ).toEqual([{ type: "text", content: "First Second" }]);
+        });
+
+        it("should return no preview for empty content", () => {
+            expect(previewContent([textBlock([])])).toEqual([]);
         });
     });
 

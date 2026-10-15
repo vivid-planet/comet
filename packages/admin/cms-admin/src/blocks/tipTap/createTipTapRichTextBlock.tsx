@@ -302,6 +302,21 @@ function getPlainTextFromContent(content: JSONContent): string {
     return text;
 }
 
+function getTextLines(content: JSONContent): string[] {
+    if (content.type !== "textBlock") {
+        return (content.content ?? []).flatMap(getTextLines);
+    }
+    const lines = [""];
+    for (const child of content.content ?? []) {
+        if (child.type === "hardBreak") {
+            lines.push("");
+        } else {
+            lines[lines.length - 1] += getPlainTextFromContent(child);
+        }
+    }
+    return lines;
+}
+
 const buildEmptyContent = ({ defaultTextBlock }: TipTapResolvedOptions): JSONContent => {
     const attrs: JSONContent["attrs"] = { textBlock: defaultTextBlock.name };
     if (defaultTextBlock.defaultStyle !== null) {
@@ -523,7 +538,7 @@ export function buildTipTapExtensions({
         }),
         createTextBlock({ ...resolvedOptions, hasTextBlockStyles: hasStyles, styled }),
         ...(hasParagraph ? [TextBlockListItem] : []),
-        ...(styledNodes.some((styledNode) => styledNode.defaultStyle !== null) ? [createDefaultTextBlockStyle(resolvedOptions)] : []),
+        ...(hasStyles ? [createDefaultTextBlockStyle(resolvedOptions)] : []),
         // Only worth replacing the list shortcuts where a list has styles of its own to apply.
         ...([resolvedOptions.orderedList, resolvedOptions.unorderedList].some((list) => list && list.styles.length > 0)
             ? [createTextBlockList(resolvedOptions)]
@@ -859,7 +874,10 @@ export const createTipTapRichTextBlock = (options: TipTapRichTextBlockFactoryOpt
         ReadOnlyComponent: ({ state }) => <TipTapEditor state={state} updateState={() => {}} {...sharedEditorProps} readOnly />,
 
         previewContent: (state) => {
-            const text = getPlainTextFromContent(state.tipTapContent);
+            const text = getTextLines(state.tipTapContent)
+                .map((line) => line.trim())
+                .filter((line) => line.length > 0)
+                .join(" ");
             const MAX_CHARS = 100;
             return text.length > 0 ? [{ type: "text", content: text.slice(0, MAX_CHARS) }] : [];
         },
