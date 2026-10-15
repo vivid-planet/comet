@@ -22,14 +22,13 @@ Like the Starter's, the components are built with App Platform's Node.js buildpa
     - `https://secondary.demo.digitalocean.dextinity.com/oauth2/callback`
     - `https://preview.demo.digitalocean.dextinity.com/oauth2/callback`
 4. Add the variables and secrets below to this repository's GitHub Actions settings, and store the secrets in 1Password. The workflow passes them into the app specs.
-5. Run the "Update DigitalOcean Demo Deployment" workflow, or merge into `main`. The first run creates the apps.
+5. Run the "Update DigitalOcean Demo Deployment" workflow, or merge into `main`. The first run creates the apps in the team's default project. Move them to `dextinity-demo` once, as for the Starter.
 6. Point the DNS records of the domains above to the apps, as shown in the DigitalOcean console.
 7. Load the fixtures once, from the console of the `api` component: `node dist/console.js fixtures`. Do this before opening the site, which would otherwise cache the empty responses for a while.
 
 | Name                                                                                                                           | Kind     | Value                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------ | -------- | -------------------------------------------------------- |
 | `DIGITALOCEAN_API_KEY`                                                                                                         | secret   | DigitalOcean API token of the team                       |
-| `DEMO_DIGITALOCEAN_PROJECT_ID`                                                                                                 | variable | ID of the `dextinity-demo` project                       |
 | `DEMO_IDP_CLIENT_ID`                                                                                                           | variable | Client ID of the OIDC client                             |
 | `DEMO_OAUTH2_PROXY_CLIENT_SECRET`                                                                                              | secret   | Client secret of the OIDC client                         |
 | `DEMO_OAUTH2_PROXY_COOKIE_SECRET`                                                                                              | secret   | `openssl rand -base64 32 \| tr -- '+/' '-_'`             |
