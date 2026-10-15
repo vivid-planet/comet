@@ -27,22 +27,24 @@ if (process.env.NODE_ENV === "development") {
     contentSecurityPolicyDirectives.push({ directive: "script-src", values: ["'unsafe-eval'"] });
 }
 
-// Only skip the upgrade to https when the site itself is served over plain http: local development
-// and http preview environments. An unset SITE_URL keeps the upgrade, so that a deployment which
-// does not set it is never silently downgraded.
-if (!process.env.SITE_URL?.startsWith("http://")) {
-    contentSecurityPolicyDirectives.push({ directive: "upgrade-insecure-requests", values: [] });
+function toContentSecurityPolicy(directives: ContentSecurityPolicyDirective[]) {
+    return directives.map((directive) => `${directive.directive} ${directive.values.filter((value) => value !== undefined).join(" ")}`).join("; ");
 }
 
-const contentSecurityPolicy = contentSecurityPolicyDirectives
-    .map((directive) => `${directive.directive} ${directive.values.filter((value) => value !== undefined).join(" ")}`)
-    .join("; ");
+const contentSecurityPolicy = toContentSecurityPolicy(contentSecurityPolicyDirectives);
+const contentSecurityPolicyWithUpgradeInsecureRequests = toContentSecurityPolicy([
+    ...contentSecurityPolicyDirectives,
+    { directive: "upgrade-insecure-requests", values: [] },
+]);
 
 export function withContentSecurityPolicyHeadersMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
         const response = await middleware(request);
 
-        response.headers.set("Content-Security-Policy", contentSecurityPolicy);
+        // A site served over plain http must not upgrade its same-origin requests to https, where nothing listens.
+        // Next.js fills in x-forwarded-proto from the socket when no proxy in front of it has set it.
+        const servedOverHttp = request.headers.get("x-forwarded-proto") === "http";
+        response.headers.set("Content-Security-Policy", servedOverHttp ? contentSecurityPolicy : contentSecurityPolicyWithUpgradeInsecureRequests);
 
         if (process.env.ADMIN_URL) {
             response.headers.set("Access-Control-Allow-Origin", process.env.ADMIN_URL);
