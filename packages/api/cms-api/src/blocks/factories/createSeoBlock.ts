@@ -37,13 +37,13 @@ export enum SitemapPagePriority {
 }
 
 export enum SitemapPageChangeFrequency {
-    "always" = "always",
-    "hourly" = "hourly",
-    "daily" = "daily",
-    "weekly" = "weekly",
-    "monthly" = "monthly",
-    "yearly" = "yearly",
-    "never" = "never",
+    always = "always",
+    hourly = "hourly",
+    daily = "daily",
+    weekly = "weekly",
+    monthly = "monthly",
+    yearly = "yearly",
+    never = "never",
 }
 
 interface CreateSeoBlockOptions<ImageBlock extends Block> {

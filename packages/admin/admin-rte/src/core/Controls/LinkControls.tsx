@@ -6,7 +6,8 @@ import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
 import type { IControlProps } from "../types";
 
 export interface RteLinkControlsProps
-    extends IControlProps,
+    extends
+        IControlProps,
         ThemedComponentBaseProps<{
             root: typeof ButtonGroup;
             item: "div";
