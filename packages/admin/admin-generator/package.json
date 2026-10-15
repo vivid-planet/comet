@@ -72,7 +72,7 @@
         "react-dom": "^19.3.0",
         "react-intl": "^7.1.14",
         "tsdown": "0.20.0-beta.4",
-        "vitest": "^4.1.11"
+        "vitest": "^5.0.4"
     },
     "peerDependencies": {
         "@apollo/client": "^3.7.0",
