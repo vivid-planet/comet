@@ -29,19 +29,18 @@ The images are built with Dockerfiles based on the Starter's [Docker Compose dep
 7. Point the DNS records of the domains above to the apps, as shown in the DigitalOcean console.
 8. Load the fixtures once, from the console of the `api` component: `node dist/console.js fixtures`. Do this before opening the site, which would otherwise cache the empty responses for a while.
 
-| Name                                                                                                                           | Kind     | Value                                                                     |
-| ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------- |
-| `DIGITALOCEAN_API_KEY`                                                                                                         | secret   | DigitalOcean API token of the team                                        |
-| `DEMO_DIGITALOCEAN_PROJECT_ID`                                                                                                 | variable | ID of the `dextinity-demo` project                                        |
-| `DEMO_POSTGRESQL_HOST`                                                                                                         | variable | Host of the database cluster                                              |
-| `DEMO_IDP_CLIENT_ID`                                                                                                           | variable | Client ID of the OIDC client                                              |
-| `DEMO_OAUTH2_PROXY_CLIENT_SECRET`                                                                                              | secret   | Client secret of the OIDC client                                          |
-| `DEMO_OAUTH2_PROXY_COOKIE_SECRET`                                                                                              | secret   | `openssl rand -base64 32 \| tr -- '+/' '-_'`                              |
-| `DEMO_POSTGRESQL_PWD_BASE64`                                                                                                   | secret   | Password of the `demo` database user, base64-encoded                      |
-| `DEMO_S3_ACCESS_KEY_ID`, `DEMO_S3_SECRET_ACCESS_KEY`                                                                           | secrets  | The Spaces access key                                                     |
-| `DEMO_IMGPROXY_KEY`, `DEMO_IMGPROXY_SALT`                                                                                      | secrets  | `openssl rand -hex 32` each                                               |
-| `DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD`, `DEMO_DAM_SECRET`, `DEMO_FILE_UPLOADS_DOWNLOAD_SECRET`, `DEMO_SITE_PREVIEW_SECRET` | secrets  | At least 16 characters each, e.g. `openssl rand -hex 16`                  |
-| `DEMO_BREVO_API_KEY`, `DEMO_BREVO_ECG_RTR_LIST_API_KEY`, `DEMO_BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD`                             | secrets  | Any value. The API requires them, but the Brevo features aren't used here |
+| Name                                                                                                                           | Kind     | Value                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------ | -------- | -------------------------------------------------------- |
+| `DIGITALOCEAN_API_KEY`                                                                                                         | secret   | DigitalOcean API token of the team                       |
+| `DEMO_DIGITALOCEAN_PROJECT_ID`                                                                                                 | variable | ID of the `dextinity-demo` project                       |
+| `DEMO_POSTGRESQL_HOST`                                                                                                         | variable | Host of the database cluster                             |
+| `DEMO_IDP_CLIENT_ID`                                                                                                           | variable | Client ID of the OIDC client                             |
+| `DEMO_OAUTH2_PROXY_CLIENT_SECRET`                                                                                              | secret   | Client secret of the OIDC client                         |
+| `DEMO_OAUTH2_PROXY_COOKIE_SECRET`                                                                                              | secret   | `openssl rand -base64 32 \| tr -- '+/' '-_'`             |
+| `DEMO_POSTGRESQL_PWD_BASE64`                                                                                                   | secret   | Password of the `demo` database user, base64-encoded     |
+| `DEMO_S3_ACCESS_KEY_ID`, `DEMO_S3_SECRET_ACCESS_KEY`                                                                           | secrets  | The Spaces access key                                    |
+| `DEMO_IMGPROXY_KEY`, `DEMO_IMGPROXY_SALT`                                                                                      | secrets  | `openssl rand -hex 32` each                              |
+| `DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD`, `DEMO_DAM_SECRET`, `DEMO_FILE_UPLOADS_DOWNLOAD_SECRET`, `DEMO_SITE_PREVIEW_SECRET` | secrets  | At least 16 characters each, e.g. `openssl rand -hex 16` |
 
 ## Deploying
 

@@ -147,22 +147,19 @@ services:
           - key: MAILER_PORT
             scope: RUN_TIME
             value: "1025"
-          # The API requires these, but the Brevo features aren't meant to work on this deployment
+          # The API requires these, but the Brevo features aren't used on this deployment
           - key: BREVO_API_KEY
             scope: RUN_TIME
-            type: SECRET
-            value: ${BREVO_API_KEY}
+            value: not-used
           - key: BREVO_ECG_RTR_LIST_API_KEY
             scope: RUN_TIME
-            type: SECRET
-            value: ${BREVO_ECG_RTR_LIST_API_KEY}
+            value: not-used
           - key: BREVO_CAMPAIGN_BASIC_AUTH_USERNAME
             scope: RUN_TIME
             value: brevo
           - key: BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD
             scope: RUN_TIME
-            type: SECRET
-            value: ${BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD}
+            value: not-used
       health_check:
           http_path: /api/status/liveness
       http_port: 4000

@@ -56,9 +56,6 @@ jobs:
                   DAM_SECRET: ${{ secrets.DEMO_DAM_SECRET }}
                   FILE_UPLOADS_DOWNLOAD_SECRET: ${{ secrets.DEMO_FILE_UPLOADS_DOWNLOAD_SECRET }}
                   SITE_PREVIEW_SECRET: ${{ secrets.DEMO_SITE_PREVIEW_SECRET }}
-                  BREVO_API_KEY: ${{ secrets.DEMO_BREVO_API_KEY }}
-                  BREVO_ECG_RTR_LIST_API_KEY: ${{ secrets.DEMO_BREVO_ECG_RTR_LIST_API_KEY }}
-                  BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD: ${{ secrets.DEMO_BREVO_CAMPAIGN_BASIC_AUTH_PASSWORD }}
               with:
                   token: ${{ secrets.DIGITALOCEAN_API_KEY }}
                   project_id: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}
