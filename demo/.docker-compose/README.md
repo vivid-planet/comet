@@ -1,6 +1,6 @@
 # Demo on a DigitalOcean Droplet
 
-Deploys the demo for internal use with Docker Compose, the same way the [Starter's Docker Compose deployment](https://github.com/vivid-planet/dextinity-starter/tree/main/.docker-compose) works. It runs on its own Droplet `dextinity-demo` in its own DigitalOcean project `dextinity-demo`, independent of the Starter. Postgres, imgproxy, Mailpit and Traefik run as containers next to the demo, and the DAM files are stored in a volume.
+Deploys the demo for internal use with Docker Compose, the same way the [Starter's Docker Compose deployment](https://github.com/vivid-planet/dextinity-starter/tree/main/.docker-compose) works. Postgres, imgproxy, Mailpit and Traefik run as containers next to the demo, and the DAM files are stored in a volume.
 
 | Domain                                      | Serves                                     |
 | ------------------------------------------- | ------------------------------------------ |
@@ -13,32 +13,28 @@ Admin and site require a login with a `vivid-planet.com` account. Both oauth2-pr
 
 The Dockerfiles are based on the Starter's, but build from the repository root, because the demo depends on the packages in this repository rather than on released versions.
 
-## Deploying
+## Setup
 
-The [Deploy Demo](../../.github/workflows/deploy-demo.yml) workflow deploys every push to `main`. It creates the project and the Droplet if they don't exist yet, copies the configuration and the secrets to the Droplet, and builds and starts the containers there.
-
-## One-time setup
-
-1. Create an SSH key without a passphrase, e.g. `ssh-keygen -t ed25519 -N "" -f dextinity-demo`. The workflow registers it at DigitalOcean and uses it to deploy.
-2. Create an OIDC client on `login.vivid-planet.cloud` with these redirect URIs:
+1. Create a Droplet (4 GB RAM is enough) with Docker, Git and Node.js 24. Add swap, because building the demo needs more memory than that: `fallocate -l 4G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile`, and add `/swapfile none swap sw 0 0` to `/etc/fstab`.
+2. Point the domains above to the Droplet's IP address.
+3. Create an OIDC client on `login.vivid-planet.cloud` with these redirect URIs:
     - `https://admin.demo.digitalocean.dextinity.com/oauth2/callback`
     - `https://demo.digitalocean.dextinity.com/oauth2/callback`
     - `https://secondary.demo.digitalocean.dextinity.com/oauth2/callback`
     - `https://preview.demo.digitalocean.dextinity.com/oauth2/callback`
-3. Add the variables and secrets below to this repository's GitHub Actions settings, and store the secrets in 1Password.
-4. Run the workflow. Once it has created the Droplet, point the DNS records of the domains above to its IP address. Traefik requests the certificates as soon as the domains resolve.
-5. Load the fixtures once: `ssh root@<droplet-ip>`, then `cd /opt/dextinity/demo/.docker-compose && docker compose exec api node dist/console.js fixtures`. Do this before opening the site, which would otherwise cache the empty responses for a while.
+4. Clone this repository on the Droplet. In this folder, copy each `*.secrets.env.tpl` to `*.secrets.env` and fill it in:
+    - Generate the passwords and secrets with `openssl rand -hex 16`, the imgproxy key and salt with `openssl rand -hex 32`, and the cookie secret with `openssl rand -base64 32 | tr -- '+/' '-_'`.
+    - Use the same values wherever a name appears in more than one file. `POSTGRESQL_PWD` is `POSTGRES_PASSWORD` base64-encoded.
+5. Run `./deploy.sh`.
+6. Load the fixtures once: `docker compose exec api node dist/console.js fixtures`. Do this before opening the site, which would otherwise cache the empty responses for a while.
 
-| Name                                                                                                                           | Kind     | Value                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------ | -------- | -------------------------------------------------------- |
-| `DIGITALOCEAN_API_KEY`                                                                                                         | secret   | DigitalOcean API token of the team                       |
-| `DEMO_DROPLET_SSH_PRIVATE_KEY`                                                                                                 | secret   | Private key from step 1 (the `dextinity-demo` file)      |
-| `DEMO_IDP_CLIENT_ID`                                                                                                           | variable | Client ID of the OIDC client                             |
-| `DEMO_OAUTH2_PROXY_CLIENT_SECRET`                                                                                              | secret   | Client secret of the OIDC client                         |
-| `DEMO_OAUTH2_PROXY_COOKIE_SECRET`                                                                                              | secret   | `openssl rand -base64 32 \| tr -- '+/' '-_'`             |
-| `DEMO_POSTGRESQL_PASSWORD`                                                                                                     | secret   | `openssl rand -hex 16`                                   |
-| `DEMO_IMGPROXY_KEY`, `DEMO_IMGPROXY_SALT`                                                                                      | secrets  | `openssl rand -hex 32` each                              |
-| `DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD`, `DEMO_DAM_SECRET`, `DEMO_FILE_UPLOADS_DOWNLOAD_SECRET`, `DEMO_SITE_PREVIEW_SECRET` | secrets  | At least 16 characters each, e.g. `openssl rand -hex 16` |
+## Deployment
+
+Run the following command on the Droplet. It pulls the latest changes, then builds and starts the containers.
+
+```
+./deploy.sh
+```
 
 ## Limitations
 
