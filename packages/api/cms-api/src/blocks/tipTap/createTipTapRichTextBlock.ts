@@ -55,7 +55,7 @@ import {
 } from "./textBlocks";
 import { containsInvalidTextBlock, getListNestingDepth } from "./tipTapValidation";
 
-export type { TipTapListOptions, TipTapTextBlock, TipTapTextBlockStyle, TipTapTextBlockTag } from "./textBlocks";
+export type { TipTapTextBlock, TipTapTextBlockStyle, TipTapTextBlockTag } from "./textBlocks";
 export type { JSONContent as TipTapRichTextBlockContent } from "@tiptap/core";
 
 /**
