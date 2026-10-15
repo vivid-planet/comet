@@ -1,5 +1,6 @@
 {
-    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "$schema": "https://unpkg.com/knip@6/schema.json",
+    "ignore": ["**/lib/**"],
     "workspaces": {
         ".": {
             "entry": ["dev-pm.config.ts"],
@@ -8,7 +9,8 @@
             "ignoreBinaries": ["oauth2-proxy", "peers", "playwright"]
         },
         "packages/cli": {
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreBinaries": ["op"]
         },
         "packages/eslint-config": {
             "ignore": ["*"],
