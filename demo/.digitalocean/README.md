@@ -20,7 +20,6 @@ Like the Starter's, the components are built with App Platform's Node.js buildpa
 4. Add the variables and secrets below to this repository's GitHub Actions settings, and store the secrets in 1Password. The workflow passes them into the app specs.
 5. Run the "Update DigitalOcean Demo Deployment" workflow, or merge into `main`. The first run creates the apps in the `dextinity-demo` project.
 6. Add the app `dextinity-demo-cms` to the trusted sources of the database cluster, like the Starter's app. Point the DNS records of the domains above to the apps, as shown in the DigitalOcean console.
-7. Load the fixtures once, from the console of the `api` component: `node dist/console.js fixtures`. Do this before opening the site, which would otherwise cache the empty responses for a while.
 
 | Name                                                                                                                           | Kind     | Value                                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
