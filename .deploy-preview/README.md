@@ -64,7 +64,7 @@ All variables are optional.
 
 | Variable                   | Default                                       | Description                                                          |
 | -------------------------- | --------------------------------------------- | -------------------------------------------------------------------- |
-| `COMPOSE_PROJECT_NAME`     | `dextinity-starter-deploy-preview`            | Compose project to create                                            |
+| `COMPOSE_PROJECT_NAME`     | `dextinity-demo-deploy-preview`               | Compose project to create                                            |
 | `DEPLOY_PREVIEW_PORT`      | `8080`                                        | Host port the environment is published on                            |
 | `DEPLOY_PREVIEW_HOST`      | `demo.preview.localhost:$DEPLOY_PREVIEW_PORT` | Public host used in all urls, see [Host names](#host-names)          |
 | `DEPLOY_PREVIEW_SCHEME`    | `http`                                        | Set to `https` when TLS is terminated by an upstream proxy           |
