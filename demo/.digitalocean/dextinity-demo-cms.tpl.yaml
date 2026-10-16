@@ -258,11 +258,13 @@ services:
             scope: RUN_TIME
             value: http://admin:80,http://api:80/api/,http://mailpit:8025/mailpit/
       http_port: 4180
-      image:
-          registry: dkarnutsch
-          registry_type: DOCKER_HUB
-          repository: oauth2-proxy
-          tag: latest
+      # App Platform can't pull from quay.io, where the official image is published, so it's built from a Dockerfile based on it.
+      dockerfile_path: demo/.digitalocean/oauth2-proxy/Dockerfile
+      source_dir: demo/.digitalocean/oauth2-proxy
+      github:
+          branch: ${DEPLOY_BRANCH}
+          deploy_on_push: false
+          repo: vivid-planet/dextinity
       instance_count: 1
       instance_size_slug: apps-s-1vcpu-0.5gb
       name: oauth2-proxy
