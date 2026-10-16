@@ -1,6 +1,6 @@
 # Demo on DigitalOcean App Platform
 
-Deploys the demo for internal use, the same way the [Starter](https://github.com/vivid-planet/dextinity-starter/tree/main/.digitalocean) is deployed. It runs in its own DigitalOcean project with its own Spaces bucket and imgproxy. Its database `demo` is on the Starter's database cluster.
+Deploys the demo for internal use, the same way the [Starter](https://github.com/vivid-planet/dextinity-starter/tree/main/.digitalocean) is deployed. It runs in its own DigitalOcean project with its own Spaces bucket and imgproxy. Its database `demo` is on the team's existing DigitalOcean database cluster, which the Starter uses as well.
 
 | App                       | Components                                | Domains                                                                                                                   |
 | ------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
@@ -14,7 +14,7 @@ Like the Starter's, the components are built with App Platform's Node.js buildpa
 
 ## One-time setup
 
-1. On the Starter's database cluster, create the database `demo` and the user `demo`, and grant the user access to the database. The cluster's CA certificate is committed as `digitalocean-postgresql-ca.crt`, the API trusts it through `NODE_EXTRA_CA_CERTS`.
+1. On the existing DigitalOcean database cluster, create the database `demo` and the user `demo`, and grant the user access to the database. The cluster's CA certificate is committed as `digitalocean-postgresql-ca.crt`, the API trusts it through `NODE_EXTRA_CA_CERTS`.
 2. Create the DigitalOcean project `dextinity-demo` in the team that hosts the Starter. In that project, create the Spaces bucket `dextinity-demo` in `fra1` and a Spaces access key for it.
 3. Create an OIDC client on `login.vivid-planet.cloud` with these redirect URIs:
     - `https://admin.demo.digitalocean.dextinity.com/oauth2/callback`
