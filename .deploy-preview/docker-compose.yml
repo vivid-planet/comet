@@ -19,7 +19,7 @@
 #
 # See .deploy-preview/README.md for details.
 
-name: dextinity-demo-preview
+name: dextinity-starter-deploy-preview
 
 x-preview-urls:
     site: &site-url ${DEPLOY_PREVIEW_SCHEME:-http}://${DEPLOY_PREVIEW_HOST:-demo.preview.localhost:8080}
