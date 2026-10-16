@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-# Starts the demo as a preview environment: builds the image and brings the compose project up,
-# blocking until it is healthy. A preview controller only has to run this script and gets a running
-# compose project.
+# Starts the demo as a preview environment: renders the site configs for the preview host, builds the
+# images and brings the compose project up, blocking until it is healthy. Everything project specific
+# happens here, so that a preview controller only has to run this script and gets a running compose
+# project.
 #
 # Configured through the environment, all optional:
 #
@@ -31,6 +32,27 @@ then
 else
     export DEPLOY_PREVIEW_COOKIE_SECURE=false
 fi
+
+if [[ -s "$HOME/.nvm/nvm.sh" ]]
+then
+    . "$HOME/.nvm/nvm.sh"
+    nvm install
+fi
+
+# The images do not know the preview host: the site configs are rendered for it here and injected
+# into api, admin and site by the compose file. Rendering needs the dextinity cli, which is installed
+# and built on its own when the repository has not been set up with ./install.sh.
+if [[ ! -x ./node_modules/.bin/dextinity || ! -f ./packages/cli/lib/dextinity.js ]]
+then
+    command -v pnpm > /dev/null || corepack enable
+    pnpm install --frozen-lockfile --filter=. --filter=@dextinity/cli
+    pnpm --filter @dextinity/cli run build
+fi
+SITE_DOMAIN="$DEPLOY_PREVIEW_HOST" ./node_modules/.bin/dextinity inject-site-configs \
+    -f demo/site-configs/site-configs.ts \
+    -i demo/.env.site-configs.tpl \
+    -o demo/.env.site-configs.preview \
+    --base64
 
 docker compose -p "${COMPOSE_PROJECT_NAME:-dextinity-demo-preview}" -f .docker-preview/docker-compose.yml \
     --project-directory . up --build -d --wait

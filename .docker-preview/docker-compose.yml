@@ -11,9 +11,10 @@
 #   DEPLOY_PREVIEW_PORT    host port the environment is published on (default 8080)
 #   DEPLOY_PREVIEW_SCHEME  http or https (default http), set to https when TLS is terminated upstream
 #
-# The image knows nothing about the preview host, everything is injected here. Everything else
-# (imgproxy keys, database credentials, secrets, ...) is taken from .env, which docker compose loads
-# itself, so the preview environment uses the same non-secret development values as `pnpm run dev`.
+# The images know nothing about the preview host, everything is injected here: the site configs from
+# demo/.env.site-configs.preview (rendered for the preview host by start-preview.sh), everything else
+# (imgproxy keys, database credentials, secrets, ...) from .env, which docker compose loads itself, so
+# the preview environment uses the same non-secret development values as `pnpm run dev`.
 #
 # See .docker-preview/README.md for details.
 
@@ -25,14 +26,6 @@ x-preview-urls:
     api: &api-url ${DEPLOY_PREVIEW_SCHEME:-http}://admin--${DEPLOY_PREVIEW_HOST:-demo.preview.localhost:8080}/api
     idp: &idp-url ${DEPLOY_PREVIEW_SCHEME:-http}://idp--${DEPLOY_PREVIEW_HOST:-demo.preview.localhost:8080}
     post-logout-redirect: &post-logout-redirect-url ${DEPLOY_PREVIEW_SCHEME:-http}://admin--${DEPLOY_PREVIEW_HOST:-demo.preview.localhost:8080}/oauth2/sign_out?rd=%2F
-
-x-app: &app
-    build:
-        context: .
-        dockerfile: .docker-preview/Dockerfile
-    image: ${COMPOSE_PROJECT_NAME}-app
-    restart: unless-stopped
-    init: true
 
 services:
     # Single entry point for the whole environment, see .docker-preview/Caddyfile.
@@ -88,9 +81,11 @@ services:
         restart: unless-stopped
 
     idp:
-        <<: *app
-        working_dir: /app
-        command: ["node_modules/.bin/dev-oidc-provider"]
+        build:
+            context: .
+            dockerfile: .docker-preview/Idp.Dockerfile
+        restart: unless-stopped
+        init: true
         environment:
             IDP_PORT: 8080
             IDP_SSO_URL: *idp-url
@@ -101,9 +96,8 @@ services:
 
     # Like in local development, the admin and the api are only reachable through oauth2-proxy.
     oauth2-proxy:
-        <<: *app
-        working_dir: /app
-        command: ["node_modules/.bin/oauth2-proxy"]
+        image: quay.io/oauth2-proxy/oauth2-proxy:${OAUTH2_PROXY_VERSION}
+        restart: unless-stopped
         environment:
             OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:4180
             OAUTH2_PROXY_REVERSE_PROXY: "true"
@@ -134,14 +128,14 @@ services:
             - api
 
     api:
-        <<: *app
-        working_dir: /app/demo/api
-        command: ["/app/.docker-preview/api-start.sh"]
+        build:
+            context: .
+            dockerfile: .docker-preview/Api.Dockerfile
+        restart: unless-stopped
+        init: true
         environment:
             NODE_ENV: production
             HELM_RELEASE: dextinity-demo-preview
-            SITE_DOMAIN: ${DEPLOY_PREVIEW_HOST:-demo.preview.localhost:8080}
-            RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY:-}
             SERVER_HOST: 0.0.0.0
             API_PORT: 4000
             API_URL: *api-url
@@ -181,6 +175,8 @@ services:
             BREVO_EMAIL_HASH_KEY: ${BREVO_EMAIL_HASH_KEY}
             BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI: ${BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI}
             NODE_OPTIONS: --max-old-space-size=1024
+        env_file:
+            - demo/.env.site-configs.preview
         volumes:
             - uploads:/app/demo/uploads
         depends_on:
@@ -199,13 +195,13 @@ services:
             start_period: 600s
 
     admin:
-        <<: *app
-        working_dir: /app/demo/admin
-        command: ["node", "server"]
+        build:
+            context: .
+            dockerfile: .docker-preview/Admin.Dockerfile
+        restart: unless-stopped
+        init: true
         environment:
             NODE_ENV: production
-            SITE_DOMAIN: ${DEPLOY_PREVIEW_HOST:-demo.preview.localhost:8080}
-            RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY:-}
             SERVER_HOST: 0.0.0.0
             ADMIN_PORT: 8001
             ADMIN_URL: *admin-url
@@ -214,15 +210,17 @@ services:
             MUI_LICENSE_KEY: ${MUI_LICENSE_KEY:-}
             BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI: ${BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI}
             NODE_OPTIONS: --max-old-space-size=256
+        env_file:
+            - demo/.env.site-configs.preview
 
     site:
-        <<: *app
-        working_dir: /app/demo/site
-        command: ["node", "dist/server.js"]
+        build:
+            context: .
+            dockerfile: .docker-preview/Site.Dockerfile
+        restart: unless-stopped
+        init: true
         environment:
             NODE_ENV: production
-            SITE_DOMAIN: ${DEPLOY_PREVIEW_HOST:-demo.preview.localhost:8080}
-            RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY:-}
             SERVER_HOST: 0.0.0.0
             SITE_PORT: 3000
             ADMIN_URL: *admin-url
@@ -240,6 +238,8 @@ services:
             VALKEY_PORT: 6379
             VALKEY_PASSWORD: ${VALKEY_PASSWORD}
             NODE_OPTIONS: --max-old-space-size=768
+        env_file:
+            - demo/.env.site-configs.preview
         depends_on:
             - api
             - valkey

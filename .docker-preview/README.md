@@ -3,8 +3,9 @@
 Runs the complete demo (api, admin, site and everything they need) in Docker.
 It is meant for preview environments, for example to look at a pull request before it is merged.
 
-Dependencies are installed and everything is built inside the image, so nothing but Docker is needed
-on the host: neither `./install.sh` nor a build has to run.
+Dependencies are installed and everything is built inside the images, so neither `./install.sh` nor a
+build has to run on the host. The one thing prepared outside is the site-configs env file, which needs
+the dextinity cli: `start-preview.sh` installs and builds it when the repository has not been set up.
 
 It is **not** a development environment: there is no hot reloading and no watch mode.
 Everything is built once, production style, and then started. For development use `pnpm run dev:demo`.
@@ -15,8 +16,11 @@ Everything is built once, production style, and then started. For development us
 ./start-preview.sh
 ```
 
-The script builds the image and brings the compose project up, blocking until api and site report
-healthy. The first build takes a while, because it builds all packages the demo depends on.
+The script renders `demo/site-configs/*.ts` for `DEPLOY_PREVIEW_HOST` into
+`demo/.env.site-configs.preview` - the images themselves do not know the preview host - and then brings
+the compose project up, blocking until api and site report healthy. Run it again whenever
+`DEPLOY_PREVIEW_HOST` or anything in `demo/site-configs/` changes. The first build takes a while,
+because every image builds the packages its application depends on.
 
 | Application | URL                                       |
 | ----------- | ----------------------------------------- |
@@ -52,6 +56,7 @@ DEPLOY_PREVIEW_PORT=8081 COMPOSE_PROJECT_NAME=pr-123 ./start-preview.sh
 ```
 
 The project name keeps containers, networks and volumes of the environments apart.
+`demo/.env.site-configs.preview` is not, so start one environment after the other, not both at once.
 
 ## Configuration
 
@@ -124,25 +129,34 @@ export COMPOSE_PROJECT_NAME=pr-123
   preview host, see [Caddyfile](Caddyfile).
 - **oauth2-proxy** and the **idp** (`dev-oidc-provider`) work like in local development. oauth2-proxy
   reaches the idp inside the network, while the browser is sent to its public host.
-- The site configs are rendered when a container starts ([entrypoint.sh](entrypoint.sh)), for the
-  host in `SITE_DOMAIN`. The image itself does not know the preview host.
 - The api loads the fixtures on its first start ([api-start.sh](api-start.sh)) and only migrates the
   database afterwards. The marker for that lives in the uploads volume, which has the same lifetime
   as the database volume.
 - Postgres runs without `fsync` and tracing is disabled - preview data is disposable and the
   environments should stay small.
 
-### Image
+### Images
 
-The demo applications depend on the workspace packages, so a single [Dockerfile](Dockerfile) installs
-and builds packages and demo together. Every application service runs this image with a different
-working directory and command. The repository root is the build context;
-[Dockerfile.dockerignore](Dockerfile.dockerignore) excludes everything that install and build
-generate, so a build from a fresh clone and a build from a local working copy produce the same image.
-The image is named after the compose project, so it is built once per environment.
+One Dockerfile per application, each one installing and building only its own application and the
+workspace packages it depends on:
 
-The image is built and run in a single stage: it never leaves the machine that built it, so its size
-does not matter. What does matter is the build time, which is why the manifests are copied before the
+| Dockerfile                           | Contains                                                     |
+| ------------------------------------ | ------------------------------------------------------------ |
+| [Api.Dockerfile](Api.Dockerfile)     | `demo/api` and its packages, served by `dist/main`           |
+| [Admin.Dockerfile](Admin.Dockerfile) | `demo/admin` and its packages, served by `demo/admin/server` |
+| [Site.Dockerfile](Site.Dockerfile)   | `demo/site` and its packages, served by `dist/server.js`     |
+| [Idp.Dockerfile](Idp.Dockerfile)     | `dev-oidc-provider` with the users of `static-users.ts`      |
+
+oauth2-proxy uses the official image, in the version of `OAUTH2_PROXY_VERSION` from `.env`.
+
+All of them use the repository root as build context, because the demo applications need the
+workspace packages and files of each other (`demo/api/schema.gql`, `demo/api/block-meta.json`,
+`demo/site-configs/site-configs.d.ts`). The [.dockerignore](../.dockerignore) excludes everything that
+install and build generate, so a build from a fresh clone and a build from a local working copy
+produce the same image.
+
+Each image is built and run in a single stage: the images never leave the machine that built them, so
+their size does not matter. What does matter is the build time, which is why the manifests are copied before the
 sources (a source change then does not invalidate `pnpm install`) and why the pnpm store and the
 Next.js build cache are mounted.
 
@@ -157,5 +171,7 @@ Next.js build cache are mounted.
   Do not expose an environment to the internet without putting authentication in front of it.
 - Mailpit is not behind the login, so anyone who can reach `mail--<host>` can read the mails.
 - The applications run as root inside their containers.
+- `demo/.env.site-configs.preview` is a single file in the repository, so two environments with
+  different hosts cannot be rendered at the same time - render, start, then render the next.
 - `down --volumes` deletes the uploads together with the database. The fixtures are loaded again on
   the next start.
