@@ -5,7 +5,7 @@ import { FigmaCliError } from "./figmaCliError.js";
 import { getOrAddSourceFile } from "./tsMorphProject.js";
 
 /** The override API every component shares, which no Figma design describes. */
-const OVERRIDE_API_PROP_NAMES = ["className", "slots", "slotProps", "ref"];
+const OVERRIDE_API_PROP_NAMES = ["className", "slots", "slotProps", "ref", "render"];
 
 /** Inherited props a Figma design can specify, so the code side has to describe them. */
 const DESCRIBED_INHERITED_PROP_NAMES = ["children"];
