@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ElementType, ReactNode, Ref } from "react";
+import type { ComponentPropsWithoutRef, ElementType, ReactElement, ReactNode, Ref } from "react";
 
 type WidgetVariant = "primary" | "secondary";
 
@@ -46,6 +46,8 @@ export interface WidgetProps extends Omit<ComponentPropsWithoutRef<"div">, "clas
     slotProps?: { startIcon?: ComponentPropsWithoutRef<"span"> };
     /** Ref forwarded to the root element. */
     ref?: Ref<HTMLDivElement>;
+    /** Replaces the rendered root element. */
+    render?: ReactElement;
 }
 
 /** A component standing in for a real one, declaring every kind of prop a description has to cover. */
