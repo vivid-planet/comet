@@ -15,6 +15,7 @@ describe("describeFigmaTarget", () => {
         const nodes = buttonNodesResponse({
             Variant: { type: "VARIANT", defaultValue: "Contained", variantOptions: ["Contained", "Outlined", "Text"] },
             Purpose: { type: "VARIANT", defaultValue: "Secondary Action", variantOptions: ["Primary Action", "Secondary Action"] },
+            Size: { type: "VARIANT", defaultValue: "MD", variantOptions: ["MD", "Icon XL"] },
             Disabled: { type: "VARIANT", defaultValue: "No", variantOptions: ["No", "Yes"] },
             Loading: { type: "VARIANT", defaultValue: "yes", variantOptions: ["yes", "no"] },
             "Children#25:38": { type: "TEXT", defaultValue: "Button" },
@@ -33,6 +34,7 @@ describe("describeFigmaTarget", () => {
                 disabled: { type: "boolean", default: false },
                 loading: { type: "boolean", default: true },
                 purpose: { type: "enum", options: ["primaryAction", "secondaryAction"], default: "secondaryAction" },
+                size: { type: "enum", options: ["md", "iconXl"], default: "md" },
                 startIcon: { type: "node" },
                 variant: { type: "enum", options: ["contained", "outlined", "text"], default: "contained" },
             },
