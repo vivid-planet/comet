@@ -5,10 +5,10 @@ Deploys the demo for internal use, the same way the [Starter](https://github.com
 | App                       | Components                                | Domains                                                                                                                   |
 | ------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `dextinity-demo-cms`      | `api`, `admin`, `oauth2-proxy`, `mailpit` | `admin.demo.digitalocean.dextinity.com`                                                                                   |
-| `dextinity-demo-site`     | `site`, `oauth2-proxy`                    | `demo.digitalocean.dextinity.com`, `secondary.demo.digitalocean.dextinity.com`, `preview.demo.digitalocean.dextinity.com` |
+| `dextinity-demo-site`     | `site`                                    | `demo.digitalocean.dextinity.com`, `secondary.demo.digitalocean.dextinity.com`, `preview.demo.digitalocean.dextinity.com` |
 | `dextinity-demo-imgproxy` | `darthsim-imgproxy`                       | `imgproxy.demo.digitalocean.dextinity.com`                                                                                |
 
-Admin and site require a login with a `vivid-planet.com` account. Both oauth2-proxies share their cookie on `.demo.digitalocean.dextinity.com`, so one login covers all domains. Every mail the demo sends ends up in Mailpit at `https://admin.demo.digitalocean.dextinity.com/mailpit/`.
+The admin requires a login with a `vivid-planet.com` account. The site is public, as in the Starter. Every mail the demo sends ends up in Mailpit at `https://admin.demo.digitalocean.dextinity.com/mailpit/`.
 
 Like the Starter's, the components are built with App Platform's Node.js buildpack. Unlike the Starter's, they build from the repository root, because the demo depends on the packages in this repository rather than on released versions.
 
@@ -16,11 +16,7 @@ Like the Starter's, the components are built with App Platform's Node.js buildpa
 
 1. On the existing DigitalOcean database cluster, create the database `demo` and the user `demo`, and grant the user access to the database. The cluster's CA certificate is committed as `digitalocean-postgresql-ca.crt`, the API trusts it through `NODE_EXTRA_CA_CERTS`.
 2. Create the DigitalOcean project `dextinity-demo` in the team that hosts the Starter. In that project, create the Spaces bucket `dextinity-demo` in `fra1` and a Spaces access key for it.
-3. Create an OIDC client on `login.vivid-planet.cloud` with these redirect URIs:
-    - `https://admin.demo.digitalocean.dextinity.com/oauth2/callback`
-    - `https://demo.digitalocean.dextinity.com/oauth2/callback`
-    - `https://secondary.demo.digitalocean.dextinity.com/oauth2/callback`
-    - `https://preview.demo.digitalocean.dextinity.com/oauth2/callback`
+3. Create an OIDC client on `login.vivid-planet.cloud` with the redirect URI `https://admin.demo.digitalocean.dextinity.com/oauth2/callback` and the post logout URI `https://admin.demo.digitalocean.dextinity.com/oauth2/sign_out?rd=%2F`.
 4. Add the variables and secrets below to this repository's GitHub Actions settings, and store the secrets in 1Password. The workflow passes them into the app specs.
 5. Run the "Update DigitalOcean Demo Deployment" workflow, or merge into `main`. The first run creates the apps in the `dextinity-demo` project.
 6. Add the app `dextinity-demo-cms` to the trusted sources of the database cluster, like the Starter's app. Point the DNS records of the domains above to the apps, as shown in the DigitalOcean console.

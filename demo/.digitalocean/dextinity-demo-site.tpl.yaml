@@ -11,14 +11,13 @@ domains:
 ingress:
     rules:
         - component:
-              name: oauth2-proxy
+              name: site
           match:
               path:
                   prefix: /
 name: dextinity-demo-site
 region: fra
 services:
-    # Only reachable through the oauth2-proxy, so the site is internal like the admin
     # Next.js loads the contact form route while building, which requires the mailer, contact form and reCAPTCHA variables. They're read again at runtime.
     - build_command: |-
           CI=true node copy-project-files.js &&
@@ -55,92 +54,7 @@ services:
           - key: PREVIEW_DOMAIN
             scope: RUN_TIME
             value: preview.demo.digitalocean.dextinity.com
-      # Without an http_port, App Platform would check the default port 8080
-      health_check:
-          port: 3000
+      http_port: 3000
       instance_count: 1
       instance_size_slug: apps-s-1vcpu-1gb
-      internal_ports:
-          - 3000
       name: site
-    - envs:
-          - key: OAUTH2_PROXY_CLIENT_ID
-            scope: RUN_TIME
-            value: ${IDP_CLIENT_ID}
-          - key: OAUTH2_PROXY_CLIENT_SECRET
-            scope: RUN_TIME
-            type: SECRET
-            value: ${OAUTH2_PROXY_CLIENT_SECRET}
-          - key: OAUTH2_PROXY_COOKIE_SECRET
-            scope: RUN_TIME
-            type: SECRET
-            value: ${OAUTH2_PROXY_COOKIE_SECRET}
-          # Provider
-          - key: OAUTH2_PROXY_CODE_CHALLENGE_METHOD
-            scope: RUN_TIME
-            value: S256
-          - key: OAUTH2_PROXY_OIDC_ISSUER_URL
-            scope: RUN_TIME
-            value: https://login.vivid-planet.cloud
-          - key: OAUTH2_PROXY_PROVIDER
-            scope: RUN_TIME
-            value: oidc
-          - key: OAUTH2_PROXY_SCOPE
-            scope: RUN_TIME
-            value: openid profile email offline_access
-          # Cookie, shared with the admin's oauth2-proxy so one login covers admin, site and preview
-          - key: OAUTH2_PROXY_COOKIE_DOMAINS
-            scope: RUN_TIME
-            value: .demo.digitalocean.dextinity.com
-          - key: OAUTH2_PROXY_COOKIE_SAMESITE
-            scope: RUN_TIME
-            value: lax
-          - key: OAUTH2_PROXY_COOKIE_REFRESH
-            scope: RUN_TIME
-            value: 55m
-          # Logging
-          - key: OAUTH2_PROXY_AUTH_LOGGING
-            scope: RUN_TIME
-            value: "true"
-          - key: OAUTH2_PROXY_REQUEST_LOGGING
-            scope: RUN_TIME
-            value: "false"
-          - key: OAUTH2_PROXY_SILENCE_PING_LOGGING
-            scope: RUN_TIME
-            value: "true"
-          - key: OAUTH2_PROXY_STANDARD_LOGGING
-            scope: RUN_TIME
-            value: "false"
-          # Proxy
-          - key: OAUTH2_PROXY_EMAIL_DOMAINS
-            scope: RUN_TIME
-            value: vivid-planet.com
-          - key: OAUTH2_PROXY_SKIP_AUTH_PREFLIGHT
-            scope: RUN_TIME
-            value: "true"
-          # The API renders Brevo campaigns through this route and authenticates with basic auth instead
-          - key: OAUTH2_PROXY_SKIP_AUTH_ROUTES
-            scope: RUN_TIME
-            value: "^/api/render-brevo-email-campaign"
-          - key: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
-            scope: RUN_TIME
-            value: "true"
-          - key: OAUTH2_PROXY_WHITELIST_DOMAINS
-            scope: RUN_TIME
-            value: login.vivid-planet.cloud,.demo.digitalocean.dextinity.com
-          - key: OAUTH2_PROXY_HTTP_ADDRESS
-            scope: RUN_TIME
-            value: 0.0.0.0:4180
-          # Upstream
-          - key: OAUTH2_PROXY_UPSTREAMS
-            scope: RUN_TIME
-            value: http://site:3000
-      http_port: 4180
-      image:
-          registry: dkarnutsch
-          registry_type: DOCKER_HUB
-          repository: oauth2-proxy
-          tag: latest
-      instance_count: 1
-      instance_size_slug: apps-s-1vcpu-0.5gb
-      name: oauth2-proxy

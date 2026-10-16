@@ -100,9 +100,6 @@ jobs:
             - name: Update DigitalOcean dextinity-demo-site Deployment
               uses: digitalocean/app_action/deploy@v2
               env:
-                  IDP_CLIENT_ID: ${{ vars.DEMO_IDP_CLIENT_ID }}
-                  OAUTH2_PROXY_CLIENT_SECRET: ${{ secrets.DEMO_OAUTH2_PROXY_CLIENT_SECRET }}
-                  OAUTH2_PROXY_COOKIE_SECRET: ${{ secrets.DEMO_OAUTH2_PROXY_COOKIE_SECRET }}
                   API_BASIC_AUTH_SYSTEM_USER_PASSWORD: ${{ secrets.DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD }}
               with:
                   token: ${{ secrets.DIGITALOCEAN_API_KEY_2 }}

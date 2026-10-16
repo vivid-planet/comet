@@ -199,10 +199,7 @@ services:
           - key: OAUTH2_PROXY_SCOPE
             scope: RUN_TIME
             value: openid profile email offline_access
-          # Cookie, shared with the site's oauth2-proxy so one login covers admin, site and preview
-          - key: OAUTH2_PROXY_COOKIE_DOMAINS
-            scope: RUN_TIME
-            value: .demo.digitalocean.dextinity.com
+          # Cookie
           - key: OAUTH2_PROXY_COOKIE_SAMESITE
             scope: RUN_TIME
             value: lax
@@ -250,7 +247,7 @@ services:
             value: "true"
           - key: OAUTH2_PROXY_WHITELIST_DOMAINS
             scope: RUN_TIME
-            value: login.vivid-planet.cloud,.demo.digitalocean.dextinity.com
+            value: login.vivid-planet.cloud
           - key: OAUTH2_PROXY_HTTP_ADDRESS
             scope: RUN_TIME
             value: 0.0.0.0:4180
