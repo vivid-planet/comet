@@ -2948,9 +2948,6 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
-      '@graphql-mocks/network-msw':
-        specifier: ^0.4.4
-        version: 0.4.4(graphql-mocks@0.12.0(graphql@16.14.2))(msw@2.15.0(@types/node@24.19.2)(typescript@5.9.3))
       '@storybook/addon-docs':
         specifier: ^10.6.1
         version: 10.6.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(storybook@10.6.1(@types/react@19.3.0)(prettier@3.9.10)(react@19.3.0))
@@ -3005,9 +3002,6 @@ importers:
       eslint-plugin-storybook:
         specifier: ^10.6.1
         version: 10.6.1(eslint@9.39.5(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@5.9.3)
-      graphql-mocks:
-        specifier: ^0.12.0
-        version: 0.12.0(graphql@16.14.2)
       immutable:
         specifier: ^3.8.4
         version: 3.8.4
@@ -5586,13 +5580,6 @@ packages:
   '@graphql-hive/signal@2.0.0':
     resolution: {integrity: sha512-Pz8wB3K0iU6ae9S1fWfsmJX24CcGeTo6hE7T44ucmV/ALKRj+bxClmqrYcDT7v3f0d12Rh4FAXBb6gon+WkDpQ==}
     engines: {node: '>=20.0.0'}
-
-  '@graphql-mocks/network-msw@0.4.4':
-    resolution: {integrity: sha512-2T6eV8uRqRcXBYgIXceBqkPaRAsL8JtTQO4u4d+902UiYcc+utgUkQraUG9wdEyRmHklgysUPli/tBo53ldFnQ==}
-    engines: {node: '>= 20.0.0'}
-    peerDependencies:
-      graphql-mocks: '*'
-      msw: ^2.0.0
 
   '@graphql-tools/apollo-engine-loader@8.0.38':
     resolution: {integrity: sha512-/qbjIdgIMcBVpZW5N3qBsB9p8byXevbab3FQAVeH9W6T0e8mKRbM02mjK6+tShntejioJyDZ5SacbFeNRU7dTg==}
@@ -13077,12 +13064,6 @@ packages:
     peerDependencies:
       graphql: '*'
 
-  graphql-mocks@0.12.0:
-    resolution: {integrity: sha512-SfDVtgamGf8xGR1PV/UArXc14hCFxvNuEmBREiBkV4MtDZgb7ciZg6r0dLMP8cDDX1uzimKn+q8XOi8QeJPb8g==}
-    engines: {node: '>= 24.0.0'}
-    peerDependencies:
-      graphql: '>=16.0.0 <17'
-
   graphql-parse-resolve-info@4.14.1:
     resolution: {integrity: sha512-WKHukfEuZamP1ZONR84b8iT+4sJgEhtXMDArm1jpXEsU2vTb5EgkCZ4Obfl+v09oNTKXm0CJjPfBUZ5jcJ2Ykg==}
     engines: {node: '>=8.6'}
@@ -16332,9 +16313,6 @@ packages:
   quick-lru@5.1.1:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
-
-  ramda@0.32.0:
-    resolution: {integrity: sha512-GQWAHhxhxWBWA8oIBr1XahFVjQ9Fic6MK9ikijfd4TZHfE2+urfk+irVlR5VOn48uwMgM+loRRBJd6Yjsbc0zQ==}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -22840,11 +22818,6 @@ snapshots:
   '@graphql-hive/signal@1.0.0': {}
 
   '@graphql-hive/signal@2.0.0': {}
-
-  '@graphql-mocks/network-msw@0.4.4(graphql-mocks@0.12.0(graphql@16.14.2))(msw@2.15.0(@types/node@24.19.2)(typescript@5.9.3))':
-    dependencies:
-      graphql-mocks: 0.12.0(graphql@16.14.2)
-      msw: 2.15.0(@types/node@24.19.2)(typescript@5.9.3)
 
   '@graphql-tools/apollo-engine-loader@8.0.38(graphql@16.14.2)':
     dependencies:
@@ -31426,13 +31399,6 @@ snapshots:
       arrify: 1.0.1
       graphql: 16.14.2
 
-  graphql-mocks@0.12.0(graphql@16.14.2):
-    dependencies:
-      graphql: 16.14.2
-      ramda: 0.32.0
-    optionalDependencies:
-      sinon: 18.0.1
-
   graphql-parse-resolve-info@4.14.1(graphql@16.14.2)(supports-color@8.1.1):
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
@@ -35384,8 +35350,6 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quick-lru@5.1.1: {}
-
-  ramda@0.32.0: {}
 
   randombytes@2.1.0:
     dependencies:
