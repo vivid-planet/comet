@@ -27,7 +27,7 @@ jobs:
         steps:
             - name: Check that all variables and secrets are set
               env:
-                  DIGITALOCEAN_API_KEY_2: ${{ secrets.DIGITALOCEAN_API_KEY_2 }}
+                  DIGITALOCEAN_API_KEY: ${{ secrets.DIGITALOCEAN_API_KEY }}
                   DEMO_DIGITALOCEAN_PROJECT_ID: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}
                   DEMO_IDP_CLIENT_ID: ${{ vars.DEMO_IDP_CLIENT_ID }}
                   DEMO_OAUTH2_PROXY_CLIENT_SECRET: ${{ secrets.DEMO_OAUTH2_PROXY_CLIENT_SECRET }}
@@ -43,7 +43,7 @@ jobs:
                   DEMO_SITE_PREVIEW_SECRET: ${{ secrets.DEMO_SITE_PREVIEW_SECRET }}
               run: |
                   missing=0
-                  for name in DIGITALOCEAN_API_KEY_2 DEMO_DIGITALOCEAN_PROJECT_ID DEMO_IDP_CLIENT_ID DEMO_OAUTH2_PROXY_CLIENT_SECRET DEMO_OAUTH2_PROXY_COOKIE_SECRET DEMO_POSTGRESQL_PWD_BASE64 DEMO_S3_ACCESS_KEY_ID DEMO_S3_SECRET_ACCESS_KEY DEMO_IMGPROXY_KEY DEMO_IMGPROXY_SALT DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD DEMO_DAM_SECRET DEMO_FILE_UPLOADS_DOWNLOAD_SECRET DEMO_SITE_PREVIEW_SECRET; do
+                  for name in DIGITALOCEAN_API_KEY DEMO_DIGITALOCEAN_PROJECT_ID DEMO_IDP_CLIENT_ID DEMO_OAUTH2_PROXY_CLIENT_SECRET DEMO_OAUTH2_PROXY_COOKIE_SECRET DEMO_POSTGRESQL_PWD_BASE64 DEMO_S3_ACCESS_KEY_ID DEMO_S3_SECRET_ACCESS_KEY DEMO_IMGPROXY_KEY DEMO_IMGPROXY_SALT DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD DEMO_DAM_SECRET DEMO_FILE_UPLOADS_DOWNLOAD_SECRET DEMO_SITE_PREVIEW_SECRET; do
                       if [ -z "${!name}" ]; then
                           echo "::error::$name isn't set, see demo/.digitalocean/README.md"
                           missing=1
@@ -69,7 +69,7 @@ jobs:
                   S3_ACCESS_KEY_ID: ${{ secrets.DEMO_S3_ACCESS_KEY_ID }}
                   S3_SECRET_ACCESS_KEY: ${{ secrets.DEMO_S3_SECRET_ACCESS_KEY }}
               with:
-                  token: ${{ secrets.DIGITALOCEAN_API_KEY_2 }}
+                  token: ${{ secrets.DIGITALOCEAN_API_KEY }}
                   project_id: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}
                   print_deploy_logs: true
                   print_build_logs: true
@@ -91,7 +91,7 @@ jobs:
                   FILE_UPLOADS_DOWNLOAD_SECRET: ${{ secrets.DEMO_FILE_UPLOADS_DOWNLOAD_SECRET }}
                   SITE_PREVIEW_SECRET: ${{ secrets.DEMO_SITE_PREVIEW_SECRET }}
               with:
-                  token: ${{ secrets.DIGITALOCEAN_API_KEY_2 }}
+                  token: ${{ secrets.DIGITALOCEAN_API_KEY }}
                   project_id: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}
                   print_deploy_logs: true
                   print_build_logs: true
@@ -102,7 +102,7 @@ jobs:
               env:
                   API_BASIC_AUTH_SYSTEM_USER_PASSWORD: ${{ secrets.DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD }}
               with:
-                  token: ${{ secrets.DIGITALOCEAN_API_KEY_2 }}
+                  token: ${{ secrets.DIGITALOCEAN_API_KEY }}
                   project_id: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}
                   print_deploy_logs: true
                   print_build_logs: true
