@@ -12,7 +12,7 @@
 #   DEPLOY_PREVIEW_SCHEME  http or https (default http), set to https when TLS is terminated upstream
 #
 # The images know nothing about the deploy preview host, everything is injected here: the site
-# configs from demo/.env.site-configs.preview (rendered for the deploy preview host by
+# configs from demo/.env.site-configs.deploy-preview (rendered for the deploy preview host by
 # start-deploy-preview.sh), everything else (imgproxy keys, database credentials, secrets, ...) from
 # .env, which docker compose loads itself, so the deploy preview environment uses the same non-secret
 # development values as `pnpm run dev`.
@@ -177,7 +177,7 @@ services:
             BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI: ${BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI}
             NODE_OPTIONS: --max-old-space-size=1024
         env_file:
-            - demo/.env.site-configs.preview
+            - demo/.env.site-configs.deploy-preview
         volumes:
             - uploads:/app/demo/uploads
         depends_on:
@@ -212,7 +212,7 @@ services:
             BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI: ${BREVO_ALLOW_ADDING_CONTACTS_WITHOUT_DOI}
             NODE_OPTIONS: --max-old-space-size=256
         env_file:
-            - demo/.env.site-configs.preview
+            - demo/.env.site-configs.deploy-preview
 
     site:
         build:
@@ -240,7 +240,7 @@ services:
             VALKEY_PASSWORD: ${VALKEY_PASSWORD}
             NODE_OPTIONS: --max-old-space-size=768
         env_file:
-            - demo/.env.site-configs.preview
+            - demo/.env.site-configs.deploy-preview
         depends_on:
             - api
             - valkey

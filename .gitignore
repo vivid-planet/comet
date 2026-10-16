@@ -12,7 +12,7 @@ junit-unit.xml
 junit-storybook.xml
 .env.local
 .env.site-configs
-.env.site-configs.preview
+.env.site-configs.deploy-preview
 **/.idea
 
 *storybook.log

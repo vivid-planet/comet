@@ -17,7 +17,7 @@ Everything is built once, production style, and then started. For development us
 ```
 
 The script renders `demo/site-configs/*.ts` for `DEPLOY_PREVIEW_HOST` into
-`demo/.env.site-configs.preview` - the images themselves do not know the deploy preview host - and then brings
+`demo/.env.site-configs.deploy-preview` - the images themselves do not know the deploy preview host - and then brings
 the compose project up, blocking until api and site report healthy. Run it again whenever
 `DEPLOY_PREVIEW_HOST` or anything in `demo/site-configs/` changes. The first build takes a while,
 because every image builds the packages its application depends on.
@@ -56,7 +56,7 @@ DEPLOY_PREVIEW_PORT=8081 COMPOSE_PROJECT_NAME=pr-123 ./start-deploy-preview.sh
 ```
 
 The project name keeps containers, networks and volumes of the environments apart.
-`demo/.env.site-configs.preview` is not, so start one environment after the other, not both at once.
+`demo/.env.site-configs.deploy-preview` is not, so start one environment after the other, not both at once.
 
 ## Configuration
 
@@ -171,7 +171,7 @@ Next.js build cache are mounted.
   Do not expose an environment to the internet without putting authentication in front of it.
 - Mailpit is not behind the login, so anyone who can reach `mail--<host>` can read the mails.
 - The applications run as root inside their containers.
-- `demo/.env.site-configs.preview` is a single file in the repository, so two environments with
+- `demo/.env.site-configs.deploy-preview` is a single file in the repository, so two environments with
   different hosts cannot be rendered at the same time - render, start, then render the next.
 - `down --volumes` deletes the uploads together with the database. The fixtures are loaded again on
   the next start.
