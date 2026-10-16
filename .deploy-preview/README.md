@@ -5,7 +5,7 @@ It is meant for preview environments, for example to look at a pull request befo
 
 Dependencies are installed and everything is built inside the images, so neither `./install.sh` nor a
 build has to run on the host. The one thing prepared outside is the site-configs env file, which needs
-the dextinity cli: `start-preview.sh` installs and builds it when the repository has not been set up.
+the dextinity cli: `start-deploy-preview.sh` installs and builds it when the repository has not been set up.
 
 It is **not** a development environment: there is no hot reloading and no watch mode.
 Everything is built once, production style, and then started. For development use `pnpm run dev:demo`.
@@ -13,7 +13,7 @@ Everything is built once, production style, and then started. For development us
 ## Quick start
 
 ```bash
-./start-preview.sh
+./start-deploy-preview.sh
 ```
 
 The script renders `demo/site-configs/*.ts` for `DEPLOY_PREVIEW_HOST` into
@@ -35,13 +35,13 @@ Every mail the demo sends ends up in Mailpit.
 Everything besides the site sits next to the base domain, not below it: `admin--<host>`, not
 `admin.<host>`. See [Host names](#host-names).
 
-Afterwards `docker compose -f .docker-preview/docker-compose.yml --project-directory .` works directly,
+Afterwards `docker compose -f .deploy-preview/docker-compose.yml --project-directory .` works directly,
 for instance to follow the logs, stop the environment, or remove the database and uploads:
 
 ```bash
-docker compose -f .docker-preview/docker-compose.yml --project-directory . logs -f
-docker compose -f .docker-preview/docker-compose.yml --project-directory . down
-docker compose -f .docker-preview/docker-compose.yml --project-directory . down --volumes
+docker compose -f .deploy-preview/docker-compose.yml --project-directory . logs -f
+docker compose -f .deploy-preview/docker-compose.yml --project-directory . down
+docker compose -f .deploy-preview/docker-compose.yml --project-directory . down --volumes
 ```
 
 To start or restart the environment, run the script again.
@@ -52,7 +52,7 @@ Only one port is published, so a second environment needs a different port and i
 compose project name:
 
 ```bash
-DEPLOY_PREVIEW_PORT=8081 COMPOSE_PROJECT_NAME=pr-123 ./start-preview.sh
+DEPLOY_PREVIEW_PORT=8081 COMPOSE_PROJECT_NAME=pr-123 ./start-deploy-preview.sh
 ```
 
 The project name keeps containers, networks and volumes of the environments apart.
@@ -62,13 +62,13 @@ The project name keeps containers, networks and volumes of the environments apar
 
 All variables are optional.
 
-| Variable                   | Default                                       | Description                                                   |
-| -------------------------- | --------------------------------------------- | ------------------------------------------------------------- |
-| `COMPOSE_PROJECT_NAME`     | `dextinity-demo-preview`                      | Compose project to create                                     |
-| `DEPLOY_PREVIEW_PORT`      | `8080`                                        | Host port the environment is published on                     |
-| `DEPLOY_PREVIEW_HOST`      | `demo.preview.localhost:$DEPLOY_PREVIEW_PORT` | Public host used in all urls, see [Host names](#host-names)   |
-| `DEPLOY_PREVIEW_SCHEME`    | `http`                                        | Set to `https` when TLS is terminated by an upstream proxy    |
-| `DEPLOY_PREVIEW_URLS_FILE` |                                               | File `start-preview.sh` writes the urls of the environment to |
+| Variable                   | Default                                       | Description                                                          |
+| -------------------------- | --------------------------------------------- | -------------------------------------------------------------------- |
+| `COMPOSE_PROJECT_NAME`     | `dextinity-demo-preview`                      | Compose project to create                                            |
+| `DEPLOY_PREVIEW_PORT`      | `8080`                                        | Host port the environment is published on                            |
+| `DEPLOY_PREVIEW_HOST`      | `demo.preview.localhost:$DEPLOY_PREVIEW_PORT` | Public host used in all urls, see [Host names](#host-names)          |
+| `DEPLOY_PREVIEW_SCHEME`    | `http`                                        | Set to `https` when TLS is terminated by an upstream proxy           |
+| `DEPLOY_PREVIEW_URLS_FILE` |                                               | File `start-deploy-preview.sh` writes the urls of the environment to |
 
 Everything else (imgproxy keys, `DAM_SECRET`, database credentials, ...) is taken from `.env`, which
 docker compose loads automatically. The preview environment therefore uses the same non-secret
@@ -106,7 +106,7 @@ export DEPLOY_PREVIEW_HOST=pr-123.example.com
 export DEPLOY_PREVIEW_SCHEME=https
 export COMPOSE_PROJECT_NAME=pr-123
 
-./start-preview.sh
+./start-deploy-preview.sh
 ```
 
 ## How it works

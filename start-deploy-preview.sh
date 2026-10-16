@@ -19,7 +19,7 @@ set -e
 # Everything besides the site lives one label next to the base domain and not below it -
 # admin--<host> and not admin.<host> - so that one wildcard certificate covers it.
 #
-# See .docker-preview/README.md for details.
+# See .deploy-preview/README.md for details.
 
 cd "$(dirname "$0")"
 
@@ -54,7 +54,7 @@ SITE_DOMAIN="$DEPLOY_PREVIEW_HOST" ./node_modules/.bin/dextinity inject-site-con
     -o demo/.env.site-configs.preview \
     --base64
 
-docker compose -p "${COMPOSE_PROJECT_NAME:-dextinity-demo-preview}" -f .docker-preview/docker-compose.yml \
+docker compose -p "${COMPOSE_PROJECT_NAME:-dextinity-demo-preview}" -f .deploy-preview/docker-compose.yml \
     --project-directory . up --build -d --wait
 
 # Tell the caller which domains this project serves, so it can link to them.

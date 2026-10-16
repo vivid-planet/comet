@@ -22,4 +22,4 @@ RUN pnpm run build
 
 ENV NODE_ENV=production
 EXPOSE 4000
-CMD ["/app/.docker-preview/api-start.sh"]
+CMD ["/app/.deploy-preview/api-start.sh"]

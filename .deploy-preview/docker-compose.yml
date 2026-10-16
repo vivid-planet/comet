@@ -1,22 +1,22 @@
 # Preview environment: runs the complete demo (api, admin, site and everything they need) in Docker,
-# using production builds instead of dev servers. Start it with ./start-preview.sh;
-# `docker compose -f .docker-preview/docker-compose.yml --project-directory . logs|ps|down` work
+# using production builds instead of dev servers. Start it with ./start-deploy-preview.sh;
+# `docker compose -f .deploy-preview/docker-compose.yml --project-directory . logs|ps|down` work
 # directly afterwards.
 #
 # --project-directory keeps the repository root the base of everything, although this file lives in
-# .docker-preview/: the build context and the .env it is interpolated with are relative to the root.
+# .deploy-preview/: the build context and the .env it is interpolated with are relative to the root.
 #
-# Read here (all optional, start-preview.sh sets them):
+# Read here (all optional, start-deploy-preview.sh sets them):
 #   DEPLOY_PREVIEW_HOST    public host incl. port (default demo.preview.localhost:8080)
 #   DEPLOY_PREVIEW_PORT    host port the environment is published on (default 8080)
 #   DEPLOY_PREVIEW_SCHEME  http or https (default http), set to https when TLS is terminated upstream
 #
 # The images know nothing about the preview host, everything is injected here: the site configs from
-# demo/.env.site-configs.preview (rendered for the preview host by start-preview.sh), everything else
+# demo/.env.site-configs.preview (rendered for the preview host by start-deploy-preview.sh), everything else
 # (imgproxy keys, database credentials, secrets, ...) from .env, which docker compose loads itself, so
 # the preview environment uses the same non-secret development values as `pnpm run dev`.
 #
-# See .docker-preview/README.md for details.
+# See .deploy-preview/README.md for details.
 
 name: dextinity-demo-preview
 
@@ -28,7 +28,7 @@ x-preview-urls:
     post-logout-redirect: &post-logout-redirect-url ${DEPLOY_PREVIEW_SCHEME:-http}://admin--${DEPLOY_PREVIEW_HOST:-demo.preview.localhost:8080}/oauth2/sign_out?rd=%2F
 
 services:
-    # Single entry point for the whole environment, see .docker-preview/Caddyfile.
+    # Single entry point for the whole environment, see .deploy-preview/Caddyfile.
     caddy:
         image: mirror.gcr.io/library/caddy:2-alpine
         pull_policy: weekly
@@ -36,7 +36,7 @@ services:
         ports:
             - "${DEPLOY_PREVIEW_PORT:-8080}:80"
         volumes:
-            - ./.docker-preview/Caddyfile:/etc/caddy/Caddyfile:ro
+            - ./.deploy-preview/Caddyfile:/etc/caddy/Caddyfile:ro
 
     postgres:
         image: mirror.gcr.io/library/postgres:16
@@ -83,7 +83,7 @@ services:
     idp:
         build:
             context: .
-            dockerfile: .docker-preview/Idp.Dockerfile
+            dockerfile: .deploy-preview/Idp.Dockerfile
         restart: unless-stopped
         init: true
         environment:
@@ -130,7 +130,7 @@ services:
     api:
         build:
             context: .
-            dockerfile: .docker-preview/Api.Dockerfile
+            dockerfile: .deploy-preview/Api.Dockerfile
         restart: unless-stopped
         init: true
         environment:
@@ -197,7 +197,7 @@ services:
     admin:
         build:
             context: .
-            dockerfile: .docker-preview/Admin.Dockerfile
+            dockerfile: .deploy-preview/Admin.Dockerfile
         restart: unless-stopped
         init: true
         environment:
@@ -216,7 +216,7 @@ services:
     site:
         build:
             context: .
-            dockerfile: .docker-preview/Site.Dockerfile
+            dockerfile: .deploy-preview/Site.Dockerfile
         restart: unless-stopped
         init: true
         environment:
