@@ -2,13 +2,13 @@
 
 Deploys the demo for internal use, the same way the [Starter](https://github.com/vivid-planet/dextinity-starter/tree/main/.digitalocean) is deployed. It runs in its own DigitalOcean project with its own Spaces bucket and imgproxy. Its database `demo` is on the team's existing DigitalOcean database cluster, which the Starter uses as well.
 
-| App                       | Components                                | Domains                                                                                                                   |
-| ------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `dextinity-demo-cms`      | `api`, `admin`, `oauth2-proxy`, `mailpit` | `admin.demo.digitalocean.dextinity.com`                                                                                   |
-| `dextinity-demo-site`     | `site`                                    | `demo.digitalocean.dextinity.com`, `secondary.demo.digitalocean.dextinity.com`, `preview.demo.digitalocean.dextinity.com` |
-| `dextinity-demo-imgproxy` | `darthsim-imgproxy`                       | `imgproxy.demo.digitalocean.dextinity.com`                                                                                |
+| App                       | Components                     | Domains                                                                                                                   |
+| ------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `dextinity-demo-cms`      | `api`, `admin`, `oauth2-proxy` | `admin.demo.digitalocean.dextinity.com`                                                                                   |
+| `dextinity-demo-site`     | `site`                         | `demo.digitalocean.dextinity.com`, `secondary.demo.digitalocean.dextinity.com`, `preview.demo.digitalocean.dextinity.com` |
+| `dextinity-demo-imgproxy` | `darthsim-imgproxy`            | `imgproxy.demo.digitalocean.dextinity.com`                                                                                |
 
-The admin requires a login with a `vivid-planet.com` account. The site is public, as in the Starter. Every mail the demo sends ends up in Mailpit at `https://admin.demo.digitalocean.dextinity.com/mailpit/`.
+The admin requires a login with a `vivid-planet.com` account. The site is public, as in the Starter.
 
 Like the Starter's, the components are built with App Platform's Node.js buildpack. Unlike the Starter's, they build from the repository root, because the demo depends on the packages in this repository rather than on released versions.
 

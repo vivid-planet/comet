@@ -151,12 +151,13 @@ services:
             scope: RUN_TIME
             type: SECRET
             value: ${S3_SECRET_ACCESS_KEY}
+          # The API requires these, but no mail server is deployed, so sending mails fails
           - key: MAILER_HOST
             scope: RUN_TIME
-            value: mailpit
+            value: localhost
           - key: MAILER_PORT
             scope: RUN_TIME
-            value: "1025"
+            value: "25"
           # The API requires these, but the Brevo features aren't used on this deployment
           - key: BREVO_API_KEY
             scope: RUN_TIME
@@ -256,7 +257,7 @@ services:
           # Upstream
           - key: OAUTH2_PROXY_UPSTREAMS
             scope: RUN_TIME
-            value: http://admin:80,http://api:80/api/,http://mailpit:8025/mailpit/
+            value: http://admin:80,http://api:80/api/
       http_port: 4180
       # App Platform can't pull from quay.io, where the official image is published, so it's built from a Dockerfile based on it.
       dockerfile_path: demo/.digitalocean/oauth2-proxy/Dockerfile
@@ -304,22 +305,3 @@ services:
       instance_count: 1
       instance_size_slug: apps-s-1vcpu-0.5gb
       name: admin
-    # Catches every mail the demo sends; its web UI is at /mailpit behind the oauth2-proxy
-    - envs:
-          - key: MP_WEBROOT
-            scope: RUN_TIME
-            value: /mailpit
-      image:
-          registry: axllent
-          registry_type: DOCKER_HUB
-          repository: mailpit
-          tag: latest
-      # Without an http_port, App Platform would check the default port 8080
-      health_check:
-          port: 8025
-      instance_count: 1
-      instance_size_slug: apps-s-1vcpu-0.5gb
-      internal_ports:
-          - 1025
-          - 8025
-      name: mailpit
