@@ -58,5 +58,5 @@ services:
             value: preview.demo.digitalocean.dextinity.com
       http_port: 3000
       instance_count: 1
-      instance_size_slug: apps-s-1vcpu-1gb
+      instance_size_slug: apps-s-1vcpu-0.5gb
       name: site
