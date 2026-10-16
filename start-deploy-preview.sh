@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-# Starts the demo as a preview environment: renders the site configs for the preview host, builds the
-# images and brings the compose project up, blocking until it is healthy. Everything project specific
-# happens here, so that a preview controller only has to run this script and gets a running compose
-# project.
+# Starts the demo as a deploy preview environment: renders the site configs for the deploy preview
+# host, builds the images and brings the compose project up, blocking until it is healthy. Everything
+# project specific happens here, so that a deploy preview controller only has to run this script and
+# gets a running compose project.
 #
 # Configured through the environment, all optional:
 #
@@ -12,9 +12,9 @@ set -e
 #   DEPLOY_PREVIEW_PORT       host port the environment is published on (default 8080)
 #   DEPLOY_PREVIEW_HOST       public host incl. port (default demo.preview.localhost:<DEPLOY_PREVIEW_PORT>)
 #   DEPLOY_PREVIEW_SCHEME     http or https (default http)
-#   DEPLOY_PREVIEW_URLS_FILE  file to report the urls of this preview to, one "<name>=<url>" per line
+#   DEPLOY_PREVIEW_URLS_FILE  file to report the urls of this deploy preview to, one "<name>=<url>" per line
 #
-# Without any of them it starts the preview environment on http://demo.preview.localhost:8080.
+# Without any of them it starts the deploy preview environment on http://demo.preview.localhost:8080.
 #
 # Everything besides the site lives one label next to the base domain and not below it -
 # admin--<host> and not admin.<host> - so that one wildcard certificate covers it.
@@ -39,9 +39,9 @@ then
     nvm install
 fi
 
-# The images do not know the preview host: the site configs are rendered for it here and injected
-# into api, admin and site by the compose file. Rendering needs the dextinity cli, which is installed
-# and built on its own when the repository has not been set up with ./install.sh.
+# The images do not know the deploy preview host: the site configs are rendered for it here and
+# injected into api, admin and site by the compose file. Rendering needs the dextinity cli, which is
+# installed and built on its own when the repository has not been set up with ./install.sh.
 if [[ ! -x ./node_modules/.bin/dextinity || ! -f ./packages/cli/lib/dextinity.js ]]
 then
     command -v pnpm > /dev/null || corepack enable

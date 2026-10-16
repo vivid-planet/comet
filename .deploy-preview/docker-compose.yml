@@ -1,5 +1,5 @@
-# Preview environment: runs the complete demo (api, admin, site and everything they need) in Docker,
-# using production builds instead of dev servers. Start it with ./start-deploy-preview.sh;
+# Deploy preview environment: runs the complete demo (api, admin, site and everything they need) in
+# Docker, using production builds instead of dev servers. Start it with ./start-deploy-preview.sh;
 # `docker compose -f .deploy-preview/docker-compose.yml --project-directory . logs|ps|down` work
 # directly afterwards.
 #
@@ -11,10 +11,11 @@
 #   DEPLOY_PREVIEW_PORT    host port the environment is published on (default 8080)
 #   DEPLOY_PREVIEW_SCHEME  http or https (default http), set to https when TLS is terminated upstream
 #
-# The images know nothing about the preview host, everything is injected here: the site configs from
-# demo/.env.site-configs.preview (rendered for the preview host by start-deploy-preview.sh), everything else
-# (imgproxy keys, database credentials, secrets, ...) from .env, which docker compose loads itself, so
-# the preview environment uses the same non-secret development values as `pnpm run dev`.
+# The images know nothing about the deploy preview host, everything is injected here: the site
+# configs from demo/.env.site-configs.preview (rendered for the deploy preview host by
+# start-deploy-preview.sh), everything else (imgproxy keys, database credentials, secrets, ...) from
+# .env, which docker compose loads itself, so the deploy preview environment uses the same non-secret
+# development values as `pnpm run dev`.
 #
 # See .deploy-preview/README.md for details.
 
@@ -42,7 +43,7 @@ services:
         image: mirror.gcr.io/library/postgres:16
         pull_policy: weekly
         restart: unless-stopped
-        # Preview data is disposable, so durability can be traded for speed.
+        # Deploy preview data is disposable, so durability can be traded for speed.
         command: ["postgres", "-c", "fsync=off", "-c", "synchronous_commit=off", "-c", "full_page_writes=off"]
         environment:
             POSTGRES_USER: ${POSTGRESQL_USER}

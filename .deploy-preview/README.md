@@ -1,7 +1,7 @@
-# Docker Preview Environment
+# Deploy Preview Environment
 
 Runs the complete demo (api, admin, site and everything they need) in Docker.
-It is meant for preview environments, for example to look at a pull request before it is merged.
+It is meant for deploy preview environments, for example to look at a pull request before it is merged.
 
 Dependencies are installed and everything is built inside the images, so neither `./install.sh` nor a
 build has to run on the host. The one thing prepared outside is the site-configs env file, which needs
@@ -17,7 +17,7 @@ Everything is built once, production style, and then started. For development us
 ```
 
 The script renders `demo/site-configs/*.ts` for `DEPLOY_PREVIEW_HOST` into
-`demo/.env.site-configs.preview` - the images themselves do not know the preview host - and then brings
+`demo/.env.site-configs.preview` - the images themselves do not know the deploy preview host - and then brings
 the compose project up, blocking until api and site report healthy. Run it again whenever
 `DEPLOY_PREVIEW_HOST` or anything in `demo/site-configs/` changes. The first build takes a while,
 because every image builds the packages its application depends on.
@@ -71,7 +71,7 @@ All variables are optional.
 | `DEPLOY_PREVIEW_URLS_FILE` |                                               | File `start-deploy-preview.sh` writes the urls of the environment to |
 
 Everything else (imgproxy keys, `DAM_SECRET`, database credentials, ...) is taken from `.env`, which
-docker compose loads automatically. The preview environment therefore uses the same non-secret
+docker compose loads automatically. The deploy preview environment therefore uses the same non-secret
 development values as the local development setup.
 
 ### Host names
@@ -81,7 +81,7 @@ subdomain of it: `$DEPLOY_PREVIEW_HOST` serves the site, `admin--$DEPLOY_PREVIEW
 the api under `/api`, `idp--$DEPLOY_PREVIEW_HOST` the login and `mail--$DEPLOY_PREVIEW_HOST` Mailpit.
 
 A wildcard certificate covers one dns label, so `*.example.com` matches `pr-123.example.com` but
-not `admin.pr-123.example.com`. With the prefixes every host of every preview stays one label
+not `admin.pr-123.example.com`. With the prefixes every host of every deploy preview stays one label
 deep and a single `*.example.com` certificate is enough. `--` separates them because a host name
 generated from a branch never contains it.
 
@@ -97,7 +97,7 @@ the cookies of the site preview in the admin require. Any other host therefore n
 
 ### Behind another reverse proxy
 
-To serve a preview under a real domain, point an upstream proxy at `DEPLOY_PREVIEW_PORT` and forward
+To serve a deploy preview under a real domain, point an upstream proxy at `DEPLOY_PREVIEW_PORT` and forward
 `<domain>` and every `<prefix>--<domain>` to it, keeping the original `Host` header:
 
 ```bash
@@ -126,13 +126,13 @@ export COMPOSE_PROJECT_NAME=pr-123
 
 - **caddy** is the only container with a published port, which is what makes multiple parallel
   environments possible. It routes by how the host name starts, so it does not need to know the
-  preview host, see [Caddyfile](Caddyfile).
+  deploy preview host, see [Caddyfile](Caddyfile).
 - **oauth2-proxy** and the **idp** (`dev-oidc-provider`) work like in local development. oauth2-proxy
   reaches the idp inside the network, while the browser is sent to its public host.
 - The api loads the fixtures on its first start ([api-start.sh](api-start.sh)) and only migrates the
   database afterwards. The marker for that lives in the uploads volume, which has the same lifetime
   as the database volume.
-- Postgres runs without `fsync` and tracing is disabled - preview data is disposable and the
+- Postgres runs without `fsync` and tracing is disabled - deploy preview data is disposable and the
   environments should stay small.
 
 ### Images

@@ -1,4 +1,4 @@
-# Build context of the docker preview environment (see .deploy-preview/docker-compose.yml).
+# Build context of the deploy preview environment (see .deploy-preview/docker-compose.yml).
 # Everything that install and build generate is excluded, so that a build from a fresh clone and a
 # build from a local working copy produce the same image.
 
