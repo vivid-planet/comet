@@ -36,16 +36,16 @@ function createImagesService(config: Partial<DamConfig> = {}) {
 function createController({
     file,
     includeFormatExtensionInImageUrls,
-    hasExpiredLicense = false,
+    hasInvalidLicense = false,
 }: {
     file: FileInterface;
     includeFormatExtensionInImageUrls: boolean;
-    hasExpiredLicense?: boolean;
+    hasInvalidLicense?: boolean;
 }) {
     const config = { secret: "secret", basePath: damBasePath, filesDirectory: "files", includeFormatExtensionInImageUrls } as DamConfig;
     const filesService = {
         findOneById: vi.fn().mockResolvedValue(file),
-        hasExpiredLicense: vi.fn().mockReturnValue(hasExpiredLicense),
+        hasInvalidLicense: vi.fn().mockReturnValue(hasInvalidLicense),
     } as unknown as FilesService;
     const imgproxyService = { builder: () => new ImgproxyBuilder(80) } as unknown as ImgproxyService;
     const cacheService = {
@@ -160,10 +160,10 @@ describe.each(routes)("ImagesController.$handler", ({ handler, storedCropArea, r
         });
     });
 
-    describe("with an expired license", () => {
+    describe("with an invalid license", () => {
         it("responds with 410 Gone and prevents caching the response", async () => {
             const file = createPngFile();
-            const controller = createController({ file, includeFormatExtensionInImageUrls: false, hasExpiredLicense: true });
+            const controller = createController({ file, includeFormatExtensionInImageUrls: false, hasInvalidLicense: true });
             const { res, setHeader, writeHead } = createMockResponse();
 
             await expect(

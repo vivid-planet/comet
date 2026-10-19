@@ -132,7 +132,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            this.throwIfLicenseHasExpired(file, res);
+            this.throwIfLicenseIsInvalid(file, res);
 
             if (this.imagesService.shouldRedirectToCurrentUrl(file, params.filename)) {
                 return this.redirectToCurrentUrl({ file, params, res });
@@ -157,7 +157,7 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            this.throwIfLicenseHasExpired(file, res);
+            this.throwIfLicenseIsInvalid(file, res);
 
             if (this.imagesService.shouldRedirectToCurrentUrl(file, params.filename)) {
                 return this.redirectToCurrentUrl({ file, params, res });
@@ -170,9 +170,9 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
             return hash === this.imagesService.createHash(imageParams);
         }
 
-        private throwIfLicenseHasExpired(file: FileInterface, res: Response): void {
-            if (this.filesService.hasExpiredLicense(file)) {
-                res.setHeader("cache-control", "no-store"); // The license might be renewed, and the image must be delivered again then
+        private throwIfLicenseIsInvalid(file: FileInterface, res: Response): void {
+            if (this.filesService.hasInvalidLicense(file)) {
+                res.setHeader("cache-control", "no-store"); // The image must be delivered again once the license becomes valid
                 throw new GoneException();
             }
         }

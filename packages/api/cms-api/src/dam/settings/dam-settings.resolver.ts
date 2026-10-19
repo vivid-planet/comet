@@ -57,26 +57,26 @@ export function createDamSettingsResolver({
             const scope = nonEmptyScopeOrNothing(passedScope);
             const id = createDamSettingsId(scope);
 
-            let expiredLicenseFallbackImage: FileInterface | null = null;
+            let invalidLicenseFallbackImage: FileInterface | null = null;
 
-            if (input.expiredLicenseFallbackImageId) {
-                expiredLicenseFallbackImage = await this.filesService.findOneById(input.expiredLicenseFallbackImageId);
+            if (input.invalidLicenseFallbackImageId) {
+                invalidLicenseFallbackImage = await this.filesService.findOneById(input.invalidLicenseFallbackImageId);
 
-                if (!expiredLicenseFallbackImage) {
-                    throw new DextinityEntityNotFoundException(`File ${input.expiredLicenseFallbackImageId} not found`);
+                if (!invalidLicenseFallbackImage) {
+                    throw new DextinityEntityNotFoundException(`File ${input.invalidLicenseFallbackImageId} not found`);
                 }
 
-                if (!contentScopesAreEqual(expiredLicenseFallbackImage.scope, scope)) {
+                if (!contentScopesAreEqual(invalidLicenseFallbackImage.scope, scope)) {
                     throw new DextinityValidationException("The fallback image must be in the same scope as the settings");
                 }
 
-                if (!expiredLicenseFallbackImage.image) {
+                if (!invalidLicenseFallbackImage.image) {
                     throw new DextinityValidationException("The fallback image must be a pixel image");
                 }
             }
 
             const settings = (await this.entityManager.findOne(DamSettings, { id })) ?? this.entityManager.create(DamSettings, { id, scope });
-            settings.assign({ expiredLicenseFallbackImage });
+            settings.assign({ invalidLicenseFallbackImage });
 
             await this.entityManager.flush();
 
@@ -84,8 +84,8 @@ export function createDamSettingsResolver({
         }
 
         @ResolveField(() => File, { nullable: true })
-        async expiredLicenseFallbackImage(@Parent() settings: DamSettings): Promise<FileInterface | null> {
-            return (await settings.expiredLicenseFallbackImage?.load()) ?? null;
+        async invalidLicenseFallbackImage(@Parent() settings: DamSettings): Promise<FileInterface | null> {
+            return (await settings.invalidLicenseFallbackImage?.load()) ?? null;
         }
     }
 

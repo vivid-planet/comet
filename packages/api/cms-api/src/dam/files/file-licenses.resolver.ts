@@ -3,7 +3,7 @@ import { differenceInCalendarDays, isBefore } from "date-fns";
 
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { License } from "./entities/license.embeddable";
-import { getLicenseExpirationDate, hasLicenseExpired } from "./license-expiration";
+import { getLicenseExpirationDate, hasLicenseExpired, isLicenseNotValidYet, isLicenseValid } from "./license-validity";
 
 @Resolver(() => License)
 @RequiredPermission(["dam"])
@@ -15,9 +15,7 @@ export class FileLicensesResolver {
 
     @ResolveField(() => Boolean)
     isNotValidYet(@Parent() license: License): boolean {
-        const currentDate = new Date();
-
-        return license.durationFrom !== undefined && isBefore(currentDate, license.durationFrom);
+        return isLicenseNotValidYet(license);
     }
 
     @ResolveField(() => Boolean)
@@ -35,9 +33,6 @@ export class FileLicensesResolver {
 
     @ResolveField(() => Boolean)
     isValid(@Parent() license: License): boolean {
-        const isNotValidYet = this.isNotValidYet(license);
-        const hasExpired = this.hasExpired(license);
-
-        return !(isNotValidYet || hasExpired);
+        return isLicenseValid(license);
     }
 }

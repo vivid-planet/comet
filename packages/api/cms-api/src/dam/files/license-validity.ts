@@ -1,4 +1,4 @@
-import { add, isAfter } from "date-fns";
+import { add, isAfter, isBefore } from "date-fns";
 
 import type { License } from "./entities/license.embeddable";
 
@@ -15,4 +15,16 @@ export function hasLicenseExpired(license: License, now: Date = new Date()): boo
     const expirationDate = getLicenseExpirationDate(license);
 
     return expirationDate !== undefined && isAfter(now, expirationDate);
+}
+
+export function isLicenseNotValidYet(license: License, now: Date = new Date()): boolean {
+    if (!license.durationFrom) {
+        return false;
+    }
+
+    return isBefore(now, license.durationFrom);
+}
+
+export function isLicenseValid(license: License, now: Date = new Date()): boolean {
+    return !isLicenseNotValidYet(license, now) && !hasLicenseExpired(license, now);
 }

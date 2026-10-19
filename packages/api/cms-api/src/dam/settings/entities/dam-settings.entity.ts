@@ -17,10 +17,10 @@ export class DamSettings extends BaseEntity {
 
     @ManyToOne({
         entity: () => FILE_ENTITY,
-        joinColumn: "expiredLicenseFallbackImageId",
+        joinColumn: "invalidLicenseFallbackImageId",
         nullable: true,
         deleteRule: "set null",
         ref: true,
     })
-    expiredLicenseFallbackImage?: Ref<FileInterface>;
+    invalidLicenseFallbackImage?: Ref<FileInterface>;
 }

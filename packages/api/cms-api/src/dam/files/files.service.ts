@@ -35,7 +35,7 @@ import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FoldersService } from "./folders.service";
-import { hasLicenseExpired } from "./license-expiration";
+import { isLicenseValid } from "./license-validity";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
 
@@ -676,19 +676,19 @@ export class FilesService {
         return [...baseUrl, file.contentHash, file.id, filename].join("/");
     }
 
-    hasExpiredLicense(file: FileInterface): boolean {
+    hasInvalidLicense(file: FileInterface): boolean {
         if (!this.config.enableLicenseFeature || !file.license) {
             return false;
         }
 
-        return hasLicenseExpired(file.license);
+        return !isLicenseValid(file.license);
     }
 
-    async findExpiredLicenseFallbackImage(scope?: DamScopeInterface): Promise<FileInterface | null> {
+    async findInvalidLicenseFallbackImage(scope?: DamScopeInterface): Promise<FileInterface | null> {
         const settings = await this.entityManager.findOne(DamSettings, { id: createDamSettingsId(scope) });
-        const fallbackImage = await settings?.expiredLicenseFallbackImage?.load();
+        const fallbackImage = await settings?.invalidLicenseFallbackImage?.load();
 
-        if (!fallbackImage?.image || this.hasExpiredLicense(fallbackImage)) {
+        if (!fallbackImage?.image || this.hasInvalidLicense(fallbackImage)) {
             return null;
         }
 

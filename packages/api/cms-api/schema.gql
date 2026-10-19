@@ -171,7 +171,7 @@ enum LicenseType {
 
 type DamSettings {
   id: ID!
-  expiredLicenseFallbackImage: DamFile
+  invalidLicenseFallbackImage: DamFile
 }
 
 type BuildTemplate {
@@ -968,5 +968,5 @@ input DamMediaAlternativeUpdateInput {
 }
 
 input DamSettingsInput {
-  expiredLicenseFallbackImageId: ID
+  invalidLicenseFallbackImageId: ID
 }

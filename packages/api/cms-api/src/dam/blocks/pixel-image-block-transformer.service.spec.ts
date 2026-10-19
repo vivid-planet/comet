@@ -34,11 +34,11 @@ const fallbackImage = createImageFile({
     cropArea: { focalPoint: FocalPoint.NORTHWEST, width: 80, height: 80, x: 10, y: 10 } as ImageCropArea,
 });
 
-function createTransformer({ hasExpiredLicense, fallback }: { hasExpiredLicense: boolean; fallback: FileInterface | null }) {
+function createTransformer({ hasInvalidLicense, fallback }: { hasInvalidLicense: boolean; fallback: FileInterface | null }) {
     const filesService = {
         findOneById: vi.fn().mockResolvedValue(originalImage),
-        hasExpiredLicense: vi.fn().mockReturnValue(hasExpiredLicense),
-        findExpiredLicenseFallbackImage: vi.fn().mockResolvedValue(fallback),
+        hasInvalidLicense: vi.fn().mockReturnValue(hasInvalidLicense),
+        findInvalidLicenseFallbackImage: vi.fn().mockResolvedValue(fallback),
         createFileUrl: vi.fn(),
     } as unknown as FilesService;
     const imagesService = new ImagesService({ secret: "secret", basePath: "dam" } as DamConfig);
@@ -51,7 +51,7 @@ const context = { includeInvisibleContent: false, previewDamUrls: false } as Blo
 
 describe("PixelImageBlockTransformerService", () => {
     it("renders the original image with the block's crop area when the license is valid", async () => {
-        const { transformer, imagesService } = createTransformer({ hasExpiredLicense: false, fallback: fallbackImage });
+        const { transformer, imagesService } = createTransformer({ hasInvalidLicense: false, fallback: fallbackImage });
 
         const result = await transformer.transformToPlain(block, context);
 
@@ -60,20 +60,20 @@ describe("PixelImageBlockTransformerService", () => {
         expect(result.urlTemplate).toBe(imagesService.createUrlTemplate({ file: originalImage, cropArea: blockCropArea }, {}));
     });
 
-    it("renders the fallback image of the original image's scope with the fallback image's own crop area when the license has expired", async () => {
-        const { transformer, filesService, imagesService } = createTransformer({ hasExpiredLicense: true, fallback: fallbackImage });
+    it("renders the fallback image of the original image's scope with the fallback image's own crop area when the license is invalid", async () => {
+        const { transformer, filesService, imagesService } = createTransformer({ hasInvalidLicense: true, fallback: fallbackImage });
 
         const result = await transformer.transformToPlain(block, context);
 
-        expect(filesService.findExpiredLicenseFallbackImage).toHaveBeenCalledWith(originalImage.scope);
+        expect(filesService.findInvalidLicenseFallbackImage).toHaveBeenCalledWith(originalImage.scope);
         expect(result.damFile?.id).toBe(fallbackImage.id);
         expect(result.damFile?.image?.cropArea).toEqual(fallbackImage.image?.cropArea);
         expect(result.cropArea).toBeUndefined();
         expect(result.urlTemplate).toBe(imagesService.createUrlTemplate({ file: fallbackImage }, {}));
     });
 
-    it("renders no image when the license has expired and no fallback image is set", async () => {
-        const { transformer } = createTransformer({ hasExpiredLicense: true, fallback: null });
+    it("renders no image when the license is invalid and no fallback image is set", async () => {
+        const { transformer } = createTransformer({ hasInvalidLicense: true, fallback: null });
 
         await expect(transformer.transformToPlain(block, context)).resolves.toEqual({});
     });

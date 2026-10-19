@@ -54,8 +54,8 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
 
         let cropArea = block.cropArea;
 
-        if (this.filesService.hasExpiredLicense(file)) {
-            file = await this.filesService.findExpiredLicenseFallbackImage(file.scope);
+        if (this.filesService.hasInvalidLicense(file)) {
+            file = await this.filesService.findInvalidLicenseFallbackImage(file.scope);
 
             if (!file) {
                 return {};

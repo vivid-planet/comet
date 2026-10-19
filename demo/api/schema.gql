@@ -520,12 +520,12 @@ input DamScopeInput {
 }
 
 type DamSettings {
-  expiredLicenseFallbackImage: DamFile
   id: ID!
+  invalidLicenseFallbackImage: DamFile
 }
 
 input DamSettingsInput {
-  expiredLicenseFallbackImageId: ID
+  invalidLicenseFallbackImageId: ID
 }
 
 input DateFilter {

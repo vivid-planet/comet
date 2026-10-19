@@ -5,7 +5,7 @@ import { damFileFieldFragment } from "../../form/file/FileField.fragment";
 const damSettingsFragment = gql`
     fragment DamSettings on DamSettings {
         id
-        expiredLicenseFallbackImage {
+        invalidLicenseFallbackImage {
             ...DamFileFieldFile
         }
     }

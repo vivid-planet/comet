@@ -27,7 +27,7 @@ import type {
 } from "./DamSettings.gql.generated";
 
 interface FormValues {
-    expiredLicenseFallbackImage?: GQLDamFileFieldFileFragment;
+    invalidLicenseFallbackImage?: GQLDamFileFieldFileFragment;
 }
 
 interface DamSettingsProps {
@@ -48,10 +48,10 @@ export const DamSettings = ({ contentScopeIndicator }: DamSettingsProps) => {
         return <Loading behavior="fillPageHeight" />;
     }
 
-    const handleSubmit = async ({ expiredLicenseFallbackImage }: FormValues) => {
+    const handleSubmit = async ({ invalidLicenseFallbackImage }: FormValues) => {
         await apolloClient.mutate<GQLUpdateDamSettingsMutation, GQLUpdateDamSettingsMutationVariables>({
             mutation: updateDamSettingsMutation,
-            variables: { scope, input: { expiredLicenseFallbackImageId: expiredLicenseFallbackImage?.id ?? null } },
+            variables: { scope, input: { invalidLicenseFallbackImageId: invalidLicenseFallbackImage?.id ?? null } },
         });
     };
 
@@ -59,7 +59,7 @@ export const DamSettings = ({ contentScopeIndicator }: DamSettingsProps) => {
         <FinalForm<FormValues>
             mode="edit"
             onSubmit={handleSubmit}
-            initialValues={{ expiredLicenseFallbackImage: data.damSettings.expiredLicenseFallbackImage ?? undefined }}
+            initialValues={{ invalidLicenseFallbackImage: data.damSettings.invalidLicenseFallbackImage ?? undefined }}
         >
             {() => (
                 <>
@@ -76,19 +76,19 @@ export const DamSettings = ({ contentScopeIndicator }: DamSettingsProps) => {
                     <MainContent>
                         <FieldSet title={<FormattedMessage id="dextinity.dam.settings.licenses" defaultMessage="Licenses" />}>
                             <Field
-                                name="expiredLicenseFallbackImage"
+                                name="invalidLicenseFallbackImage"
                                 component={FileField}
                                 fullWidth
                                 label={
                                     <FormattedMessage
-                                        id="dextinity.dam.settings.expiredLicenseFallbackImage"
-                                        defaultMessage="Fallback image for expired licenses"
+                                        id="dextinity.dam.settings.invalidLicenseFallbackImage"
+                                        defaultMessage="Fallback image for invalid licenses"
                                     />
                                 }
                                 helperText={
                                     <FormattedMessage
-                                        id="dextinity.dam.settings.expiredLicenseFallbackImage.helperText"
-                                        defaultMessage="Images with an expired license are replaced with this image on the site. If no fallback image is set, images with an expired license aren't shown at all."
+                                        id="dextinity.dam.settings.invalidLicenseFallbackImage.helperText"
+                                        defaultMessage="Images whose license has expired or isn't valid yet are replaced with this image on the site. If no fallback image is set, these images aren't shown at all."
                                     />
                                 }
                                 buttonText={<FormattedMessage id="dextinity.dam.settings.chooseImage" defaultMessage="Choose image" />}

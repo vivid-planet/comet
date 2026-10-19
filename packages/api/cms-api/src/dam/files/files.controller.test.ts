@@ -16,9 +16,9 @@ interface FilesControllerForTest {
     hashedFileUrl(params: HashFileParams, res: Response, range?: string): Promise<void>;
 }
 
-function createControllerWithMockFilesService(file: FileInterface, { hasExpiredLicense = false }: { hasExpiredLicense?: boolean } = {}) {
+function createControllerWithMockFilesService(file: FileInterface, { hasInvalidLicense = false }: { hasInvalidLicense?: boolean } = {}) {
     const filesService = {
-        hasExpiredLicense: vi.fn().mockReturnValue(hasExpiredLicense),
+        hasInvalidLicense: vi.fn().mockReturnValue(hasInvalidLicense),
         createHash: vi.fn().mockReturnValue(HASH),
         findOneById: vi.fn().mockResolvedValue(file),
         createFileUrl: vi.fn().mockResolvedValue(CANONICAL_URL),
@@ -84,9 +84,9 @@ describe.each(handlers)("FilesController.$name", ({ name, urlBuilder }) => {
         expect(res.redirect).not.toHaveBeenCalled();
     });
 
-    it("responds with 410 Gone and prevents caching the response when the file's license has expired", async () => {
+    it("responds with 410 Gone and prevents caching the response when the file's license is invalid", async () => {
         const file = { id: FILE_ID, name: "current-name.pdf", contentHash: "content-hash", scope: undefined } as FileInterface;
-        const { controller } = createControllerWithMockFilesService(file, { hasExpiredLicense: true });
+        const { controller } = createControllerWithMockFilesService(file, { hasInvalidLicense: true });
         const res = createMockResponse();
 
         await expect(

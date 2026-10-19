@@ -6,5 +6,5 @@ export class DamSettingsInput {
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()
-    expiredLicenseFallbackImageId?: string;
+    invalidLicenseFallbackImageId?: string;
 }
