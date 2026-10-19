@@ -42,7 +42,7 @@
         "@mui/x-data-grid": "^8.29.3",
         "@mui/x-data-grid-pro": "^8.29.3",
         "@mui/x-date-pickers": "^8.29.4",
-        "@mui/x-license": "^8.29.3",
+        "@mui/x-license": "^9.15.0",
         "change-case": "^5.4.4",
         "date-fns": "^4.4.0",
         "dnd-core": "^16.0.1",
