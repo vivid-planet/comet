@@ -6,14 +6,17 @@ import type { StaticAssetsStorage } from "./storage";
 export class S3StaticAssetsStorage implements StaticAssetsStorage {
     private readonly client: S3Client;
 
-    constructor(private readonly config: { bucket: string; region: string; endpoint?: string; accessKeyId?: string; secretAccessKey?: string }) {
-        const { region, endpoint, accessKeyId, secretAccessKey } = config;
-        this.client = new S3Client({
-            region,
-            endpoint,
-            // Without explicit credentials the SDK's default provider chain applies, e.g. IAM roles
-            credentials: accessKeyId && secretAccessKey ? { accessKeyId, secretAccessKey } : undefined,
-        });
+    constructor(
+        private readonly config: {
+            region: string;
+            endpoint?: string;
+            bucket: string;
+            credentials?: { accessKeyId: string; secretAccessKey: string };
+        },
+    ) {
+        const { region, endpoint, credentials } = config;
+        // Without explicit credentials the SDK's default provider chain applies, e.g. IAM roles
+        this.client = new S3Client({ region, endpoint, credentials });
     }
 
     async uploadFile(key: string, filePath: string): Promise<void> {

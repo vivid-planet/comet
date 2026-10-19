@@ -9,7 +9,7 @@ type Options = {
     sourceDirectory: string;
     prefix: string;
     driver: StaticAssetsStorageConfig["driver"];
-    fileDirectory?: string;
+    filePath?: string;
     s3Bucket?: string;
     s3Region?: string;
     s3Endpoint?: string;
@@ -32,17 +32,19 @@ function getStaticAssetsStorageConfig(options: Options): StaticAssetsStorageConf
         case "file":
             return {
                 driver: "file",
-                file: { directory: resolve(requireOption({ value: options.fileDirectory, flag: "--file-directory", driver: "file" })) },
+                file: { path: resolve(requireOption({ value: options.filePath, flag: "--file-path", driver: "file" })) },
             };
         case "s3":
             return {
                 driver: "s3",
                 s3: {
-                    bucket: requireOption({ value: options.s3Bucket, flag: "--s3-bucket", driver: "s3" }),
                     region: requireOption({ value: options.s3Region, flag: "--s3-region", driver: "s3" }),
                     endpoint: options.s3Endpoint || undefined,
-                    accessKeyId: options.s3AccessKeyId || undefined,
-                    secretAccessKey: options.s3SecretAccessKey || undefined,
+                    bucket: requireOption({ value: options.s3Bucket, flag: "--s3-bucket", driver: "s3" }),
+                    credentials:
+                        options.s3AccessKeyId && options.s3SecretAccessKey
+                            ? { accessKeyId: options.s3AccessKeyId, secretAccessKey: options.s3SecretAccessKey }
+                            : undefined,
                 },
             };
         case "azure":
@@ -66,7 +68,7 @@ export const uploadStaticAssetsCommand = new Command("upload-static-assets")
         new Option("--prefix <prefix>", "Key prefix in the storage, e.g. the environment name").env(`${envPrefix}_PREFIX`).makeOptionMandatory(),
     )
     .addOption(new Option("--driver <driver>", "Storage driver").choices(["file", "s3", "azure"]).env(`${envPrefix}_DRIVER`).makeOptionMandatory())
-    .addOption(new Option("--file-directory <directory>", "Target directory (file driver)").env(`${envPrefix}_FILE_DIRECTORY`))
+    .addOption(new Option("--file-path <path>", "Target directory (file driver)").env(`${envPrefix}_FILE_PATH`))
     .addOption(new Option("--s3-bucket <bucket>", "Bucket name (s3 driver)").env(`${envPrefix}_S3_BUCKET`))
     .addOption(new Option("--s3-region <region>", "Region (s3 driver)").env(`${envPrefix}_S3_REGION`))
     .addOption(new Option("--s3-endpoint <url>", "Endpoint for S3-compatible storages (s3 driver)").env(`${envPrefix}_S3_ENDPOINT`))

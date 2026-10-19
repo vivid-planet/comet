@@ -3,10 +3,10 @@ export interface StaticAssetsStorage {
 }
 
 export type StaticAssetsStorageConfig =
-    | { driver: "file"; file: { directory: string } }
+    | { driver: "file"; file: { path: string } }
     | {
           driver: "s3";
-          s3: { bucket: string; region: string; endpoint?: string; accessKeyId?: string; secretAccessKey?: string };
+          s3: { region: string; endpoint?: string; bucket: string; credentials?: { accessKeyId: string; secretAccessKey: string } };
       }
     | { driver: "azure"; azure: { accountName: string; accountKey: string; container: string } };
 

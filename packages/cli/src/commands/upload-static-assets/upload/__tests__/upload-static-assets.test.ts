@@ -31,7 +31,7 @@ describe("uploadStaticAssets", () => {
         const uploadedFiles = await uploadStaticAssets({
             sourceDirectory,
             prefix: "/prod/_next/static/",
-            storage: { driver: "file", file: { directory: targetDirectory } },
+            storage: { driver: "file", file: { path: targetDirectory } },
         });
 
         expect(uploadedFiles).toEqual(["chunks/app/page-abc.js", "chunks/main-def.js", "css/styles-ghi.css"]);
@@ -46,7 +46,7 @@ describe("uploadStaticAssets", () => {
         await uploadStaticAssets({
             sourceDirectory,
             prefix: "prod/_next/static",
-            storage: { driver: "file", file: { directory: targetDirectory } },
+            storage: { driver: "file", file: { path: targetDirectory } },
         });
 
         expect(fs.existsSync(join(targetDirectory, "prod/_next/static/chunks/previous-build.js"))).toBe(true);
@@ -97,7 +97,7 @@ describe("uploadStaticAssets", () => {
             uploadStaticAssets({
                 sourceDirectory: emptyDirectory,
                 prefix: "prod",
-                storage: { driver: "file", file: { directory: targetDirectory } },
+                storage: { driver: "file", file: { path: targetDirectory } },
             }),
         ).rejects.toThrow("No files found");
 
