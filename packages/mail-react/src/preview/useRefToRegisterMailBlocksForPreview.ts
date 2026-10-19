@@ -2,9 +2,20 @@
 
 import { type RefObject, useEffect, useRef } from "react";
 
-import type { PreviewElement } from "./IFrameBridge";
-import { useIFrameBridge } from "./useIFrameBridge";
-import { PREVIEW_ROUTE_CLASS_SELECTOR, readPreviewRouteAndLabelFromClassNames } from "./utils";
+import { PREVIEW_ROUTE_CLASS_SELECTOR, readPreviewRouteAndLabelFromClassNames } from "./blockPreviewClassName.js";
+
+export interface PreviewElement {
+    element: HTMLElement;
+    adminRoute: string;
+    label: string;
+    measurementTarget: "element";
+}
+
+export interface IFrameBridge {
+    hasBridge: boolean;
+    addPreviewElement: (previewElement: PreviewElement) => void;
+    removePreviewElement: (previewElement: PreviewElement) => void;
+}
 
 function findPreviewElements(container: HTMLElement): PreviewElement[] {
     return Array.from(container.querySelectorAll(PREVIEW_ROUTE_CLASS_SELECTOR)).flatMap((element) => {
@@ -21,12 +32,16 @@ function findPreviewElements(container: HTMLElement): PreviewElement[] {
 }
 
 /**
- * Returns a ref for the element that contains the HTML. Registers the elements in it whose class names carry a preview route
- * with the block preview, for instance mail blocks wrapped in `withPreview` from `@dextinity/mail-react`.
+ * Returns a ref for the element that contains the mail HTML. Registers the blocks in it that use `withPreview` with the block preview.
+ *
+ * @param iFrameBridge The result of `useIFrameBridge` from `@dextinity/site-react`.
  */
-export function useRefToRegisterPreviewElementsFromClassNames<Container extends HTMLElement>(): RefObject<Container | null> {
+export function useRefToRegisterMailBlocksForPreview<Container extends HTMLElement>({
+    hasBridge,
+    addPreviewElement,
+    removePreviewElement,
+}: IFrameBridge): RefObject<Container | null> {
     const containerRef = useRef<Container>(null);
-    const { hasBridge, addPreviewElement, removePreviewElement } = useIFrameBridge();
 
     useEffect(() => {
         const container = containerRef.current;

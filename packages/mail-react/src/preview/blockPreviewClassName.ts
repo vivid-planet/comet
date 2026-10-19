@@ -25,3 +25,21 @@ export function getBlockAdminRoute(data: unknown): string | undefined {
 
     return typeof adminMeta.route === "string" ? adminMeta.route : undefined;
 }
+
+export const PREVIEW_ROUTE_CLASS_SELECTOR = `[class*="${ROUTE_CLASS_PREFIX}"]`;
+
+function readClassNameValue(element: Element, prefix: string): string | undefined {
+    const className = Array.from(element.classList).find((name) => name.startsWith(prefix));
+
+    return className === undefined ? undefined : decodeURIComponent(className.slice(prefix.length));
+}
+
+export function readPreviewRouteAndLabelFromClassNames(element: Element): { adminRoute: string; label: string } | undefined {
+    const adminRoute = readClassNameValue(element, ROUTE_CLASS_PREFIX);
+
+    if (adminRoute === undefined) {
+        return undefined;
+    }
+
+    return { adminRoute, label: readClassNameValue(element, LABEL_CLASS_PREFIX) ?? "" };
+}

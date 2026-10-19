@@ -672,7 +672,7 @@ export const MailTextBlock = withPreview<PropsWithData<MailTextBlockData>>(
 ```
 
 - Register a block without data of its own with its data anyway, `divider: (data) => <MailDividerBlock data={data} />`, or it gets no route.
-- The block preview page must put the ref from `useRefToRegisterPreviewElementsFromClassNames` (`@dextinity/site-nextjs`) on the element that contains the mail HTML.
+- The block preview page must put the ref from `useRefToRegisterMailBlocksForPreview(useIFrameBridge())` on the element that contains the mail HTML.
 
 ---
 

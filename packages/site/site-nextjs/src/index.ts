@@ -91,7 +91,6 @@ export {
     useLocalStorageCookieApi,
     useOneTrustCookieApi,
     usePreview,
-    useRefToRegisterPreviewElementsFromClassNames,
     type VideoPreviewImageProps,
     withPreview,
     type WithPreviewProps,

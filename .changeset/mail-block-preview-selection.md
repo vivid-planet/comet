@@ -1,6 +1,5 @@
 ---
 "@dextinity/mail-react": minor
-"@dextinity/site-nextjs": minor
 "@dextinity/site-react": minor
 ---
 
@@ -25,10 +24,10 @@ export const MailButtonBlock = withPreview<PropsWithData<MailButtonBlockData>>(
 
 Pass the block's props as the type argument of `withPreview`, as in `withPreview<PropsWithData<MailButtonBlockData>>`, and it adds the `className` to them.
 
-In the block preview page, put the ref from `useRefToRegisterPreviewElementsFromClassNames` on the element that contains the mail HTML:
+In the block preview page, pass the result of `useIFrameBridge` to `useRefToRegisterMailBlocksForPreview`, and put the ref it returns on the element that contains the mail HTML:
 
 ```tsx
-const mailContainerRef = useRefToRegisterPreviewElementsFromClassNames<HTMLSpanElement>();
+const mailContainerRef = useRefToRegisterMailBlocksForPreview<HTMLSpanElement>(useIFrameBridge());
 
 return <span ref={mailContainerRef} dangerouslySetInnerHTML={{ __html: mailHtml }} />;
 ```
