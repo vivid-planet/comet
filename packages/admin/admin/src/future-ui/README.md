@@ -218,6 +218,17 @@ Maintainer scripts, run through `pnpm --filter @dextinity/admin run …`:
 - **`future-ui-figma describe-implemented <component>`** prints the props one component's source implements, in the same shape as `describe-target`, reading the source instead of Figma.
 - **`generate-future-ui-theme-tokens`** regenerates the theme SCSS partials and types from a design-token export — see [Regenerating the tokens](#regenerating-the-tokens).
 
+## Working from the Figma design
+
+future-ui implements the Dextinity Design System (DDS) Figma file. Compare, implement, and update components and theme tokens against it with the `future-ui-figma` CLI.
+
+- Find a component's Figma name and node id with `future-ui-figma list`.
+- Compare the design with the code with `future-ui-figma describe-target` and `future-ui-figma describe-implemented`, which print both sides' props in the same shape.
+
+Figma properties become props by fixed rules: names and enum options are camelCased, a Yes/No variant becomes a boolean prop, and a property whose name starts with `_` is never implemented. Such properties control the design file: the `_State` variants, for example, show browser states such as hover, which the CSS implements. The code is the source of truth: it follows the design by default, and a deviation agreed on in review stays.
+
+Theme tokens come from Figma only through the token export, which a person runs: when the theme lacks a token, ask for an export, as [Regenerating the tokens](#regenerating-the-tokens) describes. Use the CSS variables from the theme partials, also when Figma shows a different value. The next token export fixes the difference.
+
 ## Known issues
 
 - Styles are not delivered by the package build yet. The Babel build compiles no CSS Modules, so the class-name mapping applies in Storybook but not in published output.
