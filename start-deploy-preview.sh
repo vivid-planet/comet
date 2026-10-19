@@ -48,7 +48,7 @@ then
     pnpm install --frozen-lockfile --filter=. --filter=@dextinity/cli
     pnpm --filter @dextinity/cli run build
 fi
-SITE_DOMAIN="$DEPLOY_PREVIEW_HOST" ./node_modules/.bin/dextinity inject-site-configs \
+./node_modules/.bin/dextinity inject-site-configs \
     -f demo/site-configs/site-configs.ts \
     -i demo/.env.site-configs.tpl \
     -o demo/.env.site-configs.deploy-preview \
