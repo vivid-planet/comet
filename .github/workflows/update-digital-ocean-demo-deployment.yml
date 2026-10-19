@@ -4,10 +4,6 @@ on:
     push:
         branches:
             - main
-    # Only until the deployment has been tested, then the demo only deploys from main
-    pull_request:
-        branches:
-            - main
     workflow_dispatch:
 
 # There's only one deployment, so a newer run replaces a running one
@@ -18,12 +14,11 @@ concurrency:
 jobs:
     update-deployment:
         name: Update DigitalOcean Demo Deployment
-        # Only the pull request that sets up the deployment, which can't come from a fork, because those get no secrets
-        if: github.repository == 'vivid-planet/dextinity' && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'chore/deploy-demo-digitalocean'))
+        if: github.repository == 'vivid-planet/dextinity'
         runs-on: ubuntu-latest
         env:
             # The branch App Platform builds from
-            DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
+            DEPLOY_BRANCH: ${{ github.ref_name }}
         steps:
             - name: Check that all variables and secrets are set
               env:
