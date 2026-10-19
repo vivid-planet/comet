@@ -5,6 +5,7 @@ import {
     Controller,
     ForbiddenException,
     Get,
+    GoneException,
     Headers,
     HttpStatus,
     Inject,
@@ -267,6 +268,8 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
+            this.throwIfLicenseHasExpired(file, res);
+
             // Requested with a filename that no longer matches the file (e.g. an extension-less URL from before file
             // extensions were added to DAM file URLs). The hash still validates because it was signed for that filename,
             // so permanently redirect to the current canonical URL instead of serving under the stale one.
@@ -300,6 +303,8 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
+            this.throwIfLicenseHasExpired(file, res);
+
             // See the comment in downloadFile above.
             if (params.filename !== file.name) {
                 res.redirect(HttpStatus.MOVED_PERMANENTLY, await this.filesService.createFileUrl(file, {}));
@@ -317,6 +322,13 @@ export function createFilesController({ Scope: PassedScope, damBasePath }: { Sco
 
         private isValidHash(hash: string, fileParams: FileParams): boolean {
             return hash === this.filesService.createHash(fileParams);
+        }
+
+        private throwIfLicenseHasExpired(file: FileInterface, res: Response): void {
+            if (this.filesService.hasExpiredLicense(file)) {
+                res.setHeader("cache-control", "no-store"); // The license might be renewed, and the file must be delivered again then
+                throw new GoneException();
+            }
         }
 
         private async streamFile(

@@ -1,4 +1,4 @@
-import { HttpStatus } from "@nestjs/common";
+import { GoneException, HttpStatus } from "@nestjs/common";
 import type { Response } from "express";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -16,8 +16,9 @@ interface FilesControllerForTest {
     hashedFileUrl(params: HashFileParams, res: Response, range?: string): Promise<void>;
 }
 
-function createControllerWithMockFilesService(file: FileInterface) {
+function createControllerWithMockFilesService(file: FileInterface, { hasExpiredLicense = false }: { hasExpiredLicense?: boolean } = {}) {
     const filesService = {
+        hasExpiredLicense: vi.fn().mockReturnValue(hasExpiredLicense),
         createHash: vi.fn().mockReturnValue(HASH),
         findOneById: vi.fn().mockResolvedValue(file),
         createFileUrl: vi.fn().mockResolvedValue(CANONICAL_URL),
@@ -81,6 +82,17 @@ describe.each(handlers)("FilesController.$name", ({ name, urlBuilder }) => {
         );
 
         expect(res.redirect).not.toHaveBeenCalled();
+    });
+
+    it("responds with 410 Gone and prevents caching the response when the file's license has expired", async () => {
+        const file = { id: FILE_ID, name: "current-name.pdf", contentHash: "content-hash", scope: undefined } as FileInterface;
+        const { controller } = createControllerWithMockFilesService(file, { hasExpiredLicense: true });
+        const res = createMockResponse();
+
+        await expect(
+            callHandler(controller, { hash: HASH, contentHash: undefined, fileId: FILE_ID, filename: "current-name.pdf" }, res),
+        ).rejects.toThrow(GoneException);
+        expect(res.setHeader).toHaveBeenCalledWith("cache-control", "no-store");
     });
 
     it("rejects a request whose hash doesn't match the given filename", async () => {
