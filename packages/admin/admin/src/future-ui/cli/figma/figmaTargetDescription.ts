@@ -50,8 +50,15 @@ function propertyNameFromKey(propertyKey: string): string {
     return idSeparatorIndex < 0 ? propertyKey : propertyKey.slice(0, idSeparatorIndex);
 }
 
+function isAllUppercase(word: string): boolean {
+    return /^[A-Z0-9]+$/.test(word);
+}
+
 function toCamelCase(name: string): string {
-    const words = name.split(/[^a-zA-Z0-9]+/).filter((word) => word.length > 0);
+    const words = name
+        .split(/[^a-zA-Z0-9]+/)
+        .filter((word) => word.length > 0)
+        .map((word) => (isAllUppercase(word) ? word.toLowerCase() : word));
     return words.map((word, index) => (index === 0 ? word.charAt(0).toLowerCase() : word.charAt(0).toUpperCase()) + word.slice(1)).join("");
 }
 
