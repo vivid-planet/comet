@@ -2,8 +2,8 @@
 import { Command, Option } from "commander";
 import { resolve } from "path";
 
-import type { StaticAssetsStorageConfig } from "./storage";
-import { uploadStaticAssets } from "./upload-static-assets";
+import type { StaticAssetsStorageConfig } from "./storage/storage";
+import { uploadStaticAssets } from "./upload/upload-static-assets";
 
 type Options = {
     sourceDirectory: string;

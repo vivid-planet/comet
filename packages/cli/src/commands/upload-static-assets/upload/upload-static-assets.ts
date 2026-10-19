@@ -1,7 +1,7 @@
 import { readdir } from "fs/promises";
 import { join, posix, relative, sep } from "path";
 
-import { createStaticAssetsStorage, type StaticAssetsStorageConfig } from "./storage";
+import { createStaticAssetsStorage, type StaticAssetsStorageConfig } from "../storage/storage";
 
 const uploadConcurrency = 10;
 
