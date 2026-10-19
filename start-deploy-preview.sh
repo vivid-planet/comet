@@ -1,25 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-# Starts the demo as a deploy preview environment: renders the site configs for the deploy preview
-# host, builds the images and brings the compose project up, blocking until it is healthy. Everything
-# project specific happens here, so that a deploy preview controller only has to run this script and
-# gets a running compose project.
-#
-# Configured through the environment, all optional:
-#
-#   COMPOSE_PROJECT_NAME      compose project to create (default dextinity-demo-deploy-preview)
-#   DEPLOY_PREVIEW_PORT       host port the environment is published on (default 8080)
-#   DEPLOY_PREVIEW_HOST       public host incl. port (default demo.preview.localhost:<DEPLOY_PREVIEW_PORT>)
-#   DEPLOY_PREVIEW_SCHEME     http or https (default http)
-#   DEPLOY_PREVIEW_URLS_FILE  file to report the urls of this deploy preview to, one "<name>=<url>" per line
-#
-# Without any of them it starts the deploy preview environment on http://demo.preview.localhost:8080.
-#
-# Everything besides the site lives one label next to the base domain and not below it -
-# admin--<host> and not admin.<host> - so that one wildcard certificate covers it.
-#
-# See .deploy-preview/README.md for details.
+# Starts the demo as a deploy preview environment, see .deploy-preview/README.md for the configuration.
 
 cd "$(dirname "$0")"
 
@@ -39,15 +21,13 @@ then
     nvm install
 fi
 
-# The images do not know the deploy preview host: the site configs are rendered for it here and
-# injected into api, admin and site by the compose file. Rendering needs the dextinity cli, which is
-# installed and built on its own when the repository has not been set up with ./install.sh.
+# The images do not know the deploy preview host, so the site configs are rendered for it here.
 if [[ ! -x ./node_modules/.bin/dextinity || ! -f ./packages/cli/lib/dextinity.js ]]
 then
     if ! command -v pnpm > /dev/null
     then
-        # A plain corepack enable writes next to the node binary, which a system wide installation does
-        # not allow without root.
+        # A plain corepack enable writes next to the node binary, which needs root for a system wide
+        # installation.
         pnpm_directory="$(mktemp -d)"
         corepack enable --install-directory "$pnpm_directory" pnpm
         export PATH="$pnpm_directory:$PATH"
@@ -65,7 +45,6 @@ fi
 docker compose -p "${COMPOSE_PROJECT_NAME:-dextinity-demo-deploy-preview}" \
     -f .deploy-preview/docker-compose.yml --project-directory . up --build -d --wait
 
-# Tell the caller which domains this project serves, so it can link to them.
 if [[ -n "${DEPLOY_PREVIEW_URLS_FILE:-}" ]]
 then
     cat > "$DEPLOY_PREVIEW_URLS_FILE" <<URLS
