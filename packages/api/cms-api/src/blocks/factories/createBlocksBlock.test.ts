@@ -40,4 +40,14 @@ describe("createBlocksBlock", () => {
         expect(errors).toHaveLength(1);
         expect(errors[0]).toMatchObject({ property: "blocks", constraints: { isArray: expect.any(String) } });
     });
+
+    it("should report an item that is an array", async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const input = BlocksBlock.blockInputFactory({ blocks: [externalLinkItem, []] } as any);
+
+        const errors = await validate(input, validationOptions);
+
+        expect(errors).toHaveLength(1);
+        expect(errors[0]).toMatchObject({ property: "blocks", constraints: { isObject: expect.any(String) } });
+    });
 });

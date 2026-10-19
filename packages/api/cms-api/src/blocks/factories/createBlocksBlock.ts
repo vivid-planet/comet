@@ -1,6 +1,6 @@
 import { Type } from "@nestjs/common";
 import { plainToInstance, Transform } from "class-transformer";
-import { Allow, IsArray, IsBoolean, IsIn, IsString, ValidateIf, ValidateNested } from "class-validator";
+import { Allow, IsArray, IsBoolean, IsIn, IsObject, IsString, ValidateIf, ValidateNested } from "class-validator";
 
 import {
     Block,
@@ -200,6 +200,7 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
     class BlocksBlockInput extends BlockInput {
         @Transform(({ value }) => (Array.isArray(value) ? value.map((item) => plainToInstance(BlocksBlockItemInput, item)) : value))
         @IsArray()
+        @IsObject({ each: true })
         @ValidateNested({ each: true })
         @BlockField(BlocksBlockItemInput)
         blocks: SupportedBlocksInputInterfaces<BlockMap>[];

@@ -64,5 +64,15 @@ describe("createOneOfBlock", () => {
             expect(errors).toHaveLength(1);
             expect(errors[0]).toMatchObject({ property: "attachedBlocks", constraints: { isArray: expect.any(String) } });
         });
+
+        it("should report an item that is an array", async () => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const input = OneOfBlock.blockInputFactory({ attachedBlocks: [[]] } as any);
+
+            const errors = await validate(input, validationOptions);
+
+            expect(errors).toHaveLength(1);
+            expect(errors[0]).toMatchObject({ property: "attachedBlocks", constraints: { isObject: expect.any(String) } });
+        });
     });
 });
