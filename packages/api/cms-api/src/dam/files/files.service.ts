@@ -684,6 +684,11 @@ export class FilesService {
         return !isLicenseValid(file.license);
     }
 
+    // Preview DAM URLs are requested by the Admin, which must keep showing the original file and saves blocks back as it reads them
+    isBlockedByLicense(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): boolean {
+        return !previewDamUrls && this.hasInvalidLicense(file);
+    }
+
     async findInvalidLicenseFallbackImage(scope?: DamScopeInterface): Promise<FileInterface | null> {
         const settings = await this.entityManager.findOne(DamSettings, { id: createDamSettingsId(scope) });
         const fallbackImage = await settings?.invalidLicenseFallbackImage?.load();

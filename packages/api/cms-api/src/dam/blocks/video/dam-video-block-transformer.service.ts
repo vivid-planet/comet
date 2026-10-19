@@ -43,12 +43,12 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
 
         const file = await this.filesService.findOneById(block.damFileId);
 
-        if (file && !this.filesService.hasInvalidLicense(file)) {
+        if (file && !this.filesService.isBlockedByLicense(file, { previewDamUrls })) {
             const captions = [];
             for (const caption of (await file.alternativesForThisFile.loadItems()).filter((alternative) => alternative.type === "captions")) {
                 const captionFile = await caption.alternative.loadOrFail();
 
-                if (this.filesService.hasInvalidLicense(captionFile)) {
+                if (this.filesService.isBlockedByLicense(captionFile, { previewDamUrls })) {
                     continue;
                 }
 

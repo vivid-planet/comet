@@ -26,7 +26,7 @@ const imagesService = new ImagesService({ secret: "secret", basePath: "dam" } as
 function createResolver({ hasInvalidLicense, fallbackImage }: { hasInvalidLicense: boolean; fallbackImage: FileInterface | null }) {
     const filesService = {
         findOneByImageId: vi.fn().mockResolvedValue(original),
-        hasInvalidLicense: vi.fn().mockReturnValue(hasInvalidLicense),
+        isBlockedByLicense: vi.fn((_file: FileInterface, { previewDamUrls }: { previewDamUrls: boolean }) => !previewDamUrls && hasInvalidLicense),
         findInvalidLicenseFallbackImage: vi.fn().mockResolvedValue(fallbackImage),
     } as unknown as FilesService;
 

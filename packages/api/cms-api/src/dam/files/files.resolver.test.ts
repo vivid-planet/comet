@@ -19,7 +19,7 @@ const fallbackImage = { id: "fallback", image: {} } as FileInterface;
 
 function createResolver({ hasInvalidLicense, fallback }: { hasInvalidLicense: boolean; fallback: FileInterface | null }) {
     const filesService = {
-        hasInvalidLicense: vi.fn().mockReturnValue(hasInvalidLicense),
+        isBlockedByLicense: vi.fn((_file: FileInterface, { previewDamUrls }: { previewDamUrls: boolean }) => !previewDamUrls && hasInvalidLicense),
         findInvalidLicenseFallbackImage: vi.fn().mockResolvedValue(fallback),
         createFileUrl: vi.fn((file: FileInterface, { previewDamUrls }: { previewDamUrls: boolean }) =>
             Promise.resolve(`/dam/files/${previewDamUrls ? "preview/" : ""}${file.id}`),

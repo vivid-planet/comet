@@ -54,7 +54,7 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
 
         let cropArea = block.cropArea;
 
-        if (this.filesService.hasInvalidLicense(file)) {
+        if (this.filesService.isBlockedByLicense(file, { previewDamUrls })) {
             file = await this.filesService.findInvalidLicenseFallbackImage(file.scope);
 
             if (!file) {

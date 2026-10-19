@@ -38,8 +38,7 @@ export class FileImagesResolver {
             return undefined;
         }
 
-        // Preview URLs are used in the Admin, where the original image must stay visible
-        if (!previewDamUrls && this.filesService.hasInvalidLicense(file)) {
+        if (this.filesService.isBlockedByLicense(file, { previewDamUrls })) {
             const fallbackImage = await this.filesService.findInvalidLicenseFallbackImage(file.scope);
 
             return fallbackImage ? this.imagesService.createUrlTemplate({ file: fallbackImage }, { previewDamUrls }) : undefined;

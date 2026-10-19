@@ -37,7 +37,7 @@ const fallbackImage = createImageFile({
 function createTransformer({ hasInvalidLicense, fallback }: { hasInvalidLicense: boolean; fallback: FileInterface | null }) {
     const filesService = {
         findOneById: vi.fn().mockResolvedValue(originalImage),
-        hasInvalidLicense: vi.fn().mockReturnValue(hasInvalidLicense),
+        isBlockedByLicense: vi.fn((_file: FileInterface, { previewDamUrls }: { previewDamUrls: boolean }) => !previewDamUrls && hasInvalidLicense),
         findInvalidLicenseFallbackImage: vi.fn().mockResolvedValue(fallback),
         createFileUrl: vi.fn(),
     } as unknown as FilesService;
@@ -76,5 +76,15 @@ describe("PixelImageBlockTransformerService", () => {
         const { transformer } = createTransformer({ hasInvalidLicense: true, fallback: null });
 
         await expect(transformer.transformToPlain(block, context)).resolves.toEqual({});
+    });
+
+    it("keeps the original image and the block's crop area for the Admin, which saves the block back", async () => {
+        const { transformer, imagesService } = createTransformer({ hasInvalidLicense: true, fallback: fallbackImage });
+
+        const result = await transformer.transformToPlain(block, { ...context, previewDamUrls: true });
+
+        expect(result.damFile?.id).toBe(originalImage.id);
+        expect(result.cropArea).toEqual(blockCropArea);
+        expect(result.urlTemplate).toBe(imagesService.createUrlTemplate({ file: originalImage, cropArea: blockCropArea }, { previewDamUrls: true }));
     });
 });

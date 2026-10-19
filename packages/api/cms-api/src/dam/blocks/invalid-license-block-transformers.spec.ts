@@ -25,7 +25,9 @@ function createFile(id: string, alternatives: Array<{ id: string; language: stri
 function createFilesService({ file, invalidLicenseFileIds }: { file: FileInterface; invalidLicenseFileIds: string[] }) {
     return {
         findOneById: vi.fn().mockResolvedValue(file),
-        hasInvalidLicense: vi.fn((f: FileInterface) => invalidLicenseFileIds.includes(f.id)),
+        isBlockedByLicense: vi.fn(
+            (f: FileInterface, { previewDamUrls }: { previewDamUrls: boolean }) => !previewDamUrls && invalidLicenseFileIds.includes(f.id),
+        ),
         createFileUrl: vi.fn((f: FileInterface) => Promise.resolve(`/dam/files/${f.id}`)),
         createFileDownloadUrl: vi.fn((f: FileInterface) => Promise.resolve(`/dam/files/download/${f.id}`)),
     } as unknown as FilesService;
@@ -44,6 +46,12 @@ describe("SvgImageBlockTransformerService", () => {
         const transformer = new SvgImageBlockTransformerService(createFilesService({ file: createFile("svg"), invalidLicenseFileIds: ["svg"] }));
 
         await expect(transformer.transformToPlain(block, context)).resolves.toEqual({});
+    });
+
+    it("keeps the file with an invalid license for the Admin", async () => {
+        const transformer = new SvgImageBlockTransformerService(createFilesService({ file: createFile("svg"), invalidLicenseFileIds: ["svg"] }));
+
+        expect((await transformer.transformToPlain(block, { ...context, previewDamUrls: true })).damFile?.id).toBe("svg");
     });
 });
 

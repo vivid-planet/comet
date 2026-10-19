@@ -13,6 +13,7 @@ If no fallback image is set, the block renders no image.
 
 The GraphQL fields `DamFile.fileUrl`, `DamFileImage.url` and `DamFileImage.urlTemplate` return the fallback image's URL for a pixel image with an invalid license.
 `DamFileImage.url` and `DamFileImage.urlTemplate` return `null` if no fallback image is set.
-Preview DAM URLs, as used in the Admin, are not affected.
+
+None of this applies to requests for preview DAM URLs, so the Admin keeps showing the original file.
 
 The public file and image URLs of a file with an invalid license respond with `410 Gone`.

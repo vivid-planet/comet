@@ -225,6 +225,15 @@ describe("FilesService — invalid licenses", () => {
         expect(service.hasInvalidLicense({ license } as FileInterface)).toBe(expected);
     });
 
+    it.each([
+        { previewDamUrls: false, expected: true },
+        { previewDamUrls: true, expected: false },
+    ])("isBlockedByLicense returns $expected for an invalid license with previewDamUrls: $previewDamUrls", ({ previewDamUrls, expected }) => {
+        const { service } = createService();
+
+        expect(service.isBlockedByLicense({ license: expiredLicense } as FileInterface, { previewDamUrls })).toBe(expected);
+    });
+
     it("finds the fallback image of the scope's settings", async () => {
         const fallbackImage = { id: FILE_ID_A, image: {}, license: validLicense } as Partial<FileInterface>;
         const { service, entityManager } = createService({ settings: createSettingsWithFallbackImage(fallbackImage) });

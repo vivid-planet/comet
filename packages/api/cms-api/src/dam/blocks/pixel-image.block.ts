@@ -46,7 +46,7 @@ class PixelImageBlockData extends BlockData {
             return undefined;
         }
 
-        if (filesService.hasInvalidLicense(file)) {
+        if (filesService.isBlockedByLicense(file, { previewDamUrls })) {
             const fallbackImage = await filesService.findInvalidLicenseFallbackImage(file.scope);
 
             return fallbackImage ? imagesService.createUrlTemplate({ file: fallbackImage }, { previewDamUrls }) : undefined;

@@ -232,9 +232,8 @@ export function createFilesResolver({
         async fileUrl(@Parent() file: FileInterface, @Context("req") req: IncomingMessage): Promise<string> {
             const previewDamUrls = Boolean(req.headers["x-preview-dam-urls"]);
 
-            // Preview URLs are used in the Admin, where the original file must stay visible. A public URL of a file with an invalid
-            // license responds with 410 Gone, unless a pixel image can be replaced with the fallback image.
-            if (!previewDamUrls && file.image && this.filesService.hasInvalidLicense(file)) {
+            // A file with an invalid license keeps its URL, which responds with 410 Gone, unless it's a pixel image with a fallback image
+            if (file.image && this.filesService.isBlockedByLicense(file, { previewDamUrls })) {
                 const fallbackImage = await this.filesService.findInvalidLicenseFallbackImage(file.scope);
 
                 if (fallbackImage) {
