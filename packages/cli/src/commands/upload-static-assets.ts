@@ -20,7 +20,7 @@ type Options = {
     azureContainer?: string;
 };
 
-function requireOption<T>(value: T | undefined, flag: string, driver: string): T {
+function requireOption<T>({ value, flag, driver }: { value: T | undefined; flag: string; driver: string }): T {
     if (value === undefined || value === "") {
         throw new Error(`${flag} is required for the ${driver} driver`);
     }
@@ -30,13 +30,16 @@ function requireOption<T>(value: T | undefined, flag: string, driver: string): T
 function getStaticAssetsStorageConfig(options: Options): StaticAssetsStorageConfig {
     switch (options.driver) {
         case "file":
-            return { driver: "file", file: { directory: resolve(requireOption(options.fileDirectory, "--file-directory", "file")) } };
+            return {
+                driver: "file",
+                file: { directory: resolve(requireOption({ value: options.fileDirectory, flag: "--file-directory", driver: "file" })) },
+            };
         case "s3":
             return {
                 driver: "s3",
                 s3: {
-                    bucket: requireOption(options.s3Bucket, "--s3-bucket", "s3"),
-                    region: requireOption(options.s3Region, "--s3-region", "s3"),
+                    bucket: requireOption({ value: options.s3Bucket, flag: "--s3-bucket", driver: "s3" }),
+                    region: requireOption({ value: options.s3Region, flag: "--s3-region", driver: "s3" }),
                     endpoint: options.s3Endpoint || undefined,
                     accessKeyId: options.s3AccessKeyId || undefined,
                     secretAccessKey: options.s3SecretAccessKey || undefined,
@@ -46,9 +49,9 @@ function getStaticAssetsStorageConfig(options: Options): StaticAssetsStorageConf
             return {
                 driver: "azure",
                 azure: {
-                    accountName: requireOption(options.azureAccountName, "--azure-account-name", "azure"),
-                    accountKey: requireOption(options.azureAccountKey, "--azure-account-key", "azure"),
-                    container: requireOption(options.azureContainer, "--azure-container", "azure"),
+                    accountName: requireOption({ value: options.azureAccountName, flag: "--azure-account-name", driver: "azure" }),
+                    accountKey: requireOption({ value: options.azureAccountKey, flag: "--azure-account-key", driver: "azure" }),
+                    container: requireOption({ value: options.azureContainer, flag: "--azure-container", driver: "azure" }),
                 },
             };
     }
