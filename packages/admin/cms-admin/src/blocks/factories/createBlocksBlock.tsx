@@ -24,6 +24,7 @@ import {
     useState,
 } from "react";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { CannotPasteBlockDialog } from "../clipboard/CannotPasteBlockDialog";
@@ -433,7 +434,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
             };
 
             const addNewBlock = (type: BlockType, beforeIndex?: number) => {
-                const key = crypto.randomUUID();
+                const key = uuid();
 
                 const block = blockForType(type);
                 if (!block) {
@@ -518,7 +519,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                         }
 
                         return {
-                            key: crypto.randomUUID(),
+                            key: uuid(),
                             type,
                             selected: false,
                             visible: canAddVisibleBlock ? block.visible : false,

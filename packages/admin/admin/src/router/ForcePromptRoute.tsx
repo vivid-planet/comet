@@ -1,11 +1,12 @@
 import { useContext, useEffect } from "react";
 import { Route, type RouteProps } from "react-router";
 import useConstant from "use-constant";
+import { v4 as uuid } from "uuid";
 
 import { PromptContext } from "./Prompt";
 
 export function ForcePromptRoute(props: RouteProps) {
-    const id = useConstant<string>(() => crypto.randomUUID());
+    const id = useConstant<string>(() => uuid());
     const context = useContext(PromptContext);
     useEffect(() => {
         if (context) {

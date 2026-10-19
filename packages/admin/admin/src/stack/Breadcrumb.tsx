@@ -1,4 +1,5 @@
 import { Component, type ContextType, createContext, type PropsWithChildren, type ReactNode } from "react";
+import { v4 as uuid } from "uuid";
 
 import { StackApiContext } from "./Api";
 
@@ -18,7 +19,7 @@ export class StackBreadcrumb extends Component<IProps> {
     private parentId: string;
     constructor(props: IProps) {
         super(props);
-        this.id = crypto.randomUUID();
+        this.id = uuid();
     }
     public render() {
         return (

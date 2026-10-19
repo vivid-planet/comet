@@ -3,6 +3,7 @@ import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { isDateString } from "class-validator";
 import { FormattedDate, useIntl } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 interface ImageInfos {
     width: number;
@@ -28,7 +29,7 @@ export const ImageInfos = ({ imageInfos: { width, height, fileSize, fileFormat, 
         exif === null
             ? undefined
             : Object.entries(exif).map(([key, value]) => ({
-                  id: crypto.randomUUID(),
+                  id: uuid(),
                   label: key,
                   value,
               }));
@@ -45,7 +46,7 @@ export const ImageInfos = ({ imageInfos: { width, height, fileSize, fileFormat, 
                     hideTableHead
                     data={[
                         {
-                            id: crypto.randomUUID(),
+                            id: uuid(),
                             label: intl.formatMessage({ id: "dextinity.dam.file.widthAndHeight", defaultMessage: "Width and Height" }),
                             value: intl.formatMessage(
                                 {
@@ -59,12 +60,12 @@ export const ImageInfos = ({ imageInfos: { width, height, fileSize, fileFormat, 
                             ),
                         },
                         {
-                            id: crypto.randomUUID(),
+                            id: uuid(),
                             label: intl.formatMessage({ id: "dextinity.dam.file.fileSize", defaultMessage: "File Size" }),
                             value: <PrettyBytes value={fileSize} />,
                         },
                         {
-                            id: crypto.randomUUID(),
+                            id: uuid(),
                             label: intl.formatMessage({ id: "dextinity.dam.file.format", defaultMessage: "Format" }),
                             value: fileFormat,
                         },

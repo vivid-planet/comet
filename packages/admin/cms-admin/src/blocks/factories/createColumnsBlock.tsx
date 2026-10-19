@@ -4,6 +4,7 @@ import { Checkbox, Divider, FormControlLabel, IconButton, Typography } from "@mu
 import { styled } from "@mui/material/styles";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { FormattedMessage, type IntlShape, type MessageDescriptor, useIntl } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
 import { BlockAdminComponentButton } from "../common/BlockAdminComponentButton";
@@ -81,7 +82,7 @@ export function createColumnsBlock<T extends BlockInterface>(
 
     function createEmptyColumns(number: number): ListBlockItem<T>[] {
         return new Array(number).fill(undefined).map(() => ({
-            key: crypto.randomUUID(),
+            key: uuid(),
             props: contentBlock.defaultValues(),
             selected: false,
             slideIn: false,

@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import type { RichTextBlockInput } from "../../../blocks.generated";
 import { createRichTextBlock, type RichTextBlockState } from "../../createRichTextBlock";
 import type { TableBlockState } from "../../createTableBlock";
@@ -54,31 +56,31 @@ export const columnInsertDataWithFiveValues: ColumnInsertData = {
 
 const getDefaultState = (): TableBlockState => {
     const smallHighlightedColumn: TableBlockState["columns"][number] = {
-        id: crypto.randomUUID(),
+        id: uuid(),
         size: "small",
         highlighted: true,
     };
 
     const firstStandardColumn: TableBlockState["columns"][number] = {
-        id: crypto.randomUUID(),
+        id: uuid(),
         size: "standard",
         highlighted: false,
     };
 
     const secondStandardColumn: TableBlockState["columns"][number] = {
-        id: crypto.randomUUID(),
+        id: uuid(),
         size: "standard",
         highlighted: false,
     };
 
     const extraLargeColumn: TableBlockState["columns"][number] = {
-        id: crypto.randomUUID(),
+        id: uuid(),
         highlighted: false,
         size: "extraLarge",
     };
 
     const headerRow: TableBlockState["rows"][number] = {
-        id: crypto.randomUUID(),
+        id: uuid(),
         highlighted: true,
         cellValues: [
             { columnId: smallHighlightedColumn.id, value: createRteState("Product ID") },
@@ -89,7 +91,7 @@ const getDefaultState = (): TableBlockState => {
     };
 
     const dataRowOne: TableBlockState["rows"][number] = {
-        id: crypto.randomUUID(),
+        id: uuid(),
         highlighted: false,
         cellValues: [
             { columnId: smallHighlightedColumn.id, value: createRteState("p1") },
@@ -103,7 +105,7 @@ const getDefaultState = (): TableBlockState => {
     };
 
     const dataRowTwo: TableBlockState["rows"][number] = {
-        id: crypto.randomUUID(),
+        id: uuid(),
         highlighted: false,
         cellValues: [
             { columnId: smallHighlightedColumn.id, value: createRteState("p2") },
@@ -119,7 +121,7 @@ const getDefaultState = (): TableBlockState => {
     };
 
     const dataRowThree: TableBlockState["rows"][number] = {
-        id: crypto.randomUUID(),
+        id: uuid(),
         highlighted: false,
         cellValues: [
             { columnId: smallHighlightedColumn.id, value: createRteState("p3") },
@@ -135,7 +137,7 @@ const getDefaultState = (): TableBlockState => {
     };
 
     const dataRowFour: TableBlockState["rows"][number] = {
-        id: crypto.randomUUID(),
+        id: uuid(),
         highlighted: false,
         cellValues: [
             { columnId: smallHighlightedColumn.id, value: createRteState("p4") },
@@ -157,8 +159,8 @@ const getDefaultState = (): TableBlockState => {
 };
 
 const getStateWithTwoColumnsAndTwoRows = (): TableBlockState => {
-    const columnIdOne = crypto.randomUUID();
-    const columnIdTwo = crypto.randomUUID();
+    const columnIdOne = uuid();
+    const columnIdTwo = uuid();
 
     return {
         columns: [
@@ -167,7 +169,7 @@ const getStateWithTwoColumnsAndTwoRows = (): TableBlockState => {
         ],
         rows: [
             {
-                id: crypto.randomUUID(),
+                id: uuid(),
                 highlighted: false,
                 cellValues: [
                     { columnId: columnIdOne, value: createRteState("Row 1 / Column 1") },
@@ -175,7 +177,7 @@ const getStateWithTwoColumnsAndTwoRows = (): TableBlockState => {
                 ],
             },
             {
-                id: crypto.randomUUID(),
+                id: uuid(),
                 highlighted: false,
                 cellValues: [
                     { columnId: columnIdOne, value: createRteState("Row 2 / Column 1") },

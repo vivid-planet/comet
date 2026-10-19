@@ -38,7 +38,8 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "use-constant": "^2.0.0"
+        "use-constant": "^2.0.0",
+        "uuid": "^11.1.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.29.7",

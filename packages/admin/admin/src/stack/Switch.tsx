@@ -14,6 +14,7 @@ import {
     useState,
 } from "react";
 import { matchPath, Route, type RouteChildrenProps, useHistory, useLocation, useRouteMatch } from "react-router";
+import { v4 as uuid } from "uuid";
 
 import { ForcePromptRoute } from "../router/ForcePromptRoute";
 import { SubRouteIndexRoute, useSubRoutePrefix } from "../router/SubRoute";
@@ -56,7 +57,7 @@ interface IRouteParams {
 function useUuid() {
     const ref = useRef<string | undefined>(undefined);
     if (ref.current === undefined) {
-        ref.current = crypto.randomUUID() as string;
+        ref.current = uuid() as string;
     }
     return ref.current;
 }

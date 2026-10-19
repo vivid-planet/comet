@@ -17,6 +17,7 @@ import { IconButton } from "@mui/material";
 import type { GQLPredefinedPageType } from "@src/graphql.generated";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 import { predefinedPageQuery, savePredefinedPageMutation } from "./EditPredefinedPage.gql";
 import type {
@@ -78,7 +79,7 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
             type: formValues.type ?? null,
         };
 
-        const id = data?.pageTreeNode?.document?.id ?? crypto.randomUUID();
+        const id = data?.pageTreeNode?.document?.id ?? uuid();
 
         await client.mutate<GQLSavePredefinedPageMutation, GQLSavePredefinedPageMutationVariables>({
             mutation: savePredefinedPageMutation,

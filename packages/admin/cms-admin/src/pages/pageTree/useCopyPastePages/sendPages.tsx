@@ -3,6 +3,7 @@ import { LocalErrorScopeApolloContext } from "@dextinity/admin";
 import isEqual from "lodash.isequal";
 import type { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 import type { BlockDependency, ReplaceDependencyObject } from "../../../blocks/types";
 import type { ContentScope } from "../../../contentScope/Provider";
@@ -288,7 +289,7 @@ export async function sendPages(
             }
 
             // 3c. Create new document and attach it to new page tree node
-            const newDocumentId = crypto.randomUUID();
+            const newDocumentId = uuid();
             if (
                 sourcePage?.document != null &&
                 documentType.updateMutation &&
@@ -327,7 +328,7 @@ function createPageTreeNodeIdReplacements(nodes: PageClipboard[]): ReplaceDepend
     const replacements: ReplaceDependencyObject[] = [];
 
     for (const node of nodes) {
-        replacements.push({ type: "PageTreeNode", originalId: node.id, replaceWithId: crypto.randomUUID() });
+        replacements.push({ type: "PageTreeNode", originalId: node.id, replaceWithId: uuid() });
     }
 
     return replacements;

@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import { describe, expect, it } from "vitest";
 
 import { columnInsertDataWithFiveValues as columnDataToInsert, MockRichTextBlock, mockStates } from "../__mocks__/TableBlockData.mocks";
@@ -5,14 +6,14 @@ import { insertColumnDataAtIndex } from "../utils/column";
 
 describe("insertColumnDataAtIndex", () => {
     it("should insert a column with the specified column id", () => {
-        const newColumnId = crypto.randomUUID();
+        const newColumnId = uuid();
         const newState = insertColumnDataAtIndex(mockStates.default, columnDataToInsert, 0, MockRichTextBlock, newColumnId);
 
         expect(newState.columns[0].id).toBe(newColumnId);
     });
 
     it("should insert the correct number of rows with the specified column id", () => {
-        const newColumnId = crypto.randomUUID();
+        const newColumnId = uuid();
         const newState = insertColumnDataAtIndex(mockStates.default, columnDataToInsert, 0, MockRichTextBlock, newColumnId);
 
         const allCellsWithNewColumnId = newState.rows.flatMap((row) => row.cellValues).filter((cellValue) => cellValue.columnId === newColumnId);

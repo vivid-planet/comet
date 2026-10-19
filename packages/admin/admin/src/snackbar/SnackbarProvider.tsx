@@ -1,5 +1,6 @@
 import type { SnackbarCloseReason, SnackbarProps } from "@mui/material";
 import { cloneElement, createContext, type ReactElement, type ReactNode, type SyntheticEvent, useContext, useState } from "react";
+import { v4 as uuid } from "uuid";
 
 import type { UndoSnackbarProps } from "./UndoSnackbar";
 
@@ -26,10 +27,10 @@ type HandleClose = (event: SnackbarCloseEvent, reason: SnackbarCloseReason, onCl
 export const SnackbarProvider = ({ children }: { children?: ReactNode }) => {
     const [open, setOpen] = useState<boolean>(false);
     const [snackbar, setSnackbar] = useState<ReactElement<Omit<SnackbarProps | UndoSnackbarProps<unknown>, "open">>>();
-    const [key, setKey] = useState(crypto.randomUUID());
+    const [key, setKey] = useState(uuid());
 
     const updateSnackbar = (newSnackbar: ReactElement<Omit<SnackbarProps | UndoSnackbarProps<unknown>, "open">>) => {
-        setKey(crypto.randomUUID());
+        setKey(uuid());
         setSnackbar(newSnackbar);
         if (newSnackbar !== undefined) {
             setOpen(true);

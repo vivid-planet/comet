@@ -3,6 +3,7 @@ import { DialogActions } from "@mui/material";
 import { useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useLocation } from "react-router";
+import { v4 as uuid } from "uuid";
 
 import type { TableBlockData } from "../blocks.generated";
 import type { BlockContext } from "./context/BlockContext";
@@ -85,8 +86,8 @@ export const createTableBlock = <RichText extends RichTextBlockInterface = RichT
     type CellState = BlockState<RichText>;
 
     const getInitialTableState = (): TableBlockState<CellState> => {
-        const columnIdOne = crypto.randomUUID();
-        const columnIdTwo = crypto.randomUUID();
+        const columnIdOne = uuid();
+        const columnIdTwo = uuid();
 
         return {
             columns: [
@@ -95,7 +96,7 @@ export const createTableBlock = <RichText extends RichTextBlockInterface = RichT
             ],
             rows: [
                 {
-                    id: crypto.randomUUID(),
+                    id: uuid(),
                     highlighted: false,
                     cellValues: [
                         { columnId: columnIdOne, value: RichTextBlock.defaultValues() },
@@ -103,7 +104,7 @@ export const createTableBlock = <RichText extends RichTextBlockInterface = RichT
                     ],
                 },
                 {
-                    id: crypto.randomUUID(),
+                    id: uuid(),
                     highlighted: false,
                     cellValues: [
                         { columnId: columnIdOne, value: RichTextBlock.defaultValues() },

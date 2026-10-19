@@ -3,6 +3,7 @@ import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from 
 import { Divider, Snackbar } from "@mui/material";
 import type { Dispatch, SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 import { useBlockContext } from "../context/useBlockContext";
 import type { TableBlockState } from "../createTableBlock";
@@ -81,7 +82,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
         }
 
         updateState((state) => {
-            const newRowId = crypto.randomUUID();
+            const newRowId = uuid();
             addToRecentlyPastedIds(newRowId);
             return insertRowDataAtIndex(state, duplicatedRowInsertData, currentRowIndex + 1, RichTextBlock, newRowId);
         });
@@ -121,7 +122,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
         }
 
         updateState((state) => {
-            const newRowId = crypto.randomUUID();
+            const newRowId = uuid();
             addToRecentlyPastedIds(newRowId);
             const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
             return insertRowDataAtIndex(state, { ...clipboardData, cellValues: cellValuesToInsert }, currentRowIndex + 1, RichTextBlock, newRowId);

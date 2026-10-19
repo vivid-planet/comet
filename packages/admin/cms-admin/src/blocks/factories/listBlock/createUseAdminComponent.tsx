@@ -1,6 +1,7 @@
 import { UndoSnackbar, useSnackbarApi } from "@dextinity/admin";
 import { type ChangeEvent, type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
 import { type ClipboardContent, useBlockClipboard } from "../../clipboard/useBlockClipboard";
@@ -131,7 +132,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
         };
 
         const addNewBlock = (beforeIndex?: number) => {
-            const key = crypto.randomUUID();
+            const key = uuid();
 
             const newBlock = {
                 key,
@@ -200,7 +201,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
 
                 const newBlocks: ListBlockItem<T>[] = content.map((block) => {
                     return {
-                        key: crypto.randomUUID(),
+                        key: uuid(),
                         visible: canAddVisibleBlock ? block.visible : false,
                         props: block.state,
                         selected: false,
