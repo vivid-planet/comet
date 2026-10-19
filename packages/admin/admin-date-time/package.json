@@ -1,6 +1,6 @@
 {
     "name": "@dextinity/admin-date-time",
-    "version": "10.9.1",
+    "version": "10.10.0",
     "description": "Dextinity Admin Date Time component",
     "repository": {
         "directory": "packages/admin/admin-date-time",
@@ -57,8 +57,8 @@
         "@types/react-dom": "^19.3.0",
         "eslint": "^9.39.5",
         "final-form": "^4.20.10",
-        "npm-run-all2": "^8.0.4",
-        "prettier": "^3.6.2",
+        "npm-run-all2": "^9.0.3",
+        "prettier": "^3.9.10",
         "react": "^19.3.0",
         "react-dom": "^19.3.0",
         "react-final-form": "^6.5.9",

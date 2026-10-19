@@ -1853,3 +1853,83 @@ describe("createTipTapRichTextBlock defaultStyle on read", () => {
         expect(blockWithoutDefaults.blockDataFactory({ tipTapContent: { type: "doc", content } }).tipTapContent.content).toEqual(content);
     });
 });
+
+describe("createTipTapRichTextBlock searchText", () => {
+    const block = createTipTapRichTextBlock({ textBlocks: headingLevels234 }, "TestSearchText");
+
+    function searchText(content: TipTapRichTextBlockContent[]) {
+        return block.blockDataFactory({ tipTapContent: { type: "doc", content } }).searchText();
+    }
+
+    function text(value: string, marks?: TipTapRichTextBlockContent["marks"]): TipTapRichTextBlockContent {
+        return marks ? { type: "text", text: value, marks } : { type: "text", text: value };
+    }
+
+    function textBlock(name: string, content: TipTapRichTextBlockContent[]): TipTapRichTextBlockContent {
+        return { type: "textBlock", attrs: { textBlock: name }, content };
+    }
+
+    it("returns one entry for a paragraph split into several text nodes by marks", () => {
+        expect(
+            searchText([
+                textBlock("paragraph", [
+                    text("Text with "),
+                    text("bold", [{ type: "bold" }]),
+                    text(", "),
+                    text("italic", [{ type: "italic" }]),
+                    text(" and a "),
+                    text("link", [{ type: "link" }]),
+                    text("."),
+                ]),
+            ]),
+        ).toEqual(["Text with bold, italic and a link."]);
+    });
+
+    it("returns one weighted entry for a heading containing a mark", () => {
+        expect(searchText([textBlock("heading-2", [text("A "), text("bold", [{ type: "bold" }]), text(" heading")])])).toEqual([
+            { weight: "h2", text: "A bold heading" },
+        ]);
+    });
+
+    it("returns one entry per text block", () => {
+        expect(searchText([textBlock("paragraph", [text("First")]), textBlock("paragraph", [text("Second")])])).toEqual(["First", "Second"]);
+    });
+
+    it("returns one entry per list item", () => {
+        expect(
+            searchText([
+                {
+                    type: "bulletList",
+                    content: [
+                        { type: "listItem", content: [textBlock("paragraph", [text("First "), text("item", [{ type: "bold" }])])] },
+                        { type: "listItem", content: [textBlock("paragraph", [text("Second item")])] },
+                    ],
+                },
+            ]),
+        ).toEqual(["First item", "Second item"]);
+    });
+
+    it("joins the text around a hard break with a newline", () => {
+        expect(searchText([textBlock("paragraph", [text("First line"), { type: "hardBreak" }, text("Second line")])])).toEqual([
+            "First line\nSecond line",
+        ]);
+    });
+
+    it("joins the text around a non-breaking space with a space", () => {
+        expect(searchText([textBlock("paragraph", [text("First"), { type: "nonBreakingSpace" }, text("Second")])])).toEqual(["First Second"]);
+    });
+
+    it("returns no entry for an empty text block", () => {
+        expect(searchText([textBlock("paragraph", []), textBlock("paragraph", [text("Text")])])).toEqual(["Text"]);
+    });
+
+    it("returns no entries when indexSearchText is disabled", () => {
+        const blockWithoutSearchText = createTipTapRichTextBlock({ indexSearchText: false }, "TestSearchTextDisabled");
+
+        expect(
+            blockWithoutSearchText
+                .blockDataFactory({ tipTapContent: { type: "doc", content: [textBlock("paragraph", [text("Text")])] } })
+                .searchText(),
+        ).toEqual([]);
+    });
+});

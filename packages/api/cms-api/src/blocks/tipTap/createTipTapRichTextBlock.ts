@@ -55,7 +55,7 @@ import {
 } from "./textBlocks";
 import { containsInvalidTextBlock, getListNestingDepth } from "./tipTapValidation";
 
-export type { TipTapListOptions, TipTapTextBlock, TipTapTextBlockStyle, TipTapTextBlockTag } from "./textBlocks";
+export type { TipTapTextBlock, TipTapTextBlockStyle, TipTapTextBlockTag } from "./textBlocks";
 export type { JSONContent as TipTapRichTextBlockContent } from "@tiptap/core";
 
 /**
@@ -623,21 +623,33 @@ interface TextEntry {
     headingLevel?: number;
 }
 
-function extractTextEntries(node: JSONContent, textBlocks: TipTapResolvedTextBlock[], headingLevel?: number): TextEntry[] {
-    const results: TextEntry[] = [];
-    const currentHeadingLevel =
-        node.type === "textBlock" ? textBlocks.find((textBlock) => textBlock.name === node.attrs?.textBlock)?.level : headingLevel;
-
-    if (node.text) {
-        results.push({ text: node.text, headingLevel: currentHeadingLevel });
-    }
-    if (node.content && Array.isArray(node.content)) {
-        for (const child of node.content) {
-            results.push(...extractTextEntries(child, textBlocks, currentHeadingLevel));
+function extractTextEntries(node: JSONContent, textBlocks: TipTapResolvedTextBlock[]): TextEntry[] {
+    if (node.type === "textBlock") {
+        const text = joinText(node);
+        if (!text) {
+            return [];
         }
+        return [{ text, headingLevel: textBlocks.find((textBlock) => textBlock.name === node.attrs?.textBlock)?.level }];
     }
 
+    const results: TextEntry[] = [];
+    if (node.text) {
+        results.push({ text: node.text });
+    }
+    for (const child of node.content ?? []) {
+        results.push(...extractTextEntries(child, textBlocks));
+    }
     return results;
+}
+
+function joinText(node: JSONContent): string {
+    if (node.type === "hardBreak") {
+        return "\n";
+    }
+    if (node.type === "nonBreakingSpace") {
+        return " ";
+    }
+    return (node.text ?? "") + (node.content ?? []).map(joinText).join("");
 }
 
 /**
