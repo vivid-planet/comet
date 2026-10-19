@@ -333,6 +333,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
                         rowCount={pages.length}
                         rowHeight={ROW_HEIGHT}
                         rowComponent={VirtualPageTreeRow}
+                        rowKey={getPageTreeRowKey}
                         rowProps={{
                             pages,
                             newPageIds,
@@ -366,6 +367,11 @@ type VirtualPageTreeRowProps = Pick<
     pages: PageTreePage[];
     newPageIds: RefObject<string[]>;
 };
+
+// PageTreeRow recreates its row element when it gets another page but connects react-dnd only once, so rows must be keyed by page
+function getPageTreeRowKey(index: number, { pages }: VirtualPageTreeRowProps) {
+    return pages[index].id;
+}
 
 function VirtualPageTreeRow({ index, style, pages, newPageIds, ...pageTreeRowProps }: RowComponentProps<VirtualPageTreeRowProps>) {
     const [prevPage, page, nextPage] = getLinkedPages(pages, index);
