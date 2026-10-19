@@ -30,7 +30,8 @@
         "serve": "NODE_ENV=production node dist/server.js",
         "test": "pnpm run test:unit",
         "test:unit": "vitest --run",
-        "test:watch": "vitest --watch"
+        "test:watch": "vitest --watch",
+        "upload-static-assets": "dextinity upload-static-assets --source-directory .next/static"
     },
     "dependencies": {
         "@base-ui/react": "^1.9.0",
