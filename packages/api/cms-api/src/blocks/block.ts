@@ -11,6 +11,7 @@ import { createAppliedMigrationsBlockDataFactoryDecorator } from "./migrations/c
 import { BlockDataMigrationVersion } from "./migrations/decorators/BlockDataMigrationVersion";
 import type { MigrateOptions, MigrateVendorOptions } from "./migrations/types";
 import type { SearchText } from "./search/get-search-text";
+import type { TipTapRichTextBlockContentConfig } from "./tipTap/contentConfig";
 
 export interface BlockTransformerServiceInterface<
     Block extends BlockDataInterface = BlockDataInterface,
@@ -258,6 +259,11 @@ export type BlockMetaField =
            * Lets consumers like the block loader process blocks embedded in the content.
            */
           childBlocks: Record<string, Block>;
+          /**
+           * The block the content's `link` marks store their data as, `null` if links are disabled.
+           */
+          linkBlock: Block | null;
+          contentConfig: TipTapRichTextBlockContentConfig;
           nullable: boolean;
       };
 

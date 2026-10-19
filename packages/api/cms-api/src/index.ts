@@ -103,6 +103,7 @@ export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar"
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
 export { blockToMikroOrmFullText, getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
+export type { TipTapRichTextBlockContentConfig } from "./blocks/tipTap/contentConfig";
 export {
     createTipTapRichTextBlock,
     type CreateTipTapRichTextBlockOptions,

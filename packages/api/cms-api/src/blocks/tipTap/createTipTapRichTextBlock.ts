@@ -26,6 +26,7 @@ import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMig
 import type { MigrateVendorOptions } from "../migrations/types";
 import type { SearchText, WeightedSearchText } from "../search/get-search-text";
 import { applyDefaultTextBlockStyles } from "./applyDefaultTextBlockStyles";
+import { buildContentConfig } from "./contentConfig";
 import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock";
 import { CmsLink } from "./extensions/CmsLink";
 import { InlineStyleMark } from "./extensions/InlineStyleMark";
@@ -689,6 +690,14 @@ export function createTipTapRichTextBlock(
         hasInlineChildBlocks,
     });
     const schema = getSchema(extensions);
+    const contentConfig = buildContentConfig({
+        resolvedOptions,
+        inlineStyles,
+        placeholders,
+        childBlocks: childBlocksConfig,
+        maxTextBlocks,
+        listLevelMax,
+    });
 
     const draftJsTextBlockMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.textBlockMap : undefined;
     const draftJsListItemMap = typeof migrateFromDraftJs === "object" ? migrateFromDraftJs.listItemMap : undefined;
@@ -727,7 +736,7 @@ export function createTipTapRichTextBlock(
 
     @BlockDataMigrationVersion(migrate?.version, migrateVendor?.version)
     class TipTapRichTextBlockData extends BlockData implements TipTapRichTextBlockDataInterface {
-        @BlockField({ type: "tipTapRichTextBlock", childBlocks })
+        @BlockField({ type: "tipTapRichTextBlock", childBlocks, linkBlock: LinkBlock ?? null, contentConfig })
         tipTapContent: JSONContent;
 
         searchText(): SearchText[] {
@@ -791,7 +800,7 @@ export function createTipTapRichTextBlock(
             orderedList: resolvedOptions.orderedList,
             unorderedList: resolvedOptions.unorderedList,
         })
-        @BlockField({ type: "tipTapRichTextBlock", childBlocks })
+        @BlockField({ type: "tipTapRichTextBlock", childBlocks, linkBlock: LinkBlock ?? null, contentConfig })
         tipTapContent: JSONContent;
 
         transformToBlockData(): TipTapRichTextBlockData {

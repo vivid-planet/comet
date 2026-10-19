@@ -1167,7 +1167,46 @@
                 "name": "tipTapContent",
                 "kind": "TipTapRichTextBlock",
                 "nullable": false,
-                "childBlocks": {}
+                "childBlocks": {},
+                "linkBlock": "MailLink",
+                "contentConfig": {
+                    "bold": true,
+                    "italic": true,
+                    "underline": false,
+                    "strike": true,
+                    "sub": true,
+                    "sup": true,
+                    "nonBreakingSpace": true,
+                    "softHyphen": true,
+                    "textBlocks": [
+                        {
+                            "name": "paragraph",
+                            "tag": "p",
+                            "styles": [
+                                "title",
+                                "header",
+                                "small"
+                            ],
+                            "defaultStyle": null
+                        }
+                    ],
+                    "defaultTextBlock": "paragraph",
+                    "orderedList": {
+                        "styles": [],
+                        "defaultStyle": null
+                    },
+                    "unorderedList": {
+                        "styles": [],
+                        "defaultStyle": null
+                    },
+                    "inlineStyles": [],
+                    "placeholders": [
+                        "SALUTATION"
+                    ],
+                    "childBlockDisplays": {},
+                    "maxTextBlocks": null,
+                    "listLevelMax": null
+                }
             }
         ],
         "inputFields": [
@@ -1175,7 +1214,46 @@
                 "name": "tipTapContent",
                 "kind": "TipTapRichTextBlock",
                 "nullable": false,
-                "childBlocks": {}
+                "childBlocks": {},
+                "linkBlock": "MailLink",
+                "contentConfig": {
+                    "bold": true,
+                    "italic": true,
+                    "underline": false,
+                    "strike": true,
+                    "sub": true,
+                    "sup": true,
+                    "nonBreakingSpace": true,
+                    "softHyphen": true,
+                    "textBlocks": [
+                        {
+                            "name": "paragraph",
+                            "tag": "p",
+                            "styles": [
+                                "title",
+                                "header",
+                                "small"
+                            ],
+                            "defaultStyle": null
+                        }
+                    ],
+                    "defaultTextBlock": "paragraph",
+                    "orderedList": {
+                        "styles": [],
+                        "defaultStyle": null
+                    },
+                    "unorderedList": {
+                        "styles": [],
+                        "defaultStyle": null
+                    },
+                    "inlineStyles": [],
+                    "placeholders": [
+                        "SALUTATION"
+                    ],
+                    "childBlockDisplays": {},
+                    "maxTextBlocks": null,
+                    "listLevelMax": null
+                }
             }
         ]
     },
@@ -2072,7 +2150,44 @@
                 "name": "tipTapContent",
                 "kind": "TipTapRichTextBlock",
                 "nullable": false,
-                "childBlocks": {}
+                "childBlocks": {},
+                "linkBlock": "MailLink",
+                "contentConfig": {
+                    "bold": true,
+                    "italic": true,
+                    "underline": false,
+                    "strike": true,
+                    "sub": true,
+                    "sup": true,
+                    "nonBreakingSpace": true,
+                    "softHyphen": true,
+                    "textBlocks": [
+                        {
+                            "name": "paragraph",
+                            "tag": "p",
+                            "styles": [
+                                "title",
+                                "header",
+                                "small"
+                            ],
+                            "defaultStyle": null
+                        }
+                    ],
+                    "defaultTextBlock": "paragraph",
+                    "orderedList": {
+                        "styles": [],
+                        "defaultStyle": null
+                    },
+                    "unorderedList": {
+                        "styles": [],
+                        "defaultStyle": null
+                    },
+                    "inlineStyles": [],
+                    "placeholders": [],
+                    "childBlockDisplays": {},
+                    "maxTextBlocks": null,
+                    "listLevelMax": null
+                }
             }
         ],
         "inputFields": [
@@ -2080,7 +2195,44 @@
                 "name": "tipTapContent",
                 "kind": "TipTapRichTextBlock",
                 "nullable": false,
-                "childBlocks": {}
+                "childBlocks": {},
+                "linkBlock": "MailLink",
+                "contentConfig": {
+                    "bold": true,
+                    "italic": true,
+                    "underline": false,
+                    "strike": true,
+                    "sub": true,
+                    "sup": true,
+                    "nonBreakingSpace": true,
+                    "softHyphen": true,
+                    "textBlocks": [
+                        {
+                            "name": "paragraph",
+                            "tag": "p",
+                            "styles": [
+                                "title",
+                                "header",
+                                "small"
+                            ],
+                            "defaultStyle": null
+                        }
+                    ],
+                    "defaultTextBlock": "paragraph",
+                    "orderedList": {
+                        "styles": [],
+                        "defaultStyle": null
+                    },
+                    "unorderedList": {
+                        "styles": [],
+                        "defaultStyle": null
+                    },
+                    "inlineStyles": [],
+                    "placeholders": [],
+                    "childBlockDisplays": {},
+                    "maxTextBlocks": null,
+                    "listLevelMax": null
+                }
             }
         ]
     },
@@ -2110,7 +2262,46 @@
                 "name": "tipTapContent",
                 "kind": "TipTapRichTextBlock",
                 "nullable": false,
-                "childBlocks": {}
+                "childBlocks": {},
+                "linkBlock": "MailLink",
+                "contentConfig": {
+                    "bold": true,
+                    "italic": true,
+                    "underline": false,
+                    "strike": true,
+                    "sub": true,
+                    "sup": true,
+                    "nonBreakingSpace": true,
+                    "softHyphen": true,
+                    "textBlocks": [
+                        {
+                            "name": "paragraph",
+                            "tag": "p",
+                            "styles": [
+                                "small"
+                            ],
+                            "defaultStyle": null
+                        }
+                    ],
+                    "defaultTextBlock": "paragraph",
+                    "orderedList": {
+                        "styles": [
+                            "small"
+                        ],
+                        "defaultStyle": null
+                    },
+                    "unorderedList": {
+                        "styles": [
+                            "small"
+                        ],
+                        "defaultStyle": null
+                    },
+                    "inlineStyles": [],
+                    "placeholders": [],
+                    "childBlockDisplays": {},
+                    "maxTextBlocks": null,
+                    "listLevelMax": null
+                }
             }
         ],
         "inputFields": [
@@ -2118,7 +2309,46 @@
                 "name": "tipTapContent",
                 "kind": "TipTapRichTextBlock",
                 "nullable": false,
-                "childBlocks": {}
+                "childBlocks": {},
+                "linkBlock": "MailLink",
+                "contentConfig": {
+                    "bold": true,
+                    "italic": true,
+                    "underline": false,
+                    "strike": true,
+                    "sub": true,
+                    "sup": true,
+                    "nonBreakingSpace": true,
+                    "softHyphen": true,
+                    "textBlocks": [
+                        {
+                            "name": "paragraph",
+                            "tag": "p",
+                            "styles": [
+                                "small"
+                            ],
+                            "defaultStyle": null
+                        }
+                    ],
+                    "defaultTextBlock": "paragraph",
+                    "orderedList": {
+                        "styles": [
+                            "small"
+                        ],
+                        "defaultStyle": null
+                    },
+                    "unorderedList": {
+                        "styles": [
+                            "small"
+                        ],
+                        "defaultStyle": null
+                    },
+                    "inlineStyles": [],
+                    "placeholders": [],
+                    "childBlockDisplays": {},
+                    "maxTextBlocks": null,
+                    "listLevelMax": null
+                }
             }
         ]
     },
@@ -4224,6 +4454,102 @@
                 "childBlocks": {
                     "productPrice": "ProductPrice",
                     "productTeaser": "ProductTeaser"
+                },
+                "linkBlock": "Link",
+                "contentConfig": {
+                    "bold": true,
+                    "italic": true,
+                    "underline": false,
+                    "strike": true,
+                    "sub": true,
+                    "sup": true,
+                    "nonBreakingSpace": true,
+                    "softHyphen": true,
+                    "textBlocks": [
+                        {
+                            "name": "paragraph",
+                            "tag": "p",
+                            "styles": [
+                                "paragraph300",
+                                "paragraph200",
+                                "eyebrow600",
+                                "eyebrow550",
+                                "eyebrow500",
+                                "eyebrow450"
+                            ],
+                            "defaultStyle": "paragraph300"
+                        },
+                        {
+                            "name": "display",
+                            "tag": "h1",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-1",
+                            "tag": "h1",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-2",
+                            "tag": "h2",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-3",
+                            "tag": "h3",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-4",
+                            "tag": "h4",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-5",
+                            "tag": "h5",
+                            "styles": [],
+                            "defaultStyle": null
+                        }
+                    ],
+                    "defaultTextBlock": "paragraph",
+                    "orderedList": {
+                        "styles": [
+                            "list300",
+                            "list200"
+                        ],
+                        "defaultStyle": "list300"
+                    },
+                    "unorderedList": {
+                        "styles": [
+                            "list300",
+                            "list200"
+                        ],
+                        "defaultStyle": "list300"
+                    },
+                    "inlineStyles": [
+                        {
+                            "name": "highlight",
+                            "appliesTo": null
+                        },
+                        {
+                            "name": "tag",
+                            "appliesTo": [
+                                "paragraph"
+                            ]
+                        }
+                    ],
+                    "placeholders": [],
+                    "childBlockDisplays": {
+                        "productPrice": "inline",
+                        "productTeaser": "block"
+                    },
+                    "maxTextBlocks": null,
+                    "listLevelMax": null
                 }
             }
         ],
@@ -4235,6 +4561,102 @@
                 "childBlocks": {
                     "productPrice": "ProductPrice",
                     "productTeaser": "ProductTeaser"
+                },
+                "linkBlock": "Link",
+                "contentConfig": {
+                    "bold": true,
+                    "italic": true,
+                    "underline": false,
+                    "strike": true,
+                    "sub": true,
+                    "sup": true,
+                    "nonBreakingSpace": true,
+                    "softHyphen": true,
+                    "textBlocks": [
+                        {
+                            "name": "paragraph",
+                            "tag": "p",
+                            "styles": [
+                                "paragraph300",
+                                "paragraph200",
+                                "eyebrow600",
+                                "eyebrow550",
+                                "eyebrow500",
+                                "eyebrow450"
+                            ],
+                            "defaultStyle": "paragraph300"
+                        },
+                        {
+                            "name": "display",
+                            "tag": "h1",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-1",
+                            "tag": "h1",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-2",
+                            "tag": "h2",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-3",
+                            "tag": "h3",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-4",
+                            "tag": "h4",
+                            "styles": [],
+                            "defaultStyle": null
+                        },
+                        {
+                            "name": "heading-5",
+                            "tag": "h5",
+                            "styles": [],
+                            "defaultStyle": null
+                        }
+                    ],
+                    "defaultTextBlock": "paragraph",
+                    "orderedList": {
+                        "styles": [
+                            "list300",
+                            "list200"
+                        ],
+                        "defaultStyle": "list300"
+                    },
+                    "unorderedList": {
+                        "styles": [
+                            "list300",
+                            "list200"
+                        ],
+                        "defaultStyle": "list300"
+                    },
+                    "inlineStyles": [
+                        {
+                            "name": "highlight",
+                            "appliesTo": null
+                        },
+                        {
+                            "name": "tag",
+                            "appliesTo": [
+                                "paragraph"
+                            ]
+                        }
+                    ],
+                    "placeholders": [],
+                    "childBlockDisplays": {
+                        "productPrice": "inline",
+                        "productTeaser": "block"
+                    },
+                    "maxTextBlocks": null,
+                    "listLevelMax": null
                 }
             }
         ]
