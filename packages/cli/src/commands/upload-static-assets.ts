@@ -60,10 +60,8 @@ function getStaticAssetsStorageConfig(options: Options): StaticAssetsStorageConf
 const envPrefix = "STATIC_ASSETS_STORAGE";
 
 export const uploadStaticAssetsCommand = new Command("upload-static-assets")
-    .description(
-        "Upload static build assets (e.g., .next/static) to a storage that keeps the files of all deployed builds, so that every pod can serve them during a rolling deployment",
-    )
-    .addOption(new Option("--source-directory <directory>", "Directory to upload, e.g., .next/static").makeOptionMandatory())
+    .description("Upload a directory of static assets to a storage (S3, Azure or the file system). Files that already exist in the storage are kept.")
+    .addOption(new Option("--source-directory <directory>", "Directory to upload").makeOptionMandatory())
     .addOption(
         new Option("--prefix <prefix>", "Key prefix in the storage, e.g. the environment name").env(`${envPrefix}_PREFIX`).makeOptionMandatory(),
     )
