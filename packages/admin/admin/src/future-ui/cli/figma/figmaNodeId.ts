@@ -1,6 +1,5 @@
 import { Node, type Project, SyntaxKind } from "ts-morph";
 
-import { FigmaCliError } from "./figmaCliError.js";
 import { getOrAddSourceFile } from "./tsMorphProject.js";
 
 const FIGMA_DESIGN_HELPER_NAME = "figmaDesign";
@@ -11,7 +10,7 @@ function toRestApiNodeId(urlNodeId: string): string {
     return urlNodeId.split(URL_NODE_ID_SEPARATOR).join(REST_API_NODE_ID_SEPARATOR);
 }
 
-export function extractFigmaNodeId({ project, storyFilePath }: { project: Project; storyFilePath: string }): string {
+export function findFigmaNodeId({ project, storyFilePath }: { project: Project; storyFilePath: string }): string | undefined {
     const storyFile = getOrAddSourceFile(project, storyFilePath);
 
     for (const call of storyFile.getDescendantsOfKind(SyntaxKind.CallExpression)) {
@@ -35,5 +34,5 @@ export function extractFigmaNodeId({ project, storyFilePath }: { project: Projec
         }
     }
 
-    throw new FigmaCliError("source_incomplete", `Could not find a \`${FIGMA_DESIGN_HELPER_NAME}({ nodeId })\` call in "${storyFilePath}"`);
+    return undefined;
 }

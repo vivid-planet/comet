@@ -24,14 +24,14 @@ const componentSetDocumentSchema = z.object({
 });
 type ComponentSetDocument = z.infer<typeof componentSetDocumentSchema>;
 
-function parseComponentSetDocument(nodesResponse: unknown, nodeId: string): ComponentSetDocument {
+function parseComponentSetDocument(nodesResponse: unknown, nodeId: string): ComponentSetDocument | undefined {
     const response = nodesResponseSchema.safeParse(nodesResponse);
     if (!response.success) {
         throw new FigmaCliError("figma_error", `Figma nodes response is malformed: ${response.error.message}`);
     }
     const requestedNode = response.data.nodes[nodeId];
     if (requestedNode === undefined || requestedNode === null) {
-        throw new FigmaCliError("node_missing", `Figma node "${nodeId}" was not found in the file`);
+        return undefined;
     }
     const node = nodeWithDocumentSchema.safeParse(requestedNode);
     if (!node.success) {
@@ -93,7 +93,18 @@ interface FigmaProperty {
 
 /** Describes the component set at `nodeId` in a `GET /v1/files/:key/nodes` response. */
 export function describeFigmaTarget(nodesResponse: unknown, nodeId: string): ComponentDescription {
+    const description = findFigmaTarget(nodesResponse, nodeId);
+    if (description === undefined) {
+        throw new FigmaCliError("node_missing", `Figma node "${nodeId}" was not found in the file`);
+    }
+    return description;
+}
+
+export function findFigmaTarget(nodesResponse: unknown, nodeId: string): ComponentDescription | undefined {
     const document = parseComponentSetDocument(nodesResponse, nodeId);
+    if (document === undefined) {
+        return undefined;
+    }
     const publicProperties: FigmaProperty[] = Object.entries(document.componentPropertyDefinitions ?? {})
         .map(([propertyKey, definition]) => {
             const name = propertyNameFromKey(propertyKey);

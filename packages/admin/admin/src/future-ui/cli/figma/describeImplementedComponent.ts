@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import type { ComponentDescription } from "./componentDescription.js";
 import { FigmaCliError } from "./figmaCliError.js";
-import { extractFigmaNodeId } from "./figmaNodeId.js";
+import { findFigmaNodeId } from "./figmaNodeId.js";
 import { describeComponentProps } from "./propDescription.js";
 import { createTsMorphProject } from "./tsMorphProject.js";
 
@@ -29,7 +29,11 @@ function requireExistingFile(filePath: string): string {
     return filePath;
 }
 
-export function describeImplementedComponent(componentArgument: string): ComponentDescription {
+export interface ImplementedComponent extends Omit<ComponentDescription, "nodeId"> {
+    nodeId?: string;
+}
+
+export function readImplementedComponent(componentArgument: string): ImplementedComponent {
     const featureFolder = findFeatureFolder(componentArgument);
     const componentName = featureFolder.charAt(0).toUpperCase() + featureFolder.slice(1);
     const featureDirectory = join(componentsDirectory, featureFolder);
@@ -40,7 +44,15 @@ export function describeImplementedComponent(componentArgument: string): Compone
 
     return {
         component: componentName,
-        nodeId: extractFigmaNodeId({ project, storyFilePath }),
+        nodeId: findFigmaNodeId({ project, storyFilePath }),
         props: describeComponentProps({ project, componentFilePath, propsInterfaceName: `${componentName}Props` }),
     };
+}
+
+export function describeImplementedComponent(componentArgument: string): ComponentDescription {
+    const { component, nodeId, props } = readImplementedComponent(componentArgument);
+    if (nodeId === undefined) {
+        throw new FigmaCliError("source_incomplete", `The ${component} story has no \`figmaDesign({ nodeId })\` call`);
+    }
+    return { component, nodeId, props };
 }
