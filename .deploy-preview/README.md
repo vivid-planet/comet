@@ -170,7 +170,6 @@ Next.js build cache are mounted.
 - Anyone who can reach the admin host can log in: the idp lets you pick a user without a password.
   Do not expose an environment to the internet without putting authentication in front of it.
 - Mailpit is not behind the login, so anyone who can reach `mail--<host>` can read the mails.
-- The applications run as root inside their containers.
 - `demo/.env.site-configs.deploy-preview` is a single file in the repository, so two environments with
   different hosts cannot be rendered at the same time - render, start, then render the next.
 - `down --volumes` deletes the uploads together with the database. The fixtures are loaded again on

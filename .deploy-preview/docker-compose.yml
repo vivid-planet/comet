@@ -34,8 +34,11 @@ services:
         image: mirror.gcr.io/library/caddy:2-alpine
         pull_policy: weekly
         restart: unless-stopped
+        # The caddy, mailpit and valkey images run as root by default (valkey only until it drops to its
+        # own user), so their user is set here.
+        user: "1000:1000"
         ports:
-            - "${DEPLOY_PREVIEW_PORT:-8080}:80"
+            - "${DEPLOY_PREVIEW_PORT:-8080}:8080"
         volumes:
             - ./.deploy-preview/Caddyfile:/etc/caddy/Caddyfile:ro
 
@@ -74,12 +77,14 @@ services:
         image: mirror.gcr.io/valkey/valkey:9
         pull_policy: weekly
         restart: unless-stopped
+        user: valkey
         command: valkey-server --maxmemory 128M --maxmemory-policy allkeys-lru --loglevel warning --requirepass ${VALKEY_PASSWORD}
 
     mailpit:
         image: mirror.gcr.io/axllent/mailpit
         pull_policy: weekly
         restart: unless-stopped
+        user: "1000:1000"
 
     idp:
         build:

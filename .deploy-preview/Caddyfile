@@ -15,7 +15,8 @@
 	persist_config off
 }
 
-:80 {
+# 8080 and not 80, because caddy runs unprivileged and may not bind a port below 1024.
+:8080 {
 	# admin and site send upgrade-insecure-requests, which turns every request of a deploy preview served over
 	# http into https - the site preview in the admin included. Behind https it changes nothing.
 	header >Content-Security-Policy ";?\s*upgrade-insecure-requests" ""
