@@ -5,7 +5,7 @@ import os from "os";
 import { join } from "path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { uploadStaticAssets } from "./upload-static-assets";
+import { uploadStaticAssets } from "../upload-static-assets";
 
 describe("uploadStaticAssets", () => {
     let sourceDirectory: string;
