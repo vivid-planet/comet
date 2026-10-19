@@ -1,6 +1,6 @@
 import { Type } from "@nestjs/common";
 import { plainToInstance, Transform } from "class-transformer";
-import { Allow, IsBoolean, IsString, ValidateNested } from "class-validator";
+import { Allow, IsArray, IsBoolean, IsIn, IsString, ValidateIf, ValidateNested } from "class-validator";
 
 import {
     Block,
@@ -95,23 +95,21 @@ export function BaseBlocksBlockItemInput<BlockMap extends BaseBlockMap>(
         @BlockField()
         visible: boolean;
 
-        @IsString()
+        @IsIn(Object.keys(supportedBlocks))
         @BlockField()
         type: string;
 
         @Transform(
             ({ value, obj }) => {
-                const blockType = obj.type as string;
-                const block = supportedBlocks[blockType];
-
-                if (!block) {
-                    throw new Error(`unknown type ${blockType}`);
+                if (!Object.hasOwn(supportedBlocks, obj.type)) {
+                    return value;
                 }
 
-                return isBlockInputInterface(value) ? value : block.blockInputFactory(value);
+                return isBlockInputInterface(value) ? value : supportedBlocks[obj.type].blockInputFactory(value);
             },
             { toClassOnly: true },
         )
+        @ValidateIf((item: BlocksBlockItemInput) => Object.hasOwn(supportedBlocks, item.type))
         @ValidateNested()
         @BlockField({ kind: "oneOfBlocks", blocks: supportedBlocks })
         props: BlockInputInterface;
@@ -200,18 +198,8 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
     }
 
     class BlocksBlockInput extends BlockInput {
-        @Transform(({ value }: { value: BlocksBlockItemInputInterface[] }) =>
-            value
-                .filter((item) => {
-                    if (!supportedBlocks[item.type]) {
-                        console.warn(`Unknown block type "${item.type}"`);
-                        return false;
-                    }
-
-                    return true;
-                })
-                .map((item) => plainToInstance(BlocksBlockItemInput, item)),
-        )
+        @Transform(({ value }) => (Array.isArray(value) ? value.map((item) => plainToInstance(BlocksBlockItemInput, item)) : value))
+        @IsArray()
         @ValidateNested({ each: true })
         @BlockField(BlocksBlockItemInput)
         blocks: SupportedBlocksInputInterfaces<BlockMap>[];
