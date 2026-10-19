@@ -46,10 +46,23 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
             return {};
         }
 
-        const file = await this.filesService.findOneById(block.damFileId);
+        let file = await this.filesService.findOneById(block.damFileId);
 
         if (!file) {
             return {};
+        }
+
+        let cropArea = block.cropArea;
+
+        if (this.filesService.hasExpiredLicense(file)) {
+            file = await this.filesService.findExpiredLicenseFallbackImage(file.scope);
+
+            if (!file) {
+                return {};
+            }
+
+            // The block's crop area was chosen for the original image and doesn't fit the fallback image
+            cropArea = undefined;
         }
 
         const fileUrl = includeInvisibleContent ? await this.filesService.createFileUrl(file, { previewDamUrls }) : undefined;
@@ -78,8 +91,8 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
                     : undefined,
                 fileUrl,
             },
-            cropArea: block.cropArea ? { ...block.cropArea } : undefined,
-            urlTemplate: this.imagesService.createUrlTemplate({ file, cropArea: block.cropArea }, { previewDamUrls }),
+            cropArea: cropArea ? { ...cropArea } : undefined,
+            urlTemplate: this.imagesService.createUrlTemplate({ file, cropArea }, { previewDamUrls }),
         };
     }
 }

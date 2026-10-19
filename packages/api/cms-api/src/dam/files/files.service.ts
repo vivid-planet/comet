@@ -23,6 +23,8 @@ import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, DAM_DOMINANT_COLOR_CALCULATOR } from "../dam.constants";
 import { DominantColorCalculatorInterface } from "../dominant-color-calculator.interface";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
+import { createDamSettingsId } from "../settings/create-dam-settings-id";
+import { DamSettings } from "../settings/entities/dam-settings.entity";
 import { DamScopeInterface } from "../types";
 import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
@@ -33,6 +35,7 @@ import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FoldersService } from "./folders.service";
+import { hasLicenseExpired } from "./license-expiration";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
 
@@ -671,6 +674,25 @@ export class FilesService {
         }
 
         return [...baseUrl, file.contentHash, file.id, filename].join("/");
+    }
+
+    hasExpiredLicense(file: FileInterface): boolean {
+        if (!this.config.enableLicenseFeature || !file.license) {
+            return false;
+        }
+
+        return hasLicenseExpired(file.license);
+    }
+
+    async findExpiredLicenseFallbackImage(scope?: DamScopeInterface): Promise<FileInterface | null> {
+        const settings = await this.entityManager.findOne(DamSettings, { id: createDamSettingsId(scope) });
+        const fallbackImage = await settings?.expiredLicenseFallbackImage?.load();
+
+        if (!fallbackImage?.image || this.hasExpiredLicense(fallbackImage)) {
+            return null;
+        }
+
+        return fallbackImage;
     }
 
     createHash(params: FileParams): string {

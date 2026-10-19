@@ -1,9 +1,13 @@
-import type { EntityRepository, MikroORM, QueryBuilder } from "@mikro-orm/postgresql";
+import type { EntityManager, EntityRepository, MikroORM, QueryBuilder } from "@mikro-orm/postgresql";
 import { Logger } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { DamConfig } from "../dam.config";
+import { createDamSettingsId } from "../settings/create-dam-settings-id";
+import { DamSettings } from "../settings/entities/dam-settings.entity";
 import type { FileFilterInput } from "./dto/file.args";
 import type { FileInterface } from "./entities/file.entity";
+import type { DamFileImage } from "./entities/file-image.entity";
 import { FilesService } from "./files.service";
 
 const FOLDER_ID = "11111111-1111-1111-1111-111111111111";
@@ -177,5 +181,67 @@ describe("FilesService.saveDominantColor", () => {
         ).resolves.toBeUndefined();
 
         expect(loggerErrorSpy).toHaveBeenCalledWith(`Failed to save dominant color for image ${IMAGE_ID}`, expect.any(Error));
+    });
+});
+
+describe("FilesService — expired licenses", () => {
+    const expiredLicense = { durationTo: new Date("2020-01-01") };
+    const validLicense = { durationTo: new Date("2999-01-01") };
+    const scope = { domain: "main" };
+
+    function createService({
+        enableLicenseFeature = true,
+        settings = null,
+    }: { enableLicenseFeature?: boolean; settings?: { expiredLicenseFallbackImage?: { load: () => Promise<FileInterface> } } | null } = {}) {
+        const entityManager = { findOne: vi.fn().mockResolvedValue(settings) };
+
+        const service = new FilesService(
+            null as never, // filesRepository
+            null as never, // damMediaAlternativesRepository
+            null as never, // blobStorageBackendService
+            null as never, // foldersService
+            { enableLicenseFeature } as DamConfig,
+            null as never, // orm
+            entityManager as unknown as EntityManager,
+        );
+
+        return { service, entityManager };
+    }
+
+    function createSettingsWithFallbackImage(fallbackImage: Partial<FileInterface>) {
+        return { expiredLicenseFallbackImage: { load: () => Promise.resolve(fallbackImage as FileInterface) } };
+    }
+
+    it.each([
+        { case: "the license has expired", enableLicenseFeature: true, license: expiredLicense, expected: true },
+        { case: "the license is still valid", enableLicenseFeature: true, license: validLicense, expected: false },
+        { case: "the file has no license", enableLicenseFeature: true, license: undefined, expected: false },
+        { case: "the license feature is disabled", enableLicenseFeature: false, license: expiredLicense, expected: false },
+    ])("hasExpiredLicense returns $expected when $case", ({ enableLicenseFeature, license, expected }) => {
+        const { service } = createService({ enableLicenseFeature });
+
+        expect(service.hasExpiredLicense({ license } as FileInterface)).toBe(expected);
+    });
+
+    it("finds the fallback image of the scope's settings", async () => {
+        const fallbackImage = { id: FILE_ID_A, image: {}, license: validLicense } as Partial<FileInterface>;
+        const { service, entityManager } = createService({ settings: createSettingsWithFallbackImage(fallbackImage) });
+
+        await expect(service.findExpiredLicenseFallbackImage(scope)).resolves.toBe(fallbackImage);
+        expect(entityManager.findOne).toHaveBeenCalledWith(DamSettings, { id: createDamSettingsId(scope) });
+    });
+
+    it.each([
+        { case: "no settings exist for the scope", settings: null },
+        { case: "no fallback image is set", settings: {} },
+        { case: "the fallback image isn't a pixel image", settings: createSettingsWithFallbackImage({ id: FILE_ID_A }) },
+        {
+            case: "the fallback image's license has expired as well",
+            settings: createSettingsWithFallbackImage({ id: FILE_ID_A, image: {} as DamFileImage, license: expiredLicense }),
+        },
+    ])("returns no fallback image when $case", async ({ settings }) => {
+        const { service } = createService({ settings });
+
+        await expect(service.findExpiredLicenseFallbackImage(scope)).resolves.toBeNull();
     });
 });
