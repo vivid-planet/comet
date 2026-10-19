@@ -36,7 +36,7 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
 
         const file = await this.filesService.findOneById(block.fileId);
 
-        if (file) {
+        if (file && !this.filesService.hasInvalidLicense(file)) {
             const retFile: Omit<File, "fileUrl"> = {
                 id: file.id,
                 name: file.name,
