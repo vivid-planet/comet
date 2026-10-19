@@ -44,7 +44,15 @@ fi
 # installed and built on its own when the repository has not been set up with ./install.sh.
 if [[ ! -x ./node_modules/.bin/dextinity || ! -f ./packages/cli/lib/dextinity.js ]]
 then
-    command -v pnpm > /dev/null || corepack enable
+    if ! command -v pnpm > /dev/null
+    then
+        # A plain corepack enable writes next to the node binary, which a system wide installation does
+        # not allow without root.
+        pnpm_directory="$(mktemp -d)"
+        corepack enable --install-directory "$pnpm_directory" pnpm
+        export PATH="$pnpm_directory:$PATH"
+    fi
+    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     pnpm install --frozen-lockfile --filter=. --filter=@dextinity/cli
     pnpm --filter @dextinity/cli run build
 fi
