@@ -2,9 +2,14 @@ import { Command } from "commander";
 
 import { ddsFigmaFileUrl } from "../../storybook/figmaDesign.js";
 import type { ComponentDescription } from "./componentDescription.js";
-import { findImplementedComponentDifferences } from "./componentDifferences.js";
+import { findAllComponentDifferences, findImplementedComponentDifferences } from "./componentDifferences.js";
 import { discoverComponentInventory } from "./componentInventory.js";
-import { describeImplementedComponent, type ImplementedComponent, readImplementedComponent } from "./describeImplementedComponent.js";
+import {
+    describeImplementedComponent,
+    type ImplementedComponent,
+    readAllImplementedComponents,
+    readImplementedComponent,
+} from "./describeImplementedComponent.js";
 import { FigmaRestClient, parseFigmaFileKey, resolveFigmaToken } from "./figmaClient.js";
 import { exitCode, exitCodeForError, FigmaCliError, isFigmaCliError } from "./figmaCliError.js";
 import { describeFigmaTarget, findFigmaTarget } from "./figmaTargetDescription.js";
@@ -68,6 +73,28 @@ async function diffComponent(componentArgument: string): Promise<void> {
     writeResult({ ok: true, component: implemented.component, nodeId: implemented.nodeId, differences });
 }
 
+async function diffAllComponents(): Promise<void> {
+    const client = createClient();
+    const implementedComponents = readAllImplementedComponents();
+    const { components: inventory } = await discoverComponentInventory(client);
+    const targetsByNodeId = await fetchFigmaTargets(client, listLinkedNodeIds(implementedComponents));
+    const reports = findAllComponentDifferences({ implementedComponents, inventory, targetsByNodeId });
+    writeResult({ ok: true, components: reports });
+}
+
+async function runDiff(componentArgument: string | undefined, options: { all?: boolean }, command: Command): Promise<void> {
+    const hasComponentArgument = componentArgument !== undefined;
+    const isAllRequested = options.all === true;
+    if (hasComponentArgument === isAllRequested) {
+        command.error("Pass either a component or --all");
+    }
+    if (componentArgument === undefined) {
+        await diffAllComponents();
+    } else {
+        await diffComponent(componentArgument);
+    }
+}
+
 const program = new Command();
 program.name("future-ui-figma").description("Figma bridge for the future-ui component library (experimental)");
 program.command("list").description("List the DDS component inventory discovered in the Figma file").action(runList);
@@ -76,7 +103,11 @@ program
     .command("describe-implemented <component>")
     .description("Describe what a future-ui component's source implements")
     .action(runDescribeImplemented);
-program.command("diff <component>").description("Report how a future-ui component's source differs from its Figma design").action(diffComponent);
+program
+    .command("diff [component]")
+    .option("--all", "Report every future-ui component and every Figma component without code")
+    .description("Report how a future-ui component's source differs from its Figma design")
+    .action(runDiff);
 
 function toFigmaCliError(error: unknown): FigmaCliError {
     if (isFigmaCliError(error)) {

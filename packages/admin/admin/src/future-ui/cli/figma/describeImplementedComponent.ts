@@ -10,8 +10,14 @@ import { createTsMorphProject } from "./tsMorphProject.js";
 
 const componentsDirectory = join(dirname(fileURLToPath(import.meta.url)), "../../components");
 
+function listFeatureFolders(): string[] {
+    return readdirSync(componentsDirectory, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name);
+}
+
 function findFeatureFolder(componentArgument: string): string {
-    const featureFolders = readdirSync(componentsDirectory);
+    const featureFolders = listFeatureFolders();
     const featureFolder = featureFolders.find((entry) => entry.toLowerCase() === componentArgument.toLowerCase());
     if (!featureFolder) {
         throw new FigmaCliError(
@@ -55,4 +61,8 @@ export function describeImplementedComponent(componentArgument: string): Compone
         throw new FigmaCliError("source_incomplete", `The ${component} story has no \`figmaDesign({ nodeId })\` call`);
     }
     return { component, nodeId, props };
+}
+
+export function readAllImplementedComponents(): ImplementedComponent[] {
+    return listFeatureFolders().map(readImplementedComponent);
 }
