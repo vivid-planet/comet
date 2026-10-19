@@ -295,9 +295,10 @@ services:
           - key: API_URL_INTERNAL
             scope: RUN_TIME
             value: http://api:80/api
+          # Only used for the admin's Content Security Policy. The demo admin previews on the sites' own domains, so it lists both.
           - key: PREVIEW_URL
             scope: RUN_TIME
-            value: https://preview.demo.digitalocean.dextinity.com
+            value: https://demo.digitalocean.dextinity.com https://secondary.demo.digitalocean.dextinity.com
           - key: PUBLIC_SITE_CONFIGS
             scope: RUN_TIME
             value: "{{ site://configs/public/digitalocean }}"
