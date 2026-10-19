@@ -11,4 +11,8 @@ If no fallback image is set, the block renders no image.
 
 `SvgImageBlock`, `DamVideoBlock` and `DamFileDownloadLinkBlock` render no file if its license is invalid, and `DamVideoBlock` leaves out captions with an invalid license.
 
+The GraphQL fields `DamFile.fileUrl`, `DamFileImage.url` and `DamFileImage.urlTemplate` return the fallback image's URL for a pixel image with an invalid license.
+`DamFileImage.url` and `DamFileImage.urlTemplate` return `null` if no fallback image is set.
+Preview DAM URLs, as used in the Admin, are not affected.
+
 The public file and image URLs of a file with an invalid license respond with `410 Gone`.
