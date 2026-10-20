@@ -5,7 +5,6 @@ import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { loadMessages } from "@src/util/loadMessages";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { WelcomeEmailMail } from "@src/welcomeEmail/WelcomeEmailMail";
-import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
 const QueryValidationSchema = z.object({
@@ -27,17 +26,10 @@ const welcomeEmailQuery = `
  * Left open without authentication on purpose: opening the mail in a browser must stay a single click
  * in the demo.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    if (req.method !== "GET") {
-        res.setHeader("Allow", "GET");
-        res.status(405).end();
-        return;
-    }
-
-    const validationResult = QueryValidationSchema.safeParse(req.query);
+export async function renderWelcomeEmail(request: Request): Promise<Response> {
+    const validationResult = QueryValidationSchema.safeParse(Object.fromEntries(new URL(request.url).searchParams));
     if (!validationResult.success) {
-        res.status(400).send("Invalid scope");
-        return;
+        return new Response("Invalid scope", { status: 400 });
     }
     const scope = validationResult.data;
 
@@ -48,8 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     if (!welcomeEmail) {
-        res.status(404).send("No welcome email found for the given scope");
-        return;
+        return new Response("No welcome email found for the given scope", { status: 404 });
     }
 
     const content = await recursivelyLoadBlockData({
@@ -69,7 +60,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.warn(`${mjmlWarnings.length} MJML warnings`, mjmlWarnings);
     }
 
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.setHeader("Cache-Control", "no-store");
-    res.status(200).send(html);
+    return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
 }

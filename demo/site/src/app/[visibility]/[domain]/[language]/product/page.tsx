@@ -1,11 +1,6 @@
-export const dynamic = "error";
-
-import { gql } from "@dextinity/site-nextjs";
-import type { VisibilityParam } from "@src/middleware/domainRewrite";
+import { gql } from "@dextinity/site-react";
 import { createSitePath } from "@src/util/createSitePath";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { setVisibilityParam } from "@src/util/ServerContext";
-import NextLink from "next/link";
 
 import type { GQLProductListPageQuery, GQLProductListPageQueryVariables } from "./page.generated";
 
@@ -43,9 +38,7 @@ async function fetchAllPublishedProducts() {
     return products;
 }
 
-export default async function ProductListPage({ params }: PageProps<"/[visibility]/[domain]/[language]/product">) {
-    const { language, visibility } = await params;
-    setVisibilityParam(visibility as VisibilityParam);
+export default async function ProductListPage({ language }: { language: string }) {
     const products = await fetchAllPublishedProducts();
 
     return (
@@ -54,7 +47,7 @@ export default async function ProductListPage({ params }: PageProps<"/[visibilit
             <ul>
                 {products.map((product) => (
                     <li key={product.id}>
-                        <NextLink href={createSitePath({ path: `/product/${product.slug}`, scope: { language } })}>{product.title}</NextLink>
+                        <a href={createSitePath({ path: `/product/${product.slug}`, scope: { language } })}>{product.title}</a>
                     </li>
                 ))}
             </ul>

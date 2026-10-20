@@ -1,12 +1,8 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { createMiddleware } from "hono/factory";
 
-import type { CustomMiddleware } from "./chain";
-
-export function withStatusMiddleware(middleware: CustomMiddleware) {
-    return async (request: NextRequest) => {
-        if (request.nextUrl.pathname === "/api/status") {
-            return NextResponse.json({ status: "OK" }, { headers: { "cache-control": "no-store" } });
-        }
-        return middleware(request);
-    };
-}
+export const statusMiddleware = createMiddleware(async (c, next) => {
+    if (c.req.path === "/api/status") {
+        return c.json({ status: "OK" }, 200, { "cache-control": "no-store" });
+    }
+    await next();
+});

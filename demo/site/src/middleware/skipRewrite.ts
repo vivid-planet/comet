@@ -1,20 +1,12 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { router } from "@src/app/router";
+import { createMiddleware } from "hono/factory";
 
-import type { CustomMiddleware } from "./chain";
+const skipFiles = ["/favicon.ico", "/apple-icon.png", "/icon.svg", "/manifest.json"];
+const skipPaths = ["/assets/", "/_assets/", "/api/"];
 
-export function withSkipRewriteMiddleware(middleware: CustomMiddleware) {
-    const skipFiles = ["/favicon.ico", "/apple-icon.png", "/icon.svg", "/manifest.json"];
-    const skipPaths = ["/_next/static/", "/_next/image/", "/assets/", "/api/"];
-
-    return async (request: NextRequest) => {
-        if (skipFiles.some((file) => request.nextUrl.pathname === file)) {
-            return NextResponse.next();
-        }
-
-        if (skipPaths.some((path) => request.nextUrl.pathname.startsWith(path))) {
-            return NextResponse.next();
-        }
-
-        return middleware(request);
-    };
-}
+export const skipRewriteMiddleware = createMiddleware(async (c, next) => {
+    if (skipFiles.some((file) => c.req.path === file) || skipPaths.some((path) => c.req.path.startsWith(path))) {
+        return router.fetch(c.req.raw);
+    }
+    await next();
+});

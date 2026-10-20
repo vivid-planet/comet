@@ -1,4 +1,4 @@
-import { gql } from "@dextinity/site-nextjs";
+import { gql } from "@dextinity/site-react";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 
 import type { GQLProductDetailContentFragment } from "./Content.generated";

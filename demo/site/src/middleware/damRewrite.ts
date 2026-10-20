@@ -1,12 +1,12 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { createMiddleware } from "hono/factory";
+import { proxy } from "hono/proxy";
 
-import type { CustomMiddleware } from "./chain";
-
-export function withDamRewriteMiddleware(middleware: CustomMiddleware) {
-    return async (request: NextRequest) => {
-        if (request.nextUrl.pathname.startsWith("/dam/")) {
-            return NextResponse.rewrite(new URL(`${process.env.API_URL_INTERNAL}${request.nextUrl.pathname}`));
-        }
-        return middleware(request);
-    };
-}
+export const damRewriteMiddleware = createMiddleware(async (c, next) => {
+    if (c.req.path.startsWith("/dam/")) {
+        return proxy(`${process.env.API_URL_INTERNAL}${c.req.path}`, {
+            method: c.req.method,
+            headers: { ...c.req.header(), host: undefined },
+        });
+    }
+    await next();
+});

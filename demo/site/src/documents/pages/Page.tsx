@@ -1,12 +1,12 @@
-import { generateImageUrl, gql, JsonLd } from "@dextinity/site-nextjs";
+import { generateImageUrl, gql, JsonLd } from "@dextinity/site-react";
 import { Breadcrumbs } from "@src/common/components/breadcrumbs/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/breadcrumbs/Breadcrumbs.fragment";
+import type { Metadata } from "@src/framework/metadata";
+import { notFound } from "@src/framework/navigation";
 import type { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import type { Metadata, ResolvingMetadata } from "next";
-import { notFound } from "next/navigation";
 import type { Thing, WithContext } from "schema-dts";
 
 import { PageContentBlock } from "./blocks/PageContentBlock";
@@ -43,7 +43,7 @@ async function fetchData({ pageTreeNodeId, scope }: Props) {
         {
             pageTreeNodeId,
         },
-        { method: "GET" }, //for request memoization
+        { method: "GET" },
     );
 
     if (!props.pageContent) {
@@ -66,7 +66,7 @@ async function fetchData({ pageTreeNodeId, scope }: Props) {
     };
 }
 
-export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ pageTreeNodeId, scope }: Props): Promise<Metadata> {
     const data = await fetchData({ pageTreeNodeId, scope });
     const siteConfig = getSiteConfigForDomain(scope.domain);
 

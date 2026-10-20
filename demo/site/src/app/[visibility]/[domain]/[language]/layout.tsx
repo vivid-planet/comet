@@ -1,4 +1,4 @@
-import { gql } from "@dextinity/site-nextjs";
+import { gql } from "@dextinity/site-react";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { Header } from "@src/layout/header/Header";
@@ -6,26 +6,24 @@ import { headerFragment } from "@src/layout/header/Header.fragment";
 import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
 import { OrganizationJsonLd } from "@src/organization/OrganizationJsonLd";
+import type { ContentScope } from "@src/site-configs";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { IntlProvider } from "@src/util/IntlProvider";
 import { loadMessages } from "@src/util/loadMessages";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
-import { setNotFoundContext } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import type { Metadata } from "next";
+import type { PropsWithChildren } from "react";
 
 import type { GQLLayoutQuery, GQLLayoutQueryVariables } from "./layout.generated";
 
-export default async function Layout({ children, params }: LayoutProps<"/[visibility]/[domain]/[language]">) {
-    const { domain, language: languageParam } = await params;
+export function getLayoutLanguage({ domain, language }: ContentScope) {
+    return getSiteConfigForDomain(domain).scope.languages.includes(language) ? language : "en";
+}
+
+export default async function Layout({ children, ...params }: PropsWithChildren<ContentScope>) {
+    const { domain } = params;
     const siteConfig = getSiteConfigForDomain(domain);
-
-    let language = languageParam;
-
-    if (!siteConfig.scope.languages.includes(language)) {
-        language = "en";
-    }
-    setNotFoundContext({ domain, language });
+    const language = getLayoutLanguage(params);
 
     const graphQLFetch = createGraphQLFetch();
 
@@ -71,13 +69,4 @@ export default async function Layout({ children, params }: LayoutProps<"/[visibi
             {footer && <Footer footer={footer} />}
         </IntlProvider>
     );
-}
-
-export async function generateMetadata({ params }: LayoutProps<"/[visibility]/[domain]/[language]">): Promise<Metadata> {
-    const { domain } = await params;
-    const siteConfig = getSiteConfigForDomain(domain);
-
-    return {
-        metadataBase: new URL(siteConfig.url),
-    };
 }

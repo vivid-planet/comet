@@ -108,9 +108,9 @@
             "ignore": ["./src/**/generated/**", "**/*.generated.ts"]
         },
         "demo/site": {
-            "entry": ["./src/app/**", "./cache-handler.ts", "./server.ts", "./opentelemetry-metrics.ts", "tracing.dev.ts", "tracing.production.ts"],
+            "entry": ["./src/framework/entry.*.tsx", "./server.ts", "tracing.dev.ts", "tracing.production.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@babel/core", "@types/grecaptcha", "mjml"],
+            "ignoreDependencies": ["@babel/core", "@types/grecaptcha", "csso", "mjml"],
             "ignore": ["**/*.generated.ts"]
         },
         "storybook": {

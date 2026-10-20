@@ -1,20 +1,16 @@
 import { getHostByHeaders, getSiteConfigForHost } from "@src/util/siteConfig";
-import { type NextRequest, NextResponse } from "next/server";
+import { createMiddleware } from "hono/factory";
 
-import type { CustomMiddleware } from "./chain";
-
-export function withAdminRedirectMiddleware(middleware: CustomMiddleware) {
-    return async (request: NextRequest) => {
-        if (request.nextUrl.pathname === "/admin" && process.env.ADMIN_URL) {
-            const host = getHostByHeaders(request.headers);
-            const siteConfig = await getSiteConfigForHost(host);
-            if (siteConfig) {
-                const { domain, languages } = siteConfig.scope;
-                const language = languages[0];
-                return NextResponse.redirect(new URL(`/${domain}/${language}`, process.env.ADMIN_URL));
-            }
-            return NextResponse.redirect(new URL(process.env.ADMIN_URL));
+export const adminRedirectMiddleware = createMiddleware(async (c, next) => {
+    if (c.req.path === "/admin" && process.env.ADMIN_URL) {
+        const host = getHostByHeaders(c.req.raw.headers);
+        const siteConfig = await getSiteConfigForHost(host);
+        if (siteConfig) {
+            const { domain, languages } = siteConfig.scope;
+            const language = languages[0];
+            return c.redirect(new URL(`/${domain}/${language}`, process.env.ADMIN_URL).toString(), 307);
         }
-        return middleware(request);
-    };
-}
+        return c.redirect(new URL(process.env.ADMIN_URL).toString(), 307);
+    }
+    await next();
+});

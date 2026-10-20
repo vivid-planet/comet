@@ -1,16 +1,10 @@
-import { getNotFoundContext } from "@src/util/ServerContext";
-import Link from "next/link";
-import type { JSX } from "react";
+import type { ContentScope } from "@src/site-configs";
 
-export default async function NotFound404(): Promise<JSX.Element> {
-    const scope = getNotFoundContext() || { domain: "main", language: "en" };
-
+export default function NotFound404({ scope }: { scope: ContentScope }) {
     return (
-        <html lang={scope.language}>
-            <body>
-                <p>Page not found (Scope {JSON.stringify(scope)}).</p>
-                <Link href={`/${scope.language}`}>Return Home</Link>
-            </body>
-        </html>
+        <>
+            <p>Page not found (Scope {JSON.stringify(scope)}).</p>
+            <a href={`/${scope.language}`}>Return Home</a>
+        </>
     );
 }

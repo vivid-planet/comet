@@ -1,16 +1,16 @@
-import { SitePreviewProvider } from "@dextinity/site-nextjs";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { SiteConfigProvider } from "@src/util/SiteConfigProvider";
-import { draftMode } from "next/headers";
+import { getPreviewParams } from "@src/util/sitePreview";
+import { SitePreviewProvider } from "@src/util/SitePreviewProvider";
+import type { PropsWithChildren } from "react";
 
-export default async function SiteLayout({ children, params }: LayoutProps<"/[visibility]/[domain]">) {
-    const { domain } = await params;
+export default async function SiteLayout({ children, domain }: PropsWithChildren<{ domain: string }>) {
     const siteConfig = getSiteConfigForDomain(domain);
-    const isDraftModeEnabled = (await draftMode()).isEnabled;
+    const isSitePreview = (await getPreviewParams()) !== null;
 
     return (
         <SiteConfigProvider siteConfig={siteConfig}>
-            {isDraftModeEnabled ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}
+            {isSitePreview ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}
         </SiteConfigProvider>
     );
 }

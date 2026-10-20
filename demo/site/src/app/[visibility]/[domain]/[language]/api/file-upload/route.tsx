@@ -1,29 +1,30 @@
 import { acceptedFileTypes, maxFileSizeBytes } from "@src/util/fileUpload";
 import { assessRecaptchaToken } from "@src/util/recaptcha/assessRecaptchaToken";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import { type NextRequest, NextResponse } from "next/server";
+import type { Context } from "hono";
+import type { BlankEnv } from "hono/types";
 
-export async function POST(request: NextRequest, context: RouteContext<"/[visibility]/[domain]/[language]/api/file-upload">) {
-    const { domain } = await context.params;
-    const formData = await request.formData();
+export async function fileUploadRoute(c: Context<BlankEnv, "/:visibility/:domain/:language/api/file-upload">) {
+    const domain = c.req.param("domain");
+    const formData = await c.req.formData();
 
     const file = formData.get("file");
     const recaptchaToken = formData.get("recaptchaToken");
 
     if (!(file instanceof File)) {
-        return NextResponse.json({ message: "Missing file" }, { status: 400 });
+        return c.json({ message: "Missing file" }, 400);
     }
 
     if (typeof recaptchaToken !== "string") {
-        return NextResponse.json({ message: "Missing recaptchaToken" }, { status: 400 });
+        return c.json({ message: "Missing recaptchaToken" }, 400);
     }
 
     if (!acceptedFileTypes.includes(file.type)) {
-        return NextResponse.json({ message: `File type not allowed: ${file.name}` }, { status: 400 });
+        return c.json({ message: `File type not allowed: ${file.name}` }, 400);
     }
 
     if (file.size > maxFileSizeBytes) {
-        return NextResponse.json({ message: `File too large: ${file.name}` }, { status: 400 });
+        return c.json({ message: `File too large: ${file.name}` }, 400);
     }
 
     const siteConfig = getSiteConfigForDomain(domain);
@@ -35,12 +36,12 @@ export async function POST(request: NextRequest, context: RouteContext<"/[visibi
     });
 
     if (!recaptchaTokenValid) {
-        return NextResponse.json({ message: "ReCAPTCHA assessment failed" }, { status: 403 });
+        return c.json({ message: "ReCAPTCHA assessment failed" }, 403);
     }
 
     if (!process.env.API_URL_INTERNAL) {
         console.error("API_URL_INTERNAL is not set");
-        return NextResponse.json({ message: "Something went wrong processing the file upload" }, { status: 500 });
+        return c.json({ message: "Something went wrong processing the file upload" }, 500);
     }
 
     try {
@@ -54,13 +55,13 @@ export async function POST(request: NextRequest, context: RouteContext<"/[visibi
 
         if (!uploadResponse.ok) {
             console.error(`File upload failed for ${file.name}: ${uploadResponse.status} ${await uploadResponse.text()}`);
-            return NextResponse.json({ message: `File upload failed for ${file.name}` }, { status: 502 });
+            return c.json({ message: `File upload failed for ${file.name}` }, 502);
         }
 
         const uploaded = (await uploadResponse.json()) as { id: string };
-        return NextResponse.json({ id: uploaded.id }, { status: 200 });
+        return c.json({ id: uploaded.id }, 200);
     } catch (e) {
         console.error(e);
-        return NextResponse.json({ message: "Something went wrong processing the file upload" }, { status: 500 });
+        return c.json({ message: "Something went wrong processing the file upload" }, 500);
     }
 }

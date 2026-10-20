@@ -1,20 +1,15 @@
-export const dynamic = "error";
-
-import { gql } from "@dextinity/site-nextjs";
+import { gql } from "@dextinity/site-react";
+import { notFound } from "@src/framework/navigation";
 import type { GQLNewsContentScopeInput } from "@src/graphql.generated";
-import type { VisibilityParam } from "@src/middleware/domainRewrite";
 import { NewsArticleJsonLd } from "@src/news/NewsArticleJsonLd";
+import type { ContentScope } from "@src/site-configs";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { setVisibilityParam } from "@src/util/ServerContext";
-import { notFound } from "next/navigation";
 
 import { Content } from "./content";
 import { fragment } from "./fragment";
 import type { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
 
-export default async function NewsDetailPage({ params }: PageProps<"/[visibility]/[domain]/[language]/news/[slug]">) {
-    const { domain, language, slug, visibility } = await params;
-    setVisibilityParam(visibility as VisibilityParam);
+export default async function NewsDetailPage({ domain, language, slug }: ContentScope & { slug: string }) {
     const scope = { domain, language };
     const graphqlFetch = createGraphQLFetch();
 

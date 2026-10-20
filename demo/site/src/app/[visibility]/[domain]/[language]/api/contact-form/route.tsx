@@ -1,7 +1,8 @@
 import { mailerTransport } from "@src/util/mailer";
 import { assessRecaptchaToken } from "@src/util/recaptcha/assessRecaptchaToken";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import { type NextRequest, NextResponse } from "next/server";
+import type { Context } from "hono";
+import type { BlankEnv } from "hono/types";
 import { z } from "zod";
 
 const fromEmail = process.env.CONTACT_FORM_FROM_EMAIL;
@@ -27,20 +28,18 @@ const queryValidationSchema = z.object({
     attachments: z.array(z.uuid()).default([]),
 });
 
-export async function POST(request: NextRequest, context: RouteContext<"/[visibility]/[domain]/[language]/api/contact-form">) {
-    const { domain } = await context.params;
-    const body = await request.json();
+export async function contactFormRoute(c: Context<BlankEnv, "/:visibility/:domain/:language/api/contact-form">) {
+    const domain = c.req.param("domain");
+    const body = await c.req.json();
     const validationResult = queryValidationSchema.safeParse(body);
 
     if (!validationResult.success) {
-        return NextResponse.json(
+        return c.json(
             {
                 cause: validationResult.error,
                 message: "Validation failed",
             },
-            {
-                status: 400,
-            },
+            400,
         );
     }
 
@@ -53,7 +52,7 @@ export async function POST(request: NextRequest, context: RouteContext<"/[visibi
     });
 
     if (!recaptchaTokenValid) {
-        return NextResponse.json({
+        return c.json({
             success: false,
             error: "ReCAPTCHA assessment failed",
         });
@@ -81,17 +80,12 @@ export async function POST(request: NextRequest, context: RouteContext<"/[visibi
 
         if (rejected.length > 0) {
             console.error("The mail server rejected the contact form inquiry for", rejected);
-            return NextResponse.json({ error: "Something went wrong processing the contact form" }, { status: 500 });
+            return c.json({ error: "Something went wrong processing the contact form" }, 500);
         }
 
-        return NextResponse.json(
-            { success: true },
-            {
-                status: 200,
-            },
-        );
+        return c.json({ success: true }, 200);
     } catch (e) {
         console.error(e);
-        return NextResponse.json({ error: "Something went wrong processing the contact form" }, { status: 500 });
+        return c.json({ error: "Something went wrong processing the contact form" }, 500);
     }
 }

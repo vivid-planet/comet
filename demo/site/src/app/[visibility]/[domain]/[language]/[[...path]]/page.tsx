@@ -1,16 +1,13 @@
-export const dynamic = "error";
-
-import { gql } from "@dextinity/site-nextjs";
+import { gql } from "@dextinity/site-react";
 import type { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
+import type { Metadata } from "@src/framework/metadata";
+import { notFound, redirect } from "@src/framework/navigation";
 import type { GQLPageTreeNodeScope } from "@src/graphql.generated";
-import type { VisibilityParam } from "@src/middleware/domainRewrite";
+import type { ContentScope } from "@src/site-configs";
 import { createSitePath } from "@src/util/createSitePath";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { setVisibilityParam } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import type { Metadata, ResolvingMetadata } from "next";
-import { notFound, redirect } from "next/navigation";
 
 import type { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables } from "./page.generated";
 
@@ -32,8 +29,9 @@ const documentTypeQuery = gql`
     }
 `;
 
-async function fetchPageTreeNode(params: PageProps<"/[visibility]/[domain]/[language]/[[...path]]">["params"]) {
-    const { domain, language, path: pathParam } = await params;
+type Params = ContentScope & { path: string[] };
+
+async function fetchPageTreeNode({ domain, language, path: pathParam }: Params) {
     const siteConfig = getSiteConfigForDomain(domain);
 
     // Redirects are scoped by domain only, not by language.
@@ -41,7 +39,7 @@ async function fetchPageTreeNode(params: PageProps<"/[visibility]/[domain]/[lang
     // In that case we skip resolving page and only check if the path is a redirect source.
     const skipPage = !siteConfig.scope.languages.includes(language);
 
-    const path = `/${(pathParam ?? []).join("/")}`;
+    const path = `/${pathParam.join("/")}`;
     const { scope } = { scope: { domain, language } };
     const graphQLFetch = createGraphQLFetch();
 
@@ -58,9 +56,8 @@ async function fetchPageTreeNode(params: PageProps<"/[visibility]/[domain]/[lang
     );
 }
 
-export default async function Page({ params }: PageProps<"/[visibility]/[domain]/[language]/[[...path]]">) {
-    const { visibility, domain, language } = await params;
-    setVisibilityParam(visibility as VisibilityParam);
+export default async function Page(params: Params) {
+    const { domain, language } = params;
     const scope = { domain, language };
     const data = await fetchPageTreeNode(params);
 
@@ -106,16 +103,13 @@ export default async function Page({ params }: PageProps<"/[visibility]/[domain]
         scope,
     };
 
-    const { component: Component } = documentTypes[data.pageTreeNodeByPath.documentType];
+    const { loadPage } = documentTypes[data.pageTreeNodeByPath.documentType];
 
-    return <Component {...props} />;
+    return loadPage(props);
 }
 
-export async function generateMetadata(
-    { params }: PageProps<"/[visibility]/[domain]/[language]/[[...path]]">,
-    parent: ResolvingMetadata,
-): Promise<Metadata> {
-    const { domain, language } = await params;
+export async function generateMetadata(params: Params): Promise<Metadata> {
+    const { domain, language } = params;
     const scope = { domain, language };
     const data = await fetchPageTreeNode(params);
 
@@ -134,5 +128,5 @@ export async function generateMetadata(
         return {};
     }
 
-    return generateMetadata(props, parent);
+    return generateMetadata(props);
 }

@@ -1,19 +1,36 @@
+import { gql } from "@dextinity/site-react";
 import { createSitePath } from "@src/util/createSitePath";
-
-export const dynamic = "force-dynamic"; // don't generate at build time
-
-import { gql } from "@dextinity/site-nextjs";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { getSiteConfig } from "@src/util/siteConfig";
-import type { MetadataRoute } from "next";
+import { getSiteConfigForDomain } from "@src/util/siteConfig";
+import type { Context } from "hono";
+import type { BlankEnv } from "hono/types";
 
 import type { GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables } from "./sitemap.generated";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const sitemap: MetadataRoute.Sitemap = [];
+type SitemapEntry = {
+    url: string;
+    lastModified: string;
+    changeFrequency: string;
+    priority: number;
+};
+
+function escapeXml(value: string) {
+    return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+}
+
+function renderSitemapXml(sitemap: SitemapEntry[]) {
+    const urls = sitemap.map(
+        (entry) =>
+            `<url>\n<loc>${escapeXml(entry.url)}</loc>\n<lastmod>${escapeXml(entry.lastModified)}</lastmod>\n<changefreq>${entry.changeFrequency}</changefreq>\n<priority>${entry.priority}</priority>\n</url>`,
+    );
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
+}
+
+export async function sitemapRoute(c: Context<BlankEnv, "/:visibility/:domain/sitemap.xml">) {
+    const sitemap: SitemapEntry[] = [];
     const graphqlFetch = createGraphQLFetch();
 
-    const siteConfig = await getSiteConfig();
+    const siteConfig = getSiteConfigForDomain(c.req.param("domain"));
 
     for (const language of siteConfig.scope.languages) {
         const domain = siteConfig.scope.domain;
@@ -59,7 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         } while (totalCount > currentCount);
     }
 
-    return sitemap;
+    return c.body(renderSitemapXml(sitemap), 200, { "Content-Type": "application/xml" });
 }
 
 const pageDataListQuery = gql`

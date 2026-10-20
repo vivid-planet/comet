@@ -3,7 +3,6 @@ import { EmailCampaignMail } from "@src/brevo/EmailCampaignMail";
 import { replaceMailHtmlPlaceholders } from "@src/brevo/util/replaceMailHtmlPlaceholders";
 import { getMailConfig } from "@src/mail/util/getMailConfig";
 import { loadMessages } from "@src/util/loadMessages";
-import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
 const RequestBodyValidationSchema = z.object({
@@ -11,17 +10,10 @@ const RequestBodyValidationSchema = z.object({
     scope: z.object({ domain: z.string(), language: z.string() }),
 });
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    if (req.method !== "POST") {
-        res.setHeader("Allow", "POST");
-        res.status(405).end();
-        return;
-    }
-
-    const validationResult = RequestBodyValidationSchema.safeParse(req.body);
+export async function renderBrevoEmailCampaign(request: Request): Promise<Response> {
+    const validationResult = RequestBodyValidationSchema.safeParse(await request.json().catch(() => undefined));
     if (!validationResult.success) {
-        res.status(400).send("Sent data not valid");
-        return;
+        return new Response("Sent data not valid", { status: 400 });
     }
 
     const { content, scope } = validationResult.data;
@@ -37,6 +29,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const outputHtml = replaceMailHtmlPlaceholders(html, "mail");
 
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.status(200).send(outputHtml);
+    return new Response(outputHtml, { headers: { "Content-Type": "text/html; charset=utf-8" } });
 }

@@ -1,12 +1,13 @@
-export const dynamic = "error";
-
-import type { VisibilityParam } from "@src/middleware/domainRewrite";
 import { NewsPage } from "@src/news/NewsPage";
 import { fetchNewsList } from "@src/news/NewsPage.loader";
-import { setVisibilityParam } from "@src/util/ServerContext";
+import type { ContentScope } from "@src/site-configs";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 
-export default async function NewsIndexPage({ params }: PageProps<"/[visibility]/[domain]/[language]/news">) {
-    const { visibility, domain, language } = await params;
-    setVisibilityParam(visibility as VisibilityParam);
-    return <NewsPage scope={{ domain, language }} initialData={await fetchNewsList({ scope: { domain, language }, limit: 2 })} />;
+export default async function NewsIndexPage({ domain, language }: ContentScope) {
+    return (
+        <NewsPage
+            scope={{ domain, language }}
+            initialData={await fetchNewsList({ graphQLFetch: createGraphQLFetch(), scope: { domain, language }, limit: 2 })}
+        />
+    );
 }
