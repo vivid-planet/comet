@@ -11,6 +11,7 @@
                 "docs/docs/9-coding-guidelines/**",
                 "packages/**/src/index.ts",
                 "packages/site/*/src/server.ts",
+                "packages/site/*/src/persistedQueries/webpackPersistedQueriesLoader.ts",
                 "packages/mail-react/src/*/index.ts"
             ]
         }
