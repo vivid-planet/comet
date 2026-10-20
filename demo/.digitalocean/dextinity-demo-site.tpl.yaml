@@ -29,7 +29,7 @@ services:
           MAILER_HOST=build MAILER_PORT=25 CONTACT_FORM_FROM_EMAIL=build@example.com CONTACT_FORM_TO_EMAIL=build@example.com RECAPTCHA_SERVICE_ACCOUNT=eyJwcm9qZWN0X2lkIjoiYnVpbGQifQ== pnpm --filter dextinity-demo-site run build &&
           curl -fsSL -o /tmp/rclone.deb https://github.com/rclone/rclone/releases/download/v1.75.1/rclone-v1.75.1-linux-amd64.deb &&
           dpkg-deb -x /tmp/rclone.deb /tmp/rclone &&
-          /tmp/rclone/usr/bin/rclone copy demo/site/.next/static :s3:dextinity-demo/site/_next/static
+          /tmp/rclone/usr/bin/rclone copy demo/site/.next/static :s3:dextinity-demo/site/_next/static --header-upload "Cache-Control: public, max-age=31536000, immutable"
       environment_slug: node-js
       run_command: cd demo/site && node dist/server.js
       source_dir: /
