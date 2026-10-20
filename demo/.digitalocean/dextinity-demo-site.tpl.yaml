@@ -27,7 +27,9 @@ services:
           pnpm --filter "dextinity-demo-site^..." run build &&
           ./demo/site/intl-update.sh &&
           MAILER_HOST=build MAILER_PORT=25 CONTACT_FORM_FROM_EMAIL=build@example.com CONTACT_FORM_TO_EMAIL=build@example.com RECAPTCHA_SERVICE_ACCOUNT=eyJwcm9qZWN0X2lkIjoiYnVpbGQifQ== pnpm --filter dextinity-demo-site run build &&
-          pnpm --filter dextinity-demo-site run upload-static-assets
+          curl -fsSL -o /tmp/rclone.deb https://github.com/rclone/rclone/releases/download/v1.75.1/rclone-v1.75.1-linux-amd64.deb &&
+          dpkg-deb -x /tmp/rclone.deb /tmp/rclone &&
+          /tmp/rclone/usr/bin/rclone copy demo/site/.next/static :s3:dextinity-demo/site/_next/static
       environment_slug: node-js
       run_command: cd demo/site && node dist/server.js
       source_dir: /
@@ -37,26 +39,21 @@ services:
           repo: vivid-planet/dextinity
       envs:
           # Only available while building, so the running site has no write access to the storage
-          - key: STATIC_ASSETS_STORAGE_DRIVER
+          - key: RCLONE_S3_PROVIDER
             scope: BUILD_TIME
-            value: s3
-          - key: STATIC_ASSETS_STORAGE_PREFIX
+            value: DigitalOcean
+          - key: RCLONE_S3_ENDPOINT
             scope: BUILD_TIME
-            value: site/_next/static
-          - key: STATIC_ASSETS_STORAGE_S3_REGION
+            value: fra1.digitaloceanspaces.com
+          # The access key may not be allowed to create buckets
+          - key: RCLONE_S3_NO_CHECK_BUCKET
             scope: BUILD_TIME
-            value: fra1
-          - key: STATIC_ASSETS_STORAGE_S3_ENDPOINT
-            scope: BUILD_TIME
-            value: https://fra1.digitaloceanspaces.com
-          - key: STATIC_ASSETS_STORAGE_S3_BUCKET
-            scope: BUILD_TIME
-            value: dextinity-demo
-          - key: STATIC_ASSETS_STORAGE_S3_ACCESS_KEY_ID
+            value: "true"
+          - key: RCLONE_S3_ACCESS_KEY_ID
             scope: BUILD_TIME
             type: SECRET
             value: ${S3_ACCESS_KEY_ID}
-          - key: STATIC_ASSETS_STORAGE_S3_SECRET_ACCESS_KEY
+          - key: RCLONE_S3_SECRET_ACCESS_KEY
             scope: BUILD_TIME
             type: SECRET
             value: ${S3_SECRET_ACCESS_KEY}

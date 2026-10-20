@@ -10,7 +10,7 @@ Deploys the demo for internal use, the same way the [Starter](https://github.com
 
 The admin requires a login with a `vivid-planet.com` account. The site is public, as in the Starter.
 
-At the end of its build, the site uploads its `.next/static` files to the bucket under `site/_next/static` with `dextinity upload-static-assets`. The storage keeps the files of every deployed build. The access key is only available while building.
+At the end of its build, the site uploads its `.next/static` files to the bucket under `site/_next/static` with [rclone](https://rclone.org). The storage keeps the files of every deployed build. The access key is only available while building.
 
 Like the Starter's, the components are built with App Platform's Node.js buildpack. Unlike the Starter's, they build from the repository root, because the demo depends on the packages in this repository rather than on released versions.
 
