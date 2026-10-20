@@ -20,12 +20,15 @@ describe("serveStaticAssetFromS3", () => {
 
     beforeEach(async () => {
         projectDir = mkdtempSync(join(tmpdir(), "serve-static-asset-from-s3-"));
-        mkdirSync(join(projectDir, ".next/static/chunks"), { recursive: true });
+        mkdirSync(join(projectDir, ".next/static/chunks/app/[language]"), { recursive: true });
         writeFileSync(join(projectDir, ".next/static/chunks/local.js"), "local");
+        writeFileSync(join(projectDir, ".next/static/chunks/app/[language]/local.js"), "local");
         process.chdir(projectDir);
 
         server = createServer(async (req, res) => {
-            const served = await serveStaticAssetFromS3(req.url, res, {
+            const served = await serveStaticAssetFromS3({
+                pathname: req.url,
+                res,
                 s3Client: new S3Client({ region: "eu-central-1" }),
                 bucket: "static-assets",
                 keyPrefix: "site",
@@ -68,6 +71,23 @@ describe("serveStaticAssetFromS3", () => {
         expect(s3Mock.commandCalls(GetObjectCommand)).toHaveLength(0);
     });
 
+    it("serves a static asset with an escaped path from the bucket", async () => {
+        s3Mock.on(GetObjectCommand, { Bucket: "static-assets", Key: "site/_next/static/chunks/app/[language]/old.js" }).resolves({
+            Body: Readable.from(["old"]) as unknown as GetObjectCommandOutput["Body"],
+        });
+
+        const response = await fetch(`${baseUrl}/_next/static/chunks/app/%5Blanguage%5D/old.js`);
+
+        expect(await response.text()).toBe("old");
+    });
+
+    it("leaves a static asset of this build with an escaped path to Next.js", async () => {
+        const response = await fetch(`${baseUrl}/_next/static/chunks/app/%5Blanguage%5D/local.js`);
+
+        expect(await response.text()).toBe("handled by Next.js");
+        expect(s3Mock.commandCalls(GetObjectCommand)).toHaveLength(0);
+    });
+
     it("leaves a static asset missing in the bucket to Next.js", async () => {
         s3Mock.on(GetObjectCommand).rejects(new NoSuchKey({ message: "NoSuchKey", $metadata: {} }));
 
@@ -77,7 +97,9 @@ describe("serveStaticAssetFromS3", () => {
     });
 
     it("leaves all requests to Next.js without a bucket", async () => {
-        const served = await serveStaticAssetFromS3("/_next/static/chunks/old.js", {} as ServerResponse, {
+        const served = await serveStaticAssetFromS3({
+            pathname: "/_next/static/chunks/old.js",
+            res: {} as ServerResponse,
             s3Client: new S3Client({ region: "eu-central-1" }),
         });
 
@@ -86,7 +108,9 @@ describe("serveStaticAssetFromS3", () => {
     });
 
     it("leaves paths leaving the static assets to Next.js", async () => {
-        const served = await serveStaticAssetFromS3("/_next/static/../../package.json", {} as ServerResponse, {
+        const served = await serveStaticAssetFromS3({
+            pathname: "/_next/static/../../package.json",
+            res: {} as ServerResponse,
             s3Client: new S3Client({ region: "eu-central-1" }),
             bucket: "static-assets",
         });

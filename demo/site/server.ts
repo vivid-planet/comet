@@ -49,7 +49,7 @@ app.prepare().then(() => {
                 }
             }
 
-            if (await serveStaticAssetFromS3(parsedUrl.pathname, res, staticAssetsFromS3)) {
+            if (await serveStaticAssetFromS3({ pathname: parsedUrl.pathname, res, ...staticAssetsFromS3 })) {
                 return;
             }
 
