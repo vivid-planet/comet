@@ -312,8 +312,8 @@ importers:
         specifier: ^10.1.1
         version: 10.1.1(react@19.3.0)
       uuid:
-        specifier: ^11.1.1
-        version: 11.1.1
+        specifier: ^14.0.3
+        version: 14.0.3
     devDependencies:
       '@babel/core':
         specifier: ^7.29.7
@@ -947,8 +947,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(react@19.3.0)
       uuid:
-        specifier: ^11.1.1
-        version: 11.1.1
+        specifier: ^14.0.3
+        version: 14.0.3
     devDependencies:
       '@apollo/client':
         specifier: ^3.14.1
@@ -1392,8 +1392,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(react@19.3.0)
       uuid:
-        specifier: ^11.1.1
-        version: 11.1.1
+        specifier: ^14.0.3
+        version: 14.0.3
     devDependencies:
       '@babel/cli':
         specifier: ^7.29.7
@@ -1764,8 +1764,8 @@ importers:
         specifier: ^10.1.1
         version: 10.1.1(react@19.3.0)
       uuid:
-        specifier: ^11.1.1
-        version: 11.1.1
+        specifier: ^14.0.3
+        version: 14.0.3
       zod:
         specifier: ^4.6.6
         version: 4.6.7
@@ -2276,8 +2276,8 @@ importers:
         specifier: ^1.6.9
         version: 1.6.9
       uuid:
-        specifier: ^11.1.1
-        version: 11.1.1
+        specifier: ^14.0.3
+        version: 14.0.3
       uuid-by-string:
         specifier: ^4.0.0
         version: 4.0.0
@@ -2921,8 +2921,8 @@ importers:
         specifier: ^10.1.1
         version: 10.1.1(react@19.3.0)
       uuid:
-        specifier: ^11.1.1
-        version: 11.1.1
+        specifier: ^14.0.3
+        version: 14.0.3
     devDependencies:
       '@babel/cli':
         specifier: ^7.29.7
@@ -18312,6 +18312,10 @@ packages:
 
   uuid@11.1.1:
     resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
+    hasBin: true
+
+  uuid@14.0.3:
+    resolution: {integrity: sha512-Sc5u1VVln93y1Xnz4R+CunOZc7R9LUcTmhj7Rc7Eg3HVcf7rVn2FOoa812fe0W8p3jD7xeoGSYbfqCGGH2B6xw==}
     hasBin: true
 
   uuid@8.3.2:
@@ -37687,6 +37691,8 @@ snapshots:
       js-sha1: 0.6.0
 
   uuid@11.1.1: {}
+
+  uuid@14.0.3: {}
 
   uuid@8.3.2: {}
 
