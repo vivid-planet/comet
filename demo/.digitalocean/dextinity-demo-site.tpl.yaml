@@ -22,12 +22,17 @@ region: fra
 services:
     # Next.js loads the contact form route while building, which requires the mailer, contact form and reCAPTCHA variables. They're read again at runtime.
     # The static assets are uploaded at the end of the build, before App Platform replaces the running instance, so that the storage holds the files of every deployed build.
+    # The Node.js buildpack has no rclone. The access key is read with printenv, because the deploy action replaces $VARIABLE in the app spec.
     - build_command: |-
           CI=true node copy-project-files.js &&
           pnpm --filter "dextinity-demo-site^..." run build &&
           ./demo/site/intl-update.sh &&
           MAILER_HOST=build MAILER_PORT=25 CONTACT_FORM_FROM_EMAIL=build@example.com CONTACT_FORM_TO_EMAIL=build@example.com RECAPTCHA_SERVICE_ACCOUNT=eyJwcm9qZWN0X2lkIjoiYnVpbGQifQ== pnpm --filter dextinity-demo-site run build &&
-          ./demo/.digitalocean/upload-static-assets.sh
+          curl -fsSL -o /tmp/rclone.deb https://github.com/rclone/rclone/releases/download/v1.75.1/rclone-v1.75.1-linux-amd64.deb &&
+          dpkg-deb -x /tmp/rclone.deb /tmp/rclone &&
+          RCLONE_S3_ACCESS_KEY_ID="$(printenv STATIC_ASSETS_UPLOAD_ACCESS_KEY_ID)" RCLONE_S3_SECRET_ACCESS_KEY="$(printenv STATIC_ASSETS_UPLOAD_SECRET_ACCESS_KEY)" \
+          /tmp/rclone/usr/bin/rclone copy demo/site/.next/static :s3,provider=DigitalOcean,endpoint=fra1.digitaloceanspaces.com,no_check_bucket=true:dextinity-demo/site/_next/static \
+          --header-upload "Cache-Control: public, max-age=31536000, immutable"
       environment_slug: node-js
       run_command: cd demo/site && node dist/server.js
       source_dir: /
