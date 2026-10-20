@@ -619,7 +619,7 @@ Use `renderMailHtml` to convert the React tree to final HTML for sending:
 import { MjmlMailRoot, MjmlSection, MjmlColumn, MjmlText } from "@dextinity/mail-react";
 import { renderMailHtml } from "@dextinity/mail-react/server";
 
-const { html, mjmlWarnings } = renderMailHtml(
+const { html, mjmlWarnings } = await renderMailHtml(
     <MjmlMailRoot theme={theme}>
         <MjmlSection indent>
             <MjmlColumn>
@@ -633,7 +633,7 @@ const { html, mjmlWarnings } = renderMailHtml(
 - **Server** (`@dextinity/mail-react/server`) — uses `mjml`, requires Node.js
 - **Client** (`@dextinity/mail-react/client`) — uses `mjml-browser`, works without `fs`
 - `renderMailHtml` is **not** on the main `@dextinity/mail-react` barrel — always import from `/server` or `/client`
-- Returns `{ html: string; mjmlWarnings: MjmlWarning[] }` — warnings are collected, not thrown
+- Async — returns a promise of `{ html: string; mjmlWarnings: MjmlWarning[] }`; warnings are collected, not thrown
 - A framework that bundles server code (Next.js) must list `mjml` in the application's own `package.json` too, or rendering fails at runtime
 - Nothing imports it directly — add `mjml` to `ignoreDependencies` in `knip.json` rather than removing it as unused
 
@@ -642,7 +642,7 @@ const { html, mjmlWarnings } = renderMailHtml(
 When generating emails outside Storybook (e.g., in a mail template's `generateMail` method), always log `mjmlWarnings` in development to catch structural issues early:
 
 ```tsx
-const { html, mjmlWarnings } = renderMailHtml(/* ... */);
+const { html, mjmlWarnings } = await renderMailHtml(/* ... */);
 
 if (process.env.NODE_ENV === "development" && mjmlWarnings.length) {
     console.warn(`${mjmlWarnings.length} MJML Warnings`, mjmlWarnings);

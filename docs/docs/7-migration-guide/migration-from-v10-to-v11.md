@@ -738,6 +738,37 @@ npm run lint
 
 Repeat this step, fixing all lint errors, until the lint passes.
 
+## Mails
+
+Skip this section if your project doesn't use `@dextinity/mail-react`.
+
+### Await `renderMailHtml`
+
+`@dextinity/mail-react` now uses MJML 5, which renders asynchronously. `renderMailHtml` from `@dextinity/mail-react/server` and `@dextinity/mail-react/client` returns a promise now. Find its calls in every package that uses it (usually the API and the site):
+
+```sh
+grep -rn "renderMailHtml(" src
+```
+
+Await each call, and make the enclosing function `async` where it isn't yet:
+
+```diff
+- const { html, mjmlWarnings } = renderMailHtml(<MyMail />);
++ const { html, mjmlWarnings } = await renderMailHtml(<MyMail />);
+```
+
+A missing `await` compiles in places that don't use the result's properties, so check every call, not only the ones TypeScript reports.
+
+### Update `mjml`
+
+If a package lists `mjml` in its own `package.json` (e.g., a Next.js site that renders mails on the server), update it to v5:
+
+```sh
+npm install mjml@^5.4.1
+```
+
+Then verify that the package still builds and lint passes.
+
 ## Agent features
 
 ### Get the `dev-pm` skill from `dev-process-manager`

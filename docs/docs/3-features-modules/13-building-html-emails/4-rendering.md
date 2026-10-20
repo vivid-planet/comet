@@ -12,7 +12,7 @@ const theme = createTheme({
     /* your project theme */
 });
 
-const { html, mjmlWarnings } = renderMailHtml(
+const { html, mjmlWarnings } = await renderMailHtml(
     <MjmlMailRoot theme={theme}>
         <MjmlSection indent>
             <MjmlColumn>
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === "development" && mjmlWarnings.length) {
 }
 ```
 
-`renderMailHtml` accepts a React element tree and returns:
+`renderMailHtml` accepts a React element tree and returns a promise that resolves to:
 
 - **`html`** — the final HTML string ready for sending
 - **`mjmlWarnings`** — an array of MJML validation warnings (collected, not thrown)
