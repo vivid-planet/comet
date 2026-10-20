@@ -101,6 +101,7 @@ export function BaseBlocksBlockItemInput<BlockMap extends BaseBlockMap>(
 
         @Transform(
             ({ value, obj }) => {
+                // Runs before validation, so an unknown type must pass through for @IsIn to report it
                 if (!Object.hasOwn(supportedBlocks, obj.type)) {
                     return value;
                 }
