@@ -55,11 +55,11 @@ services:
           - key: STATIC_ASSETS_UPLOAD_S3_ACCESS_KEY_ID
             scope: BUILD_TIME
             type: SECRET
-            value: ${S3_ACCESS_KEY_ID}
+            value: ${STATIC_ASSETS_UPLOAD_S3_ACCESS_KEY_ID}
           - key: STATIC_ASSETS_UPLOAD_S3_SECRET_ACCESS_KEY
             scope: BUILD_TIME
             type: SECRET
-            value: ${S3_SECRET_ACCESS_KEY}
+            value: ${STATIC_ASSETS_UPLOAD_S3_SECRET_ACCESS_KEY}
           - key: SERVER_HOST
             scope: RUN_TIME
             value: "0.0.0.0"
