@@ -276,7 +276,7 @@ services:
           mkdir -p -m 700 /tmp/swc-native-cache &&
           SWC_NATIVE_BINDING_CACHE=/tmp/swc-native-cache pnpm --filter dextinity-demo-admin run build
       environment_slug: node-js
-      run_command: cd demo/admin && node server
+      run_command: cd demo/admin && node server/index.ts
       source_dir: /
       github:
           branch: ${DEPLOY_BRANCH}
