@@ -6,7 +6,13 @@ export type StaticAssetsStorageConfig =
     | { driver: "file"; file: { path: string } }
     | {
           driver: "s3";
-          s3: { region: string; endpoint?: string; bucket: string; credentials?: { accessKeyId: string; secretAccessKey: string } };
+          s3: {
+              region: string;
+              endpoint?: string;
+              bucket: string;
+              credentials?: { accessKeyId: string; secretAccessKey: string };
+              publicRead?: boolean;
+          };
       }
     | { driver: "azure"; azure: { accountName: string; accountKey: string; container: string } };
 

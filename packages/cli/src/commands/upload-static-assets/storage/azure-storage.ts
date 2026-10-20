@@ -1,5 +1,6 @@
 import { BlobServiceClient, type ContainerClient, StorageSharedKeyCredential } from "@azure/storage-blob";
 
+import { getContentType } from "./content-type";
 import type { StaticAssetsStorage } from "./storage";
 
 export class AzureStaticAssetsStorage implements StaticAssetsStorage {
@@ -12,6 +13,6 @@ export class AzureStaticAssetsStorage implements StaticAssetsStorage {
     }
 
     async uploadFile(key: string, filePath: string): Promise<void> {
-        await this.containerClient.getBlockBlobClient(key).uploadFile(filePath);
+        await this.containerClient.getBlockBlobClient(key).uploadFile(filePath, { blobHTTPHeaders: { blobContentType: getContentType(key) } });
     }
 }

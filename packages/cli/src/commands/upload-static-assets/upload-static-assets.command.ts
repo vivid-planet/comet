@@ -15,6 +15,7 @@ type Options = {
     s3Endpoint?: string;
     s3AccessKeyId?: string;
     s3SecretAccessKey?: string;
+    s3PublicRead?: boolean;
     azureAccountName?: string;
     azureAccountKey?: string;
     azureContainer?: string;
@@ -45,6 +46,7 @@ function getStaticAssetsStorageConfig(options: Options): StaticAssetsStorageConf
                         options.s3AccessKeyId && options.s3SecretAccessKey
                             ? { accessKeyId: options.s3AccessKeyId, secretAccessKey: options.s3SecretAccessKey }
                             : undefined,
+                    publicRead: options.s3PublicRead,
                 },
             };
         case "azure":
@@ -74,6 +76,7 @@ export const uploadStaticAssetsCommand = new Command("upload-static-assets")
     .addOption(new Option("--s3-endpoint <url>", "Endpoint for S3-compatible storages (s3 driver)").env(`${envPrefix}_S3_ENDPOINT`))
     .addOption(new Option("--s3-access-key-id <id>", "Access key ID (s3 driver)").env(`${envPrefix}_S3_ACCESS_KEY_ID`))
     .addOption(new Option("--s3-secret-access-key <key>", "Secret access key (s3 driver)").env(`${envPrefix}_S3_SECRET_ACCESS_KEY`))
+    .addOption(new Option("--s3-public-read", "Make the uploaded files publicly readable (s3 driver)").env(`${envPrefix}_S3_PUBLIC_READ`))
     .addOption(new Option("--azure-account-name <name>", "Storage account name (azure driver)").env(`${envPrefix}_AZURE_ACCOUNT_NAME`))
     .addOption(new Option("--azure-account-key <key>", "Storage account key (azure driver)").env(`${envPrefix}_AZURE_ACCOUNT_KEY`))
     .addOption(new Option("--azure-container <container>", "Container name (azure driver)").env(`${envPrefix}_AZURE_CONTAINER`))

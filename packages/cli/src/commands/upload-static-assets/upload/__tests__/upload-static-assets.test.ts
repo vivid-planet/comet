@@ -75,6 +75,43 @@ describe("uploadStaticAssets", () => {
         s3Mock.restore();
     });
 
+    it("sets the content type of stylesheets and scripts", async () => {
+        const s3Mock = mockClient(S3Client);
+        s3Mock.on(PutObjectCommand).resolves({});
+
+        await uploadStaticAssets({
+            sourceDirectory,
+            prefix: "prod",
+            storage: { driver: "s3", s3: { bucket: "static-assets", region: "eu-central-1" } },
+        });
+
+        const contentTypes = Object.fromEntries(
+            s3Mock.commandCalls(PutObjectCommand).map((call) => [call.args[0].input.Key, call.args[0].input.ContentType]),
+        );
+        expect(contentTypes).toEqual({
+            "prod/chunks/app/page-abc.js": "application/javascript; charset=utf-8",
+            "prod/chunks/main-def.js": "application/javascript; charset=utf-8",
+            "prod/css/styles-ghi.css": "text/css; charset=utf-8",
+        });
+
+        s3Mock.restore();
+    });
+
+    it("makes the uploaded files publicly readable", async () => {
+        const s3Mock = mockClient(S3Client);
+        s3Mock.on(PutObjectCommand).resolves({});
+
+        await uploadStaticAssets({
+            sourceDirectory,
+            prefix: "prod",
+            storage: { driver: "s3", s3: { bucket: "static-assets", region: "eu-central-1", publicRead: true } },
+        });
+
+        expect(s3Mock.commandCalls(PutObjectCommand).map((call) => call.args[0].input.ACL)).toEqual(["public-read", "public-read", "public-read"]);
+
+        s3Mock.restore();
+    });
+
     it("fails when a file can't be uploaded", async () => {
         const s3Mock = mockClient(S3Client);
         s3Mock.on(PutObjectCommand).rejects(new Error("Access Denied"));

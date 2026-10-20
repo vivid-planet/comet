@@ -1,6 +1,7 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { readFile } from "fs/promises";
 
+import { getContentType } from "./content-type";
 import type { StaticAssetsStorage } from "./storage";
 
 export class S3StaticAssetsStorage implements StaticAssetsStorage {
@@ -12,6 +13,7 @@ export class S3StaticAssetsStorage implements StaticAssetsStorage {
             endpoint?: string;
             bucket: string;
             credentials?: { accessKeyId: string; secretAccessKey: string };
+            publicRead?: boolean;
         },
     ) {
         const { region, endpoint, credentials } = config;
@@ -20,6 +22,14 @@ export class S3StaticAssetsStorage implements StaticAssetsStorage {
     }
 
     async uploadFile(key: string, filePath: string): Promise<void> {
-        await this.client.send(new PutObjectCommand({ Bucket: this.config.bucket, Key: key, Body: await readFile(filePath) }));
+        await this.client.send(
+            new PutObjectCommand({
+                Bucket: this.config.bucket,
+                Key: key,
+                Body: await readFile(filePath),
+                ContentType: getContentType(key),
+                ACL: this.config.publicRead ? "public-read" : undefined,
+            }),
+        );
     }
 }
