@@ -485,7 +485,7 @@ If your API or site packages use `react-intl` as well, update them to the same v
 
 `react-intl` v12 requires React 18 or later, so the admin packages no longer support React 16 and 17. If your admin still uses one of them, update `react` and `react-dom` to v18 or v19 first.
 
-`react-intl` v12 is ESM-only. Bundlers (Vite, Next.js) handle this on their own. A CommonJS API (e.g., NestJS) loads it via `require()`, which Node.js supports from 20.19 and 22.12 on.
+`react-intl` v12 is ESM-only. Bundlers (Vite, Next.js) handle this on their own. A CommonJS API (e.g., NestJS) loads it via `require()`, which the required Node.js version supports.
 
 #### Replace deep imports
 
