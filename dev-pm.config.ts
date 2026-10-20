@@ -6,6 +6,7 @@ const packageFolderMapping = {
     "@dextinity/admin-date-time": "packages/admin/admin-date-time",
     "@dextinity/admin-icons": "packages/admin/admin-icons",
     "@dextinity/admin-rte": "packages/admin/admin-rte",
+    "@dextinity/admin-future-ui-icons": "packages/admin/admin-future-ui-icons",
     "@dextinity/cms-admin": "packages/admin/cms-admin",
     "@dextinity/brevo-admin": "packages/admin/brevo-admin",
     "@dextinity/cms-api": "packages/api/cms-api",
@@ -47,6 +48,11 @@ export default defineConfig({
         {
             name: "dextinity-admin-rte",
             script: "pnpm --filter @dextinity/admin-rte run start",
+            group: ["dextinity-admin"],
+        },
+        {
+            name: "dextinity-admin-future-ui-icons",
+            script: "pnpm --filter @dextinity/admin-future-ui-icons run start",
             group: ["dextinity-admin"],
         },
 

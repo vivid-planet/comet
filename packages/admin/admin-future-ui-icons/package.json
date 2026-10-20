@@ -1,0 +1,57 @@
+{
+    "name": "@dextinity/admin-future-ui-icons",
+    "version": "10.9.1",
+    "description": "A collection of icons as plain React components",
+    "repository": {
+        "directory": "packages/admin/admin-future-ui-icons",
+        "type": "git",
+        "url": "https://github.com/vivid-planet/dextinity"
+    },
+    "license": "BSD-2-Clause",
+    "sideEffects": false,
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./lib/index.js",
+            "types": "./lib/index.d.ts"
+        }
+    },
+    "files": [
+        "lib"
+    ],
+    "scripts": {
+        "build": "run-s clean && run-p build:babel build:types",
+        "build:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib",
+        "build:types": "tsc --emitDeclarationOnly",
+        "clean": "rimraf lib",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
+        "lint:eslint": "eslint --max-warnings 0 src/ '**/*.json' --no-warn-ignored",
+        "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
+        "lint:fix:eslint": "pnpm run lint:eslint --fix",
+        "lint:fix:prettier": "pnpm run lint:prettier --write",
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc --noEmit",
+        "start": "run-p start:babel start:types",
+        "start:babel": "pnpm exec babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:types": "tsc --emitDeclarationOnly --watch --preserveWatchOutput"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.29.7",
+        "@babel/core": "^7.29.7",
+        "@dextinity/admin-babel-preset": "workspace:*",
+        "@dextinity/eslint-config": "workspace:*",
+        "eslint": "^9.39.5",
+        "npm-run-all2": "^8.0.4",
+        "prettier": "^3.6.2",
+        "rimraf": "^6.1.3",
+        "typescript": "^5.9.3"
+    },
+    "engines": {
+        "node": ">=22.0.0"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    }
+}

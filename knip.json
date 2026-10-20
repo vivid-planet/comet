@@ -48,6 +48,9 @@
         "packages/admin/admin-rte": {
             "project": ["./src/**/*.{ts,tsx}"]
         },
+        "packages/admin/admin-future-ui-icons": {
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
         "packages/admin/cms-admin": {
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["**/*.generated.ts", ".storybook/public/mockServiceWorker.js"]
