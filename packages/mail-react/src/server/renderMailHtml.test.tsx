@@ -8,8 +8,8 @@ import { css } from "../utils/css.js";
 import { renderMailHtml } from "./renderMailHtml.js";
 
 describe("server/renderMailHtml", () => {
-    it("produces HTML with a doctype", () => {
-        const { html } = renderMailHtml(
+    it("produces HTML with a doctype", async () => {
+        const { html } = await renderMailHtml(
             <MjmlMailRoot>
                 <MjmlSection>
                     <MjmlColumn>
@@ -22,10 +22,10 @@ describe("server/renderMailHtml", () => {
         expect(html.toLowerCase()).toMatch(/^<!doctype html>/);
     });
 
-    it("includes the passed-in text content", () => {
+    it("includes the passed-in text content", async () => {
         const textContent = "Welcome to @dextinity/mail-react";
 
-        const { html } = renderMailHtml(
+        const { html } = await renderMailHtml(
             <MjmlMailRoot>
                 <MjmlSection>
                     <MjmlColumn>
@@ -38,14 +38,14 @@ describe("server/renderMailHtml", () => {
         expect(html).toContain(textContent);
     });
 
-    it("includes registered styles in the rendered HTML", () => {
+    it("includes registered styles in the rendered HTML", async () => {
         registerStyles(css`
             .myComponent {
                 color: red;
             }
         `);
 
-        const { html } = renderMailHtml(
+        const { html } = await renderMailHtml(
             <MjmlMailRoot>
                 <MjmlSection>
                     <MjmlColumn>
@@ -59,7 +59,7 @@ describe("server/renderMailHtml", () => {
         expect(html).toContain("color:red");
     });
 
-    it("includes function-style registered styles resolved with the theme", () => {
+    it("includes function-style registered styles resolved with the theme", async () => {
         registerStyles(
             (theme) => css`
                 .themed {
@@ -68,7 +68,7 @@ describe("server/renderMailHtml", () => {
             `,
         );
 
-        const { html } = renderMailHtml(
+        const { html } = await renderMailHtml(
             <MjmlMailRoot>
                 <MjmlSection>
                     <MjmlColumn>
@@ -82,7 +82,7 @@ describe("server/renderMailHtml", () => {
         expect(html).toContain("width:600px");
     });
 
-    it("minifies the registered styles", () => {
+    it("minifies the registered styles", async () => {
         registerStyles(css`
             .minifyMe {
                 color: red;
@@ -90,7 +90,7 @@ describe("server/renderMailHtml", () => {
             }
         `);
 
-        const { html } = renderMailHtml(
+        const { html } = await renderMailHtml(
             <MjmlMailRoot>
                 <MjmlSection>
                     <MjmlColumn>
@@ -104,7 +104,7 @@ describe("server/renderMailHtml", () => {
         expect(html).toContain("color:red;padding-bottom:8px");
     });
 
-    it("writes no two closing braces in a row, which Outlook cuts the head CSS at", () => {
+    it("writes no two closing braces in a row, which Outlook cuts the head CSS at", async () => {
         registerStyles(css`
             @media (max-width: 479px) {
                 .firstMediaBlock {
@@ -118,7 +118,7 @@ describe("server/renderMailHtml", () => {
             }
         `);
 
-        const { html } = renderMailHtml(
+        const { html } = await renderMailHtml(
             <MjmlMailRoot>
                 <MjmlSection>
                     <MjmlColumn>
@@ -132,8 +132,8 @@ describe("server/renderMailHtml", () => {
         expect(html).toContain(".secondMediaBlock{color:green}");
     });
 
-    it("keeps the Outlook properties that MJML writes", () => {
-        const { html } = renderMailHtml(
+    it("keeps the Outlook properties that MJML writes", async () => {
+        const { html } = await renderMailHtml(
             <MjmlMailRoot>
                 <MjmlSection>
                     <MjmlColumn>
@@ -147,9 +147,9 @@ describe("server/renderMailHtml", () => {
         expect(html).toContain("mso-table-lspace:0pt");
     });
 
-    it("renders the head slot content inside <mj-head>", () => {
+    it("renders the head slot content inside <mj-head>", async () => {
         const titleText = "Welcome to Dextinity";
-        const { html } = renderMailHtml(
+        const { html } = await renderMailHtml(
             <MjmlMailRoot head={<MjmlTitle>{titleText}</MjmlTitle>}>
                 <MjmlSection>
                     <MjmlColumn>
@@ -162,8 +162,8 @@ describe("server/renderMailHtml", () => {
         expect(html).toContain(`<title>${titleText}</title>`);
     });
 
-    it("renders the attributes slot content inside <mj-attributes>", () => {
-        const { html } = renderMailHtml(
+    it("renders the attributes slot content inside <mj-attributes>", async () => {
+        const { html } = await renderMailHtml(
             <MjmlMailRoot attributes={<MjmlClass name="cta" color="#FF0000" />}>
                 <MjmlSection>
                     <MjmlColumn>
@@ -176,8 +176,8 @@ describe("server/renderMailHtml", () => {
         expect(html).toContain("color:#FF0000");
     });
 
-    it("produces no MJML warnings for a valid component tree", () => {
-        const { mjmlWarnings } = renderMailHtml(
+    it("produces no MJML warnings for a valid component tree", async () => {
+        const { mjmlWarnings } = await renderMailHtml(
             <MjmlMailRoot>
                 <MjmlSection>
                     <MjmlColumn>

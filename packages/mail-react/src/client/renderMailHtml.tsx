@@ -5,10 +5,13 @@ import type { ReactElement } from "react";
 import { addBodyTargetingId } from "../utils/addBodyTargetingId.js";
 
 type MjmlOptions = Parameters<typeof mjml2html>[1];
-type MjmlWarning = ReturnType<typeof mjml2html>["errors"][number];
+type MjmlWarning = Awaited<ReturnType<typeof mjml2html>>["errors"][number];
 
-export function renderMailHtml(element: ReactElement, options?: MjmlOptions): { html: string; mjmlWarnings: MjmlWarning[] } {
-    const mjmlString = renderToMjml(element);
-    const { html, errors: mjmlWarnings } = mjml2html(mjmlString, { validationLevel: "soft", ...options });
+export async function renderMailHtml(element: ReactElement, options?: MjmlOptions): Promise<{ html: string; mjmlWarnings: MjmlWarning[] }> {
+    return convertMjmlToHtml(renderToMjml(element), options);
+}
+
+export async function convertMjmlToHtml(mjmlString: string, options?: MjmlOptions): Promise<{ html: string; mjmlWarnings: MjmlWarning[] }> {
+    const { html, errors: mjmlWarnings } = await mjml2html(mjmlString, { validationLevel: "soft", ...options });
     return { html: addBodyTargetingId(html), mjmlWarnings };
 }
