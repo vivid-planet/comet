@@ -101,7 +101,9 @@ export class ActionLogsResolver {
         const requiredPermissions = metadata?.requiredPermission ?? [];
 
         if (requiredPermissions.includes(DisablePermissionCheck)) {
-            return;
+            throw new ForbiddenException(
+                `The action log of ${entity} is only readable by system users: ${entity} disables the permission check, so its access is decided by a resolver the action log doesn't know about.`,
+            );
         }
 
         const permissionScope = metadata?.options?.skipScopeCheck ? undefined : scope;

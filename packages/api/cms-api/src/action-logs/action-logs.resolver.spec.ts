@@ -111,10 +111,14 @@ describe("ActionLogsResolver", () => {
         );
     });
 
-    it("allows any user when the entity disables the permission check", async () => {
-        await expect(resolver.actionLogs({ ...args, entity: PublicLoggedEntity.name }, user("products" as Permission, []))).resolves.toMatchObject({
-            totalCount: 0,
-        });
+    it("denies a user when the entity disables the permission check", async () => {
+        await expect(resolver.actionLogs({ ...args, entity: PublicLoggedEntity.name }, user("news" as Permission, [args.scope]))).rejects.toThrow(
+            ForbiddenException,
+        );
+    });
+
+    it("allows a system user when the entity disables the permission check", async () => {
+        await expect(resolver.actionLogs({ ...args, entity: PublicLoggedEntity.name }, "system-user")).resolves.toMatchObject({ totalCount: 0 });
     });
 
     it("allows a system user", async () => {
