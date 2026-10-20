@@ -112,6 +112,12 @@ Common commands:
 - view status `pnpm exec -- dev-pm status`
 - view logs `pnpm exec -- dev-pm logs --lines 100 scriptName`
 
+### Running multiple instances in parallel
+
+To run several checkouts at once without host port collisions, run `pnpm run assign-ports` before starting the demo. It finds a free +100..+900 offset for all `*_PORT` entries in `.env` and writes the offset ports to `.env.local`. The access URLs above shift by that offset.
+
+Every process loads `.env.local` itself: the demo packages and `dev:*` scripts run through `dotenv -e .env.local -e .env`, and the `demo-docker` script sources `.env` and `.env.local` before `docker compose up`. Docker needs this because dev-pm doesn't pass the env files to its scripts, and Compose prefers real env vars over its `.env` file.
+
 ## Packages
 
 ### Admin (`packages/admin/`)
