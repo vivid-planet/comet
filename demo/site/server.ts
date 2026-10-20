@@ -1,3 +1,5 @@
+import { S3Client } from "@aws-sdk/client-s3";
+import { serveStaticAssetFromS3 } from "@dextinity/site-nextjs/staticAssets";
 import { createServer } from "http";
 import next from "next";
 import { parse } from "url";
@@ -8,6 +10,18 @@ const dev = process.env.NODE_ENV !== "production";
 const host = process.env.SERVER_HOST ?? "localhost";
 const port = parseInt(process.env.SITE_PORT || "3000", 10);
 const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
+const staticAssetsFromS3 = {
+    s3Client: new S3Client({
+        region: process.env.STATIC_ASSETS_S3_REGION,
+        endpoint: process.env.STATIC_ASSETS_S3_ENDPOINT,
+        credentials: {
+            accessKeyId: process.env.STATIC_ASSETS_S3_ACCESS_KEY_ID ?? "",
+            secretAccessKey: process.env.STATIC_ASSETS_S3_SECRET_ACCESS_KEY ?? "",
+        },
+    }),
+    bucket: process.env.STATIC_ASSETS_S3_BUCKET,
+    keyPrefix: "site",
+};
 
 // when using middleware `hostname` and `port` must be provided below
 const app = next({ dev, hostname: host, port, webpack: true });
@@ -33,6 +47,10 @@ app.prepare().then(() => {
                     res.end();
                     return;
                 }
+            }
+
+            if (await serveStaticAssetFromS3(parsedUrl.pathname, res, staticAssetsFromS3)) {
+                return;
             }
 
             let maxAge: string | undefined;

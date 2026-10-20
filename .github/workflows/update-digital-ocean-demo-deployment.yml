@@ -98,6 +98,8 @@ jobs:
                   API_BASIC_AUTH_SYSTEM_USER_PASSWORD: ${{ secrets.DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD }}
                   STATIC_ASSETS_UPLOAD_S3_ACCESS_KEY_ID: ${{ secrets.DEMO_S3_ACCESS_KEY_ID }}
                   STATIC_ASSETS_UPLOAD_S3_SECRET_ACCESS_KEY: ${{ secrets.DEMO_S3_SECRET_ACCESS_KEY }}
+                  STATIC_ASSETS_S3_ACCESS_KEY_ID: ${{ secrets.DEMO_S3_ACCESS_KEY_ID }}
+                  STATIC_ASSETS_S3_SECRET_ACCESS_KEY: ${{ secrets.DEMO_S3_SECRET_ACCESS_KEY }}
               with:
                   token: ${{ secrets.DIGITALOCEAN_API_KEY }}
                   project_id: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}

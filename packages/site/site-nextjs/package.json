@@ -22,6 +22,10 @@
             "types": "./lib/server.d.ts",
             "import": "./lib/server.js"
         },
+        "./staticAssets": {
+            "types": "./lib/staticAssets.d.ts",
+            "default": "./lib/staticAssets.js"
+        },
         "./webpackPersistedQueriesLoader": "./lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
     "files": [
@@ -51,11 +55,13 @@
         "server-only": "^0.0.1"
     },
     "devDependencies": {
+        "@aws-sdk/client-s3": "^3.1149.0",
         "@dextinity/cli": "workspace:*",
         "@dextinity/eslint-config": "workspace:*",
         "@types/react": "^19.3.0",
         "@types/react-dom": "^19.3.0",
         "@vitejs/plugin-react": "^4.7.0",
+        "aws-sdk-client-mock": "^4.1.0",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.39.5",
         "jsdom": "^28.1.0",
@@ -74,9 +80,15 @@
         "vitest": "^5.0.4"
     },
     "peerDependencies": {
+        "@aws-sdk/client-s3": "^3.0.0",
         "next": "^14.2.0 || ^15.0.0 || ^16.0.0",
         "react": "^18.0.0 || ^19.0.0",
         "react-dom": "^18.0.0 || ^19.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@aws-sdk/client-s3": {
+            "optional": true
+        }
     },
     "engines": {
         "node": ">=22.12.0"
