@@ -468,6 +468,48 @@ npm run lint
 
 Repeat this step, fixing all lint errors, until the lint passes.
 
+## Admin
+
+### Replace the `@calm/react-intl/missing-formatted-message` rule
+
+`@dextinity/eslint-config/react.js` no longer includes the deprecated `@calm/eslint-plugin-react-intl`. ESLint stops with an error when a config or an `eslint-disable` comment names one of its rules. Text in JSX is still reported by `react/jsx-no-literals`. Literal `label` and `aria-label` props are now reported by `no-restricted-syntax`.
+
+Find the references in every package that uses `@dextinity/eslint-config/react.js`, usually `admin`:
+
+```sh
+cd admin
+grep -rn "@calm/" --exclude-dir=node_modules .
+```
+
+In ESLint configs, replace the rule with `no-restricted-syntax`:
+
+```diff title="eslint.config.mjs"
+-            "@calm/react-intl/missing-formatted-message": "off",
++            "no-restricted-syntax": "off",
+```
+
+In `eslint-disable` comments, remove the rule. If it was the only rule in the comment, name the rule that now reports the line: `react/jsx-no-literals` for text in JSX, `no-restricted-syntax` for a `label` or `aria-label` prop.
+
+```diff
+- {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message,react/jsx-no-literals */}
++ {/* eslint-disable-next-line react/jsx-no-literals */}
+```
+
+If your ESLint config sets `no-restricted-syntax` itself, its options replace the ones from `@dextinity/eslint-config`. Copy the `label` selector from `@dextinity/eslint-config/react.js` into your list to keep the check.
+
+Remove `@calm/eslint-plugin-react-intl` from `package.json` if your project lists it.
+
+<!-- "Verify lint passes" must always be the last step for this service. -->
+
+### Verify lint passes
+
+```sh
+cd admin
+npm run lint
+```
+
+Repeat this step, fixing all lint errors, until the lint passes.
+
 ## Agent features
 
 ### Get the `dev-pm` skill from `dev-process-manager`

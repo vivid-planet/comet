@@ -28,7 +28,7 @@ export default defineConfig([
     {
         files: ["**/*.test.ts", "**/*.test.tsx"],
         rules: {
-            "@calm/react-intl/missing-formatted-message": "off",
+            "no-restricted-syntax": "off",
             "no-restricted-imports": [
                 "error",
                 {
@@ -55,7 +55,7 @@ export default defineConfig([
     {
         files: ["**/*.stories.ts", "**/*.stories.tsx"],
         rules: {
-            "@calm/react-intl/missing-formatted-message": "off",
+            "no-restricted-syntax": "off",
             "@typescript-eslint/no-empty-function": "off",
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/no-non-null-assertion": "off",

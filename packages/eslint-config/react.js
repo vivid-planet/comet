@@ -1,5 +1,4 @@
 import coreConfig, { restrictedImportPatterns } from "./core.js";
-import reactIntlFormatPlugin from "@calm/eslint-plugin-react-intl";
 import globals from "globals";
 import formatJs from "eslint-plugin-formatjs";
 import graphqlPlugin from "@graphql-eslint/eslint-plugin";
@@ -69,11 +68,6 @@ const config = [
     ...coreConfig,
     {
         plugins: {
-            "@calm/react-intl": reactIntlFormatPlugin,
-        },
-    },
-    {
-        plugins: {
             formatjs: formatJs,
         },
         rules: {
@@ -84,7 +78,13 @@ const config = [
     {
         files: ["**/*.ts", "**/*.tsx"],
         rules: {
-            "@calm/react-intl/missing-formatted-message": ["error", { enforceLabels: true }],
+            "no-restricted-syntax": [
+                "error",
+                {
+                    selector: 'JSXAttribute[name.name=/^(label|aria-label)$/] > Literal[value!=""]',
+                    message: "Translate the label with <FormattedMessage /> or intl.formatMessage().",
+                },
+            ],
         },
     },
     {

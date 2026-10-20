@@ -12,7 +12,7 @@ export default defineConfig([
     {
         files: ["src/**/*.stories.tsx", "src/**/*.test.ts", "src/**/*.test.tsx", "src/storybook/**"],
         rules: {
-            "@calm/react-intl/missing-formatted-message": "off",
+            "no-restricted-syntax": "off",
             "react/jsx-no-literals": "off",
         },
     },

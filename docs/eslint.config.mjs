@@ -1,12 +1,12 @@
-import { defineConfig, globalIgnores } from "eslint/config";
 import eslintConfigReact from "@dextinity/eslint-config/future/react.js";
+import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
     globalIgnores([".docusaurus", "build"]),
     ...eslintConfigReact,
     {
         rules: {
-            "@calm/react-intl/missing-formatted-message": "off",
+            "no-restricted-syntax": "off",
             "react/jsx-no-literals": "off",
         },
     },
