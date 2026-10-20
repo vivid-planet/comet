@@ -4,6 +4,8 @@ on:
     push:
         branches:
             - main
+    # Only until loading the static assets from the bucket has been tested
+    pull_request:
     workflow_dispatch:
 
 # There's only one deployment, so a newer run replaces a running one
@@ -14,11 +16,11 @@ concurrency:
 jobs:
     update-deployment:
         name: Update DigitalOcean Demo Deployment
-        if: github.repository == 'vivid-planet/dextinity'
+        if: github.repository == 'vivid-planet/dextinity' && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/serve-static-assets-from-storage'))
         runs-on: ubuntu-latest
         env:
             # The branch App Platform builds from
-            DEPLOY_BRANCH: ${{ github.ref_name }}
+            DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
         steps:
             - name: Check that all variables and secrets are set
               env:
