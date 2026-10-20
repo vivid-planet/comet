@@ -349,7 +349,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
                         overscanCount={1} // do not increase this for performance reasons
                         style={{ position: "absolute", inset: 0, scrollBehavior: "smooth" }}
                     >
-                        <div style={{ height: VIRTUAL_LIST_PADDING_SIZE * 2 }} />
+                        <VirtualListBottomPadding />
                     </List>
                 </Table>
             </Root>
@@ -411,4 +411,8 @@ const Root = styled("div")`
 const Table = styled("div")`
     flex: 1;
     position: relative;
+`;
+
+const VirtualListBottomPadding = styled("div")`
+    height: ${VIRTUAL_LIST_PADDING_SIZE * 2}px;
 `;
