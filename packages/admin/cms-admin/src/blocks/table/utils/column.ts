@@ -130,3 +130,16 @@ export const setColumnSize = (state: TableBlockState, columnId: string, size: Co
         columns: state.columns.map((column) => (column.id === columnId ? { ...column, size } : column)),
     };
 };
+
+export const moveColumnToIndex = (state: TableBlockState, columnId: string, targetIndex: number): TableBlockState => {
+    const movingColumn = state.columns.find(({ id }) => id === columnId);
+    if (!movingColumn) {
+        return state;
+    }
+
+    const otherColumns = state.columns.filter(({ id }) => id !== columnId);
+    return {
+        ...state,
+        columns: [...otherColumns.slice(0, targetIndex), movingColumn, ...otherColumns.slice(targetIndex)],
+    };
+};
