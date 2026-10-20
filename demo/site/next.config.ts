@@ -11,6 +11,8 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
+    // eslint-disable-next-line no-restricted-syntax -- the asset prefix can only be set in next.config
+    assetPrefix: process.env.ASSET_PREFIX,
     images: dextinityConfig.images,
     typescript: {
         // eslint-disable-next-line no-restricted-syntax -- NODE_ENV is set by Next.js itself, not environment-specific

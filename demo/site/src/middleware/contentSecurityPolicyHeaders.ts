@@ -7,18 +7,20 @@ type ContentSecurityPolicyDirective = {
     values: Array<string | undefined>;
 };
 
+const assetOrigin = process.env.ASSET_PREFIX ? new URL(process.env.ASSET_PREFIX).origin : undefined;
+
 const contentSecurityPolicyDirectives: ContentSecurityPolicyDirective[] = [
     { directive: "default-src", values: ["'none'"] }, // Restrict any content not explicitly allowed
     { directive: "connect-src", values: ["'self'", "https://www.google.com/recaptcha/", process.env.NODE_ENV === "development" ? "ws:" : undefined] },
-    { directive: "style-src-elem", values: ["'self'", "'unsafe-inline'"] },
+    { directive: "style-src-elem", values: ["'self'", "'unsafe-inline'", assetOrigin] },
     {
         directive: "script-src-elem",
-        values: ["'self'", "'unsafe-inline'", "https://www.google.com/recaptcha/", "https://www.gstatic.com/recaptcha/"],
+        values: ["'self'", "'unsafe-inline'", "https://www.google.com/recaptcha/", "https://www.gstatic.com/recaptcha/", assetOrigin],
     },
     { directive: "img-src", values: ["'self'", "data:", process.env.ADMIN_URL] },
     { directive: "media-src", values: ["'self'", "data:"] },
     { directive: "style-src-attr", values: ["'unsafe-inline'"] },
-    { directive: "font-src", values: ["'self'", "data:"] },
+    { directive: "font-src", values: ["'self'", "data:", assetOrigin] },
     { directive: "frame-ancestors", values: [process.env.ADMIN_URL ?? "https:"] },
     { directive: "frame-src", values: ["https://*.youtube-nocookie.com", "https://player.vimeo.com", "https://www.google.com/recaptcha/"] },
 ];

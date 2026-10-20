@@ -52,6 +52,9 @@ services:
           - key: STATIC_ASSETS_STORAGE_S3_BUCKET
             scope: BUILD_TIME
             value: dextinity-demo
+          - key: STATIC_ASSETS_STORAGE_S3_PUBLIC_READ
+            scope: BUILD_TIME
+            value: "true"
           - key: STATIC_ASSETS_STORAGE_S3_ACCESS_KEY_ID
             scope: BUILD_TIME
             type: SECRET
@@ -60,6 +63,9 @@ services:
             scope: BUILD_TIME
             type: SECRET
             value: ${S3_SECRET_ACCESS_KEY}
+          - key: ASSET_PREFIX
+            scope: RUN_AND_BUILD_TIME
+            value: https://dextinity-demo.fra1.digitaloceanspaces.com/site
           - key: SERVER_HOST
             scope: RUN_TIME
             value: "0.0.0.0"
