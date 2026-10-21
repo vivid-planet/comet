@@ -152,4 +152,4 @@ Without a running Storybook, `pnpm --filter @dextinity/ui exec storybook tools d
 
 ## Build
 
-`vite build` compiles the components to ES modules in `lib/`, one module per source file, keeping `"use client"`. All component styles go into `lib/style.css` (`@dextinity/ui/css`). The themes listed in `vite.config.mts` are copied to `lib/themes/`; the Acme theme is a Storybook-only example and isn't published. The type declarations target `moduleResolution: "bundler"`, as used by Vite and Next.js.
+`vite build` compiles the components to ES modules in `lib/`, one module per source file, keeping `"use client"`. All component styles go into `lib/style.css` (`@dextinity/ui/css`). The themes listed in `vite.config.mts` are copied to `lib/themes/`; the Sunset and Acme themes are Storybook-only examples and aren't published. The type declarations target `moduleResolution: "bundler"`, as used by Vite and Next.js.

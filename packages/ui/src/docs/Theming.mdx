@@ -8,7 +8,7 @@ import * as ThemingStories from "./__stories__/Theming.stories";
 
 A theme is a stylesheet that defines the [design tokens](?path=/docs/foundations-design-tokens--docs): CSS custom properties for colors, typography, space, shapes and motion. Components read nothing but these tokens, so a theme changes their look completely without changing their code.
 
-The package includes the Dextinity theme. This Storybook also shows Acme, a fictive brand, to prove that the components follow any theme. Switch between them, and between the light and dark color schemes, in the toolbar.
+The package includes the Dextinity theme. This Storybook also shows two example themes: Sunset, a color variation of the Dextinity theme, and Acme, a fictive brand, to prove that the components follow any theme. Switch between them, and between the light and dark color schemes, in the toolbar.
 
 <Canvas of={ThemingStories.Comparison} />
 
@@ -122,6 +122,8 @@ A theme for another brand is a stylesheet like [`acme.css`](https://github.com/v
 2. Define every token listed in [Design tokens](?path=/docs/foundations-design-tokens--docs) for the light color scheme, and every `--dextinity-color-*` token again for the dark color scheme.
 3. Check every color pair the design tokens page names against its contrast requirement.
 4. Set the motion durations to `0s` for users who prefer reduced motion.
+
+For a variation of the Dextinity theme, copy [`dextinity.css`](https://github.com/vivid-planet/dextinity/blob/main/packages/ui/src/themes/dextinity.css) instead and change what differs. [`sunset.css`](https://github.com/vivid-planet/dextinity/blob/main/packages/ui/src/themes/sunset.css) changes only the colors, and keeps the typeface, shapes and spacing.
 
 Inside this repository, a unit test checks steps 2 to 4 for every theme in `packages/ui/src/themes/`: add a theme there, and run `pnpm --filter @dextinity/ui run test:unit`.
 

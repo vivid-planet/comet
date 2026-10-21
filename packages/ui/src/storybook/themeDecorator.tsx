@@ -5,6 +5,7 @@ import styles from "./themeDecorator.module.css";
 
 export const themeOptions = [
     { value: "dextinity", title: "Dextinity" },
+    { value: "sunset", title: "Sunset (Dextinity variation)" },
     { value: "acme", title: "Acme (fictive brand)" },
 ];
 
