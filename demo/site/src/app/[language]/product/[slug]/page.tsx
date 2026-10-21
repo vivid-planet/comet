@@ -1,5 +1,6 @@
 import { gql } from "@dextinity/site-react";
 import { notFound } from "@src/framework/navigation";
+import { DefaultTitle } from "@src/layout/DefaultTitle";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 
 import { Content, productDetailContentFragment } from "./Content";
@@ -26,5 +27,10 @@ export default async function ProductDetailPage({ slug }: { slug: string }) {
         notFound();
     }
 
-    return <Content product={data.productBySlug} />;
+    return (
+        <>
+            <DefaultTitle />
+            <Content product={data.productBySlug} />
+        </>
+    );
 }

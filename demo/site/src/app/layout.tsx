@@ -3,21 +3,11 @@ import "@fontsource-variable/inter";
 import "@src/styles/global.scss";
 
 import { CookieApiProvider, useLocalStorageCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@dextinity/site-react";
-import { type Metadata, MetadataTags } from "@src/framework/metadata";
 import animateBoxInOnScrollStyles from "@src/util/animations/AnimateBoxInOnScroll.module.scss";
 import { ErrorHandler } from "@src/util/ErrorHandler";
 import type { PropsWithChildren } from "react";
 
-const defaultMetadata: Metadata = {
-    title: "Dextinity Demo Site",
-};
-
-type Props = PropsWithChildren<{
-    lang?: string;
-    metadata?: Promise<Metadata>;
-}>;
-
-export default function RootLayout({ children, lang, metadata }: Props) {
+export default function RootLayout({ children, lang }: PropsWithChildren<{ lang?: string }>) {
     return (
         <html lang={lang}>
             <head>
@@ -26,7 +16,6 @@ export default function RootLayout({ children, lang, metadata }: Props) {
                 <link rel="icon" href="/favicon.ico" sizes="any" />
                 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
                 <link rel="apple-touch-icon" href="/apple-icon.png" />
-                <MetadataTags metadata={metadata} defaultMetadata={defaultMetadata} />
                 <noscript>
                     <style>{`.${animateBoxInOnScrollStyles.scrollContainer} { opacity: 1; transform: none; transition: none; }`}</style>
                 </noscript>

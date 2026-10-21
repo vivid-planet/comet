@@ -1,12 +1,11 @@
 import { handleError } from "@src/framework/handleError";
-import type { Metadata } from "@src/framework/metadata";
 import { type PageContent, renderPage } from "@src/framework/render";
 import { getSiteContext } from "@src/framework/requestContext";
 import type { ContentScope } from "@src/site-configs";
 import { getPreviewParams } from "@src/util/sitePreview";
 import { type Context, Hono } from "hono";
 
-import PagePage, { generateMetadata as generatePageMetadata } from "./[language]/[[...path]]/page";
+import PagePage from "./[language]/[[...path]]/page";
 import LanguageLayout, { getLayoutLanguage } from "./[language]/layout";
 import NewsDetailPage from "./[language]/news/[slug]/page";
 import NewsIndexPage from "./[language]/news/page";
@@ -32,11 +31,7 @@ const noStoreCacheControl = "private, no-cache, no-store, max-age=0, must-revali
 // Same as Next.js for pages revalidated every 7.5 minutes
 const publicCacheControl = "s-maxage=450, stale-while-revalidate=31535550";
 
-async function renderSitePage(
-    c: Context,
-    loadPage: (params: ContentScope) => Promise<PageContent>,
-    generateMetadata?: (params: ContentScope) => Promise<Metadata>,
-) {
+async function renderSitePage(c: Context, loadPage: (params: ContentScope) => Promise<PageContent>) {
     const { domain } = getSiteContext();
     const language = c.req.param("language");
     if (!language) {
@@ -44,14 +39,11 @@ async function renderSitePage(
     }
     const params = { domain, language };
     const isSitePreview = (await getPreviewParams()) !== null;
-    const metadata = generateMetadata?.(params);
-    // The metadata isn't awaited if rendering is aborted, e.g. for the not found page
-    metadata?.catch(() => undefined);
 
     return renderPage(c, {
         page: loadPage(params),
         layout: (page) => (
-            <RootLayout lang={getLayoutLanguage(params)} metadata={metadata}>
+            <RootLayout lang={getLayoutLanguage(params)}>
                 <LanguageLayout domain={domain} language={language}>
                     {page}
                 </LanguageLayout>
@@ -154,11 +146,7 @@ siteRouter.get("/:language/product/:slug", (c) => renderSitePage(c, () => Produc
 siteRouter.get("/:language/*", (c) => {
     const [, , ...segments] = c.req.path.split("/");
     const path = segments.filter((segment) => segment !== "").map((segment) => decodeURIComponent(segment));
-    return renderSitePage(
-        c,
-        (params) => PagePage({ ...params, path }),
-        (params) => generatePageMetadata({ ...params, path }),
-    );
+    return renderSitePage(c, (params) => PagePage({ ...params, path }));
 });
 
 siteRouter.notFound(renderRootNotFoundPage);

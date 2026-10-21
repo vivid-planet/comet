@@ -1,7 +1,6 @@
 import { generateImageUrl, gql, JsonLd } from "@dextinity/site-react";
 import { Breadcrumbs } from "@src/common/components/breadcrumbs/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/breadcrumbs/Breadcrumbs.fragment";
-import type { Metadata } from "@src/framework/metadata";
 import { notFound } from "@src/framework/navigation";
 import type { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
@@ -66,49 +65,6 @@ async function fetchData({ pageTreeNodeId, scope }: Props) {
     };
 }
 
-export async function generateMetadata({ pageTreeNodeId, scope }: Props): Promise<Metadata> {
-    const data = await fetchData({ pageTreeNodeId, scope });
-    const siteConfig = getSiteConfigForDomain(scope.domain);
-
-    const document = data?.pageContent?.document;
-    if (!document) {
-        return {};
-    }
-
-    const siteUrl = siteConfig.url;
-    const canonicalUrl = (document.seo.canonicalUrl || `${siteUrl}/${scope.language}${data.pageContent.path}`).replace(/\/$/, ""); // Remove trailing slash for "home"
-
-    // TODO move into library
-    return {
-        title: document.seo.htmlTitle || data.pageContent.name,
-        description: document.seo.metaDescription,
-        openGraph: {
-            title: document.seo.openGraphTitle,
-            description: document.seo.openGraphDescription,
-            type: "website",
-            url: canonicalUrl,
-            images: document.seo.openGraphImage.block?.urlTemplate
-                ? generateImageUrl({ src: document.seo.openGraphImage.block?.urlTemplate, width: 1200 }, 1200 / 630)
-                : undefined,
-        },
-        robots: {
-            index: !document.seo.noIndex,
-        },
-        alternates: {
-            canonical: canonicalUrl,
-            languages: document.seo.alternativeLinks.reduce(
-                (acc, link) => {
-                    if (link.code && link.url) {
-                        acc[link.code] = link.url;
-                    }
-                    return acc;
-                },
-                { [scope.language]: canonicalUrl } as Record<string, string>,
-            ),
-        },
-    };
-}
-
 export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
     const graphQLFetch = createGraphQLFetch();
 
@@ -146,6 +102,11 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
         }),
     ]);
 
+    const siteConfig = getSiteConfigForDomain(scope.domain);
+    const canonicalUrl = (document.seo.canonicalUrl || `${siteConfig.url}/${scope.language}${data.pageContent.path}`).replace(/\/$/, ""); // Remove trailing slash for "home"
+    const alternativeLinks = document.seo.alternativeLinks.filter((link) => link.code && link.url);
+    const openGraphImageUrlTemplate = document.seo.openGraphImage.block?.urlTemplate;
+
     let structuredData: WithContext<Thing> | undefined;
     if (document.seo.structuredData && document.seo.structuredData.length > 0) {
         try {
@@ -156,8 +117,24 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
         }
     }
 
+    // React hoists these elements into the <head>
     return (
         <>
+            <title>{document.seo.htmlTitle || data.pageContent.name}</title>
+            {document.seo.metaDescription && <meta name="description" content={document.seo.metaDescription} />}
+            <meta name="robots" content={document.seo.noIndex ? "noindex" : "index"} />
+            <link rel="canonical" href={canonicalUrl} />
+            <link rel="alternate" hrefLang={scope.language} href={canonicalUrl} />
+            {alternativeLinks.map((link) => (
+                <link key={link.code} rel="alternate" hrefLang={link.code} href={link.url} />
+            ))}
+            {document.seo.openGraphTitle && <meta property="og:title" content={document.seo.openGraphTitle} />}
+            {document.seo.openGraphDescription && <meta property="og:description" content={document.seo.openGraphDescription} />}
+            <meta property="og:url" content={canonicalUrl} />
+            {openGraphImageUrlTemplate && (
+                <meta property="og:image" content={generateImageUrl({ src: openGraphImageUrlTemplate, width: 1200 }, 1200 / 630)} />
+            )}
+            <meta property="og:type" content="website" />
             {structuredData && <JsonLd<Thing> data={structuredData} />}
             <Breadcrumbs {...data.pageContent} scope={scope} />
             {/* ID is used for skip link */}

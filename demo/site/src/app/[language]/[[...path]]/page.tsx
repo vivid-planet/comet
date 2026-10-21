@@ -1,7 +1,6 @@
 import { gql } from "@dextinity/site-react";
 import type { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
-import type { Metadata } from "@src/framework/metadata";
 import { notFound, redirect } from "@src/framework/navigation";
 import type { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import type { ContentScope } from "@src/site-configs";
@@ -106,27 +105,4 @@ export default async function Page(params: Params) {
     const { loadPage } = documentTypes[data.pageTreeNodeByPath.documentType];
 
     return loadPage(props);
-}
-
-export async function generateMetadata(params: Params): Promise<Metadata> {
-    const { domain, language } = params;
-    const scope = { domain, language };
-    const data = await fetchPageTreeNode(params);
-
-    if (!data.pageTreeNodeByPath?.documentType) {
-        return {};
-    }
-
-    const pageTreeNodeId = data.pageTreeNodeByPath.id;
-
-    const props = {
-        pageTreeNodeId,
-        scope,
-    };
-    const { generateMetadata } = documentTypes[data.pageTreeNodeByPath.documentType];
-    if (!generateMetadata) {
-        return {};
-    }
-
-    return generateMetadata(props);
 }
