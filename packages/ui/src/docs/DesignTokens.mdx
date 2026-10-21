@@ -160,6 +160,10 @@ Themes set the durations to `0s` for users who prefer reduced motion.
 | `--dextinity-motion-duration-medium` | Buttons, text inputs and the switch: color and border changes on hover, and the switch's thumb. |
 | `--dextinity-motion-easing`          | Easing of all transitions.                                                                      |
 
+## Icons
+
+Each icon of the icon set is a token too, `--dextinity-icon-<name>`, with an SVG image as its value. Unlike the tokens above, a theme doesn't have to define them: the package defines all of them, and a theme defines only the icons it replaces. [Icons](?path=/docs/foundations-icons--docs) lists them and shows how to replace one.
+
 ## Layering
 
 Popups and dialogs render in a portal at the end of `<body>`, on top of the page. These tokens set their stacking order. The defaults put dialogs at the level of MUI's dialogs, and popups above them, so a select also opens inside a dialog of `@dextinity/admin`.

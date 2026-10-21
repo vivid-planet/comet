@@ -1,0 +1,14 @@
+@layer dextinity {
+    .root {
+        display: inline-block;
+        flex-shrink: 0;
+        width: 1em;
+        height: 1em;
+        background-color: currentcolor;
+        vertical-align: -0.125em;
+        mask: var(--_icon) center / contain no-repeat;
+
+        /* The icon is a mask on a background, which forced colors would otherwise replace with the system's background. */
+        forced-color-adjust: none;
+    }
+}

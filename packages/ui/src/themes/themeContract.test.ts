@@ -5,6 +5,7 @@ import { basename, join } from "node:path";
 import postcss, { type Rule } from "postcss";
 import { describe, expect, it } from "vitest";
 
+import { iconNames } from "../icon/iconNames";
 import { themeOptions } from "../storybook/themeDecorator";
 import { readTokenTableRows, tokenNamePattern } from "../storybook/tokenTables";
 
@@ -22,6 +23,7 @@ function readContractTokens() {
 }
 
 const contractTokens = readContractTokens();
+const iconTokens: string[] = iconNames.map((iconName) => `--dextinity-icon-${iconName}`);
 const contractColorTokens = contractTokens.filter((token) => token.startsWith("--dextinity-color-"));
 
 type ColorScheme = "light" | "dark";
@@ -208,8 +210,17 @@ describe.each(themes)("theme $fileName", (theme) => {
 
         expect({
             missingTokens: contractTokens.filter((token) => !definedTokens.includes(token)),
-            undocumentedTokens: definedTokens.filter((token) => !contractTokens.includes(token)),
+            undocumentedTokens: definedTokens.filter((token) => !contractTokens.includes(token) && !iconTokens.includes(token)),
         }).toEqual({ missingTokens: [], undocumentedTokens: [] });
+    });
+
+    it("replaces only icons of the icon set, each with an image", () => {
+        const themeIconTokens = [...theme.declarations.light, ...theme.declarations.dark].filter(([token]) => token.startsWith("--dextinity-icon-"));
+
+        expect({
+            unknownIcons: themeIconTokens.map(([token]) => token).filter((token) => !iconTokens.includes(token)),
+            iconsThatArentImages: themeIconTokens.filter(([, value]) => !value.startsWith("url(")).map(([token]) => token),
+        }).toEqual({ unknownIcons: [], iconsThatArentImages: [] });
     });
 
     it("redefines every color token, and only documented tokens, for the dark color scheme", () => {
@@ -217,7 +228,7 @@ describe.each(themes)("theme $fileName", (theme) => {
 
         expect({
             missingTokens: contractColorTokens.filter((token) => !definedTokens.includes(token)),
-            undocumentedTokens: definedTokens.filter((token) => !contractTokens.includes(token)),
+            undocumentedTokens: definedTokens.filter((token) => !contractTokens.includes(token) && !iconTokens.includes(token)),
         }).toEqual({ missingTokens: [], undocumentedTokens: [] });
     });
 
@@ -246,6 +257,27 @@ describe.each(themes)("theme $fileName", (theme) => {
 
             expect(ratio).toBeGreaterThanOrEqual(minimum);
         });
+    });
+});
+
+describe("icon set", () => {
+    const iconDirectory = join(sourceDirectory, "icon");
+
+    it("has an SVG file for every icon name, and no other", () => {
+        const svgNames = readdirSync(join(iconDirectory, "svg")).map((fileName) => basename(fileName, ".svg"));
+
+        expect(svgNames.sort()).toEqual([...iconNames].sort());
+    });
+
+    it("defines every icon's token in icons.css, from its SVG file", () => {
+        const defaults = new Map<string, string>();
+        postcss.parse(readFileSync(join(iconDirectory, "icons.css"), "utf8")).walkDecls((declaration) => {
+            defaults.set(declaration.prop, declaration.value);
+        });
+
+        expect(Object.fromEntries(defaults)).toEqual(
+            Object.fromEntries(iconNames.map((iconName) => [`--dextinity-icon-${iconName}`, `url("./svg/${iconName}.svg")`])),
+        );
     });
 });
 

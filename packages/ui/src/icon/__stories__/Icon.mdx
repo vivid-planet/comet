@@ -1,0 +1,25 @@
+import { Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as IconStories from "./Icon.stories";
+
+<Meta of={IconStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+An icon has no inner parts. `className` and `style` go to its `<span>`, `dextinityIcon`, which also carries the icon's name as `data-icon`. [Icons](?path=/docs/foundations-icons--docs) shows every icon and explains how a theme replaces one.
+
+## Design tokens
+
+Each icon is a design token of its own, `--dextinity-icon-<name>`, with an SVG image as its value. The package defines all of them; a theme may replace any. The icon draws the image in the current text color, so the color tokens of the text around it color it.

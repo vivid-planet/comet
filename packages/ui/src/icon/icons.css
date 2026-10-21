@@ -1,0 +1,57 @@
+/*
+ * The default icon set. Each icon is a design token, so a theme replaces an icon by defining its token with an
+ * SVG of its own. `:where()` keeps the specificity at zero, so a theme's definition always wins, and every element
+ * that names a theme starts from the defaults, so a nested theme doesn't inherit another theme's icons.
+ */
+@layer dextinity {
+    :where([data-dextinity-theme]) {
+        --dextinity-icon-arrow-left: url("./svg/arrow-left.svg");
+        --dextinity-icon-arrow-right: url("./svg/arrow-right.svg");
+        --dextinity-icon-bell: url("./svg/bell.svg");
+        --dextinity-icon-calendar: url("./svg/calendar.svg");
+        --dextinity-icon-check: url("./svg/check.svg");
+        --dextinity-icon-chevron-down: url("./svg/chevron-down.svg");
+        --dextinity-icon-chevron-left: url("./svg/chevron-left.svg");
+        --dextinity-icon-chevron-right: url("./svg/chevron-right.svg");
+        --dextinity-icon-chevron-up: url("./svg/chevron-up.svg");
+        --dextinity-icon-close: url("./svg/close.svg");
+        --dextinity-icon-copy: url("./svg/copy.svg");
+        --dextinity-icon-danger: url("./svg/danger.svg");
+        --dextinity-icon-dashboard: url("./svg/dashboard.svg");
+        --dextinity-icon-delete: url("./svg/delete.svg");
+        --dextinity-icon-download: url("./svg/download.svg");
+        --dextinity-icon-edit: url("./svg/edit.svg");
+        --dextinity-icon-external-link: url("./svg/external-link.svg");
+        --dextinity-icon-eye: url("./svg/eye.svg");
+        --dextinity-icon-eye-off: url("./svg/eye-off.svg");
+        --dextinity-icon-file: url("./svg/file.svg");
+        --dextinity-icon-filter: url("./svg/filter.svg");
+        --dextinity-icon-folder: url("./svg/folder.svg");
+        --dextinity-icon-globe: url("./svg/globe.svg");
+        --dextinity-icon-heart: url("./svg/heart.svg");
+        --dextinity-icon-help: url("./svg/help.svg");
+        --dextinity-icon-home: url("./svg/home.svg");
+        --dextinity-icon-image: url("./svg/image.svg");
+        --dextinity-icon-info: url("./svg/info.svg");
+        --dextinity-icon-link: url("./svg/link.svg");
+        --dextinity-icon-lock: url("./svg/lock.svg");
+        --dextinity-icon-logout: url("./svg/logout.svg");
+        --dextinity-icon-mail: url("./svg/mail.svg");
+        --dextinity-icon-menu: url("./svg/menu.svg");
+        --dextinity-icon-minus: url("./svg/minus.svg");
+        --dextinity-icon-more: url("./svg/more.svg");
+        --dextinity-icon-orders: url("./svg/orders.svg");
+        --dextinity-icon-pages: url("./svg/pages.svg");
+        --dextinity-icon-plus: url("./svg/plus.svg");
+        --dextinity-icon-products: url("./svg/products.svg");
+        --dextinity-icon-refresh: url("./svg/refresh.svg");
+        --dextinity-icon-search: url("./svg/search.svg");
+        --dextinity-icon-settings: url("./svg/settings.svg");
+        --dextinity-icon-star: url("./svg/star.svg");
+        --dextinity-icon-success: url("./svg/success.svg");
+        --dextinity-icon-upload: url("./svg/upload.svg");
+        --dextinity-icon-user: url("./svg/user.svg");
+        --dextinity-icon-users: url("./svg/users.svg");
+        --dextinity-icon-warning: url("./svg/warning.svg");
+    }
+}

@@ -2,6 +2,8 @@ export { Button, type ButtonOwnerState, type ButtonProps, type ButtonSize, type 
 export { Checkbox, type CheckboxOwnerState, type CheckboxProps, type CheckboxSlotProps } from "./checkbox/Checkbox";
 export { Chip, type ChipOwnerState, type ChipProps, type ChipTone } from "./chip/Chip";
 export { FormField, type FormFieldOwnerState, type FormFieldProps, type FormFieldSlotProps } from "./formField/FormField";
+export { Icon, type IconProps } from "./icon/Icon";
+export { type IconName, iconNames } from "./icon/iconNames";
 export { IconButton, type IconButtonOwnerState, type IconButtonProps, type IconButtonSlotProps } from "./iconButton/IconButton";
 export { Radio, type RadioOwnerState, type RadioProps, type RadioSlotProps } from "./radioGroup/Radio";
 export {

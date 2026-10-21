@@ -46,6 +46,7 @@ The theme names its fonts, but doesn't load them: the Dextinity theme uses [Figt
 - **CSS Modules with native CSS nesting.** Styles are plain CSS, compiled by Vite. The build lowers nesting for older browsers.
 - **CSS custom properties as the theme.** There is no JavaScript theme object. A theme is a stylesheet that defines the [design tokens](src/docs/DesignTokens.mdx), applied through the `data-dextinity-theme` attribute. Apply it to `<html>`, so popups rendered outside the application root follow it too.
 - **Everything in `@layer dextinity`.** An application's own, unlayered CSS always wins, whatever its specificity.
+- **Icons as tokens.** Each icon of the icon set is a design token, `--dextinity-icon-<name>`, whose value is an SVG image that `Icon` draws as a mask in the current text color. The package defines every icon in [`icons.css`](src/icon/icons.css), from the SVG files in `src/icon/svg/`; a theme replaces an icon by defining its token. Components use `Icon` for the icons they draw themselves, so a theme replaces those too.
 - **Stable class names.** Each component emits fixed class names, so applications can style it with plain CSS. See [Styling contract](#styling-contract).
 
 ## Folder and file names
