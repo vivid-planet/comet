@@ -11,6 +11,26 @@ import * as ActionsStories from "./__stories__/Actions.stories";
 
 <Canvas of={ActionsStories.PageHeader} />
 
+```tsx
+<header className={styles.pageHeader}>
+    <div className={styles.title}>
+        <Typography variant="heading2" render={<h1 />}>
+            Summer collection
+        </Typography>
+        <Badge tone="warning">Draft</Badge>
+    </div>
+    <div className={styles.actions}>
+        <Button onClick={publish}>Publish</Button>
+        <Button variant="secondary" onClick={openPreview}>
+            Preview
+        </Button>
+        <IconButton label="Page settings" onClick={openSettings}>
+            <SettingsIcon />
+        </IconButton>
+    </div>
+</header>
+```
+
 ## Emphasis
 
 - **One primary button per view** — a page, a dialog or a form — for the action most users take next: "Publish", "Save changes", "Place order".

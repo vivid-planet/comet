@@ -3,7 +3,7 @@
 import type { Field } from "@base-ui/react/field";
 import { Input } from "@base-ui/react/input";
 import { clsx } from "clsx";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { FormField } from "../formField/FormField";
 import type { ElementSlotProps } from "../slots/SlotElement";
@@ -74,7 +74,12 @@ export interface TextFieldProps extends Omit<Input.Props, "className" | "style" 
     name?: string;
     /** Added to the component's own classes on the outer element, which holds all parts. */
     className?: string;
-    /** Props for the inner parts: `input`, `label`, `requiredIndicator`, `description` and `error`. */
+    /** Inline styles for the outer element, which holds all parts. */
+    style?: CSSProperties;
+    /**
+     * Props for the inner parts: `input`, `label`, `requiredIndicator`, `description` and `error`. As a
+     * function, it receives the owner state: `disabled` and `required`.
+     */
     slotProps?: TextFieldSlotProps;
 }
 
@@ -106,6 +111,7 @@ export function TextField({
     disabled,
     name,
     className,
+    style,
     slotProps,
     ...inputProps
 }: TextFieldProps) {
@@ -121,6 +127,7 @@ export function TextField({
             disabled={disabled}
             name={name}
             className={clsx(styles.root, className)}
+            style={style}
             slotProps={formFieldSlotProps}
         >
             <Input

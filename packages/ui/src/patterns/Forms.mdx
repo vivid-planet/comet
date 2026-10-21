@@ -103,3 +103,25 @@ The components hold no form state. With a form library, map its state to the pro
 Settings that apply as soon as they change, such as notification preferences, use `Switch` and need no submit button. Save the change in `onCheckedChange`, and tell the user if saving fails.
 
 <Canvas of={FormsStories.ImmediateSettings} />
+
+```tsx
+function OrderNotificationsSwitch({ initialValue }: { initialValue: boolean }) {
+    const [isEnabled, setIsEnabled] = useState(initialValue);
+
+    async function handleCheckedChange(checked: boolean) {
+        setIsEnabled(checked);
+        try {
+            await saveNotificationSetting({ orderPlaced: checked });
+        } catch {
+            setIsEnabled(!checked);
+            showErrorMessage("The setting couldn't be saved. Try again.");
+        }
+    }
+
+    return (
+        <Switch checked={isEnabled} onCheckedChange={handleCheckedChange}>
+            Email me when an order is placed
+        </Switch>
+    );
+}
+```

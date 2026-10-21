@@ -2,8 +2,9 @@
 
 import { Field } from "@base-ui/react/field";
 import { clsx } from "clsx";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
+import { hasContent } from "../slots/hasContent";
 import { type ElementSlotProps, SlotElement } from "../slots/SlotElement";
 import { resolveSlotProps, type SlotProps } from "../slots/slotProps";
 import styles from "./FormField.module.css";
@@ -55,12 +56,18 @@ export interface FormFieldProps extends Omit<Field.Root.Props, "className" | "st
     disabled?: boolean;
     /** Added to the component's own classes on the outer element, which holds all parts. */
     className?: string;
-    /** Props for the inner parts: `label`, `requiredIndicator`, `description` and `error`. */
+    /** Inline styles for the outer element, which holds all parts. */
+    style?: CSSProperties;
+    /**
+     * Props for the inner parts: `label`, `requiredIndicator`, `description` and `error`. As a function, it
+     * receives the owner state: `disabled` and `required`.
+     */
     slotProps?: FormFieldSlotProps;
     /**
      * The control: a Base UI form control, such as `Input` from `@base-ui/react/input`, or `Field.Control`
      * from `@base-ui/react/field` with `render` for a native element like `<select>`. A plain HTML element
-     * isn't connected to the label, description and error.
+     * isn't connected to the label, description and error. The control must come from the same copy of
+     * `@base-ui/react` as `@dextinity/ui`'s: install the version its peer dependency names.
      */
     children: ReactNode;
 }
@@ -84,7 +91,19 @@ export interface FormFieldProps extends Omit<Field.Root.Props, "className" | "st
  * @summary The label, description and error message around a form control.
  * @experimental
  */
-export function FormField({ label, description, error, required, disabled, invalid, className, slotProps, children, ...rootProps }: FormFieldProps) {
+export function FormField({
+    label,
+    description,
+    error,
+    required,
+    disabled,
+    invalid,
+    className,
+    style,
+    slotProps,
+    children,
+    ...rootProps
+}: FormFieldProps) {
     const ownerState: FormFieldOwnerState = { disabled: Boolean(disabled), required: Boolean(required) };
     const hasError = hasContent(error);
 
@@ -95,6 +114,7 @@ export function FormField({ label, description, error, required, disabled, inval
             invalid={hasError || invalid}
             data-required={ownerState.required ? "" : undefined}
             className={clsx(styles.root, className)}
+            style={style}
         >
             <Field.Label {...resolveSlotProps({ ownProps: { className: styles.label }, slotProps: slotProps?.label, ownerState })}>
                 {label}
@@ -126,9 +146,4 @@ export function FormField({ label, description, error, required, disabled, inval
             />
         </Field.Root>
     );
-}
-
-/** Form libraries pass `false` or `""` for "no error", as in `error={touched && message}`. */
-function hasContent(node: ReactNode) {
-    return node != null && typeof node !== "boolean" && node !== "";
 }

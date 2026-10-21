@@ -39,6 +39,25 @@ describe("Switch", () => {
         expect(container.querySelector(".dextinitySwitch__label")).not.toBeInTheDocument();
     });
 
+    it("renders no label part for content that renders nothing", () => {
+        const { container } = render(<Switch aria-label="Publish product">{false}</Switch>);
+
+        expect(container.querySelector(".dextinitySwitch__label")).not.toBeInTheDocument();
+    });
+
+    it("renders the root as a span without a label, so an external label names the control", async () => {
+        render(
+            <>
+                <label htmlFor="newsletter">Newsletter</label>
+                <Switch id="newsletter" />
+            </>,
+        );
+
+        const control = await screen.findByRole("switch", { name: "Newsletter" });
+        expect(control.parentElement?.tagName).toBe("SPAN");
+        expect(control.parentElement).toHaveClass("dextinitySwitch");
+    });
+
     it("reflects the disabled owner state on the label root", () => {
         render(<Switch disabled>Email notifications</Switch>);
 

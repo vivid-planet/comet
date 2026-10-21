@@ -4,8 +4,9 @@ import { Field as BaseField } from "@base-ui/react/field";
 import { Fieldset as BaseFieldset } from "@base-ui/react/fieldset";
 import { RadioGroup as BaseRadioGroup } from "@base-ui/react/radio-group";
 import { clsx } from "clsx";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
+import { hasContent } from "../slots/hasContent";
 import { type ElementSlotProps, SlotElement } from "../slots/SlotElement";
 import { resolveSlotProps, type SlotProps } from "../slots/slotProps";
 import styles from "./RadioGroup.module.css";
@@ -42,7 +43,7 @@ export interface RadioGroupSlotProps {
 /** @experimental */
 export interface RadioGroupProps<Value = unknown> extends Omit<
     BaseRadioGroup.Props<Value>,
-    "className" | "render" | "children" | "disabled" | "required"
+    "className" | "style" | "render" | "children" | "disabled" | "required"
 > {
     /** The group's visible name, for example "Shipping method". It also names the group for assistive technology. */
     label: ReactNode;
@@ -73,7 +74,13 @@ export interface RadioGroupProps<Value = unknown> extends Omit<
     required?: boolean;
     /** Added to the component's own classes. */
     className?: string;
-    /** Props for the inner parts: `label`, `requiredIndicator`, `options` (the element around the options), `description` and `error`. */
+    /** Inline styles for the outer element, which holds all parts. */
+    style?: CSSProperties;
+    /**
+     * Props for the inner parts: `label`, `requiredIndicator`, `options` (the element around the options),
+     * `description` and `error`. As a function, it receives the owner state: `orientation`, `disabled` and
+     * `required`.
+     */
     slotProps?: RadioGroupSlotProps;
 }
 
@@ -100,6 +107,7 @@ export function RadioGroup<Value>({
     disabled,
     required,
     className,
+    style,
     slotProps,
     children,
     ...radioGroupProps
@@ -120,6 +128,7 @@ export function RadioGroup<Value>({
                                 required={required}
                                 data-orientation={orientation}
                                 className={clsx(styles.root, className)}
+                                style={style}
                             />
                         }
                     />
@@ -161,9 +170,4 @@ export function RadioGroup<Value>({
             </BaseField.Root>
         </RadioGroupDisabledContext>
     );
-}
-
-/** Form libraries pass `false` or `""` for "no message", as in `error={touched && message}`. */
-function hasContent(node: ReactNode) {
-    return node != null && typeof node !== "boolean" && node !== "";
 }

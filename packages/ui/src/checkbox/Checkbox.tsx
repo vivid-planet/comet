@@ -4,6 +4,7 @@ import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox";
 import { clsx } from "clsx";
 import type { CSSProperties, ReactNode } from "react";
 
+import { hasContent } from "../slots/hasContent";
 import { type ElementSlotProps, SlotElement } from "../slots/SlotElement";
 import { resolveSlotProps, type SlotProps } from "../slots/slotProps";
 import styles from "./Checkbox.module.css";
@@ -31,16 +32,19 @@ export interface CheckboxSlotProps {
 export interface CheckboxProps extends Omit<BaseCheckbox.Root.Props, "className" | "style" | "render" | "nativeButton" | "children" | "disabled"> {
     /**
      * The visible label next to the box. Clicking it toggles the checkbox. Without it, name the checkbox with
-     * `aria-label` or `aria-labelledby`.
+     * `aria-label`, with `aria-labelledby`, or with a `<label>` whose `htmlFor` matches its `id`.
      */
     children?: ReactNode;
     /** Prevents interaction and dims the checkbox together with its label. */
     disabled?: boolean;
-    /** Added to the component's own classes on the outer `<label>` element, which holds the box and the label. */
+    /** Added to the component's own classes on the outer element, which holds the box and the label. */
     className?: string;
-    /** Inline styles for the outer `<label>` element, which holds the box and the label. */
+    /** Inline styles for the outer element, which holds the box and the label. */
     style?: CSSProperties;
-    /** Props for the inner parts: `control` (the box), `indicator` (the mark inside it) and `label` (the element around `children`). */
+    /**
+     * Props for the inner parts: `control` (the box), `indicator` (the mark inside it) and `label` (the element around `children`). As a function, it receives the owner
+     * state: `disabled`.
+     */
     slotProps?: CheckboxSlotProps;
 }
 
@@ -62,9 +66,12 @@ export interface CheckboxProps extends Omit<BaseCheckbox.Root.Props, "className"
  */
 export function Checkbox({ disabled, className, style, slotProps, children, ...controlProps }: CheckboxProps) {
     const ownerState: CheckboxOwnerState = { disabled: Boolean(disabled) };
+    const hasLabel = hasContent(children);
+    // Without a label of its own, a <label> wrapper would hide an external <label htmlFor> from Base UI's labelling.
+    const RootElement = hasLabel ? "label" : "span";
 
     return (
-        <label className={clsx(styles.root, className)} style={style} data-disabled={ownerState.disabled ? "" : undefined}>
+        <RootElement className={clsx(styles.root, className)} style={style} data-disabled={ownerState.disabled ? "" : undefined}>
             <BaseCheckbox.Root
                 {...resolveSlotProps({
                     ownProps: { ...controlProps, disabled, className: styles.control },
@@ -89,11 +96,11 @@ export function Checkbox({ disabled, className, style, slotProps, children, ...c
                     </svg>
                 </BaseCheckbox.Indicator>
             </BaseCheckbox.Root>
-            {children != null && (
+            {hasLabel && (
                 <SlotElement tagName="span" {...resolveSlotProps({ ownProps: { className: styles.label }, slotProps: slotProps?.label, ownerState })}>
                     {children}
                 </SlotElement>
             )}
-        </label>
+        </RootElement>
     );
 }

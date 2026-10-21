@@ -10,6 +10,10 @@ The package is experimental: its components may change or be removed without a d
 
 **Example**
 
+```sh
+pnpm add @dextinity/ui @base-ui/react
+```
+
 ```tsx
 // Once, at the root of the application
 import "@dextinity/ui/css";
@@ -23,6 +27,8 @@ import "@dextinity/ui/themes/dextinity.css";
 ```tsx
 import { Button, TextField } from "@dextinity/ui";
 
-<TextField label="Email" type="email" required />
-<Button onClick={save}>Save changes</Button>
+<form onSubmit={handleSubmit}>
+    <TextField label="Email" type="email" name="email" required />
+    <Button type="submit">Subscribe</Button>
+</form>;
 ```

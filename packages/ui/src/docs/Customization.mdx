@@ -18,7 +18,7 @@ Prefer the first option that does what you need. The further down the list, the 
 
 ## Styling contract
 
-Every component emits fixed class names and attributes. They are public API: they only change in a major version.
+Every component emits fixed class names and attributes. They are public API, like props. While the package is experimental, they may change in a minor release, and the changelog names every change.
 
 | What                         | Name                           | Example                                         |
 | ---------------------------- | ------------------------------ | ----------------------------------------------- |
@@ -57,7 +57,7 @@ Prefer changing a design token over overriding a component's colors: a token kee
 
 - `className` is added to the part's classes, and `style` is merged.
 - Event handlers run before the part's own.
-- Any other prop replaces the part's own.
+- Any other prop replaces the part's own, including `ref`: a slot's `ref` replaces the `ref` the component passes to that part.
 
 ```tsx
 <Button startIcon={<AddIcon />} slotProps={{ startIcon: { className: styles.icon } }}>

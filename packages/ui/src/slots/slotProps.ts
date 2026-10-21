@@ -11,8 +11,9 @@ type SlotPropsObject<PartProps> = Omit<PartProps, "className" | "style"> & {
  * of the component's owner state that returns them.
  *
  * The props are merged with the part's own: `className` is added to the part's classes, `style` is merged,
- * event handlers run before the part's own, and any other prop replaces the part's own. `render` replaces
- * the part's element, for example `{ render: <strong /> }`.
+ * event handlers run before the part's own, and any other prop replaces the part's own. That includes `ref`:
+ * a slot's `ref` replaces a `ref` the component passes to the same part. `render` replaces the part's
+ * element, for example `{ render: <strong /> }`.
  *
  * @experimental
  */

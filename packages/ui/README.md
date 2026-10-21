@@ -4,9 +4,15 @@ Themeable React UI primitives for Dextinity applications — the admin, the site
 
 The package is **experimental**: any export may change or be removed without a deprecation notice, and every export carries the `@experimental` TSDoc tag.
 
-Its documentation is its Storybook: the components, the design tokens, the theming guide and the usage patterns. Start it with `pnpm --filter @dextinity/ui run storybook` and open http://localhost:26648. The Storybook includes an [MCP server](#storybook-mcp-server), so coding agents can read the same documentation.
+Its documentation is its Storybook: the components, the design tokens, the theming guide and the usage patterns. In a clone of the dextinity repository, run `pnpm install` and `pnpm --filter @dextinity/ui run storybook`, then open http://localhost:26648. The Storybook includes an [MCP server](#storybook-mcp-server), so coding agents can read the same documentation.
 
 ## Usage
+
+```sh
+pnpm add @dextinity/ui @base-ui/react
+```
+
+`@base-ui/react` is a peer dependency, so an application's own Base UI controls, for example inside a `FormField`, share the components' copy.
 
 ```tsx
 // Once, at the root of the application
@@ -72,16 +78,16 @@ Each component exports:
 - Enum props have a default; the default is documented with `@defaultValue`.
 - Boolean props are optional and have no default; they are off when absent. A boolean that is the controlled value, like `checked`, follows Base UI.
 - Props that take text, like `label`, are `ReactNode` and never have a default text: the package contains no user-facing text.
-- `children` is typed with `PropsWithChildren`, unless the component is useless without it — a heading's text, an icon button's icon. Then it's a required, documented prop.
+- `children` is typed with `PropsWithChildren`, unless the component can't work without it — a heading's text, an icon button's icon, a form field's control. Then it's a required, documented prop. A list of items, such as a radio group's options, stays optional: it may be empty while the items load.
 - When a component can't get an accessible name from its content, it requires one through a prop, like `IconButton`'s `label`.
 
 ### Override API
 
 The [styling contract](#styling-contract) is the main way to adjust a component. These props do what it can't:
 
-- **`className`** — added to the component's own classes on its outermost element, never replacing them.
-- **`slotProps`** — props for the component's inner parts, as an object or as a function of the owner state. They are merged with the part's own props by `resolveSlotProps`: classes are added, `style` is merged, event handlers run before the part's own, other props replace the part's own. `render` in a slot's props replaces the part's element, for example `{ label: { render: <strong /> } }`. Name every slot in the `slotProps` TSDoc: generated documentation doesn't expand the type.
-- **Owner state** — the resolved configuration that changes how the component looks or behaves: `variant`, `size`, `disabled`, … It doesn't hold interaction state, such as hover or focus, which CSS handles. Its keys are single lowercase words, because they become `data-*` attributes.
+- **`className`** and **`style`** — applied to the component's outermost element. `className` is added to the component's own classes, never replacing them.
+- **`slotProps`** — props for the component's inner parts, as an object or as a function of the owner state. They are merged with the part's own props by `resolveSlotProps`: classes are added, `style` is merged, event handlers run before the part's own, other props replace the part's own, including `ref`. `render` in a slot's props replaces the part's element, for example `{ label: { render: <strong /> } }`. Name every slot and every owner state field in the `slotProps` TSDoc: generated documentation doesn't expand the types.
+- **Owner state** — the resolved configuration that changes how the component looks or behaves: `variant`, `size`, `disabled`, … It doesn't hold interaction state, such as hover or focus, which CSS handles. Its keys are single lowercase words, because they become `data-*` attributes. `disabled` reflects the component's own `disabled` prop; when an enclosing Base UI `Fieldset` or `Field.Root` disables a component, Base UI's `data-disabled` on its parts shows it instead.
 
 There is no `slots` prop to swap a part's component, and no theme-level default props: wrap a component in the application to change its defaults.
 
@@ -142,8 +148,8 @@ Rendering alone isn't worth a test: every story already renders in a browser tes
 
 While the Storybook runs, it serves an [MCP server](https://storybook.js.org/docs/ai/mcp/overview) at http://localhost:26648/mcp. It lets coding agents list the components, read their documentation and stories, read the documentation pages (design tokens, theming, patterns), and run the story tests. The documentation pages are plain Markdown, so agents read the same text as people.
 
-Without a running Storybook, `pnpm --filter @dextinity/ui exec storybook tools docs list` and `… docs show --id <id>` print the same documentation.
+Without a running Storybook, `pnpm --filter @dextinity/ui exec storybook tools docs list` and `… docs show --id <id>` print the same documentation. Both need a clone of the dextinity repository: the published package contains only the built components.
 
 ## Build
 
-`vite build` compiles the components to ES modules in `lib/`, one module per source file, keeping `"use client"`. All component styles go into `lib/style.css` (`@dextinity/ui/css`). The themes listed in `vite.config.mts` are copied to `lib/themes/`; the Acme theme is a Storybook-only example and isn't published.
+`vite build` compiles the components to ES modules in `lib/`, one module per source file, keeping `"use client"`. All component styles go into `lib/style.css` (`@dextinity/ui/css`). The themes listed in `vite.config.mts` are copied to `lib/themes/`; the Acme theme is a Storybook-only example and isn't published. The type declarations target `moduleResolution: "bundler"`, as used by Vite and Next.js.

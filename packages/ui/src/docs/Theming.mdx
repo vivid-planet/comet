@@ -34,6 +34,8 @@ In a Next.js application, set them in the root layout:
 import "@dextinity/ui/css";
 import "@dextinity/ui/themes/dextinity.css";
 
+import type { PropsWithChildren } from "react";
+
 export default function RootLayout({ children }: PropsWithChildren) {
     return (
         <html lang="en" data-dextinity-theme="dextinity" data-dextinity-color-scheme="light">
@@ -99,6 +101,8 @@ To change a few tokens, redefine them for the theme in the application's own sty
     --dextinity-color-primary: #8fb0ff;
 }
 ```
+
+Because these rules are outside any layer, they win over the theme in both color schemes and over its reduced-motion rule. So give every `--dextinity-color-*` token you change a value for the dark color scheme too, as above, and set motion durations inside `@media (prefers-reduced-motion: no-preference) { … }`.
 
 Redefine a token on the element that names the theme, as above. A token that refers to another token, like `--dextinity-button-secondary-background: var(--dextinity-color-surface)`, gets its value there. If you change `--dextinity-color-surface` on an element further inside, the button doesn't follow.
 

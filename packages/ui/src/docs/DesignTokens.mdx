@@ -9,10 +9,11 @@ Design tokens are the CSS custom properties a theme defines and the components r
 The values live in the theme stylesheets in `packages/ui/src/themes/`. Read [Theming](?path=/docs/foundations-theming--docs) for how a theme is applied and how to create one.
 
 - A token's value is a plain CSS value. It may reference another token, for example `var(--dextinity-color-surface)`; it updates with the color scheme.
+- Colors are opaque hex colors, and a gradient has two of them, so their contrast can be checked.
 - Every theme defines all tokens for the light color scheme, and redefines every `--dextinity-color-*` token for the dark color scheme. It may redefine any other token there too.
 - "Contrast" names the minimum [WCAG 2.2](https://www.w3.org/TR/WCAG22/#contrast-minimum) contrast ratio between two tokens, checked in every theme and color scheme.
 
-To add a token, add a row here, define it in every theme, and use it in a component's stylesheet in the same change.
+To add a token, add a row here, define it in every theme, and use it in a component's stylesheet or a documented pattern in the same change.
 
 ## Color
 
@@ -23,12 +24,12 @@ To add a token, add a row here, define it in every theme, and use it in a compon
 | `--dextinity-color-foreground-muted`   | Secondary text, such as a field's description or a placeholder. Contrast 4.5:1 on background and surface.                             |
 | `--dextinity-color-surface`            | Background of controls: text inputs, checkboxes, radios, the switch thumb.                                                            |
 | `--dextinity-color-surface-hover`      | Background of a hovered surface.                                                                                                      |
-| `--dextinity-color-border`             | Borders that only separate content.                                                                                                   |
+| `--dextinity-color-border`             | Borders that only separate content, in an application's layout. Components don't set it.                                              |
 | `--dextinity-color-border-strong`      | Borders that identify a control: text inputs, checkboxes, radios, the unchecked switch track. Contrast 3:1 on background and surface. |
-| `--dextinity-color-border-hover`       | Border of a hovered control.                                                                                                          |
+| `--dextinity-color-border-hover`       | Border of a hovered control. Contrast 3:1 on background and surface.                                                                  |
 | `--dextinity-color-primary`            | The brand's accent for selected and active states, such as a checked checkbox. Contrast 3:1 on background and surface.                |
-| `--dextinity-color-primary-hover`      | Primary on a hovered element.                                                                                                         |
-| `--dextinity-color-primary-foreground` | Text and icons on primary. Contrast 4.5:1 on primary.                                                                                 |
+| `--dextinity-color-primary-hover`      | Primary on a hovered element, such as a hovered checked checkbox. Contrast 3:1 on background and surface.                             |
+| `--dextinity-color-primary-foreground` | Text and icons on primary. Contrast 4.5:1 on primary, and 3:1 on primary-hover, for the check mark of a hovered checkbox.             |
 | `--dextinity-color-primary-subtle`     | Tinted background of primary elements, such as a primary badge. Primary text on it has contrast 4.5:1.                                |
 | `--dextinity-color-neutral-subtle`     | Background of neutral elements, such as a neutral badge.                                                                              |
 | `--dextinity-color-success`            | Text and icons that report success. Contrast 4.5:1 on background and success-subtle.                                                  |
@@ -41,7 +42,7 @@ To add a token, add a row here, define it in every theme, and use it in a compon
 
 ## Typography
 
-Each text style has a font size, line height, font weight and letter spacing. Display and heading styles use the heading font family, all others the body font family. Font sizes are in `rem`, so text follows the user's browser font size.
+Each text style has a font size, line height, font weight and letter spacing. Display and heading styles use the heading font family, all others the body font family. Font sizes are in `rem`, so text follows the user's browser font size. Line heights are unitless numbers, such as `1.45`: components multiply them with the font size.
 
 The theme names the font families, but doesn't load the fonts: the application loads them, as [Theming](?path=/docs/foundations-theming--docs) describes.
 
@@ -93,7 +94,7 @@ The theme names the font families, but doesn't load the fonts: the application l
 
 ## Space
 
-Gaps and padding inside components. Change the scale to make the interface denser or roomier.
+Gaps and padding inside components, and `--dextinity-space-xl` between components in an application's layout. Change the scale to make the interface denser or roomier.
 
 | Token                  | Usage                                                                                                |
 | ---------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -101,16 +102,16 @@ Gaps and padding inside components. Change the scale to make the interface dense
 | `--dextinity-space-sm` | Between an icon and its text, and between the stacked options of a group.                            |
 | `--dextinity-space-md` | Between a checkbox, radio or switch and its label.                                                   |
 | `--dextinity-space-lg` | Inside a text input, and between the options of a group in a row.                                    |
-| `--dextinity-space-xl` | Between fields in a form.                                                                            |
+| `--dextinity-space-xl` | Between fields in a form, in an application's layout. Components don't set it.                       |
 
 ## Shape
 
-| Token                       | Usage                                       |
-| --------------------------- | ------------------------------------------- |
-| `--dextinity-radius-small`  | Small elements: checkboxes and badges.      |
-| `--dextinity-radius-medium` | Text inputs.                                |
-| `--dextinity-radius-large`  | Large surfaces, such as a group of fields.  |
-| `--dextinity-radius-full`   | Fully rounded elements: radios, the switch. |
+| Token                       | Usage                                                                               |
+| --------------------------- | ----------------------------------------------------------------------------------- |
+| `--dextinity-radius-small`  | Small elements: checkboxes and badges.                                              |
+| `--dextinity-radius-medium` | Text inputs.                                                                        |
+| `--dextinity-radius-large`  | Large surfaces in an application's layout, such as a card. Components don't set it. |
+| `--dextinity-radius-full`   | Fully rounded elements: radios, the switch.                                         |
 
 ## Controls
 
@@ -142,28 +143,28 @@ Shared metrics of interactive controls. A button's `size` picks the small, mediu
 
 Themes set the durations to `0s` for users who prefer reduced motion.
 
-| Token                                | Usage                                                      |
-| ------------------------------------ | ---------------------------------------------------------- |
-| `--dextinity-motion-duration-short`  | Small changes, such as a checkbox's check mark.            |
-| `--dextinity-motion-duration-medium` | Color and border changes on hover, and the switch's thumb. |
-| `--dextinity-motion-easing`          | Easing of all transitions.                                 |
+| Token                                | Usage                                                                                           |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| `--dextinity-motion-duration-short`  | Checkbox and radio: their check mark or dot, border and background.                             |
+| `--dextinity-motion-duration-medium` | Buttons, text inputs and the switch: color and border changes on hover, and the switch's thumb. |
+| `--dextinity-motion-easing`          | Easing of all transitions.                                                                      |
 
 ## Button
 
 Button tokens let a theme give buttons their own character, for example a gradient. `IconButton` uses them too.
 
-| Token                                           | Usage                                                                                                |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `--dextinity-button-radius`                     | Corner radius of buttons.                                                                            |
-| `--dextinity-button-font-weight`                | Font weight of a button's text.                                                                      |
-| `--dextinity-button-primary-background`         | Background of a primary button: a color or a gradient.                                               |
-| `--dextinity-button-primary-background-hover`   | Background of a hovered primary button.                                                              |
-| `--dextinity-button-primary-foreground`         | Text and icons of a primary button. Contrast 4.5:1 on its background, measured midway in a gradient. |
-| `--dextinity-button-primary-shadow`             | Shadow of a primary button, or `none`.                                                               |
-| `--dextinity-button-secondary-background`       | Background of a secondary button.                                                                    |
-| `--dextinity-button-secondary-background-hover` | Background of a hovered secondary button.                                                            |
-| `--dextinity-button-secondary-foreground`       | Text and icons of a secondary button. Contrast 4.5:1 on its background.                              |
-| `--dextinity-button-secondary-foreground-hover` | Text and icons of a hovered secondary button. Contrast 4.5:1 on its hovered background.              |
-| `--dextinity-button-secondary-border`           | Border of a secondary button.                                                                        |
-| `--dextinity-button-ghost-foreground`           | Text and icons of a ghost button. Contrast 4.5:1 on background and on its hovered background.        |
-| `--dextinity-button-ghost-background-hover`     | Background of a hovered ghost button.                                                                |
+| Token                                           | Usage                                                                                                                              |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-button-radius`                     | Corner radius of buttons.                                                                                                          |
+| `--dextinity-button-font-weight`                | Font weight of a button's text.                                                                                                    |
+| `--dextinity-button-primary-background`         | Background of a primary button: a color or a gradient.                                                                             |
+| `--dextinity-button-primary-background-hover`   | Background of a hovered primary button.                                                                                            |
+| `--dextinity-button-primary-foreground`         | Text and icons of a primary button. Contrast 4.5:1 on its background and on its hovered background, measured midway in a gradient. |
+| `--dextinity-button-primary-shadow`             | Shadow of a primary button, or `none`.                                                                                             |
+| `--dextinity-button-secondary-background`       | Background of a secondary button.                                                                                                  |
+| `--dextinity-button-secondary-background-hover` | Background of a hovered secondary button.                                                                                          |
+| `--dextinity-button-secondary-foreground`       | Text and icons of a secondary button. Contrast 4.5:1 on its background.                                                            |
+| `--dextinity-button-secondary-foreground-hover` | Text and icons of a hovered secondary button. Contrast 4.5:1 on its hovered background.                                            |
+| `--dextinity-button-secondary-border`           | Border of a secondary button.                                                                                                      |
+| `--dextinity-button-ghost-foreground`           | Text and icons of a ghost button. Contrast 4.5:1 on background and on its hovered background.                                      |
+| `--dextinity-button-ghost-background-hover`     | Background of a hovered ghost button.                                                                                              |

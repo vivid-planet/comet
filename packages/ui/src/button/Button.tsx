@@ -2,8 +2,9 @@
 
 import { Button as BaseButton } from "@base-ui/react/button";
 import { clsx } from "clsx";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
+import { hasContent } from "../slots/hasContent";
 import { type ElementSlotProps, SlotElement } from "../slots/SlotElement";
 import { resolveSlotProps, type SlotProps } from "../slots/slotProps";
 import styles from "./Button.module.css";
@@ -34,7 +35,7 @@ export interface ButtonSlotProps {
 }
 
 /** @experimental */
-export interface ButtonProps extends Omit<BaseButton.Props, "className" | "render" | "nativeButton"> {
+export interface ButtonProps extends Omit<BaseButton.Props, "className" | "style" | "render" | "nativeButton"> {
     /**
      * The button's emphasis. Use `primary` for the single main action of a page or dialog, `secondary` for
      * the actions next to it, and `ghost` for less important actions, such as in a toolbar.
@@ -56,7 +57,12 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className" | "rende
     disabled?: boolean;
     /** Added to the component's own classes. */
     className?: string;
-    /** Props for the inner parts: `startIcon` and `endIcon`. */
+    /** Inline styles for the button. */
+    style?: CSSProperties;
+    /**
+     * Props for the inner parts: `startIcon` and `endIcon`. As a function, it receives the owner state:
+     * `variant`, `size` and `disabled`.
+     */
     slotProps?: ButtonSlotProps;
 }
 
@@ -65,6 +71,10 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className" | "rende
  *
  * Label a button with a verb that says what happens, for example "Save changes". Use one `primary` button
  * per view for its main action. A button only triggers actions: navigate with a link instead.
+ *
+ * The props the component doesn't handle, such as `type`, `onClick`, `form` and `aria-*`, go to the
+ * `<button>`. Unlike a plain `<button>`, it has `type="button"` by default: set `type="submit"` on the button
+ * that submits a form.
  *
  * @summary Triggers an action, in three variants and three sizes, optionally with icons.
  * @experimental
@@ -84,7 +94,7 @@ export function Button({
 
     return (
         <BaseButton {...restProps} disabled={disabled} data-variant={variant} data-size={size} className={clsx(styles.root, className)}>
-            {startIcon != null && (
+            {hasContent(startIcon) && (
                 <SlotElement
                     tagName="span"
                     {...resolveSlotProps({
@@ -97,7 +107,7 @@ export function Button({
                 </SlotElement>
             )}
             {children}
-            {endIcon != null && (
+            {hasContent(endIcon) && (
                 <SlotElement
                     tagName="span"
                     {...resolveSlotProps({ ownProps: { className: styles.endIcon, "aria-hidden": true }, slotProps: slotProps?.endIcon, ownerState })}

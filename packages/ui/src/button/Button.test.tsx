@@ -49,6 +49,17 @@ describe("Button", () => {
         expect(screen.getByRole("button")).toHaveAccessibleName("Next");
     });
 
+    it("renders no icon slot for content that renders nothing", () => {
+        const { container } = render(
+            <Button startIcon={false} endIcon="">
+                Save
+            </Button>,
+        );
+
+        expect(container.querySelector(".dextinityButton__startIcon")).not.toBeInTheDocument();
+        expect(container.querySelector(".dextinityButton__endIcon")).not.toBeInTheDocument();
+    });
+
     it("merges slot props, resolving a function with the owner state", () => {
         render(
             <Button

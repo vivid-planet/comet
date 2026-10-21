@@ -5,6 +5,7 @@ import { Radio as BaseRadio } from "@base-ui/react/radio";
 import { clsx } from "clsx";
 import { type CSSProperties, type ReactNode, use } from "react";
 
+import { hasContent } from "../slots/hasContent";
 import { type ElementSlotProps, SlotElement } from "../slots/SlotElement";
 import { resolveSlotProps, type SlotProps } from "../slots/slotProps";
 import styles from "./Radio.module.css";
@@ -16,7 +17,7 @@ import { RadioGroupDisabledContext } from "./radioGroupContext";
  * @experimental
  */
 export type RadioOwnerState = {
-    /** Whether the option is disabled, by its own `disabled` or by the group's. */
+    /** Whether the option is disabled by its own `disabled` prop or by the RadioGroup's `disabled` prop. */
     disabled: boolean;
 };
 
@@ -50,7 +51,10 @@ export interface RadioProps<Value = unknown> extends Omit<
     className?: string;
     /** Inline styles for the outer `<label>` element, which holds the circle and the label. */
     style?: CSSProperties;
-    /** Props for the inner parts: `control` (the circle), `indicator` (the dot) and `label` (the element around `children`). */
+    /**
+     * Props for the inner parts: `control` (the circle), `indicator` (the dot) and `label` (the element around
+     * `children`). As a function, it receives the owner state: `disabled`.
+     */
     slotProps?: RadioSlotProps;
 }
 
@@ -81,7 +85,7 @@ export function Radio<Value>({ value, disabled, className, style, slotProps, chi
                     {...resolveSlotProps({ ownProps: { className: styles.indicator }, slotProps: slotProps?.indicator, ownerState })}
                 />
             </BaseRadio.Root>
-            {children != null && (
+            {hasContent(children) && (
                 <SlotElement tagName="span" {...resolveSlotProps({ ownProps: { className: styles.label }, slotProps: slotProps?.label, ownerState })}>
                     {children}
                 </SlotElement>

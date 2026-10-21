@@ -11,6 +11,7 @@ export {
     type RadioGroupProps,
     type RadioGroupSlotProps,
 } from "./radioGroup/RadioGroup";
+export type { ElementSlotProps } from "./slots/SlotElement";
 export type { SlotProps } from "./slots/slotProps";
 export { Switch, type SwitchOwnerState, type SwitchProps, type SwitchSlotProps } from "./switch/Switch";
 export { TextField, type TextFieldOwnerState, type TextFieldProps, type TextFieldSlotProps, type TextFieldType } from "./textField/TextField";

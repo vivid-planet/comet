@@ -15,7 +15,7 @@
         cursor: pointer;
 
         @media (hover: hover) {
-            &:hover:not([data-disabled]) .control:not([data-readonly]) {
+            &:hover:not([data-disabled]) .control:not([data-readonly], [data-disabled]) {
                 --_background: var(--dextinity-color-border-hover);
 
                 &[data-checked] {
@@ -25,6 +25,12 @@
         }
 
         &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+
+        /* Disabled by an enclosing Base UI component, such as a disabled Field.Root or CheckboxGroup. */
+        &:has(> .control[data-disabled]) {
             cursor: not-allowed;
             opacity: var(--dextinity-opacity-disabled);
         }

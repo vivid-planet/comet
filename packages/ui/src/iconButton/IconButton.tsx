@@ -47,7 +47,7 @@ export interface IconButtonProps extends Omit<ButtonProps, "startIcon" | "endIco
      * @defaultValue `"medium"`
      */
     size?: ButtonSize;
-    /** Props for the inner part: `icon`, the element around the icon. */
+    /** Props for the inner part: `icon`, the element around the icon. As a function, it receives the owner state: `variant`, `size` and `disabled`. */
     slotProps?: IconButtonSlotProps;
 }
 
@@ -59,6 +59,9 @@ export interface IconButtonProps extends Omit<ButtonProps, "startIcon" | "endIco
  *
  * `label` is required: the icon gives the button no accessible name. The button doesn't show the label as a
  * tooltip yet, so sighted users only see the icon.
+ *
+ * The props the component doesn't handle, such as `type`, `onClick` and `aria-*`, go to the `<button>`, which
+ * has `type="button"` by default.
  *
  * @summary A square button with only an icon, named by a required label.
  * @experimental

@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 
 import react from "@vitejs/plugin-react";
 import preserveDirectives from "rollup-plugin-preserve-directives";
@@ -42,6 +43,7 @@ export default defineConfig({
 
 /**
  * Theme stylesheets aren't imported by any component, so the library build doesn't pick them up by itself.
+ * It also emits the declaration TypeScript resolves for the stylesheet exports, which are side-effect imports.
  */
 function emitThemes(themeNames: string[]): Plugin {
     const themeFilePath = (themeName: string) => new URL(`./src/themes/${themeName}.css`, import.meta.url);
@@ -51,10 +53,11 @@ function emitThemes(themeNames: string[]): Plugin {
         apply: "build",
         buildStart() {
             for (const themeName of themeNames) {
-                this.addWatchFile(themeFilePath(themeName).pathname);
+                this.addWatchFile(fileURLToPath(themeFilePath(themeName)));
             }
         },
         async generateBundle() {
+            this.emitFile({ type: "asset", fileName: "css.d.ts", source: "export {};\n" });
             for (const themeName of themeNames) {
                 this.emitFile({
                     type: "asset",

@@ -13,6 +13,12 @@
         font-weight: var(--_font-weight);
         line-height: var(--_line-height);
         letter-spacing: var(--_letter-spacing);
+        overflow-wrap: anywhere; /* A long word, such as a German compound, breaks instead of overflowing on small screens. */
+
+        &[data-variant="display"],
+        &[data-variant^="heading"] {
+            hyphens: auto;
+        }
 
         &[data-tone="muted"] {
             color: var(--dextinity-color-foreground-muted);

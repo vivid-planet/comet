@@ -155,8 +155,10 @@
         --dextinity-color-focus-ring: #f08a5d;
     }
 
+    /* After the dark color scheme, so it wins there too. */
     @media (prefers-reduced-motion: reduce) {
-        [data-dextinity-theme="acme"] {
+        [data-dextinity-theme="acme"],
+        [data-dextinity-theme="acme"][data-dextinity-color-scheme="dark"] {
             --dextinity-motion-duration-short: 0s;
             --dextinity-motion-duration-medium: 0s;
         }

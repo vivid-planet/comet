@@ -142,6 +142,7 @@ export const Disabled: Story = {
  */
 export const CustomizedThroughSlotProps: Story = {
     args: {
+        variant: "secondary",
         className: styles.wideButton,
         startIcon: <AddIcon />,
         slotProps: {

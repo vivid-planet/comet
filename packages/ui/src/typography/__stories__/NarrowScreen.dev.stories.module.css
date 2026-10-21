@@ -1,0 +1,7 @@
+.narrowScreen {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    inline-size: 288px;
+}

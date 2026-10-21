@@ -4,6 +4,7 @@ import { Switch as BaseSwitch } from "@base-ui/react/switch";
 import { clsx } from "clsx";
 import type { CSSProperties, ReactNode } from "react";
 
+import { hasContent } from "../slots/hasContent";
 import { type ElementSlotProps, SlotElement } from "../slots/SlotElement";
 import { resolveSlotProps, type SlotProps } from "../slots/slotProps";
 import styles from "./Switch.module.css";
@@ -31,18 +32,21 @@ export interface SwitchSlotProps {
 export interface SwitchProps extends Omit<BaseSwitch.Root.Props, "className" | "style" | "render" | "nativeButton" | "children" | "disabled" | "id"> {
     /**
      * The visible label next to the track. Clicking it toggles the switch. Without it, name the switch with
-     * `aria-label` or `aria-labelledby`.
+     * `aria-label`, with `aria-labelledby`, or with a `<label>` whose `htmlFor` matches its `id`.
      */
     children?: ReactNode;
     /** Prevents interaction and dims the switch together with its label. */
     disabled?: boolean;
     /** The id of the hidden `<input>` element that submits the switch's value with a form. */
     id?: string;
-    /** Added to the component's own classes on the outer `<label>` element, which holds the track and the label. */
+    /** Added to the component's own classes on the outer element, which holds the track and the label. */
     className?: string;
-    /** Inline styles for the outer `<label>` element, which holds the track and the label. */
+    /** Inline styles for the outer element, which holds the track and the label. */
     style?: CSSProperties;
-    /** Props for the inner parts: `control` (the track), `thumb` (the handle) and `label` (the element around `children`). */
+    /**
+     * Props for the inner parts: `control` (the track), `thumb` (the handle) and `label` (the element around `children`). As a function, it receives the owner
+     * state: `disabled`.
+     */
     slotProps?: SwitchSlotProps;
 }
 
@@ -62,9 +66,12 @@ export interface SwitchProps extends Omit<BaseSwitch.Root.Props, "className" | "
  */
 export function Switch({ disabled, className, style, slotProps, children, ...controlProps }: SwitchProps) {
     const ownerState: SwitchOwnerState = { disabled: Boolean(disabled) };
+    const hasLabel = hasContent(children);
+    // Without a label of its own, a <label> wrapper would hide an external <label htmlFor> from Base UI's labelling.
+    const RootElement = hasLabel ? "label" : "span";
 
     return (
-        <label className={clsx(styles.root, className)} style={style} data-disabled={ownerState.disabled ? "" : undefined}>
+        <RootElement className={clsx(styles.root, className)} style={style} data-disabled={ownerState.disabled ? "" : undefined}>
             <BaseSwitch.Root
                 {...resolveSlotProps({
                     ownProps: { ...controlProps, disabled, className: styles.control },
@@ -74,11 +81,11 @@ export function Switch({ disabled, className, style, slotProps, children, ...con
             >
                 <BaseSwitch.Thumb {...resolveSlotProps({ ownProps: { className: styles.thumb }, slotProps: slotProps?.thumb, ownerState })} />
             </BaseSwitch.Root>
-            {children != null && (
+            {hasLabel && (
                 <SlotElement tagName="span" {...resolveSlotProps({ ownProps: { className: styles.label }, slotProps: slotProps?.label, ownerState })}>
                     {children}
                 </SlotElement>
             )}
-        </label>
+        </RootElement>
     );
 }

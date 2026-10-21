@@ -39,6 +39,25 @@ describe("Checkbox", () => {
         expect(container.querySelector(".dextinityCheckbox__label")).not.toBeInTheDocument();
     });
 
+    it("renders no label part for content that renders nothing", () => {
+        const { container } = render(<Checkbox aria-label="Publish product">{false}</Checkbox>);
+
+        expect(container.querySelector(".dextinityCheckbox__label")).not.toBeInTheDocument();
+    });
+
+    it("renders the root as a span without a label, so an external label names the control", async () => {
+        render(
+            <>
+                <label htmlFor="newsletter">Newsletter</label>
+                <Checkbox id="newsletter" />
+            </>,
+        );
+
+        const control = await screen.findByRole("checkbox", { name: "Newsletter" });
+        expect(control.parentElement?.tagName).toBe("SPAN");
+        expect(control.parentElement).toHaveClass("dextinityCheckbox");
+    });
+
     it("reflects the disabled owner state on the label root", () => {
         render(<Checkbox disabled>Subscribe to the newsletter</Checkbox>);
 

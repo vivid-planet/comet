@@ -17,8 +17,14 @@
             "types": "./lib/index.d.ts",
             "import": "./lib/index.js"
         },
-        "./css": "./lib/style.css",
-        "./themes/dextinity.css": "./lib/themes/dextinity.css"
+        "./css": {
+            "types": "./lib/css.d.ts",
+            "default": "./lib/style.css"
+        },
+        "./themes/dextinity.css": {
+            "types": "./lib/css.d.ts",
+            "default": "./lib/themes/dextinity.css"
+        }
     },
     "imports": {
         "#storybook/*": "./src/storybook/*.tsx"
@@ -48,10 +54,10 @@
         "test:watch": "vitest --watch"
     },
     "dependencies": {
-        "@base-ui/react": "^1.9.0",
         "clsx": "^2.1.1"
     },
     "devDependencies": {
+        "@base-ui/react": "^1.9.0",
         "@dextinity/eslint-config": "workspace:*",
         "@fontsource-variable/figtree": "^5.3.0",
         "@storybook/addon-a11y": "10.6.2",
@@ -90,6 +96,7 @@
         "vitest": "^5.0.4"
     },
     "peerDependencies": {
+        "@base-ui/react": "^1.9.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
     },

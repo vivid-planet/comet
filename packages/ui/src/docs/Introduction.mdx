@@ -18,8 +18,10 @@ Themeable React UI primitives for Dextinity applications: the admin, the site, a
 ## Setup
 
 ```sh
-pnpm add @dextinity/ui
+pnpm add @dextinity/ui @base-ui/react
 ```
+
+`@base-ui/react` is a peer dependency: controls you pass into a `FormField` must come from the same copy as the components'.
 
 ```tsx
 // Once, at the root of the application
@@ -58,3 +60,5 @@ In the admin, `@dextinity/admin` has components with the same names, such as `Bu
 ## For coding agents
 
 While this Storybook runs, it serves an MCP server at `http://localhost:26648/mcp` with the same documentation: list the components and pages with `docs-list`, read one with `docs-show`, and a story's code with `docs-show-story`. Use only documented props.
+
+A story's code starts with all imports of its story file. Keep the `@dextinity/ui` imports and drop the others: `fn()` from `storybook/test` stands for your own event handler, `#storybook/icons` for your application's icons, and `*.stories.module.css` for your own styles.

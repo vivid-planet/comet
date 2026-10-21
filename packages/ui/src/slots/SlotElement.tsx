@@ -7,6 +7,8 @@ type TagName = keyof JSX.IntrinsicElements;
 
 /**
  * The props of a slot that renders a plain element: the element's props plus `render`.
+ *
+ * @experimental
  */
 export type ElementSlotProps<Tag extends TagName> = useRender.ComponentProps<Tag>;
 

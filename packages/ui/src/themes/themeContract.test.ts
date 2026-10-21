@@ -25,8 +25,10 @@ interface Theme {
     fileName: string;
     name: string;
     declarations: Record<ColorScheme, Map<string, string>>;
-    reducedMotionTokens: string[];
+    reducedMotionDeclarations: Map<string, string>;
 }
+
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 
 function readThemes(): Theme[] {
     const themeFileNames = readdirSync(themesDirectory).filter((fileName) => fileName.endsWith(".css"));
@@ -37,19 +39,36 @@ function readThemes(): Theme[] {
         const lightSelector = `[data-dextinity-theme="${name}"]`;
         const darkSelector = `${lightSelector}[data-dextinity-color-scheme="dark"]`;
 
-        const theme: Theme = { fileName, name, declarations: { light: new Map(), dark: new Map() }, reducedMotionTokens: [] };
+        const theme: Theme = {
+            fileName,
+            name,
+            declarations: { light: new Map(), dark: new Map() },
+            reducedMotionDeclarations: new Map(),
+        };
 
         root.walkRules((rule) => {
-            const isInMediaQuery = rule.parent?.type === "atrule" && "name" in rule.parent && rule.parent.name === "media";
-
-            if (isInMediaQuery) {
-                theme.reducedMotionTokens.push(...customPropertyNames(rule));
-            } else if (rule.selector === lightSelector) {
-                theme.declarations.light = customProperties(rule);
-            } else if (rule.selector === darkSelector) {
-                theme.declarations.dark = customProperties(rule);
-            } else {
+            const selectors = rule.selectors;
+            const isThemeRule = selectors.every((selector) => selector === lightSelector || selector === darkSelector);
+            if (!isThemeRule) {
                 throw new Error(`${fileName}: unexpected selector "${rule.selector}". A theme only styles ${lightSelector} and ${darkSelector}.`);
+            }
+
+            const atRules = enclosingAtRules(rule);
+            if (atRules[0] !== "layer dextinity") {
+                throw new Error(`${fileName}: "${rule.selector}" must be inside @layer dextinity.`);
+            }
+            if (atRules.length > 2 || (atRules.length === 2 && atRules[1] !== `media ${reducedMotionQuery}`)) {
+                throw new Error(`${fileName}: unexpected at-rule around "${rule.selector}". A theme only uses @media ${reducedMotionQuery}.`);
+            }
+
+            if (atRules.length === 2) {
+                addCustomProperties(theme.reducedMotionDeclarations, rule);
+            } else if (rule.selector === lightSelector) {
+                addCustomProperties(theme.declarations.light, rule);
+            } else if (rule.selector === darkSelector) {
+                addCustomProperties(theme.declarations.dark, rule);
+            } else {
+                throw new Error(`${fileName}: define the light and the dark color scheme in separate rules, not in "${rule.selector}".`);
             }
         });
 
@@ -57,18 +76,23 @@ function readThemes(): Theme[] {
     });
 }
 
-function customPropertyNames(rule: Rule) {
-    return [...customProperties(rule).keys()];
+/** The at-rules around a rule, outermost first, as "<name> <params>". */
+function enclosingAtRules(rule: Rule) {
+    const atRules: string[] = [];
+    for (let node = rule.parent; node && node.type !== "root"; node = node.parent) {
+        if (node.type === "atrule" && "name" in node) {
+            atRules.unshift(`${node.name} ${node.params}`);
+        }
+    }
+    return atRules;
 }
 
-function customProperties(rule: Rule) {
-    const properties = new Map<string, string>();
+function addCustomProperties(properties: Map<string, string>, rule: Rule) {
     rule.walkDecls((declaration) => {
         if (declaration.prop.startsWith("--")) {
             properties.set(declaration.prop, declaration.value);
         }
     });
-    return properties;
 }
 
 const themes = readThemes();
@@ -94,7 +118,10 @@ const contrastRequirements = [
     ...textOn("--dextinity-button-secondary-foreground-hover", ["--dextinity-button-secondary-background-hover"]),
     ...textOn("--dextinity-button-ghost-foreground", ["--dextinity-color-background", "--dextinity-button-ghost-background-hover"]),
     ...nonTextOn("--dextinity-color-border-strong", ["--dextinity-color-background", "--dextinity-color-surface"]),
+    ...nonTextOn("--dextinity-color-border-hover", ["--dextinity-color-background", "--dextinity-color-surface"]),
     ...nonTextOn("--dextinity-color-primary", ["--dextinity-color-background", "--dextinity-color-surface"]),
+    ...nonTextOn("--dextinity-color-primary-hover", ["--dextinity-color-background", "--dextinity-color-surface"]),
+    ...nonTextOn("--dextinity-color-primary-foreground", ["--dextinity-color-primary-hover"]),
     ...nonTextOn("--dextinity-color-focus-ring", ["--dextinity-color-background"]),
 ];
 
@@ -133,9 +160,16 @@ describe.each(themes)("theme $fileName", (theme) => {
     });
 
     it("turns off motion for users who prefer reduced motion", () => {
-        expect(theme.reducedMotionTokens).toEqual(
-            expect.arrayContaining(["--dextinity-motion-duration-short", "--dextinity-motion-duration-medium"]),
-        );
+        expect(Object.fromEntries(theme.reducedMotionDeclarations)).toEqual({
+            "--dextinity-motion-duration-short": "0s",
+            "--dextinity-motion-duration-medium": "0s",
+        });
+    });
+
+    it("uses unitless line heights, which the components multiply with font sizes", () => {
+        const lineHeights = [...theme.declarations.light].filter(([token]) => token.endsWith("-line-height"));
+
+        expect(lineHeights.filter(([, value]) => !/^\d+(\.\d+)?$/.test(value))).toEqual([]);
     });
 
     describe.each<ColorScheme>(["light", "dark"])("%s color scheme", (colorScheme) => {
@@ -160,8 +194,8 @@ describe("component stylesheets", () => {
 type Rgb = [number, number, number];
 
 /**
- * Resolves a token to the color it shows. A gradient resolves to the color midway between its first and last
- * stop, where a button's text sits; `transparent` to the page background.
+ * Resolves a token to the color it shows. A gradient of two colors resolves to the color midway between them,
+ * where a button's text sits; `transparent` to the page background.
  */
 function resolveColor(theme: Theme, colorScheme: ColorScheme, token: string): Rgb {
     const value = theme.declarations[colorScheme].get(token) ?? theme.declarations.light.get(token);
@@ -180,24 +214,26 @@ function resolveColor(theme: Theme, colorScheme: ColorScheme, token: string): Rg
     }
 
     if (value.startsWith("linear-gradient(")) {
-        const [firstStop, ...otherStops] = value.match(/#[0-9a-f]{3,6}\b/gi) ?? [];
-        const lastStop = otherStops.at(-1);
-        if (firstStop === undefined || lastStop === undefined) {
-            throw new Error(`${theme.fileName}: ${token} must name its gradient stops as hex colors.`);
+        const stops = value.match(/#[0-9a-f]+\b/gi) ?? [];
+        if (stops.length !== 2 || /\b(rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\(/.test(value)) {
+            throw new Error(`${theme.fileName}: ${token} must be a gradient of two hex colors, so its contrast can be checked.`);
         }
-        const [first, last] = [parseHexColor(firstStop), parseHexColor(lastStop)];
+        const [first, last] = stops.map((stop) => parseHexColor(stop, `${theme.fileName}: ${token}`));
         return [0, 1, 2].map((channel) => (first[channel] + last[channel]) / 2) as Rgb;
     }
 
     if (value.startsWith("#")) {
-        return parseHexColor(value);
+        return parseHexColor(value, `${theme.fileName}: ${token}`);
     }
 
     throw new Error(`${theme.fileName}: ${token} is "${value}". Use a hex color, so its contrast can be checked.`);
 }
 
-function parseHexColor(hexColor: string): Rgb {
+function parseHexColor(hexColor: string, origin: string): Rgb {
     const digits = hexColor.slice(1);
+    if (!/^([0-9a-f]{3}|[0-9a-f]{6})$/i.test(digits)) {
+        throw new Error(`${origin} uses "${hexColor}". Use an opaque hex color with 3 or 6 digits, so its contrast can be checked.`);
+    }
     const fullDigits = digits.length === 3 ? [...digits].map((digit) => digit + digit).join("") : digits;
     return [0, 2, 4].map((offset) => Number.parseInt(fullDigits.slice(offset, offset + 2), 16)) as Rgb;
 }
