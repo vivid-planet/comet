@@ -8,7 +8,7 @@ Before using or changing a component, read its documentation instead of guessing
 
 - With the Storybook running, use the `dextinity-ui-storybook` MCP server: `docs-list`, then `docs-show` for a component or page, `docs-show-story` for a story's code. Use only documented props.
 - Without it: `pnpm --filter @dextinity/ui exec storybook tools docs list` and `pnpm --filter @dextinity/ui exec storybook tools docs show --id <id>`.
-- A story's code starts with imports from its story file. In application code, keep the `@dextinity/ui` and `@base-ui/react` imports, add React's own imports, such as `useState`, where the code uses them, and drop the rest: `fn()` from `storybook/test` stands for a real event handler, `#storybook/icons` for the application's icons, `*.stories.module.css` for its own styles.
+- A story's code starts with imports from its story file. In application code, keep the `@dextinity/ui` and `@base-ui/react` imports, add React's own imports, such as `useState`, where the code uses them, and drop the rest: `fn()` from `storybook/test` stands for a real event handler, `*.stories.module.css` for its own styles.
 
 The pages under "Foundations" (theming, design tokens, customization) and "Patterns" explain how the components work together.
 
