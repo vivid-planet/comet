@@ -133,7 +133,8 @@ export const setColumnSize = (state: TableBlockState, columnId: string, size: Co
 
 export const moveColumnToIndex = (state: TableBlockState, columnId: string, targetIndex: number): TableBlockState => {
     const movingColumn = state.columns.find(({ id }) => id === columnId);
-    if (!movingColumn) {
+    const isTargetIndexInTable = targetIndex >= 0 && targetIndex < state.columns.length;
+    if (!movingColumn || !isTargetIndexInTable) {
         return state;
     }
 

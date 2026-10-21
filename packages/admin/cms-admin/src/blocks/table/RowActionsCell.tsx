@@ -1,5 +1,5 @@
 import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@dextinity/admin";
-import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from "@dextinity/admin-icons";
+import { Add, ArrowDown, ArrowUp, ChevronDown, ChevronUp, Copy, Delete, Duplicate, Paste, Remove } from "@dextinity/admin-icons";
 import { Divider, Snackbar } from "@mui/material";
 import type { Dispatch, SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -15,6 +15,7 @@ import {
     getDuplicatedRowInsertData,
     getInsertDataFromRowById,
     insertRowDataAtIndex,
+    moveRowToIndex,
     type RowInsertData,
     rowInsertSchema,
 } from "./utils/row";
@@ -30,6 +31,9 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
     const snackbarApi = useSnackbarApi();
     const blockContext = useBlockContext();
     const stateRow = state.rows.find((rowInState) => rowInState.id === row.id);
+    const rowIndex = state.rows.findIndex((rowInState) => rowInState.id === row.id);
+    const isFirstRow = rowIndex === 0;
+    const isLastRow = rowIndex === state.rows.length - 1;
     const intl = useIntl();
     const { RichTextBlock } = useTableBlockContext();
 
@@ -43,6 +47,14 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
                 cellValues: state.columns.map(() => RichTextBlock.defaultValues()),
             };
             return insertRowDataAtIndex(state, insertData, newRowIndex, RichTextBlock);
+        });
+    };
+
+    const handleMoveRow = (direction: "up" | "down") => {
+        updateState((state) => {
+            const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
+            const targetRowIndex = direction === "up" ? currentRowIndex - 1 : currentRowIndex + 1;
+            return moveRowToIndex(state, row.id, targetRowIndex);
         });
     };
 
@@ -170,6 +182,25 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
                     }}
                 >
                     <FormattedMessage id="dextinity.tableBlock.addRowBelow" defaultMessage="Add row below" />
+                </RowActionsItem>
+                <Divider />
+                <RowActionsItem
+                    icon={<ChevronUp />}
+                    disabled={isFirstRow}
+                    onClick={() => {
+                        handleMoveRow("up");
+                    }}
+                >
+                    <FormattedMessage id="dextinity.tableBlock.moveRowUp" defaultMessage="Move up" />
+                </RowActionsItem>
+                <RowActionsItem
+                    icon={<ChevronDown />}
+                    disabled={isLastRow}
+                    onClick={() => {
+                        handleMoveRow("down");
+                    }}
+                >
+                    <FormattedMessage id="dextinity.tableBlock.moveRowDown" defaultMessage="Move down" />
                 </RowActionsItem>
                 <Divider />
                 <RowActionsItem icon={<Copy />} onClick={handleCopyRowToClipboard}>
