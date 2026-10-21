@@ -30,9 +30,9 @@ services:
           MAILER_HOST=build MAILER_PORT=25 CONTACT_FORM_FROM_EMAIL=build@example.com CONTACT_FORM_TO_EMAIL=build@example.com RECAPTCHA_SERVICE_ACCOUNT=eyJwcm9qZWN0X2lkIjoiYnVpbGQifQ== pnpm --filter dextinity-demo-site run build &&
           curl -fsSL -o /tmp/rclone.deb https://github.com/rclone/rclone/releases/download/v1.75.1/rclone-v1.75.1-linux-amd64.deb &&
           dpkg-deb -x /tmp/rclone.deb /tmp/rclone &&
-          RCLONE_S3_REGION="$(printenv STATIC_ASSETS_UPLOAD_S3_REGION)" RCLONE_S3_ENDPOINT="$(printenv STATIC_ASSETS_UPLOAD_S3_ENDPOINT)" \
-          RCLONE_S3_ACCESS_KEY_ID="$(printenv STATIC_ASSETS_UPLOAD_S3_ACCESS_KEY_ID)" RCLONE_S3_SECRET_ACCESS_KEY="$(printenv STATIC_ASSETS_UPLOAD_S3_SECRET_ACCESS_KEY)" \
-          /tmp/rclone/usr/bin/rclone copy demo/site/.next/static ":s3,provider=DigitalOcean,no_check_bucket=true:$(printenv STATIC_ASSETS_UPLOAD_S3_BUCKET)/site/_next/static" \
+          RCLONE_S3_REGION="$(printenv STATIC_ASSETS_S3_REGION)" RCLONE_S3_ENDPOINT="$(printenv STATIC_ASSETS_S3_ENDPOINT)" \
+          RCLONE_S3_ACCESS_KEY_ID="$(printenv STATIC_ASSETS_S3_ACCESS_KEY_ID)" RCLONE_S3_SECRET_ACCESS_KEY="$(printenv STATIC_ASSETS_S3_SECRET_ACCESS_KEY)" \
+          /tmp/rclone/usr/bin/rclone copy demo/site/.next/static ":s3,provider=DigitalOcean,no_check_bucket=true:$(printenv STATIC_ASSETS_S3_BUCKET)/site/_next/static" \
           --header-upload "Cache-Control: public, max-age=31536000, immutable"
       environment_slug: node-js
       run_command: cd demo/site && node dist/server.js
@@ -43,20 +43,20 @@ services:
           repo: vivid-planet/dextinity
       envs:
           # Only available while building, so the running site has no write access to the storage
-          - key: STATIC_ASSETS_UPLOAD_S3_BUCKET
+          - key: STATIC_ASSETS_S3_BUCKET
             scope: BUILD_TIME
             value: dextinity-demo
-          - key: STATIC_ASSETS_UPLOAD_S3_REGION
+          - key: STATIC_ASSETS_S3_REGION
             scope: BUILD_TIME
             value: fra1
-          - key: STATIC_ASSETS_UPLOAD_S3_ENDPOINT
+          - key: STATIC_ASSETS_S3_ENDPOINT
             scope: BUILD_TIME
             value: https://fra1.digitaloceanspaces.com
-          - key: STATIC_ASSETS_UPLOAD_S3_ACCESS_KEY_ID
+          - key: STATIC_ASSETS_S3_ACCESS_KEY_ID
             scope: BUILD_TIME
             type: SECRET
             value: ${STATIC_ASSETS_S3_ACCESS_KEY_ID}
-          - key: STATIC_ASSETS_UPLOAD_S3_SECRET_ACCESS_KEY
+          - key: STATIC_ASSETS_S3_SECRET_ACCESS_KEY
             scope: BUILD_TIME
             type: SECRET
             value: ${STATIC_ASSETS_S3_SECRET_ACCESS_KEY}
