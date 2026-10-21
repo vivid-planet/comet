@@ -2,11 +2,13 @@
 "@dextinity/site-nextjs": minor
 ---
 
-Add `serveStaticAsset` to serve static assets of other builds from a storage
+Add `uploadStaticAssets` and `serveStaticAsset` to serve static assets of other builds during rolling deployments
 
 During a rolling deployment, instances of the old and the new site build run side by side, so a request for a `/_next/static` file can reach an instance that doesn't have it.
-`serveStaticAsset` serves such a file from a storage that holds the `.next/static` files of every deployed build, for instance uploaded with [rclone](https://rclone.org) after `next build`.
-It passes on the content type and cache header stored with the file. Requests for other paths, for files of the own build and for files missing in the storage are left to Next.js.
+`uploadStaticAssets` uploads the `.next/static` files of the build to a storage that holds the files of every deployed build, and `serveStaticAsset` serves a file that's missing in the own build from there.
+
+Call `uploadStaticAssets` in the site server before it starts listening, so that no page of the build is delivered before its files are in the storage.
+Once an instance has uploaded the files of a build, later instances skip the upload.
 
 `createStaticAssetsStorage` uses [Apache OpenDAL](https://opendal.apache.org/docs/bindings/nodejs/) and supports its services, e.g., S3-compatible storages (`scheme: "s3"`, like AWS S3, DigitalOcean Spaces or IBM Cloud Object Storage) and Azure Blob Storage (`scheme: "azblob"`).
 It requires the `opendal` package.
@@ -15,12 +17,13 @@ It requires the `opendal` package.
 
 ```ts
 // In server.ts
-import { createStaticAssetsStorage, serveStaticAsset } from "@dextinity/site-nextjs/staticAssets";
+import { createStaticAssetsStorage, serveStaticAsset, uploadStaticAssets } from "@dextinity/site-nextjs/staticAssets";
 
 const staticAssetsStorage = await createStaticAssetsStorage({
     scheme: "s3",
     options: { bucket: process.env.STATIC_ASSETS_S3_BUCKET, region: process.env.STATIC_ASSETS_S3_REGION /* ... */ },
 });
+await uploadStaticAssets({ storage: staticAssetsStorage, keyPrefix: "site" });
 
 createServer(async (req, res) => {
     const parsedUrl = parse(req.url!, true);
@@ -30,5 +33,5 @@ createServer(async (req, res) => {
     }
 
     await handle(req, res, parsedUrl);
-});
+}).listen(port, host);
 ```

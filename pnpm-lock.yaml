@@ -2681,6 +2681,9 @@ importers:
       jose:
         specifier: ^5.10.0
         version: 5.10.0
+      mime-types:
+        specifier: ^3.0.2
+        version: 3.0.2
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -2691,6 +2694,9 @@ importers:
       '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
+      '@types/mime-types':
+        specifier: ^3.0.1
+        version: 3.0.1
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0
@@ -9737,6 +9743,9 @@ packages:
 
   '@types/mime-db@1.43.6':
     resolution: {integrity: sha512-r2cqxAt/Eo5yWBOQie1lyM1JZFCiORa5xtLlhSZI0w8RJggBPKw8c4g/fgQCzWydaDR5bL4imnmix2d1n52iBw==}
+
+  '@types/mime-types@3.0.1':
+    resolution: {integrity: sha512-xRMsfuQbnRq1Ef+C+RKaENOxXX87Ygl38W1vDfPHRku02TgQr+Qd8iivLtAMcR0KF5/29xlnFihkTlbqFrGOVQ==}
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
@@ -27374,6 +27383,8 @@ snapshots:
       '@types/node': 24.19.2
 
   '@types/mime-db@1.43.6': {}
+
+  '@types/mime-types@3.0.1': {}
 
   '@types/mime@1.3.5': {}
 

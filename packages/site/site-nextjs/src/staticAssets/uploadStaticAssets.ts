@@ -1,29 +1,9 @@
 import type { Dirent } from "fs";
 import { readdir, readFile } from "fs/promises";
-import { extname, join, posix, relative, sep } from "path";
+import { lookup } from "mime-types";
+import { join, posix, relative, sep } from "path";
 
 import type { StaticAssetsStorage } from "./staticAssetsStorage";
-
-const contentTypes: Record<string, string> = {
-    ".avif": "image/avif",
-    ".css": "text/css; charset=utf-8",
-    ".gif": "image/gif",
-    ".ico": "image/x-icon",
-    ".jpeg": "image/jpeg",
-    ".jpg": "image/jpeg",
-    ".js": "text/javascript; charset=utf-8",
-    ".json": "application/json; charset=utf-8",
-    ".map": "application/json; charset=utf-8",
-    ".otf": "font/otf",
-    ".png": "image/png",
-    ".svg": "image/svg+xml",
-    ".ttf": "font/ttf",
-    ".txt": "text/plain; charset=utf-8",
-    ".wasm": "application/wasm",
-    ".webp": "image/webp",
-    ".woff": "font/woff",
-    ".woff2": "font/woff2",
-};
 
 const uploadConcurrency = 10;
 
@@ -64,7 +44,7 @@ export async function uploadStaticAssets({ storage, keyPrefix = "" }: UploadStat
             for (let filePath = queue.shift(); filePath !== undefined; filePath = queue.shift()) {
                 await storage.putFile(posix.join(keyPrefix, "_next", filePath), {
                     body: await readFile(join(".next", filePath)),
-                    contentType: contentTypes[extname(filePath)] ?? "application/octet-stream",
+                    contentType: lookup(filePath) || "application/octet-stream",
                     cacheControl: "public, max-age=31536000, immutable",
                 });
             }

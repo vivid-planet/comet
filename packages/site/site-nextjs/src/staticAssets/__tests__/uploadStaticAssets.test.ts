@@ -42,7 +42,7 @@ describe("uploadStaticAssets", () => {
         await uploadStaticAssets({ storage, keyPrefix: "site" });
 
         expect(files.get("site/_next/static/chunks/main.js")).toMatchObject({
-            contentType: "text/javascript; charset=utf-8",
+            contentType: "text/javascript",
             cacheControl: "public, max-age=31536000, immutable",
         });
         expect(files.get("site/_next/static/chunks/app/[language]/page.js")?.body.toString()).toBe("page");
