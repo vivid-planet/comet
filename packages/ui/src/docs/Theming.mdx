@@ -2,13 +2,26 @@ import { Canvas, Meta } from "@storybook/addon-docs/blocks";
 
 import * as ThemingStories from "./__stories__/Theming.stories";
 
-<Meta title="Foundations/Theming" summary="How a theme is applied, how to adjust the Dextinity theme, and how to create a theme for another brand." />
+<Meta
+    title="Foundations/Theming"
+    summary="The available themes (Dextinity, Sunset and Acme), how a theme is applied, how to adjust the Dextinity theme, and how to create a theme for another brand."
+/>
 
 # Theming
 
 A theme is a stylesheet that defines the [design tokens](?path=/docs/foundations-design-tokens--docs): CSS custom properties for colors, typography, space, shapes and motion. Components read nothing but these tokens, so a theme changes their look completely without changing their code.
 
-The package includes the Dextinity theme. This Storybook also shows two example themes: Sunset, a color variation of the Dextinity theme, and Acme, a fictive brand, to prove that the components follow any theme. Switch between them, and between the light and dark color schemes, in the toolbar.
+## Available themes
+
+The package publishes the Dextinity theme. This Storybook also shows two example themes, which aren't published: they prove that the components follow any theme, and they're starting points for a project's own theme. Every theme has a light and a dark color scheme. Switch between them in the toolbar.
+
+| Theme     | `data-dextinity-theme` | Stylesheet                                                     | What it is                                                                                                                 |
+| --------- | ---------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Dextinity | `dextinity`            | `@dextinity/ui/themes/dextinity.css`                           | The Dextinity brand: indigo and teal, the Figtree typeface, pill-shaped buttons with the brand gradient.                   |
+| Sunset    | `sunset`               | Not published, an example: `packages/ui/src/themes/sunset.css` | A color variation of the Dextinity theme: a violet accent, a violet to red-orange button gradient and slightly warm greys. |
+| Acme      | `acme`                 | Not published, an example: `packages/ui/src/themes/acme.css`   | A fictive brand: warm paper tones with a terracotta accent, serif headings, square corners and a denser layout.            |
+
+To use an example theme in an application, copy its stylesheet into the application and import it instead of a published theme; see [Creating a theme](#creating-a-theme).
 
 <Canvas of={ThemingStories.Comparison} />
 

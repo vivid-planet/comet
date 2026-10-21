@@ -46,7 +46,7 @@ export function NewsletterForm() {
 }
 ```
 
-[Theming](?path=/docs/foundations-theming--docs) explains the fonts, the color scheme and how to combine the components with a CSS reset.
+The package publishes one theme, Dextinity. [Theming](?path=/docs/foundations-theming--docs) lists every theme, including the example themes of this Storybook, and explains the fonts, the color scheme and how to combine the components with a CSS reset.
 
 In the admin, `@dextinity/admin` has components with the same names, such as `Button` and `TextField`. Import from one package per file, or rename on import: `import { Button as UiButton } from "@dextinity/ui";`.
 
@@ -59,6 +59,6 @@ In the admin, `@dextinity/admin` has components with the same names, such as `Bu
 
 ## For coding agents
 
-While this Storybook runs, it serves an MCP server at `http://localhost:26648/mcp` with the same documentation: list the components and pages with `docs-list`, read one with `docs-show`, and a story's code with `docs-show-story`. Use only documented props.
+While this Storybook runs, it serves an MCP server at `http://localhost:26648/mcp` with the same documentation: list the components and pages with `docs-list`, read one with `docs-show`, and a story's code with `docs-show-story`. Use only documented props. "Foundations/Theming" (`foundations-theming--docs`) lists the available themes.
 
 A story's code starts with imports from its story file. Keep the `@dextinity/ui` and `@base-ui/react` imports, add React's own imports, such as `useState`, where the code uses them, and drop the rest: `fn()` from `storybook/test` stands for your own event handler, `#storybook/icons` for your application's icons, and `*.stories.module.css` for your own styles.

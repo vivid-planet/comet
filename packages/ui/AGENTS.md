@@ -31,4 +31,6 @@ Run these from `packages/ui/` after a change:
 | `lint`     | Reports remaining lint, formatting, style and TypeScript errors          |
 | `test`     | Runs the unit tests and the story tests (in a browser, with a11y checks) |
 
+The themes are in `src/themes/`: `dextinity` is published as `@dextinity/ui/themes/dextinity.css`; `sunset` and `acme` are Storybook-only examples. "Foundations/Theming" lists them. A new theme goes into that list and into the toolbar (`src/storybook/themeDecorator.tsx`), and a published one into `publishedThemes` in `vite.config.mts` and the `exports` of `package.json`; the theme contract test checks that they agree.
+
 Changing a token means changing [src/docs/DesignTokens.mdx](src/docs/DesignTokens.mdx) and every theme in `src/themes/` together; the theme contract test checks that they agree. When a component's stylesheet starts or stops using a token, update its `__stories__/<Component>DesignTokens.mdx` in the same change; the test checks that too.

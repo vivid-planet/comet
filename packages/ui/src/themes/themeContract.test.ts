@@ -4,6 +4,7 @@ import { basename, join } from "node:path";
 import postcss, { type Rule } from "postcss";
 import { describe, expect, it } from "vitest";
 
+import { themeOptions } from "../storybook/themeDecorator";
 import { readTokenTableRows, tokenNamePattern } from "../storybook/tokenTables";
 
 const sourceDirectory = join(import.meta.dirname, "..");
@@ -157,6 +158,46 @@ describe("design tokens page", () => {
     it("documents each token once", () => {
         expect(contractTokens).not.toContain("");
         expect(new Set(contractTokens).size).toBe(contractTokens.length);
+    });
+});
+
+describe("list of themes", () => {
+    const packageDirectory = join(sourceDirectory, "..");
+    const themeNames = themes.map((theme) => theme.name).sort();
+    const listedThemes = readListedThemes();
+
+    /** The rows of the table under "Available themes" on the theming page: the theme's name and whether it's published. */
+    function readListedThemes() {
+        const theming = readFileSync(join(sourceDirectory, "docs", "Theming.mdx"), "utf8");
+        const section = theming.split("## Available themes")[1]?.split("\n## ")[0] ?? "";
+        return section
+            .split("\n")
+            .filter((line) => line.startsWith("| ") && !line.startsWith("| Theme") && !line.startsWith("| ---"))
+            .map((line) => {
+                const [, , attributeCell = "", stylesheetCell = ""] = line.split("|");
+                const name = attributeCell.trim().replaceAll("`", "");
+                return { name, isPublished: stylesheetCell.includes(`\`@dextinity/ui/themes/${name}.css\``) };
+            });
+    }
+
+    it("lists every theme in Theming.mdx", () => {
+        expect(listedThemes.map((theme) => theme.name).sort()).toEqual(themeNames);
+    });
+
+    it("offers every theme in the Storybook toolbar", () => {
+        expect(themeOptions.map((option) => option.value).sort()).toEqual(themeNames);
+    });
+
+    it("publishes exactly the themes Theming.mdx names as published", () => {
+        const viteConfig = readFileSync(join(packageDirectory, "vite.config.mts"), "utf8");
+        const builtThemes = JSON.parse(viteConfig.match(/const publishedThemes = (\[[^\]]*\]);/)?.[1] ?? "null");
+        const { exports } = JSON.parse(readFileSync(join(packageDirectory, "package.json"), "utf8"));
+        const exportedThemes = Object.keys(exports)
+            .map((path) => path.match(/^\.\/themes\/([a-z-]+)\.css$/)?.[1])
+            .filter((name) => name !== undefined);
+        const publishedThemes = listedThemes.filter((theme) => theme.isPublished).map((theme) => theme.name);
+
+        expect({ builtThemes, exportedThemes }).toEqual({ builtThemes: publishedThemes, exportedThemes: publishedThemes });
     });
 });
 
