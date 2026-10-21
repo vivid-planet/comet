@@ -1,17 +1,17 @@
 import type { Dirent } from "fs";
 import { readdir, readFile } from "fs/promises";
 import { lookup } from "mime-types";
+import type { Operator } from "opendal";
 import { join, posix, relative, sep } from "path";
-
-import type { StaticAssetsStorage } from "./staticAssetsStorage";
 
 const uploadConcurrency = 10;
 
 type UploadStaticAssetsOptions = {
     /**
+     * The OpenDAL operator of the storage holding the static assets of every deployed build.
      * Without a storage, nothing is uploaded, e.g., in local development
      */
-    storage?: StaticAssetsStorage;
+    storage?: Operator;
     keyPrefix?: string;
 };
 
@@ -30,7 +30,7 @@ export async function uploadStaticAssets({ storage, keyPrefix = "" }: UploadStat
     const buildId = (await readFile(".next/BUILD_ID", "utf-8")).trim();
     // Outside of _next/static, so serveStaticAsset never serves the marker
     const markerKey = posix.join(keyPrefix, "_next/static-uploads", buildId);
-    if (await storage.hasFile(markerKey)) {
+    if (await storage.exists(markerKey)) {
         return;
     }
 
@@ -42,8 +42,7 @@ export async function uploadStaticAssets({ storage, keyPrefix = "" }: UploadStat
     await Promise.all(
         Array.from({ length: uploadConcurrency }, async () => {
             for (let filePath = queue.shift(); filePath !== undefined; filePath = queue.shift()) {
-                await storage.putFile(posix.join(keyPrefix, "_next", filePath), {
-                    body: await readFile(join(".next", filePath)),
+                await storage.write(posix.join(keyPrefix, "_next", filePath), await readFile(join(".next", filePath)), {
                     contentType: lookup(filePath) || "application/octet-stream",
                     cacheControl: "public, max-age=31536000, immutable",
                 });
@@ -51,5 +50,5 @@ export async function uploadStaticAssets({ storage, keyPrefix = "" }: UploadStat
         }),
     );
 
-    await storage.putFile(markerKey, { body: Buffer.from(buildId) });
+    await storage.write(markerKey, buildId);
 }

@@ -2,20 +2,20 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "fs";
 import { createServer, type Server, type ServerResponse } from "http";
 import type { AddressInfo } from "net";
+import { Operator } from "opendal";
 import { tmpdir } from "os";
 import { join } from "path";
-import { Readable } from "stream";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from "vitest";
 
 import { serveStaticAsset } from "../serveStaticAsset";
-import type { StaticAssetsStorage } from "../staticAssetsStorage";
 
 describe("serveStaticAsset", () => {
     const cwd = process.cwd();
     let projectDir: string;
     let server: Server;
     let baseUrl: string;
-    let storage: StaticAssetsStorage & { getFile: ReturnType<typeof vi.fn> };
+    let storage: Operator;
+    let exists: MockInstance<Operator["exists"]>;
 
     beforeEach(async () => {
         projectDir = mkdtempSync(join(tmpdir(), "serve-static-asset-"));
@@ -24,20 +24,11 @@ describe("serveStaticAsset", () => {
         writeFileSync(join(projectDir, ".next/static/chunks/app/[language]/local.js"), "local");
         process.chdir(projectDir);
 
-        storage = {
-            getFile: vi.fn(async (key: string) => {
-                if (key === "site/_next/static/chunks/old.js" || key === "site/_next/static/chunks/app/[language]/old.js") {
-                    return {
-                        body: Readable.from(["old"]),
-                        contentType: "text/javascript; charset=utf-8",
-                        cacheControl: "public, max-age=31536000, immutable",
-                    };
-                }
-                return undefined;
-            }),
-            hasFile: vi.fn(),
-            putFile: vi.fn(),
-        };
+        storage = new Operator("memory", {});
+        const headers = { contentType: "text/javascript; charset=utf-8", cacheControl: "public, max-age=31536000, immutable" };
+        await storage.write("site/_next/static/chunks/old.js", "old", headers);
+        await storage.write("site/_next/static/chunks/app/[language]/old.js", "old", headers);
+        exists = vi.spyOn(storage, "exists");
 
         server = createServer(async (req, res) => {
             if (!(await serveStaticAsset({ pathname: req.url, res, storage, keyPrefix: "site" }))) {
@@ -73,7 +64,7 @@ describe("serveStaticAsset", () => {
     it("leaves a static asset of this build to Next.js", async () => {
         expect(await (await fetch(`${baseUrl}/_next/static/chunks/local.js`)).text()).toBe("handled by Next.js");
         expect(await (await fetch(`${baseUrl}/_next/static/chunks/app/%5Blanguage%5D/local.js`)).text()).toBe("handled by Next.js");
-        expect(storage.getFile).not.toHaveBeenCalled();
+        expect(exists).not.toHaveBeenCalled();
     });
 
     it("leaves a static asset missing in the storage to Next.js", async () => {
@@ -81,7 +72,7 @@ describe("serveStaticAsset", () => {
     });
 
     it("leaves a static asset to Next.js and logs the error if the storage fails", async () => {
-        storage.getFile.mockRejectedValueOnce(new Error("Access Denied"));
+        exists.mockRejectedValueOnce(new Error("PermissionDenied (permanent) at stat"));
         const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
 
         expect(await (await fetch(`${baseUrl}/_next/static/chunks/old.js`)).text()).toBe("handled by Next.js");
@@ -92,12 +83,12 @@ describe("serveStaticAsset", () => {
 
     it("leaves other paths to Next.js", async () => {
         expect(await (await fetch(`${baseUrl}/en/page`)).text()).toBe("handled by Next.js");
-        expect(storage.getFile).not.toHaveBeenCalled();
+        expect(exists).not.toHaveBeenCalled();
     });
 
     it("leaves paths leaving the static assets to Next.js", async () => {
         expect(await serveStaticAsset({ pathname: "/_next/static/../../package.json", res: {} as ServerResponse, storage })).toBe(false);
-        expect(storage.getFile).not.toHaveBeenCalled();
+        expect(exists).not.toHaveBeenCalled();
     });
 
     it("leaves all requests to Next.js without a storage", async () => {

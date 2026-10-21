@@ -10,18 +10,19 @@ During a rolling deployment, instances of the old and the new site build run sid
 Call `uploadStaticAssets` in the site server before it starts listening, so that no page of the build is delivered before its files are in the storage.
 Once an instance has uploaded the files of a build, later instances skip the upload.
 
-`createStaticAssetsStorage` uses [Apache OpenDAL](https://opendal.apache.org/docs/bindings/nodejs/) and supports its services, e.g., S3-compatible storages (`scheme: "s3"`, like AWS S3, DigitalOcean Spaces or IBM Cloud Object Storage) and Azure Blob Storage (`scheme: "azblob"`).
-It requires the `opendal` package.
+The storage is an [Apache OpenDAL](https://opendal.apache.org/docs/bindings/nodejs/) `Operator`, so all OpenDAL services are supported, e.g., S3-compatible storages (`"s3"`, like AWS S3, DigitalOcean Spaces or IBM Cloud Object Storage) and Azure Blob Storage (`"azblob"`).
+This requires the `opendal` package.
 
 **Example**
 
 ```ts
 // In server.ts
-import { createStaticAssetsStorage, serveStaticAsset, uploadStaticAssets } from "@dextinity/site-nextjs/staticAssets";
+import { serveStaticAsset, uploadStaticAssets } from "@dextinity/site-nextjs/staticAssets";
+import { Operator } from "opendal";
 
-const staticAssetsStorage = await createStaticAssetsStorage({
-    scheme: "s3",
-    options: { bucket: process.env.STATIC_ASSETS_S3_BUCKET, region: process.env.STATIC_ASSETS_S3_REGION /* ... */ },
+const staticAssetsStorage = new Operator("s3", {
+    bucket: process.env.STATIC_ASSETS_S3_BUCKET,
+    region: process.env.STATIC_ASSETS_S3_REGION /* ... */,
 });
 await uploadStaticAssets({ storage: staticAssetsStorage, keyPrefix: "site" });
 

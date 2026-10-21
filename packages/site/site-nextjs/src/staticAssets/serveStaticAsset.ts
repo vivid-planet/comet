@@ -1,17 +1,17 @@
 import { existsSync } from "fs";
 import type { ServerResponse } from "http";
+import type { Metadata, Operator, Reader } from "opendal";
 import { posix } from "path";
 import { pipeline } from "stream/promises";
-
-import type { StaticAssetsStorage } from "./staticAssetsStorage";
 
 type ServeStaticAssetOptions = {
     pathname: string | null | undefined;
     res: ServerResponse;
     /**
+     * The OpenDAL operator of the storage holding the static assets of every deployed build.
      * Without a storage, all requests are left to Next.js, e.g., in local development
      */
-    storage?: StaticAssetsStorage;
+    storage?: Operator;
     keyPrefix?: string;
 };
 
@@ -28,21 +28,24 @@ export async function serveStaticAsset({ pathname, res, storage, keyPrefix = "" 
     }
 
     const key = posix.join(keyPrefix, filePath.slice(1));
-    const staticAsset = await storage.getFile(key).catch((error: unknown) => {
+    let staticAsset: { metadata: Metadata; reader: Reader } | undefined;
+    try {
+        if (!(await storage.exists(key))) {
+            return false;
+        }
+        staticAsset = { metadata: await storage.stat(key), reader: await storage.reader(key) };
+    } catch (error) {
         console.error(`Failed to load static asset ${key} from the storage`, error);
-        return undefined;
-    });
-    if (!staticAsset) {
         return false;
     }
 
-    if (staticAsset.contentType) {
-        res.setHeader("Content-Type", staticAsset.contentType);
+    if (staticAsset.metadata.contentType) {
+        res.setHeader("Content-Type", staticAsset.metadata.contentType);
     }
-    if (staticAsset.cacheControl) {
-        res.setHeader("Cache-Control", staticAsset.cacheControl);
+    if (staticAsset.metadata.cacheControl) {
+        res.setHeader("Cache-Control", staticAsset.metadata.cacheControl);
     }
-    await pipeline(staticAsset.body, res);
+    await pipeline(staticAsset.reader.createReadStream(), res);
     return true;
 }
 

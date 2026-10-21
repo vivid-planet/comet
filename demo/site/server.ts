@@ -1,6 +1,7 @@
-import { createStaticAssetsStorage, serveStaticAsset, uploadStaticAssets } from "@dextinity/site-nextjs/staticAssets";
+import { serveStaticAsset, uploadStaticAssets } from "@dextinity/site-nextjs/staticAssets";
 import { createServer } from "http";
 import next from "next";
+import { Operator } from "opendal";
 import { parse } from "url";
 
 import { withMetrics } from "./opentelemetry-metrics";
@@ -20,15 +21,12 @@ app.prepare().then(async () => {
     }
     const handle = withMetrics(app.getRequestHandler());
     const staticAssetsStorage = process.env.STATIC_ASSETS_S3_BUCKET
-        ? await createStaticAssetsStorage({
-              scheme: "s3",
-              options: {
-                  bucket: process.env.STATIC_ASSETS_S3_BUCKET,
-                  region: process.env.STATIC_ASSETS_S3_REGION ?? "",
-                  endpoint: process.env.STATIC_ASSETS_S3_ENDPOINT ?? "",
-                  access_key_id: process.env.STATIC_ASSETS_S3_ACCESS_KEY_ID ?? "",
-                  secret_access_key: process.env.STATIC_ASSETS_S3_SECRET_ACCESS_KEY ?? "",
-              },
+        ? new Operator("s3", {
+              bucket: process.env.STATIC_ASSETS_S3_BUCKET,
+              region: process.env.STATIC_ASSETS_S3_REGION ?? "",
+              endpoint: process.env.STATIC_ASSETS_S3_ENDPOINT ?? "",
+              access_key_id: process.env.STATIC_ASSETS_S3_ACCESS_KEY_ID ?? "",
+              secret_access_key: process.env.STATIC_ASSETS_S3_SECRET_ACCESS_KEY ?? "",
           })
         : undefined;
     await uploadStaticAssets({ storage: staticAssetsStorage, keyPrefix: "site" });
