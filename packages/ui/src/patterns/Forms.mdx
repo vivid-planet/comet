@@ -1,0 +1,105 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as FormsStories from "./__stories__/Forms.stories";
+
+<Meta
+    title="Patterns/Forms"
+    summary="How to build a form: which control to use, layout, required fields, validation and error messages, and the actions."
+/>
+
+# Forms
+
+<Canvas of={FormsStories.CheckoutForm} />
+
+## Choosing a control
+
+| To ask for                                                  | Use                               |
+| ----------------------------------------------------------- | --------------------------------- |
+| Short text, such as a name, an email address or a search    | `TextField`                       |
+| Exactly one of a few options, up to about seven             | `RadioGroup` with `Radio` options |
+| An option that is on or off, or any number of options       | `Checkbox`, one per option        |
+| A setting that takes effect immediately, without submitting | `Switch`                          |
+| Another control, such as a native `<select>`                | The control inside a `FormField`  |
+
+`Checkbox` and `Switch` bring their own label: don't put them into a `FormField`, which would nest two labels. `Radio` only works inside a `RadioGroup`.
+
+## Layout
+
+- Put the fields in one column, in the order users think about them. Two fields side by side are fine only when they belong together, such as a postal code and a city.
+- Separate fields with `--dextinity-space-xl`. Give a group of related fields a heading, for example `<Typography variant="heading4">`.
+- Put the actions at the end of the form, the primary action first: `<Button type="submit">` and then a `secondary` button, such as "Cancel".
+
+```tsx
+<form className={styles.form} onSubmit={handleSubmit}>
+    <Typography variant="heading4" render={<h2 />}>
+        Shipping details
+    </Typography>
+    <TextField label="Full name" name="name" autoComplete="name" required />
+    <TextField label="Email" name="email" type="email" autoComplete="email" description="We send the order confirmation to this address." required />
+    <RadioGroup label="Delivery" name="delivery" defaultValue="standard">
+        <Radio value="standard">Standard, 3–5 working days</Radio>
+        <Radio value="express">Express, next working day</Radio>
+    </RadioGroup>
+    <Checkbox name="newsletter">Subscribe to the newsletter</Checkbox>
+    <div className={styles.actions}>
+        <Button type="submit">Place order</Button>
+        <Button variant="secondary">Back to cart</Button>
+    </div>
+</form>
+```
+
+```css
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-xl);
+    max-inline-size: 28rem;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-md);
+}
+```
+
+## Labels, descriptions and required fields
+
+- Every field has a visible `label`. A placeholder disappears when the user types, so it is never the label and never the only place for a format hint: put hints into `description`.
+- Mark required fields with `required`. `TextField` and `RadioGroup` then show a marker next to the label and tell assistive technology. If most fields are required, consider marking the optional ones in their label instead, for example "Phone (optional)".
+- Set `autoComplete` on fields that ask for the user's own data, such as `"name"` or `"email"`, so browsers can fill them in.
+
+## Validation and errors
+
+<Canvas of={FormsStories.CheckoutFormWithErrors} />
+
+- Validate when the user submits the form, or when they leave a field they've changed. Don't show errors while they're still typing.
+- Pass the message as `error`. The field is then marked invalid, and screen readers announce the message with the field.
+- Phrase the message so it says how to fix the value: "Enter an email address in the format name@example.com", not "Invalid input".
+- After a failed submit, move focus to the first invalid field.
+
+The components hold no form state. With a form library, map its state to the props, for example with React Final Form:
+
+```tsx
+<Field name="email" validate={validateEmail}>
+    {({ input, meta }) => (
+        <TextField
+            label="Email"
+            type="email"
+            name={input.name}
+            value={input.value}
+            onValueChange={input.onChange}
+            onBlur={input.onBlur}
+            error={meta.touched ? meta.error : undefined}
+        />
+    )}
+</Field>
+```
+
+`error` ignores `false`, `null` and empty strings, so `error={meta.touched && meta.error}` works too.
+
+## Settings that take effect immediately
+
+Settings that apply as soon as they change, such as notification preferences, use `Switch` and need no submit button. Save the change in `onCheckedChange`, and tell the user if saving fails.
+
+<Canvas of={FormsStories.ImmediateSettings} />
