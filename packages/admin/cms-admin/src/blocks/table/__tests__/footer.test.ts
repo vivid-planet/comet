@@ -33,6 +33,12 @@ describe("TableBlock: Footer", () => {
         expect(rendered.queryByText(/of 101/)).not.toBeNull();
     });
 
+    it("should not offer a page size select, because a page size below 100 would hide rows once the footer hides", async () => {
+        const rendered = renderTableBlock(createStateWithRows(101), { component: DataGrid });
+
+        expect(rendered.queryByText(/rows per page/i)).toBeNull();
+    });
+
     it("should hide the pagination of a table with 100 rows, because they fit on one page", async () => {
         const rendered = renderTableBlock(createStateWithRows(100), { component: DataGrid });
 

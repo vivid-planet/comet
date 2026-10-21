@@ -221,6 +221,7 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
             {...commonDataGridProps}
             sx={freeDataGridStyles}
             disableVirtualization
+            pageSizeOptions={[maximumPageSizeOfFreeDataGrid]}
             columns={dataGridColumns}
             hideFooter={state.rows.length <= maximumPageSizeOfFreeDataGrid}
         />
