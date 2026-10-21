@@ -1,3 +1,4 @@
+import { createStaticAssetsStorage, serveStaticAsset, uploadStaticAssets } from "@dextinity/site-nextjs/staticAssets";
 import { createServer } from "http";
 import next from "next";
 import { parse } from "url";
@@ -8,17 +9,29 @@ const dev = process.env.NODE_ENV !== "production";
 const host = process.env.SERVER_HOST ?? "localhost";
 const port = parseInt(process.env.SITE_PORT || "3000", 10);
 const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
-
 // when using middleware `hostname` and `port` must be provided below
 const app = next({ dev, hostname: host, port, webpack: true });
 
-app.prepare().then(() => {
+app.prepare().then(async () => {
     if (process.env.TRACING == "production") {
         require("./tracing.production");
     } else if (process.env.TRACING == "dev") {
         require("./tracing.dev");
     }
     const handle = withMetrics(app.getRequestHandler());
+    const staticAssetsStorage = process.env.STATIC_ASSETS_S3_BUCKET
+        ? await createStaticAssetsStorage({
+              scheme: "s3",
+              options: {
+                  bucket: process.env.STATIC_ASSETS_S3_BUCKET,
+                  region: process.env.STATIC_ASSETS_S3_REGION ?? "",
+                  endpoint: process.env.STATIC_ASSETS_S3_ENDPOINT ?? "",
+                  access_key_id: process.env.STATIC_ASSETS_S3_ACCESS_KEY_ID ?? "",
+                  secret_access_key: process.env.STATIC_ASSETS_S3_SECRET_ACCESS_KEY ?? "",
+              },
+          })
+        : undefined;
+    await uploadStaticAssets({ storage: staticAssetsStorage, keyPrefix: "site" });
 
     createServer(async (req, res) => {
         try {
@@ -33,6 +46,10 @@ app.prepare().then(() => {
                     res.end();
                     return;
                 }
+            }
+
+            if (await serveStaticAsset({ pathname: parsedUrl.pathname, res, storage: staticAssetsStorage, keyPrefix: "site" })) {
+                return;
             }
 
             let maxAge: string | undefined;
