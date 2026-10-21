@@ -28,6 +28,13 @@
         },
         "./webpackPersistedQueriesLoader": "./lib/persistedQueries/webpackPersistedQueriesLoader.js"
     },
+    "typesVersions": {
+        "*": {
+            "staticAssets": [
+                "./lib/staticAssets.d.ts"
+            ]
+        }
+    },
     "files": [
         "lib/*"
     ],
