@@ -42,7 +42,7 @@
     "dependencies": {
         "@dextinity/cms-api": "workspace:*",
         "@fast-csv/parse": "^5.0.8",
-        "@getbrevo/brevo": "^5.0.4",
+        "@getbrevo/brevo": "^6.2.0",
         "@nestjs/cache-manager": "^12.0.0",
         "@nestjs/jwt": "^12.0.2",
         "cache-manager": "^7.2.9",
