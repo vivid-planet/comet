@@ -1,0 +1,37 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+import * as ButtonStories from "./Button.stories";
+
+<Meta of={ButtonStories} name="Design tokens" summary="The design tokens a theme styles the button with, and what each one changes." />
+
+# Button design tokens
+
+A theme styles the button through these [design tokens](?path=/docs/foundations-design-tokens--docs). The `--dextinity-button-*` tokens are the button's own. The others are shared with other components, so changing them changes those components too. `IconButton` is a button, so all of them style it as well.
+
+[Theme overview](?path=/docs/foundations-theme-overview--docs) shows each token's value in every theme.
+
+| Token                                                                                                                               | In the button                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `--dextinity-button-radius`                                                                                                         | Corner radius.                                                        |
+| `--dextinity-button-font-weight`                                                                                                    | Font weight of the text.                                              |
+| `--dextinity-button-primary-background`                                                                                             | Background of a primary button: a color or a gradient.                |
+| `--dextinity-button-primary-background-hover`                                                                                       | Background of a hovered primary button.                               |
+| `--dextinity-button-primary-foreground`                                                                                             | Text and icons of a primary button.                                   |
+| `--dextinity-button-primary-shadow`                                                                                                 | Shadow of a primary button. A disabled button has none.               |
+| `--dextinity-button-secondary-background`                                                                                           | Background of a secondary button.                                     |
+| `--dextinity-button-secondary-background-hover`                                                                                     | Background of a hovered secondary button.                             |
+| `--dextinity-button-secondary-foreground`                                                                                           | Text and icons of a secondary button.                                 |
+| `--dextinity-button-secondary-foreground-hover`                                                                                     | Text and icons of a hovered secondary button.                         |
+| `--dextinity-button-secondary-border`                                                                                               | Border color of a secondary button.                                   |
+| `--dextinity-button-ghost-foreground`                                                                                               | Text and icons of a ghost button.                                     |
+| `--dextinity-button-ghost-background-hover`                                                                                         | Background of a hovered ghost button. It has none until hovered.      |
+| `--dextinity-control-height-small`, `--dextinity-control-height-medium`, `--dextinity-control-height-large`                         | Minimum height of each `size`. A label that wraps makes it taller.    |
+| `--dextinity-control-padding-inline-small`, `--dextinity-control-padding-inline-medium`, `--dextinity-control-padding-inline-large` | Horizontal padding of each `size`.                                    |
+| `--dextinity-control-font-size-small`, `--dextinity-control-font-size-medium`, `--dextinity-control-font-size-large`                | Text size of each `size`. Icons are 1.25 times as large.              |
+| `--dextinity-control-border-width`                                                                                                  | Border width. Only a secondary button shows its border.               |
+| `--dextinity-font-family-body`                                                                                                      | Font family of the text.                                              |
+| `--dextinity-space-xs`                                                                                                              | Vertical padding, which keeps a wrapped label off the edges.          |
+| `--dextinity-space-sm`                                                                                                              | Gap between the icons and the text.                                   |
+| `--dextinity-color-focus-ring`, `--dextinity-focus-ring-width`, `--dextinity-focus-ring-offset`                                     | Outline of the button focused with the keyboard.                      |
+| `--dextinity-opacity-disabled`                                                                                                      | Opacity of a disabled button.                                         |
+| `--dextinity-motion-duration-medium`, `--dextinity-motion-easing`                                                                   | Transition of the background, border, shadow and text color on hover. |

@@ -6,14 +6,14 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 Design tokens are the CSS custom properties a theme defines and the components read. This page is the contract between them: a theme defines exactly the tokens listed here, and a component uses no other `--dextinity-*` property. A unit test enforces both, together with the contrast requirements below, so a theme can't silently break a component.
 
-The values live in the theme stylesheets in `packages/ui/src/themes/`. Read [Theming](?path=/docs/foundations-theming--docs) for how a theme is applied and how to create one.
+The values live in the theme stylesheets in `packages/ui/src/themes/`; [Theme overview](?path=/docs/foundations-theme-overview--docs) shows them for each theme. Each component's "Design tokens" page, such as [the button's](?path=/docs/components-button--design-tokens), lists the tokens that style it and what each one changes there. Read [Theming](?path=/docs/foundations-theming--docs) for how a theme is applied and how to create one.
 
 - A token's value is a plain CSS value. It may reference another token, for example `var(--dextinity-color-surface)`; it updates with the color scheme.
 - Colors are opaque hex colors, and a gradient has two of them, so their contrast can be checked.
 - Every theme defines all tokens for the light color scheme, and redefines every `--dextinity-color-*` token for the dark color scheme. It may redefine any other token there too.
 - "Contrast" names the minimum [WCAG 2.2](https://www.w3.org/TR/WCAG22/#contrast-minimum) contrast ratio between two tokens, checked in every theme and color scheme.
 
-To add a token, add a row here, define it in every theme, and use it in a component's stylesheet or a documented pattern in the same change.
+To add a token, add a row here, define it in every theme, and use it in a component's stylesheet or a documented pattern in the same change. When a component's stylesheet starts or stops using a token, update the component's design tokens page too; the unit test checks that it lists exactly the tokens the stylesheet uses.
 
 ## Color
 

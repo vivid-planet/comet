@@ -1,0 +1,22 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+import * as FormFieldStories from "./FormField.stories";
+
+<Meta of={FormFieldStories} name="Design tokens" summary="The design tokens a theme styles the form field with, and what each one changes." />
+
+# FormField design tokens
+
+A theme styles the form field through these [design tokens](?path=/docs/foundations-design-tokens--docs). The form field has no tokens of its own: all of them are shared with other components, so changing one changes those components too. `TextField` renders a `FormField`, so they style a text field's label, description and error message as well.
+
+[Theme overview](?path=/docs/foundations-theme-overview--docs) shows each token's value in every theme.
+
+| Token                                                                                                                                                                                               | In the form field                                                                                                                                                               |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-color-foreground`                                                                                                                                                                      | Text color of the label.                                                                                                                                                        |
+| `--dextinity-typography-label-font-size`, `--dextinity-typography-label-line-height`, `--dextinity-typography-label-font-weight`, `--dextinity-typography-label-letter-spacing`                     | Size, line height, weight and letter spacing of the label.                                                                                                                      |
+| `--dextinity-color-danger`                                                                                                                                                                          | Color of the asterisk after the label of a `required` field, and text color of the error message.                                                                               |
+| `--dextinity-color-foreground-muted`                                                                                                                                                                | Text color of the description.                                                                                                                                                  |
+| `--dextinity-typography-body-small-font-size`, `--dextinity-typography-body-small-line-height`, `--dextinity-typography-body-small-font-weight`, `--dextinity-typography-body-small-letter-spacing` | Size, line height, weight and letter spacing of the description and the error message.                                                                                          |
+| `--dextinity-font-family-body`                                                                                                                                                                      | Font family of the label, the description and the error message.                                                                                                                |
+| `--dextinity-space-xs`                                                                                                                                                                              | Gap between the label, the control, the description and the error message, and between the label and its asterisk.                                                              |
+| `--dextinity-opacity-disabled`                                                                                                                                                                      | Opacity of the label of a `disabled` field, asterisk included. The description and the error message stay fully readable, so the description can say why the field is disabled. |

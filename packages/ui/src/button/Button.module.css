@@ -1,7 +1,6 @@
 @layer dextinity {
     .root {
         --_background: transparent;
-        --_foreground: var(--dextinity-color-foreground);
         --_border-color: transparent;
         --_shadow: none;
         --_height: var(--dextinity-control-height-medium);

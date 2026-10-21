@@ -53,7 +53,7 @@ The theme names its fonts, but doesn't load them: the Dextinity theme uses [Figt
 - One feature folder per component, camelCase: `button/`, `iconButton/`, `radioGroup/`.
 - `<Component>.tsx` (PascalCase) for a component, `<featureName>.ts` (camelCase) for anything else.
 - `<Component>.module.css` for a component's styles. The file name determines the emitted class names, so it must match the component.
-- `<Component>.test.tsx` next to the component; stories in `__stories__/<Component>.stories.tsx`.
+- `<Component>.test.tsx` next to the component; stories in `__stories__/<Component>.stories.tsx`, and the component's design tokens page in `__stories__/<Component>DesignTokens.mdx`.
 - `src/themes/` holds the themes, `src/docs/` the Storybook pages that aren't tied to a component, `src/storybook/` helpers that only the stories use. Stories import those helpers as `#storybook/<file>`.
 
 ## Component conventions
@@ -107,6 +107,7 @@ In the stylesheet, the local class `root` becomes the root class and any other c
 
 - Wrap everything in `@layer dextinity { … }`.
 - Use design tokens for every value a theme might want to change, and nothing but [documented tokens](src/docs/DesignTokens.mdx); the theme contract test fails on any other `--dextinity-*` property. If a token is missing, add it in the same change: document it and define it in every theme.
+- List every token a component's stylesheets use in its design tokens page, [`ButtonDesignTokens.mdx`](src/button/__stories__/ButtonDesignTokens.mdx) for example, with what it changes in the component. The theme contract test fails when the page misses a token or lists one the stylesheets don't use.
 - Name private custom properties `--_<name>`, for example `--_background`, and set variant-specific values through them rather than repeating declarations.
 - Style owner state with attribute selectors nested under `.root` (`&[data-variant="primary"]`). Put a blank line before every nested rule.
 - Show focus with `:focus-visible` and the focus ring tokens. Put hover styles inside `@media (hover: hover)`, so they don't stick on touch screens.
@@ -140,7 +141,7 @@ Test what a consumer depends on, not the implementation:
 - **Utilities** — a unit test next to the utility.
 - **A component's styling contract** — its classes and `data-*` attributes, and how slot props are merged — a unit test next to the component. Don't assert styles.
 - **Behavior** — a `play` function in a story, which runs in a real browser. Every story also runs an accessibility check and fails on violations.
-- **Themes** — [`themeContract.test.ts`](src/themes/themeContract.test.ts) checks every theme against the documented tokens and the contrast requirements.
+- **Themes** — [`themeContract.test.ts`](src/themes/themeContract.test.ts) checks every theme against the documented tokens and the contrast requirements, and every component's design tokens page against its stylesheets.
 - **Appearance** — [Chromatic](https://www.chromatic.com) captures every story in the Dextinity theme, light and dark, and the theme overview in every theme, and shows a pull request's visual changes for review. CI publishes to it from `.github/workflows/chromatic.yml` with the `CHROMATIC_PROJECT_TOKEN_UI` secret; to publish from a local clone, run `CHROMATIC_PROJECT_TOKEN=<token> pnpm run chromatic`. The modes in [`themeDecorator.tsx`](src/storybook/themeDecorator.tsx) set which themes a story is captured in.
 
 Rendering alone isn't worth a test: every story already renders in a browser test.

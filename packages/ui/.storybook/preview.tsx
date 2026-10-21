@@ -50,7 +50,14 @@ const preview: Preview = {
         },
         options: {
             storySort: {
-                order: ["Introduction", "Foundations", ["Theming", "Design tokens", "Customization"], "Components", "Patterns", "Contributing"],
+                order: [
+                    "Introduction",
+                    "Foundations",
+                    ["Theming", "Design tokens", "Theme overview", "Customization"],
+                    "Components",
+                    "Patterns",
+                    "Contributing",
+                ],
             },
         },
     },

@@ -1,19 +1,22 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
 import postcss, { type Rule } from "postcss";
 import { describe, expect, it } from "vitest";
 
+import { readTokenTableRows, tokenNamePattern } from "../storybook/tokenTables";
+
 const sourceDirectory = join(import.meta.dirname, "..");
 const themesDirectory = join(sourceDirectory, "themes");
 
-const tokenNamePattern = /--dextinity-[a-z0-9-]+/g;
+/** The tokens of each table row of a documentation page. */
+function readPageTokenRows(pagePath: string) {
+    return readTokenTableRows(readFileSync(pagePath, "utf8")).map((row) => row.tokens);
+}
 
-/** The documented tokens: every token in a table row of the design tokens page. */
+/** The documented tokens: the token in each table row of the design tokens page. */
 function readContractTokens() {
-    const designTokensPage = readFileSync(join(sourceDirectory, "docs", "DesignTokens.mdx"), "utf8");
-    const tableRows = designTokensPage.split("\n").filter((line) => line.startsWith("| `--dextinity-"));
-    return tableRows.map((row) => row.match(tokenNamePattern)?.[0] ?? "");
+    return readPageTokenRows(join(sourceDirectory, "docs", "DesignTokens.mdx")).map((rowTokens) => (rowTokens.length === 1 ? rowTokens[0] : ""));
 }
 
 const contractTokens = readContractTokens();
@@ -205,6 +208,34 @@ describe("component stylesheets", () => {
         const usedTokens = readFileSync(join(sourceDirectory, path), "utf8").match(tokenNamePattern) ?? [];
 
         expect({ undocumentedTokens: usedTokens.filter((token) => !contractTokens.includes(token)) }).toEqual({ undocumentedTokens: [] });
+    });
+});
+
+describe("component design tokens pages", () => {
+    const isComponentStylesheet = (fileName: string) => /^[A-Z][A-Za-z0-9]*\.module\.css$/.test(fileName);
+    const componentFolders = readdirSync(sourceDirectory, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory() && readdirSync(join(sourceDirectory, entry.name)).some(isComponentStylesheet))
+        .map((entry) => entry.name);
+
+    it.each(componentFolders)("%s/__stories__ lists each token its component stylesheets use exactly once", (folder) => {
+        const storiesDirectory = join(sourceDirectory, folder, "__stories__");
+        const pageFileNames = existsSync(storiesDirectory)
+            ? readdirSync(storiesDirectory).filter((fileName) => fileName.endsWith("DesignTokens.mdx"))
+            : [];
+        expect(pageFileNames, `${folder}/__stories__ needs one <Component>DesignTokens.mdx`).toHaveLength(1);
+
+        const usedTokens = new Set(
+            readdirSync(join(sourceDirectory, folder))
+                .filter(isComponentStylesheet)
+                .flatMap((fileName) => readFileSync(join(sourceDirectory, folder, fileName), "utf8").match(tokenNamePattern) ?? []),
+        );
+        const listedTokens = readPageTokenRows(join(storiesDirectory, pageFileNames[0])).flat();
+
+        expect({
+            missingTokens: [...usedTokens].filter((token) => !listedTokens.includes(token)),
+            unusedTokens: listedTokens.filter((token) => !usedTokens.has(token)),
+            repeatedTokens: listedTokens.filter((token, index) => listedTokens.indexOf(token) !== index),
+        }).toEqual({ missingTokens: [], unusedTokens: [], repeatedTokens: [] });
     });
 });
 
