@@ -1,1 +1,7 @@
-export { serveStaticAssetFromS3 } from "./staticAssets/serveStaticAssetFromS3";
+export { serveStaticAsset } from "./staticAssets/serveStaticAsset";
+export {
+    createStaticAssetsStorage,
+    type StaticAsset,
+    type StaticAssetsStorage,
+    type StaticAssetsStorageConfig,
+} from "./staticAssets/staticAssetsStorage";

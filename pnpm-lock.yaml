@@ -2694,6 +2694,9 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.1149.0
         version: 3.1151.0
+      '@azure/storage-blob':
+        specifier: ^12.34.0
+        version: 12.34.0(supports-color@8.1.1)
       '@dextinity/cli':
         specifier: workspace:*
         version: link:../../cli
