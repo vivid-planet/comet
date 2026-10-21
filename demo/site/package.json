@@ -33,9 +33,12 @@
         "test:watch": "vitest --watch"
     },
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.1149.0",
         "@base-ui/react": "^1.9.0",
         "@dextinity/mail-react": "workspace:*",
         "@dextinity/site-nextjs": "workspace:*",
+        "@flystorage/aws-s3": "^1.2.0",
+        "@flystorage/file-storage": "^1.2.2",
         "@formatjs/cli": "^6.16.34",
         "@google-cloud/recaptcha-enterprise": "^5.13.0",
         "@next/bundle-analyzer": "^16.3.8",

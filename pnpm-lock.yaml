@@ -671,6 +671,9 @@ importers:
 
   demo/site:
     dependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.1149.0
+        version: 3.1151.0
       '@base-ui/react':
         specifier: ^1.9.0
         version: 1.9.0(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -680,6 +683,12 @@ importers:
       '@dextinity/site-nextjs':
         specifier: workspace:*
         version: link:../../packages/site/site-nextjs
+      '@flystorage/aws-s3':
+        specifier: ^1.2.0
+        version: 1.2.0(supports-color@8.1.1)
+      '@flystorage/file-storage':
+        specifier: ^1.2.2
+        version: 1.2.2
       '@formatjs/cli':
         specifier: ^6.16.34
         version: 6.16.34(@vue/compiler-core@3.5.43)
@@ -2688,12 +2697,21 @@ importers:
         specifier: ^0.0.1
         version: 0.0.1
     devDependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.1149.0
+        version: 3.1151.0
       '@dextinity/cli':
         specifier: workspace:*
         version: link:../../cli
       '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
+      '@flystorage/aws-s3':
+        specifier: ^1.2.0
+        version: 1.2.0(supports-color@8.1.1)
+      '@flystorage/file-storage':
+        specifier: ^1.2.2
+        version: 1.2.2
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0
@@ -2703,6 +2721,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.7.0
         version: 4.7.0(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.7.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))
+      aws-sdk-client-mock:
+        specifier: ^4.1.0
+        version: 4.1.0
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3342,6 +3363,10 @@ packages:
     resolution: {integrity: sha512-nslpzUCTI9b2IQMWSd6mSAXldBexPc8rr0d3dXUutXYFLFaTdsHa2GD7sJdsn3PhyjK0O5K8ypd6zi+RXXPVlg==}
     engines: {node: '>=20.0.0'}
 
+  '@aws-sdk/core@3.978.4':
+    resolution: {integrity: sha512-JvGp6y9sPX8FSs2K/EmFMZcUfdkHxqGE45+oxwGC75OIh50j2e4cbx7zcR3BwNs2DSGqJdBja5h6Vy89iIDmRQ==}
+    engines: {node: '>=20.0.0'}
+
   '@aws-sdk/credential-provider-env@3.972.74':
     resolution: {integrity: sha512-rsRJcW2iFUhCgclyD6OSbMEaPl8Eu0qSeRZb2uuCK1ViZ66hl5wOe/p6Vr6MO3b+ydyKgFeqza2p6tZThvILlw==}
     engines: {node: '>=20.0.0'}
@@ -3386,6 +3411,10 @@ packages:
 
   '@aws-sdk/nested-clients@3.997.48':
     resolution: {integrity: sha512-B01jdXJtAW/XOiUzGdI2mz67WyEHbGEc9X6Euzw3bjLAa+txTqdZDER4X2FsIEcXzV2ABqudVZ5thali8tCCzQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/s3-request-presigner@3.1153.0':
+    resolution: {integrity: sha512-GJIV1KbOiTGTutEzTr1Upn+mHYq4ZDXcAJahQ8+5zoajWPNDIAQCeu/fEZ4J63IoocEIMZM2xTeKiEf4ubLXVg==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/signature-v4-multi-region@3.996.48':
@@ -5327,6 +5356,18 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
+
+  '@flystorage/aws-s3@1.2.0':
+    resolution: {integrity: sha512-80cXfflnAfO3mSV3B3W+LyN5mIfNMOr7QFTQ6o28y81RpMDtxIUW0EJbFZ53uPcJ7Vml3RBIViiDrfVsZTAbtQ==}
+
+  '@flystorage/dynamic-import@1.0.0':
+    resolution: {integrity: sha512-CIbIUrBdaPFyKnkVBaqzksvzNtsMSXITR/G/6zlil3MBnPFq2LX+X4Mv5p2XOmv/3OulFs/ff2SNb+5dc2Twtg==}
+
+  '@flystorage/file-storage@1.2.2':
+    resolution: {integrity: sha512-n4TZIuu7DEYVmNE9vYaz6bIPgQpiS3BLyHUz/U1A69uTyl9LNDQVCIrYy3dW/oBUirXwG+OLk3HwBbrD1izsTw==}
+
+  '@flystorage/stream-mime-type@1.1.0':
+    resolution: {integrity: sha512-PAb2fH3Gl99aHCMzkr91soUuySdCNBINIiyWrccobup0ouXBhVGUaMBvVw817ub/yDZK6Tn4OBs2zqYmYXtOlw==}
 
   '@fontsource-variable/roboto-flex@5.3.0':
     resolution: {integrity: sha512-bOxckUy0qXNRjhV6e4pcHGSvptix4ZRD1uaj5Za8h+p3qrb2GL4U4TQdpVmPSy0SmqwldfD+JJqEKdF68EyiAw==}
@@ -9347,6 +9388,10 @@ packages:
   '@tiptap/starter-kit@3.32.0':
     resolution: {integrity: sha512-aPYxaevci4PgMrTLsg+baiqI7M1ICd4V9H+zTTdrqs8OUZIbAvj/pNDuHU8uWZyKMu3Dh72t2D6ZdqRu/6aSWw==}
 
+  '@tokenizer/inflate@0.2.7':
+    resolution: {integrity: sha512-MADQgmZT1eKjp06jpI2yozxaU9uVs4GzzgSL+uEq7bVcJ9V1ZXQkeGNql1fsSI0gMy1vhvNTNbUqrx+pZfJVmg==}
+    engines: {node: '>=18'}
+
   '@tokenizer/inflate@0.4.1':
     resolution: {integrity: sha512-2mAv+8pkG6GIZiF1kNg1jAjh27IDxEPKwdGul3snfztFerfPGI1LjDezZp3i7BElXompqEtPmoPx6c2wgtWsOA==}
     engines: {node: '>=18'}
@@ -12653,6 +12698,10 @@ packages:
   file-selector@2.1.2:
     resolution: {integrity: sha512-QgXo+mXTe8ljeqUFaX3QVHc5osSItJ/Km+xpocx0aSqWGMSCf6qYs/VnzZgS864Pjn5iceMRFigeAV7AfTlaig==}
     engines: {node: '>= 12'}
+
+  file-type@20.5.0:
+    resolution: {integrity: sha512-BfHZtG/l9iMm4Ecianu7P8HRD2tBHLtjXinm4X62XBOYzi7CYA7jyqfJzOvXHqzVrVPYqBo2/GvbARMaaJkKVg==}
+    engines: {node: '>=18'}
 
   file-type@21.3.4:
     resolution: {integrity: sha512-Ievi/yy8DS3ygGvT47PjSfdFoX+2isQueoYP1cntFW1JLYAuS4GD7NUPGg4zv2iZfV52uDyk5w5Z0TdpRS6Q1g==}
@@ -19300,6 +19349,17 @@ snapshots:
       bowser: 2.14.1
       tslib: 2.8.1
 
+  '@aws-sdk/core@3.978.4':
+    dependencies:
+      '@aws-sdk/types': 3.974.6
+      '@aws-sdk/xml-builder': 3.972.41
+      '@aws/lambda-invoke-store': 0.3.0
+      '@smithy/core': 3.36.0
+      '@smithy/signature-v4': 5.7.4
+      '@smithy/types': 4.19.0
+      bowser: 2.14.1
+      tslib: 2.8.1
+
   '@aws-sdk/credential-provider-env@3.972.74':
     dependencies:
       '@aws-sdk/core': 3.978.3
@@ -19411,6 +19471,15 @@ snapshots:
       '@smithy/core': 3.36.0
       '@smithy/fetch-http-handler': 5.8.0
       '@smithy/node-http-handler': 4.12.1
+      '@smithy/types': 4.19.0
+      tslib: 2.8.1
+
+  '@aws-sdk/s3-request-presigner@3.1153.0':
+    dependencies:
+      '@aws-sdk/core': 3.978.4
+      '@aws-sdk/signature-v4-multi-region': 3.996.48
+      '@aws-sdk/types': 3.974.6
+      '@smithy/core': 3.36.0
       '@smithy/types': 4.19.0
       tslib: 2.8.1
 
@@ -22472,6 +22541,30 @@ snapshots:
       react-dom: 19.3.0(react@19.3.0)
 
   '@floating-ui/utils@0.2.12': {}
+
+  '@flystorage/aws-s3@1.2.0(supports-color@8.1.1)':
+    dependencies:
+      '@aws-sdk/client-s3': 3.1151.0
+      '@aws-sdk/lib-storage': 3.1151.0(@aws-sdk/client-s3@3.1151.0)
+      '@aws-sdk/s3-request-presigner': 3.1153.0
+      '@flystorage/file-storage': 1.2.2
+      '@flystorage/stream-mime-type': 1.1.0(supports-color@8.1.1)
+      file-type: 21.3.4(supports-color@8.1.1)
+      mime-types: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
+
+  '@flystorage/dynamic-import@1.0.0': {}
+
+  '@flystorage/file-storage@1.2.2': {}
+
+  '@flystorage/stream-mime-type@1.1.0(supports-color@8.1.1)':
+    dependencies:
+      '@flystorage/dynamic-import': 1.0.0
+      file-type: 20.5.0(supports-color@8.1.1)
+      mime-types: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@fontsource-variable/roboto-flex@5.3.0': {}
 
@@ -26880,6 +26973,14 @@ snapshots:
       '@tiptap/extensions': 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))(@tiptap/pm@3.32.0)
       '@tiptap/pm': 3.32.0
 
+  '@tokenizer/inflate@0.2.7(supports-color@8.1.1)':
+    dependencies:
+      debug: 4.4.3(supports-color@8.1.1)
+      fflate: 0.8.3
+      token-types: 6.1.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@tokenizer/inflate@0.4.1(supports-color@8.1.1)':
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
@@ -30867,6 +30968,15 @@ snapshots:
   file-selector@2.1.2:
     dependencies:
       tslib: 2.8.1
+
+  file-type@20.5.0(supports-color@8.1.1):
+    dependencies:
+      '@tokenizer/inflate': 0.2.7(supports-color@8.1.1)
+      strtok3: 10.3.5
+      token-types: 6.1.2
+      uint8array-extras: 1.6.0
+    transitivePeerDependencies:
+      - supports-color
 
   file-type@21.3.4(supports-color@8.1.1):
     dependencies:
