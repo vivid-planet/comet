@@ -51,7 +51,7 @@
         "storybook": "storybook dev -p 26648 --no-open --no-version-updates --disable-telemetry",
         "test": "pnpm run test:unit && pnpm run test:storybook",
         "test:storybook": "vitest --run --project storybook --outputFile.junit=./junit-storybook.xml",
-        "test:unit": "vitest --run --project unit --outputFile.junit=./junit-unit.xml",
+        "test:unit": "vitest --run --project unit --maxWorkers=50% --outputFile.junit=./junit-unit.xml",
         "test:watch": "vitest --watch"
     },
     "dependencies": {
