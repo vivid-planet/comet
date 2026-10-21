@@ -120,6 +120,10 @@ const contrastRequirements = [
         "--dextinity-color-surface",
         "--dextinity-color-surface-hover",
         "--dextinity-color-neutral-subtle",
+        "--dextinity-color-primary-subtle",
+        "--dextinity-color-success-subtle",
+        "--dextinity-color-warning-subtle",
+        "--dextinity-color-danger-subtle",
     ]),
     ...textOn("--dextinity-color-foreground-muted", ["--dextinity-color-background", "--dextinity-color-surface"]),
     ...textOn("--dextinity-color-primary-foreground", ["--dextinity-color-primary"]),
@@ -131,12 +135,14 @@ const contrastRequirements = [
     ...textOn("--dextinity-button-secondary-foreground", ["--dextinity-button-secondary-background"]),
     ...textOn("--dextinity-button-secondary-foreground-hover", ["--dextinity-button-secondary-background-hover"]),
     ...textOn("--dextinity-button-ghost-foreground", ["--dextinity-color-background", "--dextinity-button-ghost-background-hover"]),
+    ...textOn("--dextinity-app-bar-foreground", ["--dextinity-app-bar-background", "--dextinity-app-bar-background-hover"]),
     ...nonTextOn("--dextinity-color-border-strong", ["--dextinity-color-background", "--dextinity-color-surface"]),
     ...nonTextOn("--dextinity-color-border-hover", ["--dextinity-color-background", "--dextinity-color-surface"]),
     ...nonTextOn("--dextinity-color-primary", ["--dextinity-color-background", "--dextinity-color-surface"]),
     ...nonTextOn("--dextinity-color-primary-hover", ["--dextinity-color-background", "--dextinity-color-surface"]),
     ...nonTextOn("--dextinity-color-primary-foreground", ["--dextinity-color-primary-hover"]),
     ...nonTextOn("--dextinity-color-focus-ring", ["--dextinity-color-background"]),
+    ...nonTextOn("--dextinity-app-bar-focus-ring", ["--dextinity-app-bar-background"]),
 ];
 
 function textOn(foreground: string, backgrounds: string[]) {

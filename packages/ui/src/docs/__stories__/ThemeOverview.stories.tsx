@@ -44,6 +44,13 @@ export const Shape: Story = {
 };
 
 /**
+ * The shadows of popups and dialogs.
+ */
+export const Elevation: Story = {
+    render: (_args, { globals }) => <TokenTable section="Elevation" theme={String(globals.theme)} colorScheme={String(globals.colorScheme)} />,
+};
+
+/**
  * The shared metrics of controls.
  */
 export const Controls: Story = {
@@ -65,8 +72,22 @@ export const Motion: Story = {
 };
 
 /**
+ * The stacking order of popups, dialogs and tooltips.
+ */
+export const Layering: Story = {
+    render: (_args, { globals }) => <TokenTable section="Layering" theme={String(globals.theme)} colorScheme={String(globals.colorScheme)} />,
+};
+
+/**
  * The button's own tokens, in the color scheme picked in the toolbar.
  */
 export const Button: Story = {
     render: (_args, { globals }) => <TokenTable section="Button" theme={String(globals.theme)} colorScheme={String(globals.colorScheme)} />,
+};
+
+/**
+ * The app bar's own tokens.
+ */
+export const AppBar: Story = {
+    render: (_args, { globals }) => <TokenTable section="App bar" theme={String(globals.theme)} colorScheme={String(globals.colorScheme)} />,
 };

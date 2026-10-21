@@ -32,6 +32,7 @@
         --dextinity-color-danger: #b8283f;
         --dextinity-color-danger-subtle: #fee2e5;
         --dextinity-color-focus-ring: #7c3aed;
+        --dextinity-color-backdrop: #1a1418;
 
         /* Typography */
         --dextinity-font-family-body: "Figtree Variable", "Figtree", "Helvetica Neue", system-ui, sans-serif;
@@ -91,6 +92,10 @@
         --dextinity-radius-large: 16px;
         --dextinity-radius-full: 9999px;
 
+        /* Elevation */
+        --dextinity-shadow-popup: 0 4px 10px rgb(26 20 24 / 8%), 0 16px 32px rgb(26 20 24 / 10%);
+        --dextinity-shadow-dialog: 0 8px 20px rgb(26 20 24 / 12%), 0 32px 64px rgb(26 20 24 / 16%);
+
         /* Controls */
         --dextinity-control-height-small: 2.25rem;
         --dextinity-control-height-medium: 3rem;
@@ -108,11 +113,17 @@
         --dextinity-focus-ring-width: 2px;
         --dextinity-focus-ring-offset: 2px;
         --dextinity-opacity-disabled: 0.4;
+        --dextinity-opacity-backdrop: 0.5;
 
         /* Motion */
         --dextinity-motion-duration-short: 120ms;
         --dextinity-motion-duration-medium: 200ms;
         --dextinity-motion-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+        /* Layering */
+        --dextinity-z-index-dialog: 1300;
+        --dextinity-z-index-popup: 1400;
+        --dextinity-z-index-tooltip: 1500;
 
         /* Button */
         --dextinity-button-radius: 9999px;
@@ -128,6 +139,13 @@
         --dextinity-button-secondary-border: var(--dextinity-color-foreground);
         --dextinity-button-ghost-foreground: var(--dextinity-color-foreground);
         --dextinity-button-ghost-background-hover: var(--dextinity-color-surface-hover);
+
+        /* App bar */
+        --dextinity-app-bar-height: 4rem;
+        --dextinity-app-bar-background: #2e1065;
+        --dextinity-app-bar-background-hover: #3f1d8a;
+        --dextinity-app-bar-foreground: #fff;
+        --dextinity-app-bar-focus-ring: #d8b4fe;
     }
 
     [data-dextinity-theme="sunset"][data-dextinity-color-scheme="dark"] {
@@ -154,6 +172,7 @@
         --dextinity-color-danger: #ff8a9b;
         --dextinity-color-danger-subtle: #3d1219;
         --dextinity-color-focus-ring: #a78bfa;
+        --dextinity-color-backdrop: #000;
     }
 
     /* After the dark color scheme, so it wins there too. */

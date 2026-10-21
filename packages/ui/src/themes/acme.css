@@ -31,6 +31,7 @@
         --dextinity-color-danger: #a8263b;
         --dextinity-color-danger-subtle: #fbe1e4;
         --dextinity-color-focus-ring: #b4451f;
+        --dextinity-color-backdrop: #2b2118;
 
         /* Typography */
         --dextinity-font-family-body: system-ui, -apple-system, "Segoe UI", roboto, sans-serif;
@@ -90,6 +91,10 @@
         --dextinity-radius-large: 6px;
         --dextinity-radius-full: 9999px;
 
+        /* Elevation */
+        --dextinity-shadow-popup: 0 2px 8px rgb(43 33 24 / 16%);
+        --dextinity-shadow-dialog: 0 4px 24px rgb(43 33 24 / 24%);
+
         /* Controls */
         --dextinity-control-height-small: 2rem;
         --dextinity-control-height-medium: 2.5rem;
@@ -107,11 +112,17 @@
         --dextinity-focus-ring-width: 3px;
         --dextinity-focus-ring-offset: 1px;
         --dextinity-opacity-disabled: 0.5;
+        --dextinity-opacity-backdrop: 0.4;
 
         /* Motion */
         --dextinity-motion-duration-short: 80ms;
         --dextinity-motion-duration-medium: 160ms;
         --dextinity-motion-easing: cubic-bezier(0, 0, 0.2, 1);
+
+        /* Layering */
+        --dextinity-z-index-dialog: 1300;
+        --dextinity-z-index-popup: 1400;
+        --dextinity-z-index-tooltip: 1500;
 
         /* Button */
         --dextinity-button-radius: 3px;
@@ -127,6 +138,13 @@
         --dextinity-button-secondary-border: var(--dextinity-color-primary);
         --dextinity-button-ghost-foreground: var(--dextinity-color-primary);
         --dextinity-button-ghost-background-hover: var(--dextinity-color-primary-subtle);
+
+        /* App bar */
+        --dextinity-app-bar-height: 3.5rem;
+        --dextinity-app-bar-background: #2b2118;
+        --dextinity-app-bar-background-hover: #45382b;
+        --dextinity-app-bar-foreground: #fbf8f3;
+        --dextinity-app-bar-focus-ring: #f2a27e;
     }
 
     [data-dextinity-theme="acme"][data-dextinity-color-scheme="dark"] {
@@ -153,6 +171,7 @@
         --dextinity-color-danger: #f28b9a;
         --dextinity-color-danger-subtle: #45161f;
         --dextinity-color-focus-ring: #f08a5d;
+        --dextinity-color-backdrop: #000;
     }
 
     /* After the dark color scheme, so it wins there too. */

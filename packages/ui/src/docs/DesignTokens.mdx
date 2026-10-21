@@ -17,28 +17,29 @@ To add a token, add a row here, define it in every theme, and use it in a compon
 
 ## Color
 
-| Token                                  | Usage                                                                                                                                 |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `--dextinity-color-background`         | Page background. Components don't set it: apply it to the page yourself.                                                              |
-| `--dextinity-color-foreground`         | Default text and icons. Contrast 4.5:1 on background, surface, surface-hover and neutral-subtle.                                      |
-| `--dextinity-color-foreground-muted`   | Secondary text, such as a field's description or a placeholder. Contrast 4.5:1 on background and surface.                             |
-| `--dextinity-color-surface`            | Background of controls: text inputs, checkboxes, radios, the switch thumb.                                                            |
-| `--dextinity-color-surface-hover`      | Background of a hovered surface.                                                                                                      |
-| `--dextinity-color-border`             | Borders that only separate content, in an application's layout. Components don't set it.                                              |
-| `--dextinity-color-border-strong`      | Borders that identify a control: text inputs, checkboxes, radios, the unchecked switch track. Contrast 3:1 on background and surface. |
-| `--dextinity-color-border-hover`       | Border of a hovered control, and the track of a hovered, unchecked switch. Contrast 3:1 on background and surface.                    |
-| `--dextinity-color-primary`            | The brand's accent for selected and active states, such as a checked checkbox. Contrast 3:1 on background and surface.                |
-| `--dextinity-color-primary-hover`      | Primary on a hovered element, such as a hovered checked checkbox. Contrast 3:1 on background and surface.                             |
-| `--dextinity-color-primary-foreground` | Text and icons on primary. Contrast 4.5:1 on primary, and 3:1 on primary-hover, for the check mark of a hovered checkbox.             |
-| `--dextinity-color-primary-subtle`     | Tinted background of primary elements, such as a primary badge. Primary text on it has contrast 4.5:1.                                |
-| `--dextinity-color-neutral-subtle`     | Background of neutral elements, such as a neutral badge.                                                                              |
-| `--dextinity-color-success`            | Text and icons that report success. Contrast 4.5:1 on background and success-subtle.                                                  |
-| `--dextinity-color-success-subtle`     | Tinted background of success elements.                                                                                                |
-| `--dextinity-color-warning`            | Text and icons that warn. Contrast 4.5:1 on background and warning-subtle.                                                            |
-| `--dextinity-color-warning-subtle`     | Tinted background of warning elements.                                                                                                |
-| `--dextinity-color-danger`             | Errors, such as a field's error message and an invalid control's border. Contrast 4.5:1 on background, surface and danger-subtle.     |
-| `--dextinity-color-danger-subtle`      | Tinted background of danger elements.                                                                                                 |
-| `--dextinity-color-focus-ring`         | Outline of the focused control. Contrast 3:1 on background.                                                                           |
+| Token                                  | Usage                                                                                                                                  |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-color-background`         | Page background. Components don't set it: apply it to the page yourself.                                                               |
+| `--dextinity-color-foreground`         | Default text and icons. Contrast 4.5:1 on background, surface, surface-hover, and on each subtle background, for the text of an alert. |
+| `--dextinity-color-foreground-muted`   | Secondary text, such as a field's description or a placeholder. Contrast 4.5:1 on background and surface.                              |
+| `--dextinity-color-surface`            | Background of controls: text inputs, checkboxes, radios, the switch thumb.                                                             |
+| `--dextinity-color-surface-hover`      | Background of a hovered surface.                                                                                                       |
+| `--dextinity-color-border`             | Borders that only separate content, in an application's layout. Components don't set it.                                               |
+| `--dextinity-color-border-strong`      | Borders that identify a control: text inputs, checkboxes, radios, the unchecked switch track. Contrast 3:1 on background and surface.  |
+| `--dextinity-color-border-hover`       | Border of a hovered control, and the track of a hovered, unchecked switch. Contrast 3:1 on background and surface.                     |
+| `--dextinity-color-primary`            | The brand's accent for selected and active states, such as a checked checkbox. Contrast 3:1 on background and surface.                 |
+| `--dextinity-color-primary-hover`      | Primary on a hovered element, such as a hovered checked checkbox. Contrast 3:1 on background and surface.                              |
+| `--dextinity-color-primary-foreground` | Text and icons on primary. Contrast 4.5:1 on primary, and 3:1 on primary-hover, for the check mark of a hovered checkbox.              |
+| `--dextinity-color-primary-subtle`     | Tinted background of primary elements, such as a primary badge. Primary text on it has contrast 4.5:1.                                 |
+| `--dextinity-color-neutral-subtle`     | Background of neutral elements, such as a neutral badge.                                                                               |
+| `--dextinity-color-success`            | Text and icons that report success. Contrast 4.5:1 on background and success-subtle.                                                   |
+| `--dextinity-color-success-subtle`     | Tinted background of success elements.                                                                                                 |
+| `--dextinity-color-warning`            | Text and icons that warn. Contrast 4.5:1 on background and warning-subtle.                                                             |
+| `--dextinity-color-warning-subtle`     | Tinted background of warning elements.                                                                                                 |
+| `--dextinity-color-danger`             | Errors, such as a field's error message and an invalid control's border. Contrast 4.5:1 on background, surface and danger-subtle.      |
+| `--dextinity-color-danger-subtle`      | Tinted background of danger elements.                                                                                                  |
+| `--dextinity-color-focus-ring`         | Outline of the focused control. Contrast 3:1 on background.                                                                            |
+| `--dextinity-color-backdrop`           | Backdrop behind a dialog, which covers the page at `--dextinity-opacity-backdrop`.                                                     |
 
 ## Typography
 
@@ -113,6 +114,15 @@ Gaps and padding inside components, and `--dextinity-space-xl` between component
 | `--dextinity-radius-large`  | Large surfaces in an application's layout, such as a card. Components don't set it. |
 | `--dextinity-radius-full`   | Fully rounded elements: radios, the switch.                                         |
 
+## Elevation
+
+Shadows of the surfaces that float above the page.
+
+| Token                       | Usage                                                                                |
+| --------------------------- | ------------------------------------------------------------------------------------ |
+| `--dextinity-shadow-popup`  | Popups: menus, the option lists of selects and autocompletes, tooltips and popovers. |
+| `--dextinity-shadow-dialog` | Dialogs.                                                                             |
+
 ## Controls
 
 Shared metrics of interactive controls. A button's `size` picks the small, medium or large value; text inputs use the medium height.
@@ -138,6 +148,7 @@ Shared metrics of interactive controls. A button's `size` picks the small, mediu
 | `--dextinity-focus-ring-width`  | Width of the focus outline. At least 2px.      |
 | `--dextinity-focus-ring-offset` | Gap between a focused control and its outline. |
 | `--dextinity-opacity-disabled`  | Opacity of a disabled control.                 |
+| `--dextinity-opacity-backdrop`  | Opacity of the backdrop behind a dialog.       |
 
 ## Motion
 
@@ -148,6 +159,16 @@ Themes set the durations to `0s` for users who prefer reduced motion.
 | `--dextinity-motion-duration-short`  | Checkbox and radio: their check mark or dot, border and background.                             |
 | `--dextinity-motion-duration-medium` | Buttons, text inputs and the switch: color and border changes on hover, and the switch's thumb. |
 | `--dextinity-motion-easing`          | Easing of all transitions.                                                                      |
+
+## Layering
+
+Popups and dialogs render in a portal at the end of `<body>`, on top of the page. These tokens set their stacking order. The defaults put dialogs at the level of MUI's dialogs, and popups above them, so a select also opens inside a dialog of `@dextinity/admin`.
+
+| Token                         | Usage                                                                             |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| `--dextinity-z-index-dialog`  | Dialogs and their backdrop.                                                       |
+| `--dextinity-z-index-popup`   | Popups: menus, option lists and popovers. Above dialogs, so they open inside one. |
+| `--dextinity-z-index-tooltip` | Tooltips, above everything else.                                                  |
 
 ## Button
 
@@ -168,3 +189,15 @@ Button tokens let a theme give buttons their own character, for example a gradie
 | `--dextinity-button-secondary-border`           | Border of a secondary button.                                                                                                      |
 | `--dextinity-button-ghost-foreground`           | Text and icons of a ghost button. Contrast 4.5:1 on background and on its hovered background.                                      |
 | `--dextinity-button-ghost-background-hover`     | Background of a hovered ghost button.                                                                                              |
+
+## App bar
+
+App bar tokens give the bar at the top of an application its own colors, often darker than the page.
+
+| Token                                  | Usage                                                                                          |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `--dextinity-app-bar-height`           | Height of the app bar.                                                                         |
+| `--dextinity-app-bar-background`       | Background of the app bar.                                                                     |
+| `--dextinity-app-bar-background-hover` | Background of a hovered button on the app bar.                                                 |
+| `--dextinity-app-bar-foreground`       | Text and icons on the app bar. Contrast 4.5:1 on its background and on the hovered background. |
+| `--dextinity-app-bar-focus-ring`       | Outline of a focused button on the app bar. Contrast 3:1 on its background.                    |

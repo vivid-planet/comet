@@ -104,10 +104,10 @@ function TokenValue({ token, themeKey }: { token: string; themeKey: string }) {
 function TokenPreview({ token }: { token: string }) {
     const variable = `var(${token})`;
 
-    if (/-(background|foreground|border)(-hover)?$/.test(token)) {
+    if (/-(background|foreground|border|focus-ring)(-hover)?$/.test(token)) {
         return <span className={styles.swatch} style={{ background: variable }} />;
     }
-    if (token.endsWith("-shadow")) {
+    if (token.includes("shadow")) {
         return <span className={styles.shadowSample} style={{ boxShadow: variable }} />;
     }
     if (token.includes("radius")) {
