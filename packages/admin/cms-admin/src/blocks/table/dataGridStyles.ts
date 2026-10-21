@@ -2,7 +2,7 @@ import type { SxProps, Theme } from "@mui/material";
 
 export const lastContentColumnClassName = "TableBlock-lastContentColumn";
 
-export const dataGridStyles: SxProps<Theme> = (theme) => ({
+const getCommonDataGridStyles = (theme: Theme) => ({
     "--DataGrid-rowBorderColor": theme.palette.grey[100],
     borderLeft: 0,
     borderRight: 0,
@@ -73,5 +73,18 @@ export const dataGridStyles: SxProps<Theme> = (theme) => ({
 
     ".MuiDataGrid-columnSeparator": {
         display: "none",
+    },
+});
+
+export const dataGridStyles: SxProps<Theme> = (theme) => getCommonDataGridStyles(theme);
+
+export const freeDataGridStyles: SxProps<Theme> = (theme) => ({
+    ...getCommonDataGridStyles(theme),
+
+    '.MuiDataGrid-cell[data-field="actions"], .MuiDataGrid-columnHeader[data-field="actions"]': {
+        position: "sticky",
+        right: 0,
+        zIndex: 1,
+        backgroundColor: theme.palette.background.paper,
     },
 });

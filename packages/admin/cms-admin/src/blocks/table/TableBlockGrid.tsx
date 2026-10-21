@@ -19,7 +19,7 @@ import { type DextinityConfig, useDextinityConfig } from "../../config/Dextinity
 import type { TableBlockState } from "../createTableBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
-import { dataGridStyles, lastContentColumnClassName } from "./dataGridStyles";
+import { dataGridStyles, freeDataGridStyles, lastContentColumnClassName } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
 import { RowActionsCell } from "./RowActionsCell";
 import { useTableBlockContext } from "./TableBlockContext";
@@ -215,5 +215,5 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
         );
     }
 
-    return <MuiDataGrid {...commonDataGridProps} sx={dataGridStyles} columns={dataGridColumns} hideFooter />;
+    return <MuiDataGrid {...commonDataGridProps} sx={freeDataGridStyles} columns={dataGridColumns} hideFooter />;
 };
