@@ -1,4 +1,4 @@
-import { gridClasses } from "@mui/x-data-grid-pro";
+import { gridClasses } from "@mui/x-data-grid";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { MemoryRouter } from "react-router";

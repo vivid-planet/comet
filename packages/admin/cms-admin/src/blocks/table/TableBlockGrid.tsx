@@ -1,16 +1,17 @@
 import { DragIndicator } from "@dextinity/admin-icons";
+/* eslint-disable no-restricted-imports */
+import type {
+    GridColDef,
+    GridColumnHeaderParams,
+    GridEventListener,
+    GridRenderCellParams,
+    GridRenderEditCellParams,
+    GridValidRowModel,
+} from "@mui/x-data-grid";
+/* eslint-enable no-restricted-imports */
 // eslint-disable-next-line no-restricted-imports
-import type { GridColDef, GridColumnHeaderParams, GridValidRowModel } from "@mui/x-data-grid";
-import {
-    // eslint-disable-next-line no-restricted-imports
-    DataGridPro,
-    GRID_REORDER_COL_DEF,
-    type GridEventListener,
-    type GridRenderCellParams,
-    type GridRenderEditCellParams,
-    useGridApiRef,
-} from "@mui/x-data-grid-pro";
-import { type ComponentProps, type Dispatch, type SetStateAction, useCallback, useEffect } from "react";
+import { DataGridPro, type GridApiPro } from "@mui/x-data-grid-pro";
+import { type ComponentProps, type Dispatch, type SetStateAction, useCallback, useEffect, useRef } from "react";
 
 import type { TableBlockData } from "../../blocks.generated";
 import type { TableBlockState } from "../createTableBlock";
@@ -29,6 +30,8 @@ import { useTemporarilyHighlightedIds } from "./utils/useTemporarilyHighlightedI
 
 type ColumnSize = TableBlockData["columns"][number]["size"];
 type TableBlockColumn = TableBlockData["columns"][number];
+
+const reorderColumnField = "__reorder__";
 
 const widthForColumnSize: Record<ColumnSize, number> = {
     extraSmall: 100,
@@ -54,7 +57,7 @@ type Props = {
 
 export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
     const { RichTextBlock } = useTableBlockContext();
-    const apiRef = useGridApiRef();
+    const apiRef = useRef<GridApiPro | null>(null);
     const { highlightedIds: recentlyPastedRowIds, highlightTemporarily: addToRecentlyPastedRowIds } = useTemporarilyHighlightedIds();
     const { highlightedIds: recentlyPastedColumnIds, highlightTemporarily: addToRecentlyPastedColumnIds } = useTemporarilyHighlightedIds();
     const { highlightedIds: recentlyClickedCellKeys, highlightTemporarily: highlightCellKey } = useTemporarilyHighlightedIds();
@@ -110,7 +113,7 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
 
     const dataGridColumns: GridColDef[] = [
         {
-            ...GRID_REORDER_COL_DEF,
+            field: reorderColumnField,
             minWidth: 36,
             maxWidth: 36,
         },
@@ -182,7 +185,7 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
             disableRowSelectionOnClick
             hideFooter
             pinnedColumns={{
-                left: ["__reorder__"],
+                left: [reorderColumnField],
                 right: ["actions"],
             }}
             slots={{

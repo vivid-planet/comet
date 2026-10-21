@@ -1,10 +1,10 @@
-import { type GridApiPro, gridClasses, gridDimensionsSelector, gridRowsMetaSelector } from "@mui/x-data-grid-pro";
+import { type GridApi, gridClasses, gridDimensionsSelector, gridRowsMetaSelector } from "@mui/x-data-grid";
 import { type RefObject, useEffect } from "react";
 
 import type { CellPosition } from "./utils/cellRoute";
 
 type Options = {
-    apiRef: RefObject<GridApiPro | null>;
+    apiRef: RefObject<GridApi | null>;
     cell: CellPosition | undefined;
     highlightCell: (cell: CellPosition) => void;
 };
