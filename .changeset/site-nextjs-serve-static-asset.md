@@ -9,7 +9,7 @@ During a rolling deployment, instances of the old and the new site build run sid
 It passes on the content type and cache header stored with the file. Requests for other paths, for files of the own build and for files missing in the storage are left to Next.js.
 
 `createStaticAssetsStorage` supports S3-compatible storages (`driver: "s3"`, e.g., AWS S3, DigitalOcean Spaces or IBM Cloud Object Storage) and Azure Blob Storage (`driver: "azure"`).
-They require `@aws-sdk/client-s3` or `@azure/storage-blob`, which are loaded on the first request.
+They require `@aws-sdk/client-s3` or `@azure/storage-blob`. Only the SDK of the chosen driver is loaded.
 
 **Example**
 
@@ -17,7 +17,7 @@ They require `@aws-sdk/client-s3` or `@azure/storage-blob`, which are loaded on 
 // In server.ts
 import { createStaticAssetsStorage, serveStaticAsset } from "@dextinity/site-nextjs/staticAssets";
 
-const staticAssetsStorage = createStaticAssetsStorage({
+const staticAssetsStorage = await createStaticAssetsStorage({
     driver: "s3",
     s3: { bucket: process.env.STATIC_ASSETS_S3_BUCKET, region: process.env.STATIC_ASSETS_S3_REGION /* ... */ },
 });

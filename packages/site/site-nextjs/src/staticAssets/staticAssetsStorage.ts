@@ -20,20 +20,9 @@ export type StaticAssetsStorageConfig =
 
 /**
  * Creates the storage holding the static assets of every deployed build.
- * The storage's SDK (`@aws-sdk/client-s3` or `@azure/storage-blob`) is loaded on the first request, so only the one in use needs to be installed.
+ * Only the SDK of the chosen driver (`@aws-sdk/client-s3` or `@azure/storage-blob`) is loaded, so only that one needs to be installed.
  */
-export function createStaticAssetsStorage(config: StaticAssetsStorageConfig): StaticAssetsStorage {
-    let storage: Promise<StaticAssetsStorage> | undefined;
-
-    return {
-        async getFile(key) {
-            storage ??= loadStorage(config);
-            return (await storage).getFile(key);
-        },
-    };
-}
-
-async function loadStorage(config: StaticAssetsStorageConfig): Promise<StaticAssetsStorage> {
+export async function createStaticAssetsStorage(config: StaticAssetsStorageConfig): Promise<StaticAssetsStorage> {
     if (config.driver === "s3") {
         const { createS3StaticAssetsStorage } = await import("./s3StaticAssetsStorage");
         return createS3StaticAssetsStorage(config.s3);
