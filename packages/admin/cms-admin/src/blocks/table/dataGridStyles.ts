@@ -1,5 +1,7 @@
 import type { SxProps, Theme } from "@mui/material";
 
+export const lastContentColumnClassName = "TableBlock-lastContentColumn";
+
 export const dataGridStyles: SxProps<Theme> = (theme) => ({
     "--DataGrid-rowBorderColor": theme.palette.grey[100],
     borderLeft: 0,
@@ -27,9 +29,12 @@ export const dataGridStyles: SxProps<Theme> = (theme) => ({
             boxShadow: "none",
         },
 
-        "&:nth-last-of-type(4)": {
-            // The last non-pinned cell should not have a border, as the pinned column already has one
+        [`&.${lastContentColumnClassName}`]: {
             borderRight: "none",
+        },
+
+        '&[data-field="actions"]': {
+            borderLeft: `1px solid ${theme.palette.grey[100]}`,
         },
     },
 
@@ -52,13 +57,13 @@ export const dataGridStyles: SxProps<Theme> = (theme) => ({
             boxShadow: "none",
         },
 
-        "&:nth-last-of-type(3)": {
-            // The last non-pinned cell should not have a border, as the pinned column already has one
+        [`&.${lastContentColumnClassName}`]: {
             borderRight: "none",
         },
 
         '&[data-field="actions"]': {
             display: "flex",
+            borderLeft: `1px solid ${theme.palette.grey[100]}`,
             borderRight: "none",
             justifyContent: "center",
             alignItems: "center",

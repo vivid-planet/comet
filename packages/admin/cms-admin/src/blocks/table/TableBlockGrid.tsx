@@ -17,7 +17,7 @@ import type { TableBlockData } from "../../blocks.generated";
 import type { TableBlockState } from "../createTableBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
-import { dataGridStyles } from "./dataGridStyles";
+import { dataGridStyles, lastContentColumnClassName } from "./dataGridStyles";
 import { EditCell } from "./EditCell";
 import { RowActionsCell } from "./RowActionsCell";
 import { useTableBlockContext } from "./TableBlockContext";
@@ -32,6 +32,9 @@ type ColumnSize = TableBlockData["columns"][number]["size"];
 type TableBlockColumn = TableBlockData["columns"][number];
 
 const reorderColumnField = "__reorder__";
+
+const getLastContentColumnClassName = (columnIndex: number, numberOfColumns: number) =>
+    columnIndex === numberOfColumns - 1 ? lastContentColumnClassName : undefined;
 
 const widthForColumnSize: Record<ColumnSize, number> = {
     extraSmall: 100,
@@ -123,6 +126,8 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
             sortable: false,
             flex: flexForColumnSize[size],
             minWidth: widthForColumnSize[size],
+            headerClassName: getLastContentColumnClassName(index, state.columns.length),
+            cellClassName: getLastContentColumnClassName(index, state.columns.length),
             renderHeader: (params: GridColumnHeaderParams) => (
                 <ColumnHeader
                     {...params}
