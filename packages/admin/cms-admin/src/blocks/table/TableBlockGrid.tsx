@@ -102,7 +102,7 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
             }
             const targetIndex = apiRef.current.getColumnIndex(columnId) - 1;
 
-            updateState((state) => moveColumnToIndex(state, columnId, targetIndex));
+            updateState((state) => moveColumnToIndex({ state, columnId, targetIndex }));
         };
 
         return apiRef.current?.subscribeEvent("columnHeaderDragEnd", handleMoveColumn);
@@ -190,7 +190,7 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
             }}
             sx={dataGridStyles}
             onRowOrderChange={({ targetIndex, row }) => {
-                updateState((state) => moveRowToIndex(state, row.id, targetIndex));
+                updateState((state) => moveRowToIndex({ state, rowId: row.id, targetIndex }));
             }}
             processRowUpdate={processRowUpdate}
         />

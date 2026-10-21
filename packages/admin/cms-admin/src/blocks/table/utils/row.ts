@@ -113,7 +113,7 @@ export const getInsertDataFromRowById = (state: TableBlockState, rowId: string, 
     };
 };
 
-export const moveRowToIndex = (state: TableBlockState, rowId: string, targetIndex: number): TableBlockState => {
+export const moveRowToIndex = ({ state, rowId, targetIndex }: { state: TableBlockState; rowId: string; targetIndex: number }): TableBlockState => {
     const movingRow = state.rows.find(({ id }) => id === rowId);
     const isTargetIndexInTable = targetIndex >= 0 && targetIndex < state.rows.length;
     if (!movingRow || !isTargetIndexInTable) {

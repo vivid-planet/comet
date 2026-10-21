@@ -79,7 +79,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
         updateState((state) => {
             const currentColumnIndex = state.columns.findIndex(({ id }) => id === columnId);
             const targetColumnIndex = direction === "left" ? currentColumnIndex - 1 : currentColumnIndex + 1;
-            return moveColumnToIndex(state, columnId, targetColumnIndex);
+            return moveColumnToIndex({ state, columnId, targetIndex: targetColumnIndex });
         });
     };
 

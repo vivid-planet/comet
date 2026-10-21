@@ -54,7 +54,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
         updateState((state) => {
             const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
             const targetRowIndex = direction === "up" ? currentRowIndex - 1 : currentRowIndex + 1;
-            return moveRowToIndex(state, row.id, targetRowIndex);
+            return moveRowToIndex({ state, rowId: row.id, targetIndex: targetRowIndex });
         });
     };
 
