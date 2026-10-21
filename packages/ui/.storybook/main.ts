@@ -3,7 +3,8 @@ import remarkGfm from "remark-gfm";
 
 const config: StorybookConfig = {
     framework: "@storybook/react-vite",
-    stories: ["../src/**/*.mdx", "../src/**/__stories__/*.stories.tsx"],
+    // Attached pages, such as a component's design tokens, come after its stories, so "Docs" stays first in the sidebar.
+    stories: ["../src/*/*.mdx", "../src/**/__stories__/*.stories.tsx", "../src/**/__stories__/*.mdx"],
     addons: [
         {
             name: "@storybook/addon-docs",

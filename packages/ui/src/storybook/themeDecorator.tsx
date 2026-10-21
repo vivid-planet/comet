@@ -21,7 +21,7 @@ export const dextinityThemeModes = {
 };
 
 /**
- * Chromatic modes that capture a story once per theme, for stories that show the color schemes side by side.
+ * Chromatic modes that capture a story once per theme, in the light color scheme, for the theme overview.
  * Chromatic adds a story's modes to the project's, so this reuses the light one's name and turns off the dark one.
  */
 export const themeModes = {
