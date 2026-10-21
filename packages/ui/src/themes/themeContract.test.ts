@@ -219,15 +219,22 @@ describe("component stylesheets", () => {
 
 describe("component design tokens pages", () => {
     const isComponentStylesheet = (fileName: string) => /^[A-Z][A-Za-z0-9]*\.module\.css$/.test(fileName);
+    const isDesignTokensPage = (fileName: string) => fileName.endsWith("DesignTokens.mdx");
+    const storiesFileNames = (folder: string) => {
+        const storiesDirectory = join(sourceDirectory, folder, "__stories__");
+        return existsSync(storiesDirectory) ? readdirSync(storiesDirectory) : [];
+    };
+    // A folder with a page but no stylesheet is checked too, so a page can't outlive its stylesheet.
     const componentFolders = readdirSync(sourceDirectory, { withFileTypes: true })
-        .filter((entry) => entry.isDirectory() && readdirSync(join(sourceDirectory, entry.name)).some(isComponentStylesheet))
+        .filter(
+            (entry) =>
+                entry.isDirectory() &&
+                (readdirSync(join(sourceDirectory, entry.name)).some(isComponentStylesheet) || storiesFileNames(entry.name).some(isDesignTokensPage)),
+        )
         .map((entry) => entry.name);
 
     it.each(componentFolders)("%s/__stories__ lists each token its component stylesheets use exactly once", (folder) => {
-        const storiesDirectory = join(sourceDirectory, folder, "__stories__");
-        const pageFileNames = existsSync(storiesDirectory)
-            ? readdirSync(storiesDirectory).filter((fileName) => fileName.endsWith("DesignTokens.mdx"))
-            : [];
+        const pageFileNames = storiesFileNames(folder).filter(isDesignTokensPage);
         expect(pageFileNames, `${folder}/__stories__ needs one <Component>DesignTokens.mdx`).toHaveLength(1);
 
         const usedTokens = new Set(
@@ -235,7 +242,7 @@ describe("component design tokens pages", () => {
                 .filter(isComponentStylesheet)
                 .flatMap((fileName) => readFileSync(join(sourceDirectory, folder, fileName), "utf8").match(tokenNamePattern) ?? []),
         );
-        const listedTokens = readPageTokenRows(join(storiesDirectory, pageFileNames[0])).flat();
+        const listedTokens = readPageTokenRows(join(sourceDirectory, folder, "__stories__", pageFileNames[0])).flat();
 
         expect({
             missingTokens: [...usedTokens].filter((token) => !listedTokens.includes(token)),

@@ -13,13 +13,16 @@ export interface TokenTableRow {
 export function readTokenTableRows(markdown: string): TokenTableRow[] {
     const rows: TokenTableRow[] = [];
     let section = "";
+    let isInCodeBlock = false;
 
-    for (const line of markdown.split("\n")) {
-        if (line.startsWith("## ")) {
+    for (const line of markdown.split(/\r?\n/)) {
+        if (/^(```|~~~)/.test(line)) {
+            isInCodeBlock = !isInCodeBlock;
+        } else if (!isInCodeBlock && line.startsWith("## ")) {
             section = line.slice("## ".length).trim();
-        } else if (line.startsWith("| `--dextinity-")) {
-            const [, tokenCell, descriptionCell = ""] = line.split("|");
-            rows.push({ section, tokens: tokenCell.match(tokenNamePattern) ?? [], description: descriptionCell.trim() });
+        } else if (!isInCodeBlock && line.startsWith("| `--dextinity-")) {
+            const [, tokenCell, descriptionCell = ""] = line.split(/(?<!\\)\|/);
+            rows.push({ section, tokens: tokenCell.match(tokenNamePattern) ?? [], description: descriptionCell.trim().replaceAll("\\|", "|") });
         }
     }
 

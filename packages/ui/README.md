@@ -142,7 +142,7 @@ Test what a consumer depends on, not the implementation:
 - **A component's styling contract** — its classes and `data-*` attributes, and how slot props are merged — a unit test next to the component. Don't assert styles.
 - **Behavior** — a `play` function in a story, which runs in a real browser. Every story also runs an accessibility check and fails on violations.
 - **Themes** — [`themeContract.test.ts`](src/themes/themeContract.test.ts) checks every theme against the documented tokens and the contrast requirements, and every component's design tokens page against its stylesheets.
-- **Appearance** — [Chromatic](https://www.chromatic.com) captures every story in the Dextinity theme, light and dark, and the theme overview in every theme, and shows a pull request's visual changes for review. CI publishes to it from `.github/workflows/chromatic.yml` with the `CHROMATIC_PROJECT_TOKEN_UI` secret; to publish from a local clone, run `CHROMATIC_PROJECT_TOKEN=<token> pnpm run chromatic`. The modes in [`themeDecorator.tsx`](src/storybook/themeDecorator.tsx) set which themes a story is captured in.
+- **Appearance** — [Chromatic](https://www.chromatic.com) captures every story in the Dextinity theme, light and dark, and the theme overview in every theme, and shows a pull request's visual changes for review. CI publishes to it from `.github/workflows/chromatic.yml` with the `CHROMATIC_PROJECT_TOKEN_UI` secret; to publish from a local clone, run `CHROMATIC_PROJECT_TOKEN=<token> pnpm --filter @dextinity/ui run chromatic`. The modes in [`themeDecorator.tsx`](src/storybook/themeDecorator.tsx) set which themes a story is captured in.
 
 Rendering alone isn't worth a test: every story already renders in a browser test.
 

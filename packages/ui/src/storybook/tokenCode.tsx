@@ -1,6 +1,7 @@
 import { CodeOrSourceMdx } from "@storybook/addon-docs/blocks";
 import { type ComponentProps, useSyncExternalStore } from "react";
 
+import { subscribeToStyleChanges } from "./styleChanges";
 import styles from "./tokenCode.module.css";
 
 const tokenPattern = /^--dextinity-[a-z0-9-]+$/;
@@ -25,7 +26,7 @@ export function TokenCode(props: ComponentProps<typeof CodeOrSourceMdx>) {
 }
 
 function TokenValue({ token }: { token: string }) {
-    const value = useSyncExternalStore(subscribeToDocumentTheme, () => getComputedStyle(document.documentElement).getPropertyValue(token).trim());
+    const value = useSyncExternalStore(subscribeToStyleChanges, () => getComputedStyle(document.documentElement).getPropertyValue(token).trim());
 
     if (value === "") {
         return null;
@@ -41,10 +42,4 @@ function TokenValue({ token }: { token: string }) {
 
 function isColor(value: string) {
     return /^(#|rgb|hsl|oklch|linear-gradient)/.test(value);
-}
-
-function subscribeToDocumentTheme(onChange: () => void) {
-    const observer = new MutationObserver(onChange);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-dextinity-theme", "data-dextinity-color-scheme"] });
-    return () => observer.disconnect();
 }

@@ -1,6 +1,7 @@
-import { type CSSProperties, Fragment, type RefObject, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, Fragment, type RefObject, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import designTokensPage from "../docs/DesignTokens.mdx?raw";
+import { getStyleVersion, subscribeToStyleChanges } from "./styleChanges";
 import styles from "./tokenOverview.module.css";
 import { readTokenTableRows, type TokenTableRow } from "./tokenTables";
 
@@ -237,9 +238,10 @@ function TokenHeaderCell({ row }: { row: TokenTableRow }) {
 function Description({ markdown }: { markdown: string }) {
     return (
         <span className={styles.description}>
-            {markdown.split("`").map((part, index) => (
-                <Fragment key={index}>{index % 2 === 1 ? <code>{part}</code> : part}</Fragment>
-            ))}
+            {markdown.split("`").map((part, index) => {
+                const isCode = index % 2 === 1;
+                return <Fragment key={`${index}:${part}`}>{isCode ? <code>{part}</code> : part}</Fragment>;
+            })}
         </span>
     );
 }
@@ -256,6 +258,7 @@ function useTokenValue({ elementRef, token, themeKey }: { elementRef: RefObject<
 function useTokenValues({ elementRef, tokens, themeKey }: { elementRef: RefObject<HTMLElement | null>; tokens: string[]; themeKey: string }) {
     const [values, setValues] = useState<Record<string, string>>({});
     const tokensKey = tokens.join(" ");
+    const styleVersion = useSyncExternalStore(subscribeToStyleChanges, getStyleVersion);
 
     useLayoutEffect(() => {
         if (elementRef.current === null) {
@@ -263,7 +266,7 @@ function useTokenValues({ elementRef, tokens, themeKey }: { elementRef: RefObjec
         }
         const computedStyle = getComputedStyle(elementRef.current);
         setValues(Object.fromEntries(tokensKey.split(" ").map((token) => [token, computedStyle.getPropertyValue(token).trim()])));
-    }, [elementRef, tokensKey, themeKey]);
+    }, [elementRef, tokensKey, themeKey, styleVersion]);
 
     return values;
 }

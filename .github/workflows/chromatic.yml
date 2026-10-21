@@ -65,3 +65,6 @@ jobs:
                   pnpm --filter @dextinity/ui run chromatic
               env:
                   CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN_UI }}
+                  # A pull request checks out a merge commit; Chromatic needs the branch's own commit.
+                  CHROMATIC_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+                  CHROMATIC_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

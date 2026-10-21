@@ -3,8 +3,8 @@
  *
  * The Dextinity typeface, shapes and spacing with warmer colors: a violet accent, a violet to red-orange
  * button gradient and slightly warm greys. It isn't published: Storybook uses it to show how a theme varies
- * an existing one, and it's the example to copy for a brand variant. Every token is documented in
- * "Foundations/Design tokens".
+ * an existing one. For a brand variant, copy dextinity.css and change what differs, as this file does with the
+ * colors. Every token is documented in "Foundations/Design tokens".
  */
 
 @layer dextinity {

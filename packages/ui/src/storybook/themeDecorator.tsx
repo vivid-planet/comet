@@ -20,8 +20,14 @@ export const dextinityThemeModes = {
     "dextinity dark": { theme: "dextinity", colorScheme: "dark" },
 };
 
-/** Chromatic modes that capture a story once per theme, for stories that show the color schemes side by side. */
-export const themeModes = Object.fromEntries(themeOptions.map((theme) => [theme.value, { theme: theme.value, colorScheme: "light" }]));
+/**
+ * Chromatic modes that capture a story once per theme, for stories that show the color schemes side by side.
+ * Chromatic adds a story's modes to the project's, so this reuses the light one's name and turns off the dark one.
+ */
+export const themeModes = {
+    ...Object.fromEntries(themeOptions.map((theme) => [`${theme.value} light`, { theme: theme.value, colorScheme: "light" }])),
+    "dextinity dark": { disable: true },
+};
 
 /**
  * Applies the theme and color scheme picked in the toolbar. Like an application, it sets them on `<html>`, so
