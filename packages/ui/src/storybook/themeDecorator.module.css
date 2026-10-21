@@ -4,3 +4,7 @@
     color: var(--dextinity-color-foreground);
     font-family: var(--dextinity-font-family-body);
 }
+
+.fullscreen {
+    padding: 0;
+}

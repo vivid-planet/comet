@@ -1,4 +1,5 @@
 import type { Decorator } from "@storybook/react-vite";
+import { clsx } from "clsx";
 import { type PropsWithChildren, useLayoutEffect } from "react";
 
 import styles from "./themeDecorator.module.css";
@@ -32,22 +33,33 @@ export const themeModes = {
 /**
  * Applies the theme and color scheme picked in the toolbar. Like an application, it sets them on `<html>`, so
  * popups rendered outside the story follow them too. The story's own wrapper carries them as well, for the
- * docs page, which renders every story on a themed canvas.
+ * docs page, which renders every story on a themed canvas. A story with the `fullscreen` layout gets no padding,
+ * so a page fills the canvas.
  */
-export const themeDecorator: Decorator = (Story, { globals }) => (
-    <ThemedCanvas theme={String(globals.theme)} colorScheme={String(globals.colorScheme)}>
+export const themeDecorator: Decorator = (Story, { globals, parameters }) => (
+    <ThemedCanvas theme={String(globals.theme)} colorScheme={String(globals.colorScheme)} isFullscreen={parameters.layout === "fullscreen"}>
         <Story />
     </ThemedCanvas>
 );
 
-function ThemedCanvas({ theme, colorScheme, children }: PropsWithChildren<{ theme: string; colorScheme: string }>) {
+interface ThemedCanvasProps extends PropsWithChildren {
+    theme: string;
+    colorScheme: string;
+    isFullscreen: boolean;
+}
+
+function ThemedCanvas({ theme, colorScheme, isFullscreen, children }: ThemedCanvasProps) {
     useLayoutEffect(() => {
         document.documentElement.dataset.dextinityTheme = theme;
         document.documentElement.dataset.dextinityColorScheme = colorScheme;
     }, [theme, colorScheme]);
 
     return (
-        <div className={styles.canvas} data-dextinity-theme={theme} data-dextinity-color-scheme={colorScheme}>
+        <div
+            className={clsx(styles.canvas, isFullscreen && styles.fullscreen)}
+            data-dextinity-theme={theme}
+            data-dextinity-color-scheme={colorScheme}
+        >
             {children}
         </div>
     );
