@@ -25,7 +25,7 @@ import * as ActionsStories from "./__stories__/Actions.stories";
             Preview
         </Button>
         <IconButton label="Page settings" onClick={openSettings}>
-            <SettingsIcon />
+            <Icon name="settings" />
         </IconButton>
     </div>
 </header>
@@ -53,7 +53,7 @@ Use an `IconButton` only where space is tight and the icon is widely understood,
 
 ```tsx
 <IconButton label={`Delete ${product.name}`} size="small" onClick={() => deleteProduct(product.id)}>
-    <DeleteIcon />
+    <Icon name="delete" />
 </IconButton>
 ```
 

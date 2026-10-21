@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { EditIcon } from "#storybook/icons";
-
 import { Button } from "../../button/Button";
 import { Checkbox } from "../../checkbox/Checkbox";
 import { Chip } from "../../chip/Chip";
+import { Icon } from "../../icon/Icon";
 import { IconButton } from "../../iconButton/IconButton";
 import { Radio } from "../../radioGroup/Radio";
 import { RadioGroup } from "../../radioGroup/RadioGroup";
@@ -48,7 +47,7 @@ function ThemeSample({ theme }: { theme: string }) {
                 <Button variant="secondary">Cancel</Button>
                 <Button variant="ghost">Show details</Button>
                 <IconButton label="Edit">
-                    <EditIcon />
+                    <Icon name="edit" />
                 </IconButton>
             </div>
         </div>

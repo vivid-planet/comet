@@ -1,17 +1,16 @@
 import type { Decorator, Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn } from "storybook/test";
 
-import { AddIcon, DeleteIcon, EditIcon, SearchIcon, SettingsIcon } from "#storybook/icons";
-
+import { Icon } from "../../icon/Icon";
 import { IconButton } from "../IconButton";
 import styles from "./IconButton.stories.module.css";
 
 const iconOptions = {
-    AddIcon: <AddIcon />,
-    DeleteIcon: <DeleteIcon />,
-    EditIcon: <EditIcon />,
-    SearchIcon: <SearchIcon />,
-    SettingsIcon: <SettingsIcon />,
+    plus: <Icon name="plus" />,
+    delete: <Icon name="delete" />,
+    edit: <Icon name="edit" />,
+    search: <Icon name="search" />,
+    settings: <Icon name="settings" />,
 };
 
 const meta = {
@@ -21,7 +20,7 @@ const meta = {
     tags: ["!autodocs"],
     args: {
         label: "Edit product",
-        children: <EditIcon />,
+        children: <Icon name="edit" />,
         onClick: fn(),
     },
     argTypes: {
@@ -69,13 +68,13 @@ export const Variants: Story = {
     render: (args) => (
         <>
             <IconButton {...args} variant="primary" label="Add product">
-                <AddIcon />
+                <Icon name="plus" />
             </IconButton>
             <IconButton {...args} variant="secondary" label="Open settings">
-                <SettingsIcon />
+                <Icon name="settings" />
             </IconButton>
             <IconButton {...args} variant="ghost" label="Delete product">
-                <DeleteIcon />
+                <Icon name="delete" />
             </IconButton>
         </>
     ),
@@ -123,7 +122,7 @@ export const CustomizedThroughSlotProps: Story = {
     },
     render: (args) => (
         <IconButton {...args}>
-            <DeleteIcon />
+            <Icon name="delete" />
         </IconButton>
     ),
 };

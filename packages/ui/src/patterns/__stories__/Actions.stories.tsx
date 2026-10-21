@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { AddIcon, DeleteIcon, EditIcon, SettingsIcon } from "#storybook/icons";
-
 import { Button } from "../../button/Button";
 import { Chip } from "../../chip/Chip";
+import { Icon } from "../../icon/Icon";
 import { IconButton } from "../../iconButton/IconButton";
 import { Typography } from "../../typography/Typography";
 import styles from "./Actions.stories.module.css";
@@ -33,7 +32,7 @@ export const PageHeader: Story = {
                 <Button>Publish</Button>
                 <Button variant="secondary">Preview</Button>
                 <IconButton label="Page settings">
-                    <SettingsIcon />
+                    <Icon name="settings" />
                 </IconButton>
             </div>
         </header>
@@ -50,7 +49,7 @@ export const RowActions: Story = {
                 <Typography variant="heading4" render={<h2 />}>
                     Products
                 </Typography>
-                <Button size="small" startIcon={<AddIcon />}>
+                <Button size="small" startIcon={<Icon name="plus" />}>
                     Add product
                 </Button>
             </div>
@@ -60,10 +59,10 @@ export const RowActions: Story = {
                         <Typography>{product}</Typography>
                         <div className={styles.rowActions}>
                             <IconButton label={`Edit ${product}`} size="small">
-                                <EditIcon />
+                                <Icon name="edit" />
                             </IconButton>
                             <IconButton label={`Delete ${product}`} size="small">
-                                <DeleteIcon />
+                                <Icon name="delete" />
                             </IconButton>
                         </div>
                     </li>

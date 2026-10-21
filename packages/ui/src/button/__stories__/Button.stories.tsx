@@ -1,14 +1,13 @@
 import type { Decorator, Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn } from "storybook/test";
 
-import { AddIcon, ArrowRightIcon } from "#storybook/icons";
-
+import { Icon } from "../../icon/Icon";
 import { Button } from "../Button";
 import styles from "./Button.stories.module.css";
 
 const iconOptions = {
-    AddIcon: <AddIcon />,
-    ArrowRightIcon: <ArrowRightIcon />,
+    plus: <Icon name="plus" />,
+    "arrow-right": <Icon name="arrow-right" />,
 };
 
 const meta = {
@@ -100,10 +99,10 @@ export const WithIcons: Story = {
     decorators: [inRow],
     render: (args) => (
         <>
-            <Button {...args} startIcon={<AddIcon />}>
+            <Button {...args} startIcon={<Icon name="plus" />}>
                 Add product
             </Button>
-            <Button {...args} variant="secondary" endIcon={<ArrowRightIcon />}>
+            <Button {...args} variant="secondary" endIcon={<Icon name="arrow-right" />}>
                 Next step
             </Button>
         </>
@@ -132,7 +131,7 @@ export const CustomizedThroughSlotProps: Story = {
     args: {
         variant: "secondary",
         className: styles.wideButton,
-        startIcon: <AddIcon />,
+        startIcon: <Icon name="plus" />,
         slotProps: {
             startIcon: { className: styles.accentIcon },
         },

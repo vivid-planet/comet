@@ -60,7 +60,7 @@ Prefer changing a design token over overriding a component's colors: a token kee
 - Any other prop replaces the part's own, including `ref`: a slot's `ref` replaces the `ref` the component passes to that part.
 
 ```tsx
-<Button startIcon={<AddIcon />} slotProps={{ startIcon: { className: styles.icon } }}>
+<Button startIcon={<Icon name="plus" />} slotProps={{ startIcon: { className: styles.icon } }}>
     Add product
 </Button>
 ```
