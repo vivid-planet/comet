@@ -20,6 +20,10 @@ const config: StorybookConfig = {
         "@storybook/addon-vitest",
         "@storybook/addon-mcp",
     ],
+    typescript: {
+        // react-docgen only recognizes components that return JSX, so it skips those that return useRender().
+        reactDocgen: "react-docgen-typescript",
+    },
     features: {
         // The component manifest is what the MCP server serves to agents.
         componentsManifest: true,
