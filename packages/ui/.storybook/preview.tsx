@@ -5,7 +5,7 @@ import "../src/themes/acme.css";
 
 import type { Preview } from "@storybook/react-vite";
 
-import { colorSchemeOptions, themeDecorator, themeOptions } from "../src/storybook/themeDecorator";
+import { colorSchemeOptions, dextinityThemeModes, themeDecorator, themeOptions } from "../src/storybook/themeDecorator";
 
 const preview: Preview = {
     tags: ["autodocs"],
@@ -38,6 +38,9 @@ const preview: Preview = {
         a11y: {
             // Accessibility violations fail the story's test.
             test: "error",
+        },
+        chromatic: {
+            modes: dextinityThemeModes,
         },
         controls: {
             sort: "requiredFirst",

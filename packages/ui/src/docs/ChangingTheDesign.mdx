@@ -45,6 +45,7 @@ Every pull request runs checks, and a failing check names what to fix:
 - **Theme contract.** Every theme defines every documented token, and no others.
 - **Contrast.** Text and controls reach the WCAG 2.2 AA contrast in every theme and color scheme, for example 4.5:1 for text. If a new color fails, the check names the pair and the ratio it reached.
 - **Accessibility.** Every story runs an automated accessibility check in a real browser.
+- **Visual changes.** Chromatic takes a screenshot of every story and shows what the pull request changes, so the reviewers see it before they approve.
 - **Code style.** The stylesheets are formatted and linted.
 
 A developer reviews the pull request before it's merged.

@@ -14,6 +14,15 @@ export const colorSchemeOptions = [
     { value: "dark", title: "Dark" },
 ];
 
+/** Chromatic modes for the published theme, which every story is captured in. */
+export const dextinityThemeModes = {
+    "dextinity light": { theme: "dextinity", colorScheme: "light" },
+    "dextinity dark": { theme: "dextinity", colorScheme: "dark" },
+};
+
+/** Chromatic modes that capture a story once per theme, for stories that show the color schemes side by side. */
+export const themeModes = Object.fromEntries(themeOptions.map((theme) => [theme.value, { theme: theme.value, colorScheme: "light" }]));
+
 /**
  * Applies the theme and color scheme picked in the toolbar. Like an application, it sets them on `<html>`, so
  * popups rendered outside the story follow them too. The story's own wrapper carries them as well, for the

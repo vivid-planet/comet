@@ -43,3 +43,25 @@ jobs:
               with:
                   projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_MAIL_REACT }}
                   workingDir: packages/mail-react
+
+    ui:
+        name: UI
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  fetch-depth: 0
+
+            - uses: ./.github/actions/setup
+              with:
+                  setup-ci: "false"
+
+            - name: Publish dextinity-ui to Chromatic
+              run: |
+                  if [ -z "$CHROMATIC_PROJECT_TOKEN" ]; then
+                      echo "::notice::Skipped: the repository has no CHROMATIC_PROJECT_TOKEN_UI secret yet."
+                      exit 0
+                  fi
+                  pnpm --filter @dextinity/ui run chromatic
+              env:
+                  CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN_UI }}
