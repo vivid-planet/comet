@@ -220,6 +220,7 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
         <MuiDataGrid
             {...commonDataGridProps}
             sx={freeDataGridStyles}
+            disableVirtualization
             columns={dataGridColumns}
             hideFooter={state.rows.length <= maximumPageSizeOfFreeDataGrid}
         />
