@@ -114,6 +114,7 @@ In the stylesheet, the local class `root` becomes the root class and any other c
 - Show focus with `:focus-visible` and the focus ring tokens. Put hover styles inside `@media (hover: hover)`, so they don't stick on touch screens.
 - A component sets its own font family and size instead of inheriting them, so it looks the same inside a page that uses another font, such as an MUI admin.
 - No `!important`, no global selectors, no element selectors outside the component's own parts.
+- The unit tests run in jsdom, whose CSS parser fails with "Maximum call stack size exceeded" when, inside the layer, a rule with nested rules is followed by a rule with a nested at-rule, such as `@media (hover: hover)`. Every unit test that imports the stylesheet then fails. Move the at-rule into the first rule that nests, or write it as a top-level `@media` block inside the layer.
 
 ### TSDoc
 
