@@ -71,10 +71,10 @@ Instead of an object, pass a function of the component's owner state, its resolv
 <Button slotProps={{ startIcon: (ownerState) => ({ className: ownerState.disabled ? styles.mutedIcon : undefined }) }}>…</Button>
 ```
 
-`render` replaces a part's element while keeping its classes and behavior:
+`render` replaces a part's element while keeping its classes and behavior, for example a `<div>` for a description that holds a list:
 
 ```tsx
-<Checkbox slotProps={{ label: { render: <strong /> } }}>Accept the terms</Checkbox>
+<TextField label="Address" description={<AddressHint />} slotProps={{ description: { render: <div /> } }} />
 ```
 
 Functions can't be passed from a React Server Component to a component that runs in the browser. Use the object form there, or pass the function form from a client component.

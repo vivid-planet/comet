@@ -8,7 +8,7 @@ describe("Checkbox", () => {
         render(<Checkbox defaultChecked>Subscribe to the newsletter</Checkbox>);
 
         const control = screen.getByRole("checkbox", { name: "Subscribe to the newsletter" });
-        const root = control.closest("label");
+        const root = control.closest(".dextinityCheckbox");
         const indicator = control.querySelector(".dextinityCheckbox__indicator");
         expect(root).toHaveClass("dextinityCheckbox");
         expect(root).not.toHaveAttribute("data-disabled");
@@ -18,14 +18,14 @@ describe("Checkbox", () => {
         expect(screen.getByText("Subscribe to the newsletter")).toHaveClass("dextinityCheckbox__label");
     });
 
-    it("adds the consumer's class and style to the label root", () => {
+    it("adds the consumer's class and style to the root", () => {
         render(
             <Checkbox className="consumer" style={{ maxWidth: "20rem" }}>
                 Subscribe to the newsletter
             </Checkbox>,
         );
 
-        const root = screen.getByRole("checkbox").closest("label");
+        const root = screen.getByRole("checkbox").closest(".dextinityCheckbox");
         expect(root).toHaveClass("dextinityCheckbox", "consumer");
         expect(root).toHaveStyle({ maxWidth: "20rem" });
         expect(screen.getByRole("checkbox")).not.toHaveClass("consumer");
@@ -45,7 +45,7 @@ describe("Checkbox", () => {
         expect(container.querySelector(".dextinityCheckbox__label")).not.toBeInTheDocument();
     });
 
-    it("renders the root as a span without a label, so an external label names the control", async () => {
+    it("lets an external label name the control", async () => {
         render(
             <>
                 <label htmlFor="newsletter">Newsletter</label>
@@ -54,15 +54,14 @@ describe("Checkbox", () => {
         );
 
         const control = await screen.findByRole("checkbox", { name: "Newsletter" });
-        expect(control.parentElement?.tagName).toBe("SPAN");
-        expect(control.parentElement).toHaveClass("dextinityCheckbox");
+        expect(control.closest("label")).toBeNull();
     });
 
-    it("reflects the disabled owner state on the label root", () => {
+    it("reflects the disabled owner state on the root", () => {
         render(<Checkbox disabled>Subscribe to the newsletter</Checkbox>);
 
         const control = screen.getByRole("checkbox", { name: "Subscribe to the newsletter" });
-        expect(control.closest("label")).toHaveAttribute("data-disabled");
+        expect(control.closest(".dextinityCheckbox")).toHaveAttribute("data-disabled");
         expect(control).toHaveAttribute("data-disabled");
     });
 

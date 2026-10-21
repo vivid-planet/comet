@@ -31,3 +31,33 @@ export const LongWords: Story = {
         await expect(narrowScreen.scrollWidth).toBeLessThanOrEqual(narrowScreen.clientWidth);
     },
 };
+
+/**
+ * In a row with longer text, a short label and a button keep their text on one line; the longer text wraps.
+ */
+export const RowsWithLongerText: Story = {
+    render: () => (
+        <div className={styles.rows}>
+            <div className={styles.row}>
+                <Typography variant="label" data-testid="label-in-row">
+                    Bestellnummer
+                </Typography>
+                <Typography>Die Bestellnummer steht in der Bestätigung, die wir nach dem Kauf per E-Mail senden.</Typography>
+            </div>
+            <div className={styles.row}>
+                <Typography>Benachrichtigungen informieren über neue Bestellungen, Rücksendungen und Zahlungen.</Typography>
+                <Button data-testid="button-in-row">Turn on notifications</Button>
+            </div>
+            <Typography variant="label" data-testid="label-alone">
+                Bestellnummer
+            </Typography>
+            <Button data-testid="button-alone">Turn on notifications</Button>
+        </div>
+    ),
+    play: async ({ canvas }) => {
+        const heightOf = (testId: string) => canvas.getByTestId(testId).getBoundingClientRect().height;
+
+        await expect(heightOf("label-in-row")).toBe(heightOf("label-alone"));
+        await expect(heightOf("button-in-row")).toBe(heightOf("button-alone"));
+    },
+};

@@ -5,3 +5,17 @@
     align-items: flex-start;
     inline-size: 288px;
 }
+
+.rows {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    inline-size: 640px;
+}
+
+.row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}

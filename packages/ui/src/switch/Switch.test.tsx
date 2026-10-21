@@ -8,7 +8,7 @@ describe("Switch", () => {
         render(<Switch defaultChecked>Email notifications</Switch>);
 
         const control = screen.getByRole("switch", { name: "Email notifications" });
-        const root = control.closest("label");
+        const root = control.closest(".dextinitySwitch");
         const thumb = control.querySelector(".dextinitySwitch__thumb");
         expect(root).toHaveClass("dextinitySwitch");
         expect(root).not.toHaveAttribute("data-disabled");
@@ -18,14 +18,14 @@ describe("Switch", () => {
         expect(screen.getByText("Email notifications")).toHaveClass("dextinitySwitch__label");
     });
 
-    it("adds the consumer's class and style to the label root", () => {
+    it("adds the consumer's class and style to the root", () => {
         render(
             <Switch className="consumer" style={{ maxWidth: "20rem" }}>
                 Email notifications
             </Switch>,
         );
 
-        const root = screen.getByRole("switch").closest("label");
+        const root = screen.getByRole("switch").closest(".dextinitySwitch");
         expect(root).toHaveClass("dextinitySwitch", "consumer");
         expect(root).toHaveStyle({ maxWidth: "20rem" });
         expect(screen.getByRole("switch")).not.toHaveClass("consumer");
@@ -45,7 +45,7 @@ describe("Switch", () => {
         expect(container.querySelector(".dextinitySwitch__label")).not.toBeInTheDocument();
     });
 
-    it("renders the root as a span without a label, so an external label names the control", async () => {
+    it("lets an external label name the control", async () => {
         render(
             <>
                 <label htmlFor="newsletter">Newsletter</label>
@@ -54,15 +54,14 @@ describe("Switch", () => {
         );
 
         const control = await screen.findByRole("switch", { name: "Newsletter" });
-        expect(control.parentElement?.tagName).toBe("SPAN");
-        expect(control.parentElement).toHaveClass("dextinitySwitch");
+        expect(control.closest("label")).toBeNull();
     });
 
-    it("reflects the disabled owner state on the label root", () => {
+    it("reflects the disabled owner state on the root", () => {
         render(<Switch disabled>Email notifications</Switch>);
 
         const control = screen.getByRole("switch", { name: "Email notifications" });
-        expect(control.closest("label")).toHaveAttribute("data-disabled");
+        expect(control.closest(".dextinitySwitch")).toHaveAttribute("data-disabled");
         expect(control).toHaveAttribute("data-disabled");
     });
 

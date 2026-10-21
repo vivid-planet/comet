@@ -13,10 +13,13 @@
         font-weight: var(--_font-weight);
         line-height: var(--_line-height);
         letter-spacing: var(--_letter-spacing);
-        overflow-wrap: anywhere; /* A long word, such as a German compound, breaks instead of overflowing on small screens. */
+        overflow-wrap: break-word;
 
+        /* A long word in a large style, such as a German compound, breaks instead of overflowing a small screen,
+           also where the heading is a flex item. */
         &[data-variant="display"],
         &[data-variant^="heading"] {
+            overflow-wrap: anywhere;
             hyphens: auto;
         }
 

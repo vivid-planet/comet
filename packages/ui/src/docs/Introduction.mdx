@@ -61,4 +61,4 @@ In the admin, `@dextinity/admin` has components with the same names, such as `Bu
 
 While this Storybook runs, it serves an MCP server at `http://localhost:26648/mcp` with the same documentation: list the components and pages with `docs-list`, read one with `docs-show`, and a story's code with `docs-show-story`. Use only documented props.
 
-A story's code starts with all imports of its story file. Keep the `@dextinity/ui` imports and drop the others: `fn()` from `storybook/test` stands for your own event handler, `#storybook/icons` for your application's icons, and `*.stories.module.css` for your own styles.
+A story's code starts with imports from its story file. Keep the `@dextinity/ui` and `@base-ui/react` imports, add React's own imports, such as `useState`, where the code uses them, and drop the rest: `fn()` from `storybook/test` stands for your own event handler, `#storybook/icons` for your application's icons, and `*.stories.module.css` for your own styles.

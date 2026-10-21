@@ -12,8 +12,10 @@
         gap: var(--dextinity-space-sm);
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
         box-sizing: border-box;
         min-height: var(--_height);
+        max-inline-size: 100%; /* Wraps the label only when the button is wider than its container. */
         margin: 0;
         padding-block: var(--dextinity-space-xs);
         padding-inline: var(--_padding-inline);

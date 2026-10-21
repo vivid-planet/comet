@@ -2,7 +2,7 @@
 
 import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox";
 import { clsx } from "clsx";
-import type { CSSProperties, ReactNode } from "react";
+import { type CSSProperties, type ReactNode, useId } from "react";
 
 import { hasContent } from "../slots/hasContent";
 import { type ElementSlotProps, SlotElement } from "../slots/SlotElement";
@@ -24,17 +24,22 @@ export interface CheckboxSlotProps {
     control?: SlotProps<BaseCheckbox.Root.Props, CheckboxOwnerState>;
     /** The mark inside the box: a check mark, or a dash while indeterminate. Rendered only while checked or indeterminate. */
     indicator?: SlotProps<BaseCheckbox.Indicator.Props, CheckboxOwnerState>;
-    /** The element around `children`. */
-    label?: SlotProps<ElementSlotProps<"span">, CheckboxOwnerState>;
+    /** The `<label>` element around `children`, which names the checkbox. */
+    label?: SlotProps<ElementSlotProps<"label">, CheckboxOwnerState>;
 }
 
 /** @experimental */
-export interface CheckboxProps extends Omit<BaseCheckbox.Root.Props, "className" | "style" | "render" | "nativeButton" | "children" | "disabled"> {
+export interface CheckboxProps extends Omit<
+    BaseCheckbox.Root.Props,
+    "className" | "style" | "render" | "nativeButton" | "children" | "disabled" | "id"
+> {
     /**
      * The visible label next to the box. Clicking it toggles the checkbox. Without it, name the checkbox with
      * `aria-label`, with `aria-labelledby`, or with a `<label>` whose `htmlFor` matches its `id`.
      */
     children?: ReactNode;
+    /** The id of the hidden `<input>` element that submits the checkbox's value with a form. A `<label>` elsewhere names the checkbox with a matching `htmlFor`. */
+    id?: string;
     /** Prevents interaction and dims the checkbox together with its label. */
     disabled?: boolean;
     /** Added to the component's own classes on the outer element, which holds the box and the label. */
@@ -64,17 +69,16 @@ export interface CheckboxProps extends Omit<BaseCheckbox.Root.Props, "className"
  * @summary A checkbox with an optional label, for options in a form that is submitted.
  * @experimental
  */
-export function Checkbox({ disabled, className, style, slotProps, children, ...controlProps }: CheckboxProps) {
+export function Checkbox({ id, disabled, className, style, slotProps, children, ...controlProps }: CheckboxProps) {
     const ownerState: CheckboxOwnerState = { disabled: Boolean(disabled) };
-    const hasLabel = hasContent(children);
-    // Without a label of its own, a <label> wrapper would hide an external <label htmlFor> from Base UI's labelling.
-    const RootElement = hasLabel ? "label" : "span";
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
 
     return (
-        <RootElement className={clsx(styles.root, className)} style={style} data-disabled={ownerState.disabled ? "" : undefined}>
+        <span className={clsx(styles.root, className)} style={style} data-disabled={ownerState.disabled ? "" : undefined}>
             <BaseCheckbox.Root
                 {...resolveSlotProps({
-                    ownProps: { ...controlProps, disabled, className: styles.control },
+                    ownProps: { ...controlProps, id: inputId, disabled, className: styles.control },
                     slotProps: slotProps?.control,
                     ownerState,
                 })}
@@ -96,11 +100,14 @@ export function Checkbox({ disabled, className, style, slotProps, children, ...c
                     </svg>
                 </BaseCheckbox.Indicator>
             </BaseCheckbox.Root>
-            {hasLabel && (
-                <SlotElement tagName="span" {...resolveSlotProps({ ownProps: { className: styles.label }, slotProps: slotProps?.label, ownerState })}>
+            {hasContent(children) && (
+                <SlotElement
+                    tagName="label"
+                    {...resolveSlotProps({ ownProps: { className: styles.label, htmlFor: inputId }, slotProps: slotProps?.label, ownerState })}
+                >
                     {children}
                 </SlotElement>
             )}
-        </RootElement>
+        </span>
     );
 }

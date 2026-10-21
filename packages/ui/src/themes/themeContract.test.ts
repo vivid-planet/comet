@@ -26,6 +26,10 @@ interface Theme {
     name: string;
     declarations: Record<ColorScheme, Map<string, string>>;
     reducedMotionDeclarations: Map<string, string>;
+    reducedMotionSelectors: string[];
+    /** Where the dark color scheme's rule and the reduced-motion rule start in the file, to check their order. */
+    darkRuleOffset: number;
+    reducedMotionRuleOffset: number;
 }
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
@@ -44,6 +48,9 @@ function readThemes(): Theme[] {
             name,
             declarations: { light: new Map(), dark: new Map() },
             reducedMotionDeclarations: new Map(),
+            reducedMotionSelectors: [],
+            darkRuleOffset: -1,
+            reducedMotionRuleOffset: -1,
         };
 
         root.walkRules((rule) => {
@@ -61,12 +68,16 @@ function readThemes(): Theme[] {
                 throw new Error(`${fileName}: unexpected at-rule around "${rule.selector}". A theme only uses @media ${reducedMotionQuery}.`);
             }
 
+            const ruleOffset = rule.source?.start?.offset ?? -1;
             if (atRules.length === 2) {
                 addCustomProperties(theme.reducedMotionDeclarations, rule);
+                theme.reducedMotionSelectors.push(...selectors);
+                theme.reducedMotionRuleOffset = ruleOffset;
             } else if (rule.selector === lightSelector) {
                 addCustomProperties(theme.declarations.light, rule);
             } else if (rule.selector === darkSelector) {
                 addCustomProperties(theme.declarations.dark, rule);
+                theme.darkRuleOffset = ruleOffset;
             } else {
                 throw new Error(`${fileName}: define the light and the dark color scheme in separate rules, not in "${rule.selector}".`);
             }
@@ -164,10 +175,16 @@ describe.each(themes)("theme $fileName", (theme) => {
             "--dextinity-motion-duration-short": "0s",
             "--dextinity-motion-duration-medium": "0s",
         });
+        // Covering the dark selector after the dark rule wins over durations the dark color scheme redefines.
+        expect(theme.reducedMotionSelectors).toEqual([
+            `[data-dextinity-theme="${theme.name}"]`,
+            `[data-dextinity-theme="${theme.name}"][data-dextinity-color-scheme="dark"]`,
+        ]);
+        expect(theme.reducedMotionRuleOffset).toBeGreaterThan(theme.darkRuleOffset);
     });
 
     it("uses unitless line heights, which the components multiply with font sizes", () => {
-        const lineHeights = [...theme.declarations.light].filter(([token]) => token.endsWith("-line-height"));
+        const lineHeights = [...theme.declarations.light, ...theme.declarations.dark].filter(([token]) => token.endsWith("-line-height"));
 
         expect(lineHeights.filter(([, value]) => !/^\d+(\.\d+)?$/.test(value))).toEqual([]);
     });
@@ -214,8 +231,8 @@ function resolveColor(theme: Theme, colorScheme: ColorScheme, token: string): Rg
     }
 
     if (value.startsWith("linear-gradient(")) {
-        const stops = value.match(/#[0-9a-f]+\b/gi) ?? [];
-        if (stops.length !== 2 || /\b(rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\(/.test(value)) {
+        const stops = gradientColorStops(value);
+        if (stops.length !== 2) {
             throw new Error(`${theme.fileName}: ${token} must be a gradient of two hex colors, so its contrast can be checked.`);
         }
         const [first, last] = stops.map((stop) => parseHexColor(stop, `${theme.fileName}: ${token}`));
@@ -227,6 +244,29 @@ function resolveColor(theme: Theme, colorScheme: ColorScheme, token: string): Rg
     }
 
     throw new Error(`${theme.fileName}: ${token} is "${value}". Use a hex color, so its contrast can be checked.`);
+}
+
+/** The hex colors of a gradient's color stops, or an empty list if any stop isn't a hex color with optional positions. */
+function gradientColorStops(gradient: string) {
+    const gradientArguments = splitTopLevelCommas(gradient.slice("linear-gradient(".length, -1)).map((argument) => argument.trim());
+    const hasDirection = /^(-?[\d.]+(deg|grad|rad|turn)|to |in )/.test(gradientArguments[0] ?? "");
+    const colorStops = hasDirection ? gradientArguments.slice(1) : gradientArguments;
+    const hexColors = colorStops.map((colorStop) => colorStop.match(/^(#[0-9a-f]+)(\s+-?[\d.]+%){0,2}$/i)?.[1]);
+    return hexColors.every((hexColor) => hexColor !== undefined) ? hexColors : [];
+}
+
+function splitTopLevelCommas(text: string) {
+    const parts = [""];
+    let depth = 0;
+    for (const character of text) {
+        if (character === "," && depth === 0) {
+            parts.push("");
+            continue;
+        }
+        depth += character === "(" ? 1 : character === ")" ? -1 : 0;
+        parts[parts.length - 1] += character;
+    }
+    return parts;
 }
 
 function parseHexColor(hexColor: string, origin: string): Rgb {

@@ -2,7 +2,7 @@
 
 import { Switch as BaseSwitch } from "@base-ui/react/switch";
 import { clsx } from "clsx";
-import type { CSSProperties, ReactNode } from "react";
+import { type CSSProperties, type ReactNode, useId } from "react";
 
 import { hasContent } from "../slots/hasContent";
 import { type ElementSlotProps, SlotElement } from "../slots/SlotElement";
@@ -24,8 +24,8 @@ export interface SwitchSlotProps {
     control?: SlotProps<BaseSwitch.Root.Props, SwitchOwnerState>;
     /** The round handle inside the track, which moves to the end while the switch is on. */
     thumb?: SlotProps<BaseSwitch.Thumb.Props, SwitchOwnerState>;
-    /** The element around `children`. */
-    label?: SlotProps<ElementSlotProps<"span">, SwitchOwnerState>;
+    /** The `<label>` element around `children`, which names the switch. */
+    label?: SlotProps<ElementSlotProps<"label">, SwitchOwnerState>;
 }
 
 /** @experimental */
@@ -64,28 +64,30 @@ export interface SwitchProps extends Omit<BaseSwitch.Root.Props, "className" | "
  * @summary A switch with an optional label, for settings that take effect immediately.
  * @experimental
  */
-export function Switch({ disabled, className, style, slotProps, children, ...controlProps }: SwitchProps) {
+export function Switch({ id, disabled, className, style, slotProps, children, ...controlProps }: SwitchProps) {
     const ownerState: SwitchOwnerState = { disabled: Boolean(disabled) };
-    const hasLabel = hasContent(children);
-    // Without a label of its own, a <label> wrapper would hide an external <label htmlFor> from Base UI's labelling.
-    const RootElement = hasLabel ? "label" : "span";
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
 
     return (
-        <RootElement className={clsx(styles.root, className)} style={style} data-disabled={ownerState.disabled ? "" : undefined}>
+        <span className={clsx(styles.root, className)} style={style} data-disabled={ownerState.disabled ? "" : undefined}>
             <BaseSwitch.Root
                 {...resolveSlotProps({
-                    ownProps: { ...controlProps, disabled, className: styles.control },
+                    ownProps: { ...controlProps, id: inputId, disabled, className: styles.control },
                     slotProps: slotProps?.control,
                     ownerState,
                 })}
             >
                 <BaseSwitch.Thumb {...resolveSlotProps({ ownProps: { className: styles.thumb }, slotProps: slotProps?.thumb, ownerState })} />
             </BaseSwitch.Root>
-            {hasLabel && (
-                <SlotElement tagName="span" {...resolveSlotProps({ ownProps: { className: styles.label }, slotProps: slotProps?.label, ownerState })}>
+            {hasContent(children) && (
+                <SlotElement
+                    tagName="label"
+                    {...resolveSlotProps({ ownProps: { className: styles.label, htmlFor: inputId }, slotProps: slotProps?.label, ownerState })}
+                >
                     {children}
                 </SlotElement>
             )}
-        </RootElement>
+        </span>
     );
 }
