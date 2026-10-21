@@ -1,9 +1,9 @@
 import { gql } from "@dextinity/site-react";
+import { getSiteContext } from "@src/framework/requestContext";
 import { createSitePath } from "@src/util/createSitePath";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Context } from "hono";
-import type { BlankEnv } from "hono/types";
 
 import type { GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables } from "./sitemap.generated";
 
@@ -26,11 +26,11 @@ function renderSitemapXml(sitemap: SitemapEntry[]) {
     return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
 }
 
-export async function sitemapRoute(c: Context<BlankEnv, "/:visibility/:domain/sitemap.xml">) {
+export async function sitemapRoute(c: Context) {
     const sitemap: SitemapEntry[] = [];
     const graphqlFetch = createGraphQLFetch();
 
-    const siteConfig = getSiteConfigForDomain(c.req.param("domain"));
+    const siteConfig = getSiteConfigForDomain(getSiteContext().domain);
 
     for (const language of siteConfig.scope.languages) {
         const domain = siteConfig.scope.domain;

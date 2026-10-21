@@ -1,8 +1,8 @@
+import { getSiteContext } from "@src/framework/requestContext";
 import { mailerTransport } from "@src/util/mailer";
 import { assessRecaptchaToken } from "@src/util/recaptcha/assessRecaptchaToken";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Context } from "hono";
-import type { BlankEnv } from "hono/types";
 import { z } from "zod";
 
 const fromEmail = process.env.CONTACT_FORM_FROM_EMAIL;
@@ -28,8 +28,8 @@ const queryValidationSchema = z.object({
     attachments: z.array(z.uuid()).default([]),
 });
 
-export async function contactFormRoute(c: Context<BlankEnv, "/:visibility/:domain/:language/api/contact-form">) {
-    const domain = c.req.param("domain");
+export async function contactFormRoute(c: Context) {
+    const { domain } = getSiteContext();
     const body = await c.req.json();
     const validationResult = queryValidationSchema.safeParse(body);
 

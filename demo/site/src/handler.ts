@@ -4,12 +4,12 @@ import { Hono } from "hono";
 import { adminRedirectMiddleware } from "./middleware/adminRedirect";
 import { contentSecurityPolicyHeadersMiddleware } from "./middleware/contentSecurityPolicyHeaders";
 import { damRewriteMiddleware } from "./middleware/damRewrite";
-import { domainRewriteMiddleware } from "./middleware/domainRewrite";
 import type { MiddlewareEnv } from "./middleware/env";
 import { predefinedPagesMiddleware } from "./middleware/predefinedPages";
 import { previewMiddleware } from "./middleware/preview";
 import { redirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
 import { robotsMiddleware } from "./middleware/robots";
+import { siteContextMiddleware } from "./middleware/siteContext";
 import { skipRewriteMiddleware } from "./middleware/skipRewrite";
 import { statusMiddleware } from "./middleware/status";
 
@@ -25,7 +25,7 @@ app.use(
     redirectToMainHostMiddleware,
     robotsMiddleware, // for robots.txt, the middleware may only be skipped after the main host redirect
     predefinedPagesMiddleware,
-    domainRewriteMiddleware, // must be last (rewrites all urls and hands the request over to the router)
+    siteContextMiddleware, // must be last (hands the request over to the site router)
 );
 
 app.onError(handleError);

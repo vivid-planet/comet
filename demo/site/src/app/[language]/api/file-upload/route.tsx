@@ -1,11 +1,11 @@
+import { getSiteContext } from "@src/framework/requestContext";
 import { acceptedFileTypes, maxFileSizeBytes } from "@src/util/fileUpload";
 import { assessRecaptchaToken } from "@src/util/recaptcha/assessRecaptchaToken";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Context } from "hono";
-import type { BlankEnv } from "hono/types";
 
-export async function fileUploadRoute(c: Context<BlankEnv, "/:visibility/:domain/:language/api/file-upload">) {
-    const domain = c.req.param("domain");
+export async function fileUploadRoute(c: Context) {
+    const { domain } = getSiteContext();
     const formData = await c.req.formData();
 
     const file = formData.get("file");

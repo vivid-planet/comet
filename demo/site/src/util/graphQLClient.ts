@@ -5,7 +5,7 @@ import {
     type GraphQLFetch,
 } from "@dextinity/site-react";
 import { SYSTEM_USER_NAME } from "@src/auth/constants";
-import { getVisibilityParam } from "@src/framework/requestContext";
+import { getVisibility } from "@src/framework/requestContext";
 
 import { createCachingFetch } from "./fetchCache";
 
@@ -22,8 +22,8 @@ export function createGraphQLFetch({ fetch: passedFetch }: { fetch?: Fetch } = {
         throw new Error("API_BASIC_AUTH_SYSTEM_USER_PASSWORD is not set");
     }
 
-    const visibilityParam = getVisibilityParam();
-    const previewData = visibilityParam === "default" ? undefined : { includeInvisible: visibilityParam === "invisibleBlocks" };
+    const visibility = getVisibility();
+    const previewData = visibility === "default" ? undefined : { includeInvisible: visibility === "invisibleBlocks" };
 
     return createGraphQLFetchLibrary(
         // Preview content must always be up to date

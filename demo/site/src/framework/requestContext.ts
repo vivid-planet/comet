@@ -1,19 +1,26 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
-import type { VisibilityParam } from "@src/middleware/domainRewrite";
 import { parse } from "hono/utils/cookie";
+
+export type Visibility = "default" | "invisiblePages" | "invisibleBlocks";
+
+type SiteContext = {
+    domain: string;
+    visibility: Visibility;
+};
 
 type RequestContext = {
     /** The request as sent by the browser, before any middleware rewrites */
     request: Request;
     isRscRequest: boolean;
-    visibility: VisibilityParam;
+    /** Set by the site context middleware for site requests */
+    siteContext?: SiteContext;
 };
 
 const requestContextStorage = new AsyncLocalStorage<RequestContext>();
 
-export function runWithRequestContext<T>(context: Omit<RequestContext, "visibility">, callback: () => T): T {
-    return requestContextStorage.run({ ...context, visibility: "default" }, callback);
+export function runWithRequestContext<T>(context: RequestContext, callback: () => T): T {
+    return requestContextStorage.run(context, callback);
 }
 
 function getRequestContext() {
@@ -36,11 +43,19 @@ export function getCookie(name: string): string | undefined {
     return parse(getRequest().headers.get("cookie") ?? "", name)[name];
 }
 
-export function setVisibilityParam(visibility: VisibilityParam) {
-    getRequestContext().visibility = visibility;
+export function setSiteContext(siteContext: SiteContext) {
+    getRequestContext().siteContext = siteContext;
 }
 
-// Falls back to "default" outside of the request context, e.g. in the SSR environment, which has its own module instance
-export function getVisibilityParam(): VisibilityParam {
-    return requestContextStorage.getStore()?.visibility ?? "default";
+export function getSiteContext() {
+    const { siteContext } = getRequestContext();
+    if (!siteContext) {
+        throw new Error("Site context is only available for site requests");
+    }
+    return siteContext;
+}
+
+// Falls back to "default" outside of site requests, e.g. in the SSR environment, which has its own module instance
+export function getVisibility(): Visibility {
+    return requestContextStorage.getStore()?.siteContext?.visibility ?? "default";
 }
