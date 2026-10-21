@@ -56,10 +56,10 @@ pnpm run lint:fix
 
 Every package and demo service exposes these scripts:
 
-- `lint:fix` — runs `lint:fix:eslint` and `lint:fix:prettier` in parallel (plus `lint:fix:style` in `demo/site`)
+- `lint:fix` — runs `lint:fix:eslint` and `lint:fix:prettier` in parallel (plus `lint:fix:style` in `demo/site` and `packages/ui`)
 - `lint:fix:eslint` — runs ESLint with `--fix` (also applies Prettier formatting via `eslint-plugin-prettier`)
 - `lint:fix:prettier` — runs Prettier with `--write` for any remaining formatting issues
-- `lint:fix:style` — runs Stylelint with `--fix` (`demo/site` only)
+- `lint:fix:style` — runs Stylelint with `--fix` (`demo/site` and `packages/ui` only)
 
 The root-level `lint:fix` runs all workspace `lint:fix` scripts recursively, then formats root-level config files.
 
@@ -148,6 +148,12 @@ Every process loads `.env.local` itself: the demo packages and `dev:*` scripts r
 | ------------------------ | ------------------------------------------------------------- |
 | `@dextinity/site-react`  | React components and utilities for the frontend/site layer    |
 | `@dextinity/site-nextjs` | Next.js-specific site layer components (extends `site-react`) |
+
+### UI (`packages/ui/`)
+
+| Package         | Description                                                                                               |
+| --------------- | --------------------------------------------------------------------------------------------------------- |
+| `@dextinity/ui` | Experimental, themeable React UI primitives (Base UI, CSS Modules) for the admin, the site and prototypes |
 
 ### Utilities
 

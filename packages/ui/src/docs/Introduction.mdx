@@ -1,0 +1,60 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Introduction" summary="What @dextinity/ui is, how to set it up in an application, and how this documentation is organized." />
+
+# @dextinity/ui
+
+Themeable React UI primitives for Dextinity applications: the admin, the site, and prototypes. The components are built on [Base UI](https://base-ui.com), which provides behavior and accessibility, and styled with CSS Modules and design tokens.
+
+> **Experimental.** Any component or prop may change or be removed without a deprecation notice.
+
+## Principles
+
+- **The code is the single source of truth.** The components, tokens and themes are defined in this package and documented here. Design changes are pull requests: see [Changing the design](?path=/docs/contributing-changing-the-design--docs).
+- **UI only.** No routing, forms state, data fetching or translations. All text comes in through props, so the components work in the admin and the site alike.
+- **Themeable.** A theme is a stylesheet of CSS custom properties. See [Theming](?path=/docs/foundations-theming--docs).
+- **Accessible.** Components require an accessible name where they can't derive one, themes meet WCAG 2.2 AA contrast, and every story runs an accessibility check.
+
+## Setup
+
+```sh
+pnpm add @dextinity/ui
+```
+
+```tsx
+// Once, at the root of the application
+import "@dextinity/ui/css";
+import "@dextinity/ui/themes/dextinity.css";
+```
+
+```html
+<html data-dextinity-theme="dextinity" data-dextinity-color-scheme="light"></html>
+```
+
+```tsx
+import { Button, TextField } from "@dextinity/ui";
+
+export function NewsletterForm() {
+    return (
+        <form>
+            <TextField label="Email" type="email" name="email" required />
+            <Button type="submit">Subscribe</Button>
+        </form>
+    );
+}
+```
+
+[Theming](?path=/docs/foundations-theming--docs) explains the fonts, the color scheme and how to combine the components with a CSS reset.
+
+In the admin, `@dextinity/admin` has components with the same names, such as `Button` and `TextField`. Import from one package per file, or rename on import: `import { Button as UiButton } from "@dextinity/ui";`.
+
+## Documentation
+
+- **Foundations** — [Theming](?path=/docs/foundations-theming--docs), the [design tokens](?path=/docs/foundations-design-tokens--docs), and the ways to [customize](?path=/docs/foundations-customization--docs) a component.
+- **Components** — every component with its props, guidelines and examples. Switch the theme and color scheme in the toolbar.
+- **Patterns** — how the components work together, for example in forms.
+- **Contributing** — how to change the design.
+
+## For coding agents
+
+While this Storybook runs, it serves an MCP server at `http://localhost:26648/mcp` with the same documentation: list the components and pages with `docs-list`, read one with `docs-show`, and a story's code with `docs-show-story`. Use only documented props.

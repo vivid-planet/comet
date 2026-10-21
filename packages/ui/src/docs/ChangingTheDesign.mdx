@@ -1,0 +1,54 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta
+    title="Contributing/Changing the design"
+    summary="How designers propose design changes as pull requests: what to edit, how to check it, and what protects the change."
+/>
+
+# Changing the design
+
+The code is the single source of truth for the design of `@dextinity/ui`: the themes, the components and this Storybook are what applications get. Figma follows the code, not the other way around. So a design change, whether a new color or a new button style, is a pull request to this package, and you don't need to be a developer to make one.
+
+## What to edit
+
+| To change                                   | Edit                                                                         |
+| ------------------------------------------- | ---------------------------------------------------------------------------- |
+| A color, font, size, radius or spacing      | The theme: `packages/ui/src/themes/dextinity.css`                            |
+| What a token is for, or a new token         | The list of tokens: `packages/ui/src/docs/DesignTokens.mdx`, and every theme |
+| How one component looks                     | Its stylesheet: `packages/ui/src/<component>/<Component>.module.css`         |
+| What a component does or which props it has | Talk to a developer first: that changes the component's API                  |
+
+A theme is a list of tokens with their values, grouped by topic:
+
+```css
+/* Color */
+--dextinity-color-primary: #403af2;
+
+/* Button */
+--dextinity-button-radius: 9999px;
+```
+
+Change the value, keep the name. [Design tokens](?path=/docs/foundations-design-tokens--docs) says what each token is used for.
+
+## Making the change
+
+- **A small change, such as a color:** open the file on GitHub, edit it in the browser with the pencil icon, and let GitHub create a branch and a pull request.
+- **A larger change:** ask a coding agent, such as Claude Code, to make it in this repository. Describe what should change and why. The agent reads the same documentation as this Storybook through its MCP server, and follows the package's conventions.
+- **Locally:** run `pnpm install` once, then `pnpm --filter @dextinity/ui run storybook`, and open http://localhost:26648. The Storybook updates as you save.
+
+Describe in the pull request why the design changes, and add screenshots of the stories before and after.
+
+## What protects the change
+
+Every pull request runs checks, and a failing check names what to fix:
+
+- **Theme contract.** Every theme defines every documented token, and no others.
+- **Contrast.** Text and controls reach the WCAG 2.2 AA contrast in every theme and color scheme, for example 4.5:1 for text. If a new color fails, the check names the pair and the ratio it reached.
+- **Accessibility.** Every story runs an automated accessibility check in a real browser.
+- **Code style.** The stylesheets are formatted and linted.
+
+A developer reviews the pull request before it's merged.
+
+## Keeping Figma in sync
+
+When a design change is merged, update the Figma library to match. Figma is where ideas are explored; the code decides what ships.

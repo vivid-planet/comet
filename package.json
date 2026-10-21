@@ -26,6 +26,7 @@
         "dev:brevo-api": "dev-pm start @brevo-api",
         "dev:brevo-admin": "dev-pm start @brevo-admin",
         "dev:mail-react": "dev-pm start @mail-react",
+        "dev:ui": "dev-pm start @ui",
         "dev:demo": "dev-pm start @demo",
         "dev:demo:admin": "dev-pm start @demo-admin",
         "dev:demo:api": "dev-pm start @demo-api",

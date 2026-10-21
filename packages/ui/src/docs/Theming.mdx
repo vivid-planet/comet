@@ -1,0 +1,124 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ThemingStories from "./__stories__/Theming.stories";
+
+<Meta title="Foundations/Theming" summary="How a theme is applied, how to adjust the Dextinity theme, and how to create a theme for another brand." />
+
+# Theming
+
+A theme is a stylesheet that defines the [design tokens](?path=/docs/foundations-design-tokens--docs): CSS custom properties for colors, typography, space, shapes and motion. Components read nothing but these tokens, so a theme changes their look completely without changing their code.
+
+The package includes the Dextinity theme. This Storybook also shows Acme, a fictive brand, to prove that the components follow any theme. Switch between them, and between the light and dark color schemes, in the toolbar.
+
+<Canvas of={ThemingStories.Comparison} />
+
+## Applying a theme
+
+Import the component styles and a theme once, at the root of the application:
+
+```tsx
+import "@dextinity/ui/css";
+import "@dextinity/ui/themes/dextinity.css";
+```
+
+Then name the theme and the color scheme on the `<html>` element. A theme applies to the element that names it and everything inside. Use `<html>`, so popups, which render at the end of `<body>`, follow it too.
+
+```html
+<html data-dextinity-theme="dextinity" data-dextinity-color-scheme="light"></html>
+```
+
+In a Next.js application, set them in the root layout:
+
+```tsx
+// src/app/layout.tsx
+import "@dextinity/ui/css";
+import "@dextinity/ui/themes/dextinity.css";
+
+export default function RootLayout({ children }: PropsWithChildren) {
+    return (
+        <html lang="en" data-dextinity-theme="dextinity" data-dextinity-color-scheme="light">
+            <body>{children}</body>
+        </html>
+    );
+}
+```
+
+The theme doesn't style the page itself. Give the page the theme's background and text color:
+
+```css
+body {
+    background: var(--dextinity-color-background);
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+}
+```
+
+### Fonts
+
+A theme names its font families, but doesn't load them, because applications load fonts differently. The Dextinity theme uses Figtree, for example through [Fontsource](https://fontsource.org/fonts/figtree):
+
+```tsx
+import "@fontsource-variable/figtree";
+```
+
+### Color schemes
+
+`data-dextinity-color-scheme` is `light` or `dark`. To follow the operating system, resolve its preference in the application and set the attribute. In a server-rendered application, set it before the first paint, for example from a cookie, so the page doesn't flash in the wrong scheme.
+
+### CSS reset and other global styles
+
+All styles of the package and its themes are in the `dextinity` [cascade layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer). Styles outside any layer always win over styles in a layer, whatever their specificity. That lets an application adjust any component with plain CSS, but it also means that an unlayered CSS reset breaks the components: `button { padding: 0; background: none; }` removes a button's padding and background.
+
+Put resets and other element styles into a layer that comes before `dextinity`. The first `@layer` statement sets the order, so put it before any other stylesheet:
+
+```css
+@layer reset, dextinity;
+
+@layer reset {
+    button {
+        padding: 0;
+        border: none;
+        background: none;
+    }
+}
+```
+
+Utility frameworks that use layers, such as Tailwind CSS, must name `dextinity` before their utilities layer, so utility classes can still override a component: `@layer theme, base, dextinity, components, utilities;`.
+
+## Adjusting the Dextinity theme
+
+To change a few tokens, redefine them for the theme in the application's own stylesheet, outside any layer:
+
+```css
+[data-dextinity-theme="dextinity"] {
+    --dextinity-color-primary: #2f6bf2;
+    --dextinity-button-radius: 8px;
+}
+
+[data-dextinity-theme="dextinity"][data-dextinity-color-scheme="dark"] {
+    --dextinity-color-primary: #8fb0ff;
+}
+```
+
+Redefine a token on the element that names the theme, as above. A token that refers to another token, like `--dextinity-button-secondary-background: var(--dextinity-color-surface)`, gets its value there. If you change `--dextinity-color-surface` on an element further inside, the button doesn't follow.
+
+To give a section of a page another theme or color scheme, name both on the section. It then starts a theme of its own, and every token resolves anew:
+
+```tsx
+<section data-dextinity-theme="dextinity" data-dextinity-color-scheme="dark">
+    …
+</section>
+```
+
+## Creating a theme
+
+A theme for another brand is a stylesheet like [`acme.css`](https://github.com/vivid-planet/dextinity/blob/main/packages/ui/src/themes/acme.css):
+
+1. Copy `acme.css` and replace `acme` in its selectors with the name of the theme.
+2. Define every token listed in [Design tokens](?path=/docs/foundations-design-tokens--docs) for the light color scheme, and every `--dextinity-color-*` token again for the dark color scheme.
+3. Check every color pair the design tokens page names against its contrast requirement.
+4. Set the motion durations to `0s` for users who prefer reduced motion.
+
+Inside this repository, a unit test checks steps 2 to 4 for every theme in `packages/ui/src/themes/`: add a theme there, and run `pnpm --filter @dextinity/ui run test:unit`.
+
+Keep the theme's own palette inside the theme file. Components only use the tokens, so a theme is free to name its colors however it likes before assigning them to tokens.

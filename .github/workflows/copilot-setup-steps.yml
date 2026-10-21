@@ -156,6 +156,13 @@ jobs:
                   path: packages/mail-react/lib
                   key: ${{ runner.os }}-build-mail-react-${{ hashFiles('packages/mail-react/src/**', 'packages/mail-react/package.json', 'packages/mail-react/tsconfig*.json', 'pnpm-lock.yaml') }}
 
+            - name: Cache @dextinity/ui build
+              id: cache-ui
+              uses: actions/cache@v6
+              with:
+                  path: packages/ui/lib
+                  key: ${{ runner.os }}-build-ui-${{ hashFiles('packages/ui/src/**', 'packages/ui/package.json', 'packages/ui/tsconfig*.json', 'packages/ui/vite.config.mts', 'pnpm-lock.yaml') }}
+
             - name: Cache @dextinity/site-nextjs build
               id: cache-site-nextjs
               uses: actions/cache@v6
@@ -207,6 +214,7 @@ jobs:
                   [ "${{ steps.cache-brevo-api.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @dextinity/brevo-api"
                   [ "${{ steps.cache-cms-api.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @dextinity/cms-api"
                   [ "${{ steps.cache-mail-react.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @dextinity/mail-react"
+                  [ "${{ steps.cache-ui.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @dextinity/ui"
                   [ "${{ steps.cache-site-nextjs.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @dextinity/site-nextjs"
                   [ "${{ steps.cache-site-react.outputs.cache-hit }}" != "true" ] && FILTERS="$FILTERS --filter @dextinity/site-react"
                   if [ -n "$FILTERS" ]; then
