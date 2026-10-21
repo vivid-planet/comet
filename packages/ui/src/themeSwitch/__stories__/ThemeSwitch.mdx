@@ -1,0 +1,31 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as ThemeSwitchStories from "./ThemeSwitch.stories";
+
+<Meta of={ThemeSwitchStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+A theme switch has no inner parts. `className` and `style` go to its `<div>`, `dextinityThemeSwitch`, which carries the `data-dextinity-theme` and `data-dextinity-color-scheme` attributes. See [Theming](?path=/docs/foundations-theming--docs#nesting-themes) for how themes nest.
+
+## Design tokens
+
+A theme styles the theme switch through these [design tokens](?path=/docs/foundations-design-tokens--docs), in the theme and color scheme the switch names. None of them is the theme switch's own: they're shared tokens, which other components can use too. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                          | In the theme switch             |
+| ------------------------------ | ------------------------------- |
+| `--dextinity-color-background` | Background of the switch.       |
+| `--dextinity-color-foreground` | Color of the text inside.       |
+| `--dextinity-font-family-body` | Font family of the text inside. |

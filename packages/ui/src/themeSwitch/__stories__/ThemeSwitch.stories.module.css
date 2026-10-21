@@ -1,0 +1,31 @@
+.panel,
+.nestedPanel {
+    display: grid;
+    gap: var(--dextinity-space-xl);
+    padding: var(--dextinity-space-xl);
+    border-radius: var(--dextinity-radius-large);
+}
+
+.nestedPanel {
+    margin-top: var(--dextinity-space-xl);
+}
+
+.comparison {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--dextinity-space-lg);
+}
+
+.sample {
+    display: grid;
+    gap: var(--dextinity-space-lg);
+    max-inline-size: 28rem;
+}
+
+.title,
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-md);
+    align-items: center;
+}

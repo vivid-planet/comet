@@ -15,4 +15,5 @@ export type { ElementSlotProps } from "./slots/SlotElement";
 export type { SlotProps } from "./slots/slotProps";
 export { Switch, type SwitchOwnerState, type SwitchProps, type SwitchSlotProps } from "./switch/Switch";
 export { TextField, type TextFieldOwnerState, type TextFieldProps, type TextFieldSlotProps, type TextFieldType } from "./textField/TextField";
+export { ThemeSwitch, type ThemeSwitchColorScheme, type ThemeSwitchProps } from "./themeSwitch/ThemeSwitch";
 export { Typography, type TypographyOwnerState, type TypographyProps, type TypographyTone, type TypographyVariant } from "./typography/Typography";

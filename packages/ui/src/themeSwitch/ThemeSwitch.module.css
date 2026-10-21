@@ -1,0 +1,7 @@
+@layer dextinity {
+    .root {
+        background: var(--dextinity-color-background);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+    }
+}
