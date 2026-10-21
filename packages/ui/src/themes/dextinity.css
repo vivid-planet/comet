@@ -1,0 +1,169 @@
+/*
+ * Dextinity theme
+ *
+ * The Dextinity brand: indigo and teal, the Figtree typeface, pill-shaped buttons with the brand gradient.
+ * Published as `@dextinity/ui/themes/dextinity.css`. Every token is documented in "Foundations/Design tokens".
+ *
+ * Where it deviates from the Dextinity design system, it's for contrast (WCAG 2.2 AA):
+ * - The button gradient ends in teal 600 instead of teal 400, so its white text reaches 5.9:1 instead of 3.8:1.
+ * - Control borders are grey 400 instead of grey 200 (3.7:1 instead of 1.7:1).
+ * - Danger and warning are darker, so they reach 4.5:1 on their subtle backgrounds.
+ * - The focus ring is a solid outline instead of a translucent shadow.
+ */
+
+@layer dextinity {
+    [data-dextinity-theme="dextinity"] {
+        color-scheme: light;
+
+        /* Color */
+        --dextinity-color-background: #fff;
+        --dextinity-color-foreground: #141517;
+        --dextinity-color-foreground-muted: #626873;
+        --dextinity-color-surface: #fff;
+        --dextinity-color-surface-hover: #f5f6f7;
+        --dextinity-color-border: #e5e6e8;
+        --dextinity-color-border-strong: #81868f;
+        --dextinity-color-border-hover: #4e535c;
+        --dextinity-color-primary: #403af2;
+        --dextinity-color-primary-hover: #332fc2;
+        --dextinity-color-primary-foreground: #fff;
+        --dextinity-color-primary-subtle: #ecebfe;
+        --dextinity-color-neutral-subtle: #f5f6f7;
+        --dextinity-color-success: #3d7a2b;
+        --dextinity-color-success-subtle: #e8f5e3;
+        --dextinity-color-warning: #8a5f00;
+        --dextinity-color-warning-subtle: #fff4d6;
+        --dextinity-color-danger: #b8283f;
+        --dextinity-color-danger-subtle: #fee2e5;
+        --dextinity-color-focus-ring: #403af2;
+
+        /* Typography */
+        --dextinity-font-family-body: "Figtree Variable", "Figtree", "Helvetica Neue", system-ui, sans-serif;
+        --dextinity-font-family-heading: "Figtree Variable", "Figtree", "Helvetica Neue", system-ui, sans-serif;
+        --dextinity-typography-display-font-size: 3rem;
+        --dextinity-typography-display-line-height: 1.08;
+        --dextinity-typography-display-font-weight: 800;
+        --dextinity-typography-display-letter-spacing: -0.02em;
+        --dextinity-typography-heading-1-font-size: 2.5rem;
+        --dextinity-typography-heading-1-line-height: 1.2;
+        --dextinity-typography-heading-1-font-weight: 700;
+        --dextinity-typography-heading-1-letter-spacing: -0.01em;
+        --dextinity-typography-heading-2-font-size: 2rem;
+        --dextinity-typography-heading-2-line-height: 1.2;
+        --dextinity-typography-heading-2-font-weight: 700;
+        --dextinity-typography-heading-2-letter-spacing: -0.01em;
+        --dextinity-typography-heading-3-font-size: 1.75rem;
+        --dextinity-typography-heading-3-line-height: 1.2;
+        --dextinity-typography-heading-3-font-weight: 700;
+        --dextinity-typography-heading-3-letter-spacing: 0;
+        --dextinity-typography-heading-4-font-size: 1.5rem;
+        --dextinity-typography-heading-4-line-height: 1.2;
+        --dextinity-typography-heading-4-font-weight: 600;
+        --dextinity-typography-heading-4-letter-spacing: 0;
+        --dextinity-typography-body-large-font-size: 1.125rem;
+        --dextinity-typography-body-large-line-height: 1.6;
+        --dextinity-typography-body-large-font-weight: 400;
+        --dextinity-typography-body-large-letter-spacing: 0;
+        --dextinity-typography-body-font-size: 1rem;
+        --dextinity-typography-body-line-height: 1.45;
+        --dextinity-typography-body-font-weight: 400;
+        --dextinity-typography-body-letter-spacing: 0;
+        --dextinity-typography-body-small-font-size: 0.8125rem;
+        --dextinity-typography-body-small-line-height: 1.45;
+        --dextinity-typography-body-small-font-weight: 400;
+        --dextinity-typography-body-small-letter-spacing: 0;
+        --dextinity-typography-label-font-size: 0.8125rem;
+        --dextinity-typography-label-line-height: 1.45;
+        --dextinity-typography-label-font-weight: 600;
+        --dextinity-typography-label-letter-spacing: 0;
+        --dextinity-typography-overline-font-size: 0.75rem;
+        --dextinity-typography-overline-line-height: 1.45;
+        --dextinity-typography-overline-font-weight: 600;
+        --dextinity-typography-overline-letter-spacing: 0.08em;
+        --dextinity-typography-overline-text-transform: uppercase;
+
+        /* Space */
+        --dextinity-space-xs: 0.25rem;
+        --dextinity-space-sm: 0.5rem;
+        --dextinity-space-md: 0.75rem;
+        --dextinity-space-lg: 1rem;
+        --dextinity-space-xl: 1.5rem;
+
+        /* Shape */
+        --dextinity-radius-small: 4px;
+        --dextinity-radius-medium: 8px;
+        --dextinity-radius-large: 16px;
+        --dextinity-radius-full: 9999px;
+
+        /* Controls */
+        --dextinity-control-height-small: 2.25rem;
+        --dextinity-control-height-medium: 3rem;
+        --dextinity-control-height-large: 3.5rem;
+        --dextinity-control-padding-inline-small: 1rem;
+        --dextinity-control-padding-inline-medium: 1.375rem;
+        --dextinity-control-padding-inline-large: 1.75rem;
+        --dextinity-control-font-size-small: 0.8125rem;
+        --dextinity-control-font-size-medium: 1rem;
+        --dextinity-control-font-size-large: 1.125rem;
+        --dextinity-control-border-width: 1.5px;
+        --dextinity-control-toggle-size: 1.25rem;
+
+        /* State */
+        --dextinity-focus-ring-width: 2px;
+        --dextinity-focus-ring-offset: 2px;
+        --dextinity-opacity-disabled: 0.4;
+
+        /* Motion */
+        --dextinity-motion-duration-short: 120ms;
+        --dextinity-motion-duration-medium: 200ms;
+        --dextinity-motion-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+        /* Button */
+        --dextinity-button-radius: 9999px;
+        --dextinity-button-font-weight: 600;
+        --dextinity-button-primary-background: linear-gradient(135deg, #403af2 0%, #098a82 100%);
+        --dextinity-button-primary-background-hover: linear-gradient(135deg, #272391 0%, #076964 100%);
+        --dextinity-button-primary-foreground: #fff;
+        --dextinity-button-primary-shadow: 0 8px 24px rgb(64 58 242 / 35%);
+        --dextinity-button-secondary-background: var(--dextinity-color-surface);
+        --dextinity-button-secondary-background-hover: var(--dextinity-color-foreground);
+        --dextinity-button-secondary-foreground: var(--dextinity-color-foreground);
+        --dextinity-button-secondary-foreground-hover: var(--dextinity-color-surface);
+        --dextinity-button-secondary-border: var(--dextinity-color-foreground);
+        --dextinity-button-ghost-foreground: var(--dextinity-color-foreground);
+        --dextinity-button-ghost-background-hover: var(--dextinity-color-surface-hover);
+    }
+
+    [data-dextinity-theme="dextinity"][data-dextinity-color-scheme="dark"] {
+        color-scheme: dark;
+
+        /* Color */
+        --dextinity-color-background: #08090a;
+        --dextinity-color-foreground: #fff;
+        --dextinity-color-foreground-muted: #a1a4ab;
+        --dextinity-color-surface: #141517;
+        --dextinity-color-surface-hover: #27292e;
+        --dextinity-color-border: #2a2c31;
+        --dextinity-color-border-strong: #626873;
+        --dextinity-color-border-hover: #a1a4ab;
+        --dextinity-color-primary: #8d89f7;
+        --dextinity-color-primary-hover: #b3b0fa;
+        --dextinity-color-primary-foreground: #0d0c30;
+        --dextinity-color-primary-subtle: #1a1761;
+        --dextinity-color-neutral-subtle: #27292e;
+        --dextinity-color-success: #8fd67a;
+        --dextinity-color-success-subtle: #1d3317;
+        --dextinity-color-warning: #f0b429;
+        --dextinity-color-warning-subtle: #3a2c05;
+        --dextinity-color-danger: #ff8a9b;
+        --dextinity-color-danger-subtle: #3d1219;
+        --dextinity-color-focus-ring: #8d89f7;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-dextinity-theme="dextinity"] {
+            --dextinity-motion-duration-short: 0s;
+            --dextinity-motion-duration-medium: 0s;
+        }
+    }
+}

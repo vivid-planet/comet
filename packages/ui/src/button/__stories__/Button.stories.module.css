@@ -1,0 +1,14 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+.wideButton {
+    min-width: 16rem;
+}
+
+.accentIcon {
+    color: var(--dextinity-color-warning);
+}

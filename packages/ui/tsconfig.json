@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "declarationMap": true,
+        "jsx": "react-jsx",
+        "lib": ["DOM", "DOM.Iterable", "ES2022"],
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "noEmitOnError": true,
+        "noImplicitAny": true,
+        "outDir": "lib",
+        "rootDir": ".",
+        "strict": true,
+        "target": "ES2022",
+        "types": ["node", "vite/client"]
+    },
+    "exclude": ["node_modules", "lib", "storybook-static"],
+    "extends": "../../tsconfig.core.json",
+    "include": ["./src", ".storybook/**/*.ts", ".storybook/**/*.tsx", "./*.ts", "./*.mts"]
+}
