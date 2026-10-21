@@ -1,19 +1,21 @@
 import { DragIndicator } from "@dextinity/admin-icons";
 /* eslint-disable no-restricted-imports */
-import type {
-    GridColDef,
-    GridColumnHeaderParams,
-    GridEventListener,
-    GridRenderCellParams,
-    GridRenderEditCellParams,
-    GridValidRowModel,
+import {
+    DataGrid as MuiDataGrid,
+    type DataGridProps,
+    type GridColDef,
+    type GridColumnHeaderParams,
+    type GridEventListener,
+    type GridRenderCellParams,
+    type GridRenderEditCellParams,
+    type GridValidRowModel,
 } from "@mui/x-data-grid";
 /* eslint-enable no-restricted-imports */
-// eslint-disable-next-line no-restricted-imports
-import { DataGridPro, type GridApiPro } from "@mui/x-data-grid-pro";
-import { type ComponentProps, type Dispatch, type SetStateAction, useCallback, useEffect, useRef } from "react";
+import type { DataGridProProps, GridApiPro } from "@mui/x-data-grid-pro";
+import { type ComponentType, type Dispatch, type SetStateAction, useCallback, useEffect, useRef } from "react";
 
 import type { TableBlockData } from "../../blocks.generated";
+import { type DextinityConfig, useDextinityConfig } from "../../config/DextinityConfigContext";
 import type { TableBlockState } from "../createTableBlock";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
@@ -31,7 +33,12 @@ import { useTemporarilyHighlightedIds } from "./utils/useTemporarilyHighlightedI
 type ColumnSize = TableBlockData["columns"][number]["size"];
 type TableBlockColumn = TableBlockData["columns"][number];
 
+type ConfiguredDataGrid = NonNullable<DextinityConfig["dataGrid"]>["component"];
+
 const reorderColumnField = "__reorder__";
+
+const isProOrPremiumDataGrid = (dataGrid: ConfiguredDataGrid): dataGrid is ComponentType<DataGridProProps> =>
+    dataGrid !== undefined && dataGrid !== MuiDataGrid;
 
 const getLastContentColumnClassName = (columnIndex: number, numberOfColumns: number) =>
     columnIndex === numberOfColumns - 1 ? lastContentColumnClassName : undefined;
@@ -60,6 +67,8 @@ type Props = {
 
 export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
     const { RichTextBlock } = useTableBlockContext();
+    const { dataGrid: { component: ConfiguredDataGrid } = {} } = useDextinityConfig();
+    const hasDragAndDrop = isProOrPremiumDataGrid(ConfiguredDataGrid);
     const apiRef = useRef<GridApiPro | null>(null);
     const { highlightedIds: recentlyPastedRowIds, highlightTemporarily: addToRecentlyPastedRowIds } = useTemporarilyHighlightedIds();
     const { highlightedIds: recentlyPastedColumnIds, highlightTemporarily: addToRecentlyPastedColumnIds } = useTemporarilyHighlightedIds();
@@ -80,7 +89,7 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
         });
     };
 
-    const processRowUpdate: ComponentProps<typeof DataGridPro>["processRowUpdate"] = (newRow) => {
+    const processRowUpdate: DataGridProps["processRowUpdate"] = (newRow) => {
         const { id: newRowId, ...newRowValuesRecord } = newRow;
 
         setRowData((previousRowData) => {
@@ -115,11 +124,6 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
     }, [apiRef, updateState]);
 
     const dataGridColumns: GridColDef[] = [
-        {
-            field: reorderColumnField,
-            minWidth: 36,
-            maxWidth: 36,
-        },
         ...state.columns.map(({ id: columnId, highlighted, size }: TableBlockColumn, index: number) => ({
             field: columnId,
             editable: true,
@@ -136,6 +140,7 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
                     highlighted={highlighted}
                     updateState={updateState}
                     columnIndex={index}
+                    isDraggable={hasDragAndDrop}
                     addToRecentlyPastedIds={addToRecentlyPastedColumnIds}
                 />
             ),
@@ -178,29 +183,37 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
         return dataGridRow;
     });
 
-    return (
-        <DataGridPro
-            columns={dataGridColumns}
-            apiRef={apiRef}
-            rows={rowsInDataGridFormat}
-            rowHeight={55}
-            rowReordering
-            disableColumnResize
-            disableColumnMenu
-            disableRowSelectionOnClick
-            hideFooter
-            pinnedColumns={{
-                left: [reorderColumnField],
-                right: ["actions"],
-            }}
-            slots={{
-                rowReorderIcon: ({ color, ...restProps }) => <DragIndicator {...restProps} htmlColor={color} />,
-            }}
-            sx={dataGridStyles}
-            onRowOrderChange={({ targetIndex, row }) => {
-                updateState((state) => moveRowToIndex({ state, rowId: row.id, targetIndex }));
-            }}
-            processRowUpdate={processRowUpdate}
-        />
-    );
+    const commonDataGridProps = {
+        apiRef,
+        rows: rowsInDataGridFormat,
+        rowHeight: 55,
+        disableColumnResize: true,
+        disableColumnMenu: true,
+        disableRowSelectionOnClick: true,
+        processRowUpdate,
+    } satisfies Partial<DataGridProps>;
+
+    if (isProOrPremiumDataGrid(ConfiguredDataGrid)) {
+        return (
+            <ConfiguredDataGrid
+                {...commonDataGridProps}
+                sx={dataGridStyles}
+                columns={[{ field: reorderColumnField, minWidth: 36, maxWidth: 36 }, ...dataGridColumns]}
+                rowReordering
+                hideFooter
+                pinnedColumns={{
+                    left: [reorderColumnField],
+                    right: ["actions"],
+                }}
+                slots={{
+                    rowReorderIcon: ({ color, ...restProps }) => <DragIndicator {...restProps} htmlColor={color} />,
+                }}
+                onRowOrderChange={({ targetIndex, row }) => {
+                    updateState((state) => moveRowToIndex({ state, rowId: row.id, targetIndex }));
+                }}
+            />
+        );
+    }
+
+    return <MuiDataGrid {...commonDataGridProps} sx={dataGridStyles} columns={dataGridColumns} hideFooter />;
 };
