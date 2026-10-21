@@ -1,16 +1,16 @@
 import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@dextinity/admin";
 import {
     Add,
-    ChevronLeft,
-    ChevronRight,
+    ColumnInsertLeft,
+    ColumnInsertRight,
+    ColumnMoveLeft,
+    ColumnMoveRight,
     Copy,
     Delete,
     DensityStandard,
     DragIndicator,
     Duplicate,
     Paste,
-    PinLeft,
-    PinRight,
     Remove,
 } from "@dextinity/admin-icons";
 import { ButtonBase, Divider, Snackbar } from "@mui/material";
@@ -205,7 +205,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                     </RowActionsItem>
                     <Divider />
                     <RowActionsItem
-                        icon={<PinLeft />}
+                        icon={<ColumnInsertLeft />}
                         onClick={() => {
                             handleInsertColumnAtIndex(columnIndex);
                         }}
@@ -213,7 +213,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                         <FormattedMessage id="dextinity.tableBlock.insertColumnLeft" defaultMessage="Insert column left" />
                     </RowActionsItem>
                     <RowActionsItem
-                        icon={<PinRight />}
+                        icon={<ColumnInsertRight />}
                         onClick={() => {
                             handleInsertColumnAtIndex(columnIndex + 1);
                         }}
@@ -222,7 +222,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                     </RowActionsItem>
                     <Divider />
                     <RowActionsItem
-                        icon={<ChevronLeft />}
+                        icon={<ColumnMoveLeft />}
                         disabled={isFirstColumn}
                         onClick={() => {
                             handleMoveColumn("left");
@@ -231,7 +231,7 @@ export const ColumnHeader = ({ columnSize, highlighted, state, updateState, colu
                         <FormattedMessage id="dextinity.tableBlock.moveColumnLeft" defaultMessage="Move left" />
                     </RowActionsItem>
                     <RowActionsItem
-                        icon={<ChevronRight />}
+                        icon={<ColumnMoveRight />}
                         disabled={isLastColumn}
                         onClick={() => {
                             handleMoveColumn("right");

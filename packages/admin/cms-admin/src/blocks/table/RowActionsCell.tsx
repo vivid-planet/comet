@@ -1,5 +1,5 @@
 import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@dextinity/admin";
-import { Add, ArrowDown, ArrowUp, ChevronDown, ChevronUp, Copy, Delete, Duplicate, Paste, Remove } from "@dextinity/admin-icons";
+import { Add, Copy, Delete, Duplicate, Paste, Remove, RowInsertAbove, RowInsertBelow, RowMoveDown, RowMoveUp } from "@dextinity/admin-icons";
 import { Divider, Snackbar } from "@mui/material";
 import type { Dispatch, SetStateAction } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -168,7 +168,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
                 </RowActionsItem>
                 <Divider />
                 <RowActionsItem
-                    icon={<ArrowUp />}
+                    icon={<RowInsertAbove />}
                     onClick={() => {
                         handleInsertNewRow("above");
                     }}
@@ -176,7 +176,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
                     <FormattedMessage id="dextinity.tableBlock.addRowAbove" defaultMessage="Add row above" />
                 </RowActionsItem>
                 <RowActionsItem
-                    icon={<ArrowDown />}
+                    icon={<RowInsertBelow />}
                     onClick={() => {
                         handleInsertNewRow("below");
                     }}
@@ -185,7 +185,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
                 </RowActionsItem>
                 <Divider />
                 <RowActionsItem
-                    icon={<ChevronUp />}
+                    icon={<RowMoveUp />}
                     disabled={isFirstRow}
                     onClick={() => {
                         handleMoveRow("up");
@@ -194,7 +194,7 @@ export const RowActionsCell = ({ row, updateState, state, addToRecentlyPastedIds
                     <FormattedMessage id="dextinity.tableBlock.moveRowUp" defaultMessage="Move up" />
                 </RowActionsItem>
                 <RowActionsItem
-                    icon={<ChevronDown />}
+                    icon={<RowMoveDown />}
                     disabled={isLastRow}
                     onClick={() => {
                         handleMoveRow("down");
