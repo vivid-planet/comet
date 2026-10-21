@@ -72,6 +72,7 @@ Each component exports:
 - Enum props have a default; the default is documented with `@defaultValue`.
 - Boolean props are optional and have no default; they are off when absent. A boolean that is the controlled value, like `checked`, follows Base UI.
 - Props that take text, like `label`, are `ReactNode` and never have a default text: the package contains no user-facing text.
+- `children` is typed with `PropsWithChildren`, unless the component is useless without it — a heading's text, an icon button's icon. Then it's a required, documented prop.
 - When a component can't get an accessible name from its content, it requires one through a prop, like `IconButton`'s `label`.
 
 ### Override API
@@ -89,7 +90,7 @@ There is no `slots` prop to swap a part's component, and no theme-level default 
 Every component emits class names and `data-*` attributes for consumers to style with plain CSS. They are public API: renaming one is a breaking change.
 
 - **Root class** `dextinity<Component>` on the outermost element, for example `dextinityButton`.
-- **Part classes** `dextinity<Component>__<part>` on inner parts, for example `dextinityButton__startIcon`. The part name matches its `slotProps` key.
+- **Part classes** `dextinity<Component>__<part>` on inner parts, for example `dextinityButton__startIcon`. A part that consumers can customize has a `slotProps` key of the same name.
 - **Owner state** as attributes on the root: `data-variant="primary"` for an enum, `data-disabled` (present or absent) for a boolean.
 - A component that renders another one as its root carries both root classes: `IconButton` renders `dextinityButton dextinityIconButton`.
 - Base UI's own attributes, such as `data-checked` or `data-invalid`, are part of the contract too.
@@ -121,6 +122,7 @@ The TSDoc on the exports is the component's documentation: Storybook's docs page
 - `meta.args` holds what every story needs, such as `children` and event handlers created with `fn()`.
 - The first story is `Default`, the smallest practical example. Order the rest by usefulness: agents get full code for the first three stories only. Give each story a comment that says why to use it, with a `@summary`.
 - Use literal args. Story-only helpers come from `#storybook/<file>`, so the documentation doesn't present them as exports of the package.
+- Write JSX children in `render`, not in `args`, and put layout around several components into a story decorator: code snippets leave decorators out, and they print multi-line JSX from `args` incorrectly.
 - Every declared prop has a control: `radio` for up to three options, `select` for more, a `select` with `mapping` for `ReactNode` props. Override props (`className`, `slotProps`, `render`) get `control: false`.
 - Behavior — clicks, keyboard, focus, disabled — is tested in a story's `play` function.
 - Development-only stories go into `__stories__/<name>.dev.stories.tsx` with the tags `["!autodocs", "!manifest"]`.

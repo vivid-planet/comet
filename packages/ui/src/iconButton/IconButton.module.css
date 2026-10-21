@@ -1,0 +1,32 @@
+/*
+ * The root is also Button's root. These rules win over Button's rules of equal specificity because
+ * IconButton.tsx imports Button, and with it Button's stylesheet, before this one.
+ */
+@layer dextinity {
+    .root {
+        --_width: var(--dextinity-control-height-medium);
+
+        flex-shrink: 0;
+        width: var(--_width);
+        padding-inline: 0;
+
+        &[data-size="small"] {
+            --_width: var(--dextinity-control-height-small);
+        }
+
+        &[data-size="large"] {
+            --_width: var(--dextinity-control-height-large);
+        }
+    }
+
+    .icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        font-size: 1.25em;
+
+        & > svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+}

@@ -1,0 +1,22 @@
+.frame {
+    max-inline-size: 24rem;
+}
+
+.stack {
+    display: grid;
+    gap: var(--dextinity-space-xl);
+}
+
+.promoCodeField {
+    max-inline-size: 12rem;
+}
+
+.promoCodeInput {
+    font-family: ui-monospace, monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.promoCodeLabel {
+    text-transform: uppercase;
+}

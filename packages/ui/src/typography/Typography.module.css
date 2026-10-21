@@ -1,0 +1,91 @@
+@layer dextinity {
+    .root {
+        --_font-family: var(--dextinity-font-family-body);
+        --_font-size: var(--dextinity-typography-body-font-size);
+        --_line-height: var(--dextinity-typography-body-line-height);
+        --_font-weight: var(--dextinity-typography-body-font-weight);
+        --_letter-spacing: var(--dextinity-typography-body-letter-spacing);
+
+        margin: 0;
+        color: var(--dextinity-color-foreground);
+        font-family: var(--_font-family);
+        font-size: var(--_font-size);
+        font-weight: var(--_font-weight);
+        line-height: var(--_line-height);
+        letter-spacing: var(--_letter-spacing);
+
+        &[data-tone="muted"] {
+            color: var(--dextinity-color-foreground-muted);
+        }
+
+        &[data-variant="display"] {
+            --_font-family: var(--dextinity-font-family-heading);
+            --_font-size: var(--dextinity-typography-display-font-size);
+            --_line-height: var(--dextinity-typography-display-line-height);
+            --_font-weight: var(--dextinity-typography-display-font-weight);
+            --_letter-spacing: var(--dextinity-typography-display-letter-spacing);
+        }
+
+        &[data-variant="heading1"] {
+            --_font-family: var(--dextinity-font-family-heading);
+            --_font-size: var(--dextinity-typography-heading-1-font-size);
+            --_line-height: var(--dextinity-typography-heading-1-line-height);
+            --_font-weight: var(--dextinity-typography-heading-1-font-weight);
+            --_letter-spacing: var(--dextinity-typography-heading-1-letter-spacing);
+        }
+
+        &[data-variant="heading2"] {
+            --_font-family: var(--dextinity-font-family-heading);
+            --_font-size: var(--dextinity-typography-heading-2-font-size);
+            --_line-height: var(--dextinity-typography-heading-2-line-height);
+            --_font-weight: var(--dextinity-typography-heading-2-font-weight);
+            --_letter-spacing: var(--dextinity-typography-heading-2-letter-spacing);
+        }
+
+        &[data-variant="heading3"] {
+            --_font-family: var(--dextinity-font-family-heading);
+            --_font-size: var(--dextinity-typography-heading-3-font-size);
+            --_line-height: var(--dextinity-typography-heading-3-line-height);
+            --_font-weight: var(--dextinity-typography-heading-3-font-weight);
+            --_letter-spacing: var(--dextinity-typography-heading-3-letter-spacing);
+        }
+
+        &[data-variant="heading4"] {
+            --_font-family: var(--dextinity-font-family-heading);
+            --_font-size: var(--dextinity-typography-heading-4-font-size);
+            --_line-height: var(--dextinity-typography-heading-4-line-height);
+            --_font-weight: var(--dextinity-typography-heading-4-font-weight);
+            --_letter-spacing: var(--dextinity-typography-heading-4-letter-spacing);
+        }
+
+        &[data-variant="bodyLarge"] {
+            --_font-size: var(--dextinity-typography-body-large-font-size);
+            --_line-height: var(--dextinity-typography-body-large-line-height);
+            --_font-weight: var(--dextinity-typography-body-large-font-weight);
+            --_letter-spacing: var(--dextinity-typography-body-large-letter-spacing);
+        }
+
+        &[data-variant="bodySmall"] {
+            --_font-size: var(--dextinity-typography-body-small-font-size);
+            --_line-height: var(--dextinity-typography-body-small-line-height);
+            --_font-weight: var(--dextinity-typography-body-small-font-weight);
+            --_letter-spacing: var(--dextinity-typography-body-small-letter-spacing);
+        }
+
+        &[data-variant="label"] {
+            --_font-size: var(--dextinity-typography-label-font-size);
+            --_line-height: var(--dextinity-typography-label-line-height);
+            --_font-weight: var(--dextinity-typography-label-font-weight);
+            --_letter-spacing: var(--dextinity-typography-label-letter-spacing);
+        }
+
+        &[data-variant="overline"] {
+            --_font-size: var(--dextinity-typography-overline-font-size);
+            --_line-height: var(--dextinity-typography-overline-line-height);
+            --_font-weight: var(--dextinity-typography-overline-font-weight);
+            --_letter-spacing: var(--dextinity-typography-overline-letter-spacing);
+
+            text-transform: var(--dextinity-typography-overline-text-transform);
+        }
+    }
+}

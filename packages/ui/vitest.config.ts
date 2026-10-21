@@ -34,7 +34,21 @@ export default defineConfig({
                 extends: true,
                 plugins: [storybookTest({ configDir: ".storybook" })],
                 optimizeDeps: {
-                    include: ["storybook/internal/csf", "@storybook/react-vite"],
+                    // Pre-bundled up front: a subpath discovered during the run reloads the browser and fails every story.
+                    include: [
+                        "storybook/internal/csf",
+                        "@storybook/react-vite",
+                        "@base-ui/react/button",
+                        "@base-ui/react/checkbox",
+                        "@base-ui/react/field",
+                        "@base-ui/react/fieldset",
+                        "@base-ui/react/input",
+                        "@base-ui/react/merge-props",
+                        "@base-ui/react/radio",
+                        "@base-ui/react/radio-group",
+                        "@base-ui/react/switch",
+                        "@base-ui/react/use-render",
+                    ],
                 },
                 test: {
                     name: "storybook",

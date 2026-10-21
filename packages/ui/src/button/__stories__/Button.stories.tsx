@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Decorator, Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn } from "storybook/test";
 
 import { AddIcon, ArrowRightIcon } from "#storybook/icons";
@@ -31,6 +31,12 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
+
+const inRow: Decorator = (Story) => (
+    <div className={styles.row}>
+        <Story />
+    </div>
+);
 
 /**
  * The main action of a page or dialog.
@@ -77,8 +83,9 @@ export const Ghost: Story = {
  * @summary The small, medium and large sizes.
  */
 export const Sizes: Story = {
+    decorators: [inRow],
     render: (args) => (
-        <div className={styles.row}>
+        <>
             <Button {...args} size="small">
                 Small
             </Button>
@@ -88,7 +95,7 @@ export const Sizes: Story = {
             <Button {...args} size="large">
                 Large
             </Button>
-        </div>
+        </>
     ),
 };
 
@@ -98,15 +105,16 @@ export const Sizes: Story = {
  * @summary A start icon and an end icon next to the text.
  */
 export const WithIcons: Story = {
+    decorators: [inRow],
     render: (args) => (
-        <div className={styles.row}>
+        <>
             <Button {...args} startIcon={<AddIcon />}>
                 Add product
             </Button>
             <Button {...args} variant="secondary" endIcon={<ArrowRightIcon />}>
                 Next step
             </Button>
-        </div>
+        </>
     ),
 };
 
