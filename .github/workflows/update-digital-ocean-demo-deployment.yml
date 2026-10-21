@@ -61,6 +61,7 @@ jobs:
                   done
 
             - name: Update DigitalOcean dextinity-demo-imgproxy Deployment
+              if: github.event_name != 'pull_request'
               uses: digitalocean/app_action/deploy@v2
               env:
                   IMGPROXY_KEY: ${{ secrets.DEMO_IMGPROXY_KEY }}
@@ -75,6 +76,7 @@ jobs:
                   app_spec_location: demo/.digitalocean/dextinity-demo-imgproxy.yaml
 
             - name: Update DigitalOcean dextinity-demo-cms Deployment
+              if: github.event_name != 'pull_request'
               uses: digitalocean/app_action/deploy@v2
               env:
                   IDP_CLIENT_ID: ${{ vars.DEMO_IDP_CLIENT_ID }}
