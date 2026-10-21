@@ -36,6 +36,7 @@ type TableBlockColumn = TableBlockData["columns"][number];
 type ConfiguredDataGrid = NonNullable<DextinityConfig["dataGrid"]>["component"];
 
 const reorderColumnField = "__reorder__";
+const maximumPageSizeOfFreeDataGrid = 100;
 
 const isProOrPremiumDataGrid = (dataGrid: ConfiguredDataGrid): dataGrid is ComponentType<DataGridProProps> =>
     dataGrid !== undefined && dataGrid !== MuiDataGrid;
@@ -215,5 +216,12 @@ export const TableBlockGrid = ({ state, updateState, clickedCell }: Props) => {
         );
     }
 
-    return <MuiDataGrid {...commonDataGridProps} sx={freeDataGridStyles} columns={dataGridColumns} hideFooter />;
+    return (
+        <MuiDataGrid
+            {...commonDataGridProps}
+            sx={freeDataGridStyles}
+            columns={dataGridColumns}
+            hideFooter={state.rows.length <= maximumPageSizeOfFreeDataGrid}
+        />
+    );
 };
