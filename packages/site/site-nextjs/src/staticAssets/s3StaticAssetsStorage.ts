@@ -1,9 +1,9 @@
-import { GetObjectCommand, NoSuchKey, S3Client, type S3ClientConfig } from "@aws-sdk/client-s3";
+import { GetObjectCommand, NoSuchKey, S3Client } from "@aws-sdk/client-s3";
 import type { Readable } from "stream";
 
-import type { StaticAssetsStorage } from "./staticAssetsStorage";
+import type { S3StaticAssetsStorageConfig, StaticAssetsStorage } from "./staticAssetsStorage";
 
-export function createS3StaticAssetsStorage({ bucket, ...clientConfig }: S3ClientConfig & { bucket: string }): StaticAssetsStorage {
+export function createS3StaticAssetsStorage({ bucket, ...clientConfig }: S3StaticAssetsStorageConfig): StaticAssetsStorage {
     const client = new S3Client(clientConfig);
 
     return {

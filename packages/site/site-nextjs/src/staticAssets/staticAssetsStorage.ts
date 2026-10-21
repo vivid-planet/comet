@@ -1,4 +1,3 @@
-import type { S3ClientConfig } from "@aws-sdk/client-s3";
 import type { Readable } from "stream";
 
 export type StaticAsset = {
@@ -14,9 +13,16 @@ export interface StaticAssetsStorage {
     getFile(key: string): Promise<StaticAsset | undefined>;
 }
 
+// Not the SDK's S3ClientConfig, so the types don't require @aws-sdk/client-s3 when using another driver
+export type S3StaticAssetsStorageConfig = {
+    bucket: string;
+    region?: string;
+    endpoint?: string;
+    credentials?: { accessKeyId: string; secretAccessKey: string };
+};
+
 export type StaticAssetsStorageConfig =
-    | { driver: "s3"; s3: S3ClientConfig & { bucket: string } }
-    | { driver: "azure"; azure: { accountName: string; accountKey: string; container: string } };
+    { driver: "s3"; s3: S3StaticAssetsStorageConfig } | { driver: "azure"; azure: { accountName: string; accountKey: string; container: string } };
 
 /**
  * Creates the storage holding the static assets of every deployed build.
