@@ -1,4 +1,13 @@
-import { type GridApi, gridClasses, gridDimensionsSelector, gridRowsMetaSelector } from "@mui/x-data-grid";
+import {
+    type GridApi,
+    gridClasses,
+    gridDimensionsSelector,
+    gridExpandedSortedRowIdsSelector,
+    gridPageSizeSelector,
+    type GridRowId,
+    gridRowsMetaSelector,
+    gridVisibleRowsSelector,
+} from "@mui/x-data-grid";
 import { type RefObject, useEffect } from "react";
 
 import type { CellPosition } from "./utils/cellRoute";
@@ -9,6 +18,13 @@ type Options = {
     highlightCell: (cell: CellPosition) => void;
 };
 
+const isRowOnCurrentPage = (apiRef: RefObject<GridApi | null>, rowId: GridRowId) => gridVisibleRowsSelector(apiRef).rowIdToIndexMap.has(rowId);
+
+const getPageOfRow = (apiRef: RefObject<GridApi | null>, rowId: GridRowId) => {
+    const rowIndexInTable = gridExpandedSortedRowIdsSelector(apiRef).indexOf(rowId);
+    return Math.floor(rowIndexInTable / gridPageSizeSelector(apiRef));
+};
+
 export const useScrollToAndHighlightCell = ({ apiRef, cell, highlightCell }: Options) => {
     useEffect(() => {
         const api = apiRef.current;
@@ -17,11 +33,16 @@ export const useScrollToAndHighlightCell = ({ apiRef, cell, highlightCell }: Opt
             return;
         }
 
-        const rowIndex = api.getRowIndexRelativeToVisibleRows(cell.rowId);
         const column = api.getColumn(cell.columnId);
-        if (rowIndex === -1 || !column) {
+        if (!api.getRow(cell.rowId) || !column) {
             return;
         }
+
+        if (!isRowOnCurrentPage(apiRef, cell.rowId)) {
+            api.setPage(getPageOfRow(apiRef, cell.rowId));
+        }
+
+        const rowIndex = api.getRowIndexRelativeToVisibleRows(cell.rowId);
 
         const { viewportInnerSize, leftPinnedWidth, rightPinnedWidth } = gridDimensionsSelector(apiRef);
         const { positions: rowTops, currentPageTotalHeight } = gridRowsMetaSelector(apiRef);
