@@ -1,14 +1,41 @@
-import { Meta } from "@storybook/addon-docs/blocks";
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
 
 import * as RadioGroupStories from "./RadioGroup.stories";
 
-<Meta of={RadioGroupStories} name="Design tokens" summary="The design tokens a theme styles the radio group with, and what each one changes." />
+<Meta of={RadioGroupStories} />
 
-# RadioGroup design tokens
+<Title />
 
-A theme styles the radio group through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the radio group's own: they're shared tokens, which other components can use too. They style both the group, with its label, description and error message, and each `Radio` option in it.
+<Subtitle />
 
-[Theme overview](?path=/docs/foundations-theme-overview--docs) shows each token's value in every theme.
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+Both components take `className` and `style` for their outer element, `dextinityRadioGroup` and `dextinityRadio`, and `slotProps` for their inner parts. Each slot takes an element's props, merged with the slot's own, or a function of the owner state that returns them: `orientation`, `disabled` and `required` for the group, `disabled` for a `Radio`. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot                | Component    | Element                              | Class                                    | What it is                                                                                        |
+| ------------------- | ------------ | ------------------------------------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `label`             | `RadioGroup` | `<div>` (Base UI `Fieldset.Legend`)  | `dextinityRadioGroup__label`             | The group's label, which holds `label` and the required indicator, and names the group.           |
+| `requiredIndicator` | `RadioGroup` | `<span>`                             | `dextinityRadioGroup__requiredIndicator` | The asterisk after the label of a `required` group. Assistive technology skips it.                |
+| `options`           | `RadioGroup` | `<div>`                              | `dextinityRadioGroup__options`           | The element around the `Radio` options.                                                           |
+| `description`       | `RadioGroup` | `<p>` (Base UI `Field.Description`)  | `dextinityRadioGroup__description`       | The `description`.                                                                                |
+| `error`             | `RadioGroup` | `<div>` (Base UI `Field.Error`)      | `dextinityRadioGroup__error`             | The error message. Rendered only while there is an error to show.                                 |
+| `control`           | `Radio`      | `<span>` (Base UI `Radio.Root`)      | `dextinityRadio__control`                | The circle, which has the `radio` role, receives focus and gets the props `Radio` doesn't handle. |
+| `indicator`         | `Radio`      | `<span>` (Base UI `Radio.Indicator`) | `dextinityRadio__indicator`              | The dot. Rendered only while the option is selected.                                              |
+| `label`             | `Radio`      | `<span>`                             | `dextinityRadio__label`                  | The option's text, `children`.                                                                    |
+
+<Canvas of={RadioGroupStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the radio group through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the radio group's own: they're shared tokens, which other components can use too. They style both the group, with its label, description and error message, and each `Radio` option in it. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
 
 | Token                                                                                                                                                                                               | In the radio group                                                                                                                                                                                 |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { EditIcon } from "#storybook/icons";
 
-import { Badge } from "../../badge/Badge";
 import { Button } from "../../button/Button";
 import { Checkbox } from "../../checkbox/Checkbox";
+import { Chip } from "../../chip/Chip";
 import { IconButton } from "../../iconButton/IconButton";
 import { Radio } from "../../radioGroup/Radio";
 import { RadioGroup } from "../../radioGroup/RadioGroup";
@@ -32,7 +32,7 @@ function ThemeSample({ theme }: { theme: string }) {
                     <Typography variant="heading3" render={<h2 />}>
                         Summer collection
                     </Typography>
-                    <Badge tone="success">Published</Badge>
+                    <Chip tone="success">Published</Chip>
                 </div>
                 <Typography tone="muted">Linen shirts, canvas sneakers and straw hats for warm days.</Typography>
             </div>

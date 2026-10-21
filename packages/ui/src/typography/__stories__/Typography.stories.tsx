@@ -6,6 +6,8 @@ import styles from "./Typography.stories.module.css";
 const meta = {
     component: Typography,
     title: "Components/Typography",
+    // The docs page is Typography.mdx.
+    tags: ["!autodocs"],
     args: {
         children: "Orders placed before 2 pm ship the same day.",
     },
@@ -33,16 +35,12 @@ const stacked: Decorator = (Story) => (
 
 /**
  * Running text, rendered as a paragraph.
- *
- * @summary A paragraph in the body style.
  */
 export const Default: Story = {};
 
 /**
  * Titles for the page, its sections and its cards. Each heading variant renders the matching heading element,
  * so the visual hierarchy and the document outline agree.
- *
- * @summary The display style and the four heading levels.
  */
 export const Headings: Story = {
     decorators: [stacked],
@@ -59,8 +57,6 @@ export const Headings: Story = {
 
 /**
  * A lead paragraph, running text and secondary text.
- *
- * @summary The body large, body and body small styles.
  */
 export const BodyText: Story = {
     decorators: [stacked],
@@ -75,8 +71,6 @@ export const BodyText: Story = {
 
 /**
  * Secondary text, such as a date or a hint, that should draw less attention than the text around it.
- *
- * @summary Secondary text in the muted color.
  */
 export const Muted: Story = {
     args: {
@@ -88,8 +82,6 @@ export const Muted: Story = {
 
 /**
  * An overline names the category of the heading below it. A label names a value, such as a product's status.
- *
- * @summary An overline above a heading, and a label above its value.
  */
 export const OverlineAndLabel: Story = {
     decorators: [stacked],
@@ -110,8 +102,6 @@ export const OverlineAndLabel: Story = {
 /**
  * `render` replaces the element and keeps the style. Here, a card title looks like a heading 4 but is a
  * section of the page, so it is an `h2` in the document outline.
- *
- * @summary A heading 4 style on an `h2` element, through `render`.
  */
 export const DifferentElement: Story = {
     args: {

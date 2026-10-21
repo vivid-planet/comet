@@ -1,18 +1,21 @@
-.token {
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 0.5rem;
-    align-items: center;
+.valueCell {
+    min-inline-size: 12rem;
 }
 
 .value {
-    display: inline-flex;
-    gap: 0.375rem;
+    display: flex;
+    gap: 0.5rem;
     align-items: center;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 0.8125em;
-    opacity: 0.85;
-    overflow-wrap: anywhere;
+
+    & + & {
+        margin-top: 0.25rem;
+    }
+}
+
+.valueText {
+    overflow-wrap: break-word;
 }
 
 /* A neutral outline that shows white and black swatches on the docs page's background. */

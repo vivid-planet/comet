@@ -1,14 +1,36 @@
-import { Meta } from "@storybook/addon-docs/blocks";
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
 
 import * as CheckboxStories from "./Checkbox.stories";
 
-<Meta of={CheckboxStories} name="Design tokens" summary="The design tokens a theme styles the checkbox with, and what each one changes." />
+<Meta of={CheckboxStories} />
 
-# Checkbox design tokens
+<Title />
 
-A theme styles the checkbox through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the checkbox's own: they're shared tokens, which other components can use too.
+<Subtitle />
 
-[Theme overview](?path=/docs/foundations-theme-overview--docs) shows each token's value in every theme.
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the checkbox's outer element, the `dextinityCheckbox` element. `slotProps` adjusts the inner parts. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`disabled`) that returns them. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot        | Element                                 | Class                          | What it is                                                                                              |
+| ----------- | --------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `control`   | `<span>` (Base UI `Checkbox.Root`)      | `dextinityCheckbox__control`   | The box, which has the `checkbox` role, receives focus and gets the props the component doesn't handle. |
+| `indicator` | `<span>` (Base UI `Checkbox.Indicator`) | `dextinityCheckbox__indicator` | The check mark, or the dash while `indeterminate`. Rendered only while checked or indeterminate.        |
+| `label`     | `<label>`                               | `dextinityCheckbox__label`     | The text, `children`, which names the checkbox. Rendered only when there are `children`.                |
+
+<Canvas of={CheckboxStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the checkbox through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the checkbox's own: they're shared tokens, which other components can use too. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
 
 | Token                                                                                                                                                                       | In the checkbox                                                                                                                                                              |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -21,3 +21,8 @@
 .control[data-invalid] {
     border-color: var(--dextinity-color-danger);
 }
+
+.rules {
+    margin: 0;
+    padding-inline-start: 1.25em;
+}

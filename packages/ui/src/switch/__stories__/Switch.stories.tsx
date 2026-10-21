@@ -3,10 +3,13 @@ import { useState } from "react";
 import { expect, fn } from "storybook/test";
 
 import { Switch } from "../Switch";
+import styles from "./Switch.stories.module.css";
 
 const meta = {
     component: Switch,
     title: "Components/Switch",
+    // The docs page is Switch.mdx.
+    tags: ["!autodocs"],
     args: {
         onCheckedChange: fn(),
     },
@@ -25,8 +28,6 @@ type Story = StoryObj<typeof meta>;
 /**
  * A setting that takes effect immediately, labelled by its `children`. Clicking the track or the label
  * toggles the switch, and so does Space while it has focus.
- *
- * @summary A switch with a visible label.
  */
 export const Default: Story = {
     args: {
@@ -54,8 +55,6 @@ export const Default: Story = {
 /**
  * Pass `checked` and update it in `onCheckedChange` when the setting lives in your application, for example
  * to save it as soon as it changes.
- *
- * @summary A switch whose state is controlled with `checked` and `onCheckedChange`.
  */
 export const Controlled: Story = {
     args: {
@@ -80,8 +79,6 @@ export const Controlled: Story = {
 /**
  * Where the context labels a switch visually, for example in a table row, name it with `aria-label` or
  * `aria-labelledby` instead of `children`. Name the setting, not its state: "Published", not "On".
- *
- * @summary A switch without a visible label, named with `aria-label`.
  */
 export const WithoutVisibleLabel: Story = {
     args: {
@@ -94,8 +91,6 @@ export const WithoutVisibleLabel: Story = {
 
 /**
  * `defaultChecked` sets the initial state of a switch whose state the component keeps itself.
- *
- * @summary A switch that is on initially.
  */
 export const Checked: Story = {
     args: {
@@ -107,8 +102,6 @@ export const Checked: Story = {
 /**
  * A disabled switch ignores clicks and is skipped by Tab. Prefer explaining why a setting can't be changed
  * over only disabling it.
- *
- * @summary A disabled switch, which ignores clicks.
  */
 export const Disabled: Story = {
     args: {
@@ -122,5 +115,21 @@ export const Disabled: Story = {
         await userEvent.click(switchControl);
         await expect(switchControl).toHaveAttribute("aria-checked", "false");
         await expect(args.onCheckedChange).not.toHaveBeenCalled();
+    },
+};
+
+/**
+ * `slotProps` adjusts the switch's inner parts, here the track (`control`), the `thumb` and the label, which
+ * get square corners and a bolder text. The classes are added to the component's own. See
+ * "Foundations/Customization" for all ways to adjust a component.
+ */
+export const CustomizedThroughSlotProps: Story = {
+    args: {
+        children: "Maintenance mode",
+        slotProps: {
+            control: { className: styles.squareTrack },
+            thumb: { className: styles.squareThumb },
+            label: { className: styles.strongLabel },
+        },
     },
 };

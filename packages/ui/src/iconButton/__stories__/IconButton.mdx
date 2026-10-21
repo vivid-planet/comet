@@ -1,0 +1,37 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as IconButtonStories from "./IconButton.stories";
+
+<Meta of={IconButtonStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the button itself, the `dextinityIconButton` element. `slotProps` adjusts the inner parts. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`variant`, `size`, `disabled`) that returns them. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs).
+
+The button carries both root classes, `dextinityButton dextinityIconButton`, so the [button's](?path=/docs/components-button--docs) styles apply too.
+
+| Slot   | Element  | Class                       | What it is            |
+| ------ | -------- | --------------------------- | --------------------- |
+| `icon` | `<span>` | `dextinityIconButton__icon` | The icon, `children`. |
+
+<Canvas of={IconButtonStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the icon button through these [design tokens](?path=/docs/foundations-design-tokens--docs). `IconButton` renders a `Button`, so the [Button design tokens](?path=/docs/components-button--design-tokens) style it too. Its own stylesheet only adds the square width: it sets the width from the tokens below and removes the horizontal padding, so the button's horizontal padding tokens don't change it. None of them is the icon button's own: they're shared tokens, which other components can use too. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                       | In the icon button                                                                                           |
+| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `--dextinity-control-height-small`, `--dextinity-control-height-medium`, `--dextinity-control-height-large` | Width of each `size`. The button takes its minimum height from the same token, so the icon button is square. |

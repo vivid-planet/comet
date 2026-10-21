@@ -14,6 +14,8 @@ const narrow: Decorator = (Story) => (
 const meta = {
     component: TextField,
     title: "Components/TextField",
+    // The docs page is TextField.mdx.
+    tags: ["!autodocs"],
     decorators: [narrow],
     args: {
         label: "Full name",
@@ -35,8 +37,6 @@ type Story = StoryObj<typeof meta>;
 
 /**
  * A text input named by its visible label. Clicking the label focuses the input.
- *
- * @summary A text input with a label.
  */
 export const Default: Story = {
     play: async ({ args, canvas, userEvent }) => {
@@ -53,8 +53,6 @@ export const Default: Story = {
 /**
  * Format hints and other instructions go into the description, which stays visible while the user types and
  * which screen readers announce with the label. Don't put them into the placeholder, which disappears.
- *
- * @summary A description with the expected format.
  */
 export const WithDescription: Story = {
     args: {
@@ -72,8 +70,6 @@ export const WithDescription: Story = {
 /**
  * An error from a form library or the server marks the field invalid. Say what's wrong and how to fix it,
  * rather than only "Invalid value".
- *
- * @summary An error message that says how to fix the value.
  */
 export const WithError: Story = {
     args: {
@@ -94,8 +90,6 @@ export const WithError: Story = {
 /**
  * A required field shows an asterisk after the label and requires a value natively. Screen readers announce
  * the field as required instead of reading the asterisk.
- *
- * @summary A required field, marked with an asterisk.
  */
 export const Required: Story = {
     args: {
@@ -112,8 +106,6 @@ export const Required: Story = {
 /**
  * Pass `value` and update it in `onValueChange` when the value lives in your application, for example in a
  * form library.
- *
- * @summary A text field whose value is controlled with `value` and `onValueChange`.
  */
 export const Controlled: Story = {
     render: function ControlledTextField(args) {
@@ -132,8 +124,6 @@ export const Controlled: Story = {
 /**
  * A disabled field ignores input and is skipped by Tab. Its description stays readable: use it to say why the
  * value can't be changed.
- *
- * @summary A disabled field with a description that explains why.
  */
 export const Disabled: Story = {
     args: {
@@ -156,8 +146,6 @@ export const Disabled: Story = {
 /**
  * `type` picks the keyboard on touch devices and the browser's checks. Set `autoComplete` for the user's own
  * data, so browsers can fill it in.
- *
- * @summary Email, password and search fields.
  */
 export const InputTypes: Story = {
     render: (args) => (
@@ -178,8 +166,6 @@ export const InputTypes: Story = {
  * `className` styles the field's outer element, `slotProps` its inner parts, here the input and the label.
  * Both are added to the component's own classes. See "Foundations/Customization" for all ways to adjust a
  * component.
- *
- * @summary Adjusting a text field with `className` and `slotProps`.
  */
 export const CustomizedThroughSlotProps: Story = {
     args: {

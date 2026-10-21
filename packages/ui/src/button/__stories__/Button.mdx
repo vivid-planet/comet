@@ -1,14 +1,35 @@
-import { Meta } from "@storybook/addon-docs/blocks";
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
 
 import * as ButtonStories from "./Button.stories";
 
-<Meta of={ButtonStories} name="Design tokens" summary="The design tokens a theme styles the button with, and what each one changes." />
+<Meta of={ButtonStories} />
 
-# Button design tokens
+<Title />
 
-A theme styles the button through these [design tokens](?path=/docs/foundations-design-tokens--docs). The `--dextinity-button-*` tokens are the button's own; the others are shared tokens, which other components can use too. `IconButton` renders a button, so these tokens style it as well, except the horizontal padding, which an icon button doesn't have.
+<Subtitle />
 
-[Theme overview](?path=/docs/foundations-theme-overview--docs) shows each token's value in every theme.
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the button itself, the `dextinityButton` element. `slotProps` adjusts the inner parts, which are rendered only when the button has the content they hold. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`variant`, `size`, `disabled`) that returns them. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot        | Element  | Class                        | What it holds    |
+| ----------- | -------- | ---------------------------- | ---------------- |
+| `startIcon` | `<span>` | `dextinityButton__startIcon` | The `startIcon`. |
+| `endIcon`   | `<span>` | `dextinityButton__endIcon`   | The `endIcon`.   |
+
+<Canvas of={ButtonStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the button through these [design tokens](?path=/docs/foundations-design-tokens--docs). The `--dextinity-button-*` tokens are the button's own; the others are shared tokens, which other components can use too. `IconButton` renders a button, so these tokens style it as well, except the horizontal padding, which an icon button doesn't have. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
 
 | Token                                                                                                                               | In the button                                                                                                                                                           |
 | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

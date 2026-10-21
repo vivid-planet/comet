@@ -259,38 +259,70 @@ describe("component stylesheets", () => {
     });
 });
 
-describe("component design tokens pages", () => {
+describe("component docs pages", () => {
     const isComponentStylesheet = (fileName: string) => /^[A-Z][A-Za-z0-9]*\.module\.css$/.test(fileName);
-    const isDesignTokensPage = (fileName: string) => fileName.endsWith("DesignTokens.mdx");
+    const isComponentModule = (fileName: string) => /^[A-Z][A-Za-z0-9]*\.tsx$/.test(fileName);
+    // TODO remove the *DesignTokens.mdx pages once every component has its docs page.
+    const isDocsPage = (fileName: string) => fileName.endsWith(".mdx");
     const storiesFileNames = (folder: string) => {
         const storiesDirectory = join(sourceDirectory, folder, "__stories__");
         return existsSync(storiesDirectory) ? readdirSync(storiesDirectory) : [];
     };
+    const folderFileNames = (folder: string) => readdirSync(join(sourceDirectory, folder));
+    const readFolderFile = (folder: string, fileName: string) => readFileSync(join(sourceDirectory, folder, fileName), "utf8");
     // A folder with a page but no stylesheet is checked too, so a page can't outlive its stylesheet.
     const componentFolders = readdirSync(sourceDirectory, { withFileTypes: true })
         .filter(
             (entry) =>
-                entry.isDirectory() &&
-                (readdirSync(join(sourceDirectory, entry.name)).some(isComponentStylesheet) || storiesFileNames(entry.name).some(isDesignTokensPage)),
+                entry.isDirectory() && (folderFileNames(entry.name).some(isComponentStylesheet) || storiesFileNames(entry.name).some(isDocsPage)),
         )
         .map((entry) => entry.name);
 
-    it.each(componentFolders)("%s/__stories__ lists each token its component stylesheets use exactly once", (folder) => {
-        const pageFileNames = storiesFileNames(folder).filter(isDesignTokensPage);
-        expect(pageFileNames, `${folder}/__stories__ needs one <Component>DesignTokens.mdx`).toHaveLength(1);
+    function docsPageOf(folder: string) {
+        const pageFileNames = storiesFileNames(folder).filter(isDocsPage);
+        expect(pageFileNames, `${folder}/__stories__ needs one docs page, <Component>.mdx`).toHaveLength(1);
+        return readFolderFile(join(folder, "__stories__"), pageFileNames[0]);
+    }
 
+    /** The part of a page under one of its `##` headings. */
+    function section(page: string, heading: string) {
+        return page.split(`\n## ${heading}\n`)[1]?.split("\n## ")[0] ?? "";
+    }
+
+    it.each(componentFolders)("%s lists each token its stylesheets use exactly once", (folder) => {
+        const page = docsPageOf(folder);
+        const tokenSection = page.includes("\n## Design tokens\n") ? section(page, "Design tokens") : page;
         const usedTokens = new Set(
-            readdirSync(join(sourceDirectory, folder))
+            folderFileNames(folder)
                 .filter(isComponentStylesheet)
-                .flatMap((fileName) => readFileSync(join(sourceDirectory, folder, fileName), "utf8").match(tokenNamePattern) ?? []),
+                .flatMap((fileName) => readFolderFile(folder, fileName).match(tokenNamePattern) ?? []),
         );
-        const listedTokens = readPageTokenRows(join(sourceDirectory, folder, "__stories__", pageFileNames[0])).flat();
+        const listedTokens = readTokenTableRows(tokenSection).flatMap((row) => row.tokens);
 
         expect({
             missingTokens: [...usedTokens].filter((token) => !listedTokens.includes(token)),
             unusedTokens: listedTokens.filter((token) => !usedTokens.has(token)),
             repeatedTokens: listedTokens.filter((token, index) => listedTokens.indexOf(token) !== index),
         }).toEqual({ missingTokens: [], unusedTokens: [], repeatedTokens: [] });
+    });
+
+    it.each(
+        componentFolders.filter((folder) =>
+            storiesFileNames(folder).some((fileName) => isDocsPage(fileName) && !fileName.endsWith("DesignTokens.mdx")),
+        ),
+    )("%s documents each of its slots", (folder) => {
+        const slotNames = folderFileNames(folder)
+            .filter(isComponentModule)
+            .flatMap((fileName) => [...readFolderFile(folder, fileName).matchAll(/export interface \w+SlotProps \{([\s\S]*?)\n\}/g)])
+            .flatMap(([, body]) => [...body.matchAll(/^ {4}(\w+)\?:/gm)].map(([, slotName]) => slotName));
+        const documentedSlots = section(docsPageOf(folder), "Slots")
+            .split("\n")
+            .map((line) => line.match(/^\| `(\w+)`/)?.[1])
+            .filter((slotName) => slotName !== undefined);
+
+        expect({ undocumentedSlots: [...new Set(slotNames)].filter((slotName) => !documentedSlots.includes(slotName)) }).toEqual({
+            undocumentedSlots: [],
+        });
     });
 });
 

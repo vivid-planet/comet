@@ -14,6 +14,8 @@ const iconOptions = {
 const meta = {
     component: Button,
     title: "Components/Button",
+    // The docs page is Button.mdx.
+    tags: ["!autodocs"],
     args: {
         children: "Save changes",
         onClick: fn(),
@@ -40,8 +42,6 @@ const inRow: Decorator = (Story) => (
 
 /**
  * The main action of a page or dialog.
- *
- * @summary A primary button: the single main action of a view.
  */
 export const Default: Story = {
     play: async ({ args, canvas, userEvent }) => {
@@ -55,8 +55,6 @@ export const Default: Story = {
 
 /**
  * Actions next to the main action, such as "Cancel".
- *
- * @summary A secondary button for actions next to the main action.
  */
 export const Secondary: Story = {
     args: {
@@ -67,8 +65,6 @@ export const Secondary: Story = {
 
 /**
  * Less important actions, such as in a toolbar or a dense list.
- *
- * @summary A ghost button for less important actions.
  */
 export const Ghost: Story = {
     args: {
@@ -79,8 +75,6 @@ export const Ghost: Story = {
 
 /**
  * Use one size for all buttons in a group.
- *
- * @summary The small, medium and large sizes.
  */
 export const Sizes: Story = {
     decorators: [inRow],
@@ -101,8 +95,6 @@ export const Sizes: Story = {
 
 /**
  * An icon supports the text, it doesn't replace it. For a button that only shows an icon, use `IconButton`.
- *
- * @summary A start icon and an end icon next to the text.
  */
 export const WithIcons: Story = {
     decorators: [inRow],
@@ -121,8 +113,6 @@ export const WithIcons: Story = {
 /**
  * A disabled button doesn't react to clicks. Prefer explaining why an action isn't available over only
  * disabling it.
- *
- * @summary A disabled button, which ignores clicks.
  */
 export const Disabled: Story = {
     args: {
@@ -137,8 +127,6 @@ export const Disabled: Story = {
 /**
  * `className` styles the button itself, `slotProps` its inner parts. Both are added to the component's own
  * classes. See "Foundations/Customization" for all ways to adjust a component.
- *
- * @summary Adjusting a button with `className` and `slotProps`.
  */
 export const CustomizedThroughSlotProps: Story = {
     args: {

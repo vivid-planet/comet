@@ -1,6 +1,6 @@
-export { Badge, type BadgeOwnerState, type BadgeProps, type BadgeTone } from "./badge/Badge";
 export { Button, type ButtonOwnerState, type ButtonProps, type ButtonSize, type ButtonSlotProps, type ButtonVariant } from "./button/Button";
 export { Checkbox, type CheckboxOwnerState, type CheckboxProps, type CheckboxSlotProps } from "./checkbox/Checkbox";
+export { Chip, type ChipOwnerState, type ChipProps, type ChipTone } from "./chip/Chip";
 export { FormField, type FormFieldOwnerState, type FormFieldProps, type FormFieldSlotProps } from "./formField/FormField";
 export { IconButton, type IconButtonOwnerState, type IconButtonProps, type IconButtonSlotProps } from "./iconButton/IconButton";
 export { Radio, type RadioOwnerState, type RadioProps, type RadioSlotProps } from "./radioGroup/Radio";

@@ -1,0 +1,13 @@
+.termsCheckbox {
+    padding: var(--dextinity-space-md);
+    border: 1px solid var(--dextinity-color-border);
+    border-radius: var(--dextinity-radius-medium);
+}
+
+.roundControl {
+    border-radius: var(--dextinity-radius-full);
+}
+
+.strongLabel {
+    font-weight: 600;
+}

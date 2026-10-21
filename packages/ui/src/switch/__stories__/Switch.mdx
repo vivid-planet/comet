@@ -1,14 +1,36 @@
-import { Meta } from "@storybook/addon-docs/blocks";
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
 
 import * as SwitchStories from "./Switch.stories";
 
-<Meta of={SwitchStories} name="Design tokens" summary="The design tokens a theme styles the switch with, and what each one changes." />
+<Meta of={SwitchStories} />
 
-# Switch design tokens
+<Title />
 
-A theme styles the switch through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the switch's own: they're shared tokens, which other components can use too.
+<Subtitle />
 
-[Theme overview](?path=/docs/foundations-theme-overview--docs) shows each token's value in every theme.
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the switch's outer element, the `dextinitySwitch` element. `slotProps` adjusts the inner parts. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`disabled`) that returns them. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot      | Element                           | Class                      | What it is                                                                                              |
+| --------- | --------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `control` | `<span>` (Base UI `Switch.Root`)  | `dextinitySwitch__control` | The track, which has the `switch` role, receives focus and gets the props the component doesn't handle. |
+| `thumb`   | `<span>` (Base UI `Switch.Thumb`) | `dextinitySwitch__thumb`   | The round handle, which moves to the end while the switch is on.                                        |
+| `label`   | `<label>`                         | `dextinitySwitch__label`   | The text, `children`, which names the switch. Rendered only when there are `children`.                  |
+
+<Canvas of={SwitchStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the switch through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the switch's own: they're shared tokens, which other components can use too. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
 
 | Token                                                                                                                                                                       | In the switch                                                                                                                                        |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |

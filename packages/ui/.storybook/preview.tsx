@@ -7,7 +7,7 @@ import type { Preview } from "@storybook/react-vite";
 
 import { applyToolbarThemeToDocument } from "../src/storybook/documentTheme";
 import { colorSchemeOptions, dextinityThemeModes, themeDecorator, themeOptions } from "../src/storybook/themeDecorator";
-import { TokenCode } from "../src/storybook/tokenCode";
+import { MdxTable, MdxTableRow } from "../src/storybook/tokenTable";
 
 applyToolbarThemeToDocument();
 
@@ -51,7 +51,7 @@ const preview: Preview = {
         },
         docs: {
             codePanel: true,
-            components: { code: TokenCode },
+            components: { table: MdxTable, tr: MdxTableRow },
         },
         options: {
             storySort: {

@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { AddIcon, DeleteIcon, EditIcon, SettingsIcon } from "#storybook/icons";
 
-import { Badge } from "../../badge/Badge";
 import { Button } from "../../button/Button";
+import { Chip } from "../../chip/Chip";
 import { IconButton } from "../../iconButton/IconButton";
 import { Typography } from "../../typography/Typography";
 import styles from "./Actions.stories.module.css";
@@ -27,7 +27,7 @@ export const PageHeader: Story = {
                 <Typography variant="heading2" render={<h1 />}>
                     Summer collection
                 </Typography>
-                <Badge tone="warning">Draft</Badge>
+                <Chip tone="warning">Draft</Chip>
             </div>
             <div className={styles.actions}>
                 <Button>Publish</Button>

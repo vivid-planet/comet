@@ -26,6 +26,8 @@ const narrow: Decorator = (Story) => (
 const meta = {
     component: FormField,
     title: "Components/FormField",
+    // The docs page is FormField.mdx.
+    tags: ["!autodocs"],
     decorators: [narrow],
     args: {
         label: "Company name",
@@ -52,8 +54,6 @@ type Story = StoryObj<typeof meta>;
  * A control that has no field of its own, here Base UI's unstyled `Input` with the application's styles,
  * gets a label and a description. Clicking the label focuses the control. For text input, use `TextField`,
  * which comes styled.
- *
- * @summary A Base UI `Input` with a label and a description.
  */
 export const Default: Story = {
     args: {
@@ -71,8 +71,6 @@ export const Default: Story = {
 /**
  * A native element, such as a `<select>`, connects to the field through Base UI's `Field.Control` with
  * `render`. Pass the options as its children.
- *
- * @summary A native `<select>` rendered through `Field.Control`.
  */
 export const WithNativeSelect: Story = {
     args: {
@@ -100,8 +98,6 @@ export const WithNativeSelect: Story = {
 /**
  * An error from a form library or the server marks the field invalid and is shown below the control. Say
  * how to fix the value.
- *
- * @summary An error message passed as `error`.
  */
 export const WithError: Story = {
     args: {
@@ -119,8 +115,6 @@ export const WithError: Story = {
  * Without `error`, the field shows the browser's message when the control fails a constraint, such as
  * `required` or `type="email"`. `validationMode` sets when Base UI checks it, here when the control loses
  * focus. The message is in the browser's language: pass `error` for your own wording.
- *
- * @summary The browser's message for a failed constraint, checked on blur.
  */
 export const WithBrowserValidation: Story = {
     args: {
@@ -137,4 +131,31 @@ export const WithBrowserValidation: Story = {
         await waitFor(() => expect(input).toHaveAttribute("aria-invalid", "true"));
         await expect(input).toHaveAccessibleDescription(/.+/);
     },
+};
+
+/**
+ * `slotProps` adjusts the field's inner parts. Here `render` turns the description, a paragraph by default, into
+ * a `<div>`, so it can hold a list, and a class lays the list out. See "Foundations/Customization" for all ways
+ * to adjust a component.
+ */
+export const CustomizedThroughSlotProps: Story = {
+    args: {
+        label: "Password",
+        slotProps: {
+            description: { render: <div /> },
+        },
+    },
+    render: (args) => (
+        <FormField
+            {...args}
+            description={
+                <ul className={styles.rules}>
+                    <li>At least 12 characters</li>
+                    <li>At least one number</li>
+                </ul>
+            }
+        >
+            <Input type="password" className={styles.control} />
+        </FormField>
+    ),
 };

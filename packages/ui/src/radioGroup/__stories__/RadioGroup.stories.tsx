@@ -3,11 +3,14 @@ import { expect, fn } from "storybook/test";
 
 import { Radio } from "../Radio";
 import { RadioGroup } from "../RadioGroup";
+import styles from "./RadioGroup.stories.module.css";
 
 const meta = {
     component: RadioGroup,
     subcomponents: { Radio },
     title: "Components/RadioGroup",
+    // The docs page is RadioGroup.mdx.
+    tags: ["!autodocs"],
     args: {
         label: "Shipping method",
         onValueChange: fn(),
@@ -39,8 +42,6 @@ type Story = StoryObj<typeof meta>;
 /**
  * A choice of one option from a short list, named by `label`. Clicking an option or its label selects it.
  * Tab moves focus into the group, and the arrow keys move focus and selection to the next or previous option.
- *
- * @summary A radio group with three options.
  */
 export const Default: Story = {
     play: async ({ args, canvas, userEvent }) => {
@@ -74,8 +75,6 @@ export const Default: Story = {
 /**
  * `description` explains the choice, for example what it costs or affects. Assistive technology reads it with
  * the group and with each option.
- *
- * @summary A radio group with help text below the options.
  */
 export const WithDescription: Story = {
     args: {
@@ -92,8 +91,6 @@ export const WithDescription: Story = {
  * Set `error` when validation fails, for example in your form library or on the server, and clear it once
  * the value is valid. Say how to fix the error, not only that there is one. A `description` stays visible
  * above the error.
- *
- * @summary A radio group with an error message, marked as invalid.
  */
 export const WithError: Story = {
     args: {
@@ -112,8 +109,6 @@ export const WithError: Story = {
 /**
  * Lay out a few short options in a row, such as "Yes" and "No". The options wrap onto further lines when
  * space runs out; prefer the vertical layout for longer labels.
- *
- * @summary A radio group with its options in a row.
  */
 export const Horizontal: Story = {
     args: {
@@ -143,8 +138,6 @@ export const Horizontal: Story = {
 /**
  * Disable an option that doesn't apply right now, and say why in its label or the description. The arrow
  * keys skip it.
- *
- * @summary A radio group in which one option is disabled.
  */
 export const WithDisabledOption: Story = {
     args: {
@@ -176,8 +169,6 @@ export const WithDisabledOption: Story = {
 /**
  * A disabled group ignores clicks and the arrow keys, and keeps its value. Prefer explaining why the choice
  * isn't available over only disabling it.
- *
- * @summary A disabled radio group, which ignores interaction.
  */
 export const Disabled: Story = {
     args: {
@@ -192,4 +183,31 @@ export const Disabled: Story = {
         await expect(canvas.getByRole("radio", { name: "Standard" })).toBeChecked();
         await expect(args.onValueChange).not.toHaveBeenCalled();
     },
+};
+
+/**
+ * `slotProps` adjusts the inner parts of the group and of each radio: here the group's `options` become a grid
+ * of bordered tiles, and each `Radio`'s `label` gets a bolder text. See "Foundations/Customization" for all ways
+ * to adjust a component.
+ */
+export const CustomizedThroughSlotProps: Story = {
+    args: {
+        defaultValue: "standard",
+        slotProps: {
+            options: { className: styles.tiles },
+        },
+    },
+    render: (args) => (
+        <RadioGroup {...args}>
+            <Radio value="standard" className={styles.tile} slotProps={{ label: { className: styles.strongLabel } }}>
+                Standard
+            </Radio>
+            <Radio value="express" className={styles.tile} slotProps={{ label: { className: styles.strongLabel } }}>
+                Express
+            </Radio>
+            <Radio value="pickup" className={styles.tile} slotProps={{ label: { className: styles.strongLabel } }}>
+                Pickup in store
+            </Radio>
+        </RadioGroup>
+    ),
 };

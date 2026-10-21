@@ -1,0 +1,15 @@
+.tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--dextinity-space-sm);
+}
+
+.tile {
+    padding: var(--dextinity-space-md);
+    border: 1px solid var(--dextinity-color-border);
+    border-radius: var(--dextinity-radius-medium);
+}
+
+.strongLabel {
+    font-weight: 600;
+}

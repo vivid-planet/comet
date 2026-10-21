@@ -17,6 +17,8 @@ const iconOptions = {
 const meta = {
     component: IconButton,
     title: "Components/IconButton",
+    // The docs page is IconButton.mdx.
+    tags: ["!autodocs"],
     args: {
         label: "Edit product",
         children: <EditIcon />,
@@ -44,8 +46,6 @@ const inRow: Decorator = (Story) => (
 
 /**
  * A ghost icon button, as in a toolbar or a table row. `label` gives it its accessible name.
- *
- * @summary A ghost icon button with a label for screen readers.
  */
 export const Default: Story = {
     play: async ({ args, canvas, userEvent }) => {
@@ -63,8 +63,6 @@ export const Default: Story = {
 /**
  * `ghost` for buttons side by side in a toolbar or a table row, `secondary` for an icon button on its own,
  * `primary` only for the main action of a view.
- *
- * @summary The primary, secondary and ghost variants.
  */
 export const Variants: Story = {
     decorators: [inRow],
@@ -86,8 +84,6 @@ export const Variants: Story = {
 /**
  * The width equals the height of a `Button` of the same size, so both line up in a group. Use one size for all
  * buttons in a group.
- *
- * @summary The small, medium and large sizes.
  */
 export const Sizes: Story = {
     decorators: [inRow],
@@ -102,8 +98,6 @@ export const Sizes: Story = {
 
 /**
  * A disabled icon button doesn't react to clicks. Use `focusableWhenDisabled` to keep it reachable by keyboard.
- *
- * @summary A disabled icon button, which ignores clicks.
  */
 export const Disabled: Story = {
     args: {
@@ -113,4 +107,23 @@ export const Disabled: Story = {
         await userEvent.click(canvas.getByRole("button", { name: "Edit product" }));
         await expect(args.onClick).not.toHaveBeenCalled();
     },
+};
+
+/**
+ * `slotProps.icon` adjusts the element around the icon, here to show a destructive action in the danger color.
+ * See "Foundations/Customization" for all ways to adjust a component.
+ */
+export const CustomizedThroughSlotProps: Story = {
+    args: {
+        label: "Delete product",
+        variant: "secondary",
+        slotProps: {
+            icon: { className: styles.dangerIcon },
+        },
+    },
+    render: (args) => (
+        <IconButton {...args}>
+            <DeleteIcon />
+        </IconButton>
+    ),
 };

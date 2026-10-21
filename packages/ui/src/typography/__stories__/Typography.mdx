@@ -1,14 +1,30 @@
-import { Meta } from "@storybook/addon-docs/blocks";
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
 
 import * as TypographyStories from "./Typography.stories";
 
-<Meta of={TypographyStories} name="Design tokens" summary="The design tokens a theme styles the text with, and what each one changes." />
+<Meta of={TypographyStories} />
 
-# Typography design tokens
+<Title />
 
-A theme styles the text through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is Typography's own: they're shared tokens, which other components can use too. Each `variant` takes its text style from its own tokens and one of the two font families, and the `tone` picks the text color.
+<Subtitle />
 
-[Theme overview](?path=/docs/foundations-theme-overview--docs) shows each token's value in every theme.
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+Typography has no inner parts. `className` and `style` go to its element, `dextinityTypography`, and `render` replaces the element, which by default follows the variant: an `<h1>` for `heading1`, a `<p>` for `body`. See [Customization](?path=/docs/foundations-customization--docs).
+
+<Canvas of={TypographyStories.DifferentElement} />
+
+## Design tokens
+
+A theme styles the text through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is Typography's own: they're shared tokens, which other components can use too. Each `variant` takes its text style from its own tokens and one of the two font families, and the `tone` picks the text color. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
 
 | Token                                                                                                                                                                                                                                         | In the text                                                                                                             |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |

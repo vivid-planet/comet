@@ -11,12 +11,12 @@ The code is the single source of truth for the design of `@dextinity/ui`: the th
 
 ## What to edit
 
-| To change                                   | Edit                                                                                                                                                               |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| A color, font, size, radius or spacing      | The theme: `packages/ui/src/themes/dextinity.css`                                                                                                                  |
-| What a token is for, or a new token         | The list of tokens: `packages/ui/src/docs/DesignTokens.mdx`, and every theme                                                                                       |
-| How one component looks                     | Its stylesheet: `packages/ui/src/<component>/<Component>.module.css`, and its design tokens page `__stories__/<Component>DesignTokens.mdx` if it uses other tokens |
-| What a component does or which props it has | Talk to a developer first: that changes the component's API                                                                                                        |
+| To change                                   | Edit                                                                                                                                                                         |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A color, font, size, radius or spacing      | The theme: `packages/ui/src/themes/dextinity.css`                                                                                                                            |
+| What a token is for, or a new token         | The list of tokens: `packages/ui/src/docs/DesignTokens.mdx`, and every theme                                                                                                 |
+| How one component looks                     | Its stylesheet: `packages/ui/src/<component>/<Component>.module.css`, and the "Design tokens" section of its docs page `__stories__/<Component>.mdx` if it uses other tokens |
+| What a component does or which props it has | Talk to a developer first: that changes the component's API                                                                                                                  |
 
 A theme is a list of tokens with their values, grouped by topic:
 
@@ -28,7 +28,7 @@ A theme is a list of tokens with their values, grouped by topic:
 --dextinity-button-radius: 9999px;
 ```
 
-Change the value, keep the name. [Design tokens](?path=/docs/foundations-design-tokens--docs) says what each token is used for, the [theme overview](?path=/docs/foundations-theme-overview--docs) shows the current values, and each component's "Design tokens" page says what each token changes in that component.
+Change the value, keep the name. [Design tokens](?path=/docs/foundations-design-tokens--docs) says what each token is used for, the [theme overview](?path=/docs/foundations-theme-overview--docs) shows the current values, and the "Design tokens" section of each component's docs page says what each token changes in that component.
 
 ## Making the change
 

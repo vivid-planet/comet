@@ -53,7 +53,7 @@ The theme names its fonts, but doesn't load them: the Dextinity theme uses [Figt
 - One feature folder per component, camelCase: `button/`, `iconButton/`, `radioGroup/`.
 - `<Component>.tsx` (PascalCase) for a component, `<featureName>.ts` (camelCase) for anything else.
 - `<Component>.module.css` for a component's styles. The file name determines the emitted class names, so it must match the component.
-- `<Component>.test.tsx` next to the component; stories in `__stories__/<Component>.stories.tsx`, and the component's design tokens page in `__stories__/<Component>DesignTokens.mdx`.
+- `<Component>.test.tsx` next to the component; stories in `__stories__/<Component>.stories.tsx`, and the component's docs page in `__stories__/<Component>.mdx`.
 - `src/themes/` holds the themes, `src/docs/` the Storybook pages that aren't tied to a component, `src/storybook/` helpers that only the stories use. Stories import those helpers as `#storybook/<file>`.
 
 ## Component conventions
@@ -107,7 +107,7 @@ In the stylesheet, the local class `root` becomes the root class and any other c
 
 - Wrap everything in `@layer dextinity { … }`.
 - Use design tokens for every value a theme might want to change, and nothing but [documented tokens](src/docs/DesignTokens.mdx); the theme contract test fails on any other `--dextinity-*` property. If a token is missing, add it in the same change: document it and define it in every theme.
-- List every token a component's stylesheets use in its design tokens page, [`ButtonDesignTokens.mdx`](src/button/__stories__/ButtonDesignTokens.mdx) for example, with what it changes in the component. The theme contract test fails when the page misses a token or lists one the stylesheets don't use.
+- List every token a component's stylesheets use in the "Design tokens" section of its docs page, [`Button.mdx`](src/button/__stories__/Button.mdx) for example, with what it changes in the component. The theme contract test fails when the page misses a token or lists one the stylesheets don't use.
 - Name private custom properties `--_<name>`, for example `--_background`, and set variant-specific values through them rather than repeating declarations.
 - Style owner state with attribute selectors nested under `.root` (`&[data-variant="primary"]`). Put a blank line before every nested rule.
 - Show focus with `:focus-visible` and the focus ring tokens. Put hover styles inside `@media (hover: hover)`, so they don't stick on touch screens.
@@ -127,11 +127,12 @@ The TSDoc on the exports is the component's documentation: Storybook's docs page
 - `__stories__/<Component>.stories.tsx` in [CSF 3](https://storybook.js.org/docs/api/csf), with `title: "Components/<Component>"` and the meta typed with `satisfies Meta<typeof Component>`.
 - Don't put a comment on `meta`: it would replace the component's TSDoc in the documentation.
 - `meta.args` holds what every story needs, such as `children` and event handlers created with `fn()`.
-- The first story is `Default`, the smallest practical example. Order the rest by usefulness: agents get full code for the first three stories only. Give each story a comment that says why to use it, with a `@summary`.
+- The first story is `Default`, the smallest practical example. Order the rest by usefulness: agents get full code for the first three stories only. Give each story a comment that says why to use it. The docs page shows the comment as it is, so don't put JSDoc tags such as `@summary` into it.
 - Use literal args. Story-only helpers come from `#storybook/<file>`, so the documentation doesn't present them as exports of the package.
 - Write JSX children in `render`, not in `args`, and put layout around several components into a story decorator: code snippets leave decorators out, and they print multi-line JSX from `args` incorrectly.
 - Every declared prop has a control: `radio` for up to three options, `select` for more, a `select` with `mapping` for `ReactNode` props. Override props (`className`, `slotProps`, `render`) get `control: false`.
 - Behavior — clicks, keyboard, focus, disabled — is tested in a story's `play` function.
+- Each component folder has one docs page, `__stories__/<Component>.mdx`, which replaces the generated one: it attaches to the stories with `<Meta of={…} />`, and the stories' meta has `tags: ["!autodocs"]`. It renders the blocks of the generated page (`Title`, `Subtitle`, `Description`, `Primary`, `Controls`, `Stories`), then a `## Slots` section with a table of every slot and a story that adjusts one, and a `## Design tokens` section with a table of every token the stylesheets use. The theme contract test checks both tables, and the docs add a value column to the tokens table. Copy [`Button.mdx`](src/button/__stories__/Button.mdx).
 - Development-only stories go into `__stories__/<name>.dev.stories.tsx` with the tags `["!autodocs", "!manifest"]`.
 
 ## Testing
@@ -141,8 +142,8 @@ Test what a consumer depends on, not the implementation:
 - **Utilities** — a unit test next to the utility.
 - **A component's styling contract** — its classes and `data-*` attributes, and how slot props are merged — a unit test next to the component. Don't assert styles.
 - **Behavior** — a `play` function in a story, which runs in a real browser. Every story also runs an accessibility check and fails on violations.
-- **Themes** — [`themeContract.test.ts`](src/themes/themeContract.test.ts) checks every theme against the documented tokens and the contrast requirements, and every component's design tokens page against its stylesheets.
-- **Appearance** — [Chromatic](https://www.chromatic.com) captures every story in the Dextinity theme, light and dark, except the theme overview, which it captures once per theme in the light color scheme (its color table shows both schemes), and shows a pull request's visual changes for review. CI publishes to it from `.github/workflows/chromatic.yml` with the `CHROMATIC_PROJECT_TOKEN_UI` secret; to publish from a local clone, run `CHROMATIC_PROJECT_TOKEN=<token> pnpm --filter @dextinity/ui run chromatic`. The modes in [`themeDecorator.tsx`](src/storybook/themeDecorator.tsx) set which themes a story is captured in.
+- **Themes** — [`themeContract.test.ts`](src/themes/themeContract.test.ts) checks every theme against the documented tokens and the contrast requirements, and every component's docs page against its stylesheets and its slots.
+- **Appearance** — [Chromatic](https://www.chromatic.com) captures every story in the Dextinity theme, light and dark, except the theme overview, which it captures once per theme in the light color scheme (its color table shows both schemes), and shows a pull request's visual changes for review. CI publishes to it with Chromatic's GitHub Action in `.github/workflows/chromatic.yml`, like the admin, with the `CHROMATIC_PROJECT_TOKEN_UI` secret and the options in [`chromatic.config.json`](chromatic.config.json); to publish from a local clone, run `CHROMATIC_PROJECT_TOKEN=<token> pnpm --filter @dextinity/ui run chromatic`. The modes in [`themeDecorator.tsx`](src/storybook/themeDecorator.tsx) set which themes a story is captured in.
 
 Rendering alone isn't worth a test: every story already renders in a browser test.
 
