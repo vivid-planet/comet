@@ -2372,6 +2372,9 @@ importers:
       '@types/request-ip':
         specifier: ^0.0.41
         version: 0.0.41
+      ajv:
+        specifier: ^8.20.0
+        version: 8.20.0
       aws-sdk-client-mock:
         specifier: ^4.1.0
         version: 4.1.0

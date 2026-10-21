@@ -49,6 +49,7 @@ export {
     TraversableTransformBlockResponse,
     TraversableTransformBlockResponseArray,
 } from "./blocks/block";
+export { type BlockInputJsonSchemaContext, getBlockInputJsonSchema, type JsonSchema } from "./blocks/block-input-json-schema";
 export { BlocksModule } from "./blocks/blocks.module";
 export { getBlocksMeta } from "./blocks/blocks-meta";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
@@ -103,7 +104,6 @@ export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar"
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
 export { blockToMikroOrmFullText, getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
-export type { TipTapRichTextBlockContentConfig } from "./blocks/tipTap/contentConfig";
 export {
     createTipTapRichTextBlock,
     type CreateTipTapRichTextBlockOptions,

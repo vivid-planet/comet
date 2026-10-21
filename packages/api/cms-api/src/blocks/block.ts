@@ -3,6 +3,7 @@ import { type ClassConstructor, instanceToPlain, plainToInstance } from "class-t
 import { Equals } from "class-validator";
 import type { WarningSeverity as WarningSeverityEnum } from "src/warnings/entities/warning-severity.enum";
 
+import type { BlockInputJsonSchemaContext, JsonSchema } from "./block-input-json-schema";
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
@@ -11,7 +12,6 @@ import { createAppliedMigrationsBlockDataFactoryDecorator } from "./migrations/c
 import { BlockDataMigrationVersion } from "./migrations/decorators/BlockDataMigrationVersion";
 import type { MigrateOptions, MigrateVendorOptions } from "./migrations/types";
 import type { SearchText } from "./search/get-search-text";
-import type { TipTapRichTextBlockContentConfig } from "./tipTap/contentConfig";
 
 export interface BlockTransformerServiceInterface<
     Block extends BlockDataInterface = BlockDataInterface,
@@ -259,11 +259,6 @@ export type BlockMetaField =
            * Lets consumers like the block loader process blocks embedded in the content.
            */
           childBlocks: Record<string, Block>;
-          /**
-           * The block the content's `link` marks store their data as, `null` if links are disabled.
-           */
-          linkBlock: Block | null;
-          contentConfig: TipTapRichTextBlockContentConfig;
           nullable: boolean;
       };
 
@@ -278,6 +273,11 @@ export type Block<BlockType extends BlockDataInterface = BlockDataInterface, Blo
     blockInputFactory: BlockInputFactory<BlockInputType>;
     blockMeta: BlockMetaInterface;
     blockInputMeta: BlockMetaInterface;
+    /**
+     * Describes the block's input as a JSON Schema, for a block whose input the block meta can't
+     * describe. Derived from `blockInputMeta` if left out. See `getBlockInputJsonSchema`.
+     */
+    blockInputJsonSchema?: (context: BlockInputJsonSchemaContext) => JsonSchema;
 };
 
 const blocks: Block[] = [];
