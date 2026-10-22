@@ -381,6 +381,8 @@ The CLI no longer supports `ts-node`. Install one of the loaders it accepts (`ox
 }
 ```
 
+The API Generator loads the entities with the same loader, so the loader also has to support decorator metadata. `@swc-node/register` does; `tsx` doesn't.
+
 `ts-node` can stay for anything else in your project that uses it.
 
 ### Update the NestJS dependencies
