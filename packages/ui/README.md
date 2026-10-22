@@ -55,7 +55,8 @@ The theme names its fonts, but doesn't load them: the Dextinity theme uses [Figt
 - `<Component>.tsx` (PascalCase) for a component, `<featureName>.ts` (camelCase) for anything else.
 - `<Component>.module.css` for a component's styles. The file name determines the emitted class names, so it must match the component.
 - `<Component>.test.tsx` next to the component; stories in `__stories__/<Component>.stories.tsx`, and the component's docs page in `__stories__/<Component>.mdx`.
-- `src/themes/` holds the themes, `src/docs/` the Storybook pages that aren't tied to a component, `src/storybook/` helpers that only the stories use. Stories import those helpers as `#storybook/<file>`.
+- `src/themes/` holds the themes, `src/docs/` the Storybook pages that aren't tied to a component, `src/patterns/` the pattern pages, `src/storybook/` helpers that only the stories use. Stories import those helpers as `#storybook/<file>`.
+- `src/samplePages/` holds the sample pages, whole screens of a fictive application that combine the components, in `__stories__/<Name>.stories.tsx` with `title: "Sample pages/<Name>"` and the tags `["!autodocs", "!manifest"]`.
 
 ## Component conventions
 
@@ -86,7 +87,7 @@ Each component exports:
 
 The [styling contract](#styling-contract) is the main way to adjust a component. These props do what it can't:
 
-- **`className`** and **`style`** — applied to the component's outermost element. `className` is added to the component's own classes, never replacing them.
+- **`className`** and **`style`** — applied to the component's outermost element; for a component that opens a popup from a trigger it receives, such as `Menu`, `Tooltip` and `Dialog`, to the popup. `className` is added to the component's own classes, never replacing them.
 - **`slotProps`** — props for the component's inner parts, as an object or as a function of the owner state. They are merged with the part's own props by `resolveSlotProps`: classes are added, `style` is merged, event handlers run before the part's own, other props replace the part's own, including `ref`. `render` in a slot's props replaces the part's element, for example `{ description: { render: <div /> } }`. Name every slot and every owner state field in the `slotProps` TSDoc: generated documentation doesn't expand the types.
 - **Owner state** — the resolved configuration that changes how the component looks or behaves: `variant`, `size`, `disabled`, … It doesn't hold interaction state, such as hover or focus, which CSS handles. Its keys are single lowercase words, because they become `data-*` attributes. `disabled` reflects the component's own `disabled` prop; when an enclosing Base UI `Fieldset` or `Field.Root` disables a component, Base UI's `data-disabled` on its parts shows it instead.
 
@@ -96,7 +97,7 @@ There is no `slots` prop to swap a part's component, and no theme-level default 
 
 Every component emits class names and `data-*` attributes for consumers to style with plain CSS. They are public API: renaming one is a breaking change.
 
-- **Root class** `dextinity<Component>` on the outermost element, for example `dextinityButton`.
+- **Root class** `dextinity<Component>` on the outermost element, for example `dextinityButton`. For a component that opens a popup from a trigger it receives, such as `Menu`, `Tooltip` and `Dialog`, it's on the popup, and the positioner, viewport and backdrop around it are parts.
 - **Part classes** `dextinity<Component>__<part>` on inner parts, for example `dextinityButton__startIcon`. A part that consumers can customize has a `slotProps` key of the same name.
 - **Owner state** as attributes on the root: `data-variant="primary"` for an enum, `data-disabled` (present or absent) for a boolean.
 - A component that renders another one as its root carries both root classes: `IconButton` renders `dextinityButton dextinityIconButton`.
@@ -114,7 +115,7 @@ In the stylesheet, the local class `root` becomes the root class and any other c
 - Show focus with `:focus-visible` and the focus ring tokens. Put hover styles inside `@media (hover: hover)`, so they don't stick on touch screens.
 - A component sets its own font family and size instead of inheriting them, so it looks the same inside a page that uses another font, such as an MUI admin.
 - No `!important`, no global selectors, no element selectors outside the component's own parts.
-- The unit tests run in jsdom, whose CSS parser fails with "Maximum call stack size exceeded" when, inside the layer, a rule with nested rules is followed by a rule with a nested at-rule, such as `@media (hover: hover)`. Every unit test that imports the stylesheet then fails. Move the at-rule into the first rule that nests, or write it as a top-level `@media` block inside the layer.
+- The unit tests run in jsdom, whose CSS parser fails with "Maximum call stack size exceeded" when, inside the layer, a rule's first nested block is a `@media` rule that holds a rule, such as `@media (hover: hover) { &:hover { … } }`, and an earlier rule nests a block, such as `&[data-variant="primary"] { … }` or another `@media` rule. Every unit test that imports the stylesheet then fails. In such a rule, put a nested rule before the `@media` rule, or move the `@media` rule to the top level of the layer: `@media (hover: hover) { .part:hover { … } }`.
 
 ### TSDoc
 
@@ -145,7 +146,7 @@ Test what a consumer depends on, not the implementation:
 - **A component's styling contract** — its classes and `data-*` attributes, and how slot props are merged — a unit test next to the component. Don't assert styles.
 - **Behavior** — a `play` function in a story, which runs in a real browser. Every story also runs an accessibility check and fails on violations.
 - **Themes** — [`themeContract.test.ts`](src/themes/themeContract.test.ts) checks every theme against the documented tokens and the contrast requirements, and every component's docs page against its stylesheets and its slots.
-- **Appearance** — [Chromatic](https://www.chromatic.com) captures every story in the Dextinity theme, light and dark, except the theme overview, which it captures once per theme in the light color scheme (its color table shows both schemes), and shows a pull request's visual changes for review. CI publishes to it with Chromatic's GitHub Action in `.github/workflows/chromatic.yml`, like the admin, with the `CHROMATIC_PROJECT_TOKEN_UI` secret and the options in [`chromatic.config.json`](chromatic.config.json); to publish from a local clone, run `CHROMATIC_PROJECT_TOKEN=<token> pnpm --filter @dextinity/ui run chromatic`. The modes in [`themeDecorator.tsx`](src/storybook/themeDecorator.tsx) set which themes a story is captured in.
+- **Appearance** — [Chromatic](https://www.chromatic.com) captures every story in the Dextinity theme, light and dark, except the theme overview and the icon gallery, which it captures once per theme in the light color scheme (the overview's color table shows both schemes), and shows a pull request's visual changes for review. CI publishes to it with Chromatic's GitHub Action in `.github/workflows/chromatic.yml`, like the admin, with the `CHROMATIC_PROJECT_TOKEN_UI` secret and the options in [`chromatic.config.json`](chromatic.config.json); to publish from a local clone, run `CHROMATIC_PROJECT_TOKEN=<token> pnpm --filter @dextinity/ui run chromatic`. The modes in [`themeDecorator.tsx`](src/storybook/themeDecorator.tsx) set which themes a story is captured in.
 
 Rendering alone isn't worth a test: every story already renders in a browser test.
 
@@ -157,4 +158,4 @@ Without a running Storybook, `pnpm --filter @dextinity/ui exec storybook tools d
 
 ## Build
 
-`vite build` compiles the components to ES modules in `lib/`, one module per source file, keeping `"use client"`. All component styles go into `lib/style.css` (`@dextinity/ui/css`). The themes listed in `vite.config.mts` are copied to `lib/themes/`; the Sunset and Acme themes are Storybook-only examples and aren't published. The type declarations target `moduleResolution: "bundler"`, as used by Vite and Next.js.
+`vite build` compiles the components to ES modules in `lib/`, one module per source file, keeping `"use client"`. All component styles go into `lib/style.css` (`@dextinity/ui/css`). The themes listed in `vite.config.mts` are copied to `lib/themes/`; the other themes in `src/themes/`, such as Sunset and Acme, are Storybook-only examples and aren't published. The type declarations target `moduleResolution: "bundler"`, as used by Vite and Next.js.

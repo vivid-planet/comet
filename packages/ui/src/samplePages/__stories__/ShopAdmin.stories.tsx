@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type FormEvent, type PropsWithChildren, useState } from "react";
+import { type FormEvent, type PropsWithChildren, useId, useState } from "react";
+import { flushSync } from "react-dom";
 import { expect, screen, waitFor, within } from "storybook/test";
 
 import { Alert } from "../../alert/Alert";
@@ -64,14 +65,32 @@ interface ShopAdminProps extends PropsWithChildren {
     darkNavigationTheme?: string;
 }
 
+const userMenuItems = (
+    <>
+        <MenuLinkItem href="#profile" icon={<Icon name="user" />}>
+            Profile
+        </MenuLinkItem>
+        <MenuLinkItem href="#settings" icon={<Icon name="settings" />}>
+            Settings
+        </MenuLinkItem>
+        <MenuSeparator />
+        <MenuItem icon={<Icon name="logout" />}>Log out</MenuItem>
+    </>
+);
+
+const wideScreenQuery = "(width >= 48rem)";
+
 /**
  * The frame of every page: the app bar across the top, the main navigation in a sidebar, and the page's content.
+ * On a narrow screen, the navigation starts hidden behind its button, and on a phone, the app bar shows only the
+ * user's avatar, with the name visually hidden, and moves "Help" into the user's menu.
  */
 function ShopAdmin({ currentPage, darkNavigationTheme, children }: ShopAdminProps) {
-    const [isNavigationOpen, setIsNavigationOpen] = useState(true);
+    const navigationId = useId();
+    const [isNavigationOpen, setIsNavigationOpen] = useState(() => window.matchMedia(wideScreenQuery).matches);
 
     const navigation = (
-        <Navigation label="Main" id="main-navigation">
+        <Navigation label="Main" id={navigationId}>
             <NavigationItem href="#dashboard" icon={<Icon name="dashboard" />} active={currentPage === "dashboard"}>
                 Dashboard
             </NavigationItem>
@@ -104,7 +123,7 @@ function ShopAdmin({ currentPage, darkNavigationTheme, children }: ShopAdminProp
                     <AppBarIconButton
                         label="Navigation"
                         aria-expanded={isNavigationOpen}
-                        aria-controls="main-navigation"
+                        aria-controls={navigationId}
                         onClick={() => setIsNavigationOpen(!isNavigationOpen)}
                     >
                         <Icon name="menu" />
@@ -113,7 +132,7 @@ function ShopAdmin({ currentPage, darkNavigationTheme, children }: ShopAdminProp
                     <AppBarSpacer />
                     <TooltipProvider>
                         <Tooltip content="Help">
-                            <AppBarIconButton label="Help">
+                            <AppBarIconButton label="Help" className={styles.helpButton}>
                                 <Icon name="help" />
                             </AppBarIconButton>
                         </Tooltip>
@@ -126,19 +145,28 @@ function ShopAdmin({ currentPage, darkNavigationTheme, children }: ShopAdminProp
                     <Menu
                         align="end"
                         trigger={
-                            <AppBarButton startIcon={<Avatar name="Jane Doe" size="small" />} endIcon={<Icon name="chevron-down" />}>
+                            <AppBarButton
+                                className={styles.userButton}
+                                startIcon={<Avatar name="Jane Doe" size="small" />}
+                                endIcon={<Icon name="chevron-down" />}
+                            >
                                 Jane Doe
                             </AppBarButton>
                         }
                     >
-                        <MenuLinkItem href="#profile" icon={<Icon name="user" />}>
-                            Profile
-                        </MenuLinkItem>
-                        <MenuLinkItem href="#settings" icon={<Icon name="settings" />}>
-                            Settings
-                        </MenuLinkItem>
+                        {userMenuItems}
+                    </Menu>
+                    <Menu
+                        align="end"
+                        trigger={
+                            <AppBarButton className={styles.compactUserButton} startIcon={<Avatar name="Jane Doe" size="small" />}>
+                                <span className={styles.visuallyHidden}>Jane Doe</span>
+                            </AppBarButton>
+                        }
+                    >
+                        <MenuItem icon={<Icon name="help" />}>Help</MenuItem>
                         <MenuSeparator />
-                        <MenuItem icon={<Icon name="logout" />}>Log out</MenuItem>
+                        {userMenuItems}
                     </Menu>
                 </AppBar>
                 {isNavigationOpen &&
@@ -198,7 +226,15 @@ export const Dashboard: Story = {
                     <Button startIcon={<Icon name="plus" />}>Add product</Button>
                 </div>
             </div>
-            <Alert tone="warning" title="3 products are out of stock" action={<Button variant="secondary">Show products</Button>}>
+            <Alert
+                tone="warning"
+                title="3 products are out of stock"
+                action={
+                    <a href="#products" className={styles.actionLink}>
+                        Show products
+                    </a>
+                }
+            >
                 Customers can't order them until you restock them.
             </Alert>
             <div className={styles.stats}>
@@ -239,9 +275,10 @@ export const Dashboard: Story = {
                 <Card
                     title="Recent orders"
                     actions={
-                        <Button variant="ghost" endIcon={<Icon name="arrow-right" />}>
+                        <a href="#orders" className={styles.actionLink}>
                             All orders
-                        </Button>
+                            <Icon name="arrow-right" />
+                        </a>
                     }
                 >
                     <div className={styles.tableScroller}>
@@ -269,7 +306,7 @@ export const Dashboard: Story = {
                                         </td>
                                         <td>
                                             <span className={styles.person}>
-                                                <Avatar name={order.customer} size="small" />
+                                                <Avatar name={order.customer} size="small" aria-hidden />
                                                 {order.customer}
                                             </span>
                                         </td>
@@ -296,15 +333,25 @@ export const Dashboard: Story = {
     ),
     play: async ({ canvas, userEvent }) => {
         const navigationButton = canvas.getByRole("button", { name: "Navigation" });
-        await expect(navigationButton).toHaveAttribute("aria-expanded", "true");
-        await expect(canvas.getByRole("link", { name: "Dashboard" })).toHaveAttribute("aria-current", "page");
+
+        async function expectNavigationOpen(isOpen: boolean) {
+            await expect(navigationButton).toHaveAttribute("aria-expanded", String(isOpen));
+            if (isOpen) {
+                await expect(canvas.getByRole("navigation", { name: "Main" })).toBeVisible();
+                await expect(canvas.getByRole("link", { name: "Dashboard" })).toHaveAttribute("aria-current", "page");
+            } else {
+                await expect(canvas.queryByRole("navigation", { name: "Main" })).not.toBeInTheDocument();
+            }
+        }
+
+        const isInitiallyOpen = window.matchMedia(wideScreenQuery).matches;
+        await expectNavigationOpen(isInitiallyOpen);
 
         await userEvent.click(navigationButton);
-        await expect(navigationButton).toHaveAttribute("aria-expanded", "false");
-        await expect(canvas.queryByRole("navigation", { name: "Main" })).not.toBeInTheDocument();
+        await expectNavigationOpen(!isInitiallyOpen);
 
         await userEvent.click(navigationButton);
-        await expect(canvas.getByRole("navigation", { name: "Main" })).toBeVisible();
+        await expectNavigationOpen(isInitiallyOpen);
     },
 };
 
@@ -530,6 +577,123 @@ const labelColorPresets = [
 ];
 
 /**
+ * The product's form, which the "Save" button in the page header submits. Its panels stay mounted, so the entries
+ * survive switching tabs and every field is submitted.
+ */
+function ProductForm() {
+    const [selectedTab, setSelectedTab] = useState("general");
+
+    function selectTabOfFirstInvalidField(event: FormEvent<HTMLFormElement>) {
+        const tab = event.currentTarget.querySelector(":invalid")?.closest<HTMLElement>("[data-tab]")?.dataset.tab;
+        if (tab !== undefined) {
+            // Synchronously, so the browser can focus the field and show its error: it can't in a hidden panel.
+            flushSync(() => setSelectedTab(tab));
+        }
+    }
+
+    return (
+        <form id="product-form" onSubmit={preventSubmit} onInvalidCapture={selectTabOfFirstInvalidField}>
+            <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(String(value))}>
+                <TabList label="Product">
+                    <Tab value="general">General</Tab>
+                    <Tab value="prices">Price and stock</Tab>
+                    <Tab value="search">Search engines</Tab>
+                </TabList>
+                <TabPanel value="general" keepMounted data-tab="general">
+                    <div className={styles.formColumns}>
+                        <Card title="Basics">
+                            <div className={styles.fields}>
+                                <TextField label="Name" name="name" defaultValue="Linen shirt" required />
+                                <TextField
+                                    label="Slug"
+                                    name="slug"
+                                    defaultValue="linen-shirt"
+                                    description="The end of the product's address: linen-and-co.com/products/linen-shirt."
+                                    required
+                                />
+                                <Autocomplete
+                                    label="Category"
+                                    name="category"
+                                    options={productCategoryOptions}
+                                    defaultValue="shirts"
+                                    emptyMessage="No category matches. Check the spelling."
+                                />
+                                <Select label="Status" name="status" options={statusOptions.slice(1)} defaultValue="published" />
+                            </div>
+                        </Card>
+                        <Card title="Presentation" description="How the product appears in the shop.">
+                            <div className={styles.fields}>
+                                <ColorPicker
+                                    label="Label color"
+                                    name="labelColor"
+                                    defaultValue="#c2410c"
+                                    presets={labelColorPresets}
+                                    pickerLabel="Pick the label color"
+                                    description="The color of the “New” label on the product's picture."
+                                />
+                                <Checkbox name="showOnStartPage" defaultChecked>
+                                    Show on the start page
+                                </Checkbox>
+                                <Checkbox name="giftWrapping">Offer gift wrapping</Checkbox>
+                            </div>
+                        </Card>
+                    </div>
+                </TabPanel>
+                <TabPanel value="prices" keepMounted data-tab="prices">
+                    <div className={styles.formColumns}>
+                        <Card title="Price">
+                            <div className={styles.fields}>
+                                <NumberField
+                                    label="Price"
+                                    name="price"
+                                    defaultValue={59}
+                                    min={0}
+                                    step={0.5}
+                                    format={{ style: "currency", currency: "EUR" }}
+                                    decrementLabel="Decrease the price"
+                                    incrementLabel="Increase the price"
+                                    required
+                                />
+                                <NumberField
+                                    label="Discount"
+                                    name="discount"
+                                    defaultValue={0.1}
+                                    min={0}
+                                    max={1}
+                                    step={0.05}
+                                    format={{ style: "percent" }}
+                                    description="Shown as a crossed-out price in the shop."
+                                />
+                            </div>
+                        </Card>
+                        <Card title="Stock">
+                            <div className={styles.fields}>
+                                <NumberField label="In stock" name="stock" defaultValue={42} min={0} />
+                                <Checkbox name="trackStock" defaultChecked>
+                                    Hide the product while it is out of stock
+                                </Checkbox>
+                            </div>
+                        </Card>
+                    </div>
+                </TabPanel>
+                <TabPanel value="search" keepMounted data-tab="search">
+                    <Card title="Search engines" description="How search engines show the product.">
+                        <div className={styles.fields}>
+                            <TextField label="Title" name="seoTitle" defaultValue="Linen shirt – Linen & Co." />
+                            <TextField
+                                label="Description"
+                                name="seoDescription"
+                                defaultValue="A light, breathable shirt made of pure European linen."
+                            />
+                        </div>
+                    </Card>
+                </TabPanel>
+            </Tabs>
+        </form>
+    );
+}
+
+/**
  * A form that edits one record. The title row holds the record's status and the actions, `Tabs` split the long
  * form into sections, and cards group the related fields within a section.
  */
@@ -559,110 +723,23 @@ export const Product: Story = {
                     </Button>
                 </div>
             </div>
-            <form id="product-form" onSubmit={preventSubmit}>
-                <Tabs defaultValue="general">
-                    <TabList label="Product">
-                        <Tab value="general">General</Tab>
-                        <Tab value="prices">Price and stock</Tab>
-                        <Tab value="search">Search engines</Tab>
-                    </TabList>
-                    <TabPanel value="general">
-                        <div className={styles.formColumns}>
-                            <Card title="Basics">
-                                <div className={styles.fields}>
-                                    <TextField label="Name" name="name" defaultValue="Linen shirt" required />
-                                    <TextField
-                                        label="Slug"
-                                        name="slug"
-                                        defaultValue="linen-shirt"
-                                        description="The end of the product's address: linen-and-co.com/products/linen-shirt."
-                                        required
-                                    />
-                                    <Autocomplete
-                                        label="Category"
-                                        name="category"
-                                        options={productCategoryOptions}
-                                        defaultValue="shirts"
-                                        emptyMessage="No category matches. Check the spelling."
-                                    />
-                                    <Select label="Status" name="status" options={statusOptions.slice(1)} defaultValue="published" />
-                                </div>
-                            </Card>
-                            <Card title="Presentation" description="How the product appears in the shop.">
-                                <div className={styles.fields}>
-                                    <ColorPicker
-                                        label="Label color"
-                                        name="labelColor"
-                                        defaultValue="#c2410c"
-                                        presets={labelColorPresets}
-                                        pickerLabel="Pick the label color"
-                                        description="The color of the “New” label on the product's picture."
-                                    />
-                                    <Switch defaultChecked>Show on the start page</Switch>
-                                    <Switch>Offer gift wrapping</Switch>
-                                </div>
-                            </Card>
-                        </div>
-                    </TabPanel>
-                    <TabPanel value="prices">
-                        <div className={styles.formColumns}>
-                            <Card title="Price">
-                                <div className={styles.fields}>
-                                    <NumberField
-                                        label="Price"
-                                        name="price"
-                                        defaultValue={59}
-                                        min={0}
-                                        step={0.5}
-                                        format={{ style: "currency", currency: "EUR" }}
-                                        decrementLabel="Decrease the price"
-                                        incrementLabel="Increase the price"
-                                        required
-                                    />
-                                    <NumberField
-                                        label="Discount"
-                                        name="discount"
-                                        defaultValue={0.1}
-                                        min={0}
-                                        max={1}
-                                        step={0.05}
-                                        format={{ style: "percent" }}
-                                        description="Shown as a crossed-out price in the shop."
-                                    />
-                                </div>
-                            </Card>
-                            <Card title="Stock">
-                                <div className={styles.fields}>
-                                    <NumberField label="In stock" name="stock" defaultValue={42} min={0} />
-                                    <Checkbox name="trackStock" defaultChecked>
-                                        Hide the product while it is out of stock
-                                    </Checkbox>
-                                </div>
-                            </Card>
-                        </div>
-                    </TabPanel>
-                    <TabPanel value="search">
-                        <Card title="Search engines" description="How search engines show the product.">
-                            <div className={styles.fields}>
-                                <TextField label="Title" name="seoTitle" defaultValue="Linen shirt – Linen & Co." />
-                                <TextField
-                                    label="Description"
-                                    name="seoDescription"
-                                    defaultValue="A light, breathable shirt made of pure European linen."
-                                />
-                            </div>
-                        </Card>
-                    </TabPanel>
-                </Tabs>
-            </form>
+            <ProductForm />
         </ShopAdmin>
     ),
     play: async ({ canvas, userEvent }) => {
         await userEvent.click(canvas.getByRole("tab", { name: "Price and stock" }));
-        await expect(canvas.getByRole("textbox", { name: "Price" })).toHaveValue("€59.00");
+        const stock = canvas.getByRole("textbox", { name: "In stock" });
+        await userEvent.clear(stock);
+        await userEvent.type(stock, "40");
 
         await userEvent.click(canvas.getByRole("tab", { name: "General" }));
         await expect(canvas.getByRole("textbox", { name: "Name" })).toHaveValue("Linen shirt");
+
+        await userEvent.click(canvas.getByRole("tab", { name: "Price and stock" }));
+        await expect(canvas.getByRole("textbox", { name: "In stock" })).toHaveValue("40");
+        await expect(canvas.getByRole("textbox", { name: "Price" })).toHaveValue("€59.00");
+
+        await userEvent.click(canvas.getByRole("tab", { name: "General" }));
     },
 };
 
@@ -670,6 +747,10 @@ const themes = [
     { value: "dextinity", label: "Dextinity" },
     { value: "sunset", label: "Sunset" },
     { value: "acme", label: "Acme" },
+    { value: "volt", label: "Volt" },
+    { value: "tropic", label: "Tropic" },
+    { value: "nova", label: "Nova" },
+    { value: "primo", label: "Primo" },
 ];
 
 /** The appearance settings, with a preview of the picked theme inside a `ThemeSwitch`. */
@@ -729,7 +810,7 @@ export const Settings: Story = {
             </Typography>
             <div className={styles.settings}>
                 <Card title="Profile" actions={<Button variant="secondary">Change picture</Button>}>
-                    <div className={styles.profile}>
+                    <form className={styles.profile} onSubmit={preventSubmit}>
                         <Avatar name="Jane Doe" size="large" />
                         <div className={styles.fields}>
                             <TextField label="Name" name="name" defaultValue="Jane Doe" autoComplete="name" required />
@@ -741,8 +822,11 @@ export const Settings: Story = {
                                 autoComplete="email"
                                 required
                             />
+                            <div>
+                                <Button type="submit">Save</Button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </Card>
                 <Card title="Notifications" description="Changes take effect immediately.">
                     <div className={styles.stack}>
@@ -777,10 +861,6 @@ export const WithDarkNavigation: Story = {
         <ShopAdmin currentPage="orders" darkNavigationTheme={String(globals.theme)}>
             <div className={styles.pageHeader}>
                 <div>
-                    <Breadcrumbs label="Breadcrumbs">
-                        <BreadcrumbItem href="#sales">Sales</BreadcrumbItem>
-                        <BreadcrumbItem current>Orders</BreadcrumbItem>
-                    </Breadcrumbs>
                     <Typography variant="heading1" render={<h1 />}>
                         Orders
                     </Typography>
@@ -810,7 +890,7 @@ export const WithDarkNavigation: Story = {
                                     </td>
                                     <td>
                                         <span className={styles.person}>
-                                            <Avatar name={order.customer} size="small" />
+                                            <Avatar name={order.customer} size="small" aria-hidden />
                                             {order.customer}
                                         </span>
                                     </td>
@@ -827,7 +907,12 @@ export const WithDarkNavigation: Story = {
             </Card>
         </ShopAdmin>
     ),
-    play: async ({ canvas }) => {
+    play: async ({ canvas, userEvent }) => {
+        const navigationButton = canvas.getByRole("button", { name: "Navigation" });
+        if (navigationButton.getAttribute("aria-expanded") === "false") {
+            await userEvent.click(navigationButton);
+        }
+
         const sidebar = canvas.getByRole("navigation", { name: "Main" }).closest("[data-dextinity-theme]");
         await expect(sidebar).toHaveAttribute("data-dextinity-color-scheme", "dark");
     },

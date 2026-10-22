@@ -63,6 +63,7 @@ export interface NumberFieldProps
             | "name"
             | "form"
             | "id"
+            | "aria-roledescription"
         >,
         Pick<
             BaseNumberField.Root.Props,
@@ -121,6 +122,11 @@ export interface NumberFieldProps
      * assistive technology skips the button. See `decrementLabel`.
      */
     incrementLabel?: string;
+    /**
+     * Describes the input's role in the user's language, for example "Zahlenfeld". The input has no role
+     * description without it.
+     */
+    "aria-roledescription"?: string;
     /**
      * An example value, shown while the input is empty, for example "0". It disappears when the user types and
      * doesn't replace the label: say the range or the unit in `description` instead.

@@ -1,4 +1,7 @@
-/* The layout follows the width of the canvas, not the window: the docs page shows the pages in narrower canvases. */
+/*
+ * The layout follows the width of the canvas, not the window: the docs page shows the pages in narrower canvases.
+ * The content's grids follow the content's own width, which the sidebar narrows.
+ */
 .frame {
     container-type: inline-size;
 }
@@ -23,6 +26,25 @@
 
 .productName {
     font-weight: var(--dextinity-button-font-weight);
+    white-space: nowrap;
+}
+
+@container (width < 32rem) {
+    .helpButton,
+    .userButton {
+        display: none;
+    }
+}
+
+.compactUserButton {
+    inline-size: var(--dextinity-control-height-medium);
+    padding-inline: 0;
+}
+
+@container (width >= 32rem) {
+    .compactUserButton {
+        display: none;
+    }
 }
 
 .sidebar {
@@ -34,6 +56,7 @@
 }
 
 .content {
+    container: content / inline-size;
     grid-area: content;
     display: flex;
     flex-direction: column;
@@ -91,13 +114,13 @@
     gap: var(--dextinity-space-lg);
 }
 
-@container (width >= 36rem) {
+@container content (width >= 32rem) {
     .stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
-@container (width >= 72rem) {
+@container content (width >= 60rem) {
     .stats {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
@@ -118,7 +141,7 @@
     align-items: start;
 }
 
-@container (width >= 75rem) {
+@container content (width >= 56rem) {
     .columns {
         grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
     }
@@ -213,6 +236,22 @@
         &:hover {
             text-decoration: underline;
         }
+    }
+}
+
+.actionLink {
+    display: inline-flex;
+    gap: var(--dextinity-space-xs);
+    align-items: center;
+    color: inherit;
+    font-weight: var(--dextinity-typography-label-font-weight);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+
+    &:focus-visible {
+        border-radius: var(--dextinity-radius-small);
+        outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+        outline-offset: var(--dextinity-focus-ring-offset);
     }
 }
 

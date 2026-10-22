@@ -10,6 +10,9 @@
         padding-block: var(--dextinity-space-xs);
         padding-inline: var(--dextinity-space-sm);
         border-radius: var(--dextinity-radius-small);
+
+        /* Forced-colors mode removes the background and the shadow, and draws the transparent outline in a system color instead. */
+        outline: 1px solid transparent;
         background: var(--dextinity-color-foreground);
         box-shadow: var(--dextinity-shadow-popup);
         color: var(--dextinity-color-background);

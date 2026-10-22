@@ -70,7 +70,7 @@ import * as FormsStories from "./__stories__/Forms.stories";
 ## Labels, descriptions and required fields
 
 - Every field has a visible `label`. A placeholder disappears when the user types, so it is never the label and never the only place for a format hint: put hints into `description`.
-- Mark required fields with `required`. The fields with a `label` prop, such as `TextField`, `Select` and `RadioGroup`, then show a marker next to the label and tell assistive technology. If most fields are required, consider marking the optional ones in their label instead, for example "Phone (optional)".
+- Mark required fields with `required`. The fields with a `label` prop, such as `TextField`, `Select` and `RadioGroup`, then show a marker next to the label and tell assistive technology. A `FormField` only shows the marker: set `required` on its control too. If most fields are required, consider marking the optional ones in their label instead, for example "Phone (optional)".
 - Set `autoComplete` on fields that ask for the user's own data, such as `"name"` or `"email"`, so browsers can fill them in.
 
 ## Validation and errors

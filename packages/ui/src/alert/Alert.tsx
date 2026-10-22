@@ -63,7 +63,7 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"
      * Replaces the tone's icon, for example with another `Icon`. Pass `false` to show no icon. The tone's icon is
      * decorative; to announce the tone, pass an `Icon` with a `label`, such as `<Icon name="danger" label="Error" />`.
      *
-     * @defaultValue The tone's icon: `<Icon name="info" />`, `"success"`, `"warning"` or `"danger"`
+     * @defaultValue `<Icon name={tone} />`, the icon named after the tone
      */
     icon?: ReactNode;
     /**

@@ -173,6 +173,9 @@
         --dextinity-color-danger-subtle: #3d1219;
         --dextinity-color-focus-ring: #a78bfa;
         --dextinity-color-backdrop: #000;
+
+        /* App bar: darker than primary-subtle, so the avatars on it keep their circle. */
+        --dextinity-app-bar-background: #1e0b3d;
     }
 
     /* After the dark color scheme, so it wins there too. */

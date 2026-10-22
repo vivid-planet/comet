@@ -197,10 +197,34 @@
         }
     }
 
-    /* Outside `.preset`: jsdom, which runs the unit tests, can't parse at-rules nested in more than one rule of a layer. */
+    /* Outside `.preset`: see the README's note on jsdom and nested at-rules. */
     @media (hover: hover) {
         .preset:hover:not(:disabled, [data-pressed]) {
             --_shadow: inset 0 0 0 var(--dextinity-control-border-width) var(--dextinity-color-border-hover);
+        }
+    }
+
+    /* Forced colors would replace the color, which is the swatch's and each preset's content, and remove the shadows that frame them and mark the selected preset. */
+    @media (forced-colors: active) {
+        .swatch,
+        .preset {
+            forced-color-adjust: none;
+            border: var(--dextinity-control-border-width) solid CanvasText;
+        }
+
+        .preset[data-pressed] {
+            border: calc(2 * var(--dextinity-control-border-width)) solid SelectedItem;
+        }
+
+        /*
+         * Forced colors draw a focused element's own outline in `Highlight`, as for the clear button. The group draws
+         * the input's ring, which would get the text color, and `forced-color-adjust: none` would keep the swatch's and
+         * the presets' rings in the theme's color.
+         */
+        .group:has(> .input:focus-visible),
+        .swatch:has(> .picker:focus-visible),
+        .preset:focus-visible {
+            outline-color: Highlight;
         }
     }
 }

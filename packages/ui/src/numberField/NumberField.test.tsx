@@ -137,8 +137,10 @@ describe("NumberField", () => {
     });
 
     it("keeps a role description the consumer passes to the input", () => {
-        render(<NumberField label="Quantity" slotProps={{ input: { "aria-roledescription": "Zahlenfeld" } }} />);
+        const { rerender } = render(<NumberField label="Quantity" aria-roledescription="Zahlenfeld" />);
+        expect(screen.getByRole("textbox", { name: "Quantity" })).toHaveAttribute("aria-roledescription", "Zahlenfeld");
 
+        rerender(<NumberField label="Quantity" slotProps={{ input: { "aria-roledescription": "Zahlenfeld" } }} />);
         expect(screen.getByRole("textbox", { name: "Quantity" })).toHaveAttribute("aria-roledescription", "Zahlenfeld");
     });
 });

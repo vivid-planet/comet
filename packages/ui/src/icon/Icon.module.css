@@ -8,7 +8,12 @@
         vertical-align: -0.125em;
         mask: var(--_icon) center / contain no-repeat;
 
-        /* The icon is a mask on a background, which forced colors would otherwise replace with the system's background. */
+        /*
+         * The icon is a mask on a background, which forced colors would otherwise replace with the system's background.
+         * `preserve-parent-color` keeps the background in the parent's system color, such as `ButtonText`. Firefox
+         * doesn't support it and keeps the author's color.
+         */
         forced-color-adjust: none;
+        forced-color-adjust: preserve-parent-color;
     }
 }

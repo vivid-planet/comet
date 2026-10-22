@@ -20,6 +20,7 @@ describe("Select", () => {
         expect(root).toHaveClass("dextinityFormField", "dextinitySelect");
         expect(root).not.toHaveAttribute("data-required");
         expect(root).not.toHaveAttribute("data-disabled");
+        expect(root).not.toHaveAttribute("data-readonly");
         expect(trigger).toHaveClass("dextinitySelect__trigger");
         expect(trigger.querySelector(".dextinitySelect__value")).toBeInTheDocument();
         expect(trigger.querySelector(".dextinitySelect__icon")).toHaveAttribute("aria-hidden", "true");
@@ -71,6 +72,13 @@ describe("Select", () => {
         expect(container.firstElementChild).toHaveAttribute("data-disabled");
         expect(screen.getByText("Country")).toHaveAttribute("data-disabled");
         expect(screen.getByRole("combobox", { name: "Country" })).toHaveAttribute("data-disabled");
+    });
+
+    it("reflects readOnly on the root and the trigger", () => {
+        const { container } = render(<Select label="Country" options={options} readOnly />);
+
+        expect(container.firstElementChild).toHaveAttribute("data-readonly");
+        expect(screen.getByRole("combobox", { name: "Country" })).toHaveAttribute("data-readonly");
     });
 
     it("passes the other props and the ref to the trigger, and adds the consumer's class to the root", () => {

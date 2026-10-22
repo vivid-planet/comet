@@ -4,7 +4,7 @@
     }
 
     /* The box draws the input's border, so the buttons sit inside it, like in a text field's input. */
-    .control {
+    .group {
         --_border-color: var(--dextinity-color-border-strong);
 
         display: flex;

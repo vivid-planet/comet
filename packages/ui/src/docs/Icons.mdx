@@ -42,10 +42,11 @@ The icon draws the image's shape in the current text color, so the image's own c
 
 ## Adding an icon
 
-Inside this repository, add an icon in three places:
+Inside this repository, add an icon in four places:
 
 1. An SVG file in `packages/ui/src/icon/svg/<name>.svg`, 24 by 24 pixels, drawn with 2 pixel round strokes like the others.
 2. Its name in `packages/ui/src/icon/iconNames.ts`.
 3. Its token in `packages/ui/src/icon/icons.css`.
+4. Its Acme version in `packages/ui/src/themes/acmeIcons/<name>.svg`, drawn with thin lines, square line ends and sharp corners like the other Acme icons, and its token in `packages/ui/src/themes/acme.css`, so the Acme theme keeps replacing every icon.
 
-A unit test checks that the three agree.
+A unit test checks that the first three agree.

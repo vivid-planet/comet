@@ -43,7 +43,7 @@ export interface AutocompleteSlotProps {
     /** The `<input>` element, which has the `combobox` role and receives the props the component doesn't handle. */
     input?: SlotProps<BaseCombobox.Input.Props, AutocompleteOwnerState>;
     /** The bordered box around the input and its buttons, which looks like a text field's input. */
-    control?: SlotProps<BaseCombobox.InputGroup.Props, AutocompleteOwnerState>;
+    group?: SlotProps<BaseCombobox.InputGroup.Props, AutocompleteOwnerState>;
     /** The button that clears the value. Rendered only with `clearLabel`, while an option is selected. */
     clear?: SlotProps<BaseCombobox.Clear.Props, AutocompleteOwnerState>;
     /** The chevron button at the end of the box, which opens and closes the list. It is skipped by Tab: the input opens the list with the arrow keys. */
@@ -164,7 +164,7 @@ export interface AutocompleteProps
     /** Inline styles for the outer element, which holds all parts. */
     style?: CSSProperties;
     /**
-     * Props for the inner parts: `input`, `control`, `clear`, `trigger`, `positioner`, `popup`, `list`,
+     * Props for the inner parts: `input`, `group`, `clear`, `trigger`, `positioner`, `popup`, `list`,
      * `option`, `optionText`, `optionIndicator`, `empty`, `label`, `requiredIndicator`, `description` and
      * `error`. As a function, it receives the owner state: `disabled`, `required` and `readonly`.
      */
@@ -223,7 +223,7 @@ export function Autocomplete({
     const ownerState: AutocompleteOwnerState = { disabled: Boolean(disabled), required: Boolean(required), readonly: Boolean(readOnly) };
     const {
         input: inputSlotProps,
-        control: controlSlotProps,
+        group: groupSlotProps,
         clear: clearSlotProps,
         trigger: triggerSlotProps,
         positioner: positionerSlotProps,
@@ -262,6 +262,7 @@ export function Autocomplete({
             required={required}
             disabled={disabled}
             name={name}
+            data-readonly={ownerState.readonly ? "" : undefined}
             className={clsx(styles.root, className)}
             style={style}
             slotProps={{
@@ -297,8 +298,8 @@ export function Autocomplete({
                 <FilterObserver onHasMatchesChange={setHasMatches} />
                 <BaseCombobox.InputGroup
                     {...resolveSlotProps({
-                        ownProps: { ...collapsedStateProps, className: styles.control },
-                        slotProps: controlSlotProps,
+                        ownProps: { ...collapsedStateProps, className: styles.group },
+                        slotProps: groupSlotProps,
                         ownerState,
                     })}
                 >

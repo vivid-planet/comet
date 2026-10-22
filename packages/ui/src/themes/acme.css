@@ -5,7 +5,9 @@
  * icon of the icon set with its own, thinner icons with square line ends and sharp corners, in `acmeIcons/`, to show
  * how a theme replaces icons.
  * It isn't published: Storybook uses it to show that the components follow any theme, and it's the
- * example to copy when a project creates its own theme. Every token is documented in "Foundations/Design tokens".
+ * example to copy when a project creates its own theme. Copy the `acmeIcons/` folder along with it, or delete
+ * the `--dextinity-icon-*` declarations to keep the package's icons. Every token is documented in
+ * "Foundations/Design tokens".
  */
 
 @layer dextinity {

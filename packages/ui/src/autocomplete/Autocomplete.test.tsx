@@ -20,8 +20,9 @@ describe("Autocomplete", () => {
         expect(root).toHaveClass("dextinityFormField", "dextinityAutocomplete");
         expect(root).not.toHaveAttribute("data-required");
         expect(root).not.toHaveAttribute("data-disabled");
+        expect(root).not.toHaveAttribute("data-readonly");
         expect(input).toHaveClass("dextinityAutocomplete__input");
-        expect(input.closest(".dextinityAutocomplete__control")).toBeInTheDocument();
+        expect(input.closest(".dextinityAutocomplete__group")).toBeInTheDocument();
         expect(container.querySelector(".dextinityAutocomplete__trigger")).toHaveAttribute("tabindex", "-1");
         expect(screen.getByText("Country")).toHaveClass("dextinityFormField__label");
     });
@@ -54,7 +55,7 @@ describe("Autocomplete", () => {
 
         const input = screen.getByRole("combobox", { name: "Country" });
         expect(input).toHaveAttribute("aria-invalid", "true");
-        expect(input.closest(".dextinityAutocomplete__control")).toHaveAttribute("data-invalid");
+        expect(input.closest(".dextinityAutocomplete__group")).toHaveAttribute("data-invalid");
         await waitFor(() => expect(input).toHaveAccessibleDescription("We use it for taxes. Choose a country."));
     });
 
@@ -72,7 +73,15 @@ describe("Autocomplete", () => {
         expect(container.firstElementChild).toHaveAttribute("data-disabled");
         expect(screen.getByText("Country")).toHaveAttribute("data-disabled");
         expect(screen.getByRole("combobox", { name: "Country" })).toBeDisabled();
-        expect(container.querySelector(".dextinityAutocomplete__control")).toHaveAttribute("data-disabled");
+        expect(container.querySelector(".dextinityAutocomplete__group")).toHaveAttribute("data-disabled");
+    });
+
+    it("reflects readOnly on the root, the input and the box around it", () => {
+        const { container } = render(<Autocomplete label="Country" options={options} readOnly />);
+
+        expect(container.firstElementChild).toHaveAttribute("data-readonly");
+        expect(screen.getByRole("combobox", { name: "Country" })).toHaveAttribute("readonly");
+        expect(container.querySelector(".dextinityAutocomplete__group")).toHaveAttribute("data-readonly");
     });
 
     it("passes the other props and the ref to the input, its id to the label, and adds the consumer's class to the root", () => {
@@ -140,7 +149,7 @@ describe("Autocomplete", () => {
         expect(input).not.toHaveAttribute("aria-controls");
         expect(input).not.toHaveAttribute("data-popup-open");
         expect(input).toHaveValue("Atlantis");
-        expect(container.querySelector(".dextinityAutocomplete__control")).not.toHaveAttribute("data-popup-open");
+        expect(container.querySelector(".dextinityAutocomplete__group")).not.toHaveAttribute("data-popup-open");
         expect(container.querySelector(".dextinityAutocomplete__trigger")).toHaveAttribute("aria-expanded", "false");
         expect(document.querySelector(".dextinityAutocomplete__positioner")).toHaveAttribute("hidden");
     });
@@ -184,7 +193,7 @@ describe("Autocomplete", () => {
                 defaultOpen
                 slotProps={{
                     input: (ownerState) => ({ className: "consumerInput", title: ownerState.required ? "required" : "optional" }),
-                    control: { className: "consumerControl" },
+                    group: { className: "consumerGroup" },
                     label: { className: "consumerLabel" },
                     option: { className: "consumerOption" },
                 }}
@@ -194,7 +203,7 @@ describe("Autocomplete", () => {
         const input = screen.getByRole("combobox", { name: "Country" });
         expect(input).toHaveClass("dextinityAutocomplete__input", "consumerInput");
         expect(input).toHaveAttribute("title", "required");
-        expect(input.closest(".dextinityAutocomplete__control")).toHaveClass("consumerControl");
+        expect(input.closest(".dextinityAutocomplete__group")).toHaveClass("consumerGroup");
         expect(screen.getByText("Country")).toHaveClass("dextinityFormField__label", "consumerLabel");
         await screen.findByRole("listbox");
         expect(screen.getByRole("option", { name: "Austria" })).toHaveClass("dextinityAutocomplete__option", "consumerOption");

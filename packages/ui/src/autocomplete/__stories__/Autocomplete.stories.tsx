@@ -326,7 +326,7 @@ export const CustomizedThroughSlotProps: Story = {
         defaultValue: "en",
         className: styles.languageField,
         slotProps: {
-            control: { className: styles.languageControl },
+            group: { className: styles.languageGroup },
             option: { className: styles.languageOption },
         },
     },

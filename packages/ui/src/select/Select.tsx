@@ -131,7 +131,7 @@ export interface SelectProps
 }
 
 /**
- * A form field to choose one option from a short list, such as a country or a sort order. The trigger shows
+ * A form field to choose one option from a short list, such as a sort order or a status. The trigger shows
  * the selected option; clicking it, or pressing Enter, Space or an arrow key while it has focus, opens the
  * list. Typing the first letters of an option highlights it in the open list, and selects it while the list
  * is closed.
@@ -205,6 +205,7 @@ export function Select({
             required={required}
             disabled={disabled}
             name={name}
+            data-readonly={ownerState.readonly ? "" : undefined}
             className={clsx(styles.root, className)}
             style={style}
             slotProps={{

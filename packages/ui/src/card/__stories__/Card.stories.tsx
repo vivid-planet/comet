@@ -78,8 +78,19 @@ export const Default: Story = {
 export const WithDescriptionAndActions: Story = {
     args: {
         description: "Shown on your invoices and order confirmations.",
-        actions: "EditButton",
     },
+    render: (args) => (
+        <Card
+            {...args}
+            actions={
+                <Button variant="secondary" size="small" startIcon={<Icon name="edit" />}>
+                    Edit
+                </Button>
+            }
+        >
+            <Typography>Acme Corporation, 42 Harbour Street, 5020 Salzburg, Austria</Typography>
+        </Card>
+    ),
     play: async ({ canvas, userEvent }) => {
         await expect(canvas.getByText("Shown on your invoices and order confirmations.")).toBeVisible();
 

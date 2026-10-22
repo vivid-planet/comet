@@ -57,8 +57,8 @@ export interface IconButtonProps extends Omit<ButtonProps, "startIcon" | "endIco
  * Use it only when space is tight and the icon is widely understood, such as a pencil for editing or a
  * trash can for deleting. Otherwise, use a `Button` with text, which needs no guessing.
  *
- * `label` is required: the icon gives the button no accessible name. The button doesn't show the label as a
- * tooltip yet, so sighted users only see the icon.
+ * `label` is required: the icon gives the button no accessible name. Wrap the button in a `Tooltip` whose
+ * `content` repeats `label`, so sighted users can read it too.
  *
  * The props the component doesn't handle, such as `type`, `onClick` and `aria-*`, go to the `<button>`, which
  * has `type="button"` by default.

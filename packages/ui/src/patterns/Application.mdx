@@ -9,7 +9,7 @@ import * as ShopAdminStories from "../samplePages/__stories__/ShopAdmin.stories"
 
 # Application
 
-The components compose into the screens of an application, such as an admin. The examples are pages of the admin of a fictive shop, which "Sample pages/Shop admin" shows in full size. Switch the theme in the toolbar to see the whole application in another brand.
+The components compose into the screens of an application, such as an admin. The examples are pages of the admin of a fictive shop, and the code blocks show how they are built. Switch the theme in the toolbar to see the whole application in another brand; "Sample pages/Shop admin" in the Storybook's sidebar shows the pages in full size.
 
 <Canvas of={ShopAdminStories.Dashboard} />
 
@@ -21,6 +21,68 @@ The package has no layout components: the application lays out its screens, usua
 - **The main navigation** in a sidebar below the app bar, about `16rem` wide. The item of the current page is `active`, and groups of related pages collapse. See `Navigation`.
 - **The content**: the page header, then the page's sections. Put `--dextinity-space-xl` between sections, and limit the content's width, so lines stay readable on wide screens.
 
+```tsx
+function Application({ currentPage, children }: PropsWithChildren<{ currentPage: string }>) {
+    const navigationId = useId();
+    const [isNavigationOpen, setIsNavigationOpen] = useState(() => window.matchMedia("(width >= 48rem)").matches);
+
+    return (
+        <div className={styles.application}>
+            <AppBar className={styles.appBar}>
+                <AppBarIconButton
+                    label="Navigation"
+                    aria-expanded={isNavigationOpen}
+                    aria-controls={navigationId}
+                    onClick={() => setIsNavigationOpen(!isNavigationOpen)}
+                >
+                    <Icon name="menu" />
+                </AppBarIconButton>
+                <span className={styles.productName}>Linen & Co.</span>
+                <AppBarSpacer />
+                <TooltipProvider>
+                    <Tooltip content="Notifications">
+                        <AppBarIconButton label="Notifications" onClick={showNotifications}>
+                            <Icon name="bell" />
+                        </AppBarIconButton>
+                    </Tooltip>
+                </TooltipProvider>
+                <Menu
+                    align="end"
+                    trigger={
+                        <AppBarButton startIcon={<Avatar name="Jane Doe" size="small" />} endIcon={<Icon name="chevron-down" />}>
+                            Jane Doe
+                        </AppBarButton>
+                    }
+                >
+                    <MenuLinkItem href="/profile" icon={<Icon name="user" />}>
+                        Profile
+                    </MenuLinkItem>
+                    <MenuSeparator />
+                    <MenuItem icon={<Icon name="logout" />} onClick={logOut}>
+                        Log out
+                    </MenuItem>
+                </Menu>
+            </AppBar>
+            {isNavigationOpen && (
+                <div className={styles.sidebar}>
+                    <Navigation label="Main" id={navigationId}>
+                        <NavigationItem href="/" icon={<Icon name="dashboard" />} active={currentPage === "dashboard"}>
+                            Dashboard
+                        </NavigationItem>
+                        <NavigationGroup label="Catalog" icon={<Icon name="products" />} defaultOpen>
+                            <NavigationItem href="/products" active={currentPage === "products"}>
+                                Products
+                            </NavigationItem>
+                        </NavigationGroup>
+                    </Navigation>
+                </div>
+            )}
+            <main className={styles.content}>{children}</main>
+        </div>
+    );
+}
+```
+
 ```css
 .application {
     display: grid;
@@ -31,24 +93,111 @@ The package has no layout components: the application lays out its screens, usua
     min-block-size: 100dvh;
     background: var(--dextinity-color-background);
     color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+}
+
+.appBar {
+    grid-area: appBar;
+}
+
+.productName {
+    font-weight: var(--dextinity-button-font-weight);
+    white-space: nowrap;
 }
 
 .sidebar {
     grid-area: sidebar;
+    box-sizing: border-box;
     inline-size: 16rem;
+    padding: var(--dextinity-space-lg) var(--dextinity-space-sm);
     border-inline-end: 1px solid var(--dextinity-color-border);
+}
+
+.content {
+    grid-area: content;
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-xl);
+    box-sizing: border-box;
+    max-inline-size: 80rem;
+    padding: var(--dextinity-space-xl);
+}
+
+@media (width < 48rem) {
+    .application {
+        grid-template:
+            "appBar" auto
+            "sidebar" auto
+            "content" 1fr
+            / minmax(0, 1fr);
+    }
+
+    .sidebar {
+        inline-size: auto;
+        border-inline-end: none;
+        border-block-end: 1px solid var(--dextinity-color-border);
+    }
 }
 ```
 
-The button that shows and hides the navigation is an `AppBarIconButton` with `aria-expanded` and `aria-controls`, which point to the navigation. On a narrow screen, stack the areas instead of putting the navigation beside the content.
+The button that shows and hides the navigation is an `AppBarIconButton` with `aria-expanded`, and with `aria-controls` set to the navigation's `id`, which `useId` creates. On a narrow screen, the navigation starts hidden, so the page's content comes first, and when the user opens it, the areas stack instead of putting the navigation beside the content. On a phone, show fewer children in the app bar: for example, show only the `Avatar` on the button of the user's menu, with the name in a visually hidden element, so it still names the button, and move rarely used actions, such as help, into the user's menu.
+
+The `useState` initializer reads the media query in the first render, which works in a client-rendered application, such as the admin. A server-rendered application has no `window` on the server, and the first render on the client must match the server's: start with a fixed value there, and read the media query in an effect.
 
 ## Page header
 
 Start every page with its place in the application, its title and its actions:
 
-- `Breadcrumbs` show where the page sits, and the current page is the last item. A top-level page, such as the dashboard, needs none.
-- The title is the page's only level 1 heading: `<Typography variant="heading1" render={<h1 />}>`. A `Chip` next to it shows the record's status, such as "Published".
+- `Breadcrumbs` show where the page sits, and the current page is the last item. A top-level page, such as the dashboard or the orders, needs none.
+- The title is the page's only level 1 heading: a `Typography` with `variant="heading1"` and `render={<h1 />}`. A `Chip` next to it shows the record's status, such as "Published".
 - The page's primary action, such as "Add product" or "Save", is a primary `Button` at the end of the title's row. Put rarely used actions into a `Menu` behind an `IconButton`. [Actions](?path=/docs/patterns-actions--docs) explains how to choose and place them.
+
+```tsx
+<div className={styles.pageHeader}>
+    <div>
+        <Breadcrumbs label="Breadcrumbs">
+            <BreadcrumbItem href="/catalog">Catalog</BreadcrumbItem>
+            <BreadcrumbItem current>Products</BreadcrumbItem>
+        </Breadcrumbs>
+        <Typography variant="heading1" render={<h1 />}>
+            Products
+        </Typography>
+    </div>
+    <div className={styles.headerActions}>
+        <Menu
+            align="end"
+            trigger={
+                <IconButton label="More actions" variant="secondary">
+                    <Icon name="more" />
+                </IconButton>
+            }
+        >
+            <MenuItem icon={<Icon name="upload" />} onClick={importProducts}>
+                Import products
+            </MenuItem>
+        </Menu>
+        <Button startIcon={<Icon name="plus" />} onClick={addProduct}>
+            Add product
+        </Button>
+    </div>
+</div>
+```
+
+```css
+.pageHeader {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-lg);
+    align-items: end;
+    justify-content: space-between;
+}
+
+.headerActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-sm);
+}
+```
 
 ## Lists and row actions
 
@@ -58,6 +207,54 @@ Start every page with its place in the application, its title and its actions:
 - Each row has its actions in a `Menu`, opened by an `IconButton` whose label names the row, such as "Actions for Linen shirt", so screen reader users know which row it acts on.
 - A destructive action, such as deleting, has `tone="danger"` and opens a `Dialog` that asks to confirm and names what it deletes.
 - Show each record's status as a `Chip`, whose text says the status: the color only supports it.
+- Next to a person's visible name, as in a list of orders, give the `Avatar` `aria-hidden`, so the name isn't announced twice.
+
+```tsx
+function ProductActions({ product }: { product: Product }) {
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+    async function handleDelete() {
+        await deleteProduct(product.id);
+        setIsDeleteDialogOpen(false);
+    }
+
+    return (
+        <>
+            <Menu
+                align="end"
+                trigger={
+                    <IconButton label={`Actions for ${product.name}`} variant="ghost" size="small">
+                        <Icon name="more" />
+                    </IconButton>
+                }
+            >
+                <MenuLinkItem href={`/products/${product.id}`} icon={<Icon name="edit" />}>
+                    Edit
+                </MenuLinkItem>
+                <MenuSeparator />
+                <MenuItem icon={<Icon name="delete" />} tone="danger" onClick={() => setIsDeleteDialogOpen(true)}>
+                    Delete
+                </MenuItem>
+            </Menu>
+            <Dialog
+                open={isDeleteDialogOpen}
+                onOpenChange={setIsDeleteDialogOpen}
+                size="small"
+                title="Delete product?"
+                description={`This permanently deletes “${product.name}”. You can't undo this.`}
+                actions={
+                    <>
+                        <DialogClose>
+                            <Button variant="secondary">Cancel</Button>
+                        </DialogClose>
+                        <Button onClick={handleDelete}>Delete</Button>
+                    </>
+                }
+            />
+        </>
+    );
+}
+```
 
 The package has no table component: use a `<table>` with `<th scope="col">` headers, and align numbers at the end.
 
@@ -65,18 +262,77 @@ The package has no table component: use a `<table>` with `<th scope="col">` head
 
 <Canvas of={ShopAdminStories.Product} />
 
-A form that edits one record splits a long form into `Tabs`, and groups related fields in cards within a tab. The form's submit button can sit in the page header, outside the `<form>`: connect it with the form's `id` through `form`. [Forms](?path=/docs/patterns-forms--docs) explains which control to use, validation and errors.
+A form that edits one record splits a long form into `Tabs`, and groups related fields in cards within a tab. Set `keepMounted` on every `TabPanel` of the form: a hidden panel isn't rendered otherwise, so the user's entries would be lost when they switch tabs, and only the visible tab's fields would be submitted. The browser can't show the error of a field in a hidden panel, so when the user submits, select the tab of the first invalid field in an `onInvalidCapture` handler on the form, with `flushSync`, so the panel shows before the browser reports the error.
+
+The form's submit button can sit in the page header, outside the `<form>`: connect it with the form's `id` through `form`. [Forms](?path=/docs/patterns-forms--docs) explains which control to use, validation and errors.
+
+```tsx
+<Button type="submit" form="product-form">
+    Save
+</Button>
+```
+
+```tsx
+function ProductForm({ product }: { product: Product }) {
+    const [selectedTab, setSelectedTab] = useState("general");
+
+    function selectTabOfFirstInvalidField(event: FormEvent<HTMLFormElement>) {
+        const tab = event.currentTarget.querySelector(":invalid")?.closest<HTMLElement>("[data-tab]")?.dataset.tab;
+        if (tab !== undefined) {
+            flushSync(() => setSelectedTab(tab));
+        }
+    }
+
+    return (
+        <form id="product-form" onSubmit={handleSubmit} onInvalidCapture={selectTabOfFirstInvalidField}>
+            <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(String(value))}>
+                <TabList label="Product">
+                    <Tab value="general">General</Tab>
+                    <Tab value="prices">Price and stock</Tab>
+                </TabList>
+                <TabPanel value="general" keepMounted data-tab="general">
+                    <Card title="Basics">
+                        <TextField label="Name" name="name" defaultValue={product.name} required />
+                    </Card>
+                </TabPanel>
+                <TabPanel value="prices" keepMounted data-tab="prices">
+                    <Card title="Price">
+                        <NumberField
+                            label="Price"
+                            name="price"
+                            defaultValue={product.price}
+                            min={0}
+                            format={{ style: "currency", currency: "EUR" }}
+                            required
+                        />
+                    </Card>
+                </TabPanel>
+            </Tabs>
+        </form>
+    );
+}
+```
 
 ## Settings and themes
 
 <Canvas of={ShopAdminStories.Settings} />
 
-Group settings in cards, one per topic. Settings that take effect immediately use a `Switch`. A `ThemeSwitch` gives a part of the page another theme or color scheme, such as the preview of the theme a user picks, or a dark sidebar:
+Group settings in cards, one per topic. Settings that take effect immediately use a `Switch`. Other settings, such as the user's profile, are a form in their card, with a submit button. A `ThemeSwitch` gives a part of the page another theme or color scheme, such as the preview of the theme a user picks, or a dark sidebar:
 
 <Canvas of={ShopAdminStories.WithDarkNavigation} />
 
+```tsx
+<ThemeSwitch theme="dextinity" colorScheme="dark" className={styles.sidebar}>
+    <Navigation label="Main" id={navigationId}>
+        <NavigationItem href="/orders" icon={<Icon name="orders" />} active>
+            Orders
+        </NavigationItem>
+    </Navigation>
+</ThemeSwitch>
+```
+
 ## Messages
 
-- An `Alert` reports something about the whole page, such as products that are out of stock, at the top of the content, below the page header.
+- An `Alert` reports something about the whole page, such as products that are out of stock, at the top of the content, below the page header. When it leads to another page, its `action` is a link, not a `Button`.
 - A field's error belongs to the field: pass it to the field's `error` prop.
 - A `Tooltip` repeats an icon button's label visually. It never holds information that's missing elsewhere.
