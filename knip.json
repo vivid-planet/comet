@@ -84,6 +84,9 @@
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/*.generated.ts"]
         },
+        "packages/icons": {
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.dextinityGen.{ts,tsx}"],
             "project": ["./src/**/*.{ts,tsx}"],
