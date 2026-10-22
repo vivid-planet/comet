@@ -1,1 +1,1 @@
-export {};
+export type { IconProps } from "./IconBase.js";
