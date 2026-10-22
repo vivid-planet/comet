@@ -1,0 +1,101 @@
+@layer dextinity {
+    .root {
+        --_border-color: var(--dextinity-color-border-strong);
+
+        display: inline-flex;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: var(--dextinity-control-height-medium);
+        padding-inline: var(--dextinity-space-lg);
+        border: var(--dextinity-control-border-width) solid var(--_border-color);
+        border-radius: var(--dextinity-radius-medium);
+        background: var(--dextinity-color-surface);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        vertical-align: top;
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: border-color;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        &[data-multiline] {
+            align-items: flex-start;
+            padding-block: var(--dextinity-space-sm);
+        }
+
+        /* `:where()` keeps the hover rule's specificity low, so focus and invalid borders win over it. */
+        @media (hover: hover) {
+            &:hover:where(:not([data-disabled], :has(> .input[data-disabled], > .input[readonly]))) {
+                --_border-color: var(--dextinity-color-border-hover);
+            }
+        }
+
+        &:focus-within {
+            --_border-color: var(--dextinity-color-primary);
+        }
+
+        &:has(> .input:focus-visible) {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: var(--dextinity-focus-ring-offset);
+        }
+
+        /* Base UI marks the input invalid while an enclosing field shows an error. */
+        &:has(> .input[data-invalid]) {
+            --_border-color: var(--dextinity-color-danger);
+        }
+
+        &[data-disabled],
+        &:has(> .input[data-disabled]) {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .input {
+        flex: 1;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        min-block-size: calc(var(--dextinity-control-height-medium) - 2 * var(--dextinity-control-border-width));
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        appearance: none;
+
+        &::placeholder {
+            color: var(--dextinity-color-foreground-muted);
+            opacity: 1; /* Firefox dims placeholders by default. */
+        }
+
+        /* The box shows focus. */
+        &:focus {
+            outline: none;
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+        }
+    }
+
+    .root[data-multiline] > .input {
+        min-block-size: 0;
+        resize: vertical;
+    }
+
+    .startAdornment,
+    .endAdornment {
+        display: inline-flex;
+        flex: none;
+        gap: var(--dextinity-space-xs);
+        align-items: center;
+        color: var(--dextinity-color-foreground-muted);
+    }
+}

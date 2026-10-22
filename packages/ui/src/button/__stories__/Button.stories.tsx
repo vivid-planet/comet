@@ -3,6 +3,7 @@ import { expect, fn } from "storybook/test";
 
 import { Icon } from "../../icon/Icon";
 import { Button } from "../Button";
+import { ButtonLink } from "../ButtonLink";
 import styles from "./Button.stories.module.css";
 
 const iconOptions = {
@@ -22,6 +23,7 @@ const meta = {
     argTypes: {
         variant: { control: "radio", options: ["primary", "secondary", "ghost"] },
         size: { control: "radio", options: ["small", "medium", "large"] },
+        tone: { control: "radio", options: ["default", "danger", "success"] },
         startIcon: { control: "select", options: Object.keys(iconOptions), mapping: iconOptions },
         endIcon: { control: "select", options: Object.keys(iconOptions), mapping: iconOptions },
         className: { control: false },
@@ -107,6 +109,54 @@ export const WithIcons: Story = {
             </Button>
         </>
     ),
+};
+
+/**
+ * A tone colors a button by what its action does: `danger` for an action that deletes or can't be undone,
+ * `success` for one that completes something. Name the consequence in the label too.
+ */
+export const Tones: Story = {
+    decorators: [inRow],
+    render: (args) => (
+        <>
+            <Button {...args} tone="danger" startIcon={<Icon name="delete" />}>
+                Delete product
+            </Button>
+            <Button {...args} tone="danger" variant="secondary">
+                Discard changes
+            </Button>
+            <Button {...args} tone="danger" variant="ghost">
+                Remove
+            </Button>
+            <Button {...args} tone="success" startIcon={<Icon name="check" />}>
+                Publish
+            </Button>
+            <Button {...args} tone="success" variant="secondary">
+                Approve
+            </Button>
+        </>
+    ),
+};
+
+/**
+ * An action that opens another page is a link: `ButtonLink` renders an `<a>` in the look of a button. For a
+ * router's link, pass it as `render`, for example `render={<Link to="/products/new" />}`.
+ */
+export const AsLink: Story = {
+    decorators: [inRow],
+    render: () => (
+        <>
+            <ButtonLink href="#new-product" startIcon={<Icon name="plus" />}>
+                Add product
+            </ButtonLink>
+            <ButtonLink href="#products" variant="secondary" endIcon={<Icon name="arrow-right" />}>
+                All products
+            </ButtonLink>
+        </>
+    ),
+    play: async ({ canvas }) => {
+        await expect(canvas.getByRole("link", { name: "Add product" })).toHaveAttribute("href", "#new-product");
+    },
 };
 
 /**

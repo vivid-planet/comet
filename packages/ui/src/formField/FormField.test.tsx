@@ -135,4 +135,57 @@ describe("FormField", () => {
         expect(screen.getByText("As shown on your invoices.")).toHaveClass("dextinityFormField__description", "consumerDescription");
         expect(screen.getByText("Enter a company name.")).toHaveClass("dextinityFormField__error", "consumerError");
     });
+    it("reflects the orientation on the root and wraps the control and messages in the content part", () => {
+        const { container } = render(
+            <FormField label="Company name" orientation="horizontal" description="As shown on your invoices.">
+                <Input />
+            </FormField>,
+        );
+
+        const content = container.querySelector(".dextinityFormField__content");
+        expect(container.firstElementChild).toHaveAttribute("data-orientation", "horizontal");
+        expect(content).toContainElement(screen.getByRole("textbox", { name: "Company name" }));
+        expect(content).toContainElement(screen.getByText("As shown on your invoices."));
+    });
+
+    it("leaves out the label part without a label, unless the field is horizontal", () => {
+        const { container, rerender } = render(
+            <FormField>
+                <Input aria-label="Company name" />
+            </FormField>,
+        );
+
+        expect(container.firstElementChild).toHaveAttribute("data-orientation", "vertical");
+        expect(container.querySelector(".dextinityFormField__label")).not.toBeInTheDocument();
+
+        rerender(
+            <FormField orientation="horizontal">
+                <Input aria-label="Company name" />
+            </FormField>,
+        );
+
+        expect(container.querySelector(".dextinityFormField__label")).toBeInTheDocument();
+    });
+
+    it("shows a warning without marking the field invalid, and replaces it with an error", async () => {
+        const { container, rerender } = render(
+            <FormField label="Slug" warning="Another page uses this slug.">
+                <Input />
+            </FormField>,
+        );
+
+        const control = screen.getByRole("textbox", { name: "Slug" });
+        expect(screen.getByText("Another page uses this slug.")).toHaveClass("dextinityFormField__warning");
+        expect(container.firstElementChild).not.toHaveAttribute("data-invalid");
+        await waitFor(() => expect(control).toHaveAccessibleDescription("Another page uses this slug."));
+
+        rerender(
+            <FormField label="Slug" warning="Another page uses this slug." error="Enter a slug.">
+                <Input />
+            </FormField>,
+        );
+
+        expect(screen.queryByText("Another page uses this slug.")).not.toBeInTheDocument();
+        expect(screen.getByText("Enter a slug.")).toHaveClass("dextinityFormField__error");
+    });
 });

@@ -1,6 +1,6 @@
 import type { Decorator, Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { expect } from "storybook/test";
+import { expect, fn } from "storybook/test";
 
 import { Button } from "../../button/Button";
 import { Icon } from "../../icon/Icon";
@@ -44,6 +44,7 @@ const meta = {
         action: { control: "select", options: Object.keys(actionOptions), mapping: actionOptions },
         icon: { control: "select", options: Object.keys(iconOptions), mapping: iconOptions },
         role: { control: "radio", options: Object.keys(roleOptions), mapping: roleOptions },
+        closeLabel: { control: "text" },
         className: { control: false },
         style: { control: false },
         slotProps: { control: false },
@@ -130,6 +131,23 @@ export const WithAction: Story = {
             }
         />
     ),
+};
+
+/**
+ * A close button lets the user dismiss a message they have read. `closeLabel` names it; remove the alert in
+ * `onClose`.
+ */
+export const Dismissible: Story = {
+    args: {
+        title: "New: bulk editing",
+        children: "Select several products in the list to change their prices at once.",
+        closeLabel: "Close",
+        onClose: fn(),
+    },
+    play: async ({ args, canvas, userEvent }) => {
+        await userEvent.click(canvas.getByRole("button", { name: "Close" }));
+        await expect(args.onClose).toHaveBeenCalledOnce();
+    },
 };
 
 /**

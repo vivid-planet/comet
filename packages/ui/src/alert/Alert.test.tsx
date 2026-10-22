@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { createRef } from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { Alert } from "./Alert";
 
@@ -106,5 +106,25 @@ describe("Alert", () => {
         );
 
         expect(screen.getByRole("heading", { level: 2, name: "Payment failed" })).toHaveClass("dextinityAlert__title");
+    });
+
+    it("renders no close button without a closeLabel, which would leave it without a name", () => {
+        render(<Alert onClose={() => {}}>Saved.</Alert>);
+
+        expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    });
+
+    it("renders a close button named by closeLabel, which calls onClose", () => {
+        const handleClose = vi.fn();
+        render(
+            <Alert closeLabel="Close" onClose={handleClose} slotProps={{ close: { className: "consumer-close" } }}>
+                Saved.
+            </Alert>,
+        );
+
+        const closeButton = screen.getByRole("button", { name: "Close" });
+        expect(closeButton).toHaveClass("dextinityButton", "dextinityIconButton", "dextinityAlert__close", "consumer-close");
+        fireEvent.click(closeButton);
+        expect(handleClose).toHaveBeenCalledOnce();
     });
 });

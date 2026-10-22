@@ -1,0 +1,54 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as InputStories from "./Input.stories";
+
+<Meta of={InputStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the outer element, the `dextinityInput` box. `slotProps` adjusts the inner parts. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`disabled`, `multiline`) that returns them. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot             | Element                                                        | Class                            | What it is                                                             |
+| ---------------- | -------------------------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| `input`          | `<input>`, or `<textarea>` while `multiline` (Base UI `Input`) | `dextinityInput__input`          | The input, which gets the props the component doesn't handle.          |
+| `startAdornment` | `<span>`                                                       | `dextinityInput__startAdornment` | The element around `startAdornment`. Rendered only while there is one. |
+| `endAdornment`   | `<span>`                                                       | `dextinityInput__endAdornment`   | The element around `endAdornment`. Rendered only while there is one.   |
+
+<Canvas of={InputStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the input through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the input's own: they're shared tokens, which other components can use too. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                       | In the input                                                                                                         |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-color-surface`                                                                                                                                                 | Background of the box.                                                                                               |
+| `--dextinity-color-border-strong`                                                                                                                                           | Border color of the box.                                                                                             |
+| `--dextinity-color-border-hover`                                                                                                                                            | Border color of the hovered box. A focused, invalid or `readOnly` input keeps its border.                            |
+| `--dextinity-color-primary`                                                                                                                                                 | Border color of the box while the input or an adornment has focus. An invalid input keeps its danger border.         |
+| `--dextinity-color-danger`                                                                                                                                                  | Border color of the box while an enclosing field shows an error.                                                     |
+| `--dextinity-control-border-width`                                                                                                                                          | Border width of the box.                                                                                             |
+| `--dextinity-radius-medium`                                                                                                                                                 | Corner radius of the box.                                                                                            |
+| `--dextinity-control-height-medium`                                                                                                                                         | Minimum height of the box. The input comes in this one size.                                                         |
+| `--dextinity-space-lg`                                                                                                                                                      | Horizontal padding inside the box.                                                                                   |
+| `--dextinity-space-sm`                                                                                                                                                      | Gap between the adornments and the text, and vertical padding of a `multiline` input.                                |
+| `--dextinity-space-xs`                                                                                                                                                      | Gap between several elements inside an adornment.                                                                    |
+| `--dextinity-color-foreground`                                                                                                                                              | Text color of the value.                                                                                             |
+| `--dextinity-color-foreground-muted`                                                                                                                                        | Text color of the `placeholder` and of the adornments.                                                               |
+| `--dextinity-font-family-body`                                                                                                                                              | Font family of the value, the placeholder and the adornments.                                                        |
+| `--dextinity-typography-body-font-size`, `--dextinity-typography-body-line-height`, `--dextinity-typography-body-font-weight`, `--dextinity-typography-body-letter-spacing` | Size, line height, weight and letter spacing of the value, the placeholder and the adornments.                       |
+| `--dextinity-color-focus-ring`, `--dextinity-focus-ring-width`, `--dextinity-focus-ring-offset`                                                                             | Outline of the box while the input has focus. Browsers show it on a text input also when it was focused by clicking. |
+| `--dextinity-opacity-disabled`                                                                                                                                              | Opacity of a `disabled` input.                                                                                       |
+| `--dextinity-motion-duration-medium`, `--dextinity-motion-easing`                                                                                                           | Transition of the box's border color as it is hovered, focused or marked invalid.                                    |

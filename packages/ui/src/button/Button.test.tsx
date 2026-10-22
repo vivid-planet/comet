@@ -11,13 +11,14 @@ describe("Button", () => {
         expect(button).toHaveClass("dextinityButton");
         expect(button).toHaveAttribute("data-variant", "primary");
         expect(button).toHaveAttribute("data-size", "medium");
+        expect(button).toHaveAttribute("data-tone", "default");
         expect(button).not.toHaveAttribute("data-disabled");
         expect(button).toHaveAttribute("type", "button");
     });
 
     it("reflects the owner state in data attributes", () => {
         render(
-            <Button variant="ghost" size="small" disabled>
+            <Button variant="ghost" size="small" tone="danger" disabled>
                 Save
             </Button>,
         );
@@ -25,6 +26,7 @@ describe("Button", () => {
         const button = screen.getByRole("button", { name: "Save" });
         expect(button).toHaveAttribute("data-variant", "ghost");
         expect(button).toHaveAttribute("data-size", "small");
+        expect(button).toHaveAttribute("data-tone", "danger");
         expect(button).toHaveAttribute("data-disabled");
     });
 

@@ -63,6 +63,24 @@
         }
     }
 
+    .control {
+        position: relative; /* Positions the end adornment over the trigger. */
+        display: flex;
+        box-sizing: border-box;
+        inline-size: 100%;
+    }
+
+    .endAdornment {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: calc(var(--dextinity-space-lg) + 1.25em + var(--dextinity-space-sm));
+        display: flex;
+        align-items: center;
+        color: var(--dextinity-color-foreground-muted);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+    }
+
     .value {
         flex: 1;
         min-inline-size: 0;
@@ -72,6 +90,11 @@
 
         &[data-placeholder] {
             color: var(--dextinity-color-foreground-muted);
+        }
+
+        /* Keeps the text clear of an end adornment, which is about as wide as a small icon button. */
+        .control:has(> .endAdornment) & {
+            margin-inline-end: 2em;
         }
     }
 
@@ -122,6 +145,12 @@
             opacity: 0;
             transform: scale(0.98);
         }
+    }
+
+    .message {
+        padding-block: var(--dextinity-space-sm);
+        padding-inline: var(--dextinity-space-lg);
+        color: var(--dextinity-color-foreground-muted);
     }
 
     .list {

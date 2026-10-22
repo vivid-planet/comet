@@ -1,0 +1,13 @@
+.frame {
+    max-inline-size: 24rem;
+}
+
+.promoCodeBox {
+    max-inline-size: 12rem;
+}
+
+.promoCodeInput {
+    font-family: ui-monospace, monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}

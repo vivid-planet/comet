@@ -138,7 +138,7 @@ const contrastRequirements = [
     ...textOn("--dextinity-color-foreground-muted", ["--dextinity-color-background", "--dextinity-color-surface"]),
     ...textOn("--dextinity-color-primary-foreground", ["--dextinity-color-primary"]),
     ...textOn("--dextinity-color-primary", ["--dextinity-color-primary-subtle"]),
-    ...textOn("--dextinity-color-success", ["--dextinity-color-background", "--dextinity-color-success-subtle"]),
+    ...textOn("--dextinity-color-success", ["--dextinity-color-background", "--dextinity-color-surface", "--dextinity-color-success-subtle"]),
     ...textOn("--dextinity-color-warning", ["--dextinity-color-background", "--dextinity-color-warning-subtle"]),
     ...textOn("--dextinity-color-danger", ["--dextinity-color-background", "--dextinity-color-surface", "--dextinity-color-danger-subtle"]),
     ...textOn("--dextinity-button-primary-foreground", ["--dextinity-button-primary-background", "--dextinity-button-primary-background-hover"]),

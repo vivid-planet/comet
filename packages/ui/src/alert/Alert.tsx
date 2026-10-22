@@ -4,6 +4,7 @@ import { clsx } from "clsx";
 import type { AriaRole, CSSProperties, HTMLAttributes, ReactNode, Ref } from "react";
 
 import { Icon } from "../icon/Icon";
+import { IconButton, type IconButtonProps } from "../iconButton/IconButton";
 import { hasContent } from "../slots/hasContent";
 import { type ElementSlotProps, SlotElement } from "../slots/SlotElement";
 import { resolveSlotProps, type SlotProps } from "../slots/slotProps";
@@ -33,6 +34,8 @@ export interface AlertSlotProps {
     message?: SlotProps<ElementSlotProps<"div">, AlertOwnerState>;
     /** The element that holds `action`. Rendered only when the alert has an action. */
     action?: SlotProps<ElementSlotProps<"div">, AlertOwnerState>;
+    /** The close button at the end, an `IconButton` with a cross, rendered only when `closeLabel` is set. */
+    close?: SlotProps<Partial<IconButtonProps>, AlertOwnerState>;
 }
 
 /** @experimental */
@@ -67,6 +70,15 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"
      */
     icon?: ReactNode;
     /**
+     * The accessible name of a close button with a cross at the end of the alert, for example "Close". The
+     * button is only shown when the label has text. Add it to a message the user may dismiss, such as a hint
+     * they have read, and remove the alert in `onClose`. Don't add it to a message that stays true until the
+     * user acts, such as an error.
+     */
+    closeLabel?: string;
+    /** Called when the user clicks the close button, which `closeLabel` adds. Remove the alert from the page in it. */
+    onClose?: IconButtonProps["onClick"];
+    /**
      * Makes the alert a live region, so screen readers announce its message. Use `alert` for an urgent message
      * that appears after the user's action, such as an error after submitting a form: it is announced as soon as
      * the alert is added to the page, interrupting what the screen reader is saying. Use `status` for a message
@@ -82,8 +94,8 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"
     /** Inline styles for the outer element. */
     style?: CSSProperties;
     /**
-     * Props for the inner parts: `icon`, `content`, `title`, `message` and `action`. As a function, it receives
-     * the owner state: `tone`.
+     * Props for the inner parts: `icon`, `content`, `title`, `message`, `action` and `close`. As a function, it
+     * receives the owner state: `tone`.
      */
     slotProps?: AlertSlotProps;
     /** A ref to the outer `<div>`. */
@@ -96,7 +108,8 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"
  *
  * Pick the `tone` by what the message means, and write the message so it says the same without the color and
  * the icon. Keep it short: a sentence or two, with an optional `title` and one `action`. Place it near the
- * content it is about. For a message that needs a decision before the user can go on, use `Dialog` instead.
+ * content it is about. For a message the user may dismiss, add a close button with `closeLabel` and `onClose`.
+ * For a message that needs a decision before the user can go on, use `Dialog` instead.
  *
  * It has no role, so assistive technology reads it like other content. For an urgent message that appears in
  * response to the user's action, set `role="alert"`, so it is announced when it appears; a message that can
@@ -106,7 +119,7 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"
  * @summary A message about the page or an action, in four tones, with an optional title and action.
  * @experimental
  */
-export function Alert({ tone = "info", title, action, icon, className, slotProps, children, ...restProps }: AlertProps) {
+export function Alert({ tone = "info", title, action, icon, closeLabel, onClose, className, slotProps, children, ...restProps }: AlertProps) {
     const ownerState: AlertOwnerState = { tone };
     const shownIcon = icon === undefined ? <Icon name={tone} /> : icon;
 
@@ -141,6 +154,15 @@ export function Alert({ tone = "info", title, action, icon, className, slotProps
                     </SlotElement>
                 )}
             </SlotElement>
+            {closeLabel ? (
+                <IconButton
+                    {...(resolveSlotProps({
+                        ownProps: { className: styles.close, label: closeLabel, size: "small", onClick: onClose, children: <Icon name="close" /> },
+                        slotProps: slotProps?.close,
+                        ownerState,
+                    }) as IconButtonProps)}
+                />
+            ) : null}
         </div>
     );
 }

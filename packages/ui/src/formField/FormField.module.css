@@ -5,6 +5,27 @@
         gap: var(--dextinity-space-xs);
         font-family: var(--dextinity-font-family-body);
         overflow-wrap: anywhere;
+
+        /* Wraps to one column below the breakpoint: each part's flex basis is then larger than the field. */
+        &[data-orientation="horizontal"] {
+            --_horizontal-breakpoint: 600px;
+            --_horizontal-basis: calc((var(--_horizontal-breakpoint) - 100%) * 999);
+
+            flex-flow: row wrap;
+            column-gap: var(--dextinity-space-lg);
+        }
+    }
+
+    .content {
+        display: contents;
+
+        .root[data-orientation="horizontal"] > & {
+            display: flex;
+            flex: 2 1 var(--_horizontal-basis);
+            flex-direction: column;
+            gap: var(--dextinity-space-xs);
+            min-inline-size: 0;
+        }
     }
 
     .label {
@@ -19,6 +40,19 @@
         &[data-disabled] {
             opacity: var(--dextinity-opacity-disabled);
         }
+
+        /* Centers the label's first line on a control of the medium height. */
+        .root[data-orientation="horizontal"] > & {
+            flex: 1 1 var(--_horizontal-basis);
+            box-sizing: border-box;
+            padding-block-start: calc(
+                (
+                        var(--dextinity-control-height-medium) - var(--dextinity-typography-label-font-size) *
+                            var(--dextinity-typography-label-line-height)
+                    ) /
+                    2
+            );
+        }
     }
 
     .requiredIndicator {
@@ -27,6 +61,7 @@
     }
 
     .description,
+    .warning,
     .error {
         margin: 0;
         font-size: var(--dextinity-typography-body-small-font-size);
@@ -37,6 +72,10 @@
 
     .description {
         color: var(--dextinity-color-foreground-muted);
+    }
+
+    .warning {
+        color: var(--dextinity-color-warning);
     }
 
     .error {

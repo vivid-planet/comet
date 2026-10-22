@@ -83,6 +83,15 @@
         align-items: center;
     }
 
+    /* Centered on the first line of the title or the message without making it taller, and with its icon closer to the corner. */
+    .close {
+        --_line-height: calc(var(--dextinity-typography-body-font-size) * var(--dextinity-typography-body-line-height));
+
+        align-self: flex-start;
+        margin-block: calc((var(--_line-height) - var(--dextinity-control-height-small)) / 2);
+        margin-inline-end: calc(var(--dextinity-space-sm) * -1);
+    }
+
     .title ~ .action {
         flex-basis: 100%;
         margin-block-start: var(--dextinity-space-xs);

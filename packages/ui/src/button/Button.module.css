@@ -69,6 +69,34 @@
             --_foreground: var(--dextinity-button-ghost-foreground);
         }
 
+        &[data-tone="danger"] {
+            --_tone: var(--dextinity-color-danger);
+            --_tone-subtle: var(--dextinity-color-danger-subtle);
+        }
+
+        &[data-tone="success"] {
+            --_tone: var(--dextinity-color-success);
+            --_tone-subtle: var(--dextinity-color-success-subtle);
+        }
+
+        &:is([data-tone="danger"], [data-tone="success"]) {
+            /* The tone's color has contrast 4.5:1 on the page background, so the background color is legible on it. */
+            &[data-variant="primary"] {
+                --_background: var(--_tone);
+                --_foreground: var(--dextinity-color-background);
+                --_shadow: none;
+            }
+
+            &[data-variant="secondary"] {
+                --_foreground: var(--_tone);
+                --_border-color: var(--_tone);
+            }
+
+            &[data-variant="ghost"] {
+                --_foreground: var(--_tone);
+            }
+        }
+
         @media (hover: hover) {
             &:hover:not([data-disabled]) {
                 &[data-variant="primary"] {
@@ -82,6 +110,18 @@
 
                 &[data-variant="ghost"] {
                     --_background: var(--dextinity-button-ghost-background-hover);
+                }
+
+                &:is([data-tone="danger"], [data-tone="success"]) {
+                    /* Mixing in the text color moves the fill away from the page background, so its text keeps its contrast. */
+                    &[data-variant="primary"] {
+                        --_background: color-mix(in oklab, var(--_tone), var(--dextinity-color-foreground) 20%);
+                    }
+
+                    &:is([data-variant="secondary"], [data-variant="ghost"]) {
+                        --_background: var(--_tone-subtle);
+                        --_foreground: var(--_tone);
+                    }
                 }
             }
         }

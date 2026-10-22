@@ -15,6 +15,9 @@ export type ButtonVariant = "primary" | "secondary" | "ghost";
 /** @experimental */
 export type ButtonSize = "small" | "medium" | "large";
 
+/** @experimental */
+export type ButtonTone = "default" | "danger" | "success";
+
 /**
  * The resolved configuration that influences the component's appearance or behavior.
  *
@@ -23,6 +26,7 @@ export type ButtonSize = "small" | "medium" | "large";
 export type ButtonOwnerState = {
     variant: ButtonVariant;
     size: ButtonSize;
+    tone: ButtonTone;
     disabled: boolean;
 };
 
@@ -49,6 +53,16 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className" | "style
      * @defaultValue `"medium"`
      */
     size?: ButtonSize;
+    /**
+     * Colors the button by what its action does: `danger` for an action that deletes or can't be undone, such
+     * as "Delete product", `success` for an action that completes something, such as "Publish". Combine it with
+     * any `variant`: a `primary` button is filled with the tone's color, a `secondary` one outlined in it. Name
+     * the consequence in the label too: the color only supports it. On a tinted background, such as in an
+     * `Alert`, use the `default` tone.
+     *
+     * @defaultValue `"default"`
+     */
+    tone?: ButtonTone;
     /** An icon before the text. It is decorative: the text labels the button. */
     startIcon?: ReactNode;
     /** An icon after the text, for example an arrow when the button leads to another step. */
@@ -61,7 +75,7 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className" | "style
     style?: CSSProperties;
     /**
      * Props for the inner parts: `startIcon` and `endIcon`. As a function, it receives the owner state:
-     * `variant`, `size` and `disabled`.
+     * `variant`, `size`, `tone` and `disabled`.
      */
     slotProps?: ButtonSlotProps;
 }
@@ -70,18 +84,20 @@ export interface ButtonProps extends Omit<BaseButton.Props, "className" | "style
  * Triggers an action, such as saving a form or opening a dialog.
  *
  * Label a button with a verb that says what happens, for example "Save changes". Use one `primary` button
- * per view for its main action. A button only triggers actions: navigate with a link instead.
+ * per view for its main action. A button only triggers actions: to navigate, use `ButtonLink`, a link that
+ * looks like a button.
  *
  * The props the component doesn't handle, such as `type`, `onClick`, `form` and `aria-*`, go to the
  * `<button>`. Unlike a plain `<button>`, it has `type="button"` by default: set `type="submit"` on the button
  * that submits a form.
  *
- * @summary Triggers an action, in three variants and three sizes, optionally with icons.
+ * @summary Triggers an action, in three variants, three tones and three sizes, optionally with icons.
  * @experimental
  */
 export function Button({
     variant = "primary",
     size = "medium",
+    tone = "default",
     startIcon,
     endIcon,
     disabled,
@@ -90,10 +106,17 @@ export function Button({
     children,
     ...restProps
 }: ButtonProps) {
-    const ownerState: ButtonOwnerState = { variant, size, disabled: Boolean(disabled) };
+    const ownerState: ButtonOwnerState = { variant, size, tone, disabled: Boolean(disabled) };
 
     return (
-        <BaseButton {...restProps} disabled={disabled} data-variant={variant} data-size={size} className={clsx(styles.root, className)}>
+        <BaseButton
+            {...restProps}
+            disabled={disabled}
+            data-variant={variant}
+            data-size={size}
+            data-tone={tone}
+            className={clsx(styles.root, className)}
+        >
             {hasContent(startIcon) && (
                 <SlotElement
                     tagName="span"

@@ -1,16 +1,15 @@
 "use client";
 
 import type { Field } from "@base-ui/react/field";
-import { Select as BaseSelect } from "@base-ui/react/select";
+import type { Select as BaseSelect } from "@base-ui/react/select";
 import { clsx } from "clsx";
-import { type CSSProperties, type ReactNode, useRef, useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { FormField } from "../formField/FormField";
-import { Icon } from "../icon/Icon";
 import type { ElementSlotProps } from "../slots/SlotElement";
-import { resolveSlotProps, type SlotProps } from "../slots/slotProps";
-import { usePopupTheme } from "../themeSwitch/usePopupTheme";
+import type { SlotProps } from "../slots/slotProps";
 import styles from "./Select.module.css";
+import { SelectControl, type SelectControlProps } from "./SelectControl";
 
 /**
  * One option of a `Select`.
@@ -20,8 +19,8 @@ import styles from "./Select.module.css";
 export interface SelectOption {
     /** The value the select takes while this option is selected, and submits with a form. Unique within the options. */
     value: string;
-    /** The option's visible text, in the list and in the field while the option is selected. */
-    label: string;
+    /** The option's visible text, in the list and in the field while the option is selected. Prefer plain text, which typing its first letters finds. */
+    label: ReactNode;
     /** Prevents selecting the option and dims it. Prefer leaving out an option that never applies. */
     disabled?: boolean;
 }
@@ -155,50 +154,27 @@ export function Select({
     label,
     description,
     error,
-    options = [],
-    placeholder,
-    value,
-    defaultValue,
-    onValueChange,
-    open,
-    defaultOpen,
-    onOpenChange,
-    readOnly,
-    inputRef,
-    form,
-    autoComplete,
     required,
     disabled,
+    readOnly,
     name,
+    onValueChange,
     className,
     style,
     slotProps,
-    ...triggerProps
+    ...controlProps
 }: SelectProps) {
     const ownerState: SelectOwnerState = { disabled: Boolean(disabled), required: Boolean(required), readonly: Boolean(readOnly) };
     const {
-        trigger: triggerSlotProps,
-        value: valueSlotProps,
-        icon: iconSlotProps,
-        positioner: positionerSlotProps,
-        popup: popupSlotProps,
-        list: listSlotProps,
-        option: optionSlotProps,
-        optionText: optionTextSlotProps,
-        optionIndicator: optionIndicatorSlotProps,
         label: labelSlotProps,
         requiredIndicator: requiredIndicatorSlotProps,
         description: descriptionSlotProps,
         error: errorSlotProps,
+        ...controlSlotProps
     } = slotProps ?? {};
-    // The trigger's `ref` belongs to the consumer; the root around it is in the same theme.
-    const rootRef = useRef<HTMLDivElement>(null);
-    const [isOpen, setIsOpen] = useState(Boolean(defaultOpen));
-    const popupTheme = usePopupTheme(rootRef, open ?? isOpen);
 
     return (
         <FormField
-            ref={rootRef}
             label={label}
             description={description}
             error={error}
@@ -216,82 +192,14 @@ export function Select({
                 error: resolveFormFieldSlotProps(errorSlotProps, ownerState),
             }}
         >
-            <BaseSelect.Root<string>
-                items={options}
-                value={value}
-                defaultValue={defaultValue}
-                onValueChange={onValueChange}
-                open={open}
-                defaultOpen={defaultOpen}
-                onOpenChange={(nextOpen, eventDetails) => {
-                    onOpenChange?.(nextOpen, eventDetails);
-                    if (!eventDetails.isCanceled) {
-                        setIsOpen(nextOpen);
-                    }
-                }}
+            <SelectControl
+                {...controlProps}
+                // A select without `multiple` only ever calls it with a single value.
+                onValueChange={onValueChange as SelectControlProps["onValueChange"]}
                 readOnly={readOnly}
                 required={required}
-                inputRef={inputRef}
-                form={form}
-                autoComplete={autoComplete}
-            >
-                <BaseSelect.Trigger
-                    {...resolveSlotProps({ ownProps: { ...triggerProps, className: styles.trigger }, slotProps: triggerSlotProps, ownerState })}
-                >
-                    <BaseSelect.Value
-                        {...resolveSlotProps({ ownProps: { className: styles.value, placeholder }, slotProps: valueSlotProps, ownerState })}
-                    />
-                    <BaseSelect.Icon {...resolveSlotProps({ ownProps: { className: styles.icon }, slotProps: iconSlotProps, ownerState })}>
-                        <Icon name="chevron-down" />
-                    </BaseSelect.Icon>
-                </BaseSelect.Trigger>
-                <BaseSelect.Portal>
-                    <BaseSelect.Positioner
-                        {...resolveSlotProps({
-                            // Aligning the selected option with the trigger covers the field and its label, and
-                            // falls back to this placement on touch and near the viewport's edges anyway.
-                            ownProps: { ...popupTheme, className: styles.positioner, alignItemWithTrigger: false, align: "start", sideOffset: 4 },
-                            slotProps: positionerSlotProps,
-                            ownerState,
-                        })}
-                    >
-                        <BaseSelect.Popup {...resolveSlotProps({ ownProps: { className: styles.popup }, slotProps: popupSlotProps, ownerState })}>
-                            <BaseSelect.List {...resolveSlotProps({ ownProps: { className: styles.list }, slotProps: listSlotProps, ownerState })}>
-                                {options.map((option) => (
-                                    <BaseSelect.Item
-                                        key={option.value}
-                                        {...resolveSlotProps({
-                                            ownProps: { className: styles.option, disabled: option.disabled },
-                                            slotProps: optionSlotProps,
-                                            ownerState,
-                                        })}
-                                        value={option.value}
-                                    >
-                                        <BaseSelect.ItemText
-                                            {...resolveSlotProps({
-                                                ownProps: { className: styles.optionText },
-                                                slotProps: optionTextSlotProps,
-                                                ownerState,
-                                            })}
-                                        >
-                                            {option.label}
-                                        </BaseSelect.ItemText>
-                                        <BaseSelect.ItemIndicator
-                                            {...resolveSlotProps({
-                                                ownProps: { className: styles.optionIndicator },
-                                                slotProps: optionIndicatorSlotProps,
-                                                ownerState,
-                                            })}
-                                        >
-                                            <Icon name="check" />
-                                        </BaseSelect.ItemIndicator>
-                                    </BaseSelect.Item>
-                                ))}
-                            </BaseSelect.List>
-                        </BaseSelect.Popup>
-                    </BaseSelect.Positioner>
-                </BaseSelect.Portal>
-            </BaseSelect.Root>
+                slotProps={controlSlotProps}
+            />
         </FormField>
     );
 }
