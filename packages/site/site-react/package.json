@@ -72,8 +72,8 @@
         "sass": "^1.105.1",
         "schema-dts": "^2.1.0",
         "typescript": "^5.9.3",
+        "unplugin-dts": "^1.1.2",
         "vite": "^8.3.5",
-        "vite-plugin-dts": "^5.1.2",
         "vitest": "^5.0.5",
         "webpack": "^5.111.1"
     },
