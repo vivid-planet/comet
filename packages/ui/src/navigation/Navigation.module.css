@@ -1,0 +1,13 @@
+@layer dextinity {
+    .root {
+        /* The list and the entries lay out the navigation. This rule only gives the root its `dextinityNavigation` class. */
+    }
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}

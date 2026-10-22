@@ -17,6 +17,10 @@ import * as FormsStories from "./__stories__/Forms.stories";
 | ----------------------------------------------------------- | --------------------------------- |
 | Short text, such as a name, an email address or a search    | `TextField`                       |
 | Exactly one of a few options, up to about seven             | `RadioGroup` with `Radio` options |
+| One of more options than radios show well, up to about 15   | `Select`                          |
+| One of a long list, found by typing, such as a country      | `Autocomplete`                    |
+| A number, such as a quantity or a price                     | `NumberField`                     |
+| A color                                                     | `ColorPicker`                     |
 | An option that is on or off, or any number of options       | `Checkbox`, one per option        |
 | A setting that takes effect immediately, without submitting | `Switch`                          |
 | Another control, such as a native `<select>`                | The control inside a `FormField`  |
@@ -66,7 +70,7 @@ import * as FormsStories from "./__stories__/Forms.stories";
 ## Labels, descriptions and required fields
 
 - Every field has a visible `label`. A placeholder disappears when the user types, so it is never the label and never the only place for a format hint: put hints into `description`.
-- Mark required fields with `required`. `TextField` and `RadioGroup` then show a marker next to the label and tell assistive technology. If most fields are required, consider marking the optional ones in their label instead, for example "Phone (optional)".
+- Mark required fields with `required`. The fields with a `label` prop, such as `TextField`, `Select` and `RadioGroup`, then show a marker next to the label and tell assistive technology. If most fields are required, consider marking the optional ones in their label instead, for example "Phone (optional)".
 - Set `autoComplete` on fields that ask for the user's own data, such as `"name"` or `"email"`, so browsers can fill them in.
 
 ## Validation and errors

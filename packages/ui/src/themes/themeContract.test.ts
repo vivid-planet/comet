@@ -304,7 +304,6 @@ describe("component stylesheets", () => {
 describe("component docs pages", () => {
     const isComponentStylesheet = (fileName: string) => /^[A-Z][A-Za-z0-9]*\.module\.css$/.test(fileName);
     const isComponentModule = (fileName: string) => /^[A-Z][A-Za-z0-9]*\.tsx$/.test(fileName);
-    // TODO remove the *DesignTokens.mdx pages once every component has its docs page.
     const isDocsPage = (fileName: string) => fileName.endsWith(".mdx");
     const storiesFileNames = (folder: string) => {
         const storiesDirectory = join(sourceDirectory, folder, "__stories__");
@@ -333,7 +332,7 @@ describe("component docs pages", () => {
 
     it.each(componentFolders)("%s lists each token its stylesheets use exactly once", (folder) => {
         const page = docsPageOf(folder);
-        const tokenSection = page.includes("\n## Design tokens\n") ? section(page, "Design tokens") : page;
+        const tokenSection = section(page, "Design tokens");
         const usedTokens = new Set(
             folderFileNames(folder)
                 .filter(isComponentStylesheet)
@@ -348,11 +347,7 @@ describe("component docs pages", () => {
         }).toEqual({ missingTokens: [], unusedTokens: [], repeatedTokens: [] });
     });
 
-    it.each(
-        componentFolders.filter((folder) =>
-            storiesFileNames(folder).some((fileName) => isDocsPage(fileName) && !fileName.endsWith("DesignTokens.mdx")),
-        ),
-    )("%s documents each of its slots", (folder) => {
+    it.each(componentFolders)("%s documents each of its slots", (folder) => {
         const slotNames = folderFileNames(folder)
             .filter(isComponentModule)
             .flatMap((fileName) => [...readFolderFile(folder, fileName).matchAll(/export interface \w+SlotProps \{([\s\S]*?)\n\}/g)])

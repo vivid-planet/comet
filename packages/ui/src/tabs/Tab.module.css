@@ -1,0 +1,89 @@
+@layer dextinity {
+    .root {
+        --_foreground: var(--dextinity-color-foreground-muted);
+        --_line-color: transparent;
+
+        position: relative; /* Positions the line of a hovered tab. */
+        display: inline-flex;
+        flex-shrink: 0;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-block-size: var(--dextinity-control-height-medium);
+        margin: 0;
+        padding-block: var(--dextinity-space-xs);
+        padding-inline: var(--dextinity-space-lg);
+        border: 0;
+        border-radius: var(--dextinity-radius-small);
+        background: none;
+        color: var(--_foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        text-decoration: none; /* A tab rendered as a link. */
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
+        transition: color var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+
+        /* The line of a hovered tab, where the indicator marks the selected one. */
+        &::after {
+            position: absolute;
+            inset-block-end: 0;
+            inset-inline: 0;
+            block-size: 2px;
+            background: var(--_line-color);
+            content: "";
+            transition: background-color var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+        }
+
+        &[data-orientation="vertical"] {
+            justify-content: flex-start;
+            text-align: start;
+            white-space: normal;
+
+            &::after {
+                inset-block: 0;
+                inset-inline: auto 0;
+                inline-size: 2px;
+                block-size: auto;
+            }
+        }
+
+        &[data-active] {
+            --_foreground: var(--dextinity-color-foreground);
+        }
+
+        @media (hover: hover) {
+            &:hover:not([data-active], [data-disabled]) {
+                --_foreground: var(--dextinity-color-foreground);
+                --_line-color: var(--dextinity-color-border-hover);
+            }
+        }
+
+        /* Inside the tab: the tab list scrolls, which would clip an outline around it. */
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: calc(-1 * var(--dextinity-focus-ring-width));
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        font-size: 1.25em;
+
+        & > svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+}

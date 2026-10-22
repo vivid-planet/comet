@@ -1,0 +1,52 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as CardStories from "./Card.stories";
+
+<Meta of={CardStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the card's outer element, the `dextinityCard` element, and so do the props the component doesn't handle; `render` on the card replaces that element, a `<div>`, for example with an `<li>` in a list of cards. `slotProps` adjusts the inner parts, which are rendered only when the card has the content they hold. Each slot takes an element's props, merged with the slot's own, or a function of the owner state that returns them; a card has no configuration that changes how it looks, so its owner state is empty. `render` replaces a slot's element, for example `{ title: { render: <h3 /> } }` for another heading level. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot          | Element | Class                        | What it is                                                                                                                                  |
+| ------------- | ------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `header`      | `<div>` | `dextinityCard__header`      | The row at the top that holds the title group and the actions. Rendered only when the card has a `title`, a `description` or `actions`.     |
+| `titleGroup`  | `<div>` | `dextinityCard__titleGroup`  | The element around the title and the description, which takes the header's width next to the actions. Rendered only with either of them.    |
+| `title`       | `<h2>`  | `dextinityCard__title`       | The `title`, a level 2 heading.                                                                                                             |
+| `description` | `<p>`   | `dextinityCard__description` | The `description`, below the title.                                                                                                         |
+| `actions`     | `<div>` | `dextinityCard__actions`     | The `actions`, at the end of the header. They move below the title and the description when the card is too narrow for both, as on a phone. |
+| `body`        | `<div>` | `dextinityCard__body`        | The content, `children`, below the header.                                                                                                  |
+
+<Canvas of={CardStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the card through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the card's own: they're shared tokens, which other components can use too. The components inside the card's content keep their own styles. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                                           | In the card                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `--dextinity-color-surface`                                                                                                                                                                     | Background of the card.                                                                          |
+| `--dextinity-color-border`                                                                                                                                                                      | Border color of the card.                                                                        |
+| `--dextinity-radius-large`                                                                                                                                                                      | Corner radius of the card.                                                                       |
+| `--dextinity-space-xl`                                                                                                                                                                          | Padding inside the card's border, and gap between the header and the content.                    |
+| `--dextinity-space-lg`                                                                                                                                                                          | Gap between the title and the actions beside it.                                                 |
+| `--dextinity-space-sm`                                                                                                                                                                          | Gap between the actions, and between the title and the actions when they move below it.          |
+| `--dextinity-space-xs`                                                                                                                                                                          | Gap between the title and the description.                                                       |
+| `--dextinity-color-foreground`                                                                                                                                                                  | Text color of the title and of the content's plain text.                                         |
+| `--dextinity-color-foreground-muted`                                                                                                                                                            | Text color of the description.                                                                   |
+| `--dextinity-font-family-heading`                                                                                                                                                               | Font family of the title.                                                                        |
+| `--dextinity-typography-heading-4-font-size`, `--dextinity-typography-heading-4-line-height`, `--dextinity-typography-heading-4-font-weight`, `--dextinity-typography-heading-4-letter-spacing` | Size, line height, weight and letter spacing of the title, whichever heading level it renders.   |
+| `--dextinity-font-family-body`                                                                                                                                                                  | Font family of the description and of the content's plain text.                                  |
+| `--dextinity-typography-body-font-size`, `--dextinity-typography-body-line-height`, `--dextinity-typography-body-font-weight`, `--dextinity-typography-body-letter-spacing`                     | Size, line height, weight and letter spacing of the description and of the content's plain text. |

@@ -1,0 +1,40 @@
+@layer dextinity {
+    .positioner {
+        z-index: var(--dextinity-z-index-popup);
+    }
+
+    .root {
+        box-sizing: border-box;
+        min-inline-size: var(--anchor-width);
+        max-inline-size: var(--available-width);
+        max-block-size: var(--available-height);
+        padding-block: var(--dextinity-space-xs);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border: 1px solid var(--dextinity-color-border);
+        border-radius: var(--dextinity-radius-medium);
+        background: var(--dextinity-color-surface);
+        box-shadow: var(--dextinity-shadow-popup);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        overflow-wrap: anywhere;
+        transform-origin: var(--transform-origin);
+        transition-duration: var(--dextinity-motion-duration-short);
+        transition-property: opacity, transform;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        &:focus {
+            outline: none; /* Focus is on the highlighted item, which shows it. */
+        }
+
+        &[data-starting-style],
+        &[data-ending-style] {
+            opacity: 0;
+            transform: scale(0.98);
+        }
+    }
+}

@@ -1,0 +1,21 @@
+/*
+ * The root is also AppBarButton's root. These rules win over AppBarButton's rules of equal specificity because
+ * AppBarIconButton.tsx imports AppBarButton, and with it AppBarButton's stylesheet, before this one.
+ */
+@layer dextinity {
+    .root {
+        inline-size: var(--dextinity-control-height-medium);
+        padding-inline: 0;
+    }
+
+    .icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        font-size: 1.25em;
+
+        & > svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+}

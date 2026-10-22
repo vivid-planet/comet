@@ -1,0 +1,21 @@
+.pageHeader {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-sm);
+}
+
+.narrowFrame {
+    max-inline-size: 16rem;
+}
+
+.framedBreadcrumbs {
+    padding: var(--dextinity-space-sm) var(--dextinity-space-md);
+    border: 1px solid var(--dextinity-color-border);
+    border-radius: var(--dextinity-radius-medium);
+    background: var(--dextinity-color-surface);
+}
+
+.accentSeparator {
+    margin-inline: var(--dextinity-space-xs);
+    color: var(--dextinity-color-primary);
+}

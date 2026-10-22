@@ -1,0 +1,24 @@
+@layer dextinity {
+    .root {
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-small-font-size);
+        font-weight: var(--dextinity-typography-body-small-font-weight);
+        line-height: var(--dextinity-typography-body-small-line-height);
+        letter-spacing: var(--dextinity-typography-body-small-letter-spacing);
+    }
+
+    .list {
+        /* How far a focused link's outline reaches beyond its text. */
+        --_focus-ring-room: calc(var(--dextinity-space-xs) + var(--dextinity-focus-ring-offset) + var(--dextinity-focus-ring-width));
+
+        display: flex;
+        flex-wrap: wrap;
+
+        /* Matches the gap between an item's separator and its link in BreadcrumbItem.module.css, so the separators sit centered. */
+        column-gap: max(var(--dextinity-space-sm), var(--_focus-ring-room));
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}

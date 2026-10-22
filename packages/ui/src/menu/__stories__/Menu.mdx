@@ -1,0 +1,58 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as MenuStories from "./Menu.stories";
+
+<Meta of={MenuStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`Menu` takes `className` and `style` for its popup, the `dextinityMenu` element with the `menu` role (Base UI `Menu.Popup`), which also gets the props the component doesn't handle. The trigger keeps its own classes. `MenuItem`, `MenuLinkItem`, `MenuGroup` and `MenuSeparator` take them for their own element: `dextinityMenuItem`, `dextinityMenuLinkItem`, `dextinityMenuGroup` and `dextinityMenuSeparator`. `slotProps` adjusts the inner parts; a `MenuSeparator` has none. Each slot takes an element's props, merged with the slot's own, or a function of the owner state that returns them: `side` and `align` for the menu, `tone` and `disabled` for a `MenuItem`, `tone` for a `MenuLinkItem`, and an empty object for a `MenuGroup`. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs).
+
+The popup and its parts render only while the menu is open, at the end of `<body>`: style them through their classes, not as descendants of the trigger. The positioner carries the theme and color scheme of a [`ThemeSwitch`](?path=/docs/components-themeswitch--docs) around the trigger, so the menu looks like its trigger.
+
+| Slot         | Component      | Element                             | Class                         | What it is                                                                                                                                                                                |
+| ------------ | -------------- | ----------------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `positioner` | `Menu`         | `<div>` (Base UI `Menu.Positioner`) | `dextinityMenu__positioner`   | Positions the popup against the trigger. Its props, such as `sideOffset` and `collisionPadding`, change where the menu opens. It carries the theme of a `ThemeSwitch` around the trigger. |
+| `icon`       | `MenuItem`     | `<span>`                            | `dextinityMenuItem__icon`     | The element around the item's `icon`. Rendered only with an `icon`. Assistive technology skips it.                                                                                        |
+| `icon`       | `MenuLinkItem` | `<span>`                            | `dextinityMenuLinkItem__icon` | The element around the link's `icon`. Rendered only with an `icon`. Assistive technology skips it.                                                                                        |
+| `label`      | `MenuGroup`    | `<div>` (Base UI `Menu.GroupLabel`) | `dextinityMenuGroup__label`   | The group's `label` above its items, which names the group. The arrow keys skip it.                                                                                                       |
+
+<Canvas of={MenuStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the menu through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the menu's own: they're shared tokens, which other components can use too. They style the popup and its parts: `MenuItem`, `MenuLinkItem`, `MenuGroup` and `MenuSeparator`. The trigger is a button of its own, which its own tokens style. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                                               | In the menu                                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `--dextinity-color-surface`                                                                                                                                                                         | Background of the popup.                                                                                                             |
+| `--dextinity-color-border`                                                                                                                                                                          | Border color of the popup, and color of the line a `MenuSeparator` draws.                                                            |
+| `--dextinity-radius-medium`                                                                                                                                                                         | Corner radius of the popup.                                                                                                          |
+| `--dextinity-shadow-popup`                                                                                                                                                                          | Shadow of the popup, which lifts it above the page.                                                                                  |
+| `--dextinity-z-index-popup`                                                                                                                                                                         | Stacking order of the popup, above the page and above dialogs.                                                                       |
+| `--dextinity-color-foreground`                                                                                                                                                                      | Text and icon color of the items.                                                                                                    |
+| `--dextinity-color-surface-hover`                                                                                                                                                                   | Background of the highlighted item: the item under the pointer, or the one the arrow keys moved to.                                  |
+| `--dextinity-color-danger`                                                                                                                                                                          | Text and icon color of an item with `tone="danger"`.                                                                                 |
+| `--dextinity-color-danger-subtle`                                                                                                                                                                   | Background of the highlighted item with `tone="danger"`.                                                                             |
+| `--dextinity-color-foreground-muted`                                                                                                                                                                | Text color of a `MenuGroup`'s label.                                                                                                 |
+| `--dextinity-font-family-body`                                                                                                                                                                      | Font family of the items and the group labels.                                                                                       |
+| `--dextinity-typography-body-font-size`, `--dextinity-typography-body-line-height`, `--dextinity-typography-body-font-weight`, `--dextinity-typography-body-letter-spacing`                         | Text style of the items. Icons are 1.25 times as large as the text.                                                                  |
+| `--dextinity-typography-body-small-font-size`, `--dextinity-typography-body-small-line-height`, `--dextinity-typography-body-small-font-weight`, `--dextinity-typography-body-small-letter-spacing` | Text style of a `MenuGroup`'s label.                                                                                                 |
+| `--dextinity-space-xs`                                                                                                                                                                              | Vertical padding inside the popup, the space above and below a `MenuSeparator`, and the space between a group's label and its items. |
+| `--dextinity-space-sm`                                                                                                                                                                              | Vertical padding of the items and the space above a group's label, and the gap between an item's icon and its text.                  |
+| `--dextinity-space-lg`                                                                                                                                                                              | Horizontal padding of the items and the group labels.                                                                                |
+| `--dextinity-focus-ring-width`                                                                                                                                                                      | Width of the outline that marks the highlighted item in forced-colors mode, where the system's colors replace its background.        |
+| `--dextinity-opacity-disabled`                                                                                                                                                                      | Opacity of a disabled `MenuItem`.                                                                                                    |
+| `--dextinity-motion-duration-short`, `--dextinity-motion-easing`                                                                                                                                    | Transition of the popup as it fades and grows in when it opens, and fades and shrinks away when it closes.                           |

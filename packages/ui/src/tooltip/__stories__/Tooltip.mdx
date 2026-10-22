@@ -1,0 +1,46 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as TooltipStories from "./Tooltip.stories";
+
+<Meta of={TooltipStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the popup, the `dextinityTooltip` element that holds `content` (Base UI `Tooltip.Popup`). The props the component doesn't handle, and `ref`, go to the trigger: they're merged with the props of `children`, which keeps its own classes. `slotProps` adjusts the parts, including the popup's other props, such as `id`. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`side`) that returns them. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs). `TooltipProvider` renders no element.
+
+| Slot         | Element                                | Class                          | What it is                                                                                                                                                                       |
+| ------------ | -------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `popup`      | `<div>` (Base UI `Tooltip.Popup`)      | `dextinityTooltip`             | The popup, which holds `content` and receives `className` and `style`. Its other props, such as `id`, go here.                                                                   |
+| `positioner` | `<div>` (Base UI `Tooltip.Positioner`) | `dextinityTooltip__positioner` | The element that positions the popup next to the trigger. Its props, such as `sideOffset` and `align`, change where. It carries the theme of a `ThemeSwitch` around the trigger. |
+| `arrow`      | `<div>` (Base UI `Tooltip.Arrow`)      | `dextinityTooltip__arrow`      | The arrow that points at the trigger. Rendered only with `showArrow`.                                                                                                            |
+
+<Canvas of={TooltipStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the tooltip through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the tooltip's own: they're shared tokens, which other components can use too. The tooltip inverts the page's colors, so it stands out from the content around it; the contrast between the two colors is guaranteed. The trigger is an element of its own, which its own tokens style. Inside a `ThemeSwitch`, the tooltip takes the values of the theme switch's theme, like its trigger. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                                               | In the tooltip                                                                                                                                                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-color-foreground`                                                                                                                                                                      | Background of the tooltip and its arrow.                                                                                                                                                                                                                |
+| `--dextinity-color-background`                                                                                                                                                                      | Text color of the tooltip.                                                                                                                                                                                                                              |
+| `--dextinity-radius-small`                                                                                                                                                                          | Corner radius of the tooltip.                                                                                                                                                                                                                           |
+| `--dextinity-shadow-popup`                                                                                                                                                                          | Shadow of the tooltip, which lifts it above the page.                                                                                                                                                                                                   |
+| `--dextinity-z-index-tooltip`                                                                                                                                                                       | Stacking order of the tooltip, above the page, popups and dialogs.                                                                                                                                                                                      |
+| `--dextinity-font-family-body`                                                                                                                                                                      | Font family of the text.                                                                                                                                                                                                                                |
+| `--dextinity-typography-body-small-font-size`, `--dextinity-typography-body-small-line-height`, `--dextinity-typography-body-small-font-weight`, `--dextinity-typography-body-small-letter-spacing` | Text style of the tooltip.                                                                                                                                                                                                                              |
+| `--dextinity-space-xs`                                                                                                                                                                              | Vertical padding of the tooltip.                                                                                                                                                                                                                        |
+| `--dextinity-space-sm`                                                                                                                                                                              | Horizontal padding of the tooltip.                                                                                                                                                                                                                      |
+| `--dextinity-motion-duration-short`, `--dextinity-motion-easing`                                                                                                                                    | Transition of the tooltip, which fades and grows in as it opens on hover, and back as it closes when the pointer leaves. It opens on keyboard focus, closes on Escape or a click, and replaces another tooltip of a `TooltipProvider` group without it. |

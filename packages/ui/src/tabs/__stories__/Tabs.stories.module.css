@@ -1,0 +1,19 @@
+.frame {
+    max-inline-size: 40rem;
+}
+
+.narrowFrame {
+    max-inline-size: 20rem;
+}
+
+.roomyTabs {
+    gap: var(--dextinity-space-xl);
+}
+
+.thickIndicator {
+    border-block-end-width: 4px;
+}
+
+.accentIcon {
+    color: var(--dextinity-color-primary);
+}

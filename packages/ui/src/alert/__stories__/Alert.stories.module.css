@@ -1,0 +1,22 @@
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-lg);
+}
+
+.trigger {
+    align-self: flex-start;
+}
+
+.accentAlert {
+    border-inline-start: var(--dextinity-space-xs) solid var(--dextinity-color-warning);
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+}
+
+.overlineTitle {
+    font-size: var(--dextinity-typography-overline-font-size);
+    font-weight: var(--dextinity-typography-overline-font-weight);
+    letter-spacing: var(--dextinity-typography-overline-letter-spacing);
+    text-transform: var(--dextinity-typography-overline-text-transform);
+}

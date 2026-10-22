@@ -1,0 +1,58 @@
+@layer dextinity {
+    .root {
+        --_size: var(--dextinity-control-height-medium);
+        --_font-size: var(--dextinity-control-font-size-medium);
+
+        position: relative;
+        display: inline-block;
+        flex-shrink: 0;
+        width: var(--_size);
+        height: var(--_size);
+        overflow: hidden;
+        border-radius: var(--dextinity-radius-full);
+        vertical-align: middle;
+        user-select: none;
+
+        &[data-size="small"] {
+            --_size: var(--dextinity-control-height-small);
+            --_font-size: var(--dextinity-control-font-size-small);
+        }
+
+        &[data-size="large"] {
+            --_size: var(--dextinity-control-height-large);
+            --_font-size: var(--dextinity-control-font-size-large);
+        }
+    }
+
+    /* The image is stacked on the initials, which show through until it has loaded. */
+    .fallback,
+    .image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .fallback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dextinity-color-primary-subtle);
+        color: var(--dextinity-color-primary);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--_font-size);
+        font-weight: var(--dextinity-typography-label-font-weight);
+        line-height: 1;
+        letter-spacing: var(--dextinity-typography-label-letter-spacing);
+    }
+
+    .image {
+        object-fit: cover;
+
+        /* Hidden rather than removed, so `loading="lazy"` still fetches the image. */
+        &[data-loading],
+        &[data-error] {
+            visibility: hidden;
+        }
+    }
+}

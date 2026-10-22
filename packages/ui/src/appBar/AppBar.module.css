@@ -1,0 +1,19 @@
+@layer dextinity {
+    .root {
+        display: flex;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        box-sizing: border-box;
+        min-block-size: var(--dextinity-app-bar-height);
+        overflow-x: auto; /* Children that don't fit scroll inside the bar instead of out of its background. */
+        padding-block: var(--dextinity-space-xs);
+        padding-inline: var(--dextinity-space-lg);
+        background: var(--dextinity-app-bar-background);
+        color: var(--dextinity-app-bar-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+    }
+}

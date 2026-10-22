@@ -1,0 +1,45 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as BreadcrumbsStories from "./Breadcrumbs.stories";
+
+<Meta of={BreadcrumbsStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+Both components take `className` and `style` for their outer element: the `<nav>` of `Breadcrumbs`, `dextinityBreadcrumbs`, and the list item of `BreadcrumbItem`, `dextinityBreadcrumbItem`. `slotProps` adjusts their inner parts. Each slot takes an element's props, merged with the slot's own, or a function of the owner state that returns them: `current` for an item; the breadcrumbs' owner state is empty. `render` replaces a slot's element; `BreadcrumbItem`'s own `render` prop replaces its link, for a router's link component. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot        | Component        | Element  | Class                                | What it is                                                                                                                                             |
+| ----------- | ---------------- | -------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `list`      | `Breadcrumbs`    | `<ol>`   | `dextinityBreadcrumbs__list`         | The ordered list of the items, `children`.                                                                                                             |
+| `separator` | `BreadcrumbItem` | `<span>` | `dextinityBreadcrumbItem__separator` | The chevron before the item, which separates it from the item before. It is hidden on the first item. Assistive technology skips it.                   |
+| `link`      | `BreadcrumbItem` | `<a>`    | `dextinityBreadcrumbItem__link`      | The link, which holds `children` and gets the props the component doesn't handle. For the `current` page, it has no `href`, which makes it plain text. |
+
+<Canvas of={BreadcrumbsStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the breadcrumbs through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the breadcrumbs' own: they're shared tokens, which other components can use too. They style both the trail and each `BreadcrumbItem` in it. The separators are the `chevron-right` icon of the [icon set](?path=/docs/foundations-icons--docs), which a theme can replace. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                                               | In the breadcrumbs                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-color-foreground-muted`                                                                                                                                                                | Text color of the links, and color of the chevrons between the items.                                                                                                           |
+| `--dextinity-color-foreground`                                                                                                                                                                      | Text color of the `current` page, and of a hovered link, which is underlined too.                                                                                               |
+| `--dextinity-font-family-body`                                                                                                                                                                      | Font family of the items.                                                                                                                                                       |
+| `--dextinity-typography-body-small-font-size`, `--dextinity-typography-body-small-line-height`, `--dextinity-typography-body-small-font-weight`, `--dextinity-typography-body-small-letter-spacing` | Text style of the items. The chevrons are 1.25 times as large as the text.                                                                                                      |
+| `--dextinity-space-xs`                                                                                                                                                                              | Padding around each item's text, which makes a link a larger target and keeps its focus outline off the text.                                                                   |
+| `--dextinity-space-sm`                                                                                                                                                                              | Least gap between a chevron and the items on either side of it.                                                                                                                 |
+| `--dextinity-radius-small`                                                                                                                                                                          | Corner radius of a link's focus outline.                                                                                                                                        |
+| `--dextinity-color-focus-ring`, `--dextinity-focus-ring-width`, `--dextinity-focus-ring-offset`                                                                                                     | Outline of a link focused with the keyboard. The gaps around the chevrons grow where it needs more room than `--dextinity-space-sm` leaves, so that it never reaches a chevron. |
+| `--dextinity-motion-duration-medium`, `--dextinity-motion-easing`                                                                                                                                   | Transition of a link's text color on hover.                                                                                                                                     |

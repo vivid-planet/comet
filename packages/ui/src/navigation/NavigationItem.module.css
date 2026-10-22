@@ -1,0 +1,70 @@
+/* The link looks like the trigger in NavigationGroup.module.css, so items and groups line up. Keep both in sync. */
+@layer dextinity {
+    .root {
+        /* `--_level` is set inline from the item's nesting level. */
+        --_background: transparent;
+        --_foreground: var(--dextinity-color-foreground);
+
+        /* The link fills the list item, so hovering one hovers the other. */
+        @media (hover: hover) {
+            &:hover {
+                --_background: var(--dextinity-color-surface-hover);
+            }
+        }
+
+        &[data-active] {
+            --_background: var(--dextinity-color-primary-subtle);
+            --_foreground: var(--dextinity-color-primary);
+        }
+    }
+
+    .link {
+        display: flex;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: var(--dextinity-control-height-medium);
+        padding-block: var(--dextinity-space-xs);
+        padding-inline: calc(var(--dextinity-space-lg) + (var(--_level, 1) - 1) * (1.25em + var(--dextinity-space-sm))) var(--dextinity-space-lg);
+        border-radius: var(--dextinity-radius-medium);
+        background: var(--_background);
+        color: var(--_foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        text-decoration: none;
+        overflow-wrap: anywhere;
+        transition: background-color var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+
+        /* Inside the link: a scrolling sidebar or a closing group would clip an outline around it. */
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: calc(-1 * var(--dextinity-focus-ring-width));
+        }
+    }
+
+    .icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        font-size: 1.25em;
+
+        & > svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+
+    /* Forced colors replace the background and the text color that mark the active item, so it takes the system's colors of a selected item. */
+    @media (forced-colors: active) {
+        .root[data-active] > .link {
+            /* Otherwise, the browser draws the text on a backplate in the system's background color. */
+            forced-color-adjust: none;
+            outline-color: SelectedItemText;
+            background: SelectedItem;
+            color: SelectedItemText;
+        }
+    }
+}

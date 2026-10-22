@@ -1,0 +1,63 @@
+@layer dextinity {
+    .root {
+        --_background: transparent;
+
+        display: inline-flex;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        min-block-size: var(--dextinity-control-height-medium);
+        margin: 0;
+        padding-block: var(--dextinity-space-xs);
+        padding-inline: var(--dextinity-control-padding-inline-medium);
+        border: none;
+        border-radius: var(--dextinity-button-radius);
+        background: var(--_background);
+        color: var(--dextinity-app-bar-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-control-font-size-medium);
+        font-weight: var(--dextinity-button-font-weight);
+        line-height: 1.2;
+        text-align: center;
+        white-space: nowrap; /* A bar of fixed height has no room for a wrapped label. */
+        cursor: pointer;
+        user-select: none;
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: background-color;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-app-bar-focus-ring);
+            outline-offset: var(--dextinity-focus-ring-offset);
+        }
+
+        @media (hover: hover) {
+            &:hover:not([data-disabled]) {
+                --_background: var(--dextinity-app-bar-background-hover);
+            }
+        }
+
+        &[data-popup-open] {
+            --_background: var(--dextinity-app-bar-background-hover);
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .startIcon,
+    .endIcon {
+        display: inline-flex;
+        flex-shrink: 0;
+        font-size: 1.25em;
+
+        & > svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+}

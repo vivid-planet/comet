@@ -1,0 +1,47 @@
+@layer dextinity {
+    .root {
+        --_foreground: var(--dextinity-color-foreground);
+        --_background-highlighted: var(--dextinity-color-surface-hover);
+
+        display: flex;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        padding-block: var(--dextinity-space-sm);
+        padding-inline: var(--dextinity-space-lg);
+        color: var(--_foreground);
+        cursor: pointer;
+        user-select: none;
+
+        &:focus {
+            outline: none; /* Base UI focuses the highlighted item, whose background shows it. */
+        }
+
+        &[data-tone="danger"] {
+            --_foreground: var(--dextinity-color-danger);
+            --_background-highlighted: var(--dextinity-color-danger-subtle);
+        }
+
+        &[data-highlighted] {
+            /* Forced-colors mode removes the background and draws the transparent outline in a system color instead. */
+            outline: var(--dextinity-focus-ring-width) solid transparent;
+            outline-offset: calc(-1 * var(--dextinity-focus-ring-width));
+            background: var(--_background-highlighted);
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        font-size: 1.25em;
+
+        & > svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+}

@@ -1,0 +1,39 @@
+.frame {
+    max-inline-size: 32rem;
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-xl);
+}
+
+.fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-xl);
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-xs);
+}
+
+.highlightedCard {
+    border-color: var(--dextinity-color-primary);
+}
+
+.dividedHeader {
+    padding-block-end: var(--dextinity-space-lg);
+    border-block-end: 1px solid var(--dextinity-color-border);
+}

@@ -1,0 +1,82 @@
+/* The trigger looks like the link in NavigationItem.module.css, so items and groups line up. Keep both in sync. */
+@layer dextinity {
+    .root {
+        /* The trigger and the panel lay out the group. This rule only gives the root its `dextinityNavigationGroup` class. `--_level` is set inline from the group's nesting level. */
+    }
+
+    .trigger {
+        --_background: transparent;
+        --_indicator-rotation: 0deg;
+
+        display: flex;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: var(--dextinity-control-height-medium);
+        margin: 0;
+        padding-block: var(--dextinity-space-xs);
+        padding-inline: calc(var(--dextinity-space-lg) + (var(--_level, 1) - 1) * (1.25em + var(--dextinity-space-sm))) var(--dextinity-space-lg);
+        border: 0;
+        border-radius: var(--dextinity-radius-medium);
+        background: var(--_background);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        text-align: start;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+        transition: background-color var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+
+        &[data-panel-open] {
+            --_indicator-rotation: 180deg;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                --_background: var(--dextinity-color-surface-hover);
+            }
+        }
+
+        /* Inside the trigger: a scrolling sidebar would clip an outline around it. */
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: calc(-1 * var(--dextinity-focus-ring-width));
+        }
+    }
+
+    .icon,
+    .indicator {
+        display: inline-flex;
+        flex-shrink: 0;
+        font-size: 1.25em;
+    }
+
+    .icon > svg {
+        width: 1em;
+        height: 1em;
+    }
+
+    .indicator {
+        margin-inline-start: auto;
+        transform: rotate(var(--_indicator-rotation));
+        transition: transform var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+    }
+
+    .panel {
+        block-size: var(--collapsible-panel-height);
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        list-style: none;
+        transition: block-size var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+
+        &[data-starting-style],
+        &[data-ending-style] {
+            block-size: 0;
+        }
+    }
+}

@@ -1,0 +1,26 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-xs);
+    align-items: center;
+}
+
+/* Leaves room above the trigger, so the tooltip opens on its side instead of the opposite one. */
+.withRoom {
+    padding-block: 3rem;
+}
+
+.wideButton {
+    min-inline-size: 18rem;
+}
+
+/* Leaves room around the trigger, so the tooltip opens inside the theme switch. */
+.themeSwitch {
+    padding: 3rem;
+    border-radius: var(--dextinity-radius-large);
+}
+
+.accentTooltip {
+    background: var(--dextinity-color-primary);
+    color: var(--dextinity-color-primary-foreground);
+}

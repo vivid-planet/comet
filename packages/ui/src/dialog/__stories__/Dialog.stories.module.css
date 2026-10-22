@@ -1,0 +1,30 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-xl);
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-lg);
+}
+
+.themeSwitch {
+    padding: var(--dextinity-space-lg);
+    border-radius: var(--dextinity-radius-large);
+}
+
+.status {
+    margin: 0;
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+}
+
+.actionsWithStart > :first-child {
+    margin-inline-end: auto;
+}
+
+.narrowDialog {
+    inline-size: 30rem;
+}
