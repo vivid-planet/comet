@@ -233,11 +233,11 @@ export function createFilesResolver({
             const previewDamUrls = Boolean(req.headers["x-preview-dam-urls"]);
 
             // A file with an invalid license keeps its URL, which responds with 410 Gone, unless it's a pixel image with a fallback image
-            if (file.image && this.filesService.isBlockedByLicense(file, { previewDamUrls })) {
-                const fallbackImage = await this.filesService.findInvalidLicenseFallbackImage(file.scope);
+            if (file.image) {
+                const image = await this.filesService.findImageToDeliver({ file }, { previewDamUrls });
 
-                if (fallbackImage) {
-                    return this.filesService.createFileUrl(fallbackImage, { previewDamUrls });
+                if (image) {
+                    return this.filesService.createFileUrl(image.file, { previewDamUrls });
                 }
             }
 

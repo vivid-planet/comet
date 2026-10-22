@@ -38,12 +38,8 @@ export class FileImagesResolver {
             return undefined;
         }
 
-        if (this.filesService.isBlockedByLicense(file, { previewDamUrls })) {
-            const fallbackImage = await this.filesService.findInvalidLicenseFallbackImage(file.scope);
+        const image = await this.filesService.findImageToDeliver({ file }, { previewDamUrls });
 
-            return fallbackImage ? this.imagesService.createUrlTemplate({ file: fallbackImage }, { previewDamUrls }) : undefined;
-        }
-
-        return this.imagesService.createUrlTemplate({ file }, { previewDamUrls });
+        return image ? this.imagesService.createUrlTemplate(image, { previewDamUrls }) : undefined;
     }
 }

@@ -2,7 +2,9 @@ import type { EntityManager, EntityRepository, MikroORM, QueryBuilder } from "@m
 import { Logger } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { FocalPoint } from "../../file-utils/focal-point.enum";
 import type { DamConfig } from "../dam.config";
+import type { ImageCropArea } from "../images/entities/image-crop-area.entity";
 import { damSettingsByScope } from "../settings/dam-settings-by-scope";
 import { DamSettings } from "../settings/entities/dam-settings.entity";
 import type { FileFilterInput } from "./dto/file.args";
@@ -234,11 +236,27 @@ describe("FilesService — invalid licenses", () => {
         expect(service.isBlockedByLicense({ license: expiredLicense } as FileInterface, { previewDamUrls })).toBe(expected);
     });
 
-    it("finds the fallback image of the scope's settings", async () => {
+    const cropArea = { focalPoint: FocalPoint.CENTER, width: 50, height: 50, x: 25, y: 25 } as ImageCropArea;
+    const imageWithValidLicense = { file: { id: FILE_ID_B, scope, license: validLicense } as unknown as FileInterface, cropArea };
+    const imageWithInvalidLicense = { file: { id: FILE_ID_B, scope, license: expiredLicense } as unknown as FileInterface, cropArea };
+
+    it("delivers the image itself, including its crop area, when its license is valid", async () => {
+        const { service } = createService();
+
+        await expect(service.findImageToDeliver(imageWithValidLicense, {})).resolves.toBe(imageWithValidLicense);
+    });
+
+    it("delivers the image itself for the Admin, even when its license is invalid", async () => {
+        const { service } = createService();
+
+        await expect(service.findImageToDeliver(imageWithInvalidLicense, { previewDamUrls: true })).resolves.toBe(imageWithInvalidLicense);
+    });
+
+    it("delivers the fallback image of the image's scope, without the crop area, when its license is invalid", async () => {
         const fallbackImage = { id: FILE_ID_A, image: {}, license: validLicense } as Partial<FileInterface>;
         const { service, entityManager } = createService({ settings: createSettingsWithFallbackImage(fallbackImage) });
 
-        await expect(service.findInvalidLicenseFallbackImage(scope)).resolves.toBe(fallbackImage);
+        await expect(service.findImageToDeliver(imageWithInvalidLicense, {})).resolves.toEqual({ file: fallbackImage });
         expect(entityManager.findOne).toHaveBeenCalledWith(DamSettings, damSettingsByScope(scope));
     });
 
@@ -250,9 +268,9 @@ describe("FilesService — invalid licenses", () => {
             case: "the fallback image's license is invalid as well",
             settings: createSettingsWithFallbackImage({ id: FILE_ID_A, image: {} as DamFileImage, license: expiredLicense }),
         },
-    ])("returns no fallback image when $case", async ({ settings }) => {
+    ])("delivers no image when the license is invalid and $case", async ({ settings }) => {
         const { service } = createService({ settings });
 
-        await expect(service.findInvalidLicenseFallbackImage(scope)).resolves.toBeNull();
+        await expect(service.findImageToDeliver(imageWithInvalidLicense, {})).resolves.toBeNull();
     });
 });

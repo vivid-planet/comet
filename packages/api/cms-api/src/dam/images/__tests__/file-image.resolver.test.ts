@@ -6,6 +6,7 @@ import type { DamConfig } from "../../dam.config";
 import type { FileInterface } from "../../files/entities/file.entity";
 import type { DamFileImage } from "../../files/entities/file-image.entity";
 import type { FilesService } from "../../files/files.service";
+import type { ImageInterface } from "../dto/image.interface";
 import { FileImagesResolver } from "../file-image.resolver";
 import { ImagesService } from "../images.service";
 
@@ -26,8 +27,9 @@ const imagesService = new ImagesService({ secret: "secret", basePath: "dam" } as
 function createResolver({ hasInvalidLicense, fallbackImage }: { hasInvalidLicense: boolean; fallbackImage: FileInterface | null }) {
     const filesService = {
         findOneByImageId: vi.fn().mockResolvedValue(original),
-        isBlockedByLicense: vi.fn((_file: FileInterface, { previewDamUrls }: { previewDamUrls: boolean }) => !previewDamUrls && hasInvalidLicense),
-        findInvalidLicenseFallbackImage: vi.fn().mockResolvedValue(fallbackImage),
+        findImageToDeliver: vi.fn((image: ImageInterface, { previewDamUrls }: { previewDamUrls: boolean }) =>
+            Promise.resolve(!previewDamUrls && hasInvalidLicense ? (fallbackImage ? { file: fallbackImage } : null) : image),
+        ),
     } as unknown as FilesService;
 
     return new FileImagesResolver(imagesService, filesService);

@@ -1,6 +1,7 @@
 import type { IncomingMessage } from "http";
 import { describe, expect, it, vi } from "vitest";
 
+import type { ImageInterface } from "../images/dto/image.interface";
 import { createFileEntity, type FileInterface } from "./entities/file.entity";
 import { createFolderEntity } from "./entities/folder.entity";
 import { createFilesResolver } from "./files.resolver";
@@ -19,8 +20,9 @@ const fallbackImage = { id: "fallback", image: {} } as FileInterface;
 
 function createResolver({ hasInvalidLicense, fallback }: { hasInvalidLicense: boolean; fallback: FileInterface | null }) {
     const filesService = {
-        isBlockedByLicense: vi.fn((_file: FileInterface, { previewDamUrls }: { previewDamUrls: boolean }) => !previewDamUrls && hasInvalidLicense),
-        findInvalidLicenseFallbackImage: vi.fn().mockResolvedValue(fallback),
+        findImageToDeliver: vi.fn((image: ImageInterface, { previewDamUrls }: { previewDamUrls: boolean }) =>
+            Promise.resolve(!previewDamUrls && hasInvalidLicense ? (fallback ? { file: fallback } : null) : image),
+        ),
         createFileUrl: vi.fn((file: FileInterface, { previewDamUrls }: { previewDamUrls: boolean }) =>
             Promise.resolve(`/dam/files/${previewDamUrls ? "preview/" : ""}${file.id}`),
         ),

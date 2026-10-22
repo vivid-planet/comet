@@ -46,24 +46,19 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
             return {};
         }
 
-        let file = await this.filesService.findOneById(block.damFileId);
+        const blockFile = await this.filesService.findOneById(block.damFileId);
 
-        if (!file) {
+        if (!blockFile) {
             return {};
         }
 
-        let cropArea = block.cropArea;
+        const image = await this.filesService.findImageToDeliver({ file: blockFile, cropArea: block.cropArea }, { previewDamUrls });
 
-        if (this.filesService.isBlockedByLicense(file, { previewDamUrls })) {
-            file = await this.filesService.findInvalidLicenseFallbackImage(file.scope);
-
-            if (!file) {
-                return {};
-            }
-
-            // The block's crop area was chosen for the original image and doesn't fit the fallback image
-            cropArea = undefined;
+        if (!image) {
+            return {};
         }
+
+        const { file, cropArea } = image;
 
         const fileUrl = includeInvisibleContent ? await this.filesService.createFileUrl(file, { previewDamUrls }) : undefined;
 

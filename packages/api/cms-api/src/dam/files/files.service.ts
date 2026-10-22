@@ -22,6 +22,7 @@ import { getDamFileCategory } from "../common/mimeTypes/dam-file-category";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, DAM_DOMINANT_COLOR_CALCULATOR } from "../dam.constants";
 import { DominantColorCalculatorInterface } from "../dominant-color-calculator.interface";
+import { ImageInterface } from "../images/dto/image.interface";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { damSettingsByScope } from "../settings/dam-settings-by-scope";
 import { DamSettings } from "../settings/entities/dam-settings.entity";
@@ -689,7 +690,22 @@ export class FilesService {
         return !previewDamUrls && this.hasInvalidLicense(file);
     }
 
-    async findInvalidLicenseFallbackImage(scope?: DamScopeInterface): Promise<FileInterface | null> {
+    /**
+     * Returns the image to deliver for the given one: the image itself, the fallback image if its license is invalid, or `null` if
+     * there's no fallback image.
+     */
+    async findImageToDeliver(image: ImageInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<ImageInterface | null> {
+        if (!this.isBlockedByLicense(image.file, { previewDamUrls })) {
+            return image;
+        }
+
+        const fallbackImage = await this.findInvalidLicenseFallbackImage(image.file.scope);
+
+        // The crop area was chosen for the original image and doesn't fit the fallback image
+        return fallbackImage ? { file: fallbackImage } : null;
+    }
+
+    private async findInvalidLicenseFallbackImage(scope?: DamScopeInterface): Promise<FileInterface | null> {
         const settings = await this.entityManager.findOne(DamSettings, damSettingsByScope(scope));
         const fallbackImage = await settings?.invalidLicenseFallbackImage?.load();
 

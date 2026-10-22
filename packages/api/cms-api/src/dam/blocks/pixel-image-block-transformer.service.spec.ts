@@ -5,6 +5,7 @@ import { FocalPoint } from "../../file-utils/focal-point.enum";
 import type { DamConfig } from "../dam.config";
 import type { FileInterface } from "../files/entities/file.entity";
 import type { FilesService } from "../files/files.service";
+import type { ImageInterface } from "../images/dto/image.interface";
 import type { ImageCropArea } from "../images/entities/image-crop-area.entity";
 import { ImagesService } from "../images/images.service";
 import type { PixelImageBlockData } from "./pixel-image.block";
@@ -37,8 +38,9 @@ const fallbackImage = createImageFile({
 function createTransformer({ hasInvalidLicense, fallback }: { hasInvalidLicense: boolean; fallback: FileInterface | null }) {
     const filesService = {
         findOneById: vi.fn().mockResolvedValue(originalImage),
-        isBlockedByLicense: vi.fn((_file: FileInterface, { previewDamUrls }: { previewDamUrls: boolean }) => !previewDamUrls && hasInvalidLicense),
-        findInvalidLicenseFallbackImage: vi.fn().mockResolvedValue(fallback),
+        findImageToDeliver: vi.fn((image: ImageInterface, { previewDamUrls }: { previewDamUrls: boolean }) =>
+            Promise.resolve(!previewDamUrls && hasInvalidLicense ? (fallback ? { file: fallback } : null) : image),
+        ),
         createFileUrl: vi.fn(),
     } as unknown as FilesService;
     const imagesService = new ImagesService({ secret: "secret", basePath: "dam" } as DamConfig);
@@ -65,7 +67,7 @@ describe("PixelImageBlockTransformerService", () => {
 
         const result = await transformer.transformToPlain(block, context);
 
-        expect(filesService.findInvalidLicenseFallbackImage).toHaveBeenCalledWith(originalImage.scope);
+        expect(filesService.findImageToDeliver).toHaveBeenCalledWith({ file: originalImage, cropArea: blockCropArea }, { previewDamUrls: false });
         expect(result.damFile?.id).toBe(fallbackImage.id);
         expect(result.damFile?.image?.cropArea).toEqual(fallbackImage.image?.cropArea);
         expect(result.cropArea).toBeUndefined();
