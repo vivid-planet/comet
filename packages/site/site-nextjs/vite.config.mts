@@ -19,7 +19,7 @@ export default defineConfig({
             formats: ["es"],
             cssFileName: "style",
         },
-        rollupOptions: {
+        rolldownOptions: {
             plugins: [preserveDirectives()], // is necessary to preserve "use client" at top of file
             external: (source) => {
                 // this is necessary to treat all npm packages as external,
