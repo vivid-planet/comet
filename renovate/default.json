@@ -6,8 +6,10 @@
         ":configMigration",
         "abandonments:recommended",
         "security:minimumReleaseAgeNpm",
-        ":maintainLockFilesWeekly"
+        ":maintainLockFilesWeekly",
+        ":automergeStableNonMajor"
     ],
+    "automergeStrategy": "squash",
     "recreateWhen": "never",
     "packageRules": [
         {
