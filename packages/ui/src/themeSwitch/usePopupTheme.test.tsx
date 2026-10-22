@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { useRef } from "react";
 import { describe, expect, it } from "vitest";
 
@@ -29,6 +29,36 @@ describe("usePopupTheme", () => {
 
         expect(screen.getByTestId("popup")).toHaveAttribute("data-dextinity-theme", "sunset");
         expect(screen.getByTestId("popup")).toHaveAttribute("data-dextinity-color-scheme", "dark");
+    });
+
+    it("follows a change of the theme around the trigger while the popup is open", async () => {
+        const { rerender } = render(
+            <ThemeSwitch theme="sunset" colorScheme="dark">
+                <TriggerWithPopup isOpen />
+            </ThemeSwitch>,
+        );
+
+        rerender(
+            <ThemeSwitch theme="acme" colorScheme="light">
+                <TriggerWithPopup isOpen />
+            </ThemeSwitch>,
+        );
+
+        await waitFor(() => expect(screen.getByTestId("popup")).toHaveAttribute("data-dextinity-color-scheme", "light"));
+        expect(screen.getByTestId("popup")).toHaveAttribute("data-dextinity-theme", "acme");
+    });
+
+    it("removes the theme attributes when the theme around the trigger disappears while the popup is open", async () => {
+        render(
+            <ThemeSwitch theme="sunset" colorScheme="dark" data-testid="theme-switch">
+                <TriggerWithPopup isOpen />
+            </ThemeSwitch>,
+        );
+
+        screen.getByTestId("theme-switch").removeAttribute("data-dextinity-theme");
+
+        await waitFor(() => expect(screen.getByTestId("popup")).not.toHaveAttribute("data-dextinity-theme"));
+        expect(screen.getByTestId("popup")).not.toHaveAttribute("data-dextinity-color-scheme");
     });
 
     it("leaves a popup without theme attributes when nothing around the trigger names a theme", () => {

@@ -8,23 +8,41 @@ export interface PopupThemeAttributes {
     "data-dextinity-color-scheme"?: string;
 }
 
+const themeAttributeNames = ["data-dextinity-theme", "data-dextinity-color-scheme"];
+
 /**
  * Gives a popup the theme and color scheme of the nearest element around its trigger that names them, such as a
- * `ThemeSwitch`, so the popup looks like its trigger. It reads them when the popup opens, from the DOM, so it
- * needs no React context.
+ * `ThemeSwitch`, so the popup looks like its trigger. It reads them from the DOM, so it needs no React context:
+ * when the popup opens, and again whenever they change while it's open.
  */
 export function usePopupTheme(triggerRef: RefObject<Element | null>, isOpen: boolean): PopupThemeAttributes {
     const [attributes, setAttributes] = useState<PopupThemeAttributes>({});
 
     useLayoutEffect(() => {
-        const themedElement = isOpen ? triggerRef.current?.closest("[data-dextinity-theme]") : null;
-        if (!themedElement) {
+        const trigger = triggerRef.current;
+        if (!isOpen || !trigger) {
             return;
         }
-        setAttributes({
-            "data-dextinity-theme": themedElement.getAttribute("data-dextinity-theme") ?? undefined,
-            "data-dextinity-color-scheme": themedElement.getAttribute("data-dextinity-color-scheme") ?? undefined,
-        });
+
+        const copyTheme = () => {
+            // A trigger that left the page, such as the item of a menu that closed when it opened a dialog, keeps its theme.
+            if (!trigger.isConnected) {
+                return;
+            }
+            const themedElement = trigger.closest("[data-dextinity-theme]");
+            const theme = themedElement?.getAttribute("data-dextinity-theme") ?? undefined;
+            const colorScheme = themedElement?.getAttribute("data-dextinity-color-scheme") ?? undefined;
+            setAttributes((current) =>
+                current["data-dextinity-theme"] === theme && current["data-dextinity-color-scheme"] === colorScheme
+                    ? current
+                    : { "data-dextinity-theme": theme, "data-dextinity-color-scheme": colorScheme },
+            );
+        };
+
+        copyTheme();
+        const observer = new MutationObserver(copyTheme);
+        observer.observe(trigger.ownerDocument.documentElement, { attributeFilter: themeAttributeNames, subtree: true });
+        return () => observer.disconnect();
     }, [triggerRef, isOpen]);
 
     return attributes;
