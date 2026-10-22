@@ -39,3 +39,5 @@ jobs:
 
             - name: Validate renovate config
               run: npx --yes --package renovate -- renovate-config-validator
+              env:
+                  GITHUB_COM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
