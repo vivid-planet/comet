@@ -20,7 +20,7 @@
         },
         {
             "extends": ["packages:eslint"],
-            "groupName": "Eslint packages"
+            "groupName": "ESLint packages"
         },
         {
             "groupName": "Storybook",
