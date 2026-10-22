@@ -5,6 +5,7 @@ on:
         paths:
             - renovate.json
             - renovate.json5
+            - renovate/**
         branches:
             - main
             - next
@@ -12,6 +13,7 @@ on:
         paths:
             - renovate.json
             - renovate.json5
+            - renovate/**
         branches:
             - main
             - next
