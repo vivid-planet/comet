@@ -122,7 +122,7 @@
         "@types/react-router-dom": "^5.3.3",
         "@types/react-window": "^1.8.8",
         "@vitest/browser": "5.0.4",
-        "@vitest/browser-playwright": "5.0.4",
+        "@vitest/browser-playwright": "5.0.5",
         "chokidar-cli": "^3.0.0",
         "draft-js": "^0.11.7",
         "eslint": "^9.39.5",
@@ -148,7 +148,7 @@
         "typescript": "5.9.3",
         "vite": "^7.3.7",
         "vite-tsconfig-paths": "^6.1.1",
-        "vitest": "^5.0.4"
+        "vitest": "^5.0.5"
     },
     "peerDependencies": {
         "@apollo/client": "^3.7.0",
