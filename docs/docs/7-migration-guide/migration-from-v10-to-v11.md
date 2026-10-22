@@ -508,6 +508,17 @@ npm install
 
 v2 drops support for `graphql` below v16 and for Node 20, which v11 doesn't support either. The scalars themselves are unchanged.
 
+### Replace deep imports into the API packages
+
+`@dextinity/cms-api`, `@dextinity/brevo-api` and `@dextinity/api-generator` only expose their package root through an `exports` map, so imports of their internals no longer resolve. Import from the package root instead:
+
+```diff
+- import { CombinedPermission } from "@dextinity/cms-api/lib/user-permissions/user-permissions.types";
++ import { CombinedPermission } from "@dextinity/cms-api";
+```
+
+If something you need isn't exported from the package root, open an issue.
+
 ### Regenerate the generated API files
 
 The API Generator reads MikroORM metadata, which changed shape in v7. Regenerate and check that the output is unchanged:
