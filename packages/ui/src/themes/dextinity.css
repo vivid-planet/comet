@@ -5,7 +5,7 @@
  * Published as `@dextinity/ui/themes/dextinity.css`. Every token is documented in "Foundations/Design tokens".
  *
  * Where it deviates from the Dextinity design system, it's for contrast (WCAG 2.2 AA):
- * - The button gradient ends in teal 600 instead of teal 400, so its white text reaches 5.9:1 instead of 3.8:1.
+ * - The button gradient ends in a darker teal than teal 400, so its white text reaches 4.6:1 along the whole gradient.
  * - Control borders are grey 400 instead of grey 200 (3.7:1 instead of 1.7:1).
  * - Danger and warning are darker, so they reach 4.5:1 on their subtle backgrounds.
  * - The focus ring is a solid outline instead of a translucent shadow.

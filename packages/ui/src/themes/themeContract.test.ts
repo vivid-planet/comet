@@ -396,7 +396,7 @@ function resolveColors(theme: Theme, colorScheme: ColorScheme, token: string): R
     if (value.startsWith("linear-gradient(")) {
         const stops = gradientColorStops(value);
         if (stops.length !== 2) {
-            throw new Error(`${theme.fileName}: ${token} must be a gradient of two hex colors, so its contrast can be checked.`);
+            throw new Error(`${theme.fileName}: ${token} must be a gradient of two hex colors in sRGB, so its contrast can be checked.`);
         }
         const [first, last] = stops.map((stop) => parseHexColor(stop, `${theme.fileName}: ${token}`));
         // The luminance doesn't change monotonically between two colors whose channels change in opposite directions.
@@ -413,10 +413,17 @@ function resolveColors(theme: Theme, colorScheme: ColorScheme, token: string): R
     throw new Error(`${theme.fileName}: ${token} is "${value}". Use a hex color, so its contrast can be checked.`);
 }
 
-/** The hex colors of a gradient's color stops, or an empty list if any stop isn't a hex color with optional positions. */
+/**
+ * The hex colors of a gradient's color stops, or an empty list if any stop isn't a hex color with optional positions
+ * or the gradient is interpolated in another color space than sRGB.
+ */
 function gradientColorStops(gradient: string) {
     const gradientArguments = splitTopLevelCommas(gradient.slice("linear-gradient(".length, -1)).map((argument) => argument.trim());
     const hasDirection = /^(-?[\d.]+(deg|grad|rad|turn)|to |in )/.test(gradientArguments[0] ?? "");
+    // The colors are sampled in sRGB, so a gradient that a browser interpolates in another color space can't be checked.
+    if (hasDirection && /\bin\s+(?!srgb\b)/.test(gradientArguments[0])) {
+        return [];
+    }
     const colorStops = hasDirection ? gradientArguments.slice(1) : gradientArguments;
     const hexColors = colorStops.map((colorStop) => colorStop.match(/^(#[0-9a-f]+)(\s+-?[\d.]+%){0,2}$/i)?.[1]);
     return hexColors.every((hexColor) => hexColor !== undefined) ? hexColors : [];

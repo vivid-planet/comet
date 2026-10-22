@@ -132,7 +132,7 @@
         --dextinity-button-primary-background: linear-gradient(135deg, #ff6a45 0%, #ffa21f 100%);
         --dextinity-button-primary-background-hover: linear-gradient(135deg, #ff6f4d 0%, #ffbb3a 100%);
         --dextinity-button-primary-foreground: #0b3436;
-        --dextinity-button-primary-shadow: 0 2px 0 #d9481f, 0 6px 16px rgb(255 92 57 / 30%);
+        --dextinity-button-primary-shadow: 0 2px 0 #d9481f, 0 6px 16px rgb(255 106 69 / 30%);
         --dextinity-button-secondary-background: var(--dextinity-color-surface);
         --dextinity-button-secondary-background-hover: #00575a;
         --dextinity-button-secondary-foreground: #00575a;
@@ -177,7 +177,7 @@
 
         /* Button */
         --dextinity-button-primary-foreground: #061b1c;
-        --dextinity-button-primary-shadow: 0 2px 0 #c2401c, 0 6px 20px rgb(255 92 57 / 40%);
+        --dextinity-button-primary-shadow: 0 2px 0 #c2401c, 0 6px 20px rgb(255 106 69 / 40%);
         --dextinity-button-secondary-background-hover: #6fe0d2;
         --dextinity-button-secondary-foreground: #6fe0d2;
         --dextinity-button-secondary-foreground-hover: #061b1c;

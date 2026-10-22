@@ -9,7 +9,7 @@ Design tokens are the CSS custom properties a theme defines and the components r
 The values live in the theme stylesheets in `packages/ui/src/themes/`; [Theme overview](?path=/docs/foundations-theme-overview--docs) shows them for each theme. The "Design tokens" section of each component's docs page, such as [the button's](?path=/docs/components-button--docs#design-tokens), lists the tokens that style it and what each one changes there. Read [Theming](?path=/docs/foundations-theming--docs) for how a theme is applied and how to create one.
 
 - A token's value is a plain CSS value. It may reference another token, for example `var(--dextinity-color-surface)`; it updates with the color scheme.
-- Colors are opaque hex colors, and a gradient has two of them, so their contrast can be checked.
+- Colors are opaque hex colors, and a gradient has two of them and is interpolated in sRGB, the default, so their contrast can be checked.
 - Every theme defines all tokens for the light color scheme, and redefines every `--dextinity-color-*` token for the dark color scheme. It may redefine any other token there too.
 - "Contrast" names the minimum [WCAG 2.2](https://www.w3.org/TR/WCAG22/#contrast-minimum) contrast ratio between two tokens, checked in every theme and color scheme.
 
