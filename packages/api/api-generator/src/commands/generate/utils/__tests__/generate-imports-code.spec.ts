@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { generateImportsCode } from "../generate-imports-code";
+import { generateImportsCode } from "../generate-imports-code.js";
 
 describe("generateImportsCode", () => {
     it("groups imports by path and sorts them by name", () => {

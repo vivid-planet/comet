@@ -9,15 +9,15 @@ import {
     IsString,
     Length,
     registerDecorator,
-    ValidationOptions,
+    type ValidationOptions,
     ValidatorConstraint,
-    ValidatorConstraintInterface,
+    type ValidatorConstraintInterface,
 } from "class-validator";
 import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
-import { generateCrud } from "../../generateCrud/generate-crud";
-import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
+import { generateCrud } from "../../generateCrud/generate-crud.js";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper.js";
 
 export const IsTrueAsString = (validationOptions?: ValidationOptions) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

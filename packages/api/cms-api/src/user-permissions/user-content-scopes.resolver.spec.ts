@@ -2,10 +2,10 @@ import { createMock } from "@golevelup/ts-vitest";
 import type { EntityManager } from "@mikro-orm/postgresql";
 import { describe, expect, it } from "vitest";
 
-import type { ContentScope } from "./interfaces/content-scope.interface";
-import type { User } from "./interfaces/user";
-import { UserContentScopesResolver } from "./user-content-scopes.resolver";
-import type { UserPermissionsService } from "./user-permissions.service";
+import type { ContentScope } from "./interfaces/content-scope.interface.js";
+import type { User } from "./interfaces/user.js";
+import { UserContentScopesResolver } from "./user-content-scopes.resolver.js";
+import type { UserPermissionsService } from "./user-permissions.service.js";
 
 describe("UserContentScopesResolver", () => {
     describe("userPermissionsContentScopes", () => {

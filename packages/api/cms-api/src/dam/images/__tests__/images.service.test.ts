@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { FocalPoint } from "../../../file-utils/focal-point.enum";
-import type { DamConfig } from "../../dam.config";
-import type { FileInterface } from "../../files/entities/file.entity";
-import { ImagesService } from "../images.service";
+import { FocalPoint } from "../../../file-utils/focal-point.enum.js";
+import type { DamConfig } from "../../dam.config.js";
+import type { FileInterface } from "../../files/entities/file.entity.js";
+import { ImagesService } from "../images.service.js";
 
 function createImagesService(config: Partial<DamConfig> = {}) {
     return new ImagesService({ secret: "secret", basePath: "dam", ...config } as DamConfig);

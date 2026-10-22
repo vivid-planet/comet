@@ -1,13 +1,13 @@
-import { AnyEntity, EntityManager, FilterQuery } from "@mikro-orm/postgresql";
+import { type AnyEntity, EntityManager, type FilterQuery } from "@mikro-orm/postgresql";
 import { ModuleRef } from "@nestjs/core";
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
-import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { SCOPED_ENTITY_METADATA_KEY, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
-import { getScopesForScopedEntity } from "../user-permissions/get-scopes-for-scoped-entity";
-import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { Dependency } from "./dto/dependency";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator.js";
+import { SCOPED_ENTITY_METADATA_KEY, type ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator.js";
+import { getScopesForScopedEntity } from "../user-permissions/get-scopes-for-scoped-entity.js";
+import type { ContentScope } from "../user-permissions/interfaces/content-scope.interface.js";
+import { Dependency } from "./dto/dependency.js";
 
 @Resolver(() => Dependency)
 @RequiredPermission("dependencies")

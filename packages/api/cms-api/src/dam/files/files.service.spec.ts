@@ -3,9 +3,9 @@ import type { EntityManager, MikroORM, QueryBuilder } from "@mikro-orm/postgresq
 import { Logger } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { FileFilterInput } from "./dto/file.args";
-import type { FileInterface } from "./entities/file.entity";
-import { FilesService } from "./files.service";
+import type { FileFilterInput } from "./dto/file.args.js";
+import type { FileInterface } from "./entities/file.entity.js";
+import { FilesService } from "./files.service.js";
 
 // Decorating a stand-in entity registers "DamFile" in MikroORM's metadata, which is all `resolveFileEntity()` needs.
 @Entity({ tableName: "DamFile" })

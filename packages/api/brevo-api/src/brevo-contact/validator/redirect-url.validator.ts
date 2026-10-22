@@ -1,12 +1,18 @@
 import { resolveEntityClass } from "@dextinity/cms-api";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
-import { registerDecorator, ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
+import {
+    registerDecorator,
+    type ValidationArguments,
+    type ValidationOptions,
+    ValidatorConstraint,
+    type ValidatorConstraintInterface,
+} from "class-validator";
 
-import { BrevoConfigInterface } from "../../brevo-config/entities/brevo-config-entity.factory";
-import { BrevoModuleConfig } from "../../config/brevo-module.config";
-import { BREVO_MODULE_CONFIG } from "../../config/brevo-module.constants";
-import { EmailCampaignScopeInterface } from "../../types";
+import type { BrevoConfigInterface } from "../../brevo-config/entities/brevo-config-entity.factory.js";
+import type { BrevoModuleConfig } from "../../config/brevo-module.config.js";
+import { BREVO_MODULE_CONFIG } from "../../config/brevo-module.constants.js";
+import type { EmailCampaignScopeInterface } from "../../types.js";
 
 export const IsValidRedirectURL = (scope: EmailCampaignScopeInterface, validationOptions?: ValidationOptions) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

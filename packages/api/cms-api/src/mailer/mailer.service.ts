@@ -4,10 +4,10 @@ import { subDays } from "date-fns";
 import { htmlToText } from "html-to-text";
 import type { Address, SendMailOptions as MailOptions, SentMessageInfo, Transporter } from "nodemailer";
 
-import { MailerLog } from "./entities/mailer-log.entity";
-import { MailerLogStatus } from "./entities/mailer-log-status.enum";
-import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";
-import { MailerModuleConfig } from "./mailer.module";
+import { MailerLog } from "./entities/mailer-log.entity.js";
+import { MailerLogStatus } from "./entities/mailer-log-status.enum.js";
+import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants.js";
+import type { MailerModuleConfig } from "./mailer.module.js";
 
 type MailerServiceConfig = Omit<MailerModuleConfig, "transport">;
 

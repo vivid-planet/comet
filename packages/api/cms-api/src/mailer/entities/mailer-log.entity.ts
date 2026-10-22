@@ -4,7 +4,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { randomUUID } from "crypto";
 import type { SendMailOptions as MailOptions, SentMessageInfo } from "nodemailer";
 
-import { MailerLogStatus } from "./mailer-log-status.enum";
+import { MailerLogStatus } from "./mailer-log-status.enum.js";
 
 @ObjectType()
 @Entity()

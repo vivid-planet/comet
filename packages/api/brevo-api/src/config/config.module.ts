@@ -1,8 +1,8 @@
-import { DynamicModule, Global, Module } from "@nestjs/common";
+import { type DynamicModule, Global, Module } from "@nestjs/common";
 
-import { EmailCampaignScopeInterface } from "../types";
-import { BrevoModuleConfig } from "./brevo-module.config";
-import { BREVO_MODULE_CONFIG } from "./brevo-module.constants";
+import type { EmailCampaignScopeInterface } from "../types.js";
+import type { BrevoModuleConfig } from "./brevo-module.config.js";
+import { BREVO_MODULE_CONFIG } from "./brevo-module.constants.js";
 
 @Global()
 @Module({})
