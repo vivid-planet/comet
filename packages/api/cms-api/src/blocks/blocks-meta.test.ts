@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { BlockData, type BlockDataInterface, BlockInput, blockInputToData, createBlock } from "./block";
-import { getBlocksMeta } from "./blocks-meta";
+import { BlockData, type BlockDataInterface, BlockInput, blockInputToData, createBlock } from "./block.js";
+import { getBlocksMeta } from "./blocks-meta.js";
 
 class MetaTestBlockData extends BlockData {}
 

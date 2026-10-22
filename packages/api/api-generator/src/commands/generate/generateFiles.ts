@@ -13,10 +13,10 @@ import type { MikroORM } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { format, resolveConfig } from "prettier";
 
-import { buildOptions } from "./generateCrud/build-options";
-import { generateCrud } from "./generateCrud/generate-crud";
-import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
-import { writeGeneratedFiles } from "./utils/write-generated-files";
+import { buildOptions } from "./generateCrud/build-options.js";
+import { generateCrud } from "./generateCrud/generate-crud.js";
+import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single.js";
+import { writeGeneratedFiles } from "./utils/write-generated-files.js";
 /**
  * Generate mode for the generator.
  *

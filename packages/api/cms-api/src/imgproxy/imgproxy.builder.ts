@@ -1,4 +1,4 @@
-import { type Extension, Gravity, ResizingType } from "./imgproxy.enum";
+import { type Extension, Gravity, ResizingType } from "./imgproxy.enum.js";
 
 export class ImgproxyBuilder {
     private defaultQuality: number;

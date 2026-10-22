@@ -6,29 +6,37 @@ import StarterKit from "@tiptap/starter-kit";
 import { plainToInstance } from "class-transformer";
 import { registerDecorator, validate, type ValidationOptions } from "class-validator";
 
-import { Block, BlockData, BlockDataFactory, BlockDataInterface, BlockInputFactory, BlockInputInterface, ChildBlockInfo } from "../block";
-import { AnnotationBlockMeta, BlockField } from "../decorators/field";
-import { BlockFactoryNameOrOptions } from "../factories/types";
-import { withDefaultDescription } from "../factories/withDefaultDescription";
-import { strictBlockDataFactoryDecorator } from "../helpers/strictBlockDataFactoryDecorator";
-import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFactoryDecorator";
-import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
-import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
-import type { MigrateVendorOptions } from "../migrations/types";
-import type { SearchText, WeightedSearchText } from "../search/get-search-text";
-import { applyDefaultTextBlockStyles } from "./applyDefaultTextBlockStyles";
-import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock";
-import { CmsLink } from "./extensions/CmsLink";
-import { InlineStyleMark } from "./extensions/InlineStyleMark";
-import { NonBreakingSpace } from "./extensions/NonBreakingSpace";
-import { Placeholder } from "./extensions/Placeholder";
-import { SoftHyphen } from "./extensions/SoftHyphen";
-import { createTextBlock } from "./extensions/TextBlock";
-import { TextBlockListItem } from "./extensions/TextBlockListItem";
-import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration";
-import { buildNoopMigration } from "./migrations/buildNoopMigration";
-import { buildTextBlockNodeMigration } from "./migrations/buildTextBlockNodeMigration";
-import { assertDraftJsHeadingsAreUnambiguous, type ListItemMapping, type TextBlockMapping } from "./migrations/convertDraftJsToTipTap";
+import {
+    type Block,
+    BlockData,
+    type BlockDataFactory,
+    type BlockDataInterface,
+    type BlockInputFactory,
+    type BlockInputInterface,
+    type ChildBlockInfo,
+} from "../block.js";
+import { AnnotationBlockMeta, BlockField } from "../decorators/field.js";
+import type { BlockFactoryNameOrOptions } from "../factories/types.js";
+import { withDefaultDescription } from "../factories/withDefaultDescription.js";
+import { strictBlockDataFactoryDecorator } from "../helpers/strictBlockDataFactoryDecorator.js";
+import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFactoryDecorator.js";
+import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator.js";
+import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion.js";
+import type { MigrateVendorOptions } from "../migrations/types.js";
+import type { SearchText, WeightedSearchText } from "../search/get-search-text.js";
+import { applyDefaultTextBlockStyles } from "./applyDefaultTextBlockStyles.js";
+import { CmsBlock, CmsInlineBlock } from "./extensions/CmsBlock.js";
+import { CmsLink } from "./extensions/CmsLink.js";
+import { InlineStyleMark } from "./extensions/InlineStyleMark.js";
+import { NonBreakingSpace } from "./extensions/NonBreakingSpace.js";
+import { Placeholder } from "./extensions/Placeholder.js";
+import { SoftHyphen } from "./extensions/SoftHyphen.js";
+import { createTextBlock } from "./extensions/TextBlock.js";
+import { TextBlockListItem } from "./extensions/TextBlockListItem.js";
+import { buildDraftJsToTipTapMigration } from "./migrations/buildDraftJsToTipTapMigration.js";
+import { buildNoopMigration } from "./migrations/buildNoopMigration.js";
+import { buildTextBlockNodeMigration } from "./migrations/buildTextBlockNodeMigration.js";
+import { assertDraftJsHeadingsAreUnambiguous, type ListItemMapping, type TextBlockMapping } from "./migrations/convertDraftJsToTipTap.js";
 import {
     defaultTextBlocks,
     findDefaultTextBlock,
@@ -43,10 +51,10 @@ import {
     type TipTapResolvedTextBlock,
     type TipTapTextBlock,
     unorderedListName,
-} from "./textBlocks";
-import { containsInvalidTextBlock, getListNestingDepth } from "./tipTapValidation";
+} from "./textBlocks.js";
+import { containsInvalidTextBlock, getListNestingDepth } from "./tipTapValidation.js";
 
-export type { TipTapTextBlock, TipTapTextBlockStyle, TipTapTextBlockTag } from "./textBlocks";
+export type { TipTapTextBlock, TipTapTextBlockStyle, TipTapTextBlockTag } from "./textBlocks.js";
 export type { JSONContent as TipTapRichTextBlockContent } from "@tiptap/core";
 
 /**

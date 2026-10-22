@@ -2,9 +2,9 @@ import { type CrudSingleGeneratorOptions, hasCrudFieldFeature, REQUIRED_PERMISSI
 import type { EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
-import { buildOptions } from "../generateCrud/build-options";
-import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
-import type { GeneratedFile } from "../utils/write-generated-files";
+import { buildOptions } from "../generateCrud/build-options.js";
+import { generateCrudInput } from "../generateCrudInput/generate-crud-input.js";
+import type { GeneratedFile } from "../utils/write-generated-files.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {

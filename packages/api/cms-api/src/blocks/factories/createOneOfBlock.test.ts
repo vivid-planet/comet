@@ -1,10 +1,10 @@
 import { validate } from "class-validator";
 import { describe, expect, it } from "vitest";
 
-import { InternalLinkBlock } from "../../page-tree/blocks/internal-link.block";
-import { BlockMetaFieldKind } from "../block";
-import { ExternalLinkBlock } from "../externalLink/external-link.block";
-import { createOneOfBlock } from "./createOneOfBlock";
+import { InternalLinkBlock } from "../../page-tree/blocks/internal-link.block.js";
+import { BlockMetaFieldKind } from "../block.js";
+import { ExternalLinkBlock } from "../externalLink/external-link.block.js";
+import { createOneOfBlock } from "./createOneOfBlock.js";
 
 const validationOptions = { whitelist: true, forbidNonWhitelisted: true };
 

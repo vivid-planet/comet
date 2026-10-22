@@ -1,15 +1,15 @@
-import { CrudGenerator, CrudGeneratorHooksService, CurrentUser, MutationError } from "@dextinity/cms-api";
+import { CrudGenerator, type CrudGeneratorHooksService, type CurrentUser, type MutationError } from "@dextinity/cms-api";
 import { Entity, PrimaryKey, Property, ReflectMetadataProvider } from "@mikro-orm/decorators/legacy";
 import { BaseEntity, defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
-import { findHooksService } from "../find-hooks-service";
-import { testPermission } from "../test-helper";
-import { TestEntity } from "./find-hooks-service/test-entity.entity";
-import { TestEntityService } from "./find-hooks-service/test-entity.service";
-import { TestEntity3 } from "./find-hooks-service/test-entity3.entity";
+import { findHooksService } from "../find-hooks-service.js";
+import { testPermission } from "../test-helper.js";
+import { TestEntity } from "./find-hooks-service/test-entity.entity.js";
+import { TestEntityService } from "./find-hooks-service/test-entity.service.js";
+import { TestEntity3 } from "./find-hooks-service/test-entity3.entity.js";
 
 export class Test2MutationError implements MutationError {
     code: string;

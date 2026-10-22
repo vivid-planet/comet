@@ -4,18 +4,18 @@ import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import pluralize from "pluralize";
 
-import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
-import { buildNameVariants } from "../utils/build-name-variants";
-import { integerTypes, numberTypes } from "../utils/constants";
-import { isEnumArrayProp } from "../utils/entity-property-type";
-import { findHooksService } from "../utils/find-hooks-service";
-import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
-import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, findImportPath } from "../utils/ts-morph-helper";
-import type { GeneratedFile } from "../utils/write-generated-files";
-import { buildOptions } from "./build-options";
-import { generateEnumFilterDto } from "./generate-enum-filter-dto";
-import { generatePayloadObjectTypes } from "./generate-payload-object-types";
-import { generateServiceHookCall } from "./generate-service-hook-call";
+import { generateCrudInput } from "../generateCrudInput/generate-crud-input.js";
+import { buildNameVariants } from "../utils/build-name-variants.js";
+import { integerTypes, numberTypes } from "../utils/constants.js";
+import { isEnumArrayProp } from "../utils/entity-property-type.js";
+import { findHooksService } from "../utils/find-hooks-service.js";
+import { generateImportsCode, type Imports } from "../utils/generate-imports-code.js";
+import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, findImportPath } from "../utils/ts-morph-helper.js";
+import type { GeneratedFile } from "../utils/write-generated-files.js";
+import { buildOptions } from "./build-options.js";
+import { generateEnumFilterDto } from "./generate-enum-filter-dto.js";
+import { generatePayloadObjectTypes } from "./generate-payload-object-types.js";
+import { generateServiceHookCall } from "./generate-service-hook-call.js";
 
 function generateFilterDto({
     generatorOptions,

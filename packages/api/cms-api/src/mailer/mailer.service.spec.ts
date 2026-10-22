@@ -3,8 +3,8 @@ import { Logger } from "@nestjs/common";
 import type { Transporter } from "nodemailer";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { MailerLog } from "./entities/mailer-log.entity";
-import { MailerService } from "./mailer.service";
+import { MailerLog } from "./entities/mailer-log.entity.js";
+import { MailerService } from "./mailer.service.js";
 
 describe("MailerService.sendMail", () => {
     afterEach(() => {

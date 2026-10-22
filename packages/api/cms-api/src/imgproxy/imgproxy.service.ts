@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { createHmac } from "crypto";
 
-import { ImgproxyBuilder } from "./imgproxy.builder";
-import { IMGPROXY_CONFIG } from "./imgproxy.constants";
+import { ImgproxyBuilder } from "./imgproxy.builder.js";
+import { IMGPROXY_CONFIG } from "./imgproxy.constants.js";
 
 export interface ImgproxyConfig {
     url: string;

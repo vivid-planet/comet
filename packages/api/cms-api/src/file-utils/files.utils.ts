@@ -9,8 +9,8 @@ import slugify from "slugify";
 import stream from "stream";
 import { promisify } from "util";
 
-import type { FileUploadInput } from "./file-upload.input";
-import { FILE_UPLOAD_FIELD } from "./files.constants";
+import type { FileUploadInput } from "./file-upload.input.js";
+import { FILE_UPLOAD_FIELD } from "./files.constants.js";
 
 const pipeline = promisify(stream.pipeline);
 

@@ -1,11 +1,11 @@
 import type { Block } from "@dextinity/cms-api";
 import type { Type } from "@nestjs/common";
 
-import type { BlacklistedContactsInterface } from "../blacklisted-contacts/entity/blacklisted-contacts.entity.factory";
-import type { BrevoEmailImportLogInterface } from "../brevo-email-import-log/entity/brevo-email-import-log.entity.factory";
-import type { EmailCampaignInterface } from "../email-campaign/entities/email-campaign-entity.factory";
-import type { TargetGroupInterface } from "../target-group/entity/target-group-entity.factory";
-import type { BrevoContactAttributesInterface, BrevoContactFilterAttributesInterface, EmailCampaignScopeInterface } from "../types";
+import type { BlacklistedContactsInterface } from "../blacklisted-contacts/entity/blacklisted-contacts.entity.factory.js";
+import type { BrevoEmailImportLogInterface } from "../brevo-email-import-log/entity/brevo-email-import-log.entity.factory.js";
+import type { EmailCampaignInterface } from "../email-campaign/entities/email-campaign-entity.factory.js";
+import type { TargetGroupInterface } from "../target-group/entity/target-group-entity.factory.js";
+import type { BrevoContactAttributesInterface, BrevoContactFilterAttributesInterface, EmailCampaignScopeInterface } from "../types.js";
 
 interface FrontendConfig {
     url: string;

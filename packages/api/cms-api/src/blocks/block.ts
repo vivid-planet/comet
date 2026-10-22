@@ -2,15 +2,15 @@ import type { Type } from "@nestjs/common";
 import { type ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
 import { Equals } from "class-validator";
 
-import type { WarningSeverity as WarningSeverityEnum } from "../warnings/entities/warning-severity.enum";
-import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
-import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
-import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
-import { getBlockDataMigrateVendor, setBlockDataMigrateVendor } from "./migrations/blockDataMigrateVendor";
-import { createAppliedMigrationsBlockDataFactoryDecorator } from "./migrations/createAppliedMigrationsBlockDataFactoryDecorator";
-import { BlockDataMigrationVersion } from "./migrations/decorators/BlockDataMigrationVersion";
-import type { MigrateOptions, MigrateVendorOptions } from "./migrations/types";
-import type { SearchText } from "./search/get-search-text";
+import type { WarningSeverity as WarningSeverityEnum } from "../warnings/entities/warning-severity.enum.js";
+import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field.js";
+import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator.js";
+import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator.js";
+import { getBlockDataMigrateVendor, setBlockDataMigrateVendor } from "./migrations/blockDataMigrateVendor.js";
+import { createAppliedMigrationsBlockDataFactoryDecorator } from "./migrations/createAppliedMigrationsBlockDataFactoryDecorator.js";
+import { BlockDataMigrationVersion } from "./migrations/decorators/BlockDataMigrationVersion.js";
+import type { MigrateOptions, MigrateVendorOptions } from "./migrations/types.js";
+import type { SearchText } from "./search/get-search-text.js";
 
 export interface BlockTransformerServiceInterface<
     Block extends BlockDataInterface = BlockDataInterface,

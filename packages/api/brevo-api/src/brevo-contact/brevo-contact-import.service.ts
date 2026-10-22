@@ -7,17 +7,17 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { IsEmail, IsNotEmpty, validateSync } from "class-validator";
 import { GraphQLJSONObject } from "graphql-scalars";
-import { Readable } from "stream";
+import type { Readable } from "stream";
 
-import { BrevoApiContactsService, CreateDoubleOptInContactData } from "../brevo-api/brevo-api-contact.service";
-import { BrevoConfigInterface } from "../brevo-config/entities/brevo-config-entity.factory";
-import { BrevoContactsService } from "../brevo-contact/brevo-contacts.service";
-import { ContactSource } from "../brevo-email-import-log/entity/brevo-email-import-log.entity.factory";
-import { BrevoModuleConfig } from "../config/brevo-module.config";
-import { BREVO_MODULE_CONFIG } from "../config/brevo-module.constants";
-import { TargetGroupInterface } from "../target-group/entity/target-group-entity.factory";
-import { TargetGroupsService } from "../target-group/target-groups.service";
-import { EmailCampaignScopeInterface } from "../types";
+import { BrevoApiContactsService, type CreateDoubleOptInContactData } from "../brevo-api/brevo-api-contact.service.js";
+import type { BrevoConfigInterface } from "../brevo-config/entities/brevo-config-entity.factory.js";
+import { BrevoContactsService } from "../brevo-contact/brevo-contacts.service.js";
+import { ContactSource } from "../brevo-email-import-log/entity/brevo-email-import-log.entity.factory.js";
+import type { BrevoModuleConfig } from "../config/brevo-module.config.js";
+import { BREVO_MODULE_CONFIG } from "../config/brevo-module.constants.js";
+import type { TargetGroupInterface } from "../target-group/entity/target-group-entity.factory.js";
+import { TargetGroupsService } from "../target-group/target-groups.service.js";
+import type { EmailCampaignScopeInterface } from "../types.js";
 
 class BasicValidateableRow {
     @IsEmail()

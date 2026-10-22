@@ -2,10 +2,10 @@ import { getSchema } from "@tiptap/core";
 import { validate } from "class-validator";
 import { describe, expect, it } from "vitest";
 
-import { BlockMetaFieldKind } from "../block";
-import { getBlocksMeta } from "../blocks-meta";
-import { ExternalLinkBlock } from "../externalLink/external-link.block";
-import { createLinkBlock } from "../factories/createLinkBlock";
+import { BlockMetaFieldKind } from "../block.js";
+import { getBlocksMeta } from "../blocks-meta.js";
+import { ExternalLinkBlock } from "../externalLink/external-link.block.js";
+import { createLinkBlock } from "../factories/createLinkBlock.js";
 import {
     buildExtensions,
     createTipTapRichTextBlock,
@@ -15,7 +15,7 @@ import {
     type TipTapRichTextBlockDataInterface,
     type TipTapRichTextBlockInputInterface,
     type TipTapTextBlock,
-} from "./createTipTapRichTextBlock";
+} from "./createTipTapRichTextBlock.js";
 
 const paragraphOnly: TipTapTextBlock[] = [{ name: "paragraph", tag: "p" }];
 

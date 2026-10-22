@@ -4,8 +4,8 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
-import { formatSource, testPermission } from "../../utils/test-helper";
-import { generateCrudInput } from "../generate-crud-input";
+import { formatSource, testPermission } from "../../utils/test-helper.js";
+import { generateCrudInput } from "../generate-crud-input.js";
 import { NestedObject, type NestedType } from "./.generate-crud-input-json-import-nested-object";
 
 @Entity()
