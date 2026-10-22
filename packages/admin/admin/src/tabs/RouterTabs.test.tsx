@@ -3,8 +3,8 @@ import { createMemoryHistory } from "history";
 import { useEffect } from "react";
 import { IntlProvider } from "react-intl";
 import { Router, useRouteMatch } from "react-router";
-import { fireEvent, render } from "test-utils";
-import { expect, test } from "vitest";
+import { cleanup, fireEvent, render } from "test-utils";
+import { afterEach, expect, test } from "vitest";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
 import { SubRoute, useSubRoutePrefix } from "../router/SubRoute";
@@ -12,6 +12,10 @@ import { StackPage } from "../stack/Page";
 import { Stack } from "../stack/Stack";
 import { StackSwitch } from "../stack/Switch";
 import { RouterTab, RouterTabs } from "./RouterTabs";
+
+afterEach(() => {
+    cleanup();
+});
 
 test("RouterTabs in SubRoute", async () => {
     function Cmp1() {
@@ -52,6 +56,47 @@ test("RouterTabs in SubRoute", async () => {
 
     expect(rendered.getByText("bar tab content")).toBeInTheDocument();
     expect(rendered.getByText("matchUrl=/sub/bar")).toBeInTheDocument();
+});
+
+test("RouterTabs selects the tab of a deep link without changing the URL", async () => {
+    function Story() {
+        const urlPrefix = useSubRoutePrefix();
+        return (
+            <SubRoute path={`${urlPrefix}/sub`}>
+                <RouterTabs>
+                    <RouterTab label="Foo" path="">
+                        <p>foo tab content</p>
+                    </RouterTab>
+                    <RouterTab label="Bar" path="/bar">
+                        <p>bar tab content</p>
+                    </RouterTab>
+                </RouterTabs>
+            </SubRoute>
+        );
+    }
+
+    const history = createMemoryHistory({ initialEntries: ["/sub/bar"] });
+
+    const rendered = render(
+        <IntlProvider locale="en">
+            <MuiThemeProvider theme={createTheme()}>
+                <Router history={history}>
+                    <Story />
+                </Router>
+            </MuiThemeProvider>
+        </IntlProvider>,
+    );
+
+    expect(rendered.getByText("bar tab content")).toBeInTheDocument();
+    expect(rendered.queryByText("foo tab content")).not.toBeInTheDocument();
+    expect(rendered.getByRole("tab", { name: "Bar" })).toHaveAttribute("aria-selected", "true");
+    expect(history.length).toBe(1);
+    expect(history.location.pathname).toBe("/sub/bar");
+
+    fireEvent.click(rendered.getByRole("tab", { name: "Foo" }));
+
+    expect(history.location.pathname).toBe("/sub");
+    expect(rendered.getByText("foo tab content")).toBeInTheDocument();
 });
 
 test("RouterTabs must not remount content", async () => {

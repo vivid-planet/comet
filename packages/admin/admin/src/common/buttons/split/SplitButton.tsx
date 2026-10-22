@@ -1,20 +1,22 @@
 import { ChevronDown } from "@dextinity/admin-icons";
+import { MenuItem, type MenuItemProps, MenuList, type MenuListProps, Popover, type PopoverProps } from "@mui/material";
+import { css, styled } from "@mui/material/styles";
 import {
-    // eslint-disable-next-line no-restricted-imports
-    Button,
-    ButtonGroup as MuiButtonGroup,
-    type ButtonGroupProps,
-    MenuItem as MuiMenuItem,
-    MenuList as MuiMenuList,
-    Popover as MuiPopover,
-    type PopoverProps,
-} from "@mui/material";
-import { useThemeProps } from "@mui/material/styles";
-import { Children, isValidElement, type MouseEvent, type PropsWithChildren, type ReactElement, type ReactNode, useRef, useState } from "react";
+    Children,
+    cloneElement,
+    type ComponentProps,
+    isValidElement,
+    type MouseEvent,
+    type PropsWithChildren,
+    type ReactElement,
+    type ReactNode,
+    useRef,
+    useState,
+} from "react";
+import { useIntl } from "react-intl";
 
-import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStoredState } from "../../../hooks/useStoredState";
+import { Button, type ButtonProps } from "../Button";
 import { SplitButtonContext } from "./SplitButtonContext";
 
 /**
@@ -25,16 +27,7 @@ export type SplitButtonClassKey = "root" | "activeButton" | "popover" | "menuLis
 /**
  * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
  */
-export interface SplitButtonProps
-    extends
-        ButtonGroupProps<any>,
-        ThemedComponentBaseProps<{
-            root: typeof MuiButtonGroup;
-            activeButton: typeof Button;
-            popover: typeof MuiPopover;
-            menuList: typeof MuiMenuList;
-            menuItem: typeof MuiMenuItem;
-        }> {
+export interface SplitButtonProps {
     selectIcon?: ReactNode;
     selectedIndex?: number;
     onSelectIndex?: (index: number, item: ReactElement) => void;
@@ -42,56 +35,45 @@ export interface SplitButtonProps
     localStorageKey?: string;
     autoClickOnSelect?: boolean;
     storage?: Storage;
+    /** Disables the active button and the button that opens the other options. */
+    disabled?: boolean;
+    className?: string;
+    slotProps?: {
+        root?: Partial<ComponentProps<"div">>;
+        activeButton?: Partial<ButtonProps>;
+        popover?: Partial<PopoverProps>;
+        menuList?: Partial<MenuListProps>;
+        menuItem?: Partial<MenuItemProps>;
+    };
     /**
      * @deprecated Use `slotProps` instead.
      */
     popoverProps?: Partial<PopoverProps>;
+    /** @deprecated Has no effect: the button that opens the other options takes the variant of the active button. */
+    variant?: string;
+    /** @deprecated Has no effect: the button that opens the other options takes the variant of the active button. */
+    color?: string;
 }
-
-const Root = createComponentSlot(MuiButtonGroup)<SplitButtonClassKey>({
-    componentName: "SplitButton",
-    slotName: "root",
-})();
-
-const ActiveButton = createComponentSlot(Button)<SplitButtonClassKey>({
-    componentName: "SplitButton",
-    slotName: "activeButton",
-})();
-
-const Popover = createComponentSlot(MuiPopover)<SplitButtonClassKey>({
-    componentName: "SplitButton",
-    slotName: "popover",
-})();
-
-const MenuList = createComponentSlot(MuiMenuList)<SplitButtonClassKey>({
-    componentName: "SplitButton",
-    slotName: "menuList",
-})();
-
-const MenuItem = createComponentSlot(MuiMenuItem)<SplitButtonClassKey>({
-    componentName: "SplitButton",
-    slotName: "menuItem",
-})();
 
 // Based on https://v4.mui.com/components/button-group/#split-button
 /**
  * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
  */
-export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
-    const {
-        selectIcon = <ChevronDown />,
-        selectedIndex,
-        onSelectIndex,
-        children,
-        showSelectButton,
-        localStorageKey,
-        storage,
-        autoClickOnSelect = true,
-        popoverProps,
-        slotProps,
-        ...restProps
-    } = useThemeProps({ props: inProps, name: "DextinityAdminSplitButton" });
-
+export function SplitButton({
+    selectIcon = <ChevronDown />,
+    selectedIndex,
+    onSelectIndex,
+    children,
+    showSelectButton,
+    localStorageKey,
+    storage,
+    autoClickOnSelect = true,
+    disabled,
+    className,
+    popoverProps,
+    slotProps,
+}: PropsWithChildren<SplitButtonProps>) {
+    const intl = useIntl();
     const [showSelectButtonState, setShowSelectButtonState] = useState<boolean | undefined>(undefined);
 
     const childrenArray = Children.toArray(children);
@@ -136,24 +118,26 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
 
     const ActiveChild = childrenArray[_selectedIndex] as ReactElement<any>;
 
-    const { variant: activeChildVariant, color: activeChildColor } = ActiveChild.props;
+    const { variant: activeChildVariant, size: activeChildSize } = ActiveChild.props;
 
     const showSelect = showSelectButtonState != null ? showSelectButtonState : showSelectButton;
     return (
         <SplitButtonContext.Provider value={{ setShowSelectButton: setShowSelectButtonState }}>
-            <Root variant={activeChildVariant} color={activeChildColor} {...slotProps?.root} {...restProps} ref={anchorRef}>
-                {ActiveChild}
+            <Root className={className} {...slotProps?.root} ref={anchorRef}>
+                {disabled ? cloneElement(ActiveChild, { disabled: true }) : ActiveChild}
                 {(showSelect ?? childrenArray.length > 1) && (
-                    <ActiveButton
+                    <SelectButton
                         variant={activeChildVariant}
-                        color={activeChildColor}
-                        size="small"
-                        classes={ActiveChild.props.classes}
+                        size={activeChildSize}
+                        disabled={disabled}
+                        aria-label={intl.formatMessage({ id: "dextinity.splitButton.showOptions", defaultMessage: "Show options" })}
+                        aria-haspopup="menu"
+                        aria-expanded={open}
                         onClick={handleToggle}
                         {...slotProps?.activeButton}
                     >
                         {selectIcon}
-                    </ActiveButton>
+                    </SelectButton>
                 )}
             </Root>
             <Popover
@@ -185,14 +169,21 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
     );
 }
 
-declare module "@mui/material/styles" {
-    interface ComponentsPropsList {
-        DextinityAdminSplitButton: SplitButtonProps;
+const Root = styled("div")(css`
+    display: inline-flex;
+    gap: 1px;
+
+    & > .dextinityButton:not(:last-child) {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
     }
 
-    interface Components {
-        DextinityAdminSplitButton?: {
-            defaultProps?: Partial<ComponentsPropsList["DextinityAdminSplitButton"]>;
-        };
+    & > .dextinityButton:not(:first-child) {
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
     }
-}
+`);
+
+const SelectButton = styled(Button)(css`
+    padding-inline: var(--dextinity-space-sm);
+`);

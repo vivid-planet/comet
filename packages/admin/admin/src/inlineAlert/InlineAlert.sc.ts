@@ -1,13 +1,9 @@
-import { Typography } from "@mui/material";
-import { css } from "@mui/material/styles";
+import { Typography } from "@dextinity/ui";
+import { css, styled } from "@mui/material/styles";
 
-import { createComponentSlot } from "../helpers/createComponentSlot";
-import type { InlineAlertClassKey } from "./InlineAlert";
+import type { InlineAlertSeverity } from "./InlineAlert";
 
-export const Root = createComponentSlot("div")<InlineAlertClassKey>({
-    componentName: "InlineAlert",
-    slotName: "root",
-})(css`
+export const Root = styled("div")(css`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -15,36 +11,33 @@ export const Root = createComponentSlot("div")<InlineAlertClassKey>({
     flex: 0;
 `);
 
-export const IconContainer = createComponentSlot("div")<InlineAlertClassKey>({
-    componentName: "InlineAlert",
-    slotName: "iconContainer",
-})(
-    ({ theme }) => css`
-        margin-bottom: ${theme.spacing(2)};
-    `,
-);
+export const IconContainer = styled("div")<{ ownerState: { severity: InlineAlertSeverity } }>(({ theme, ownerState }) => {
+    const colors: Record<InlineAlertSeverity, string> = {
+        error: theme.palette.error.main,
+        warning: theme.palette.warning.main,
+        info: theme.palette.info.main,
+    };
 
-export const Title = createComponentSlot(Typography)<InlineAlertClassKey>({
-    componentName: "InlineAlert",
-    slotName: "title",
-})(
+    return css`
+        display: flex;
+        margin-bottom: ${theme.spacing(2)};
+        color: ${colors[ownerState.severity]};
+        font-size: 32px;
+    `;
+});
+
+export const Title = styled(Typography)(
     ({ theme }) => css`
         text-align: center;
         margin-bottom: ${theme.spacing(1)};
     `,
 );
 
-export const Description = createComponentSlot(Typography)<InlineAlertClassKey>({
-    componentName: "InlineAlert",
-    slotName: "description",
-})(css`
+export const Description = styled(Typography)(css`
     text-align: center;
 `);
 
-export const ActionsContainer = createComponentSlot("div")<InlineAlertClassKey>({
-    componentName: "InlineAlert",
-    slotName: "actionsContainer",
-})(
+export const ActionsContainer = styled("div")(
     ({ theme }) => css`
         margin-top: ${theme.spacing(4)};
     `,

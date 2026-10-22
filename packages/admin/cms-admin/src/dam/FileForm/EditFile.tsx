@@ -221,7 +221,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        {isVideoTooLarge(file) && <VideoPerformanceWarningAlert sx={{ marginBottom: 4 }} />}
+                        {isVideoTooLarge(file) && <VideoWarningAlert />}
                         <ReactSplit sizes={[initialPreviewWidth, initialBlockListWidth]} minSize={360} gutterSize={40} style={{ display: "flex" }}>
                             <StickyScrollWrapper>
                                 <FilePreview file={file} />
@@ -312,6 +312,10 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
         </FinalForm>
     );
 };
+
+const VideoWarningAlert = styled(VideoPerformanceWarningAlert)`
+    margin-bottom: ${({ theme }) => theme.spacing(4)};
+`;
 
 const FullHeightWrapper = styled("div")`
     height: 100%;

@@ -21,7 +21,8 @@ import { DataGridPagination } from "../../dataGrid/pagination/DataGridPagination
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import type { GetMuiComponentTheme } from "./getComponentsTheme";
 
-const getDensityHeightValue = (density: string) => {
+// The style overrides type the owner state's density as unknown.
+const getDensityHeightValue = (density: unknown) => {
     switch (density) {
         case "compact":
             return 40;

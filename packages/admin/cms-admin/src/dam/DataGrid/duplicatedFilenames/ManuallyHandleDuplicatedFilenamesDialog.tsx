@@ -116,8 +116,8 @@ export const ManuallyHandleDuplicatedFilenamesDialog: FunctionComponent<Duplicat
                             }}
                         />
                     </Button>
-                    <Box>
-                        <Button variant="outlined" onClick={onReplace} startIcon={<Duplicate />} sx={{ marginRight: "10px" }}>
+                    <Box sx={{ display: "flex", gap: "10px" }}>
+                        <Button variant="outlined" onClick={onReplace} startIcon={<Duplicate />}>
                             <FormattedMessage
                                 id="dextinity.dam.duplicateFilenameDialog.action.replaceFiles"
                                 defaultMessage="Replace {count, plural, one {file} other {files}}"

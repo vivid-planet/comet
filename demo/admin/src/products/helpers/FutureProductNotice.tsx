@@ -1,4 +1,5 @@
 import { Alert } from "@dextinity/admin";
+import { css, styled } from "@mui/material/styles";
 import { useField } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -10,9 +11,8 @@ export const FutureProductNotice = () => {
 
     if (willBeAvailableInTheFuture) {
         return (
-            <Alert
+            <FutureProductAlert
                 severity="warning"
-                sx={{ mb: 4 }}
                 title={
                     <FormattedMessage
                         id="product.futureProductNotice"
@@ -25,3 +25,9 @@ export const FutureProductNotice = () => {
 
     return null;
 };
+
+const FutureProductAlert = styled(Alert)(
+    ({ theme }) => css`
+        margin-bottom: ${theme.spacing(4)};
+    `,
+);

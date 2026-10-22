@@ -28,8 +28,8 @@ export const _FieldSet = {
                 title={
                     <>
                         FieldSet with an icon
-                        <Tooltip title="Lorem ipsum info." sx={{ ml: 1 }}>
-                            <Info />
+                        <Tooltip title="Lorem ipsum info.">
+                            <Info sx={{ ml: 1 }} />
                         </Tooltip>
                     </>
                 }

@@ -17,6 +17,7 @@ import {
 } from "@dextinity/admin";
 import { Reload, ThreeDotSaving } from "@dextinity/admin-icons";
 import { Chip, IconButton } from "@mui/material";
+import { css, styled } from "@mui/material/styles";
 import type { GridSlotsComponent, GridToolbarProps } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -229,15 +230,18 @@ export const DependenciesList = ({ query, variables }: DependenciesListProps) =>
                 }}
                 showToolbar
             />
-            <Alert
-                title={<FormattedMessage id="dextinity.dependencies.dependencies.info.title" defaultMessage="What are dependencies?" />}
-                sx={{ marginTop: 4 }}
-            >
+            <InfoAlert title={<FormattedMessage id="dextinity.dependencies.dependencies.info.title" defaultMessage="What are dependencies?" />}>
                 <FormattedMessage
                     id="dextinity.dependencies.dependencies.info.content"
                     defaultMessage="Dependencies are all items that this content references or uses — such as linked pages, embedded files, or other content. Use this list to review what this item depends on."
                 />
-            </Alert>
+            </InfoAlert>
         </>
     );
 };
+
+const InfoAlert = styled(Alert)(
+    ({ theme }) => css`
+        margin-top: ${theme.spacing(4)};
+    `,
+);

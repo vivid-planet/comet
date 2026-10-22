@@ -16,7 +16,7 @@ export const getMuiCardHeader: GetMuiComponentTheme<"MuiCardHeader"> = (componen
             marginTop: 0,
             alignSelf: "center",
 
-            "& > .MuiButton-root": {
+            "& > .MuiButton-root, & > .dextinityButton": {
                 marginTop: "-10px",
                 marginBottom: "-10px",
             },

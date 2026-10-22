@@ -1,24 +1,17 @@
-import { Card, css, Divider, Typography } from "@mui/material";
+import { Card, Icon, Typography } from "@dextinity/ui";
+import { css, styled } from "@mui/material/styles";
 
-import { createComponentSlot } from "../helpers/createComponentSlot";
 import { InlineAlert } from "../inlineAlert/InlineAlert";
-import type { FullPageAlertClassKey } from "./FullPageAlert";
 import { FullPageAlertBackground } from "./FullPageAlertBackground";
 
-export const Root = createComponentSlot("div")<FullPageAlertClassKey>({
-    componentName: "FullPageAlert",
-    slotName: "root",
-})(css`
+export const Root = styled("div")(css`
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 `);
 
-export const BackgroundStyled = createComponentSlot(FullPageAlertBackground)<FullPageAlertClassKey>({
-    componentName: "FullPageAlert",
-    slotName: "background",
-})(css`
+export const BackgroundStyled = styled(FullPageAlertBackground)(css`
     position: absolute;
     width: 100%;
     height: 100%;
@@ -29,57 +22,50 @@ export const BackgroundStyled = createComponentSlot(FullPageAlertBackground)<Ful
     z-index: -1;
 `);
 
-export const ContentContainer = createComponentSlot(Card)<FullPageAlertClassKey>({
-    componentName: "FullPageAlert",
-    slotName: "contentContainer",
-})(({ theme }) => {
-    return css`
-        display: flex;
-        max-width: 550px;
-        align-items: center;
-        gap: ${theme.spacing(2)};
-        flex-direction: column;
-        padding: ${theme.spacing(10)};
-    `;
-});
-
-export const DetailDescription = createComponentSlot(Typography)<FullPageAlertClassKey>({
-    componentName: "FullPageAlert",
-    slotName: "detailDescription",
-})();
-
-export const DividerStyled = createComponentSlot(Divider)<FullPageAlertClassKey>({
-    componentName: "FullPageAlert",
-    slotName: "divider",
-})(
+export const ContentContainer = styled(Card)(
     ({ theme }) => css`
-        width: 100%;
-        margin-top: ${theme.spacing(6)};
-        margin-bottom: ${theme.spacing(6)};
+        max-width: 550px;
+        padding: ${theme.spacing(10)};
+
+        & > .dextinityCard__body {
+            display: flex;
+            align-items: center;
+            gap: ${theme.spacing(2)};
+            flex-direction: column;
+        }
     `,
 );
 
-export const LogoContainer = createComponentSlot("div")<FullPageAlertClassKey>({
-    componentName: "FullPageAlert",
-    slotName: "logoContainer",
-})(
+export const LargeIcon = styled(Icon)(css`
+    font-size: 48px;
+`);
+
+export const DetailDescription = styled(Typography)(css`
+    text-align: center;
+`);
+
+export const DividerStyled = styled("hr")(
+    ({ theme }) => css`
+        width: 100%;
+        margin: ${theme.spacing(6)} 0;
+        border: none;
+        border-top: 1px solid ${theme.palette.divider};
+    `,
+);
+
+export const LogoContainer = styled("div")(
     ({ theme }) => css`
         width: 100%;
         display: flex;
         justify-content: center;
         margin-bottom: ${theme.spacing(6)};
+        font-size: 30px;
     `,
 );
 
-export const ActionContainer = createComponentSlot("div")<FullPageAlertClassKey>({
-    componentName: "FullPageAlert",
-    slotName: "actionContainer",
-})(css`
+export const ActionContainer = styled("div")(css`
     width: 100%;
     display: flex;
 `);
 
-export const InlineAlertStyled = createComponentSlot(InlineAlert)<FullPageAlertClassKey>({
-    componentName: "FullPageAlert",
-    slotName: "inlineAlert",
-})(css``);
+export const InlineAlertStyled = InlineAlert;

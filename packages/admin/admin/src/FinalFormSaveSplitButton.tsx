@@ -1,10 +1,9 @@
-import { ChevronDown } from "@dextinity/admin-icons";
 import type { PropsWithChildren } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { SaveButton } from "./common/buttons/SaveButton";
-import { SplitButton, type SplitButtonProps } from "./common/buttons/split/SplitButton";
+import { SplitButton } from "./common/buttons/split/SplitButton";
 import { FinalFormSubmitEvent } from "./FinalForm";
 import { messages } from "./messages";
 import { useStackApi } from "./stack/Api";
@@ -28,34 +27,11 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
               console.warn(`Can't set submitEvent, as the setSubmitEvent mutator is missing. Did you forget to add the mutator to the form?`);
           };
 
-    const splitButtonProps: Partial<SplitButtonProps> = {};
-    if (hasConflict) {
-        splitButtonProps.selectIcon = (
-            <ChevronDown
-                sx={(theme) => ({
-                    color: theme.palette.error.contrastText,
-                })}
-            />
-        );
-    }
     return (
         <SplitButton
-            {...splitButtonProps}
             disabled={pristine || hasValidationErrors || submitting}
             localStorageKey={localStorageKey}
-            slotProps={{
-                activeButton: {
-                    variant: "contained",
-                    color: hasConflict ? "error" : "primary",
-                    sx: ({ palette }) => ({
-                        borderLeft: `1px solid ${palette.primary.dark}`,
-
-                        "&.Mui-disabled": {
-                            borderLeftColor: palette.grey[200],
-                        },
-                    }),
-                },
-            }}
+            slotProps={{ activeButton: { variant: hasConflict ? "destructive" : "primary" } }}
         >
             <SaveButton
                 loading={submitting}

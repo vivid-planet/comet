@@ -1,43 +1,13 @@
 import { ThreeDotSaving } from "@dextinity/admin-icons";
-import type { ComponentsOverrides } from "@mui/material";
-import { type Theme, useThemeProps } from "@mui/material/styles";
 import { type ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import type { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
-import { Tooltip as BaseTooltip } from "../../Tooltip";
+import { Tooltip, type TooltipProps } from "../../Tooltip";
 import { Button, type ButtonClassKey, type ButtonProps } from "../Button";
 
 export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "error" | "tooltip" | ButtonClassKey;
 
-type OwnerState = { displayState: FeedbackButtonDisplayState };
-
-const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
-    componentName: "FeedbackButton",
-    slotName: "root",
-    classesResolver(ownerState) {
-        return [
-            ownerState.displayState === "idle" && "idle",
-            ownerState.displayState === "error" && "error",
-            ownerState.displayState === "success" && "success",
-            ownerState.displayState === "loading" && "loading",
-        ];
-    },
-})();
-
-const Tooltip = createComponentSlot(BaseTooltip)<FeedbackButtonClassKey>({
-    componentName: "FeedbackButton",
-    slotName: "tooltip",
-})();
-
-export interface FeedbackButtonProps
-    extends
-        ThemedComponentBaseProps<{
-            root: typeof Button;
-            tooltip: typeof BaseTooltip;
-        }>,
-        Omit<ButtonProps, "slotProps"> {
+export interface FeedbackButtonProps extends Omit<ButtonProps, "onClick" | "slotProps"> {
     onClick?: () => void | Promise<void>;
     hasErrors?: boolean;
     loading?: boolean;
@@ -45,47 +15,30 @@ export interface FeedbackButtonProps
     endIcon?: ReactNode;
     tooltipSuccessMessage?: ReactNode;
     tooltipErrorMessage?: ReactNode;
+    slotProps?: {
+        root?: Partial<ButtonProps>;
+        tooltip?: Partial<TooltipProps>;
+    };
 }
 
 type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "error";
 
-export function FeedbackButton(inProps: FeedbackButtonProps) {
-    const {
-        onClick,
-        loading,
-        hasErrors,
-        children,
-        classes,
-        disabled,
-        startIcon,
-        endIcon,
-        tooltipSuccessMessage = <FormattedMessage id="dextinity.feedbackButton.tooltipSuccessMessage" defaultMessage="Success" />,
-        tooltipErrorMessage = <FormattedMessage id="dextinity.feedbackButton.tooltipErrorMessage" defaultMessage="Error" />,
-        slotProps,
-        ...restProps
-    } = useThemeProps({
-        props: inProps,
-        name: "DextinityAdminFeedbackButton",
-    });
-
+export function FeedbackButton({
+    onClick,
+    loading,
+    hasErrors,
+    children,
+    disabled,
+    startIcon,
+    endIcon,
+    tooltipSuccessMessage = <FormattedMessage id="dextinity.feedbackButton.tooltipSuccessMessage" defaultMessage="Success" />,
+    tooltipErrorMessage = <FormattedMessage id="dextinity.feedbackButton.tooltipErrorMessage" defaultMessage="Error" />,
+    slotProps,
+    ...restProps
+}: FeedbackButtonProps) {
     const [displayState, setDisplayState] = useState<FeedbackButtonDisplayState>("idle");
 
-    const ownerState: OwnerState = {
-        displayState,
-    };
-
     const isUncontrolled = loading === undefined && hasErrors === undefined;
-
-    const resolveTooltipColorForDisplayState = (displayState: FeedbackButtonDisplayState) => {
-        switch (displayState) {
-            case "error":
-                return "error";
-            case "success":
-                return "success";
-            default:
-                return "light";
-        }
-    };
 
     const handleOnClick =
         isUncontrolled && onClick
@@ -141,49 +94,33 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         };
     }, [displayState, loading, hasErrors, isUncontrolled]);
 
-    const tooltip = (
-        <Tooltip
-            title={displayState === "error" ? tooltipErrorMessage : displayState === "success" ? tooltipSuccessMessage : ""}
-            open={displayState === "error" || displayState === "success"}
-            placement={endIcon && !startIcon ? "top-end" : "top-start"}
-            color={resolveTooltipColorForDisplayState(displayState)}
-            {...slotProps?.tooltip}
-        >
-            <span>{startIcon || endIcon}</span>
-        </Tooltip>
-    );
+    const isLoading = loading !== undefined ? loading : displayState === "loading";
+    const hasFeedback = displayState === "error" || displayState === "success";
+    const loadingIcon = <ThreeDotSaving />;
+    const showsLoadingAtStart = Boolean(startIcon);
 
     return (
-        <Root
-            onClick={handleOnClick}
-            ownerState={ownerState}
-            loading={loading !== undefined ? loading : displayState === "loading"}
-            disabled={disabled || (loading !== undefined ? loading : displayState === "loading")}
-            loadingPosition={startIcon ? "start" : "end"}
-            loadingIndicator={<ThreeDotSaving />}
-            startIcon={startIcon && tooltip}
-            endIcon={endIcon && !startIcon ? tooltip : endIcon}
-            {...slotProps?.root}
-            {...restProps}
+        <Tooltip
+            title={displayState === "error" ? tooltipErrorMessage : tooltipSuccessMessage}
+            open={hasFeedback}
+            disabled={!hasFeedback}
+            placement={endIcon && !startIcon ? "top-end" : "top-start"}
+            color={displayState === "error" ? "error" : "success"}
+            {...slotProps?.tooltip}
         >
-            {children}
-        </Root>
+            <Button
+                onClick={handleOnClick}
+                disabled={disabled || isLoading}
+                focusableWhenDisabled={isLoading}
+                aria-busy={isLoading || undefined}
+                data-feedback={displayState}
+                startIcon={isLoading && showsLoadingAtStart ? loadingIcon : startIcon}
+                endIcon={isLoading && !showsLoadingAtStart ? loadingIcon : endIcon}
+                {...slotProps?.root}
+                {...restProps}
+            >
+                {children}
+            </Button>
+        </Tooltip>
     );
-}
-
-declare module "@mui/material/styles" {
-    interface ComponentNameToClassKey {
-        DextinityAdminFeedbackButton: FeedbackButtonClassKey;
-    }
-
-    interface ComponentsPropsList {
-        DextinityAdminFeedbackButton: FeedbackButtonProps;
-    }
-
-    interface Components {
-        DextinityAdminFeedbackButton?: {
-            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFeedbackButton"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFeedbackButton"];
-        };
-    }
 }

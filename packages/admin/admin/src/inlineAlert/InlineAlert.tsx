@@ -1,23 +1,23 @@
-import { Error, Info, Warning } from "@dextinity/admin-icons";
-import type { ComponentsOverrides, Theme, Typography } from "@mui/material";
-import { useThemeProps } from "@mui/material/styles";
-import type { FunctionComponent, ReactNode } from "react";
+import { Icon, type TypographyProps } from "@dextinity/ui";
+import type { ComponentProps, FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { ActionsContainer, Description, IconContainer, Root, Title } from "./InlineAlert.sc";
 
 export type InlineAlertClassKey = "root" | "iconContainer" | "title" | "description" | "actionsContainer";
 
 export type InlineAlertSeverity = "error" | "warning" | "info";
 
-export type InlineAlertProps = ThemedComponentBaseProps<{
-    root: "div";
-    iconContainer: "div";
-    title: typeof Typography;
-    description: typeof Typography;
-    actionsContainer: "div";
-}> & {
+export type InlineAlertProps = {
+    className?: string;
+    slotProps?: {
+        root?: Partial<ComponentProps<"div">>;
+        iconContainer?: Partial<ComponentProps<"div">>;
+        title?: Partial<TypographyProps>;
+        description?: Partial<TypographyProps>;
+        actionsContainer?: Partial<ComponentProps<"div">>;
+    };
+
     /**
      * A description providing more details.
      */
@@ -65,9 +65,9 @@ export type InlineAlertProps = ThemedComponentBaseProps<{
 };
 
 const defaultIconMapping: Record<InlineAlertSeverity, ReactNode> = {
-    error: <Error sx={{ fontSize: "32px" }} color="error" />,
-    warning: <Warning sx={{ fontSize: "32px" }} color="warning" />,
-    info: <Info sx={{ fontSize: "32px" }} color="info" />,
+    error: <Icon name="danger" />,
+    warning: <Icon name="warning" />,
+    info: <Icon name="info" />,
 };
 
 const defaultTitleMapping: Record<InlineAlertSeverity, ReactNode> = {
@@ -91,21 +91,18 @@ const defaultDescriptionMapping: Record<InlineAlertSeverity, ReactNode> = {
  * The InlineAlert component is used to display inline error messages within an application.
  * It provides visual feedback for errors, warnings, or informational messages with optional actions.
  */
-export const InlineAlert: FunctionComponent<InlineAlertProps> = (inProps) => {
-    const {
-        icon,
-        iconMapping: passedIconMapping = {},
-        actions,
-        severity = "error",
-        title,
-        titleMapping: passedTitleMapping = {},
-        description: _description,
-        descriptionMapping: passedDescriptionMapping = {},
-        sx,
-        className,
-        slotProps = {},
-    } = useThemeProps({ props: inProps, name: "DextinityAdminInlineAlert" });
-
+export const InlineAlert: FunctionComponent<InlineAlertProps> = ({
+    icon,
+    iconMapping: passedIconMapping = {},
+    actions,
+    severity = "error",
+    title,
+    titleMapping: passedTitleMapping = {},
+    description: _description,
+    descriptionMapping: passedDescriptionMapping = {},
+    className,
+    slotProps = {},
+}) => {
     const iconMapping = { ...defaultIconMapping, ...passedIconMapping };
     const titleMapping = { ...defaultTitleMapping, ...passedTitleMapping };
     const descriptionMapping = { ...defaultDescriptionMapping, ...passedDescriptionMapping };
@@ -113,13 +110,15 @@ export const InlineAlert: FunctionComponent<InlineAlertProps> = (inProps) => {
     const description = _description ?? descriptionMapping[severity];
 
     return (
-        <Root sx={sx} className={className} {...slotProps.root}>
-            <IconContainer {...slotProps.iconContainer}>{icon ?? iconMapping[severity]}</IconContainer>
-            <Title variant="h5" {...slotProps.title}>
+        <Root className={className} {...slotProps.root}>
+            <IconContainer ownerState={{ severity }} {...slotProps.iconContainer}>
+                {icon ?? iconMapping[severity]}
+            </IconContainer>
+            <Title variant="heading4" {...slotProps.title}>
                 {title ?? titleMapping[severity]}
             </Title>
             {Boolean(description) && (
-                <Description variant="body2" {...slotProps.description}>
+                <Description tone="muted" {...slotProps.description}>
                     {description}
                 </Description>
             )}
@@ -127,20 +126,3 @@ export const InlineAlert: FunctionComponent<InlineAlertProps> = (inProps) => {
         </Root>
     );
 };
-
-declare module "@mui/material/styles" {
-    interface ComponentsPropsList {
-        DextinityAdminInlineAlert: InlineAlertProps;
-    }
-
-    interface ComponentNameToClassKey {
-        DextinityAdminInlineAlert: InlineAlertClassKey;
-    }
-
-    interface Components {
-        DextinityAdminInlineAlert?: {
-            defaultProps?: Partial<ComponentsPropsList["DextinityAdminInlineAlert"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminInlineAlert"];
-        };
-    }
-}

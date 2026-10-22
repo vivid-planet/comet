@@ -14,7 +14,7 @@ export const getMuiTableCell: GetMuiComponentTheme<"MuiTableCell"> = (component,
             paddingLeft: 20,
             paddingRight: 20,
 
-            [`& > .${buttonClasses.root}, & > ${iconButtonClasses.root}`]: {
+            [`& > .${buttonClasses.root}, & > ${iconButtonClasses.root}, & > .dextinityButton`]: {
                 marginTop: -12,
                 marginBottom: -10,
             },

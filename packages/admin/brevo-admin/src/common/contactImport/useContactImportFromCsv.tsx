@@ -67,19 +67,19 @@ export const useContactImportFromCsv = ({ scope, targetGroupId, refetchQueries }
                         return (
                             <>
                                 {values.sendDoubleOptIn ? (
-                                    <Alert severity="warning" sx={{ marginBottom: 5 }}>
+                                    <DoubleOptInAlert severity="warning">
                                         <FormattedMessage
                                             id="dextinity.contactImport.contactAddAlert"
                                             defaultMessage="The contact will get a double opt-in email to confirm the subscription. After the contact's confirmation, the contact will be added to the corresponding target groups in this scope depending on the contact's attributes. Before the confirmation the contact will not be shown on the contacts page."
                                         />
-                                    </Alert>
+                                    </DoubleOptInAlert>
                                 ) : (
-                                    <Alert severity="error" sx={{ marginBottom: 5 }}>
+                                    <DoubleOptInAlert severity="error">
                                         <FormattedMessage
                                             id="dextinity.contactImport.contactNoOptInAlert"
                                             defaultMessage="No Double Opt-In email will be sent. Please ensure recipients have given their consent before proceeding."
                                         />
-                                    </Alert>
+                                    </DoubleOptInAlert>
                                 )}
                                 {allowAddingContactsWithoutDoi && (
                                     <CheckboxField
@@ -371,6 +371,10 @@ const ContactImportComponent = ({ scope, targetGroupId, fileInputRef, sendDouble
         </>
     );
 };
+
+const DoubleOptInAlert = styled(Alert)`
+    margin-bottom: ${({ theme }) => theme.spacing(5)};
+`;
 
 const CsvDownloadLink = styled("span")`
     color: ${({ theme }) => theme.palette.info.main};

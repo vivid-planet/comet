@@ -1,11 +1,10 @@
-import { DextinityLogo, Error, Info, Warning } from "@dextinity/admin-icons";
-import { type ComponentsOverrides, type Divider, type Theme, type Typography, useThemeProps } from "@mui/material";
-import type { FunctionComponent, ReactNode } from "react";
+import { DextinityLogo } from "@dextinity/admin-icons";
+import type { CardProps, TypographyProps } from "@dextinity/ui";
+import type { ComponentProps, FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
-import type { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import type { InlineAlert, InlineAlertSeverity } from "../inlineAlert/InlineAlert";
+import type { InlineAlertProps, InlineAlertSeverity } from "../inlineAlert/InlineAlert";
 import {
     ActionContainer,
     BackgroundStyled,
@@ -13,27 +12,28 @@ import {
     DetailDescription,
     DividerStyled,
     InlineAlertStyled,
+    LargeIcon,
     LogoContainer,
     Root,
 } from "./FullPageAlert.styles";
-import type { FullPageAlertBackground } from "./FullPageAlertBackground";
 
 export type FullPageAlertClassKey =
     "root" | "background" | "detailDescription" | "contentContainer" | "divider" | "logoContainer" | "actionContainer" | "inlineAlert";
 
 type FullPageAlertSeverity = InlineAlertSeverity;
 
-export type FullPageAlertProps = ThemedComponentBaseProps<{
-    root: "div";
-    contentContainer: "div";
-    iconContainer: "div";
-    background: typeof FullPageAlertBackground;
-    divider: typeof Divider;
-    inlineAlert: typeof InlineAlert;
-    detailDescription: typeof Typography;
-    logoContainer: "div";
-    actionContainer: "div";
-}> & {
+export type FullPageAlertProps = {
+    className?: string;
+    slotProps?: {
+        root?: Partial<ComponentProps<"div">>;
+        contentContainer?: Partial<CardProps>;
+        background?: { className?: string };
+        divider?: Partial<ComponentProps<"hr">>;
+        inlineAlert?: Partial<InlineAlertProps>;
+        detailDescription?: Partial<TypographyProps>;
+        logoContainer?: Partial<ComponentProps<"div">>;
+        actionContainer?: Partial<ComponentProps<"div">>;
+    };
     logo?: ReactNode;
     icon?: ReactNode;
     iconMapping?: Partial<Record<FullPageAlertSeverity, ReactNode>>;
@@ -48,9 +48,9 @@ export type FullPageAlertProps = ThemedComponentBaseProps<{
 };
 
 const defaultIconMapping: Record<FullPageAlertSeverity, ReactNode> = {
-    error: <Error sx={{ fontSize: "48px" }} color="error" />,
-    warning: <Warning sx={{ fontSize: "48px" }} color="warning" />,
-    info: <Info sx={{ fontSize: "48px" }} color="info" />,
+    error: <LargeIcon name="danger" />,
+    warning: <LargeIcon name="warning" />,
+    info: <LargeIcon name="info" />,
 };
 
 const defaultTitleMapping: Record<FullPageAlertSeverity, ReactNode> = {
@@ -76,28 +76,25 @@ const defaultDetailDescriptionMapping: Record<FullPageAlertSeverity, ReactNode> 
     info: null,
 };
 
-export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) => {
-    const {
-        severity = "error",
-        title: _title,
-        titleMapping: passedTitleMapping = {},
-        description,
-        descriptionMapping: passedDescriptionMapping = {},
-        icon,
-        iconMapping: passedIconMapping = {},
-        detailDescription: _detailDescription,
-        detailDescriptionMapping: passedDetailDescriptionMapping = {},
-        logo = <DextinityLogo sx={{ fontSize: 30 }} />,
-        actions = (
-            <Button href="/" fullWidth>
-                <FormattedMessage id="dextinity.fullPageAlert.action.returnToHomePage" defaultMessage="Return to home page" />
-            </Button>
-        ),
-        sx,
-        className,
-        slotProps = {},
-    } = useThemeProps({ props: inProps, name: "DextinityAdminFullPageAlert" });
-
+export const FullPageAlert: FunctionComponent<FullPageAlertProps> = ({
+    severity = "error",
+    title: _title,
+    titleMapping: passedTitleMapping = {},
+    description,
+    descriptionMapping: passedDescriptionMapping = {},
+    icon,
+    iconMapping: passedIconMapping = {},
+    detailDescription: _detailDescription,
+    detailDescriptionMapping: passedDetailDescriptionMapping = {},
+    logo = <DextinityLogo fontSize="inherit" />,
+    actions = (
+        <Button href="/" fullWidth>
+            <FormattedMessage id="dextinity.fullPageAlert.action.returnToHomePage" defaultMessage="Return to home page" />
+        </Button>
+    ),
+    className,
+    slotProps = {},
+}) => {
     const iconMapping = { ...defaultIconMapping, ...passedIconMapping };
     const titleMapping = { ...defaultTitleMapping, ...passedTitleMapping };
     const descriptionMapping = { ...defaultDescriptionMapping, ...passedDescriptionMapping };
@@ -107,7 +104,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
     const detailDescription = _detailDescription ?? detailDescriptionMapping[severity];
 
     return (
-        <Root sx={sx} className={className} {...slotProps.root}>
+        <Root className={className} {...slotProps.root}>
             <BackgroundStyled {...slotProps.background} />
             <ContentContainer {...slotProps.contentContainer}>
                 <InlineAlertStyled
@@ -120,7 +117,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
                     severity={severity}
                     slotProps={{
                         title: {
-                            variant: "h3",
+                            variant: "heading2",
                         },
                     }}
                     {...slotProps.inlineAlert}
@@ -129,9 +126,7 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
                 {detailDescription && (
                     <>
                         <DividerStyled {...slotProps.divider} />
-                        <DetailDescription variant="body2" {...slotProps.detailDescription}>
-                            {detailDescription}
-                        </DetailDescription>
+                        <DetailDescription {...slotProps.detailDescription}>{detailDescription}</DetailDescription>
                     </>
                 )}
                 {(logo || actions) && <DividerStyled {...slotProps.divider} />}
@@ -141,20 +136,3 @@ export const FullPageAlert: FunctionComponent<FullPageAlertProps> = (inProps) =>
         </Root>
     );
 };
-
-declare module "@mui/material/styles" {
-    interface ComponentsPropsList {
-        DextinityAdminFullPageAlert: FullPageAlertProps;
-    }
-
-    interface ComponentNameToClassKey {
-        DextinityAdminFullPageAlert: FullPageAlertClassKey;
-    }
-
-    interface Components {
-        DextinityAdminFullPageAlert?: {
-            defaultProps?: Partial<ComponentsPropsList["DextinityAdminFullPageAlert"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminFullPageAlert"];
-        };
-    }
-}

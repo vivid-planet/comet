@@ -1,5 +1,5 @@
 import { Add, Edit } from "@dextinity/admin-icons";
-import { DialogContent, Typography } from "@mui/material";
+import { Box, DialogContent, Typography } from "@mui/material";
 import type { StoryObj } from "@storybook/react-vite";
 import { expect, waitFor, within } from "storybook/test";
 
@@ -43,16 +43,18 @@ const Page = () => {
         <StackSwitch>
             <StackPage name="grid">
                 <StackMainContent fullHeight>
-                    <Tooltip title="Open the add dialog">
-                        <Button sx={{ m: 2 }} startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
-                            Add new item
-                        </Button>
-                    </Tooltip>
-                    <Tooltip title="Open the edit page">
-                        <Button sx={{ m: 2 }} startIcon={<Edit />} variant="secondary" component={StackLink} pageName="edit" payload="example-id">
-                            Edit existing item
-                        </Button>
-                    </Tooltip>
+                    <Box sx={{ display: "flex", gap: 2, m: 2 }}>
+                        <Tooltip title="Open the add dialog">
+                            <Button startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                                Add new item
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="Open the edit page">
+                            <Button startIcon={<Edit />} variant="secondary" component={StackLink} pageName="edit" payload="example-id">
+                                Edit existing item
+                            </Button>
+                        </Tooltip>
+                    </Box>
                 </StackMainContent>
                 <EditDialog title="Add new item">
                     <DialogContent>

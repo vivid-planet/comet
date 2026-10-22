@@ -21,6 +21,7 @@ import {
 import { ArrowLeft } from "@dextinity/admin-icons";
 import { type ContentScope, ContentScopeIndicator, resolveHasSaveConflict, useFormSaveConflict } from "@dextinity/cms-admin";
 import { Card, IconButton } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { Box } from "@mui/system";
 import type { FormApi } from "final-form";
 import { type ReactElement, type ReactNode, useMemo } from "react";
@@ -234,21 +235,21 @@ export function BrevoContactForm({ id, scope, input2State, additionalFormFields,
                                         />
                                     )}
                                     {values.sendDoubleOptIn ? (
-                                        <Alert severity="warning" sx={{ marginBottom: 5 }}>
+                                        <DoubleOptInAlert severity="warning">
                                             <FormattedMessage
                                                 id="dextinity.brevoContact.contactAddAlert"
                                                 defaultMessage="The contact will get a double opt-in email to confirm the subscription. After the contact's confirmation, the contact will be added to the corresponding target groups in this scope depending on the contact's attributes. Before the confirmation the contact will not be shown on the contacts page."
                                             />
-                                        </Alert>
+                                        </DoubleOptInAlert>
                                     ) : (
-                                        <Alert severity="error" sx={{ marginBottom: 5 }}>
+                                        <DoubleOptInAlert severity="error">
                                             <FormattedMessage
                                                 id="dextinity.brevoContact.contactNoOptInAlert"
                                                 defaultMessage="No Double Opt-In email will be sent. You are responsible for ensuring that recipients have provided their consent before proceeding. If consent has not been given, sending a Double Opt-In email is legally required.
                                                 
                                                 Additionally, the creation of the user will be tracked, and you may need to provide clarification if users report any issues."
                                             />
-                                        </Alert>
+                                        </DoubleOptInAlert>
                                     )}
 
                                     <TextField
@@ -278,3 +279,7 @@ export function BrevoContactForm({ id, scope, input2State, additionalFormFields,
         </FinalForm>
     );
 }
+
+const DoubleOptInAlert = styled(Alert)`
+    margin-bottom: ${({ theme }) => theme.spacing(5)};
+`;

@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Alert, Button, FormSection, useStackApi } from "@dextinity/admin";
 import { BallTriangle as BallTriangleIcon, Link as LinkIcon, OpenNewTab as OpenNewTabIcon, Reload as ReloadIcon } from "@dextinity/admin-icons";
 import { IconButton, List as MuiList, ListItem, ListItemIcon as MuiListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { css, styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
 import type { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
@@ -88,15 +88,14 @@ const Duplicates = ({ fileId }: { fileId: string }) => {
                     </ListItem>
                 )}
             </List>
-            <Alert
+            <DuplicatesInfoAlert
                 title={<FormattedMessage id="dextinity.dam.file.duplicates.info.title" defaultMessage="What are duplicate assets?" />}
-                sx={{ marginTop: 4 }}
             >
                 <FormattedMessage
                     id="dextinity.dam.file.duplicates.info.content"
                     defaultMessage="Duplicates refer to one or more identical copies of a digital asset stored in the DAM system. The DAM automatically detects identical assets, even if their file names are different, to reduce storage usage."
                 />
-            </Alert>
+            </DuplicatesInfoAlert>
         </FormSection>
     );
 };
@@ -125,3 +124,9 @@ const LoadingIcon = styled(BallTriangleIcon)`
     font-size: 32px;
     margin: ${({ theme }) => theme.spacing(2, 0)};
 `;
+
+const DuplicatesInfoAlert = styled(Alert)(
+    ({ theme }) => css`
+        margin-top: ${theme.spacing(4)};
+    `,
+);

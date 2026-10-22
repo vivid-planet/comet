@@ -150,53 +150,6 @@ export function ContentScopeSelect({
                         },
                     }),
                 },
-                button: {
-                    slotProps: {
-                        root: {
-                            sx: (theme) => ({
-                                width: "100%",
-                                justifyContent: "start",
-
-                                [theme.breakpoints.up("md")]: {
-                                    justifyContent: "center",
-                                },
-                            }),
-                        },
-                        content: {
-                            sx: (theme) => ({
-                                width: "100%",
-                                justifyContent: "start",
-
-                                [theme.breakpoints.up("md")]: {
-                                    justifyContent: "center",
-                                },
-                            }),
-                        },
-
-                        endIcon: {
-                            sx: (theme) => ({
-                                [theme.breakpoints.up("xs")]: {
-                                    "&:not(:first-of-type)": {
-                                        marginLeft: "auto",
-                                    },
-                                },
-
-                                [theme.breakpoints.up("md")]: {
-                                    "&:not(:first-of-type)": {
-                                        marginLeft: theme.spacing(2),
-                                    },
-                                },
-                            }),
-                        },
-                        typography: {
-                            sx: {
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                            },
-                        },
-                    },
-                },
 
                 popover: {
                     anchorOrigin: { vertical: "bottom", horizontal: "left" },

@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { Field } from "@dextinity/admin";
 import { Video } from "@dextinity/admin-icons";
 import { Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { deepClone } from "@mui/x-data-grid/internals";
 import { defineMessage, FormattedMessage, type MessageDescriptor } from "react-intl";
 
@@ -165,7 +166,7 @@ export const createDamVideoBlock = (
             return (
                 <Box padding={isInPaper ? 3 : 0} pb={0}>
                     <BlocksFinalForm onSubmit={updateState} initialValues={state}>
-                        {state.damFile && isVideoTooLarge(state.damFile) && <VideoPerformanceWarningAlert sx={{ marginBottom: 2 }} />}
+                        {state.damFile && isVideoTooLarge(state.damFile) && <VideoWarningAlert />}
                         <Field
                             name="damFile"
                             component={FileField}
@@ -215,3 +216,7 @@ export const createDamVideoBlock = (
 
     return DamVideoBlock;
 };
+
+const VideoWarningAlert = styled(VideoPerformanceWarningAlert)`
+    margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;

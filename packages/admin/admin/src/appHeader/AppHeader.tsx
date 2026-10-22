@@ -10,7 +10,7 @@ export interface AppHeaderProps extends AppBarProps {
      */
     headerHeight?: number;
     /** The MasterLayout expects the header at the top of the window. */
-    position?: "fixed" | "static";
+    position?: "fixed" | "relative" | "static";
 }
 
 export type AppHeaderClassKey = "root";
@@ -25,6 +25,10 @@ const Root = styled(AppBar)(
         block-size: var(--header-height);
         min-block-size: 0;
         overflow: visible;
+
+        &[data-position="relative"] {
+            position: relative;
+        }
 
         &[data-position="static"] {
             position: static;

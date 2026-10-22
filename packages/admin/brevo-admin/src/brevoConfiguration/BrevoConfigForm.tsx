@@ -279,9 +279,8 @@ export function BrevoConfigForm({ scope }: FormProps): ReactElement {
                                                     defaultMessage="By default, the folder ID should be set to 1 unless you have specifically configured another folder in Brevo."
                                                 />
                                             }
-                                            sx={{ marginLeft: "5px" }}
                                         >
-                                            <Info />
+                                            <Info sx={{ marginLeft: "5px" }} />
                                         </Tooltip>
                                     </>
                                 }
@@ -302,9 +301,8 @@ export function BrevoConfigForm({ scope }: FormProps): ReactElement {
                                                     defaultMessage="Defines the schema of a valid redirection URL that is set when creating or importing contacts."
                                                 />
                                             }
-                                            sx={{ marginLeft: "5px" }}
                                         >
-                                            <Info />
+                                            <Info sx={{ marginLeft: "5px" }} />
                                         </Tooltip>
                                     </>
                                 }
