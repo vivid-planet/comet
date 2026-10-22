@@ -24,4 +24,4 @@ RUN NODE_OPTIONS=--max-old-space-size=4096 pnpm run build
 
 ENV NODE_ENV=production
 EXPOSE 8001
-CMD ["node", "server"]
+CMD ["node", "server/index.ts"]

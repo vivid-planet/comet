@@ -194,6 +194,11 @@ services:
             NODE_OPTIONS: --max-old-space-size=256
         env_file:
             - demo/.env.site-configs.deploy-preview
+        healthcheck:
+            test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8001/status/health').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+            interval: 30s
+            start_interval: 2s
+            start_period: 60s
 
     site:
         build:
