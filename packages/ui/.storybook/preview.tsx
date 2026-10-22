@@ -62,7 +62,7 @@ const preview: Preview = {
                 order: [
                     "Introduction",
                     "Foundations",
-                    ["Theming", "Design tokens", "Theme overview", "Icons", "Customization"],
+                    ["Theming", "ThemeSwitch", "Design tokens", "Theme overview", "Icons", "Customization"],
                     "Components",
                     "Patterns",
                     "Sample pages",

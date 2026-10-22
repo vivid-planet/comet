@@ -125,7 +125,7 @@ Redefine a token on the element that names the theme, as above. A token that ref
 
 ## Nesting themes
 
-To give a part of a page another theme or color scheme, such as a dark sidebar or the preview of a theme, wrap it in a [`ThemeSwitch`](?path=/docs/components-themeswitch--docs). Every design token inside gets the value of its theme and color scheme, and theme switches can be nested:
+To give a part of a page another theme or color scheme, such as a dark sidebar or the preview of a theme, wrap it in a [`ThemeSwitch`](?path=/docs/foundations-themeswitch--docs). Every design token inside gets the value of its theme and color scheme, and theme switches can be nested:
 
 ```tsx
 import { ThemeSwitch } from "@dextinity/ui";
@@ -149,7 +149,7 @@ Inside a theme switch, another one starts its own theme anew, so the innermost d
 </ThemeSwitch>
 ```
 
-The [nested theme switches](?path=/story/components-themeswitch--nested) story shows five levels, each with its own colors, shapes and icons.
+The [nested theme switches](?path=/story/foundations-themeswitch--nested) story shows seven levels, each with its own colors, shapes and icons.
 
 A theme switch is a `<div>` with the `data-dextinity-theme` and `data-dextinity-color-scheme` attributes, which paints the theme's background. It uses no React context, so it renders on the server, also as a React Server Component. Name both its theme and its color scheme: CSS can't find out the color scheme around it. Popups opened inside it, such as a select's options, follow its theme too, although they render at the end of `<body>`.
 

@@ -127,7 +127,7 @@ The TSDoc on the exports is the component's documentation: Storybook's docs page
 
 ### Stories
 
-- `__stories__/<Component>.stories.tsx` in [CSF 3](https://storybook.js.org/docs/api/csf), with `title: "Components/<Component>"` and the meta typed with `satisfies Meta<typeof Component>`.
+- `__stories__/<Component>.stories.tsx` in [CSF 3](https://storybook.js.org/docs/api/csf), with `title: "Components/<Component>"` and the meta typed with `satisfies Meta<typeof Component>`. `ThemeSwitch` applies a theme instead of showing an interface, so its title is `"Foundations/ThemeSwitch"`, next to Theming.
 - Don't put a comment on `meta`: it would replace the component's TSDoc in the documentation.
 - `meta.args` holds what every story needs, such as `children` and event handlers created with `fn()`.
 - The first story is `Default`, the smallest practical example. Order the rest by usefulness: agents get full code for the first three stories only. Give each story a comment that says why to use it. The docs page shows the comment as it is, so don't put JSDoc tags such as `@summary` into it.

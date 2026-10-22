@@ -69,9 +69,11 @@ function LevelSample({ title }: { title: string }) {
     );
 }
 
+const colorSchemes = ["light", "dark"] as const;
+
 const meta = {
     component: ThemeSwitch,
-    title: "Components/ThemeSwitch",
+    title: "Foundations/ThemeSwitch",
     // The docs page is ThemeSwitch.mdx.
     tags: ["!autodocs"],
     args: {
@@ -114,18 +116,25 @@ export const Default: Story = {
 };
 
 /**
- * The same content in every theme, each in its own theme switch.
+ * The same content in every theme, in its light and its dark color scheme side by side, each in its own theme
+ * switch.
  */
 export const EveryTheme: Story = {
     render: (args) => (
         <div className={styles.comparison}>
-            {themeOptions.map((option) => (
-                <ThemeSwitch key={option.value} {...args} theme={option.value}>
-                    <NewsletterSettings title={option.title} />
-                </ThemeSwitch>
-            ))}
+            {themeOptions.flatMap((option) =>
+                colorSchemes.map((colorScheme) => (
+                    <ThemeSwitch key={`${option.value}-${colorScheme}`} {...args} theme={option.value} colorScheme={colorScheme}>
+                        <NewsletterSettings title={`${option.title.replace(/ \(.*\)$/, "")}, ${colorScheme}`} />
+                    </ThemeSwitch>
+                )),
+            )}
         </div>
     ),
+    play: async ({ canvas }) => {
+        await expect(canvas.getAllByRole("heading", { name: /, light$/ })).toHaveLength(themeOptions.length);
+        await expect(canvas.getAllByRole("heading", { name: /, dark$/ })).toHaveLength(themeOptions.length);
+    },
 };
 
 /**
