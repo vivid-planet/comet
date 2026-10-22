@@ -17,7 +17,6 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControlLabel,
     Grid,
     MenuItem,
     Paper,
@@ -109,7 +108,7 @@ export const FieldsInSidebar = {
                                         <>
                                             {flavourOptions.map(({ value, label }) => (
                                                 <Field key={value} name="radio" type="radio" value={value} variant="vertical">
-                                                    {(props) => <FormControlLabel label={label} control={<FinalFormRadio {...props} />} />}
+                                                    {(props) => <FinalFormRadio {...props}>{label}</FinalFormRadio>}
                                                 </Field>
                                             ))}
                                         </>
@@ -313,7 +312,7 @@ export const HorizontalFields = {
                                     <>
                                         {flavourOptions.map(({ value, label }) => (
                                             <Field key={value} name="radio" type="radio" value={value} variant="vertical">
-                                                {(props) => <FormControlLabel label={label} control={<FinalFormRadio {...props} />} />}
+                                                {(props) => <FinalFormRadio {...props}>{label}</FinalFormRadio>}
                                             </Field>
                                         ))}
                                     </>

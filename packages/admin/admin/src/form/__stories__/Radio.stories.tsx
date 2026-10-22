@@ -1,4 +1,4 @@
-import { Card, CardContent, FormControlLabel, Grid } from "@mui/material";
+import { Card, CardContent, Grid } from "@mui/material";
 import { Form } from "react-final-form";
 
 import { Field } from "../../form/Field";
@@ -30,16 +30,16 @@ export const Radio = () => {
                                     <CardContent>
                                         <FieldContainer label="Radios">
                                             <Field name="foo1" type="radio" value="bar1" fullWidth>
-                                                {(props) => <FormControlLabel label="Unchecked" control={<FinalFormRadio {...props} />} />}
+                                                {(props) => <FinalFormRadio {...props}>Unchecked</FinalFormRadio>}
                                             </Field>
                                             <Field name="foo1" type="radio" value="bar2" fullWidth>
-                                                {(props) => <FormControlLabel label="Checked" control={<FinalFormRadio {...props} />} />}
+                                                {(props) => <FinalFormRadio {...props}>Checked</FinalFormRadio>}
                                             </Field>
                                             <Field name="foo2" type="radio" value="bar1" fullWidth disabled>
-                                                {(props) => <FormControlLabel label="Disabled" control={<FinalFormRadio {...props} />} />}
+                                                {(props) => <FinalFormRadio {...props}>Disabled</FinalFormRadio>}
                                             </Field>
                                             <Field name="foo2" type="radio" value="bar2" fullWidth disabled>
-                                                {(props) => <FormControlLabel label="Disabled & Checked" control={<FinalFormRadio {...props} />} />}
+                                                {(props) => <FinalFormRadio {...props}>Disabled & Checked</FinalFormRadio>}
                                             </Field>
                                         </FieldContainer>
                                     </CardContent>

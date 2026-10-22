@@ -47,8 +47,6 @@ describe("SelectField", () => {
             </Form>,
         );
 
-        const selectField = screen.getByTestId("test-select");
-        expect(selectField).toBeInTheDocument();
-        expect(selectField.tagName).toBe("INPUT");
+        expect(screen.getByTestId("test-select")).toBe(screen.getByRole("combobox"));
     });
 });

@@ -1,6 +1,4 @@
-import { Search } from "@dextinity/admin-icons";
-import { InputAdornment } from "@mui/material";
-import { useThemeProps } from "@mui/material/styles";
+import { Icon } from "@dextinity/ui";
 import type { ReactNode } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
@@ -18,8 +16,11 @@ type FinalFormSearchTextFieldInternalProps = FieldRenderProps<string, HTMLInputE
  *
  * @see {@link SearchField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
-export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps & FinalFormSearchTextFieldInternalProps) {
-    const { icon = <Search />, placeholder, ...restProps } = useThemeProps({ props: inProps, name: "DextinityAdminFinalFormSearchTextField" });
+export function FinalFormSearchTextField({
+    icon = <Icon name="search" />,
+    placeholder,
+    ...restProps
+}: FinalFormSearchTextFieldProps & FinalFormSearchTextFieldInternalProps) {
     const intl = useIntl();
 
     return (
@@ -28,16 +29,13 @@ export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps 
             placeholder={
                 placeholder ?? intl.formatMessage({ id: "dextinity.finalformsearchtextfield.default.placeholder", defaultMessage: "Search" })
             }
-            startAdornment={
-                <InputAdornment position="start" disablePointerEvents>
-                    {icon}
-                </InputAdornment>
-            }
+            startAdornment={icon}
             disableContentTranslation={true}
         />
     );
 }
 
+// Kept so that themes setting these keep compiling, although FinalFormSearchTextField no longer reads the MUI theme.
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
         DextinityAdminFinalFormSearchTextField: FinalFormSearchTextFieldProps;
@@ -45,6 +43,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         DextinityAdminFinalFormSearchTextField?: {
+            /** @deprecated Has no effect: FinalFormSearchTextField is built on `@dextinity/ui` and doesn't read the MUI theme. */
             defaultProps?: Partial<ComponentsPropsList["DextinityAdminFinalFormSearchTextField"]>;
         };
     }

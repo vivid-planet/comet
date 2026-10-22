@@ -1,7 +1,10 @@
-import MuiCheckbox, { type CheckboxProps } from "@mui/material/Checkbox";
+import { Checkbox, type CheckboxProps } from "@dextinity/ui";
 import type { FieldRenderProps } from "react-final-form";
 
-export type FinalFormCheckboxProps = CheckboxProps;
+export type FinalFormCheckboxProps = Omit<CheckboxProps, "checked" | "defaultChecked" | "onCheckedChange"> & {
+    /** @deprecated Has no effect: the checkbox comes in one size. */
+    size?: "small" | "medium";
+};
 
 type FinalFormCheckboxInternalProps = FieldRenderProps<string, HTMLInputElement>;
 
@@ -11,9 +14,21 @@ type FinalFormCheckboxInternalProps = FieldRenderProps<string, HTMLInputElement>
  * @see {@link CheckboxField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export const FinalFormCheckbox = ({
-    input: { checked, name, onChange, ...restInput },
+    input: { checked, name, onChange, onBlur, onFocus },
     meta,
+    size,
+    variant,
+    fullWidth,
     ...rest
 }: FinalFormCheckboxProps & FinalFormCheckboxInternalProps) => {
-    return <MuiCheckbox {...rest} name={name} inputProps={restInput} onChange={onChange} checked={checked} />;
+    return (
+        <Checkbox
+            {...rest}
+            name={name}
+            onBlur={() => onBlur()}
+            onFocus={() => onFocus()}
+            onCheckedChange={(checked) => onChange(checked)}
+            checked={Boolean(checked)}
+        />
+    );
 };

@@ -1,7 +1,11 @@
-import MuiSwitch, { type SwitchProps } from "@mui/material/Switch";
+import { Switch, type SwitchProps } from "@dextinity/ui";
 import type { FieldRenderProps } from "react-final-form";
 
-export type FinalFormSwitchProps = SwitchProps;
+export type FinalFormSwitchProps = Omit<SwitchProps, "checked" | "defaultChecked" | "onCheckedChange"> & {
+    /** @deprecated Has no effect: the switch comes in one size. */
+    size?: "small" | "medium";
+};
+
 type FinalFormSwitchInternalProps = FieldRenderProps<string, HTMLInputElement>;
 
 /**
@@ -10,9 +14,21 @@ type FinalFormSwitchInternalProps = FieldRenderProps<string, HTMLInputElement>;
  * @see {@link SwitchField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export const FinalFormSwitch = ({
-    input: { checked, name, onChange, ...restInput },
+    input: { checked, name, onChange, onBlur, onFocus },
     meta,
+    size,
+    variant,
+    fullWidth,
     ...rest
 }: FinalFormSwitchProps & FinalFormSwitchInternalProps) => {
-    return <MuiSwitch {...rest} name={name} inputProps={restInput} onChange={onChange} checked={checked} />;
+    return (
+        <Switch
+            {...rest}
+            name={name}
+            onBlur={() => onBlur()}
+            onFocus={() => onFocus()}
+            onCheckedChange={(checked) => onChange(checked)}
+            checked={Boolean(checked)}
+        />
+    );
 };

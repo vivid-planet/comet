@@ -99,7 +99,6 @@ export function FinalFormNumberInput({
             {...input}
             {...props}
             type="text"
-            inputMode={decimals > 0 ? "decimal" : "numeric"}
             required={required}
             disabled={disabled}
             readOnly={readOnly}

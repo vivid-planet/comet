@@ -1,4 +1,3 @@
-import { MenuItem } from "@mui/material";
 import type { ComponentProps, ReactNode } from "react";
 
 import { Field, type FieldProps } from "../Field";
@@ -34,9 +33,9 @@ export function SelectField<Value extends string | number>({ componentsProps = {
                     {children
                         ? children
                         : options?.map(({ label, value, disabled }) => (
-                              <MenuItem key={value} value={value} disabled={disabled}>
+                              <option key={value} value={value} disabled={disabled}>
                                   {label}
-                              </MenuItem>
+                              </option>
                           ))}
                 </FinalFormSelect>
             )}

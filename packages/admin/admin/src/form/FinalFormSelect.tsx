@@ -1,24 +1,58 @@
-import { Error } from "@dextinity/admin-icons";
-import { InputAdornment, LinearProgress, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
-import type { ReactNode } from "react";
+import { Icon, SelectControl, type SelectControlProps, type SelectOption } from "@dextinity/ui";
+import { type ChangeEvent, Children, Fragment, isValidElement, type ReactNode, useRef } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import type { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
-import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
+import { InputClearButton } from "./InputClearButton";
 
 export interface FinalFormSelectProps<T> {
     noOptionsText?: ReactNode;
     errorText?: ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
+    /**
+     * The options as elements, such as `<option value="a">A</option>` or MUI's `<MenuItem value="a">A</MenuItem>`: each element's `value`,
+     * `children` and `disabled` props become an option. The field's value is then the selected element's `value`.
+     */
     children?: ReactNode;
     required?: boolean;
     loadingError?: Error | null;
+    multiple?: boolean;
+    disabled?: boolean;
+    placeholder?: ReactNode;
+    renderValue?: (value: unknown) => ReactNode;
+    className?: string;
+    /** @deprecated Has no effect: the select always fills its field. */
+    fullWidth?: boolean;
 }
 
 type FinalFormSelectInternalProps<T> = FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement>;
+
+type ElementOption = SelectOption & { originalValue: unknown };
+
+function getElementOptions(children: ReactNode): ElementOption[] {
+    return Children.toArray(children).flatMap((child): ElementOption[] => {
+        if (!isValidElement<{ value?: unknown; children?: ReactNode; disabled?: boolean }>(child)) {
+            return [];
+        }
+        if (child.type === Fragment) {
+            return getElementOptions(child.props.children);
+        }
+        if (child.props.value === undefined) {
+            return [];
+        }
+        return [{ value: String(child.props.value), label: child.props.children, disabled: child.props.disabled, originalValue: child.props.value }];
+    });
+}
+
+function isEmptyValue(value: unknown) {
+    return value === undefined || value === null || value === "";
+}
+
+function getDataAndAriaProps(props: Record<string, unknown>) {
+    return Object.fromEntries(Object.entries(props).filter(([key]) => key.startsWith("data-") || key.startsWith("aria-")));
+}
 
 /**
  * Final Form-compatible Select component.
@@ -26,12 +60,15 @@ type FinalFormSelectInternalProps<T> = FieldRenderProps<T, HTMLInputElement | HT
  * @see {@link SelectField} – preferred for typical form use. Use this only if no Field wrapper is needed.
  */
 export const FinalFormSelect = <T,>({
-    input: { checked, value: incomingValue, name, onChange, onFocus, onBlur, ...restInput },
+    input: { value: incomingValue, name, onChange, onFocus, onBlur, multiple: inputMultiple },
     meta,
     isAsync = false,
     options = [],
     loading = false,
     loadingError,
+    open,
+    onOpen,
+    onClose,
     getOptionLabel = (option: T) => {
         if (typeof option === "object") {
             console.error(`The \`getOptionLabel\` method of FinalFormSelect returned an object instead of a string for${JSON.stringify(option)}.`);
@@ -51,125 +88,141 @@ export const FinalFormSelect = <T,>({
             return String(option);
         }
     },
-
-    noOptionsText = (
-        <Typography variant="body2">
-            <FormattedMessage id="dextinity.finalFormSelect.noOptions" defaultMessage="No options." />
-        </Typography>
-    ),
-    errorText = (
-        <Typography variant="body2">
-            <FormattedMessage id="dextinity.finalFormSelect.error" defaultMessage="Error loading options." />
-        </Typography>
-    ),
+    noOptionsText = <FormattedMessage id="dextinity.finalFormSelect.noOptions" defaultMessage="No options." />,
+    errorText = <FormattedMessage id="dextinity.finalFormSelect.error" defaultMessage="Error loading options." />,
     disabled,
     children,
     required,
+    multiple: propsMultiple,
+    placeholder,
+    renderValue,
+    className,
+    id,
+    autoFocus,
+    readOnly,
+    inputProps,
     ...rest
-}: FinalFormSelectProps<T> & FinalFormSelectInternalProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
+}: FinalFormSelectProps<T> & FinalFormSelectInternalProps<T> & Partial<AsyncOptionsProps<T>>) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
-    // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
-    // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
-    const multiple = restInput.multiple ?? rest.multiple;
+    // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in input
+    // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is a root prop
+    const multiple = Boolean(inputMultiple ?? propsMultiple);
 
-    const value = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
+    const value: unknown = multiple ? (Array.isArray(incomingValue) ? incomingValue : []) : incomingValue;
 
-    const hasClearableContent = !disabled && (multiple && Array.isArray(value) ? value.length > 0 : value !== undefined && value !== "");
+    const hasClearableContent = !disabled && (multiple && Array.isArray(value) ? value.length > 0 : !isEmptyValue(value));
 
-    const endAdornment =
-        !required && hasClearableContent ? <ClearInputAdornment position="end" onClick={() => onChange(multiple ? [] : undefined)} /> : null;
+    const clearButton = !required && hasClearableContent ? <InputClearButton onClick={() => onChange(multiple ? [] : undefined)} /> : null;
 
-    const selectProps = {
-        ...rest,
+    // Focus moves from the trigger into the list while it's open, but the user hasn't left the field, so it isn't touched yet.
+    const isOpenRef = useRef(false);
+
+    const handleOpenChange: SelectControlProps["onOpenChange"] = (nextOpen, eventDetails) => {
+        isOpenRef.current = nextOpen;
+        if (!nextOpen && (eventDetails.reason === "outside-press" || eventDetails.reason === "focus-out")) {
+            onBlur();
+        }
+        if (isAsync) {
+            const event = eventDetails.event as unknown as ChangeEvent;
+            if (nextOpen) {
+                onOpen?.(event);
+            } else {
+                onClose?.(event);
+            }
+        }
+    };
+
+    const controlProps = {
+        ...getDataAndAriaProps(rest),
+        ...(inputProps && getDataAndAriaProps(inputProps)),
+        id,
+        autoFocus,
+        readOnly,
+        className,
+        placeholder,
         multiple,
         disabled,
-        endAdornment,
-        name,
-        onChange,
-        onFocus,
-        onBlur,
         required,
+        name,
+        onFocus,
+        onBlur: () => {
+            if (!isOpenRef.current) {
+                onBlur();
+            }
+        },
+        ...(isAsync && { open }),
+        onOpenChange: handleOpenChange,
     };
 
     if (children) {
+        const elementOptions = getElementOptions(children);
+        const toKey = (optionValue: unknown) =>
+            isEmptyValue(optionValue) && !elementOptions.some((option) => option.value === "") ? null : String(optionValue);
+        const toOriginalValue = (key: string) => elementOptions.find((option) => option.value === key)?.originalValue ?? key;
+
         return (
-            <Select {...selectProps} value={value}>
-                {children}
-            </Select>
+            <SelectControl
+                {...controlProps}
+                options={elementOptions}
+                value={Array.isArray(value) ? value.map((item) => String(item)) : toKey(value)}
+                onValueChange={(newValue) => {
+                    onChange(Array.isArray(newValue) ? newValue.map(toOriginalValue) : newValue === null ? undefined : toOriginalValue(newValue));
+                }}
+                endAdornment={clearButton}
+                slotProps={renderValue ? { value: { children: () => renderValue(value) } } : undefined}
+            />
         );
     }
 
-    const showLoadingMessage = loading === true && options.length === 0 && loadingError == null;
-    const showLinearProgress = loading === true && !showLoadingMessage;
+    const showLoadingMessage = loading === true && loadingError == null;
     const showOptions = options.length > 0 && loadingError == null;
     const showError = loadingError != null && !loading;
     const showNoOptions = loading === false && loadingError == null && options.length === 0;
 
-    return (
-        <Select
-            {...selectProps}
-            endAdornment={
-                <InputAdornment position="end">
-                    {loadingError && <Error color="error" />}
+    const selectOptions: SelectOption[] = showOptions
+        ? options.map((option) => ({ value: getOptionValue(option), label: getOptionLabel(option) }))
+        : [];
 
-                    {endAdornment}
-                </InputAdornment>
-            }
-            onChange={(event) => {
-                const value = event.target.value;
+    const renderSelectedLabels = () => {
+        if (renderValue) {
+            return renderValue(value);
+        }
+        if (Array.isArray(value)) {
+            return value.map((item) => getOptionLabel(item)).join(", ");
+        }
+        return isEmptyValue(value) ? placeholder : getOptionLabel(value as T);
+    };
+
+    return (
+        <SelectControl
+            {...controlProps}
+            options={selectOptions}
+            value={Array.isArray(value) ? value.map((item) => getOptionValue(item)) : isEmptyValue(value) ? null : getOptionValue(value as T)}
+            onValueChange={(newValue) => {
                 onChange(
-                    Array.isArray(value)
-                        ? value.map((v) => options.find((i) => getOptionValue(i) == v))
-                        : options.find((i) => getOptionValue(i) == value),
+                    Array.isArray(newValue)
+                        ? newValue.map((key) => options.find((option) => getOptionValue(option) == key))
+                        : options.find((option) => getOptionValue(option) == newValue),
                 );
             }}
-            value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
-            renderValue={() => {
-                if (Array.isArray(value)) {
-                    return value.map((i) => getOptionLabel(i)).join(", ");
-                } else {
-                    return getOptionLabel(value);
-                }
-            }}
-        >
-            <LinearLoadingContainer>{showLinearProgress && <LinearProgress />}</LinearLoadingContainer>
-            {showLoadingMessage && (
-                <MenuItemDisabledOverrideOpacity value="" disabled>
+            message={
+                showLoadingMessage ? (
                     <FormattedMessage id="dextinity.common.loading" defaultMessage="Loading ..." />
-                </MenuItemDisabledOverrideOpacity>
-            )}
-
-            {options.length === 0 &&
-                value &&
-                (Array.isArray(value) ? (
-                    value.map((v) => (
-                        <MenuItem value={getOptionValue(v)} key={getOptionValue(v)} sx={{ display: "none" }}>
-                            {getOptionLabel(v)}
-                        </MenuItem>
-                    ))
-                ) : (
-                    <MenuItem value={getOptionValue(value)} key={getOptionValue(value)} sx={{ display: "none" }}>
-                        {getOptionLabel(value)}
-                    </MenuItem>
-                ))}
-
-            {showNoOptions && (
-                <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {noOptionsText}
-                </MenuItemDisabledOverrideOpacity>
-            )}
-            {showError && (
-                <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {errorText}
-                </MenuItemDisabledOverrideOpacity>
-            )}
-
-            {showOptions &&
-                options.map((option: T) => (
-                    <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
-                        {getOptionLabel(option)}
-                    </MenuItem>
-                ))}
-        </Select>
+                ) : showError ? (
+                    errorText
+                ) : showNoOptions ? (
+                    noOptionsText
+                ) : undefined
+            }
+            endAdornment={
+                loadingError || clearButton ? (
+                    <>
+                        {loadingError && <Icon name="danger" />}
+                        {clearButton}
+                    </>
+                ) : undefined
+            }
+            slotProps={{ value: { children: renderSelectedLabels } }}
+        />
     );
 };
