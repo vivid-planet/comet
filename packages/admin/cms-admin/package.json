@@ -103,7 +103,7 @@
         "@mui/x-data-grid-pro": "^8.29.3",
         "@mui/x-date-pickers": "^8.29.4",
         "@storybook/addon-docs": "^10.6.1",
-        "@storybook/addon-vitest": "10.6.1",
+        "@storybook/addon-vitest": "10.6.2",
         "@storybook/react-vite": "^10.6.1",
         "@testing-library/dom": "^10.4.2",
         "@testing-library/react": "^16.3.3",
