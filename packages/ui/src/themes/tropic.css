@@ -129,7 +129,7 @@
         /* Button */
         --dextinity-button-radius: 9999px;
         --dextinity-button-font-weight: 800;
-        --dextinity-button-primary-background: linear-gradient(135deg, #ff5c39 0%, #ffa21f 100%);
+        --dextinity-button-primary-background: linear-gradient(135deg, #ff6a45 0%, #ffa21f 100%);
         --dextinity-button-primary-background-hover: linear-gradient(135deg, #ff6f4d 0%, #ffbb3a 100%);
         --dextinity-button-primary-foreground: #0b3436;
         --dextinity-button-primary-shadow: 0 2px 0 #d9481f, 0 6px 16px rgb(255 92 57 / 30%);
@@ -143,7 +143,7 @@
 
         /* App bar */
         --dextinity-app-bar-height: 4rem;
-        --dextinity-app-bar-background: linear-gradient(90deg, #ff5c39 0%, #ffa21f 100%);
+        --dextinity-app-bar-background: linear-gradient(90deg, #ff6a45 0%, #ffa21f 100%);
         --dextinity-app-bar-background-hover: #ffd23f;
         --dextinity-app-bar-foreground: #0b3436;
         --dextinity-app-bar-focus-ring: #0b3436;

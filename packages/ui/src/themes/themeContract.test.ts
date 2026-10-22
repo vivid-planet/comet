@@ -266,9 +266,12 @@ describe.each(themes)("theme $fileName", (theme) => {
 
     describe.each<ColorScheme>(["light", "dark"])("%s color scheme", (colorScheme) => {
         it.each(contrastRequirements)("meets a contrast of $minimum:1 for $foreground on $background", ({ foreground, background, minimum }) => {
-            const ratio = contrastRatio(resolveColor(theme, colorScheme, foreground), resolveColor(theme, colorScheme, background));
+            const backgroundColors = resolveColors(theme, colorScheme, background);
+            const ratios = resolveColors(theme, colorScheme, foreground).flatMap((foregroundColor) =>
+                backgroundColors.map((backgroundColor) => contrastRatio(foregroundColor, backgroundColor)),
+            );
 
-            expect(ratio).toBeGreaterThanOrEqual(minimum);
+            expect(Math.min(...ratios)).toBeGreaterThanOrEqual(minimum);
         });
     });
 });
@@ -368,11 +371,13 @@ describe("component docs pages", () => {
 
 type Rgb = [number, number, number];
 
+const gradientSampleCount = 101;
+
 /**
- * Resolves a token to the color it shows. A gradient of two colors resolves to the color midway between them,
- * where a button's text sits; `transparent` to the page background.
+ * Resolves a token to the colors it shows: a color, or for a gradient of two colors, the colors along it, since a
+ * label can span the whole gradient; `transparent` resolves to the page background.
  */
-function resolveColor(theme: Theme, colorScheme: ColorScheme, token: string): Rgb {
+function resolveColors(theme: Theme, colorScheme: ColorScheme, token: string): Rgb[] {
     const value = theme.declarations[colorScheme].get(token) ?? theme.declarations.light.get(token);
 
     if (value === undefined) {
@@ -381,11 +386,11 @@ function resolveColor(theme: Theme, colorScheme: ColorScheme, token: string): Rg
 
     const reference = value.match(/^var\((--dextinity-[a-z0-9-]+)\)$/)?.[1];
     if (reference !== undefined) {
-        return resolveColor(theme, colorScheme, reference);
+        return resolveColors(theme, colorScheme, reference);
     }
 
     if (value === "transparent") {
-        return resolveColor(theme, colorScheme, "--dextinity-color-background");
+        return resolveColors(theme, colorScheme, "--dextinity-color-background");
     }
 
     if (value.startsWith("linear-gradient(")) {
@@ -394,11 +399,15 @@ function resolveColor(theme: Theme, colorScheme: ColorScheme, token: string): Rg
             throw new Error(`${theme.fileName}: ${token} must be a gradient of two hex colors, so its contrast can be checked.`);
         }
         const [first, last] = stops.map((stop) => parseHexColor(stop, `${theme.fileName}: ${token}`));
-        return [0, 1, 2].map((channel) => (first[channel] + last[channel]) / 2) as Rgb;
+        // The luminance doesn't change monotonically between two colors whose channels change in opposite directions.
+        return Array.from({ length: gradientSampleCount }, (_, sample) => {
+            const position = sample / (gradientSampleCount - 1);
+            return [0, 1, 2].map((channel) => first[channel] + (last[channel] - first[channel]) * position) as Rgb;
+        });
     }
 
     if (value.startsWith("#")) {
-        return parseHexColor(value, `${theme.fileName}: ${token}`);
+        return [parseHexColor(value, `${theme.fileName}: ${token}`)];
     }
 
     throw new Error(`${theme.fileName}: ${token} is "${value}". Use a hex color, so its contrast can be checked.`);

@@ -132,7 +132,7 @@
         /* Button */
         --dextinity-button-radius: 9999px;
         --dextinity-button-font-weight: 600;
-        --dextinity-button-primary-background: linear-gradient(135deg, #403af2 0%, #098a82 100%);
+        --dextinity-button-primary-background: linear-gradient(135deg, #403af2 0%, #08827b 100%);
         --dextinity-button-primary-background-hover: linear-gradient(135deg, #272391 0%, #076964 100%);
         --dextinity-button-primary-foreground: #fff;
         --dextinity-button-primary-shadow: 0 8px 24px rgb(64 58 242 / 35%);
