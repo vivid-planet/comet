@@ -5,10 +5,12 @@ export const getMuiFormControlLabel: GetMuiComponentTheme<"MuiFormControlLabel">
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiFormControlLabel">(component?.styleOverrides, {
         root: {
-            marginLeft: -9,
+            // The checkboxes, radios and switches of @dextinity/ui have no padding around them, unlike MUI's.
+            marginLeft: 0,
             marginTop: 0,
             marginBottom: 0,
             minHeight: 40,
+            gap: "var(--dextinity-space-sm)",
         },
     }),
 });
