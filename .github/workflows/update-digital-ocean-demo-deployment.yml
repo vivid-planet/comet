@@ -4,6 +4,8 @@ on:
     push:
         branches:
             - main
+    # Only until the proof of concept has been tested
+    pull_request:
     workflow_dispatch:
 
 # There's only one deployment, so a newer run replaces a running one
@@ -14,11 +16,11 @@ concurrency:
 jobs:
     update-deployment:
         name: Update DigitalOcean Demo Deployment
-        if: github.repository == 'vivid-planet/dextinity'
+        if: github.repository == 'vivid-planet/dextinity' && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/demo-site-upload-static-assets-on-startup'))
         runs-on: ubuntu-latest
         env:
             # The branch App Platform builds from
-            DEPLOY_BRANCH: ${{ github.ref_name }}
+            DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
         steps:
             - name: Check that all variables and secrets are set
               env:
@@ -30,6 +32,8 @@ jobs:
                   DEMO_POSTGRESQL_PWD_BASE64: ${{ secrets.DEMO_POSTGRESQL_PWD_BASE64 }}
                   DEMO_S3_ACCESS_KEY_ID: ${{ secrets.DEMO_S3_ACCESS_KEY_ID }}
                   DEMO_S3_SECRET_ACCESS_KEY: ${{ secrets.DEMO_S3_SECRET_ACCESS_KEY }}
+                  DEMO_STATIC_ASSETS_S3_ACCESS_KEY_ID: ${{ secrets.DEMO_STATIC_ASSETS_S3_ACCESS_KEY_ID }}
+                  DEMO_STATIC_ASSETS_S3_SECRET_ACCESS_KEY: ${{ secrets.DEMO_STATIC_ASSETS_S3_SECRET_ACCESS_KEY }}
                   DEMO_IMGPROXY_KEY: ${{ secrets.DEMO_IMGPROXY_KEY }}
                   DEMO_IMGPROXY_SALT: ${{ secrets.DEMO_IMGPROXY_SALT }}
                   DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD: ${{ secrets.DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD }}
@@ -38,7 +42,7 @@ jobs:
                   DEMO_SITE_PREVIEW_SECRET: ${{ secrets.DEMO_SITE_PREVIEW_SECRET }}
               run: |
                   missing=0
-                  for name in DIGITALOCEAN_API_KEY DEMO_DIGITALOCEAN_PROJECT_ID DEMO_IDP_CLIENT_ID DEMO_OAUTH2_PROXY_CLIENT_SECRET DEMO_OAUTH2_PROXY_COOKIE_SECRET DEMO_POSTGRESQL_PWD_BASE64 DEMO_S3_ACCESS_KEY_ID DEMO_S3_SECRET_ACCESS_KEY DEMO_IMGPROXY_KEY DEMO_IMGPROXY_SALT DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD DEMO_DAM_SECRET DEMO_FILE_UPLOADS_DOWNLOAD_SECRET DEMO_SITE_PREVIEW_SECRET; do
+                  for name in DIGITALOCEAN_API_KEY DEMO_DIGITALOCEAN_PROJECT_ID DEMO_IDP_CLIENT_ID DEMO_OAUTH2_PROXY_CLIENT_SECRET DEMO_OAUTH2_PROXY_COOKIE_SECRET DEMO_POSTGRESQL_PWD_BASE64 DEMO_S3_ACCESS_KEY_ID DEMO_S3_SECRET_ACCESS_KEY DEMO_STATIC_ASSETS_S3_ACCESS_KEY_ID DEMO_STATIC_ASSETS_S3_SECRET_ACCESS_KEY DEMO_IMGPROXY_KEY DEMO_IMGPROXY_SALT DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD DEMO_DAM_SECRET DEMO_FILE_UPLOADS_DOWNLOAD_SECRET DEMO_SITE_PREVIEW_SECRET; do
                       if [ -z "${!name}" ]; then
                           echo "::error::$name isn't set, see demo/.digitalocean/README.md"
                           missing=1
@@ -57,6 +61,7 @@ jobs:
                   done
 
             - name: Update DigitalOcean dextinity-demo-imgproxy Deployment
+              if: github.event_name != 'pull_request'
               uses: digitalocean/app_action/deploy@v2
               env:
                   IMGPROXY_KEY: ${{ secrets.DEMO_IMGPROXY_KEY }}
@@ -71,6 +76,7 @@ jobs:
                   app_spec_location: demo/.digitalocean/dextinity-demo-imgproxy.yaml
 
             - name: Update DigitalOcean dextinity-demo-cms Deployment
+              if: github.event_name != 'pull_request'
               uses: digitalocean/app_action/deploy@v2
               env:
                   IDP_CLIENT_ID: ${{ vars.DEMO_IDP_CLIENT_ID }}
@@ -96,6 +102,8 @@ jobs:
               uses: digitalocean/app_action/deploy@v2
               env:
                   API_BASIC_AUTH_SYSTEM_USER_PASSWORD: ${{ secrets.DEMO_API_BASIC_AUTH_SYSTEM_USER_PASSWORD }}
+                  STATIC_ASSETS_S3_ACCESS_KEY_ID: ${{ secrets.DEMO_STATIC_ASSETS_S3_ACCESS_KEY_ID }}
+                  STATIC_ASSETS_S3_SECRET_ACCESS_KEY: ${{ secrets.DEMO_STATIC_ASSETS_S3_SECRET_ACCESS_KEY }}
               with:
                   token: ${{ secrets.DIGITALOCEAN_API_KEY }}
                   project_id: ${{ vars.DEMO_DIGITALOCEAN_PROJECT_ID }}

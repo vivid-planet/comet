@@ -731,6 +731,9 @@ importers:
       nodemailer:
         specifier: ^10.0.15
         version: 10.0.15
+      opendal:
+        specifier: 0.49.2
+        version: 0.49.2
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -2678,6 +2681,9 @@ importers:
       jose:
         specifier: ^5.10.0
         version: 5.10.0
+      mime-types:
+        specifier: ^3.0.2
+        version: 3.0.2
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -2688,6 +2694,9 @@ importers:
       '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
+      '@types/mime-types':
+        specifier: ^3.0.1
+        version: 3.0.1
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0
@@ -2712,6 +2721,9 @@ importers:
       npm-run-all2:
         specifier: ^9.0.3
         version: 9.0.3
+      opendal:
+        specifier: 0.49.2
+        version: 0.49.2
       prettier:
         specifier: ^3.9.10
         version: 3.9.10
@@ -7054,6 +7066,58 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
+  '@opendal/lib-darwin-arm64@0.49.2':
+    resolution: {integrity: sha512-Yg+d24uWV57/iGkbqf0XAOcJVpoxFbnQa5gjhBHhRiJPK4j3Aer6QenKImeW3BO96GY5TZ2GLv6GOijcUBjSxA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@opendal/lib-darwin-x64@0.49.2':
+    resolution: {integrity: sha512-arlAgDMtuaYKw6QS2szDamIbZ6ti3iUWF7piaTg9740uBvtJHi4Mqj6bqxmYAFcW08vWdugsbLrpPntkIaDcVA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@opendal/lib-linux-arm64-gnu@0.49.2':
+    resolution: {integrity: sha512-U8TkDGrKbeccpXw40E3oSv4aboqkOCUq2Hwfz9nt4Nw7FpscV7SIJqE9cAbz/a3lWZ3s6msE8nsAHfBn8jq/Yg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@opendal/lib-linux-arm64-musl@0.49.2':
+    resolution: {integrity: sha512-vvg1LCXBUjARrp0UaL/2lnbK1LajlWbAez4ZHZmTAoMRStYoWSCAzip3euMCHBHjrBrDvrS6eJyLeD0X/R+izw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@opendal/lib-linux-x64-gnu@0.49.2':
+    resolution: {integrity: sha512-mS5Jc7PvRO42xf9ASTyTJr1bEhsbsSPihMnDAZONkWa9njl8ux3F1T6AghLLwdPOkTvst9VH7likDDrj+6gcCA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@opendal/lib-linux-x64-musl@0.49.2':
+    resolution: {integrity: sha512-4b4r5pjVyZqkCDrgm1c0A9UWZaC8djTSSGpNuVEkvzf3COBuwpKu/7nWNWWefk+7JJtuHsVatR62Fzfl0fSJ4Q==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@opendal/lib-win32-arm64-msvc@0.49.2':
+    resolution: {integrity: sha512-/p/lylG0V+kN4YcmgTWXQlOAOuDt7gLLZBBkAC1BqoCOuguyWTFIAgNOjf5faw6fnMkUZfe8Mj/Sg+xr6LWoMg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@opendal/lib-win32-x64-msvc@0.49.2':
+    resolution: {integrity: sha512-b9FLXpz3sygHso9csRGX7eLOlwhnHwDlQmlAQGlgodLuAaRpCZAFtamwxC7ocd5F7DttL30vmdJJDPi9UU7Gxg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
   '@opentelemetry/api-logs@0.217.0':
     resolution: {integrity: sha512-Cdq0jW2lknrNfrAm92MyEAvpe2cRsKjdnQLHUL6xRA4IVUnsWx6P65E7NcUO0Y+L4w1Aee5iV8FvjSwd+lrs9A==}
     engines: {node: '>=8.0.0'}
@@ -9679,6 +9743,9 @@ packages:
 
   '@types/mime-db@1.43.6':
     resolution: {integrity: sha512-r2cqxAt/Eo5yWBOQie1lyM1JZFCiORa5xtLlhSZI0w8RJggBPKw8c4g/fgQCzWydaDR5bL4imnmix2d1n52iBw==}
+
+  '@types/mime-types@3.0.1':
+    resolution: {integrity: sha512-xRMsfuQbnRq1Ef+C+RKaENOxXX87Ygl38W1vDfPHRku02TgQr+Qd8iivLtAMcR0KF5/29xlnFihkTlbqFrGOVQ==}
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
@@ -15299,6 +15366,10 @@ packages:
         optional: true
       zod:
         optional: true
+
+  opendal@0.49.2:
+    resolution: {integrity: sha512-FZxLgJSssYUZSgLD66nQgaieHhfWpK9D/BCaS7lCUWR5pDYsYTJqCm1rbL0/jwwOMmNUhz0g49LMY8OnHOd5Ng==}
+    engines: {node: '>= 10'}
 
   opener@1.5.2:
     resolution: {integrity: sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==}
@@ -24588,6 +24659,30 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
+  '@opendal/lib-darwin-arm64@0.49.2':
+    optional: true
+
+  '@opendal/lib-darwin-x64@0.49.2':
+    optional: true
+
+  '@opendal/lib-linux-arm64-gnu@0.49.2':
+    optional: true
+
+  '@opendal/lib-linux-arm64-musl@0.49.2':
+    optional: true
+
+  '@opendal/lib-linux-x64-gnu@0.49.2':
+    optional: true
+
+  '@opendal/lib-linux-x64-musl@0.49.2':
+    optional: true
+
+  '@opendal/lib-win32-arm64-msvc@0.49.2':
+    optional: true
+
+  '@opendal/lib-win32-x64-msvc@0.49.2':
+    optional: true
+
   '@opentelemetry/api-logs@0.217.0':
     dependencies:
       '@opentelemetry/api': 1.9.1
@@ -27284,6 +27379,8 @@ snapshots:
       '@types/node': 24.19.2
 
   '@types/mime-db@1.43.6': {}
+
+  '@types/mime-types@3.0.1': {}
 
   '@types/mime@1.3.5': {}
 
@@ -34169,6 +34266,17 @@ snapshots:
       '@smithy/signature-v4': 5.7.4
       ws: 8.22.0
       zod: 4.6.7
+
+  opendal@0.49.2:
+    optionalDependencies:
+      '@opendal/lib-darwin-arm64': 0.49.2
+      '@opendal/lib-darwin-x64': 0.49.2
+      '@opendal/lib-linux-arm64-gnu': 0.49.2
+      '@opendal/lib-linux-arm64-musl': 0.49.2
+      '@opendal/lib-linux-x64-gnu': 0.49.2
+      '@opendal/lib-linux-x64-musl': 0.49.2
+      '@opendal/lib-win32-arm64-msvc': 0.49.2
+      '@opendal/lib-win32-x64-msvc': 0.49.2
 
   opener@1.5.2: {}
 
