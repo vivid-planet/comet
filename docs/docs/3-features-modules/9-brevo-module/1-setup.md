@@ -1002,7 +1002,7 @@ Render that component to HTML with `renderMailHtml` from `@dextinity/mail-react/
 ```tsx
 import { renderMailHtml } from "@dextinity/mail-react/server";
 
-const { html } = renderMailHtml(
+const { html } = await renderMailHtml(
     <EmailCampaignMail content={content} config={getMailConfig(scope)} />,
 );
 ```

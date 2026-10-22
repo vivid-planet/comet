@@ -768,6 +768,48 @@ npm run lint
 
 Repeat this step, fixing all lint errors, until the lint passes.
 
+## Mails
+
+Skip this section if your project doesn't use `@dextinity/mail-react`.
+
+### Await `renderMailHtml`
+
+`@dextinity/mail-react` now uses MJML 5, which renders asynchronously. `renderMailHtml` from `@dextinity/mail-react/server` and `@dextinity/mail-react/client` returns a promise now. Find its calls in every package that uses it (usually the API and the site):
+
+```sh
+grep -rn "renderMailHtml(" src
+```
+
+Await each call, and make the enclosing function `async` where it isn't yet:
+
+```diff
+- const { html, mjmlWarnings } = renderMailHtml(<MyMail />);
++ const { html, mjmlWarnings } = await renderMailHtml(<MyMail />);
+```
+
+A missing `await` compiles in places that don't use the result's properties, so check every call, not only the ones TypeScript reports.
+
+### Update `mjml`
+
+If a package lists `mjml` in its own `package.json` (e.g., a Next.js site that renders mails on the server), update it to v5:
+
+```sh
+npm install mjml@^5.4.1
+```
+
+Then verify that the package still builds and lint passes.
+
+### Test the mails in every supported mail client
+
+MJML 5 changes the HTML it generates, so a mail can look different even though its code didn't change. See the [MJML 5 release notes](https://github.com/mjmlio/mjml/releases/tag/v5.0.0) for the full list. The changes most likely to affect your mails:
+
+- The HTML and CSS are minified more aggressively. Tooling that parses or compares the generated HTML (snapshots, regular expressions) may need updating.
+- `mj-body` generates the `<body>` tag now. Its `class` moves from the inner `<div>` to `<body>`, and its background color moves from `<body>` to the inner `<div>`, so CSS targeting either of them may stop applying.
+- The `inner-padding` of `mj-hero` applies in every client now, not only in Outlook.
+- Template syntax inside CSS or `style` attributes (e.g., `{{ color }}`) can make the CSS minification fail.
+
+Client-specific workarounds are especially sensitive to these changes, because they often depend on the exact HTML structure. Send every mail of your project to each mail client you support (e.g., Outlook, Gmail, Apple Mail) and compare it with the version rendered by MJML 4.
+
 ## Agent features
 
 ### Get the `dev-pm` skill from `dev-process-manager`
