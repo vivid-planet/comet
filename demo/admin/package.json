@@ -2,7 +2,7 @@
     "name": "dextinity-demo-admin",
     "private": true,
     "description": "Dextinity Admin Demo Application",
-    "type": "commonjs",
+    "type": "module",
     "scripts": {
         "admin-generator": "rimraf --glob 'src/**/generated' && dextinity-admin-generator generate",
         "build": "run-s admin-generator intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",

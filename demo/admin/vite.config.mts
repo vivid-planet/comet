@@ -4,7 +4,7 @@ import { defineConfig, type Plugin } from "vite";
 import { compression } from "vite-plugin-compression2";
 import { createHtmlPlugin } from "vite-plugin-html";
 
-import { environment as envVarsToLoad } from "./src/environment";
+import { environment as envVarsToLoad } from "./src/environment.ts";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => {
             compression(),
             createHtmlPlugin({
                 minify: true,
-                entry: resolve(__dirname, "src/loader.ts"),
+                entry: resolve(import.meta.dirname, "src/loader.ts"),
                 inject: {
                     data: {
                         environmentValues: envVarsToLoad.map((envVarKey) => ({
@@ -84,7 +84,7 @@ export default defineConfig(({ mode }) => {
         },
         resolve: {
             alias: {
-                "@src": resolve(__dirname, "./src"),
+                "@src": resolve(import.meta.dirname, "./src"),
             },
         },
         build: {
