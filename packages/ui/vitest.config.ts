@@ -25,6 +25,9 @@ export default defineConfig({
                 test: {
                     name: "unit",
                     environment: "jsdom",
+                    // In CI, the unit tests run next to those of other packages, whose timing is tight: sharing jsdom
+                    // and the modules between files instead of starting them per file cuts the CPU time to a fifth.
+                    isolate: false,
                     setupFiles: "./vitest.setup.ts",
                     include: ["src/**/*.test.{ts,tsx}"],
                     css: cssModules,
