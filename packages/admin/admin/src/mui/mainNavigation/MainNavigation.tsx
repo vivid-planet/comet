@@ -1,17 +1,45 @@
+import { Navigation } from "@dextinity/ui";
 import { type ComponentsOverrides, type Drawer as MuiDrawer, type Theme, useThemeProps } from "@mui/material";
+import { css, styled } from "@mui/material/styles";
 import { Children, cloneElement, type ReactNode, useContext, useEffect, useMemo, useRef } from "react";
+import { useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
 import type { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import type { MainNavigationChild, MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
 import { useMainNavigation } from "./Context";
-import type { MainNavigationItemProps } from "./Item";
+import { type MainNavigationItemProps, mainNavigationLabelClassName } from "./Item";
 import type { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 import { type MainNavigationClassKey, type OwnerState, PermanentDrawer, TemporaryDrawer } from "./MainNavigation.styles";
 
-export const DEFAULT_DRAWER_WIDTH = 300;
-export const DEFAULT_DRAWER_WIDTH_COLLAPSED = 60;
+export const DEFAULT_DRAWER_WIDTH = 280;
+export const DEFAULT_DRAWER_WIDTH_COLLAPSED = 72;
+
+const NavigationRoot = styled(Navigation)(
+    ({ theme }) => css`
+        padding: ${theme.spacing(3, 2)};
+
+        &[data-collapsed] {
+            padding-inline: ${theme.spacing(1)};
+        }
+
+        /* Collapsed to its icons, the navigation keeps the items' names for screen readers. */
+        &[data-collapsed] .${mainNavigationLabelClassName} {
+            position: absolute;
+            overflow: hidden;
+            clip-path: inset(50%);
+            inline-size: 1px;
+            block-size: 1px;
+            white-space: nowrap;
+        }
+
+        &[data-collapsed] .dextinityNavigationGroup__indicator,
+        &[data-collapsed] .dextinityChip {
+            display: none;
+        }
+    `,
+);
 
 export interface MainNavigationProps extends ThemedComponentBaseProps<{
     temporaryDrawer: typeof MuiDrawer;
@@ -32,6 +60,7 @@ export const MainNavigation = (inProps: MainNavigationProps) => {
         slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "DextinityAdminMainNavigation" });
+    const intl = useIntl();
     const history = useHistory();
     const { open, toggleOpen, setOpen, setDrawerVariant, drawerVariant } = useMainNavigation();
     const initialRender = useRef(true);
@@ -93,6 +122,15 @@ export const MainNavigation = (inProps: MainNavigationProps) => {
         [children, open],
     );
 
+    const navigation = (
+        <NavigationRoot
+            label={intl.formatMessage({ id: "dextinity.mainNavigation.label", defaultMessage: "Main navigation" })}
+            data-collapsed={variant === "permanent" && !open ? "" : undefined}
+        >
+            {childElements}
+        </NavigationRoot>
+    );
+
     // Always render both temporary and permanent drawers to make sure, the opening and closing animations run fully when switching between variants.
     return (
         <>
@@ -105,7 +143,7 @@ export const MainNavigation = (inProps: MainNavigationProps) => {
                 {...slotProps?.temporaryDrawer}
                 {...restProps}
             >
-                {childElements}
+                {navigation}
             </TemporaryDrawer>
             <PermanentDrawer
                 variant="permanent"
@@ -114,12 +152,12 @@ export const MainNavigation = (inProps: MainNavigationProps) => {
                 hidden={variant === "temporary"}
                 {...slotProps?.permanentDrawer}
                 PaperProps={{
-                    elevation: 2,
+                    elevation: 0,
                     ...slotProps?.permanentDrawer?.PaperProps,
                 }}
                 {...restProps}
             >
-                {childElements}
+                {navigation}
             </PermanentDrawer>
         </>
     );

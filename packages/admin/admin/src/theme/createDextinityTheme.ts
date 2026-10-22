@@ -40,7 +40,7 @@ export const createDextinityTheme = (
         },
         typography: typographyOptions,
         shape: {
-            borderRadius: 2,
+            borderRadius: 8,
         },
         shadows,
         zIndex: passedZIndexOptions,

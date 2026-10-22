@@ -2,7 +2,7 @@ import type { Breakpoints } from "@mui/material";
 import type { TypographyVariantsOptions } from "@mui/material/styles";
 import type { CSSProperties } from "react";
 
-const fontFamily = "Roboto Flex Variable, Helvetica, Arial, sans-serif";
+const fontFamily = "Figtree Variable, Figtree, Helvetica Neue, system-ui, sans-serif";
 
 export const createTypographyOptions = (breakpoints: Breakpoints): TypographyVariantsOptions => ({
     fontFamily,

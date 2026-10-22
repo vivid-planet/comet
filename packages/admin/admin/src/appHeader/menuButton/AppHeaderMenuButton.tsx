@@ -1,71 +1,32 @@
-import { Close, Hamburger, HamburgerClose, HamburgerOpen } from "@dextinity/admin-icons";
-import { type ComponentsOverrides, css, IconButton, type IconButtonClassKey, type IconButtonProps, type Theme, useThemeProps } from "@mui/material";
+import { AppBarIconButton, type AppBarIconButtonProps, Icon } from "@dextinity/ui";
 import type { ReactNode } from "react";
+import { useIntl } from "react-intl";
 
-import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { useMainNavigation } from "../../mui/mainNavigation/Context";
 
-export type AppHeaderMenuButtonProps = IconButtonProps;
+export interface AppHeaderMenuButtonProps extends Omit<AppBarIconButtonProps, "label" | "children"> {
+    /** Names the button for screen readers. Defaults to "Open navigation" or "Close navigation". */
+    label?: string;
+    children?: ReactNode;
+}
 
-export type AppHeaderMenuButtonClassKey = IconButtonClassKey;
+export type AppHeaderMenuButtonClassKey = "root";
 
-export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
-    const { children: propChildren, ...restProps } = useThemeProps({ props: inProps, name: "DextinityAdminAppHeaderMenuButton" });
-    const { toggleOpen, open, drawerVariant, hasMultipleMenuItems } = useMainNavigation();
+export const AppHeaderMenuButton = ({ label, children, ...buttonProps }: AppHeaderMenuButtonProps) => {
+    const intl = useIntl();
+    const { toggleOpen, open, hasMultipleMenuItems } = useMainNavigation();
 
     if (!hasMultipleMenuItems) {
         return null;
     }
 
-    const closeIcons: Record<typeof drawerVariant, ReactNode> = {
-        temporary: <Close />,
-        permanent: <HamburgerClose fontSize="large" />,
-    };
-
-    const openIcons: Record<typeof drawerVariant, ReactNode> = {
-        temporary: <Hamburger />,
-        permanent: <HamburgerOpen fontSize="large" />,
-    };
-
-    const children = propChildren || (open ? closeIcons[drawerVariant] : openIcons[drawerVariant]);
+    const defaultLabel = open
+        ? intl.formatMessage({ id: "dextinity.appHeaderMenuButton.closeNavigation", defaultMessage: "Close navigation" })
+        : intl.formatMessage({ id: "dextinity.appHeaderMenuButton.openNavigation", defaultMessage: "Open navigation" });
 
     return (
-        <Root onClick={toggleOpen} size="large" {...restProps}>
-            {children}
-        </Root>
+        <AppBarIconButton label={label ?? defaultLabel} aria-expanded={open} onClick={toggleOpen} {...buttonProps}>
+            {children ?? <Icon name="menu" />}
+        </AppBarIconButton>
     );
 };
-
-const Root = createComponentSlot(IconButton)<AppHeaderMenuButtonClassKey>({
-    componentName: "AppHeaderMenuButton",
-    slotName: "root",
-})(
-    ({ theme }) => css`
-        color: #fff;
-        margin: 0 9px;
-        padding: 8px;
-        border-radius: 4px;
-        border: 1px solid ${theme.palette.grey.A200};
-
-        ${theme.breakpoints.up("md")} {
-            margin: 0 0 0 14px;
-        }
-    `,
-);
-
-declare module "@mui/material/styles" {
-    interface ComponentNameToClassKey {
-        DextinityAdminAppHeaderMenuButton: AppHeaderMenuButtonClassKey;
-    }
-
-    interface ComponentsPropsList {
-        DextinityAdminAppHeaderMenuButton: AppHeaderMenuButtonProps;
-    }
-
-    interface Components {
-        DextinityAdminAppHeaderMenuButton?: {
-            defaultProps?: Partial<ComponentsPropsList["DextinityAdminAppHeaderMenuButton"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminAppHeaderMenuButton"];
-        };
-    }
-}

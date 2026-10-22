@@ -1,81 +1,40 @@
-import { AppBar as MuiAppBar, type AppBarClassKey, capitalize, type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material";
-import type { AppBarProps } from "@mui/material/AppBar";
+import { AppBar, type AppBarProps } from "@dextinity/ui";
+import { css, styled } from "@mui/material/styles";
 import { type CSSProperties, useContext } from "react";
 
-import { createComponentSlot } from "../helpers/createComponentSlot";
 import { MasterLayoutContext } from "../mui/MasterLayoutContext";
 
-interface AppHeaderProps extends AppBarProps {
+export interface AppHeaderProps extends AppBarProps {
     /**
      * A custom height should only be set, if used outside of MasterLayout.
      */
     headerHeight?: number;
+    /** The MasterLayout expects the header at the top of the window. */
+    position?: "fixed" | "static";
 }
 
-export type AppHeaderClassKey = AppBarClassKey;
+export type AppHeaderClassKey = "root";
 
-type OwnerState = {
-    position: AppBarProps["position"];
-    color: AppBarProps["color"];
-};
-
-const AppHeaderRoot = createComponentSlot(MuiAppBar)<AppHeaderClassKey, OwnerState>({
-    componentName: "AppHeader",
-    slotName: "root",
-    classesResolver(ownerState) {
-        return [
-            ownerState.position && `position${capitalize(ownerState.position)}`,
-            ownerState.color && `color${capitalize(ownerState.color)}`,
-        ] as AppHeaderClassKey[];
-    },
-})(
+const Root = styled(AppBar)(
     ({ theme }) => css`
-        background-color: ${theme.palette.grey.A400};
-        color: white;
-        height: var(--header-height);
-        flex-direction: row;
-        align-items: center;
+        position: fixed;
+        inset-block-start: 0;
+        inset-inline: 0;
+        z-index: ${theme.zIndex.appBar};
+        box-sizing: border-box;
+        block-size: var(--header-height);
+        min-block-size: 0;
+        overflow: visible;
+
+        &[data-position="static"] {
+            position: static;
+        }
     `,
 );
 
-export const AppHeader = (inProps: AppHeaderProps) => {
-    const props = useThemeProps({ props: inProps, name: "DextinityAdminAppHeader" });
-    const { children, headerHeight: passedHeaderHeight, position = "fixed", color = "primary", ...restProps } = props;
-
+export const AppHeader = ({ headerHeight: passedHeaderHeight, position = "fixed", style, ...restProps }: AppHeaderProps) => {
     const { headerHeight: masterLayoutHeaderHeight } = useContext(MasterLayoutContext);
     const headerHeight = passedHeaderHeight === undefined ? masterLayoutHeaderHeight : passedHeaderHeight;
 
-    const ownerState: OwnerState = {
-        position,
-        color,
-    };
-
-    return (
-        <AppHeaderRoot
-            position={position}
-            color={color}
-            ownerState={ownerState}
-            {...restProps}
-            style={{ "--header-height": `${headerHeight}px` } as CSSProperties}
-        >
-            {children}
-        </AppHeaderRoot>
-    );
+    return <Root data-position={position} {...restProps} style={{ "--header-height": `${headerHeight}px`, ...style } as CSSProperties} />;
 };
-
-declare module "@mui/material/styles" {
-    interface ComponentNameToClassKey {
-        DextinityAdminAppHeader: AppHeaderClassKey;
-    }
-
-    interface ComponentsPropsList {
-        DextinityAdminAppHeader: AppHeaderProps;
-    }
-
-    interface Components {
-        DextinityAdminAppHeader?: {
-            defaultProps?: Partial<ComponentsPropsList["DextinityAdminAppHeader"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["DextinityAdminAppHeader"];
-        };
-    }
-}
