@@ -1,6 +1,25 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["github>vivid-planet/dextinity//renovate/default"],
+    "baseBranchPatterns": ["main", "next"],
+    "packageRules": [
+        {
+            "matchBaseBranches": ["next"],
+            "matchDepTypes": ["!peerDependencies"],
+            "enabled": false
+        },
+        {
+            "matchBaseBranches": ["next"],
+            "matchUpdateTypes": ["minor", "patch", "pin", "digest", "pinDigest", "rollback", "bump", "replacement"],
+            "enabled": false
+        },
+        {
+            "matchBaseBranches": ["main"],
+            "matchDepTypes": ["peerDependencies"],
+            "matchUpdateTypes": ["major"],
+            "enabled": false
+        }
+    ],
     "lockFileMaintenance": { "enabled": false },
     "toolSettings": {
         "nodeMaxMemory": 2048
