@@ -33,7 +33,7 @@ const config: StorybookConfig = {
     viteFinal: (viteConfig) => ({
         ...viteConfig,
         // Type declarations are only needed for the package build.
-        plugins: viteConfig.plugins?.filter((plugin) => !(plugin && "name" in plugin && plugin.name === "vite:dts")),
+        plugins: viteConfig.plugins?.filter((plugin) => !(plugin && "name" in plugin && plugin.name === "unplugin-dts")),
     }),
 };
 

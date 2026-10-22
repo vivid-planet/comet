@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import preserveDirectives from "rollup-plugin-preserve-directives";
 import { defineConfig, type Plugin } from "vite";
-import dts from "vite-plugin-dts";
+import dts from "unplugin-dts/vite";
 
 import { generateScopedName } from "./src/cssModules/generateScopedName";
 
@@ -25,7 +25,7 @@ export default defineConfig({
             formats: ["es"],
             cssFileName: "style",
         },
-        rollupOptions: {
+        rolldownOptions: {
             plugins: [preserveDirectives()], // keeps the "use client" directive at the top of each component module
             external: (source) => !source.startsWith(".") && !source.startsWith("/"),
             output: {
