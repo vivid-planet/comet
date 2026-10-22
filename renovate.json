@@ -4,23 +4,109 @@
     "baseBranchPatterns": ["main", "next"],
     "packageRules": [
         {
-            "matchBaseBranches": ["next"],
-            "matchDepTypes": ["!peerDependencies"],
-            "enabled": false
-        },
-        {
-            "matchBaseBranches": ["next"],
-            "matchUpdateTypes": ["minor", "patch", "pin", "digest", "pinDigest", "rollback", "bump", "replacement"],
+            "matchBaseBranches": ["main"],
+            "matchUpdateTypes": ["major"],
+            "matchPackageNames": [
+                "@apollo/client",
+                "apollo-link-rest",
+                "graphql-tag",
+                "/@babel/*/",
+                "class-transformer",
+                "class-validator",
+                "draft-js",
+                "/^@emotion//",
+                "express",
+                "graphql",
+                "history",
+                "@kubernetes/client-node",
+                "/^@mikro-orm//",
+                "/^@mui//",
+                "/^@nestjs//",
+                "nest-commander",
+                "next",
+                "@next/bundle-analyzer",
+                "@next/eslint-plugin-next",
+                "eslint-config-next",
+                "prettier",
+                "react",
+                "react-dom",
+                "@types/react",
+                "@types/react-dom",
+                "/^react-dnd/",
+                "react-intl",
+                "react-router",
+                "react-router-dom",
+                "reflect-metadata",
+                "rxjs",
+                "@sentry/node",
+                "/^@storybook//",
+                "/^storybook/",
+                "eslint-plugin-storybook"
+            ],
             "enabled": false
         },
         {
             "matchBaseBranches": ["main"],
-            "matchDepTypes": ["peerDependencies"],
             "matchUpdateTypes": ["major"],
+            "extends": ["packages:eslint"],
             "enabled": false
+        },
+        {
+            "matchBaseBranches": ["next"],
+            "enabled": false
+        },
+        {
+            "matchBaseBranches": ["next"],
+            "matchUpdateTypes": ["major"],
+            "matchPackageNames": [
+                "@apollo/client",
+                "apollo-link-rest",
+                "graphql-tag",
+                "/@babel/*/",
+                "class-transformer",
+                "class-validator",
+                "draft-js",
+                "/^@emotion//",
+                "express",
+                "graphql",
+                "history",
+                "@kubernetes/client-node",
+                "/^@mikro-orm//",
+                "/^@mui//",
+                "/^@nestjs//",
+                "nest-commander",
+                "next",
+                "@next/bundle-analyzer",
+                "@next/eslint-plugin-next",
+                "eslint-config-next",
+                "prettier",
+                "react",
+                "react-dom",
+                "@types/react",
+                "@types/react-dom",
+                "/^react-dnd/",
+                "react-intl",
+                "react-router",
+                "react-router-dom",
+                "reflect-metadata",
+                "rxjs",
+                "@sentry/node",
+                "/^@storybook//",
+                "/^storybook/",
+                "eslint-plugin-storybook"
+            ],
+            "enabled": true
+        },
+        {
+            "matchBaseBranches": ["next"],
+            "matchUpdateTypes": ["major"],
+            "extends": ["packages:eslint"],
+            "enabled": true
         }
     ],
-    "lockFileMaintenance": { "enabled": false },
+    "lockFileMaintenance": {
+        "enabled": false
+    },
     "toolSettings": {
         "nodeMaxMemory": 2048
     }
