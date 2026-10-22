@@ -72,7 +72,7 @@
         "sass": "^1.105.1",
         "schema-dts": "^2.1.0",
         "typescript": "^5.9.3",
-        "vite": "^7.3.7",
+        "vite": "^8.3.4",
         "vite-plugin-dts": "^4.5.4",
         "vitest": "^5.0.5",
         "webpack": "^5.111.1"
