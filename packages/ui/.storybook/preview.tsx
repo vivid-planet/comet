@@ -61,6 +61,7 @@ const preview: Preview = {
                     ["Theming", "Design tokens", "Theme overview", "Icons", "Customization"],
                     "Components",
                     "Patterns",
+                    "Sample pages",
                     "Contributing",
                 ],
             },
