@@ -7,3 +7,5 @@ An icon is 16×16 pixels and uses the current text color. Style an icon through 
 An icon is hidden from assistive technology unless it gets an `aria-label`.
 
 Every icon has a `searchTerms` property with other words for it, for example `Accept.searchTerms`. Use it to find an icon, for example in an icon picker.
+
+The "Dextinity Icons" and "Dextinity Icons Usage" pages of the root Storybook show the whole set and how to use it.

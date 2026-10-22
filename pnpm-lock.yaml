@@ -2973,6 +2973,9 @@ importers:
       '@dextinity/eslint-config':
         specifier: workspace:*
         version: link:../packages/eslint-config
+      '@dextinity/icons':
+        specifier: workspace:*
+        version: link:../packages/icons
       '@dextinity/mail-react':
         specifier: workspace:*
         version: link:../packages/mail-react

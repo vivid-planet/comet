@@ -120,6 +120,8 @@ const preview: Preview = {
                 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
                 const orderHelper = ["docs-helper-clipboard"];
                 const orderIcons = [
+                    "docs-icons-and-logo-dextinity-icons--",
+                    "docs-icons-and-logo-dextinity-icons-usage--",
                     "docs-icons-and-logo-admin-icons--",
                     "docs-icons-and-logo-admin-icons-usage--",
                     "docs-icons-and-logo-dextinity-logo--",
