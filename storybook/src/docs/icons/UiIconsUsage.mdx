@@ -1,0 +1,31 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as UiIconsUsageStories from "./UiIconsUsage.stories";
+
+<Meta title="Docs/Icons and Logo/Dextinity Icons Usage" tags={["new-ui"]} />
+
+# Dextinity Icons Usage
+
+By default, an icon is 16×16 pixels, uses the current text color and is hidden from assistive technology.
+
+## Render an icon
+
+<Canvas of={UiIconsUsageStories.Icon} />
+
+## Label an icon
+
+Give an icon an `aria-label` when nothing else, such as a text or the label of its button, gives its meaning:
+
+<Canvas of={UiIconsUsageStories.LabeledIcon} />
+
+## Size
+
+Set `width` and `height` in CSS, through `className` or the `dextinityIcon` class:
+
+<Canvas of={UiIconsUsageStories.Size} />
+
+## Color
+
+Set `color` in CSS, on the icon or on its parent:
+
+<Canvas of={UiIconsUsageStories.Color} />

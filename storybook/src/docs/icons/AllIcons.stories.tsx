@@ -84,7 +84,8 @@ const IconsGrid = ({ searchQuery }: { searchQuery: string }) => (
 );
 
 export default {
-    title: "Docs/Icons/All Icons",
+    title: "Docs/Icons and Logo/Admin Icons",
+    tags: ["!dev", "!autodocs"],
 };
 
 export const AllIcons = () => {

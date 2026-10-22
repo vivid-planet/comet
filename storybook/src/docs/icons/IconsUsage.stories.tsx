@@ -2,7 +2,7 @@ import { Attachment, Cookie, Error, ThreeDotSaving } from "@dextinity/admin-icon
 import { Typography } from "@mui/material";
 
 export default {
-    title: "Docs/Icons/Usage",
+    title: "Docs/Icons and Logo/Admin Icons Usage",
 };
 
 export const Icon = () => {

@@ -2,7 +2,7 @@ import { DextinityIcon, DextinityLogo } from "@dextinity/admin-icons";
 import { styled } from "@mui/material/styles";
 
 export default {
-    title: "Docs/Icons/Logo",
+    title: "Docs/Icons and Logo/Dextinity Logo",
 };
 
 const LightBackground = styled("div")`

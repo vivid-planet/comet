@@ -140,6 +140,13 @@ export default defineConfig({
             group: ["storybook", "docs"],
         },
 
+        //group icons
+        {
+            name: "icons",
+            script: "pnpm --filter @dextinity/icons run dev",
+            group: ["icons"],
+        },
+
         //group brevo
         {
             name: "brevo-api",
