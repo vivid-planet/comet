@@ -77,17 +77,9 @@ export default defineConfig(({ mode }) => {
         define: {
             // define NODE_ENV for packages using it
             "process.env.NODE_ENV": mode === "production" ? "'production'" : "'development'",
-        },
-        optimizeDeps: {
-            rolldownOptions: {
-                transform: {
-                    // Node.js global to browser globalThis. https://github.com/vitejs/vite/discussions/5912
-                    // "global is not defined" occurs directly after loading. Used by draft-is package
-                    define: {
-                        global: "globalThis",
-                    },
-                },
-            },
+            // Node.js global to browser globalThis. https://github.com/vitejs/vite/discussions/5912
+            // "global is not defined" occurs directly after loading. Used by draft-is package
+            global: "globalThis",
         },
         resolve: {
             alias: {
