@@ -115,19 +115,25 @@ function addCustomProperties(properties: Map<string, string>, rule: Rule) {
 
 const themes = readThemes();
 
+const subtleBackgrounds = [
+    "--dextinity-color-neutral-subtle",
+    "--dextinity-color-primary-subtle",
+    "--dextinity-color-success-subtle",
+    "--dextinity-color-warning-subtle",
+    "--dextinity-color-danger-subtle",
+];
+
 /**
  * Text needs 4.5:1, control boundaries, focus rings and the checked state of a control 3:1 (WCAG 2.2, 1.4.3 and 1.4.11).
+ * Secondary and ghost buttons may show the background behind them, so their text needs it on the subtle backgrounds
+ * too, for a button in an alert.
  */
 const contrastRequirements = [
     ...textOn("--dextinity-color-foreground", [
         "--dextinity-color-background",
         "--dextinity-color-surface",
         "--dextinity-color-surface-hover",
-        "--dextinity-color-neutral-subtle",
-        "--dextinity-color-primary-subtle",
-        "--dextinity-color-success-subtle",
-        "--dextinity-color-warning-subtle",
-        "--dextinity-color-danger-subtle",
+        ...subtleBackgrounds,
     ]),
     ...textOn("--dextinity-color-foreground-muted", ["--dextinity-color-background", "--dextinity-color-surface"]),
     ...textOn("--dextinity-color-primary-foreground", ["--dextinity-color-primary"]),
@@ -136,9 +142,13 @@ const contrastRequirements = [
     ...textOn("--dextinity-color-warning", ["--dextinity-color-background", "--dextinity-color-warning-subtle"]),
     ...textOn("--dextinity-color-danger", ["--dextinity-color-background", "--dextinity-color-surface", "--dextinity-color-danger-subtle"]),
     ...textOn("--dextinity-button-primary-foreground", ["--dextinity-button-primary-background", "--dextinity-button-primary-background-hover"]),
-    ...textOn("--dextinity-button-secondary-foreground", ["--dextinity-button-secondary-background"]),
+    ...textOn("--dextinity-button-secondary-foreground", ["--dextinity-button-secondary-background", ...subtleBackgrounds]),
     ...textOn("--dextinity-button-secondary-foreground-hover", ["--dextinity-button-secondary-background-hover"]),
-    ...textOn("--dextinity-button-ghost-foreground", ["--dextinity-color-background", "--dextinity-button-ghost-background-hover"]),
+    ...textOn("--dextinity-button-ghost-foreground", [
+        "--dextinity-color-background",
+        "--dextinity-button-ghost-background-hover",
+        ...subtleBackgrounds,
+    ]),
     ...textOn("--dextinity-app-bar-foreground", ["--dextinity-app-bar-background", "--dextinity-app-bar-background-hover"]),
     ...nonTextOn("--dextinity-color-border-strong", ["--dextinity-color-background", "--dextinity-color-surface"]),
     ...nonTextOn("--dextinity-color-border-hover", ["--dextinity-color-background", "--dextinity-color-surface"]),
