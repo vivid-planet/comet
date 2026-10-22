@@ -23,7 +23,7 @@ import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, DAM_DOMINANT_COLOR_CALCULATOR } from "../dam.constants";
 import { DominantColorCalculatorInterface } from "../dominant-color-calculator.interface";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
-import { createDamSettingsId } from "../settings/create-dam-settings-id";
+import { damSettingsByScope } from "../settings/dam-settings-by-scope";
 import { DamSettings } from "../settings/entities/dam-settings.entity";
 import { DamScopeInterface } from "../types";
 import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
@@ -690,7 +690,7 @@ export class FilesService {
     }
 
     async findInvalidLicenseFallbackImage(scope?: DamScopeInterface): Promise<FileInterface | null> {
-        const settings = await this.entityManager.findOne(DamSettings, { id: createDamSettingsId(scope) });
+        const settings = await this.entityManager.findOne(DamSettings, damSettingsByScope(scope));
         const fallbackImage = await settings?.invalidLicenseFallbackImage?.load();
 
         if (!fallbackImage?.image || this.hasInvalidLicense(fallbackImage)) {

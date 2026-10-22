@@ -52,6 +52,7 @@ export const DamSettings = ({ contentScopeIndicator }: DamSettingsProps) => {
         await apolloClient.mutate<GQLUpdateDamSettingsMutation, GQLUpdateDamSettingsMutationVariables>({
             mutation: updateDamSettingsMutation,
             variables: { scope, input: { invalidLicenseFallbackImageId: invalidLicenseFallbackImage?.id ?? null } },
+            refetchQueries: data.damSettings ? [] : [{ query: damSettingsQuery, variables: { scope } }],
         });
     };
 
@@ -59,7 +60,7 @@ export const DamSettings = ({ contentScopeIndicator }: DamSettingsProps) => {
         <FinalForm<FormValues>
             mode="edit"
             onSubmit={handleSubmit}
-            initialValues={{ invalidLicenseFallbackImage: data.damSettings.invalidLicenseFallbackImage ?? undefined }}
+            initialValues={{ invalidLicenseFallbackImage: data.damSettings?.invalidLicenseFallbackImage ?? undefined }}
         >
             {() => (
                 <>

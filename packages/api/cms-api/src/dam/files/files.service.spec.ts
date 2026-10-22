@@ -3,7 +3,7 @@ import { Logger } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { DamConfig } from "../dam.config";
-import { createDamSettingsId } from "../settings/create-dam-settings-id";
+import { damSettingsByScope } from "../settings/dam-settings-by-scope";
 import { DamSettings } from "../settings/entities/dam-settings.entity";
 import type { FileFilterInput } from "./dto/file.args";
 import type { FileInterface } from "./entities/file.entity";
@@ -239,7 +239,7 @@ describe("FilesService — invalid licenses", () => {
         const { service, entityManager } = createService({ settings: createSettingsWithFallbackImage(fallbackImage) });
 
         await expect(service.findInvalidLicenseFallbackImage(scope)).resolves.toBe(fallbackImage);
-        expect(entityManager.findOne).toHaveBeenCalledWith(DamSettings, { id: createDamSettingsId(scope) });
+        expect(entityManager.findOne).toHaveBeenCalledWith(DamSettings, damSettingsByScope(scope));
     });
 
     it.each([

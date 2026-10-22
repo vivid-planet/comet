@@ -10,7 +10,7 @@ import { EmptyDamScope } from "../files/dto/empty-dam-scope";
 import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
 import { DamScopeInterface } from "../types";
-import { createDamSettingsId } from "./create-dam-settings-id";
+import { damSettingsByScope } from "./dam-settings-by-scope";
 import { DamSettingsInput } from "./dto/dam-settings.input";
 import { DamSettings } from "./entities/dam-settings.entity";
 
@@ -37,16 +37,11 @@ export function createDamSettingsResolver({
             private readonly filesService: FilesService,
         ) {}
 
-        @Query(() => DamSettings)
+        @Query(() => DamSettings, { nullable: true })
         async damSettings(
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) passedScope: typeof Scope,
-        ): Promise<DamSettings> {
-            const scope = nonEmptyScopeOrNothing(passedScope);
-            const id = createDamSettingsId(scope);
-
-            const settings = await this.entityManager.findOne(DamSettings, { id });
-
-            return settings ?? this.entityManager.create(DamSettings, { id, scope }, { persist: false });
+        ): Promise<DamSettings | null> {
+            return this.entityManager.findOne(DamSettings, damSettingsByScope(nonEmptyScopeOrNothing(passedScope)));
         }
 
         @Mutation(() => DamSettings)
@@ -55,7 +50,6 @@ export function createDamSettingsResolver({
             @Args("input", { type: () => DamSettingsInput }) input: DamSettingsInput,
         ): Promise<DamSettings> {
             const scope = nonEmptyScopeOrNothing(passedScope);
-            const id = createDamSettingsId(scope);
 
             let invalidLicenseFallbackImage: FileInterface | null = null;
 
@@ -75,7 +69,8 @@ export function createDamSettingsResolver({
                 }
             }
 
-            const settings = (await this.entityManager.findOne(DamSettings, { id })) ?? this.entityManager.create(DamSettings, { id, scope });
+            const settings =
+                (await this.entityManager.findOne(DamSettings, damSettingsByScope(scope))) ?? this.entityManager.create(DamSettings, { scope });
             settings.assign({ invalidLicenseFallbackImage });
 
             await this.entityManager.flush();
