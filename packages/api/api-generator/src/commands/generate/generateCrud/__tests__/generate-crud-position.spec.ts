@@ -4,7 +4,7 @@ import { BaseEntity, defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { Field, Int } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
 import { Min } from "class-validator";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
 import { generateCrudInput } from "../../generateCrudInput/generate-crud-input";
@@ -14,7 +14,7 @@ import { generateCrud } from "../generate-crud";
 @Entity()
 class TestEntityWithPositionField extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ columnType: "integer" })
     @Field(() => Int)
@@ -30,7 +30,7 @@ export class TestEntityScope {
 @Entity()
 class TestEntityWithPositionFieldAndScope extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ columnType: "integer" })
     @Field(() => Int)
@@ -45,7 +45,7 @@ class TestEntityWithPositionFieldAndScope extends BaseEntity {
 @CrudGenerator({ requiredPermission: testPermission, position: { groupByFields: ["country"] } })
 class TestEntityWithPositionGroup extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ columnType: "integer" })
     @Field(() => Int)

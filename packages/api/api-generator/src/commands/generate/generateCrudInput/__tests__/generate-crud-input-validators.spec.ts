@@ -13,7 +13,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from "class-validator";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
 import { generateCrud } from "../../generateCrud/generate-crud";
@@ -45,7 +45,7 @@ class IsSlugConstraint implements ValidatorConstraintInterface {
 @Entity()
 export class TestEntityWithEmail extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @IsEmail()
     @IsString()
@@ -56,7 +56,7 @@ export class TestEntityWithEmail extends BaseEntity {
 @Entity()
 export class TestEntityWithCaseSensitiveConstraintName extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @IsISO8601()
     @Property({ columnType: "text" })
@@ -66,7 +66,7 @@ export class TestEntityWithCaseSensitiveConstraintName extends BaseEntity {
 @Entity()
 export class TestEntityWithShortenedDecoratorName extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Length(2, 5)
     @Property({ columnType: "text" })
@@ -76,7 +76,7 @@ export class TestEntityWithShortenedDecoratorName extends BaseEntity {
 @Entity()
 export class TestEntityWithRelativeImportDecorator extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @IsValidRedirectSource()
     @Property({ columnType: "text" })
@@ -86,7 +86,7 @@ export class TestEntityWithRelativeImportDecorator extends BaseEntity {
 @Entity()
 export class TestEntityWithDuplicateDefaultDecorator extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @IsString()
     @IsOptional()
@@ -97,7 +97,7 @@ export class TestEntityWithDuplicateDefaultDecorator extends BaseEntity {
 @Entity()
 export class TestEntityWithValidatorDefinedInFile extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @IsTrueAsString()
     @Property({ columnType: "text" })

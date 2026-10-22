@@ -3,7 +3,7 @@ import { Embedded, Entity, Enum, PrimaryKey, Property } from "@mikro-orm/decorat
 import { OptionalProps } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 
 import { EmailCampaignScopeInterface } from "../../types";
 
@@ -32,7 +32,7 @@ export function createBrevoEmailImportLogEntity({ Scope }: { Scope: Type<EmailCa
 
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
-        id: string = uuid();
+        id: string = randomUUID();
 
         @Property({ columnType: "text" })
         @Field()
@@ -62,7 +62,7 @@ export function createBrevoEmailImportLogEntity({ Scope }: { Scope: Type<EmailCa
         @Property({ columnType: "uuid" })
         @IsUndefinable()
         @Field(() => ID)
-        importId?: string = uuid();
+        importId?: string = randomUUID();
 
         @Property({ columnType: "text" })
         @Field(() => ContactSource)

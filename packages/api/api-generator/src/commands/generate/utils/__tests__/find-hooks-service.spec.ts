@@ -2,7 +2,7 @@ import { CrudGenerator, CrudGeneratorHooksService, CurrentUser, MutationError } 
 import { Entity, PrimaryKey, Property, ReflectMetadataProvider } from "@mikro-orm/decorators/legacy";
 import { BaseEntity, defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
 import { findHooksService } from "../find-hooks-service";
@@ -29,7 +29,7 @@ class TestEntity2Service implements CrudGeneratorHooksService {
 })
 export class TestEntity2 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property()
     foo: string;
