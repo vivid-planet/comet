@@ -2,9 +2,27 @@ import react from "@vitejs/plugin-react-swc";
 import { resolve } from "path";
 import { defineConfig, type Plugin } from "vite";
 import { compression } from "vite-plugin-compression2";
-import { createHtmlPlugin } from "vite-plugin-html";
 
 import { environment as envVarsToLoad } from "./src/environment.ts";
+
+function injectEnvironmentValues({ mode }: { mode: string }): Plugin {
+    return {
+        name: "inject-environment-values",
+        transformIndexHtml: () => [
+            {
+                tag: "script",
+                children: envVarsToLoad
+                    .map((envVarKey) => {
+                        // In production, server/index.ts replaces the $-placeholders when it serves index.html
+                        const value = mode === "production" ? `$${envVarKey}` : process.env[envVarKey];
+                        return `window.EXTERNAL__${envVarKey}__ = ${value ? `'${value}'` : undefined};`;
+                    })
+                    .join("\n"),
+                injectTo: "head",
+            },
+        ],
+    };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -35,18 +53,7 @@ export default defineConfig(({ mode }) => {
                 ],
             }),
             compression(),
-            createHtmlPlugin({
-                minify: true,
-                entry: resolve(import.meta.dirname, "src/loader.ts"),
-                inject: {
-                    data: {
-                        environmentValues: envVarsToLoad.map((envVarKey) => ({
-                            key: envVarKey,
-                            value: mode === "production" ? `$${envVarKey}` : process.env[envVarKey],
-                        })),
-                    },
-                },
-            }),
+            injectEnvironmentValues({ mode }),
         ],
         server: {
             host: process.env.SERVER_HOST ?? "localhost",
