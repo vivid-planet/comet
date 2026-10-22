@@ -13,7 +13,7 @@ const themeAttributeNames = ["data-dextinity-theme", "data-dextinity-color-schem
 /**
  * Gives a popup the theme and color scheme of the nearest element around its trigger that names them, such as a
  * `ThemeSwitch`, so the popup looks like its trigger. It reads them from the DOM, so it needs no React context:
- * when the popup opens, and again whenever they change while it's open.
+ * when the popup opens, and again whenever they change while it's open and the trigger is on the page.
  */
 export function usePopupTheme(triggerRef: RefObject<Element | null>, isOpen: boolean): PopupThemeAttributes {
     const [attributes, setAttributes] = useState<PopupThemeAttributes>({});
