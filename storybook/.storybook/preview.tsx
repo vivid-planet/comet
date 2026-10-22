@@ -119,7 +119,12 @@ const preview: Preview = {
                 ];
                 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
                 const orderHelper = ["docs-helper-clipboard"];
-                const orderIcons = ["docs-icons-all-icons", "docs-icons-usage", "docs-icons"];
+                const orderIcons = [
+                    "docs-icons-and-logo-admin-icons--",
+                    "docs-icons-and-logo-admin-icons-usage--",
+                    "docs-icons-and-logo-dextinity-logo--",
+                    "docs-icons-and-logo",
+                ];
                 const orderBestPractices = ["docs-best-practices-overview", "docs-best-theme-and-styling", "docs-best-practices"];
                 const orderDevelopment = ["docs-development-overview", "docs-development-create-a-component-with-theme-support", "docs-development"];
 
