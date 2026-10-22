@@ -238,12 +238,23 @@ function TokenHeaderCell({ row }: { row: TokenTableRow }) {
 function Description({ markdown }: { markdown: string }) {
     return (
         <span className={styles.description}>
-            {markdown.split("`").map((part, index) => {
-                const isCode = index % 2 === 1;
-                return <Fragment key={`${index}:${part}`}>{isCode ? <code>{part}</code> : part}</Fragment>;
-            })}
+            {splitCodeSpans(markdown).map(({ key, text, isCode }) => (
+                <Fragment key={key}>{isCode ? <code>{text}</code> : text}</Fragment>
+            ))}
         </span>
     );
+}
+
+/** Splits Markdown into its text and its code spans, keyed by their content and how often it came before. */
+function splitCodeSpans(markdown: string) {
+    const occurrences = new Map<string, number>();
+    return markdown.split("`").map((text, index) => {
+        const isCode = index % 2 === 1;
+        const content = `${isCode ? "code" : "text"}:${text}`;
+        const occurrence = occurrences.get(content) ?? 0;
+        occurrences.set(content, occurrence + 1);
+        return { key: `${content}:${occurrence}`, text, isCode };
+    });
 }
 
 function rowsOfSection(section: string) {
