@@ -1,8 +1,7 @@
-import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml.js";
-import { useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useChannel, useGlobals } from "storybook/preview-api";
 
-import { convertMjmlToHtml } from "../client/renderMailHtml.js";
+import { renderMailHtml } from "../client/renderMailHtml.js";
 import { MjmlMailRoot } from "../components/mailRoot/MjmlMailRoot.js";
 import type { Theme } from "../theme/themeTypes.js";
 import { replaceImagesWithPublicUrl } from "./replaceImagesWithPublicUrl.js";
@@ -13,20 +12,17 @@ export function MailRendererDecorator(Story: () => React.JSX.Element, context: {
     const [globals] = useGlobals();
     const emit = useChannel({});
 
-    // Rendered while the decorator runs, because the story may use Storybook hooks, which only work during this call.
-    const mjmlString = renderToMjml(
-        context.parameters.mailRoot === false ? (
-            <Story />
-        ) : (
-            <MjmlMailRoot theme={context.parameters.theme}>
-                <Story />
-            </MjmlMailRoot>
-        ),
-    );
-
     return (
         <RenderedMail
-            mjmlString={mjmlString}
+            mail={
+                context.parameters.mailRoot === false ? (
+                    <Story />
+                ) : (
+                    <MjmlMailRoot theme={context.parameters.theme}>
+                        <Story />
+                    </MjmlMailRoot>
+                )
+            }
             usePublicImageUrls={Boolean(globals.usePublicImageUrls)}
             onRendered={(renderResult) => emit(RENDER_RESULT_EVENT, renderResult)}
         />
@@ -35,16 +31,16 @@ export function MailRendererDecorator(Story: () => React.JSX.Element, context: {
 
 interface RenderResult {
     html: string;
-    mjmlWarnings: Awaited<ReturnType<typeof convertMjmlToHtml>>["mjmlWarnings"];
+    mjmlWarnings: Awaited<ReturnType<typeof renderMailHtml>>["mjmlWarnings"];
     usePublicImageUrls: boolean;
 }
 
 function RenderedMail({
-    mjmlString,
+    mail,
     usePublicImageUrls,
     onRendered,
 }: {
-    mjmlString: string;
+    mail: ReactElement;
     usePublicImageUrls: boolean;
     onRendered: (renderResult: RenderResult) => void;
 }) {
@@ -55,9 +51,9 @@ function RenderedMail({
         let isOutdated = false;
 
         async function render() {
-            let renderResult: Awaited<ReturnType<typeof convertMjmlToHtml>>;
+            let renderResult: Awaited<ReturnType<typeof renderMailHtml>>;
             try {
-                renderResult = await convertMjmlToHtml(mjmlString);
+                renderResult = await renderMailHtml(mail);
             } catch (error) {
                 if (!isOutdated) {
                     setRenderError(error);
@@ -85,7 +81,7 @@ function RenderedMail({
         return () => {
             isOutdated = true;
         };
-    }, [mjmlString, usePublicImageUrls, onRendered]);
+    }, [mail, usePublicImageUrls, onRendered]);
 
     if (renderError !== undefined) {
         // Rethrown during render so Storybook shows it like an error thrown by the story.
