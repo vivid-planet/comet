@@ -121,7 +121,7 @@
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",
         "@types/react-window": "^1.8.8",
-        "@vitest/browser": "5.0.4",
+        "@vitest/browser": "5.0.5",
         "@vitest/browser-playwright": "5.0.4",
         "chokidar-cli": "^3.0.0",
         "draft-js": "^0.11.7",
