@@ -33,6 +33,10 @@ export const generateFiles = async (
 ) => {
     let orm: MikroORM | null = null;
     try {
+        const settings = CLIHelper.getSettings();
+        if (settings.preferTs !== false) {
+            await CLIHelper.registerTypeScriptSupport(settings.tsConfigPath, settings.tsLoader);
+        }
         orm = await CLIHelper.getORM(undefined, undefined, { dbName: "generator" });
     } catch (e) {
         console.warn(e);

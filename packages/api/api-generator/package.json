@@ -45,8 +45,6 @@
         "commander": "^15.0.0",
         "pluralize": "^8.0.0",
         "ts-morph": "^25.0.1",
-        "ts-node": "^10.9.2",
-        "tsconfig-paths": "^3.15.0",
         "typescript": "^6.0.3"
     },
     "devDependencies": {

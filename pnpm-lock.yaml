@@ -656,12 +656,6 @@ importers:
       storybook:
         specifier: ^10.6.1
         version: 10.6.1(@types/react@19.3.0)(prettier@3.9.10)(react@19.3.0)
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.16.18(@swc/helpers@0.5.23))(@types/node@24.19.2)(typescript@6.0.3)
-      tsconfig-paths:
-        specifier: ^4.2.0
-        version: 4.2.0
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -1988,12 +1982,6 @@ importers:
       ts-morph:
         specifier: ^25.0.1
         version: 25.0.1
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.16.18(@swc/helpers@0.5.23))(@types/node@24.19.2)(typescript@6.0.3)
-      tsconfig-paths:
-        specifier: ^3.15.0
-        version: 3.15.0
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -2119,6 +2107,9 @@ importers:
       '@nestjs/testing':
         specifier: ^12.0.4
         version: 12.2.0(@nestjs/common@12.2.0(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@12.2.0)(@nestjs/platform-express@12.2.0)
+      '@swc-node/register':
+        specifier: ^1.12.1
+        version: 1.12.1(@swc/core@1.16.18(@swc/helpers@0.5.23))(@swc/types@0.1.28)(supports-color@8.1.1)(typescript@6.0.3)
       '@swc/core':
         specifier: ^1.16.18
         version: 1.16.18(@swc/helpers@0.5.23)
@@ -2152,9 +2143,6 @@ importers:
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.16.18(@swc/helpers@0.5.23))(@types/node@24.19.2)(typescript@6.0.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -2333,6 +2321,9 @@ importers:
       '@smithy/types':
         specifier: ^4.19.0
         version: 4.19.0
+      '@swc-node/register':
+        specifier: ^1.12.1
+        version: 1.12.1(@swc/core@1.16.18(@swc/helpers@0.5.23))(@swc/types@0.1.28)(supports-color@8.1.1)(typescript@6.0.3)
       '@swc/core':
         specifier: ^1.16.18
         version: 1.16.18(@swc/helpers@0.5.23)
@@ -2405,9 +2396,6 @@ importers:
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.16.18(@swc/helpers@0.5.23))(@types/node@24.19.2)(typescript@6.0.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
