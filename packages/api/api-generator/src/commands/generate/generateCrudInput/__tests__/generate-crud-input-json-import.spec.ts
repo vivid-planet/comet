@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property, ReflectMetadataProvider } from "@mikro-orm/decorators/legacy";
 import { BaseEntity, defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
 import { formatSource, testPermission } from "../../utils/test-helper";
@@ -11,7 +11,7 @@ import { NestedObject, type NestedType } from "./.generate-crud-input-json-impor
 @Entity()
 export class TestEntityWithJsonObject1 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ type: "json" })
     foo: NestedObject;
@@ -20,7 +20,7 @@ export class TestEntityWithJsonObject1 extends BaseEntity {
 @Entity()
 export class TestEntityWithJsonObject2 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ type: "json" })
     foo: NestedObject[];
@@ -29,7 +29,7 @@ export class TestEntityWithJsonObject2 extends BaseEntity {
 @Entity()
 export class TestEntityWithJsonType1 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ type: "json" })
     foo: NestedType;
@@ -38,7 +38,7 @@ export class TestEntityWithJsonType1 extends BaseEntity {
 @Entity()
 export class TestEntityWithJsonType2 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ type: "json" })
     foo: NestedType[];

@@ -2,7 +2,7 @@ import { Entity, PrimaryKey, Property, ReflectMetadataProvider } from "@mikro-or
 import { BaseEntity, defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { Field } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
 import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
@@ -24,7 +24,7 @@ export abstract class TimestampEntity extends BaseEntity {
 @Entity()
 export class TestEntityWithTimestamps extends TimestampEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property()
     foo: string;

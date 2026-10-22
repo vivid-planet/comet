@@ -31,7 +31,7 @@ function createService(
 
 describe("UserPermissionsService", () => {
     describe("getAvailableContentScopeDimensions", () => {
-        it("returns the configured dimensions and falls back to the name for missing labels", async () => {
+        it("returns the configured dimensions and humanizes missing labels", async () => {
             const service = createService({
                 availableContentScopeDimensions: [{ name: "domain", label: "Domain" }, { name: "language" }, { name: "product" }],
             });
@@ -40,8 +40,8 @@ describe("UserPermissionsService", () => {
 
             expect(dimensions).toEqual([
                 { name: "domain", label: "Domain" },
-                { name: "language", label: "language" },
-                { name: "product", label: "product" },
+                { name: "language", label: "Language" },
+                { name: "product", label: "Product" },
             ]);
         });
 
@@ -52,7 +52,7 @@ describe("UserPermissionsService", () => {
 
             const dimensions = await service.getAvailableContentScopeDimensions();
 
-            expect(dimensions).toEqual([{ name: "domain", label: "domain" }]);
+            expect(dimensions).toEqual([{ name: "domain", label: "Domain" }]);
         });
 
         it("derives the dimensions from the available content scopes when not configured", async () => {
@@ -66,8 +66,8 @@ describe("UserPermissionsService", () => {
             const dimensions = await service.getAvailableContentScopeDimensions();
 
             expect(dimensions).toEqual([
-                { name: "domain", label: "domain" },
-                { name: "language", label: "language" },
+                { name: "domain", label: "Domain" },
+                { name: "language", label: "Language" },
             ]);
         });
 

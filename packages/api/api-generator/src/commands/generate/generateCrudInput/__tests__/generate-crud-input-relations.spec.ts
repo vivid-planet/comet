@@ -1,7 +1,7 @@
 import { Entity, ManyToOne, OneToMany, PrimaryKey, ReflectMetadataProvider } from "@mikro-orm/decorators/legacy";
 import { BaseEntity, Collection, defineConfig, MikroORM, Ref } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
 import { formatSource, parseSource, testPermission } from "../../utils/test-helper";
@@ -10,7 +10,7 @@ import { generateCrudInput } from "../generate-crud-input";
 @Entity()
 export class ProductCategory extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @OneToMany(() => Product, (products) => products.category)
     products = new Collection<Product>(this);
@@ -19,7 +19,7 @@ export class ProductCategory extends BaseEntity {
 @Entity()
 export class Product extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @ManyToOne(() => ProductCategory, { nullable: true, ref: true })
     category?: Ref<ProductCategory>;

@@ -3822,6 +3822,47 @@
         "name": "Table",
         "fields": [
             {
+                "name": "table",
+                "kind": "Block",
+                "block": "TableContent",
+                "nullable": false
+            },
+            {
+                "name": "responsiveBehavior",
+                "kind": "Enum",
+                "enum": [
+                    "scrollSideways",
+                    "none",
+                    "listByRow",
+                    "listByColumn"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "table",
+                "kind": "Block",
+                "block": "TableContent",
+                "nullable": false
+            },
+            {
+                "name": "responsiveBehavior",
+                "kind": "Enum",
+                "enum": [
+                    "scrollSideways",
+                    "none",
+                    "listByRow",
+                    "listByColumn"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TableContent",
+        "fields": [
+            {
                 "name": "columns",
                 "kind": "NestedObjectList",
                 "object": {
@@ -4219,6 +4260,47 @@
     },
     {
         "name": "TipTapTable",
+        "fields": [
+            {
+                "name": "table",
+                "kind": "Block",
+                "block": "TipTapTableContent",
+                "nullable": false
+            },
+            {
+                "name": "responsiveBehavior",
+                "kind": "Enum",
+                "enum": [
+                    "scrollSideways",
+                    "none",
+                    "listByRow",
+                    "listByColumn"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "table",
+                "kind": "Block",
+                "block": "TipTapTableContent",
+                "nullable": false
+            },
+            {
+                "name": "responsiveBehavior",
+                "kind": "Enum",
+                "enum": [
+                    "scrollSideways",
+                    "none",
+                    "listByRow",
+                    "listByColumn"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TipTapTableContent",
         "fields": [
             {
                 "name": "columns",
