@@ -7,8 +7,12 @@
         "directory": "packages/api/brevo-api"
     },
     "license": "BSD-2-Clause",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./lib/index.d.ts",
+            "default": "./lib/index.js"
+        }
+    },
     "sideEffects": false,
     "files": [
         "lib/*",
