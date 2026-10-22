@@ -70,7 +70,7 @@
         "sass": "^1.105.1",
         "typescript": "^5.9.3",
         "vite": "^7.3.7",
-        "vite-plugin-dts": "^4.5.4",
+        "vite-plugin-dts": "^5.1.2",
         "vitest": "^5.0.5"
     },
     "peerDependencies": {
