@@ -1,9 +1,10 @@
 import { handleError } from "@src/framework/handleError";
-import { type PageContent, renderPage } from "@src/framework/render";
+import { renderPage } from "@src/framework/render";
 import { getSiteContext } from "@src/framework/requestContext";
 import type { ContentScope } from "@src/site-configs";
 import { getPreviewParams } from "@src/util/sitePreview";
 import { type Context, Hono } from "hono";
+import type { ReactNode } from "react";
 
 import PagePage from "./[language]/[[...path]]/page";
 import LanguageLayout, { getLayoutLanguage } from "./[language]/layout";
@@ -31,7 +32,7 @@ const noStoreCacheControl = "private, no-cache, no-store, max-age=0, must-revali
 // Same as Next.js for pages revalidated every 7.5 minutes
 const publicCacheControl = "s-maxage=450, stale-while-revalidate=31535550";
 
-async function renderSitePage(c: Context, loadPage: (params: ContentScope) => Promise<PageContent>) {
+async function renderSitePage(c: Context, renderContent: (params: ContentScope) => ReactNode) {
     const { domain } = getSiteContext();
     const language = c.req.param("language");
     if (!language) {
@@ -41,11 +42,10 @@ async function renderSitePage(c: Context, loadPage: (params: ContentScope) => Pr
     const isSitePreview = (await getPreviewParams()) !== null;
 
     return renderPage(c, {
-        page: loadPage(params),
-        layout: (page) => (
+        root: (
             <RootLayout lang={getLayoutLanguage(params)}>
                 <LanguageLayout domain={domain} language={language}>
-                    {page}
+                    {renderContent(params)}
                 </LanguageLayout>
             </RootLayout>
         ),
@@ -60,12 +60,11 @@ async function renderSitePage(c: Context, loadPage: (params: ContentScope) => Pr
     });
 }
 
-function renderBlockPreviewPage(c: Context, page: PageContent) {
+function renderBlockPreviewPage(c: Context, page: ReactNode) {
     const { domain, language } = c.req.param() as ContentScope;
 
     return renderPage(c, {
-        page: Promise.resolve(page),
-        layout: (page) => (
+        root: (
             <RootLayout lang={language}>
                 <BlockPreviewLayout domain={domain}>
                     <BlockPreviewLanguageLayout language={language}>{page}</BlockPreviewLanguageLayout>
@@ -87,8 +86,7 @@ function renderRootNotFound() {
 
 function renderRootNotFoundPage(c: Context) {
     return renderPage(c, {
-        page: Promise.resolve(null),
-        layout: renderRootNotFound,
+        root: renderRootNotFound(),
         notFound: renderRootNotFound,
         cacheControl: noStoreCacheControl,
         status: 404,
@@ -139,14 +137,14 @@ siteRouter.get("/", (c) => c.redirect("/en", 307));
 siteRouter.post("/:language/api/contact-form", async (c) => (await import("./[language]/api/contact-form/route")).contactFormRoute(c));
 siteRouter.post("/:language/api/file-upload", async (c) => (await import("./[language]/api/file-upload/route")).fileUploadRoute(c));
 
-siteRouter.get("/:language/news", (c) => renderSitePage(c, NewsIndexPage));
-siteRouter.get("/:language/news/:slug", (c) => renderSitePage(c, (params) => NewsDetailPage({ ...params, slug: c.req.param("slug") })));
-siteRouter.get("/:language/product", (c) => renderSitePage(c, ProductListPage));
-siteRouter.get("/:language/product/:slug", (c) => renderSitePage(c, () => ProductDetailPage({ slug: c.req.param("slug") })));
+siteRouter.get("/:language/news", (c) => renderSitePage(c, (params) => <NewsIndexPage {...params} />));
+siteRouter.get("/:language/news/:slug", (c) => renderSitePage(c, (params) => <NewsDetailPage {...params} slug={c.req.param("slug")} />));
+siteRouter.get("/:language/product", (c) => renderSitePage(c, ({ language }) => <ProductListPage language={language} />));
+siteRouter.get("/:language/product/:slug", (c) => renderSitePage(c, () => <ProductDetailPage slug={c.req.param("slug")} />));
 siteRouter.get("/:language/*", (c) => {
     const [, , ...segments] = c.req.path.split("/");
     const path = segments.filter((segment) => segment !== "").map((segment) => decodeURIComponent(segment));
-    return renderSitePage(c, (params) => PagePage({ ...params, path }));
+    return renderSitePage(c, (params) => <PagePage {...params} path={path} />);
 });
 
 siteRouter.notFound(renderRootNotFoundPage);

@@ -1,21 +1,20 @@
 import { Page } from "@src/documents/pages/Page";
-import type { PageContent } from "@src/framework/render";
 import type { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import type { ReactNode } from "react";
 
 import { Link } from "./links/Link";
 
 type DocumentProps = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
 
 type DocumentType = {
-    // Called as function instead of rendered as component, so that notFound() and redirect() can still change the response
-    loadPage: (props: DocumentProps) => Promise<PageContent>;
+    component: (props: DocumentProps) => Promise<ReactNode>;
 };
 
 export const documentTypes: Record<string, DocumentType> = {
     Page: {
-        loadPage: Page,
+        component: Page,
     },
     Link: {
-        loadPage: Link,
+        component: Link,
     },
 };

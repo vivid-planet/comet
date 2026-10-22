@@ -102,7 +102,7 @@ export default async function Page(params: Params) {
         scope,
     };
 
-    const { loadPage } = documentTypes[data.pageTreeNodeByPath.documentType];
+    const { component: Component } = documentTypes[data.pageTreeNodeByPath.documentType];
 
-    return loadPage(props);
+    return <Component {...props} />;
 }

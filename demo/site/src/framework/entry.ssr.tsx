@@ -3,12 +3,18 @@ import { use } from "react";
 import { renderToReadableStream } from "react-dom/server.edge";
 import { injectRSCPayload } from "rsc-html-stream/server";
 
+import { getNavigationErrorDigest } from "./navigation";
 import type { RscPayload } from "./render";
 
 export { renderBrevoEmailCampaign } from "@src/app/api/render-brevo-email-campaign";
 export { renderWelcomeEmail } from "@src/app/api/render-welcome-email";
 
-export async function renderHtml(rscStream: ReadableStream<Uint8Array>): Promise<{ stream: ReadableStream<Uint8Array>; status?: number }> {
+type RenderHtmlResult =
+    | { stream: ReadableStream<Uint8Array>; status?: number }
+    /** `notFound()` or `redirect()` was called by a client component */
+    | { navigationDigest: string };
+
+export async function renderHtml(rscStream: ReadableStream<Uint8Array>): Promise<RenderHtmlResult> {
     const [ssrRscStream, browserRscStream] = rscStream.tee();
 
     let payload: Promise<RscPayload> | undefined;
@@ -22,10 +28,21 @@ export async function renderHtml(rscStream: ReadableStream<Uint8Array>): Promise
     try {
         htmlStream = await renderToReadableStream(<SsrRoot />, {
             bootstrapScriptContent: `import(${JSON.stringify(getClientEntryUrl())})`,
+            onError(error: unknown) {
+                const digest = getNavigationErrorDigest(error);
+                if (digest) {
+                    return digest;
+                }
+                console.error(error);
+                return undefined;
+            },
         });
     } catch (error) {
-        console.error(error);
         await browserRscStream.cancel();
+        const navigationDigest = getNavigationErrorDigest(error);
+        if (navigationDigest) {
+            return { navigationDigest };
+        }
         return {
             stream: new Response("Internal Server Error").body as ReadableStream<Uint8Array>,
             status: 500,

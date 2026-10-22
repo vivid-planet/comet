@@ -2,89 +2,114 @@ import { renderToReadableStream } from "@vitejs/plugin-rsc/rsc/server";
 import type { Context } from "hono";
 import type { ReactNode } from "react";
 
-import { NotFoundError, RedirectError } from "./navigation";
+import { getNavigationErrorDigest, isNotFoundDigest, parseRedirectDigest } from "./navigation";
 import { getRequest, isRscRequest } from "./requestContext";
 import { RouterProvider } from "./RouterProvider";
-
-/** React nodes except promises, a promise of these can be rendered as React node */
-export type PageContent = Exclude<ReactNode, PromiseLike<unknown>>;
 
 export type RscPayload = {
     root: ReactNode;
 };
 
 type RenderPageOptions = {
-    /**
-     * The page content. Rejects with a `NotFoundError` or `RedirectError` to respond with the not found page or a redirect.
-     * Layouts start rendering in parallel to loading the page.
-     */
-    page: Promise<PageContent>;
-    layout: (page: Promise<PageContent>) => ReactNode;
+    root: ReactNode;
+    /** Rendered with status 404 when `notFound()` is called while rendering `root` */
     notFound: () => ReactNode;
     cacheControl: string;
     status?: number;
 };
 
-export async function renderPage(c: Context, { page, layout, notFound, cacheControl, status = 200 }: RenderPageOptions): Promise<Response> {
-    // Rendering the layout can fail before the page is awaited
-    page.catch(() => undefined);
-
+export async function renderPage(c: Context, { root, notFound, cacheControl, status = 200 }: RenderPageOptions): Promise<Response> {
     const url = new URL(getRequest().url);
-    const wrapInRouterProvider = (children: ReactNode) => (
+    const rscPayload = await renderRscPayload(
         <RouterProvider pathname={url.pathname} search={url.search} params={c.req.param()}>
-            {children}
-        </RouterProvider>
+            {root}
+        </RouterProvider>,
     );
 
-    const abortController = new AbortController();
-    const rscStream = renderRscStream(wrapInRouterProvider(layout(page)), abortController.signal);
-
-    try {
-        await page;
-    } catch (error) {
-        abortController.abort();
-        if (error instanceof NotFoundError) {
-            return respond(renderRscStream(wrapInRouterProvider(notFound())), { status: 404, cacheControl });
-        }
-        throw error;
+    const result = rscPayload.navigationDigest
+        ? { navigationDigest: rscPayload.navigationDigest }
+        : await respond(rscPayload.chunks, { status, cacheControl });
+    if ("response" in result) {
+        return result.response;
     }
 
-    return respond(rscStream, { status, cacheControl });
+    const redirect = parseRedirectDigest(result.navigationDigest);
+    if (redirect) {
+        return c.redirect(redirect.location, redirect.status);
+    }
+    if (isNotFoundDigest(result.navigationDigest) && status !== 404) {
+        return renderPage(c, { root: notFound(), notFound, cacheControl, status: 404 });
+    }
+    throw new Error("notFound() must not be called while rendering the not found page");
 }
 
-function renderRscStream(root: ReactNode, signal?: AbortSignal) {
-    return renderToReadableStream<RscPayload>(
+async function renderRscPayload(root: ReactNode) {
+    let navigationDigest: string | undefined;
+    const stream = renderToReadableStream<RscPayload>(
         { root },
         {
-            signal,
             onError(error: unknown) {
-                if (signal?.aborted || error instanceof NotFoundError || error instanceof RedirectError) {
-                    return;
+                const digest = getNavigationErrorDigest(error);
+                if (digest) {
+                    navigationDigest ??= digest;
+                    return digest;
                 }
                 console.error(error);
+                return undefined;
             },
         },
     );
+
+    // The payload is rendered completely before responding, so that notFound() and redirect() can set the status,
+    // no matter where in the tree they are called
+    const chunks: Uint8Array[] = [];
+    const reader = stream.getReader();
+    for (let result = await reader.read(); !result.done; result = await reader.read()) {
+        chunks.push(result.value);
+    }
+
+    return { chunks, navigationDigest };
 }
 
-async function respond(rscStream: ReadableStream<Uint8Array>, { status, cacheControl }: { status: number; cacheControl: string }) {
+function createStream(chunks: Uint8Array[]) {
+    return new ReadableStream<Uint8Array>({
+        start(controller) {
+            for (const chunk of chunks) {
+                controller.enqueue(chunk);
+            }
+            controller.close();
+        },
+    });
+}
+
+async function respond(
+    rscChunks: Uint8Array[],
+    { status, cacheControl }: { status: number; cacheControl: string },
+): Promise<{ response: Response } | { navigationDigest: string }> {
     if (isRscRequest()) {
-        return new Response(rscStream, {
-            status,
-            headers: {
-                "Content-Type": "text/x-component;charset=utf-8",
-                "Cache-Control": cacheControl,
-                // Crawlers only need the HTML, the RSC payload for hydration is embedded in it
-                "X-Robots-Tag": "noindex",
-            },
-        });
+        return {
+            response: new Response(createStream(rscChunks), {
+                status,
+                headers: {
+                    "Content-Type": "text/x-component;charset=utf-8",
+                    "Cache-Control": cacheControl,
+                    // Crawlers only need the HTML, the RSC payload for hydration is embedded in it
+                    "X-Robots-Tag": "noindex",
+                },
+            }),
+        };
     }
 
     const ssrEntry = await import.meta.viteRsc.loadModule<typeof import("./entry.ssr")>("ssr", "index");
-    const html = await ssrEntry.renderHtml(rscStream);
+    const html = await ssrEntry.renderHtml(createStream(rscChunks));
+    if ("navigationDigest" in html) {
+        return html;
+    }
 
-    return new Response(html.stream, {
-        status: html.status ?? status,
-        headers: { "Content-Type": "text/html;charset=utf-8", "Cache-Control": cacheControl },
-    });
+    return {
+        response: new Response(html.stream, {
+            status: html.status ?? status,
+            headers: { "Content-Type": "text/html;charset=utf-8", "Cache-Control": cacheControl },
+        }),
+    };
 }
