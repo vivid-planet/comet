@@ -44,7 +44,7 @@
         "@faire/mjml-react": "^3.5.4",
         "clsx": "^2.1.1",
         "csso": "^5.0.5",
-        "mjml": "^4.18.0",
+        "mjml": "^5.4.1",
         "mjml-browser": "^4.18.0",
         "redraft": "^0.10.2"
     },
@@ -55,7 +55,7 @@
         "@storybook/addon-vitest": "10.6.1",
         "@storybook/react-vite": "^10.6.1",
         "@types/csso": "^5.0.5",
-        "@types/mjml": "^4.7.4",
+        "@types/mjml": "^5.0.0",
         "@types/mjml-browser": "^4.15.0",
         "@types/react": "^19.3.0",
         "@types/react-dom": "^19.3.0",
