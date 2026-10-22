@@ -3,7 +3,7 @@ import { resolve } from "path";
 import { defineConfig, type Plugin } from "vite";
 import { compression } from "vite-plugin-compression2";
 
-import { environment as envVarsToLoad } from "./src/environment";
+import { environment as envVarsToLoad } from "./src/environment.ts";
 
 function injectEnvironmentValues({ mode }: { mode: string }): Plugin {
     return {
@@ -91,7 +91,7 @@ export default defineConfig(({ mode }) => {
         },
         resolve: {
             alias: {
-                "@src": resolve(__dirname, "./src"),
+                "@src": resolve(import.meta.dirname, "./src"),
             },
         },
         build: {
