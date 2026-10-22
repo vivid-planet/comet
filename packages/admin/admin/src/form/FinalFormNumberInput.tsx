@@ -1,12 +1,14 @@
-import { InputBase, type InputBaseProps } from "@mui/material";
+import { Input, type InputProps } from "@dextinity/ui";
 import { type ChangeEvent, type FocusEvent, useCallback, useEffect, useState } from "react";
 import type { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { ClearInputAdornment } from "../common/ClearInputAdornment";
+import { InputClearButton } from "./InputClearButton";
 
-export type FinalFormNumberInputProps = InputBaseProps & {
+export type FinalFormNumberInputProps = Omit<InputProps, "type" | "value" | "defaultValue" | "onChange" | "onValueChange" | "multiline" | "rows"> & {
     decimals?: number;
+    /** @deprecated Has no effect: the input always fills its field. */
+    fullWidth?: boolean;
 };
 
 type FinalFormNumberInputInternalProps = FieldRenderProps<number>;
@@ -25,6 +27,8 @@ export function FinalFormNumberInput({
     disabled,
     readOnly,
     decimals = 0,
+    fullWidth,
+    variant,
     ...props
 }: FinalFormNumberInputProps & FinalFormNumberInputInternalProps) {
     const intl = useIntl();
@@ -91,9 +95,11 @@ export function FinalFormNumberInput({
     const clearable = !required && !disabled && !readOnly;
 
     return (
-        <InputBase
+        <Input
             {...input}
             {...props}
+            type="text"
+            inputMode={decimals > 0 ? "decimal" : "numeric"}
             required={required}
             disabled={disabled}
             readOnly={readOnly}
@@ -103,9 +109,7 @@ export function FinalFormNumberInput({
             endAdornment={
                 (endAdornment || clearable) && (
                     <>
-                        {clearable && typeof input.value === "number" && (
-                            <ClearInputAdornment position="end" onClick={() => input.onChange(undefined)} />
-                        )}
+                        {clearable && typeof input.value === "number" && <InputClearButton onClick={() => input.onChange(undefined)} />}
                         {endAdornment}
                     </>
                 )

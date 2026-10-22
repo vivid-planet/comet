@@ -1,4 +1,7 @@
+import "@fontsource-variable/figtree";
 import "@fontsource-variable/roboto-flex/full.css";
+import "@dextinity/ui/css";
+import "@dextinity/ui/themes/dextinity.css";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@dextinity/admin";
