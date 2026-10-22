@@ -1,6 +1,8 @@
 import type { Decorator, Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, screen, waitFor } from "storybook/test";
 
+import { afterEffects } from "#storybook/afterEffects";
+
 import { Button } from "../../button/Button";
 import { Icon } from "../../icon/Icon";
 import { IconButton } from "../../iconButton/IconButton";
@@ -76,6 +78,7 @@ export const Default: Story = {
         </Tooltip>
     ),
     play: async ({ args, canvas, userEvent }) => {
+        await afterEffects();
         const button = canvas.getByRole("button", { name: "Edit product" });
 
         await userEvent.hover(button);
@@ -111,6 +114,7 @@ export const WithButton: Story = {
         </Tooltip>
     ),
     play: async ({ canvas, userEvent }) => {
+        await afterEffects();
         await userEvent.hover(canvas.getByRole("button", { name: "Save changes" }));
         await findOpenTooltip("Save changes (Ctrl+S)");
 
@@ -145,6 +149,7 @@ export const InToolbar: Story = {
         </TooltipProvider>
     ),
     play: async ({ canvas, userEvent }) => {
+        await afterEffects();
         await userEvent.hover(canvas.getByRole("button", { name: "Edit product" }));
         await findOpenTooltip("Edit product");
 
@@ -175,6 +180,7 @@ export const WithArrow: Story = {
         </Tooltip>
     ),
     play: async ({ canvas, userEvent }) => {
+        await afterEffects();
         await userEvent.hover(canvas.getByRole("button", { name: "Product settings" }));
         const tooltip = await findOpenTooltip("Product settings");
 
@@ -200,6 +206,7 @@ export const Disabled: Story = {
         </Tooltip>
     ),
     play: async ({ args, canvas, userEvent }) => {
+        await afterEffects();
         const button = canvas.getByRole("button", { name: "Edit product" });
 
         await userEvent.hover(button);
@@ -229,6 +236,7 @@ export const OnADisabledButton: Story = {
         </Tooltip>
     ),
     play: async ({ canvas, userEvent }) => {
+        await afterEffects();
         const button = canvas.getByRole("button", { name: "Delete product" });
         await expect(button).toHaveAttribute("aria-disabled", "true");
 
@@ -259,6 +267,7 @@ export const InsideAThemeSwitch: Story = {
         </ThemeSwitch>
     ),
     play: async ({ canvas, userEvent }) => {
+        await afterEffects();
         await userEvent.hover(canvas.getByRole("button", { name: "Edit product" }));
         const positioner = (await findOpenTooltip("Edit product")).closest(".dextinityTooltip__positioner");
 
@@ -296,6 +305,7 @@ export const CustomizedThroughSlotProps: Story = {
         </Tooltip>
     ),
     play: async ({ canvas, userEvent }) => {
+        await afterEffects();
         await userEvent.hover(canvas.getByRole("button", { name: "Preview the shop" }));
         const tooltip = await findOpenTooltip("Preview the shop (Ctrl+Shift+P)");
 

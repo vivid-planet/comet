@@ -41,6 +41,7 @@ export const DisabledByFieldset: Story = {
         await expect(canvas.getByRole("textbox", { name: "Brand color" })).toBeDisabled();
         await expect(canvas.getByRole("button", { name: "Teal" })).toBeDisabled();
         await expect(canvas.queryByRole("button", { name: "Clear brand color" })).not.toBeInTheDocument();
-        await expect(groupStyle.opacity).toBe(groupStyle.getPropertyValue("--dextinity-opacity-disabled").trim());
+        // Compared as numbers: a production build writes the token's 0.4 as .4.
+        await expect(Number(groupStyle.opacity)).toBe(Number(groupStyle.getPropertyValue("--dextinity-opacity-disabled")));
     },
 };

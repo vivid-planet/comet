@@ -2,6 +2,8 @@ import type { Decorator, Meta, StoryObj } from "@storybook/react-vite";
 import { type FormEvent, useState } from "react";
 import { expect, fn, screen, waitFor, within } from "storybook/test";
 
+import { afterEffects } from "#storybook/afterEffects";
+
 import { Button } from "../../button/Button";
 import { Icon } from "../../icon/Icon";
 import { IconButton } from "../../iconButton/IconButton";
@@ -349,6 +351,7 @@ export const IconButtonTrigger: Story = {
         const trigger = canvas.getByRole("button", { name: "Delete variant" });
         await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
 
+        await afterEffects();
         await userEvent.hover(trigger);
         const tooltip = await screen.findByText("Delete variant", { selector: ".dextinityTooltip" }, { timeout: 2000 });
         await waitFor(() => expect(tooltip).toBeVisible());
