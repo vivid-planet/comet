@@ -1,8 +1,8 @@
 import { Entity, Index, PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
 import { BaseEntity, BigIntType, OptionalProps } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { randomUUID } from "crypto";
 import { GraphQLBigInt } from "graphql-scalars";
-import { v4 as uuid } from "uuid";
 
 @ObjectType("FileUpload")
 @Entity({ tableName: "DextinityFileUpload" })
@@ -11,7 +11,7 @@ export class FileUpload extends BaseEntity {
 
     @Field(() => ID)
     @PrimaryKey({ columnType: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Field()
     @Property({ columnType: "text" })

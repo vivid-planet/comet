@@ -2,7 +2,7 @@ import { BlockDataInterface, CrudSingleGenerator, RootBlock, RootBlockDataScalar
 import { Embedded, Entity, PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
 import { BaseEntity, OptionalProps } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 
 import { FooterContentBlock } from "../blocks/footer-content.block";
 import { FooterScope } from "../dto/footer-scope";
@@ -16,7 +16,7 @@ export class Footer extends BaseEntity {
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
-    id: string = uuid();
+    id: string = randomUUID();
 
     @RootBlock(FooterContentBlock)
     @Property({ type: new RootBlockType(FooterContentBlock) })

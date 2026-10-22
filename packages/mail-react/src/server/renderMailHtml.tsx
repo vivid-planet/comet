@@ -9,6 +9,10 @@ type MjmlWarning = Awaited<ReturnType<typeof mjml2html>>["errors"][number];
 
 export async function renderMailHtml(element: ReactElement, options?: MjmlOptions): Promise<{ html: string; mjmlWarnings: MjmlWarning[] }> {
     const mjmlString = renderToMjml(element);
-    const { html, errors: mjmlWarnings } = await mjml2html(mjmlString, { validationLevel: "soft", ...options });
+    const { html, errors: mjmlWarnings } = await mjml2html(mjmlString, {
+        validationLevel: "soft",
+        ...options,
+        ignoreIncludes: options?.ignoreIncludes ?? true,
+    });
     return { html: addBodyTargetingId(html), mjmlWarnings };
 }

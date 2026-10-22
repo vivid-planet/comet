@@ -1,4 +1,6 @@
-import { MjmlClass, MjmlColumn, MjmlText, MjmlTitle } from "@faire/mjml-react";
+import { fileURLToPath } from "node:url";
+
+import { MjmlClass, MjmlColumn, MjmlInclude, MjmlText, MjmlTitle } from "@faire/mjml-react";
 import { describe, expect, it } from "vitest";
 
 import { MjmlMailRoot } from "../components/mailRoot/MjmlMailRoot.js";
@@ -188,5 +190,33 @@ describe("server/renderMailHtml", () => {
         );
 
         expect(mjmlWarnings).toEqual([]);
+    });
+
+    // MJML only includes files by a relative path inside the directory of the `filePath` option.
+    const fixturesDirectory = fileURLToPath(new URL("./__fixtures__", import.meta.url));
+
+    const mailWithIncludedFile = (
+        <MjmlMailRoot>
+            <MjmlSection>
+                <MjmlColumn>
+                    <MjmlInclude path="./included.mjml" />
+                </MjmlColumn>
+            </MjmlSection>
+        </MjmlMailRoot>
+    );
+
+    it.each([
+        { case: "without ignoreIncludes", options: { filePath: fixturesDirectory } },
+        { case: "with ignoreIncludes set to undefined", options: { filePath: fixturesDirectory, ignoreIncludes: undefined } },
+    ])("does not read files from the server through mj-include $case", async ({ options }) => {
+        const { html } = await renderMailHtml(mailWithIncludedFile, options);
+
+        expect(html).not.toContain("content-of-a-server-file");
+    });
+
+    it("reads files through mj-include when ignoreIncludes is false", async () => {
+        const { html } = await renderMailHtml(mailWithIncludedFile, { filePath: fixturesDirectory, ignoreIncludes: false });
+
+        expect(html).toContain("content-of-a-server-file");
     });
 });
