@@ -29,15 +29,16 @@ The gallery shows every icon in the theme picked in the toolbar. Search it by na
 
 ## Replacing icons in a theme
 
-Each icon is a design token, `--dextinity-icon-<name>`, whose value is an SVG image. The package defines all of them, and a theme replaces an icon by defining its token, for example with a data URL:
+Each icon is a design token, `--dextinity-icon-<name>`, whose value is an SVG image. The package defines all of them, and a theme replaces an icon by defining its token, with an SVG file next to the theme's stylesheet, which the application's bundler resolves, or with a data URL, which keeps the stylesheet self-contained:
 
 ```css
 [data-dextinity-theme="acme"] {
-    --dextinity-icon-chevron-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    --dextinity-icon-check: url("./acmeIcons/check.svg");
+    --dextinity-icon-chevron-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 ```
 
-The icon draws the image's shape in the current text color, so the image's own colors don't matter: draw it in black on a transparent background. The Acme theme replaces the chevrons, arrows, check mark, close, plus and minus icons with versions that have square line ends: switch to it in the toolbar to see them. Every element that names a theme starts from the package's icons, so a [`ThemeSwitch`](?path=/docs/components-themeswitch--docs) inside an Acme page shows the default icons unless its own theme replaces them.
+The icon draws the image's shape in the current text color, so the image's own colors don't matter: draw it in black on a transparent background, in the same 24 by 24 box as the package's icons. A theme can replace a few icons or all of them. The Acme theme replaces every icon with its own set, with thinner lines, square line ends and sharp corners, in `packages/ui/src/themes/acmeIcons/`: switch to it in the toolbar, and the gallery above shows its icons. Every element that names a theme starts from the package's icons, so a [`ThemeSwitch`](?path=/docs/components-themeswitch--docs) inside an Acme page shows the default icons unless its own theme replaces them.
 
 ## Adding an icon
 

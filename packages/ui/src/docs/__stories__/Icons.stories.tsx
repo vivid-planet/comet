@@ -66,5 +66,9 @@ export const Gallery: Story = {
         await userEvent.clear(canvas.getByRole("searchbox", { name: "Search icons" }));
         await userEvent.type(canvas.getByRole("searchbox", { name: "Search icons" }), "unicorn");
         await expect(canvas.getByText("No icon matches “unicorn”.")).toBeVisible();
+
+        // Ends with every icon, so the visual tests capture the whole icon set of each theme.
+        await userEvent.clear(canvas.getByRole("searchbox", { name: "Search icons" }));
+        await expect(canvas.getAllByRole("listitem")).toHaveLength(iconNames.length);
     },
 };

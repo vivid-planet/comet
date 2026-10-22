@@ -1,8 +1,9 @@
 /*
  * Acme theme — a fictive brand
  *
- * Warm paper tones with a terracotta accent, serif headings, square corners and a denser layout. It replaces some
- * icons of the icon set with versions that have square line ends, to show how a theme replaces icons.
+ * Warm paper tones with a terracotta accent, serif headings, square corners and a denser layout. It replaces every
+ * icon of the icon set with its own, thinner icons with square line ends and sharp corners, in `acmeIcons/`, to show
+ * how a theme replaces icons.
  * It isn't published: Storybook uses it to show that the components follow any theme, and it's the
  * example to copy when a project creates its own theme. Every token is documented in "Foundations/Design tokens".
  */
@@ -147,17 +148,55 @@
         --dextinity-app-bar-foreground: #fbf8f3;
         --dextinity-app-bar-focus-ring: #f2a27e;
 
-        /* Icons: square line ends and corners, to match the square shapes of the brand */
-        --dextinity-icon-arrow-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='M19 12H5M11 6l-6 6 6 6'/%3E%3C/svg%3E");
-        --dextinity-icon-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E");
-        --dextinity-icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E");
-        --dextinity-icon-chevron-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-        --dextinity-icon-chevron-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m15 6-6 6 6 6'/%3E%3C/svg%3E");
-        --dextinity-icon-chevron-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m9 6 6 6-6 6'/%3E%3C/svg%3E");
-        --dextinity-icon-chevron-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m6 15 6-6 6 6'/%3E%3C/svg%3E");
-        --dextinity-icon-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E");
-        --dextinity-icon-minus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
-        --dextinity-icon-plus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+        /* Icons: its own set, with thin lines, square line ends and sharp corners, to match the square shapes of the brand */
+        --dextinity-icon-arrow-left: url("./acmeIcons/arrow-left.svg");
+        --dextinity-icon-arrow-right: url("./acmeIcons/arrow-right.svg");
+        --dextinity-icon-bell: url("./acmeIcons/bell.svg");
+        --dextinity-icon-calendar: url("./acmeIcons/calendar.svg");
+        --dextinity-icon-check: url("./acmeIcons/check.svg");
+        --dextinity-icon-chevron-down: url("./acmeIcons/chevron-down.svg");
+        --dextinity-icon-chevron-left: url("./acmeIcons/chevron-left.svg");
+        --dextinity-icon-chevron-right: url("./acmeIcons/chevron-right.svg");
+        --dextinity-icon-chevron-up: url("./acmeIcons/chevron-up.svg");
+        --dextinity-icon-close: url("./acmeIcons/close.svg");
+        --dextinity-icon-copy: url("./acmeIcons/copy.svg");
+        --dextinity-icon-danger: url("./acmeIcons/danger.svg");
+        --dextinity-icon-dashboard: url("./acmeIcons/dashboard.svg");
+        --dextinity-icon-delete: url("./acmeIcons/delete.svg");
+        --dextinity-icon-download: url("./acmeIcons/download.svg");
+        --dextinity-icon-edit: url("./acmeIcons/edit.svg");
+        --dextinity-icon-external-link: url("./acmeIcons/external-link.svg");
+        --dextinity-icon-eye: url("./acmeIcons/eye.svg");
+        --dextinity-icon-eye-off: url("./acmeIcons/eye-off.svg");
+        --dextinity-icon-file: url("./acmeIcons/file.svg");
+        --dextinity-icon-filter: url("./acmeIcons/filter.svg");
+        --dextinity-icon-folder: url("./acmeIcons/folder.svg");
+        --dextinity-icon-globe: url("./acmeIcons/globe.svg");
+        --dextinity-icon-heart: url("./acmeIcons/heart.svg");
+        --dextinity-icon-help: url("./acmeIcons/help.svg");
+        --dextinity-icon-home: url("./acmeIcons/home.svg");
+        --dextinity-icon-image: url("./acmeIcons/image.svg");
+        --dextinity-icon-info: url("./acmeIcons/info.svg");
+        --dextinity-icon-link: url("./acmeIcons/link.svg");
+        --dextinity-icon-lock: url("./acmeIcons/lock.svg");
+        --dextinity-icon-logout: url("./acmeIcons/logout.svg");
+        --dextinity-icon-mail: url("./acmeIcons/mail.svg");
+        --dextinity-icon-menu: url("./acmeIcons/menu.svg");
+        --dextinity-icon-minus: url("./acmeIcons/minus.svg");
+        --dextinity-icon-more: url("./acmeIcons/more.svg");
+        --dextinity-icon-orders: url("./acmeIcons/orders.svg");
+        --dextinity-icon-pages: url("./acmeIcons/pages.svg");
+        --dextinity-icon-plus: url("./acmeIcons/plus.svg");
+        --dextinity-icon-products: url("./acmeIcons/products.svg");
+        --dextinity-icon-refresh: url("./acmeIcons/refresh.svg");
+        --dextinity-icon-search: url("./acmeIcons/search.svg");
+        --dextinity-icon-settings: url("./acmeIcons/settings.svg");
+        --dextinity-icon-star: url("./acmeIcons/star.svg");
+        --dextinity-icon-success: url("./acmeIcons/success.svg");
+        --dextinity-icon-upload: url("./acmeIcons/upload.svg");
+        --dextinity-icon-user: url("./acmeIcons/user.svg");
+        --dextinity-icon-users: url("./acmeIcons/users.svg");
+        --dextinity-icon-warning: url("./acmeIcons/warning.svg");
     }
 
     [data-dextinity-theme="acme"][data-dextinity-color-scheme="dark"] {

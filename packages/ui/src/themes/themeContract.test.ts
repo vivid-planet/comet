@@ -224,13 +224,16 @@ describe.each(themes)("theme $fileName", (theme) => {
         }).toEqual({ missingTokens: [], undocumentedTokens: [] });
     });
 
-    it("replaces only icons of the icon set, each with an image", () => {
+    it("replaces only icons of the icon set, each with an image that exists", () => {
         const themeIconTokens = [...theme.declarations.light, ...theme.declarations.dark].filter(([token]) => token.startsWith("--dextinity-icon-"));
 
         expect({
             unknownIcons: themeIconTokens.map(([token]) => token).filter((token) => !iconTokens.includes(token)),
             iconsThatArentImages: themeIconTokens.filter(([, value]) => !value.startsWith("url(")).map(([token]) => token),
-        }).toEqual({ unknownIcons: [], iconsThatArentImages: [] });
+            missingIconFiles: themeIconTokens
+                .map(([, value]) => value.match(/^url\("(\.[^"]+)"\)$/)?.[1])
+                .filter((path) => path !== undefined && !existsSync(join(themesDirectory, path))),
+        }).toEqual({ unknownIcons: [], iconsThatArentImages: [], missingIconFiles: [] });
     });
 
     it("redefines every color token, and only documented tokens, for the dark color scheme", () => {
