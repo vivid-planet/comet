@@ -13,7 +13,7 @@ example to look at a pull request before it is merged. For development use `pnpm
 | ----------- | ----------------------------------------- |
 | Site        | http://demo.preview.localhost:8080        |
 | Admin       | http://admin--demo.preview.localhost:8080 |
-| Mails       | http://mail--demo.preview.localhost:8080  |
+| Mailpit     | http://mail--demo.preview.localhost:8080  |
 
 The admin login offers the users of `demo/api/src/auth/static-users.ts`, like in local development.
 
