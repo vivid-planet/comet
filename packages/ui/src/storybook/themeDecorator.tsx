@@ -8,6 +8,10 @@ export const themeOptions = [
     { value: "dextinity", title: "Dextinity" },
     { value: "sunset", title: "Sunset (Dextinity variation)" },
     { value: "acme", title: "Acme (fictive brand)" },
+    { value: "volt", title: "Volt (fictive brand)" },
+    { value: "tropic", title: "Tropic (fictive brand)" },
+    { value: "nova", title: "Nova (fictive brand)" },
+    { value: "primo", title: "Primo (fictive brand)" },
 ];
 
 export const colorSchemeOptions = [

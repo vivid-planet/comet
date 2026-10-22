@@ -29,3 +29,15 @@
     gap: var(--dextinity-space-md);
     align-items: center;
 }
+
+.level {
+    display: grid;
+    gap: var(--dextinity-space-lg);
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--dextinity-space-lg);
+    max-inline-size: 40rem;
+}

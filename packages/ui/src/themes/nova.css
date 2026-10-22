@@ -1,0 +1,201 @@
+/*
+ * Nova theme — a fictive brand
+ *
+ * A music festival and streaming brand: an ultraviolet to hot magenta gradient with a cyan spark, on cool near-white,
+ * and a deep midnight indigo with neon glow in the dark. Pill buttons, heavy headings and a glowing primary button.
+ * It isn't published: Storybook uses it to show that the components follow any theme, and it's an example
+ * to copy when a project creates its own theme. Every token is documented in "Foundations/Design tokens".
+ */
+
+@layer dextinity {
+    [data-dextinity-theme="nova"] {
+        color-scheme: light;
+
+        /* Color */
+        --dextinity-color-background: #f3f1fe;
+        --dextinity-color-foreground: #150d33;
+        --dextinity-color-foreground-muted: #5d5680;
+        --dextinity-color-surface: #fff;
+        --dextinity-color-surface-hover: #efebfd;
+        --dextinity-color-border: #e0dbf5;
+        --dextinity-color-border-strong: #77738f;
+        --dextinity-color-border-hover: #48445f;
+        --dextinity-color-primary: #6419e6;
+        --dextinity-color-primary-hover: #b8106e;
+        --dextinity-color-primary-foreground: #fff;
+        --dextinity-color-primary-subtle: #ece2ff;
+        --dextinity-color-neutral-subtle: #e9e5f8;
+        --dextinity-color-success: #0b7a4b;
+        --dextinity-color-success-subtle: #d9f7e8;
+        --dextinity-color-warning: #8f5200;
+        --dextinity-color-warning-subtle: #fff0c4;
+        --dextinity-color-danger: #c41d24;
+        --dextinity-color-danger-subtle: #ffe4e1;
+        --dextinity-color-focus-ring: #0088ba;
+        --dextinity-color-backdrop: #150d33;
+
+        /* Typography */
+        --dextinity-font-family-body: "Figtree Variable", "Figtree", "Helvetica Neue", system-ui, sans-serif;
+        --dextinity-font-family-heading: "Figtree Variable", "Figtree", "Helvetica Neue", system-ui, sans-serif;
+        --dextinity-typography-display-font-size: 3.25rem;
+        --dextinity-typography-display-line-height: 1;
+        --dextinity-typography-display-font-weight: 900;
+        --dextinity-typography-display-letter-spacing: -0.035em;
+        --dextinity-typography-heading-1-font-size: 2.5rem;
+        --dextinity-typography-heading-1-line-height: 1.1;
+        --dextinity-typography-heading-1-font-weight: 850;
+        --dextinity-typography-heading-1-letter-spacing: -0.025em;
+        --dextinity-typography-heading-2-font-size: 2rem;
+        --dextinity-typography-heading-2-line-height: 1.15;
+        --dextinity-typography-heading-2-font-weight: 800;
+        --dextinity-typography-heading-2-letter-spacing: -0.02em;
+        --dextinity-typography-heading-3-font-size: 1.5rem;
+        --dextinity-typography-heading-3-line-height: 1.2;
+        --dextinity-typography-heading-3-font-weight: 800;
+        --dextinity-typography-heading-3-letter-spacing: -0.015em;
+        --dextinity-typography-heading-4-font-size: 1.25rem;
+        --dextinity-typography-heading-4-line-height: 1.25;
+        --dextinity-typography-heading-4-font-weight: 750;
+        --dextinity-typography-heading-4-letter-spacing: -0.01em;
+        --dextinity-typography-body-large-font-size: 1.125rem;
+        --dextinity-typography-body-large-line-height: 1.55;
+        --dextinity-typography-body-large-font-weight: 400;
+        --dextinity-typography-body-large-letter-spacing: 0;
+        --dextinity-typography-body-font-size: 1rem;
+        --dextinity-typography-body-line-height: 1.5;
+        --dextinity-typography-body-font-weight: 400;
+        --dextinity-typography-body-letter-spacing: 0;
+        --dextinity-typography-body-small-font-size: 0.8125rem;
+        --dextinity-typography-body-small-line-height: 1.45;
+        --dextinity-typography-body-small-font-weight: 450;
+        --dextinity-typography-body-small-letter-spacing: 0;
+        --dextinity-typography-label-font-size: 0.8125rem;
+        --dextinity-typography-label-line-height: 1.4;
+        --dextinity-typography-label-font-weight: 700;
+        --dextinity-typography-label-letter-spacing: 0.01em;
+        --dextinity-typography-overline-font-size: 0.75rem;
+        --dextinity-typography-overline-line-height: 1.3;
+        --dextinity-typography-overline-font-weight: 800;
+        --dextinity-typography-overline-letter-spacing: 0.16em;
+        --dextinity-typography-overline-text-transform: uppercase;
+
+        /* Space */
+        --dextinity-space-xs: 0.25rem;
+        --dextinity-space-sm: 0.5rem;
+        --dextinity-space-md: 0.75rem;
+        --dextinity-space-lg: 1rem;
+        --dextinity-space-xl: 1.5rem;
+
+        /* Shape */
+        --dextinity-radius-small: 6px;
+        --dextinity-radius-medium: 12px;
+        --dextinity-radius-large: 22px;
+        --dextinity-radius-full: 9999px;
+
+        /* Elevation */
+        --dextinity-shadow-popup: 0 4px 12px rgb(21 13 51 / 10%), 0 18px 40px rgb(100 25 230 / 16%);
+        --dextinity-shadow-dialog: 0 10px 24px rgb(21 13 51 / 14%), 0 36px 80px rgb(100 25 230 / 24%);
+
+        /* Controls */
+        --dextinity-control-height-small: 2.25rem;
+        --dextinity-control-height-medium: 2.75rem;
+        --dextinity-control-height-large: 3.25rem;
+        --dextinity-control-padding-inline-small: 1.125rem;
+        --dextinity-control-padding-inline-medium: 1.5rem;
+        --dextinity-control-padding-inline-large: 2rem;
+        --dextinity-control-font-size-small: 0.8125rem;
+        --dextinity-control-font-size-medium: 0.9375rem;
+        --dextinity-control-font-size-large: 1.0625rem;
+        --dextinity-control-border-width: 2px;
+        --dextinity-control-toggle-size: 1.25rem;
+
+        /* State */
+        --dextinity-focus-ring-width: 3px;
+        --dextinity-focus-ring-offset: 2px;
+        --dextinity-opacity-disabled: 0.4;
+        --dextinity-opacity-backdrop: 0.6;
+
+        /* Motion */
+        --dextinity-motion-duration-short: 140ms;
+        --dextinity-motion-duration-medium: 220ms;
+        --dextinity-motion-easing: cubic-bezier(0.34, 1.36, 0.64, 1);
+
+        /* Layering */
+        --dextinity-z-index-dialog: 1300;
+        --dextinity-z-index-popup: 1400;
+        --dextinity-z-index-tooltip: 1500;
+
+        /* Button */
+        --dextinity-button-radius: 9999px;
+        --dextinity-button-font-weight: 750;
+        --dextinity-button-primary-background: linear-gradient(120deg, #6419e6 0%, #e3127d 100%);
+        --dextinity-button-primary-background-hover: linear-gradient(120deg, #4e0fbd 0%, #bd0d66 100%);
+        --dextinity-button-primary-foreground: #fff;
+        --dextinity-button-primary-shadow: -6px 8px 20px rgb(100 25 230 / 32%), 6px 8px 20px rgb(227 18 125 / 32%);
+        --dextinity-button-secondary-background: var(--dextinity-color-surface);
+        --dextinity-button-secondary-background-hover: #006a91;
+        --dextinity-button-secondary-foreground: #006a91;
+        --dextinity-button-secondary-foreground-hover: #fff;
+        --dextinity-button-secondary-border: #006a91;
+        --dextinity-button-ghost-foreground: #006a91;
+        --dextinity-button-ghost-background-hover: #dff5fc;
+
+        /* App bar */
+        --dextinity-app-bar-height: 4rem;
+        --dextinity-app-bar-background: linear-gradient(100deg, #4012c4 0%, #b81070 100%);
+        --dextinity-app-bar-background-hover: #1d0b52;
+        --dextinity-app-bar-foreground: #fff;
+        --dextinity-app-bar-focus-ring: #3fe0ff;
+    }
+
+    [data-dextinity-theme="nova"][data-dextinity-color-scheme="dark"] {
+        color-scheme: dark;
+
+        /* Color */
+        --dextinity-color-background: #0b0821;
+        --dextinity-color-foreground: #f5f2ff;
+        --dextinity-color-foreground-muted: #aaa3d1;
+        --dextinity-color-surface: #151033;
+        --dextinity-color-surface-hover: #221a4a;
+        --dextinity-color-border: #2b2257;
+        --dextinity-color-border-strong: #7d7898;
+        --dextinity-color-border-hover: #d4d0e6;
+        --dextinity-color-primary: #b27aff;
+        --dextinity-color-primary-hover: #ff7ac4;
+        --dextinity-color-primary-foreground: #14072f;
+        --dextinity-color-primary-subtle: #2c1569;
+        --dextinity-color-neutral-subtle: #221a4a;
+        --dextinity-color-success: #3ee39b;
+        --dextinity-color-success-subtle: #0b3324;
+        --dextinity-color-warning: #ffc247;
+        --dextinity-color-warning-subtle: #45270a;
+        --dextinity-color-danger: #ff7a85;
+        --dextinity-color-danger-subtle: #46111c;
+        --dextinity-color-focus-ring: #2ee6ff;
+        --dextinity-color-backdrop: #05030f;
+
+        /* Elevation: neon glow instead of a dark shadow, which wouldn't show on the midnight background */
+        --dextinity-shadow-popup: 0 0 0 1px rgb(178 122 255 / 24%), 0 16px 40px rgb(0 0 0 / 55%), 0 0 40px rgb(124 58 255 / 30%);
+        --dextinity-shadow-dialog: 0 0 0 1px rgb(178 122 255 / 28%), 0 32px 80px rgb(0 0 0 / 65%), 0 0 80px rgb(124 58 255 / 34%);
+
+        /* Button */
+        --dextinity-button-primary-background: linear-gradient(120deg, #7225ff 0%, #e3127d 100%);
+        --dextinity-button-primary-background-hover: linear-gradient(120deg, #8a47ff 0%, #d81b7f 100%);
+        --dextinity-button-primary-shadow: 0 0 22px rgb(138 71 255 / 60%), 0 0 44px rgb(240 40 143 / 35%);
+        --dextinity-button-secondary-background-hover: #2ee6ff;
+        --dextinity-button-secondary-foreground: #2ee6ff;
+        --dextinity-button-secondary-foreground-hover: #0b0821;
+        --dextinity-button-secondary-border: #2ee6ff;
+        --dextinity-button-ghost-foreground: #2ee6ff;
+        --dextinity-button-ghost-background-hover: #0c2c40;
+    }
+
+    /* After the dark color scheme, so it wins there too. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-dextinity-theme="nova"],
+        [data-dextinity-theme="nova"][data-dextinity-color-scheme="dark"] {
+            --dextinity-motion-duration-short: 0s;
+            --dextinity-motion-duration-medium: 0s;
+        }
+    }
+}

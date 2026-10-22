@@ -2,6 +2,10 @@ import "@fontsource-variable/figtree";
 import "../src/themes/dextinity.css";
 import "../src/themes/sunset.css";
 import "../src/themes/acme.css";
+import "../src/themes/volt.css";
+import "../src/themes/tropic.css";
+import "../src/themes/nova.css";
+import "../src/themes/primo.css";
 
 import type { Preview } from "@storybook/react-vite";
 
