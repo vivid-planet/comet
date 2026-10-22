@@ -71,7 +71,12 @@ async function respond(rscStream: ReadableStream<Uint8Array>, { status, cacheCon
     if (isRscRequest()) {
         return new Response(rscStream, {
             status,
-            headers: { "Content-Type": "text/x-component;charset=utf-8", "Cache-Control": cacheControl },
+            headers: {
+                "Content-Type": "text/x-component;charset=utf-8",
+                "Cache-Control": cacheControl,
+                // Crawlers only need the HTML, the RSC payload for hydration is embedded in it
+                "X-Robots-Tag": "noindex",
+            },
         });
     }
 

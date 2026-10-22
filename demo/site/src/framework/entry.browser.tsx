@@ -4,7 +4,7 @@ import { hydrateRoot } from "react-dom/client";
 import { rscStream } from "rsc-html-stream/client";
 
 import type { RscPayload } from "./render";
-import { createRscUrl, stripRscSuffix } from "./rscRequest";
+import { createRscUrl, stripRscPrefix } from "./rscRequest";
 
 type ScrollTarget = "top" | "hash" | undefined;
 
@@ -44,7 +44,7 @@ async function navigate(href: string, scrollTarget: ScrollTarget) {
             return;
         }
         if (response.redirected) {
-            const redirectedUrl = stripRscSuffix(new URL(response.url));
+            const redirectedUrl = stripRscPrefix(new URL(response.url));
             if (redirectedUrl) {
                 window.history.replaceState(null, "", redirectedUrl);
             }
