@@ -16,6 +16,8 @@ export default defineConfig({
                     name: "unit",
                     environment: "jsdom",
                     setupFiles: "./vitest.setup.ts",
+                    // The tests that render a data grid take a few seconds and run next to other packages' tests in CI.
+                    testTimeout: 10000,
                 },
             },
             {
