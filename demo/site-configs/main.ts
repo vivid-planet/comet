@@ -6,6 +6,7 @@ const port = parseInt(process.env.SITE_PORT || "3000", 10);
 const envToDomainMap: Record<Environment, string> = {
     // DEPLOY_PREVIEW_HOST is set by ./start-deploy-preview.sh, see .deploy-preview/README.md
     local: process.env.DEPLOY_PREVIEW_HOST ?? `${host}:${port}`,
+    digitalocean: "demo.digitalocean.dextinity.com",
 };
 
 export default ((env) => {

@@ -23,9 +23,9 @@
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:generated-files-not-modified": "git diff --exit-code HEAD -- $(find src -type f -path '*/generated/*')",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --project .",
+        "lint:tsc": "tsc --project . && tsc --project server",
         "preview": "pnpm run build && vite preview",
-        "serve": "node server",
+        "serve": "node server/index.ts",
         "start": "pnpm check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
     },
     "dependencies": {
@@ -49,7 +49,7 @@
         "final-form": "^4.20.10",
         "graphql": "^16.14.2",
         "lodash.isequal": "^4.5.0",
-        "p-debounce": "^5.1.1",
+        "p-debounce": "^6.0.0",
         "rdndmb-html5-to-touch": "^9.0.0",
         "react": "^19.3.0",
         "react-dnd": "^16.0.1",
@@ -60,7 +60,7 @@
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
         "use-debounce": "^10.1.1",
-        "uuid": "^11.1.1"
+        "uuid": "^14.0.3"
     },
     "devDependencies": {
         "@babel/core": "^7.29.7",
