@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "outDir": "lib",
+        "rootDir": "src",
+        "target": "ES2022"
+    },
+    "exclude": ["node_modules", "lib"],
+    "extends": "../../tsconfig.core.json",
+    "include": ["./src"]
+}
