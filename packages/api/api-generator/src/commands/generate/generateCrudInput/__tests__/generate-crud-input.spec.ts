@@ -2,7 +2,7 @@ import { Entity, Enum, PrimaryKey, Property, ReflectMetadataProvider } from "@mi
 import { BaseEntity, DateType, defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 import { describe, expect, it } from "vitest";
 
 import { formatSource, parseSource, testPermission } from "../../utils/test-helper";
@@ -11,7 +11,7 @@ import { generateCrudInput } from "../generate-crud-input";
 @Entity()
 export class TestEntityWithString extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property()
     title: string;
@@ -19,7 +19,7 @@ export class TestEntityWithString extends BaseEntity {
 @Entity()
 export class TestEntityWithDate extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ type: DateType })
     foo: Date;
@@ -27,7 +27,7 @@ export class TestEntityWithDate extends BaseEntity {
 @Entity()
 export class TestEntityWithBoolean extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property()
     foo: boolean;
@@ -45,7 +45,7 @@ registerEnumType(TestEnumType, {
 @ObjectType()
 export class TestEntityWithEnum extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Enum({ items: () => TestEnumType })
     @Field(() => TestEnumType)
@@ -55,7 +55,7 @@ export class TestEntityWithEnum extends BaseEntity {
 @Entity()
 export class TestEntityWithUuid extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ type: "uuid" })
     fooId: string;
@@ -64,7 +64,7 @@ export class TestEntityWithUuid extends BaseEntity {
 @Entity()
 export class TestEntityWithTextRuntimeType extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ type: "text" })
     title: string;
@@ -73,7 +73,7 @@ export class TestEntityWithTextRuntimeType extends BaseEntity {
 @Entity()
 export class TestEntityWithNullablePropWithInitializer extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ type: "text", nullable: true })
     title?: string = undefined;
@@ -82,7 +82,7 @@ export class TestEntityWithNullablePropWithInitializer extends BaseEntity {
 @Entity()
 export class TestEntityWithNullablePropWithoutInitializer extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Property({ type: "text", nullable: true })
     title?: string;

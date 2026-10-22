@@ -25,13 +25,15 @@ function createControllerWithMockFilesService(file: FileInterface) {
     } as unknown as FilesService;
 
     const FilesController = createFilesController({ damBasePath: "dam" });
-    const controller = new (FilesController as unknown as new (
-        damConfig: never,
-        filesService: FilesService,
-        blobStorageBackendService: never,
-        foldersService: never,
-        scopeAccessControl: never,
-    ) => FilesControllerForTest)(null as never, filesService, null as never, null as never, null as never);
+    const controller = new (
+        FilesController as unknown as new (
+            damConfig: never,
+            filesService: FilesService,
+            blobStorageBackendService: never,
+            foldersService: never,
+            scopeAccessControl: never,
+        ) => FilesControllerForTest
+    )(null as never, filesService, null as never, null as never, null as never);
 
     return { controller, filesService };
 }

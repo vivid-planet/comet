@@ -12,7 +12,7 @@ import { Embedded, Entity, Enum, ManyToMany, PrimaryKey, Property } from "@mikro
 import { Collection, OptionalProps } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 
 import { TargetGroupInterface } from "../../target-group/entity/target-group-entity.factory";
 import { EmailCampaignScopeInterface } from "../../types";
@@ -54,7 +54,7 @@ export function createEmailCampaignEntity({
 
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
-        id: string = uuid();
+        id: string = randomUUID();
 
         @Property({
             columnType: "timestamp with time zone",

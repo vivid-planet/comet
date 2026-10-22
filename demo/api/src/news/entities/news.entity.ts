@@ -15,7 +15,7 @@ import { Embeddable, Embedded, Entity, Enum, Index, OneToMany, PrimaryKey, Prope
 import { BaseEntity, Collection, FullTextType, OptionalProps } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { NewsComment } from "./news-comment.entity";
@@ -66,7 +66,7 @@ export class News extends BaseEntity {
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
-    id: string = uuid();
+    id: string = randomUUID();
 
     @Embedded(() => NewsContentScope)
     @Field(() => NewsContentScope)

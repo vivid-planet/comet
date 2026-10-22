@@ -1,7 +1,7 @@
 import { AnyEntity, Connection, EntityManager, type FindOptions, type ObjectQuery } from "@mikro-orm/postgresql";
 import { Injectable, Logger, Optional } from "@nestjs/common";
+import { randomUUID } from "crypto";
 import { subMinutes } from "date-fns";
-import { v4 as uuid } from "uuid";
 
 import { filtersToMikroOrmQuery, gqlSortToMikroOrmOrderBy } from "../common/filter/mikro-orm";
 import { StringFilter } from "../common/filter/string.filter";
@@ -254,7 +254,7 @@ export class DependenciesService {
                     }
                 }
 
-                const id = uuid();
+                const id = randomUUID();
                 this.logger.log(`Starting block index refresh ${id}`);
 
                 await writeConnection.execute(
@@ -302,7 +302,7 @@ export class DependenciesService {
                 await writeConnection.execute(`REFRESH MATERIALIZED VIEW block_index_dependencies`, [], "run", transaction);
                 await writeConnection.execute(
                     `INSERT INTO "BlockIndexRefresh" ("id", "startedAt", "finishedAt") VALUES (?, ?, ?)`,
-                    [uuid(), new Date(), new Date()],
+                    [randomUUID(), new Date(), new Date()],
                     "run",
                     transaction,
                 );

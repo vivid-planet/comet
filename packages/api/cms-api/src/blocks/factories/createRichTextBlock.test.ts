@@ -1,3 +1,4 @@
+import { validate } from "class-validator";
 import { describe, expect, it } from "vitest";
 
 import { BlockMetaFieldKind } from "../block";
@@ -21,5 +22,19 @@ describe("createRichTextBlock", () => {
         const blockMeta = getBlocksMeta([RichTextBlock]).find((block) => block.name === "RichTextMetaTest");
 
         expect(blockMeta?.fields).toEqual([{ name: "draftContent", kind: "RichTextBlock", linkBlock: "RichTextMetaTestLink", nullable: false }]);
+    });
+
+    it("should report invalid draft content with a message", async () => {
+        const ValidationRichTextBlock = createRichTextBlock({ link: ExternalLinkBlock }, "RichTextValidationTest");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const input = ValidationRichTextBlock.blockInputFactory({ draftContent: { blocks: "abc" } } as any);
+
+        const errors = await validate(input, { whitelist: true, forbidNonWhitelisted: true });
+
+        expect(errors).toHaveLength(1);
+        expect(errors[0].property).toBe("draftContent");
+        expect(errors[0].constraints?.isDraftContent).toBe(
+            "draftContent must be a Draft.js content object with blocks and entityMap, where each entity is a LINK with valid ExternalLink data",
+        );
     });
 });
