@@ -1,6 +1,7 @@
+import { resolve } from "node:path";
+
 import react from "@vitejs/plugin-react";
 import rsc from "@vitejs/plugin-rsc";
-import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
 import { persistedQueriesPlugin } from "./vitePersistedQueriesPlugin";
@@ -26,6 +27,12 @@ export default defineConfig({
     },
     environments: {
         ssr: {
+            build: {
+                rollupOptions: {
+                    // Loaded by the mail routes in app/router.tsx
+                    input: { mails: "./src/app/api/entry.mails.ts" },
+                },
+            },
             resolve: {
                 noExternal: [
                     // CommonJS dependencies whose exports aren't detected by Node.js when imported from ESM

@@ -104,8 +104,8 @@ function renderRootNotFoundPage(c: Context) {
     });
 }
 
-async function loadSsrEntry() {
-    return import.meta.viteRsc.loadModule<typeof import("@src/framework/entry.ssr")>("ssr", "index");
+async function loadMailsEntry() {
+    return import.meta.viteRsc.loadModule<typeof import("./api/entry.mails")>("ssr", "mails");
 }
 
 /**
@@ -117,8 +117,8 @@ router.get("/robots.txt", robotsRoute);
 router.get("/site-preview", sitePreviewRoute);
 
 // Mails are rendered with react-dom/server, which is only available in the SSR environment
-router.post("/api/render-brevo-email-campaign", async (c) => (await loadSsrEntry()).renderBrevoEmailCampaign(c.req.raw));
-router.get("/api/render-welcome-email", async (c) => (await loadSsrEntry()).renderWelcomeEmail(c.req.raw));
+router.post("/api/render-brevo-email-campaign", async (c) => (await loadMailsEntry()).renderBrevoEmailCampaign(c.req.raw));
+router.get("/api/render-welcome-email", async (c) => (await loadMailsEntry()).renderWelcomeEmail(c.req.raw));
 
 router.get("/block-preview/:domain/:language/page", (c) => renderBlockPreviewPage(c, <PageBlockPreviewPage />));
 router.get("/block-preview/:domain/:language/stage", (c) => renderBlockPreviewPage(c, <StageBlockPreviewPage />));

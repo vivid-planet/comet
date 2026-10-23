@@ -7,9 +7,6 @@ import { getNavigationErrorDigest } from "./navigation";
 import type { RscPayload } from "./render";
 import { reportError } from "./reportError";
 
-export { renderBrevoEmailCampaign } from "@src/app/api/render-brevo-email-campaign";
-export { renderWelcomeEmail } from "@src/app/api/render-welcome-email";
-
 type RenderHtmlResult =
     | { stream: ReadableStream<Uint8Array> }
     /** `notFound()` or `redirect()` was called by a client component */
