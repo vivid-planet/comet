@@ -1,5 +1,41 @@
 # @comet/cms-api
 
+## 10.11.0
+
+### Patch Changes
+
+- 97b3b42: Allow `graphql-scalars` v2
+
+    v2 only drops support for `graphql` below v16 and for Node 20, so projects can update to it whenever they want.
+
+- 79c2746: Reject unknown block types in the input of `createBlocksBlock` and `createOneOfBlock`
+
+    Previously, an item with a `type` that isn't in `supportedBlocks` was removed from `blocks` or `attachedBlocks` before validation, and the mutation saved the block without it.
+    Now, such an input fails validation with an `isIn` error at the `type` of the item, for instance `blocks.1.type`.
+    The index in the error path is the index of the item in the input.
+    Code that calls `blockInputFactory` without validating the result keeps such an item now, and `transformToBlockData()` throws for it. Call `validate()` to detect it.
+
+    The Admin only sends supported block types and isn't affected.
+    Stored block data with unknown types is still filtered when loaded, as a block may have been removed from `supportedBlocks` since the data was saved.
+
+- 79c2746: Report invalid block input as validation errors instead of internal errors
+
+    - `createBlocksBlock` and `createOneOfBlock`: Report a `blocks` or `attachedBlocks` value that isn't an array with an `isArray` error. Previously, the mutation failed with `value.filter is not a function`. `createListBlock` additionally reports an `isArray` error. All three report an item that is an array with an `isObject` error, which `createListBlock` accepted before and which failed when saving.
+    - `ChildBlockInput`: Report a missing non-nullable child block with an `isDefined` error. Previously, the mutation failed with `Missing child block input for '<key>'`. Code that calls `blockInputFactory` without validating the result doesn't get this error anymore and must call `validate()` to detect a missing child block. This includes the `openGraphImage` of the SEO block, which was marked as optional although the mutation failed without it.
+    - `createRichTextBlock`: Add a message to the `isDraftContent` error, which was empty
+
+- 75ebfd4: Require Node.js 22.12.0 or later
+
+    `@dextinity/cms-api` is a CommonJS package that loads dependencies which are only available as ES modules, for instance `content-disposition`.
+    Node.js supports loading ES modules with `require()` without a flag only from version 22.12.0.
+    On older versions, the API fails at startup with `ERR_REQUIRE_ESM`.
+    The other packages require the same version, so that all packages have the same Node.js minimum.
+    For `@dextinity/site-react` and `@dextinity/site-nextjs`, this drops support for Node.js 18 and 20, which no longer receive security updates.
+
+- 9a5fd29: Report each validation error in the `openGraphImage` of the SEO block once
+
+    The field had an additional `@ValidateNested()` next to `@ChildBlockInput()`, which already adds it, so the image was validated twice.
+
 ## 10.10.0
 
 ### Minor Changes
