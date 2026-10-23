@@ -12,8 +12,8 @@ export const getMuiPickersInputBase = (
     styleOverrides: mergeOverrideStyles(component?.styleOverrides, {
         root: {
             border: `1px solid ${palette.grey[100]}`,
-            borderRadius: 2,
-            backgroundColor: "#fff",
+            borderRadius: 8,
+            backgroundColor: palette.background.paper,
             paddingLeft: spacing(2),
             paddingRight: spacing(2),
 

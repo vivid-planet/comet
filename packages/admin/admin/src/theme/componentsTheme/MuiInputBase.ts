@@ -8,8 +8,8 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
     styleOverrides: mergeOverrideStyles<"MuiInputBase">(component?.styleOverrides, {
         root: {
             border: `1px solid ${palette.grey[100]}`,
-            borderRadius: 2,
-            backgroundColor: "#fff",
+            borderRadius: 8,
+            backgroundColor: palette.background.paper,
 
             [`&.${inputBaseClasses.focused}`]: {
                 borderColor: palette.primary.main,

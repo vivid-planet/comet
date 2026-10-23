@@ -35,7 +35,7 @@ export const createDextinityTheme = (
             ...paletteOptions,
             DataGrid: {
                 ...paletteOptions.DataGrid,
-                bg: "rgb(255, 255, 255)",
+                bg: paletteOptions.DataGrid?.bg ?? "rgb(255, 255, 255)",
             },
         },
         typography: typographyOptions,

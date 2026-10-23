@@ -104,7 +104,7 @@ export const getMuiChip: GetMuiComponentTheme<"MuiChip"> = (component, { palette
             },
         },
         filledInfo: {
-            backgroundColor: "#fff",
+            backgroundColor: palette.background.paper,
             "&.MuiChip-clickable": {
                 "&:hover": {
                     backgroundColor: palette.grey["50"],
