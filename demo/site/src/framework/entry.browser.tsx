@@ -3,6 +3,7 @@ import { startTransition, useEffect, useLayoutEffect, useState } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { rscStream } from "rsc-html-stream/client";
 
+import { GlobalErrorBoundary } from "./GlobalErrorBoundary";
 import type { RscPayload } from "./render";
 import { createRscUrl, stripRscPrefix } from "./rscRequest";
 
@@ -29,7 +30,7 @@ function BrowserRoot({ initialPayload }: { initialPayload: RscPayload }) {
         }
     }, [payload, scrollTarget]);
 
-    return payload.root;
+    return <GlobalErrorBoundary resetKey={payload}>{payload.root}</GlobalErrorBoundary>;
 }
 
 async function navigate(href: string, scrollTarget: ScrollTarget) {

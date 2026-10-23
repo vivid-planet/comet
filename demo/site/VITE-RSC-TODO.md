@@ -17,11 +17,11 @@ Follow-ups for [vivid-planet/dextinity#6779](https://github.com/vivid-planet/dex
 
 Errors carry a digest (`NOT_FOUND`, `REDIRECT;307;/path`), the RSC payload is buffered completely in `framework/render.tsx` before responding, SSR `onError` handles client components. Pages are plain components again. Refs: audi6 `renderPage.tsx`/`navigationErrors.ts`, Next.js digests.
 
-### #2 Render a 500 error page and add a client error boundary (in progress, waiting for decision)
+### #2 Render a 500 error page and add a client error boundary (done)
 
 - Problem: SSR failure answers with plain text "Internal Server Error" (`framework/entry.ssr.tsx`); RSC requests with a server component error get status 200 + `s-maxage` (CDN caches the broken payload); no client boundary, so any error after hydration or client navigation unmounts the whole document (white page). Block errors are already contained in the browser by site-react's `ErrorHandlerBoundary` (`BlocksBlock`/`ListBlock`/`OneOfBlock`), but not during SSR.
 - Proposal: `renderPage` gets an `error` option → server-rendered error page (`src/app/error.tsx`, only `RootLayout`, no API data) with status 500, plain-text fallback if it fails too; `no-store` for payloads containing errors; `framework/GlobalErrorBoundary.tsx` around `BrowserRoot` (full document fallback, keyed by URL to reset on navigation, navigation digests → full page load); one central `reportError` for RSC/SSR/client.
-- Open decision: server-rendered error page without browser retry (recommended) vs. plugin-rsc examples' approach (500 + empty shell + `__NO_HYDRATE` client render retry).
+- Decision: server-rendered error page without browser retry (instead of the plugin-rsc examples' 500 + empty shell + `__NO_HYDRATE` client render retry). `GlobalErrorBoundary` follows redirect digests with `location.assign` without protocol validation until #39.
 - Refs: plugin-rsc `basic/src/framework/error-boundary.tsx` + `entry.ssr.tsx`, audi6 `GlobalErrorBoundary.tsx`/`renderPage.tsx` (`error` option), Next.js `global-error.tsx`, React Router `RSCRouterGlobalErrorBoundary`.
 
 ### #3 Redirect URLs with a trailing slash

@@ -5,14 +5,17 @@ import { injectRSCPayload } from "rsc-html-stream/server";
 
 import { getNavigationErrorDigest } from "./navigation";
 import type { RscPayload } from "./render";
+import { reportError } from "./reportError";
 
 export { renderBrevoEmailCampaign } from "@src/app/api/render-brevo-email-campaign";
 export { renderWelcomeEmail } from "@src/app/api/render-welcome-email";
 
 type RenderHtmlResult =
-    | { stream: ReadableStream<Uint8Array>; status?: number }
+    | { stream: ReadableStream<Uint8Array> }
     /** `notFound()` or `redirect()` was called by a client component */
-    | { navigationDigest: string };
+    | { navigationDigest: string }
+    /** Rendering the shell failed */
+    | { hasFailed: true };
 
 export async function renderHtml(rscStream: ReadableStream<Uint8Array>): Promise<RenderHtmlResult> {
     const [ssrRscStream, browserRscStream] = rscStream.tee();
@@ -33,7 +36,7 @@ export async function renderHtml(rscStream: ReadableStream<Uint8Array>): Promise
                 if (digest) {
                     return digest;
                 }
-                console.error(error);
+                reportError(error);
                 return undefined;
             },
         });
@@ -43,10 +46,7 @@ export async function renderHtml(rscStream: ReadableStream<Uint8Array>): Promise
         if (navigationDigest) {
             return { navigationDigest };
         }
-        return {
-            stream: new Response("Internal Server Error").body as ReadableStream<Uint8Array>,
-            status: 500,
-        };
+        return { hasFailed: true };
     }
 
     // The RSC payload is embedded into the HTML for hydration

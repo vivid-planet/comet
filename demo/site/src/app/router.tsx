@@ -1,5 +1,5 @@
 import { handleError } from "@src/framework/handleError";
-import { renderPage } from "@src/framework/render";
+import { noStoreCacheControl, renderPage } from "@src/framework/render";
 import { getSiteContext } from "@src/framework/requestContext";
 import type { ContentScope } from "@src/site-configs";
 import { getPreviewParams } from "@src/util/sitePreview";
@@ -21,6 +21,7 @@ import PageBlockPreviewPage from "./block-preview/[domain]/[language]/page/page"
 import StageBlockPreviewPage from "./block-preview/[domain]/[language]/stage/page";
 import WelcomeEmailBlockPreviewPage from "./block-preview/[domain]/[language]/welcome-email/page";
 import BlockPreviewLayout from "./block-preview/[domain]/layout";
+import ErrorPage from "./error";
 import { graphQLRoute } from "./graphql/route";
 import RootLayout from "./layout";
 import RootNotFound from "./not-found";
@@ -28,7 +29,6 @@ import { robotsRoute } from "./robots";
 import { sitePreviewRoute } from "./site-preview/route";
 import { sitemapRoute } from "./sitemap";
 
-const noStoreCacheControl = "private, no-cache, no-store, max-age=0, must-revalidate";
 // Same as Next.js for pages revalidated every 7.5 minutes
 const publicCacheControl = "s-maxage=450, stale-while-revalidate=31535550";
 
@@ -56,6 +56,7 @@ async function renderSitePage(c: Context, renderContent: (params: ContentScope) 
                 </LanguageLayout>
             </RootLayout>
         ),
+        error: () => renderErrorPage(getLayoutLanguage(params)),
         cacheControl: isSitePreview ? noStoreCacheControl : publicCacheControl,
     });
 }
@@ -72,6 +73,7 @@ function renderBlockPreviewPage(c: Context, page: ReactNode) {
             </RootLayout>
         ),
         notFound: renderRootNotFound,
+        error: () => renderErrorPage(language),
         cacheControl: noStoreCacheControl,
     });
 }
@@ -84,10 +86,19 @@ function renderRootNotFound() {
     );
 }
 
+function renderErrorPage(lang: string) {
+    return (
+        <RootLayout lang={lang}>
+            <ErrorPage />
+        </RootLayout>
+    );
+}
+
 function renderRootNotFoundPage(c: Context) {
     return renderPage(c, {
         root: renderRootNotFound(),
         notFound: renderRootNotFound,
+        error: () => renderErrorPage("en"),
         cacheControl: noStoreCacheControl,
         status: 404,
     });

@@ -1,6 +1,7 @@
 import type { ErrorHandler } from "hono";
 
 import { getNavigationErrorDigest, parseRedirectDigest } from "./navigation";
+import { reportError } from "./reportError";
 
 export const handleError: ErrorHandler = (error, c) => {
     const digest = getNavigationErrorDigest(error);
@@ -8,6 +9,6 @@ export const handleError: ErrorHandler = (error, c) => {
     if (redirect) {
         return c.redirect(redirect.location, redirect.status);
     }
-    console.error("Error occurred handling", c.req.url, error);
+    reportError(error);
     return c.text("Internal Server Error", 500);
 };
