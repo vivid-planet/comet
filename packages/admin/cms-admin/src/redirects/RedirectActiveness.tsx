@@ -14,6 +14,7 @@ import type {
 const updateRedirectActivenessMutation = gql`
     mutation UpdateRedirectActiveness($id: ID!, $input: RedirectUpdateActivenessInput!) {
         updateRedirectActiveness(id: $id, input: $input) {
+            __typename
             id
             active
             activatedAt
