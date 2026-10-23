@@ -108,8 +108,15 @@
             "ignore": ["./src/**/generated/**", "**/*.generated.ts"]
         },
         "demo/site": {
-            "entry": ["./src/framework/entry.*.tsx", "./server.ts", "tracing.dev.ts", "tracing.production.ts"],
-            "project": ["./src/**/*.{ts,tsx}"],
+            "entry": [
+                "./src/framework/entry.*.tsx",
+                "./src/app/api/entry.mails.ts",
+                "./e2e/fixture/handler.tsx",
+                "./server.ts",
+                "tracing.dev.ts",
+                "tracing.production.ts"
+            ],
+            "project": ["./src/**/*.{ts,tsx}", "./e2e/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core", "@types/grecaptcha", "csso", "mjml"],
             "ignore": ["**/*.generated.ts"]
         },

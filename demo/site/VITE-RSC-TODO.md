@@ -98,9 +98,16 @@ Bootstrap script and inlined RSC payload are inline scripts, so `src/middleware/
 
 `persistedQueryRoute` (site-react) loads `dist/persisted-queries.json` once; queries added while the dev server runs are unknown until restart. Reload on file change or skip persisted queries in dev. Files: `vitePersistedQueriesPlugin.ts`, `src/app/graphql/route.ts`.
 
-### #18 Add unit tests for the framework code
+### #18 Add unit tests and HTTP tests against a test app for the framework code (done)
 
-`framework/rscRequest.ts` (add/strip prefix), `util/fetchCache.ts` (stale-while-revalidate, no caching of errors, cache key), router (path splitting, trailing slash), sitemap/robots output.
+- Unit tests (Vitest, `pnpm test:unit`): `framework/navigation.ts`, `framework/rscRequest.ts`, `framework/requestContext.ts`, `util/fetchCache.ts` (store mocked). Each fix adds its unit tests here (#3, #5, #7, #39).
+- HTTP tests (Playwright `request` fixture, no browser, `pnpm test:e2e`, CI job "Test (e2e)"): `e2e/fixture/` is a test app that runs the real framework entries with its own Hono routes (`@src/handler` aliased in `e2e/fixture/vite.config.ts`), against the dev server and the production build (`vite preview`). Covers rendering, request context, `/_rsc`, navigation errors (#1) and error handling (#2). Add a route to `e2e/fixture/handler.tsx` and a test per fix (#3, #4, #6, #38, #39).
+- Still open: router path splitting and sitemap/robots output (need the demo's API), see also #40.
+- Ref: plugin-rsc `e2e/fixture.ts` (`useFixture` with dev/build modes).
+
+### #40 Add browser tests against the test app
+
+Playwright with a browser against the same test app (`e2e/fixture/`): client navigation without full reload, title/meta update, back/forward, hydration without console errors, navigation to a 404/redirect (full load, final URL, #1/#4/#38), `GlobalErrorBoundary` fallback and reset (#2). Later abort, pending state, scroll restoration, prefetch (#13, #14) and CSP violations (#16). CI needs `playwright install chromium-headless-shell` like the Storybook job. Optionally also a few smoke tests against the real demo (needs Docker + API, run manually or nightly).
 
 ### #39 Only allow http(s) and relative redirect targets
 
