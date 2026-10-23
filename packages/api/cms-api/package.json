@@ -46,7 +46,7 @@
         "@golevelup/nestjs-discovery": "^5.0.1",
         "@hapi/accept": "^6.0.3",
         "@nestjs/mapped-types": "^2.1.1",
-        "@opentelemetry/api": "^1.9.1",
+        "@opentelemetry/api": "^1.10.0",
         "@tiptap/core": "^3.32.0",
         "@tiptap/extension-subscript": "^3.32.0",
         "@tiptap/extension-superscript": "^3.32.0",
