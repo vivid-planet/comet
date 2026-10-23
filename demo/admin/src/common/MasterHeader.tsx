@@ -1,12 +1,16 @@
 import { BuildEntry, ContentScopeControls, Header, SearchHeaderItem, UserHeaderItem } from "@dextinity/cms-admin";
 
+import { UiThemeSwitch } from "./uiTheme/UiThemeSwitch";
+
 const MasterHeader = () => {
     return (
         <Header>
             <SearchHeaderItem />
             <ContentScopeControls />
             <BuildEntry />
-            <UserHeaderItem />
+            <UserHeaderItem>
+                <UiThemeSwitch />
+            </UserHeaderItem>
         </Header>
     );
 };

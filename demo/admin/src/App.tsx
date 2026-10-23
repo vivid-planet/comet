@@ -4,7 +4,7 @@ import "@dextinity/ui/css";
 import "@dextinity/ui/themes/dextinity.css";
 
 import { ApolloProvider } from "@apollo/client";
-import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@dextinity/admin";
+import { ErrorDialogHandler, MasterLayout, RouterBrowserRouter, SnackbarProvider } from "@dextinity/admin";
 import { BrevoConfigProvider } from "@dextinity/brevo-admin";
 import {
     AzureAiTranslatorProvider,
@@ -24,9 +24,7 @@ import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
 import { PageTreeNodeDependency } from "@src/pageTree/PageTreeNodeDependency";
 import type { ContentScope as BaseContentScope } from "@src/site-configs";
-import { createTheme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
-import { useMemo } from "react";
 import { DndProvider } from "react-dnd-multi-backend";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router";
@@ -34,6 +32,7 @@ import { Route, Switch } from "react-router";
 import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
 import { AppMasterMenu, AppMasterMenuRoutes, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { UiThemeProvider } from "./common/uiTheme/UiThemeProvider";
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
@@ -71,7 +70,6 @@ LicenseInfo.setLicenseKey(config.muiLicenseKey);
 
 export function App() {
     const { language, messages, dateFnsLocale, muiLocale } = getLanguageConfig();
-    const theme = useMemo(() => createTheme(muiLocale), [muiLocale]);
 
     return (
         <DextinityConfigProvider
@@ -162,7 +160,7 @@ export function App() {
             >
                 <ApolloProvider client={apolloClient}>
                     <IntlProvider locale={language} messages={messages}>
-                        <MuiThemeProvider theme={theme}>
+                        <UiThemeProvider muiLocale={muiLocale}>
                             <LocalizationProvider adapterLocale={dateFnsLocale} dateAdapter={AdapterDateFns}>
                                 <DndProvider options={HTML5toTouch}>
                                     <SnackbarProvider>
@@ -201,7 +199,7 @@ export function App() {
                                     </SnackbarProvider>
                                 </DndProvider>
                             </LocalizationProvider>
-                        </MuiThemeProvider>
+                        </UiThemeProvider>
                     </IntlProvider>
                 </ApolloProvider>
             </BrevoConfigProvider>
