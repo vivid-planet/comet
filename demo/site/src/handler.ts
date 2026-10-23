@@ -1,4 +1,5 @@
 import { handleError } from "@src/framework/handleError";
+import { trailingSlashRedirectMiddleware } from "@src/framework/trailingSlashRedirect";
 import { Hono } from "hono";
 
 import { adminRedirectMiddleware } from "./middleware/adminRedirect";
@@ -16,6 +17,7 @@ import { statusMiddleware } from "./middleware/status";
 export const app = new Hono<MiddlewareEnv>();
 
 app.use(
+    trailingSlashRedirectMiddleware,
     statusMiddleware,
     adminRedirectMiddleware,
     skipRewriteMiddleware,

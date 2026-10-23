@@ -111,7 +111,7 @@ async function loadMailsEntry() {
 /**
  * Handles the requests that skip the site middlewares, see `handler.ts`
  */
-export const router = new Hono({ strict: false });
+export const router = new Hono();
 
 router.get("/robots.txt", robotsRoute);
 router.get("/site-preview", sitePreviewRoute);
@@ -138,7 +138,7 @@ router.onError(handleError);
  * Handles the requests of the site after the middlewares have been applied, see `handler.ts`.
  * The domain and visibility are available via `getSiteContext()`.
  */
-export const siteRouter = new Hono({ strict: false });
+export const siteRouter = new Hono();
 
 siteRouter.on(["GET", "POST"], "/graphql", graphQLRoute);
 siteRouter.get("/sitemap.xml", sitemapRoute);

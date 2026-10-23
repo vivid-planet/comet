@@ -1,6 +1,7 @@
 import { handleError } from "@src/framework/handleError";
 import { redirect } from "@src/framework/navigation";
 import { renderPage } from "@src/framework/render";
+import { trailingSlashRedirectMiddleware } from "@src/framework/trailingSlashRedirect";
 import { type Context, Hono } from "hono";
 import { type ReactNode, Suspense } from "react";
 
@@ -36,6 +37,8 @@ function renderTestPage(c: Context, root: ReactNode, options: TestPageOptions = 
 }
 
 export const app = new Hono();
+
+app.use(trailingSlashRedirectMiddleware);
 
 app.get("/", (c) => renderTestPage(c, <p>Home page</p>));
 

@@ -24,9 +24,9 @@ Errors carry a digest (`NOT_FOUND`, `REDIRECT;307;/path`), the RSC payload is bu
 - Decision: server-rendered error page without browser retry (instead of the plugin-rsc examples' 500 + empty shell + `__NO_HYDRATE` client render retry). `GlobalErrorBoundary` follows redirect digests with `location.assign` without protocol validation until #39.
 - Refs: plugin-rsc `basic/src/framework/error-boundary.tsx` + `entry.ssr.tsx`, audi6 `GlobalErrorBoundary.tsx`/`renderPage.tsx` (`error` option), Next.js `global-error.tsx`, React Router `RSCRouterGlobalErrorBoundary`.
 
-### #3 Redirect URLs with a trailing slash
+### #3 Redirect URLs with a trailing slash (done)
 
-`new Hono({ strict: false })` in `src/app/router.tsx` serves `/en/` and `/en` with 200 (duplicate content). Next.js redirected with 308. Add a redirect middleware. Ref: audi6 `src/app/app.tsx` (`trailingSlashRedirectMiddleware`).
+`new Hono({ strict: false })` in `src/app/router.tsx` served `/en/` and `/en` with 200 (duplicate content). Next.js redirected with 308. Now `framework/trailingSlashRedirect.ts` redirects with 308, collapsing leading slashes so that `//example.com/` doesn't redirect to another host (audi6's middleware has that open redirect). `createSitePath` returns `/en` instead of `/en/` for the root page (links, sitemap). Ref: audi6 `src/app/app.tsx` (`trailingSlashRedirectMiddleware`).
 
 ### #4 Keep the `/_rsc` prefix for absolute same-origin redirects (superseded by #38)
 
