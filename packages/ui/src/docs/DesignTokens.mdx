@@ -1,0 +1,207 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Foundations/Design tokens" summary="Every CSS custom property a theme defines, what it is for, and the contrast it must meet." />
+
+# Design tokens
+
+Design tokens are the CSS custom properties a theme defines and the components read. This page is the contract between them: a theme defines exactly the tokens listed here, and a component uses no other `--dextinity-*` property. A unit test enforces both, together with the contrast requirements below, so a theme can't silently break a component.
+
+The values live in the theme stylesheets in `packages/ui/src/themes/`; [Theme overview](?path=/docs/foundations-theme-overview--docs) shows them for each theme. The "Design tokens" section of each component's docs page, such as [the button's](?path=/docs/components-button--docs#design-tokens), lists the tokens that style it and what each one changes there. Read [Theming](?path=/docs/foundations-theming--docs) for how a theme is applied and how to create one.
+
+- A token's value is a plain CSS value. It may reference another token, for example `var(--dextinity-color-surface)`; it updates with the color scheme.
+- Colors are opaque hex colors, and a gradient has two of them and is interpolated in sRGB, the default, so their contrast can be checked.
+- Every theme defines all tokens for the light color scheme, and redefines every `--dextinity-color-*` token for the dark color scheme. It may redefine any other token there too.
+- "Contrast" names the minimum [WCAG 2.2](https://www.w3.org/TR/WCAG22/#contrast-minimum) contrast ratio between two tokens, checked in every theme and color scheme.
+
+To add a token, add a row here, define it in every theme, and use it in a component's stylesheet or a documented pattern in the same change. When a component's stylesheet starts or stops using a token, update the "Design tokens" section of the component's docs page too; the unit test checks that it lists exactly the tokens the stylesheet uses.
+
+## Color
+
+| Token                                  | Usage                                                                                                                                                                                                                                      |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--dextinity-color-background`         | Page background. Apply it to the page yourself; a `ThemeSwitch` paints it as its own background. A tooltip uses it for its text, on foreground.                                                                                            |
+| `--dextinity-color-foreground`         | Default text and icons, and the background of a tooltip. Contrast 4.5:1 on background, surface, surface-hover, and on each subtle background, for the text of an alert.                                                                    |
+| `--dextinity-color-foreground-muted`   | Secondary text and icons, such as a field's description, a placeholder, a card's description, a tab that isn't selected, breadcrumb links and the chevrons between them, and a select's chevron. Contrast 4.5:1 on background and surface. |
+| `--dextinity-color-surface`            | Background of controls, such as text inputs, selects, checkboxes and the switch thumb, and of the surfaces above the page: cards, popups and dialogs.                                                                                      |
+| `--dextinity-color-surface-hover`      | Background of a hovered surface, such as the highlighted item of a menu or an option list, a hovered row of a navigation, or a hovered stepper button of a number field.                                                                   |
+| `--dextinity-color-border`             | Borders and lines that only separate content: the border of cards, popups and dialogs, the line along a tab list, menu separators, and separators in an application's layout. Controls use border-strong.                                  |
+| `--dextinity-color-border-strong`      | Borders that identify a control: text inputs, selects, number fields, checkboxes, radios, color swatches, the unchecked switch track. Contrast 3:1 on background and surface.                                                              |
+| `--dextinity-color-border-hover`       | Border of a hovered control, the track of a hovered, unchecked switch, and the line that marks a hovered tab. Contrast 3:1 on background and surface.                                                                                      |
+| `--dextinity-color-primary`            | The brand's accent for selected and active states, such as a checked checkbox or the indicator under the selected tab, and the icon of an info alert and an avatar's initials. Contrast 3:1 on background and surface.                     |
+| `--dextinity-color-primary-hover`      | Primary on a hovered element, such as a hovered checked checkbox. Contrast 3:1 on background and surface.                                                                                                                                  |
+| `--dextinity-color-primary-foreground` | Text and icons on primary. Contrast 4.5:1 on primary, and 3:1 on primary-hover, for the check mark of a hovered checkbox.                                                                                                                  |
+| `--dextinity-color-primary-subtle`     | Tinted background of primary elements, such as a primary chip, the current item of a navigation, an alert with `tone="info"` and an avatar's initials. Primary text on it has contrast 4.5:1.                                              |
+| `--dextinity-color-neutral-subtle`     | Background of neutral elements, such as a neutral chip.                                                                                                                                                                                    |
+| `--dextinity-color-success`            | Text and icons that report success, such as the icon of a success alert. Contrast 4.5:1 on background and success-subtle.                                                                                                                  |
+| `--dextinity-color-success-subtle`     | Tinted background of success elements, such as a success chip or alert.                                                                                                                                                                    |
+| `--dextinity-color-warning`            | Text and icons that warn, such as the icon of a warning alert. Contrast 4.5:1 on background and warning-subtle.                                                                                                                            |
+| `--dextinity-color-warning-subtle`     | Tinted background of warning elements, such as a warning chip or alert.                                                                                                                                                                    |
+| `--dextinity-color-danger`             | Errors and destructive actions, such as a field's error message, an invalid control's border, the icon of a danger alert and a menu item with `tone="danger"`. Contrast 4.5:1 on background, surface and danger-subtle.                    |
+| `--dextinity-color-danger-subtle`      | Tinted background of danger elements, such as a danger chip or alert, and a highlighted menu item with `tone="danger"`.                                                                                                                    |
+| `--dextinity-color-focus-ring`         | Outline of the focused control. Contrast 3:1 on background.                                                                                                                                                                                |
+| `--dextinity-color-backdrop`           | Backdrop behind a dialog, which covers the page at `--dextinity-opacity-backdrop`.                                                                                                                                                         |
+
+## Typography
+
+Each text style has a font size, line height, font weight and letter spacing. Display and heading styles use the heading font family, all others the body font family. Font sizes are in `rem`, so text follows the user's browser font size. Line heights are unitless numbers, such as `1.45`: components multiply them with the font size.
+
+The theme names the font families, but doesn't load the fonts: the application loads them, as [Theming](?path=/docs/foundations-theming--docs) describes.
+
+| Token                                              | Usage                                                                                         |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `--dextinity-font-family-body`                     | Body text, labels and controls.                                                               |
+| `--dextinity-font-family-heading`                  | Display and heading text.                                                                     |
+| `--dextinity-typography-display-font-size`         | Display: a page's single, most prominent title, for example on a start page.                  |
+| `--dextinity-typography-display-line-height`       |                                                                                               |
+| `--dextinity-typography-display-font-weight`       |                                                                                               |
+| `--dextinity-typography-display-letter-spacing`    |                                                                                               |
+| `--dextinity-typography-heading-1-font-size`       | Heading 1: a page title.                                                                      |
+| `--dextinity-typography-heading-1-line-height`     |                                                                                               |
+| `--dextinity-typography-heading-1-font-weight`     |                                                                                               |
+| `--dextinity-typography-heading-1-letter-spacing`  |                                                                                               |
+| `--dextinity-typography-heading-2-font-size`       | Heading 2: a section title.                                                                   |
+| `--dextinity-typography-heading-2-line-height`     |                                                                                               |
+| `--dextinity-typography-heading-2-font-weight`     |                                                                                               |
+| `--dextinity-typography-heading-2-letter-spacing`  |                                                                                               |
+| `--dextinity-typography-heading-3-font-size`       | Heading 3: a subsection title.                                                                |
+| `--dextinity-typography-heading-3-line-height`     |                                                                                               |
+| `--dextinity-typography-heading-3-font-weight`     |                                                                                               |
+| `--dextinity-typography-heading-3-letter-spacing`  |                                                                                               |
+| `--dextinity-typography-heading-4-font-size`       | Heading 4: the title of a card, a dialog or a group of fields.                                |
+| `--dextinity-typography-heading-4-line-height`     |                                                                                               |
+| `--dextinity-typography-heading-4-font-weight`     |                                                                                               |
+| `--dextinity-typography-heading-4-letter-spacing`  |                                                                                               |
+| `--dextinity-typography-body-large-font-size`      | Body large: an introduction or lead paragraph.                                                |
+| `--dextinity-typography-body-large-line-height`    |                                                                                               |
+| `--dextinity-typography-body-large-font-weight`    |                                                                                               |
+| `--dextinity-typography-body-large-letter-spacing` |                                                                                               |
+| `--dextinity-typography-body-font-size`            | Body: running text, and the text in controls.                                                 |
+| `--dextinity-typography-body-line-height`          |                                                                                               |
+| `--dextinity-typography-body-font-weight`          |                                                                                               |
+| `--dextinity-typography-body-letter-spacing`       |                                                                                               |
+| `--dextinity-typography-body-small-font-size`      | Body small: secondary text, such as a field's description or error, breadcrumbs and tooltips. |
+| `--dextinity-typography-body-small-line-height`    |                                                                                               |
+| `--dextinity-typography-body-small-font-weight`    |                                                                                               |
+| `--dextinity-typography-body-small-letter-spacing` |                                                                                               |
+| `--dextinity-typography-label-font-size`           | Label: a field's label.                                                                       |
+| `--dextinity-typography-label-line-height`         |                                                                                               |
+| `--dextinity-typography-label-font-weight`         |                                                                                               |
+| `--dextinity-typography-label-letter-spacing`      |                                                                                               |
+| `--dextinity-typography-overline-font-size`        | Overline: a short line above a heading that names its category, and chips.                    |
+| `--dextinity-typography-overline-line-height`      |                                                                                               |
+| `--dextinity-typography-overline-font-weight`      |                                                                                               |
+| `--dextinity-typography-overline-letter-spacing`   |                                                                                               |
+| `--dextinity-typography-overline-text-transform`   | `uppercase` or `none`.                                                                        |
+
+## Space
+
+Gaps and padding inside components. `--dextinity-space-xl` also separates the components in an application's layout. Change the scale to make the interface denser or roomier.
+
+| Token                  | Usage                                                                                                                                                                                                                                                                                                                                                                            |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-space-xs` | Between a field's label, control, description and error, inside small elements, such as a chip, around the text of breadcrumb links, above a color picker's presets, and the vertical padding of popups and of the app bar.                                                                                                                                                      |
+| `--dextinity-space-sm` | Between an icon and its text, between the stacked options of a group, the children of an app bar and a color picker's presets, the vertical padding of the items of menus and option lists, how far the buttons inside a number field or color picker sit from its edges, the indentation of a navigation's nested levels, and the least gap around the chevrons of breadcrumbs. |
+| `--dextinity-space-md` | Between a checkbox, radio or switch and its label, around a color picker's hex value, and between an alert's icon and its text.                                                                                                                                                                                                                                                  |
+| `--dextinity-space-lg` | Inside text inputs, selects, number fields, tabs, menu items and the rows of a navigation, around the content of the app bar, between the options of a group in a row, between a tab list and its panels, and inside alerts.                                                                                                                                                     |
+| `--dextinity-space-xl` | The padding of large surfaces, such as cards and dialogs. Between fields in a form, in an application's layout.                                                                                                                                                                                                                                                                  |
+
+## Shape
+
+| Token                       | Usage                                                                                                                                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-radius-small`  | Small elements, such as checkboxes, chips, tooltips, color swatches and the buttons inside a number field, a color picker or an autocomplete, and the focus outline of tabs and breadcrumb links. |
+| `--dextinity-radius-medium` | Text inputs, selects, autocompletes, number fields, color pickers, the rows of a navigation, alerts, and popups, such as menus and option lists.                                                  |
+| `--dextinity-radius-large`  | Large surfaces, such as cards and dialogs.                                                                                                                                                        |
+| `--dextinity-radius-full`   | Fully rounded elements: radios, the switch, avatars.                                                                                                                                              |
+
+## Elevation
+
+Shadows of the surfaces that float above the page.
+
+| Token                       | Usage                                                                                |
+| --------------------------- | ------------------------------------------------------------------------------------ |
+| `--dextinity-shadow-popup`  | Popups: menus, the option lists of selects and autocompletes, tooltips and popovers. |
+| `--dextinity-shadow-dialog` | Dialogs.                                                                             |
+
+## Controls
+
+Shared metrics of interactive controls. The `size` of a button or an avatar picks the small, medium or large value; text inputs, selects, autocompletes, number fields, color pickers and the buttons on the app bar use the medium values.
+
+| Token                                       | Usage                                                                                                                                                       |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-control-height-small`          | Height of a small control. Keep it at 24px or more, the minimum target size.                                                                                |
+| `--dextinity-control-height-medium`         | Height of a medium control, and the minimum height of text inputs, selects, autocompletes, number fields, color pickers, tabs and the rows of a navigation. |
+| `--dextinity-control-height-large`          | Height of a large control.                                                                                                                                  |
+| `--dextinity-control-padding-inline-small`  | Horizontal padding of a small control.                                                                                                                      |
+| `--dextinity-control-padding-inline-medium` | Horizontal padding of a medium control.                                                                                                                     |
+| `--dextinity-control-padding-inline-large`  | Horizontal padding of a large control.                                                                                                                      |
+| `--dextinity-control-font-size-small`       | Text size of a small control.                                                                                                                               |
+| `--dextinity-control-font-size-medium`      | Text size of a medium control.                                                                                                                              |
+| `--dextinity-control-font-size-large`       | Text size of a large control.                                                                                                                               |
+| `--dextinity-control-border-width`          | Border width of controls with a border.                                                                                                                     |
+| `--dextinity-control-toggle-size`           | Size of the checkbox and radio box. The switch is twice as wide as it is high.                                                                              |
+
+## State
+
+| Token                           | Usage                                                                                                                                                                                                                |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-focus-ring-width`  | Width of the focus outline, and of the outline that marks the highlighted item of a menu or an option list in forced-colors mode. At least 2px. The gaps around the chevrons of breadcrumbs grow to fit the outline. |
+| `--dextinity-focus-ring-offset` | Gap between a focused control and its outline.                                                                                                                                                                       |
+| `--dextinity-opacity-disabled`  | Opacity of a disabled control, and of a disabled item of a menu or an option list.                                                                                                                                   |
+| `--dextinity-opacity-backdrop`  | Opacity of the backdrop behind a dialog.                                                                                                                                                                             |
+
+## Motion
+
+Themes set the durations to `0s` for users who prefer reduced motion.
+
+| Token                                | Usage                                                                                                                                                                                                                                                                                      |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--dextinity-motion-duration-short`  | Checkbox and radio: their check mark or dot, border and background. A color picker's presets as they're hovered or selected. Popups, such as menus, option lists and tooltips, as they open and close.                                                                                     |
+| `--dextinity-motion-duration-medium` | Buttons, text inputs, selects, autocompletes, number fields, color pickers, tabs, the navigation and the switch: color and border changes on hover, the switch's thumb, the indicator of the selected tab as it moves, a navigation group as it opens, and dialogs as they open and close. |
+| `--dextinity-motion-easing`          | Easing of all transitions.                                                                                                                                                                                                                                                                 |
+
+## Icons
+
+Each icon of the icon set is a token too, `--dextinity-icon-<name>`, with an SVG image as its value. Unlike the tokens above, a theme doesn't have to define them: the package defines all of them, and a theme defines only the icons it replaces. [Icons](?path=/docs/foundations-icons--docs) lists them and shows how to replace one.
+
+## Layering
+
+Popups and dialogs render in a portal at the end of `<body>`, on top of the page. These tokens set their stacking order. The defaults put dialogs at the level of MUI's dialogs, and popups above them, so a select also opens inside a dialog of `@dextinity/admin`.
+
+| Token                         | Usage                                                                             |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| `--dextinity-z-index-dialog`  | Dialogs and their backdrop.                                                       |
+| `--dextinity-z-index-popup`   | Popups: menus, option lists and popovers. Above dialogs, so they open inside one. |
+| `--dextinity-z-index-tooltip` | Tooltips, above everything else.                                                  |
+
+## Button
+
+Button tokens let a theme give buttons their own character, for example a gradient. `IconButton` uses them too, and the buttons on the app bar use the radius and the font weight.
+
+| Token                                           | Usage                                                                                                                                               |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-button-radius`                     | Corner radius of buttons, also of the buttons on the app bar.                                                                                       |
+| `--dextinity-button-font-weight`                | Font weight of a button's text, also on the app bar.                                                                                                |
+| `--dextinity-button-primary-background`         | Background of a primary button: a color or a gradient.                                                                                              |
+| `--dextinity-button-primary-background-hover`   | Background of a hovered primary button.                                                                                                             |
+| `--dextinity-button-primary-foreground`         | Text and icons of a primary button. Contrast 4.5:1 on its background and on its hovered background, along the whole gradient.                       |
+| `--dextinity-button-primary-shadow`             | Shadow of a primary button, or `none`.                                                                                                              |
+| `--dextinity-button-secondary-background`       | Background of a secondary button.                                                                                                                   |
+| `--dextinity-button-secondary-background-hover` | Background of a hovered secondary button.                                                                                                           |
+| `--dextinity-button-secondary-foreground`       | Text and icons of a secondary button. Contrast 4.5:1 on its background, and on each subtle background, for a button in an alert.                    |
+| `--dextinity-button-secondary-foreground-hover` | Text and icons of a hovered secondary button. Contrast 4.5:1 on its hovered background.                                                             |
+| `--dextinity-button-secondary-border`           | Border of a secondary button.                                                                                                                       |
+| `--dextinity-button-ghost-foreground`           | Text and icons of a ghost button. Contrast 4.5:1 on background, on its hovered background, and on each subtle background, for a button in an alert. |
+| `--dextinity-button-ghost-background-hover`     | Background of a hovered ghost button.                                                                                                               |
+
+## App bar
+
+App bar tokens give the bar at the top of an application its own colors, often darker than the page.
+
+| Token                                  | Usage                                                                                          |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `--dextinity-app-bar-height`           | Minimum height of the app bar. Taller content makes it taller.                                 |
+| `--dextinity-app-bar-background`       | Background of the app bar.                                                                     |
+| `--dextinity-app-bar-background-hover` | Background of a hovered button on the app bar, and of a button whose menu is open.             |
+| `--dextinity-app-bar-foreground`       | Text and icons on the app bar. Contrast 4.5:1 on its background and on the hovered background. |
+| `--dextinity-app-bar-focus-ring`       | Outline of a focused button on the app bar. Contrast 3:1 on its background.                    |

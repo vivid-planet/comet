@@ -1,0 +1,8 @@
+{
+    "mcpServers": {
+        "dextinity-ui-storybook": {
+            "type": "http",
+            "url": "http://localhost:26648/mcp"
+        }
+    }
+}

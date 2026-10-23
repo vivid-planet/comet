@@ -1,0 +1,44 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as AvatarStories from "./Avatar.stories";
+
+<Meta of={AvatarStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the avatar itself, the `dextinityAvatar` element, which also gets the props the component doesn't handle, such as `aria-hidden`. `slotProps` adjusts the inner parts. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`size`) that returns them. `render` replaces a slot's element, for example the image with an optimized image component, such as Next.js's `Image`. See [Customization](?path=/docs/foundations-customization--docs).
+
+The image is stacked on the initials. It is rendered right away and loads in place, so it also loads with `loading="lazy"` and is part of server-rendered HTML. Until it has loaded, Base UI's `data-loading` and `data-error` attributes hide it, and the initials show through.
+
+| Slot       | Element                              | Class                       | What it is                                                                                                                                                                                                                                                                                              |
+| ---------- | ------------------------------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `image`    | `<img>` (Base UI `Avatar.Image`)     | `dextinityAvatar__image`    | The picture, `src`, with `name` as its text alternative. Rendered only when the avatar has a `src`; hidden until it has loaded.                                                                                                                                                                         |
+| `fallback` | `<span>` (Base UI `Avatar.Fallback`) | `dextinityAvatar__fallback` | The initials, or a person icon for a name without a letter or digit, with the `img` role and `name` as their accessible name; without a name, it has no role. Rendered while there is no loaded image: without a `src`, while it loads, and when it fails to load. Its `children` replace the initials. |
+
+<Canvas of={AvatarStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the avatar through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the avatar's own: they're shared tokens, which other components can use too. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                | In the avatar                                   |
+| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `--dextinity-control-height-small`, `--dextinity-control-height-medium`, `--dextinity-control-height-large`          | Diameter of each `size`.                        |
+| `--dextinity-control-font-size-small`, `--dextinity-control-font-size-medium`, `--dextinity-control-font-size-large` | Size of the initials of each `size`.            |
+| `--dextinity-radius-full`                                                                                            | Corner radius, which makes the avatar a circle. |
+| `--dextinity-color-primary-subtle`                                                                                   | Background of the initials.                     |
+| `--dextinity-color-primary`                                                                                          | Color of the initials.                          |
+| `--dextinity-font-family-body`                                                                                       | Font family of the initials.                    |
+| `--dextinity-typography-label-font-weight`, `--dextinity-typography-label-letter-spacing`                            | Weight and letter spacing of the initials.      |

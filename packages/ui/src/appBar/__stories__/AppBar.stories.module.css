@@ -1,0 +1,21 @@
+.productName {
+    padding-inline: var(--dextinity-space-sm);
+    font-family: var(--dextinity-font-family-heading);
+    font-size: var(--dextinity-typography-heading-4-font-size);
+    font-weight: var(--dextinity-typography-heading-4-font-weight);
+    line-height: var(--dextinity-typography-heading-4-line-height);
+    letter-spacing: var(--dextinity-typography-heading-4-letter-spacing);
+    white-space: nowrap;
+}
+
+.accentLine {
+    border-block-end: 3px solid var(--dextinity-color-primary);
+}
+
+.turningChevron {
+    transition: rotate var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+
+    [data-popup-open] > & {
+        rotate: 180deg;
+    }
+}

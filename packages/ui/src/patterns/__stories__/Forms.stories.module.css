@@ -1,0 +1,13 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-xl);
+    max-inline-size: 28rem;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-md);
+    align-items: center;
+}

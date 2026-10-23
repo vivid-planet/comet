@@ -1,0 +1,16 @@
+@layer dextinity {
+    /* No `display`: it would override the `hidden` attribute of a panel kept mounted with `keepMounted`. */
+    .root {
+        min-inline-size: 0;
+
+        /* Beside a column of tabs while 16rem remain for it, otherwise below them, so the text stays readable. */
+        &[data-orientation="vertical"] {
+            flex: 1 1 16rem;
+        }
+
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: var(--dextinity-focus-ring-offset);
+        }
+    }
+}

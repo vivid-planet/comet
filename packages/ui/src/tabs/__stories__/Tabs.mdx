@@ -1,0 +1,51 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as TabsStories from "./Tabs.stories";
+
+<Meta of={TabsStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+Each of the four components takes `className` and `style` for its own element: `Tabs` for the `dextinityTabs` element around the tab list and the panels, `TabList` for the `dextinityTabList` element with the `tablist` role, `Tab` for the `dextinityTab` element with the `tab` role, and `TabPanel` for the `dextinityTabPanel` element with the `tabpanel` role. `slotProps` adjusts the inner parts of a `TabList` and of a `Tab`; `Tabs` and `TabPanel` have none. Each slot takes an element's props, merged with the slot's own, or a function of the owner state that returns them: `orientation` for a `TabList`, `orientation` and `disabled` for a `Tab`. `render` replaces a slot's element; on a `Tab`, `render` replaces the tab's own `<button>`, for example with a link. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot        | Component | Element                             | Class                         | What it is                                                                                                                                                                 |
+| ----------- | --------- | ----------------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `indicator` | `TabList` | `<span>` (Base UI `Tabs.Indicator`) | `dextinityTabList__indicator` | The line in the primary color that marks the selected tab: under it in a row, at its end in a column. It moves to the tab the user selects. Assistive technology skips it. |
+| `icon`      | `Tab`     | `<span>`                            | `dextinityTab__icon`          | The element around `icon`, before the label. Rendered only when the tab has an `icon`. Assistive technology skips it.                                                      |
+
+<Canvas of={TabsStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the tabs through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the tabs' own: they're shared tokens, which other components can use too. They style `Tabs`, the `TabList` with its indicator, each `Tab` and each `TabPanel`. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                       | In the tabs                                                                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-color-foreground-muted`                                                                                                                                        | Text and icon color of a tab that isn't selected.                                                                                                                                                                             |
+| `--dextinity-color-foreground`                                                                                                                                              | Text and icon color of the selected tab, and of a hovered tab.                                                                                                                                                                |
+| `--dextinity-color-primary`                                                                                                                                                 | Color of the indicator, the line that marks the selected tab: under it in a row of tabs, at its end in a column.                                                                                                              |
+| `--dextinity-color-border`                                                                                                                                                  | Color of the line along the tab list that separates the tabs from the panels: under a row of tabs, above its scrollbar where the platform shows one, and at the end of a column. The indicator covers it at the selected tab. |
+| `--dextinity-color-border-hover`                                                                                                                                            | Color of the line that marks a hovered tab, where the indicator marks the selected one. A selected or disabled tab shows none.                                                                                                |
+| `--dextinity-control-height-medium`                                                                                                                                         | Minimum height of a tab. A label that wraps in a column of tabs makes it taller.                                                                                                                                              |
+| `--dextinity-space-lg`                                                                                                                                                      | Horizontal padding of a tab, and gap between the tab list and the panels.                                                                                                                                                     |
+| `--dextinity-space-sm`                                                                                                                                                      | Gap between a tab's icon and its label.                                                                                                                                                                                       |
+| `--dextinity-space-xs`                                                                                                                                                      | Vertical padding of a tab, which keeps a wrapped label off its edges.                                                                                                                                                         |
+| `--dextinity-font-family-body`                                                                                                                                              | Font family of the tabs' labels.                                                                                                                                                                                              |
+| `--dextinity-typography-body-font-size`, `--dextinity-typography-body-line-height`, `--dextinity-typography-body-font-weight`, `--dextinity-typography-body-letter-spacing` | Size, line height, weight and letter spacing of the tabs' labels. Icons are 1.25 times as large as the text.                                                                                                                  |
+| `--dextinity-radius-small`                                                                                                                                                  | Corner radius of a tab's focus outline.                                                                                                                                                                                       |
+| `--dextinity-color-focus-ring`, `--dextinity-focus-ring-width`                                                                                                              | Outline of a tab or a panel focused with the keyboard. A tab's outline lies inside its edges, so the scrolling tab list doesn't cut it off.                                                                                   |
+| `--dextinity-focus-ring-offset`                                                                                                                                             | Gap between a focused panel and its outline.                                                                                                                                                                                  |
+| `--dextinity-opacity-disabled`                                                                                                                                              | Opacity of a disabled tab, its label and icon together.                                                                                                                                                                       |
+| `--dextinity-motion-duration-medium`, `--dextinity-motion-easing`                                                                                                           | Transition of the indicator as it moves to the selected tab, and of a tab's text color and line on hover.                                                                                                                     |

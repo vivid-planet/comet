@@ -1,0 +1,77 @@
+@layer dextinity {
+    .positioner {
+        z-index: var(--dextinity-z-index-tooltip);
+    }
+
+    .root {
+        position: relative;
+        box-sizing: border-box;
+        max-inline-size: min(20rem, var(--available-width));
+        padding-block: var(--dextinity-space-xs);
+        padding-inline: var(--dextinity-space-sm);
+        border-radius: var(--dextinity-radius-small);
+
+        /* Forced-colors mode removes the background and the shadow, and draws the transparent outline in a system color instead. */
+        outline: 1px solid transparent;
+        background: var(--dextinity-color-foreground);
+        box-shadow: var(--dextinity-shadow-popup);
+        color: var(--dextinity-color-background);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-small-font-size);
+        font-weight: var(--dextinity-typography-body-small-font-weight);
+        line-height: var(--dextinity-typography-body-small-line-height);
+        letter-spacing: var(--dextinity-typography-body-small-letter-spacing);
+        overflow-wrap: break-word;
+        transform-origin: var(--transform-origin);
+        transition-duration: var(--dextinity-motion-duration-short);
+        transition-property: opacity, transform;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        &[data-starting-style],
+        &[data-ending-style] {
+            opacity: 0;
+            transform: scale(0.96);
+        }
+
+        /* Set by Base UI when the tooltip opens on keyboard focus, closes on Escape or a click, or replaces another one in a group. */
+        &[data-instant] {
+            transition-duration: 0s;
+        }
+    }
+
+    /* A square turned by 45°, half of which shows beside the popup. The popup covers the other half. */
+    .arrow {
+        --_size: 0.5rem;
+        --_inset: calc(var(--_size) / -2);
+
+        z-index: -1;
+        inline-size: var(--_size);
+        block-size: var(--_size);
+        background: inherit;
+        rotate: 45deg;
+
+        &[data-side="top"] {
+            bottom: var(--_inset);
+        }
+
+        &[data-side="bottom"] {
+            top: var(--_inset);
+        }
+
+        &[data-side="left"] {
+            right: var(--_inset);
+        }
+
+        &[data-side="right"] {
+            left: var(--_inset);
+        }
+
+        &[data-side="inline-start"] {
+            inset-inline-end: var(--_inset);
+        }
+
+        &[data-side="inline-end"] {
+            inset-inline-start: var(--_inset);
+        }
+    }
+}

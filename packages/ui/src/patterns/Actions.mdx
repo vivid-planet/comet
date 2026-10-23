@@ -1,0 +1,78 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ActionsStories from "./__stories__/Actions.stories";
+
+<Meta
+    title="Patterns/Actions"
+    summary="How to choose, label and place buttons: one primary action per view, icon buttons, destructive actions, disabled buttons and links."
+/>
+
+# Actions
+
+<Canvas of={ActionsStories.PageHeader} />
+
+```tsx
+<header className={styles.pageHeader}>
+    <div className={styles.title}>
+        <Typography variant="heading2" render={<h1 />}>
+            Summer collection
+        </Typography>
+        <Chip tone="warning">Draft</Chip>
+    </div>
+    <div className={styles.actions}>
+        <Button onClick={publish}>Publish</Button>
+        <Button variant="secondary" onClick={openPreview}>
+            Preview
+        </Button>
+        <Tooltip content="Page settings">
+            <IconButton label="Page settings" onClick={openSettings}>
+                <Icon name="settings" />
+            </IconButton>
+        </Tooltip>
+    </div>
+</header>
+```
+
+## Emphasis
+
+- **One primary button per view** — a page, a dialog or a form — for the action most users take next: "Publish", "Save changes", "Place order".
+- **Secondary buttons** for the actions next to it, such as "Preview" or "Cancel".
+- **Ghost buttons** for less important or repeated actions, such as in a toolbar or a dense list.
+
+If several actions seem equally important, the view probably does too much: split it, or move the rarely used actions into a `Menu` behind an `IconButton`.
+
+## Labels
+
+- Start with a verb and name the object when it isn't obvious: "Delete product", not "Delete" or "OK".
+- Use sentence case and keep it short: two or three words.
+- A button's text and its icon say the same thing. The icon is decorative, so the text must stand on its own.
+
+## Icon buttons
+
+<Canvas of={ActionsStories.RowActions} />
+
+Use an `IconButton` only where space is tight and the icon is widely understood, such as a pencil for editing or a trash can for deleting. Its `label` names the action for screen reader users; repeat the object in rows of the same actions, for example `label="Delete Linen shirt"`, so every button has a distinct name. Wrap it in a `Tooltip` whose `content` repeats `label`, so sighted users can read it too:
+
+```tsx
+<Tooltip content={`Delete ${product.name}`}>
+    <IconButton label={`Delete ${product.name}`} size="small" onClick={() => deleteProduct(product.id)}>
+        <Icon name="delete" />
+    </IconButton>
+</Tooltip>
+```
+
+Touch screens don't show tooltips, so prefer a `Button` with text wherever it fits.
+
+## Destructive actions
+
+Label a destructive action with its consequence, such as "Delete product". As a button, it's a `secondary` one: `Button` has no danger variant yet. In a `Menu`, it's a `MenuItem` with `tone="danger"`, after the other items.
+
+Before anything that can't be undone, ask for confirmation in a `Dialog`: its `title` asks the question, such as "Delete product?", its `description` names what gets deleted, and its `actions` are a `secondary` "Cancel" button and, last, a primary button that names the action, such as "Delete".
+
+## Disabled buttons
+
+A disabled button doesn't say why it's disabled. Prefer keeping it enabled and explaining what's missing when the user activates it, for example by validating the form on submit. If a button must be disabled, explain why next to it, and use `focusableWhenDisabled`, so keyboard users can still reach it.
+
+## Buttons and links
+
+A button triggers an action on the current page; a link navigates to another one. Use a link for navigation even if it should look like a button: screen readers and browsers treat links differently, for example when opening them in a new tab. `Button` always renders a `<button>`.

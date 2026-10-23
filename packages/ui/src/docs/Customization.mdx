@@ -1,0 +1,92 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta
+    title="Foundations/Customization"
+    summary="Ways to adjust a component, in order of preference: props, tokens, CSS against the styling contract, className, slotProps and wrapping."
+/>
+
+# Customization
+
+Prefer the first option that does what you need. The further down the list, the more the adjustment depends on a component's inner structure.
+
+1. **Props**, such as `variant` and `size`, for what the component is designed to do.
+2. **Design tokens**, to change how every instance looks, for a whole brand: see [Theming](?path=/docs/foundations-theming--docs).
+3. **CSS** against the styling contract, to change how every instance looks in an application.
+4. **`className`**, to adjust one instance.
+5. **`slotProps`**, to adjust or replace one of an instance's inner parts.
+6. **Wrapping** a component in the application, to change its default props.
+
+## Styling contract
+
+Every component emits fixed class names and attributes. They are public API, like props. While the package is experimental, they may change in a minor release, and the changelog names every change.
+
+| What                         | Name                           | Example                                         |
+| ---------------------------- | ------------------------------ | ----------------------------------------------- |
+| The component's root element | `dextinity<Component>`         | `dextinityButton`                               |
+| An inner part                | `dextinity<Component>__<part>` | `dextinityButton__startIcon`                    |
+| An enum prop's value         | `data-<prop>="<value>"`        | `data-variant="secondary"`, `data-size="small"` |
+| A boolean state              | `data-<state>`, when it's on   | `data-disabled`, `data-checked`, `data-invalid` |
+
+A component that builds on another carries both root classes: an `IconButton` is `dextinityButton dextinityIconButton`.
+
+The component styles are in the `dextinity` cascade layer, so an application's own, unlayered CSS always wins, without `!important` or extra specificity:
+
+```css
+.dextinityButton[data-variant="secondary"] {
+    text-transform: uppercase;
+}
+
+.toolbar .dextinityButton {
+    min-width: 8rem;
+}
+```
+
+Prefer changing a design token over overriding a component's colors: a token keeps hover, focus and the dark color scheme consistent.
+
+## className
+
+`className` is added to the component's own classes on its root element. It never replaces them.
+
+```tsx
+<Button className={styles.saveButton}>Save changes</Button>
+```
+
+## slotProps
+
+`slotProps` passes props to a component's inner parts. Each component's documentation names its parts. The props are merged with the part's own:
+
+- `className` is added to the part's classes, and `style` is merged.
+- Event handlers run before the part's own.
+- Any other prop replaces the part's own, including `ref`: a slot's `ref` replaces the `ref` the component passes to that part.
+
+```tsx
+<Button startIcon={<Icon name="plus" />} slotProps={{ startIcon: { className: styles.icon } }}>
+    Add product
+</Button>
+```
+
+Instead of an object, pass a function of the component's owner state, its resolved configuration:
+
+```tsx
+<Button slotProps={{ startIcon: (ownerState) => ({ className: ownerState.disabled ? styles.mutedIcon : undefined }) }}>…</Button>
+```
+
+`render` replaces a part's element while keeping its classes and behavior, for example a `<div>` for a description that holds a list:
+
+```tsx
+<TextField label="Address" description={<AddressHint />} slotProps={{ description: { render: <div /> } }} />
+```
+
+Functions can't be passed from a React Server Component to a component that runs in the browser. Use the object form there, or pass the function form from a client component.
+
+## Wrapping a component
+
+There is no theme-level way to change a component's default props. To give a component other defaults, wrap it in the application:
+
+```tsx
+import { Button, type ButtonProps } from "@dextinity/ui";
+
+export function ToolbarButton(props: ButtonProps) {
+    return <Button variant="ghost" size="small" {...props} />;
+}
+```

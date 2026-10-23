@@ -1,0 +1,60 @@
+@layer dextinity {
+    .root {
+        --_link-color: var(--dextinity-color-foreground-muted);
+        --_separator-display: inline-flex;
+
+        /* How far a focused link's outline reaches beyond its text. */
+        --_focus-ring-room: calc(var(--dextinity-space-xs) + var(--dextinity-focus-ring-offset) + var(--dextinity-focus-ring-width));
+
+        display: inline-flex;
+
+        /* At least the room a focused link's outline takes beyond the text, so it stays off the chevron in every theme. The gap between the items in Breadcrumbs.module.css matches it. */
+        gap: max(var(--dextinity-space-sm), var(--_focus-ring-room));
+        align-items: center;
+        min-inline-size: 0;
+
+        &:first-child {
+            --_separator-display: none;
+        }
+
+        &[data-current] {
+            --_link-color: var(--dextinity-color-foreground);
+        }
+
+        /* `:any-link` leaves out the current page, which has no `href`. */
+        @media (hover: hover) {
+            & > .link:any-link:hover {
+                --_link-color: var(--dextinity-color-foreground);
+
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .separator {
+        display: var(--_separator-display);
+        flex-shrink: 0;
+        color: var(--dextinity-color-foreground-muted);
+        font-size: 1.25em;
+
+        &:dir(rtl) {
+            transform: scaleX(-1);
+        }
+    }
+
+    .link {
+        /* The padding enlarges the target to 24px and keeps the focus outline off the text; the margin keeps the text in line. */
+        margin-inline: calc(-1 * var(--dextinity-space-xs));
+        padding: var(--dextinity-space-xs);
+        border-radius: var(--dextinity-radius-small);
+        color: var(--_link-color);
+        text-decoration: none;
+        overflow-wrap: anywhere;
+        transition: color var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: var(--dextinity-focus-ring-offset);
+        }
+    }
+}

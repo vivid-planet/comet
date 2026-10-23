@@ -70,3 +70,17 @@ Provides a component for selecting colors in forms, built with react-final-form.
 ### @dextinity/site-nextjs
 
 Used to integrate Dextinity into a Next.js application.
+
+## UI {#uiPackage}
+
+### @dextinity/ui
+
+:::warning Experimental
+
+This package is experimental. Its components may change or be removed without a deprecation notice.
+
+:::
+
+Provides themeable React UI primitives, such as buttons, form fields and typography, built on [Base UI](https://base-ui.com/) and CSS Modules. They don't depend on MUI or Emotion, so they work in the Admin and the Site alike. A theme is a stylesheet of CSS custom properties; the package includes the Dextinity theme.
+
+Documentation, the design tokens, the theming guide and usage patterns are in the package's Storybook. To run it, clone the [Dextinity repository](https://github.com/vivid-planet/dextinity), run `pnpm install`, then `pnpm --filter @dextinity/ui run storybook`. It includes an MCP server for coding agents at `http://localhost:26648/mcp`.

@@ -1,0 +1,53 @@
+@layer dextinity {
+    .root {
+        --_options-flow: column;
+        --_options-gap: var(--dextinity-space-sm);
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--dextinity-space-xs);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+
+        &[data-orientation="horizontal"] {
+            --_options-flow: row wrap;
+            --_options-gap: var(--dextinity-space-sm) var(--dextinity-space-lg);
+        }
+    }
+
+    .label {
+        font-size: var(--dextinity-typography-label-font-size);
+        font-weight: var(--dextinity-typography-label-font-weight);
+        line-height: var(--dextinity-typography-label-line-height);
+        letter-spacing: var(--dextinity-typography-label-letter-spacing);
+    }
+
+    .requiredIndicator {
+        margin-inline-start: var(--dextinity-space-xs);
+        color: var(--dextinity-color-danger);
+    }
+
+    .options {
+        display: flex;
+        flex-flow: var(--_options-flow);
+        gap: var(--_options-gap);
+        align-items: flex-start;
+    }
+
+    .description,
+    .error {
+        margin: 0;
+        font-size: var(--dextinity-typography-body-small-font-size);
+        font-weight: var(--dextinity-typography-body-small-font-weight);
+        line-height: var(--dextinity-typography-body-small-line-height);
+        letter-spacing: var(--dextinity-typography-body-small-letter-spacing);
+    }
+
+    .description {
+        color: var(--dextinity-color-foreground-muted);
+    }
+
+    .error {
+        color: var(--dextinity-color-danger);
+    }
+}

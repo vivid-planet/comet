@@ -1,0 +1,29 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+.rowEnd {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.output {
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+}
+
+.themeSwitch {
+    padding: var(--dextinity-space-lg);
+    border-radius: var(--dextinity-radius-large);
+}
+
+.widePopup {
+    min-inline-size: 16rem;
+}
+
+.accentIcon {
+    color: var(--dextinity-color-primary);
+}

@@ -1,0 +1,319 @@
+/*
+ * The layout follows the width of the canvas, not the window: the docs page shows the pages in narrower canvases.
+ * The content's grids follow the content's own width, which the sidebar narrows.
+ */
+.frame {
+    container-type: inline-size;
+}
+
+.application {
+    display: grid;
+    grid-template:
+        "appBar appBar" auto
+        "sidebar content" 1fr
+        / auto minmax(0, 1fr);
+    min-block-size: 100dvh;
+    background: var(--dextinity-color-background);
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+    font-size: var(--dextinity-typography-body-font-size);
+    line-height: var(--dextinity-typography-body-line-height);
+}
+
+.appBar {
+    grid-area: appBar;
+}
+
+.productName {
+    font-weight: var(--dextinity-button-font-weight);
+    white-space: nowrap;
+}
+
+@container (width < 32rem) {
+    .helpButton,
+    .userButton {
+        display: none;
+    }
+}
+
+.compactUserButton {
+    inline-size: var(--dextinity-control-height-medium);
+    padding-inline: 0;
+}
+
+@container (width >= 32rem) {
+    .compactUserButton {
+        display: none;
+    }
+}
+
+.sidebar {
+    grid-area: sidebar;
+    box-sizing: border-box;
+    inline-size: 16rem;
+    padding: var(--dextinity-space-lg) var(--dextinity-space-sm);
+    border-inline-end: 1px solid var(--dextinity-color-border);
+}
+
+.content {
+    container: content / inline-size;
+    grid-area: content;
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-xl);
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: 80rem;
+    padding: var(--dextinity-space-xl);
+}
+
+@container (width < 48rem) {
+    .application {
+        grid-template:
+            "appBar" auto
+            "sidebar" auto
+            "content" 1fr
+            / minmax(0, 1fr);
+    }
+
+    .sidebar {
+        inline-size: auto;
+        border-inline-end: none;
+        border-block-end: 1px solid var(--dextinity-color-border);
+    }
+
+    .content {
+        padding: var(--dextinity-space-lg);
+    }
+}
+
+.pageHeader {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-lg);
+    align-items: end;
+    justify-content: space-between;
+}
+
+.headerActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-sm);
+}
+
+.titleRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-md);
+    align-items: center;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--dextinity-space-lg);
+}
+
+@container content (width >= 32rem) {
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@container content (width >= 60rem) {
+    .stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.trend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-sm);
+    align-items: center;
+    margin: 0;
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--dextinity-space-lg);
+    align-items: start;
+}
+
+@container content (width >= 56rem) {
+    .columns {
+        grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+    }
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-md);
+}
+
+.fields {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: var(--dextinity-space-xl);
+}
+
+.formColumns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: var(--dextinity-space-lg);
+    align-items: start;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-lg);
+    margin-block-end: var(--dextinity-space-xl);
+
+    & > * {
+        flex: 1 1 12rem;
+    }
+}
+
+.tableScroller {
+    /* Positioned, so the visually hidden headers scroll with the table instead of widening the page. */
+    position: relative;
+    overflow-x: auto;
+}
+
+.table {
+    inline-size: 100%;
+    border-collapse: collapse;
+
+    & th {
+        padding: var(--dextinity-space-sm);
+        border-block-end: 1px solid var(--dextinity-color-border-strong);
+        color: var(--dextinity-color-foreground-muted);
+        font-size: var(--dextinity-typography-label-font-size);
+        font-weight: var(--dextinity-typography-label-font-weight);
+        line-height: var(--dextinity-typography-label-line-height);
+        text-align: start;
+    }
+
+    & td {
+        padding: var(--dextinity-space-sm);
+        border-block-end: 1px solid var(--dextinity-color-border);
+        vertical-align: middle;
+    }
+
+    & tbody tr:last-child td {
+        border-block-end: none;
+    }
+}
+
+.numeric {
+    font-variant-numeric: tabular-nums;
+
+    &:is(th, td) {
+        text-align: end;
+    }
+}
+
+.rowActions {
+    inline-size: 1%;
+}
+
+.link {
+    color: inherit;
+    font-weight: var(--dextinity-typography-label-font-weight);
+    text-decoration: none;
+
+    &:focus-visible {
+        border-radius: var(--dextinity-radius-small);
+        outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+        outline-offset: var(--dextinity-focus-ring-offset);
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.actionLink {
+    display: inline-flex;
+    gap: var(--dextinity-space-xs);
+    align-items: center;
+    color: inherit;
+    font-weight: var(--dextinity-typography-label-font-weight);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+
+    &:focus-visible {
+        border-radius: var(--dextinity-radius-small);
+        outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+        outline-offset: var(--dextinity-focus-ring-offset);
+    }
+}
+
+.person,
+.product {
+    display: inline-flex;
+    gap: var(--dextinity-space-md);
+    align-items: center;
+}
+
+.thumbnail {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    inline-size: var(--dextinity-control-height-medium);
+    block-size: var(--dextinity-control-height-medium);
+    border-radius: var(--dextinity-radius-medium);
+    background: var(--dextinity-color-neutral-subtle);
+    color: var(--dextinity-color-foreground-muted);
+    font-size: var(--dextinity-typography-heading-4-font-size);
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-lg);
+    max-inline-size: 48rem;
+}
+
+.profile {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-xl);
+    align-items: start;
+}
+
+.appearance {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--dextinity-space-xl);
+}
+
+.preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-md);
+    padding: var(--dextinity-space-lg);
+    border: 1px solid var(--dextinity-color-border);
+    border-radius: var(--dextinity-radius-large);
+}
+
+.previewRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-sm);
+}
+
+.visuallyHidden {
+    position: absolute;
+    overflow: hidden;
+    clip-path: inset(50%);
+    inline-size: 1px;
+    block-size: 1px;
+    white-space: nowrap;
+}

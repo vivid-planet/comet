@@ -1,0 +1,54 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as AppBarStories from "./AppBar.stories";
+
+<Meta of={AppBarStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`AppBar` and `AppBarSpacer` have no inner parts: `className` and `style` go to their element, the `dextinityAppBar` `<header>` and the `dextinityAppBarSpacer` `<div>`. `AppBarButton` and `AppBarIconButton` take them for their `<button>` (Base UI `Button`), the `dextinityAppBarButton` element; an icon button renders an `AppBarButton`, so it carries both root classes, `dextinityAppBarButton dextinityAppBarIconButton`. `slotProps` adjusts the buttons' inner parts, which an `AppBarButton` renders only when it has the content they hold. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`disabled`) that returns them. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs). A `Menu` that opens from a button on the bar has [its own slots](?path=/docs/components-menu--docs#slots).
+
+| Slot        | Component          | Element  | Class                              | What it is                                                                                                     |
+| ----------- | ------------------ | -------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `startIcon` | `AppBarButton`     | `<span>` | `dextinityAppBarButton__startIcon` | The element around `startIcon`, such as the user's picture. Assistive technology skips it.                     |
+| `endIcon`   | `AppBarButton`     | `<span>` | `dextinityAppBarButton__endIcon`   | The element around `endIcon`, such as the chevron of a `Menu`'s trigger. Assistive technology skips it.        |
+| `icon`      | `AppBarIconButton` | `<span>` | `dextinityAppBarIconButton__icon`  | The element around the icon, the button's `children`. Assistive technology skips it: `label` names the button. |
+
+<Canvas of={AppBarStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the app bar through these [design tokens](?path=/docs/foundations-design-tokens--docs). The `--dextinity-app-bar-*` tokens are the app bar's own; the others are shared tokens, which other components can use too. They style the bar and the buttons on it: `AppBarButton` and `AppBarIconButton`. A `Menu` that opens from a button on the bar has [its own tokens](?path=/docs/components-menu--docs#design-tokens). The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                       | In the app bar                                                                                                      |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-app-bar-height`                                                                                                                                                | Minimum height of the bar. Content that is taller makes it taller.                                                  |
+| `--dextinity-app-bar-background`                                                                                                                                            | Background of the bar.                                                                                              |
+| `--dextinity-app-bar-foreground`                                                                                                                                            | Text and icon color on the bar, also of its buttons.                                                                |
+| `--dextinity-app-bar-background-hover`                                                                                                                                      | Background of a hovered button, and of a button whose `Menu` is open. A button has no background until then.        |
+| `--dextinity-app-bar-focus-ring`                                                                                                                                            | Color of the outline of a button focused with the keyboard.                                                         |
+| `--dextinity-font-family-body`                                                                                                                                              | Font family of the bar's text and of the buttons' labels.                                                           |
+| `--dextinity-typography-body-font-size`, `--dextinity-typography-body-line-height`, `--dextinity-typography-body-font-weight`, `--dextinity-typography-body-letter-spacing` | Text style of plain text on the bar. Text in an element of its own, such as a product name, can have its own style. |
+| `--dextinity-space-lg`                                                                                                                                                      | Horizontal padding of the bar.                                                                                      |
+| `--dextinity-space-xs`                                                                                                                                                      | Vertical padding of the bar and of the buttons, which keeps the buttons off the bar's edges.                        |
+| `--dextinity-space-sm`                                                                                                                                                      | Gap between the bar's children, and between a button's icons and its label.                                         |
+| `--dextinity-control-height-medium`                                                                                                                                         | Minimum height of a button, and width and height of an `AppBarIconButton`.                                          |
+| `--dextinity-control-padding-inline-medium`                                                                                                                                 | Horizontal padding of an `AppBarButton`. An `AppBarIconButton` has none.                                            |
+| `--dextinity-control-font-size-medium`                                                                                                                                      | Text size of a button's label. Icons are 1.25 times as large.                                                       |
+| `--dextinity-button-radius`                                                                                                                                                 | Corner radius of the buttons, which shows on their hover background, like that of a `Button`.                       |
+| `--dextinity-button-font-weight`                                                                                                                                            | Font weight of a button's label, like that of a `Button`.                                                           |
+| `--dextinity-focus-ring-width`, `--dextinity-focus-ring-offset`                                                                                                             | Width of the outline of a button focused with the keyboard, and its gap to the button.                              |
+| `--dextinity-opacity-disabled`                                                                                                                                              | Opacity of a disabled button.                                                                                       |
+| `--dextinity-motion-duration-medium`, `--dextinity-motion-easing`                                                                                                           | Transition of a button's background on hover.                                                                       |

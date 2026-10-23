@@ -1,0 +1,24 @@
+.sidebar {
+    inline-size: 16rem;
+    max-inline-size: 100%;
+}
+
+.framedNavigation {
+    padding: var(--dextinity-space-sm);
+    border: 1px solid var(--dextinity-color-border);
+    border-radius: var(--dextinity-radius-large);
+    background: var(--dextinity-color-surface);
+}
+
+.accentIcon {
+    color: var(--dextinity-color-primary);
+}
+
+.pageLink {
+    display: inline-block;
+    margin-block-start: var(--dextinity-space-lg);
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+    font-size: var(--dextinity-typography-body-font-size);
+    line-height: var(--dextinity-typography-body-line-height);
+}

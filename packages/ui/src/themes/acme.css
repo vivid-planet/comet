@@ -1,0 +1,239 @@
+/*
+ * Acme theme — a fictive brand
+ *
+ * Warm paper tones with a terracotta accent, serif headings, square corners and a denser layout. It replaces every
+ * icon of the icon set with its own, thinner icons with square line ends and sharp corners, in `acmeIcons/`, to show
+ * how a theme replaces icons.
+ * It isn't published: Storybook uses it to show that the components follow any theme, and it's the
+ * example to copy when a project creates its own theme. Copy the `acmeIcons/` folder along with it, or delete
+ * the `--dextinity-icon-*` declarations to keep the package's icons. Every token is documented in
+ * "Foundations/Design tokens".
+ */
+
+@layer dextinity {
+    [data-dextinity-theme="acme"] {
+        color-scheme: light;
+
+        /* Color */
+        --dextinity-color-background: #fbf8f3;
+        --dextinity-color-foreground: #2b2118;
+        --dextinity-color-foreground-muted: #6b5d50;
+        --dextinity-color-surface: #fff;
+        --dextinity-color-surface-hover: #f3ece2;
+        --dextinity-color-border: #e6ddd0;
+        --dextinity-color-border-strong: #8c7b6b;
+        --dextinity-color-border-hover: #5c4d40;
+        --dextinity-color-primary: #b4451f;
+        --dextinity-color-primary-hover: #93361a;
+        --dextinity-color-primary-foreground: #fff;
+        --dextinity-color-primary-subtle: #fbe6dc;
+        --dextinity-color-neutral-subtle: #f2ebe2;
+        --dextinity-color-success: #2f6b3a;
+        --dextinity-color-success-subtle: #e3f1e1;
+        --dextinity-color-warning: #7a5a00;
+        --dextinity-color-warning-subtle: #fdf0c8;
+        --dextinity-color-danger: #a8263b;
+        --dextinity-color-danger-subtle: #fce6e8;
+        --dextinity-color-focus-ring: #b4451f;
+        --dextinity-color-backdrop: #2b2118;
+
+        /* Typography */
+        --dextinity-font-family-body: system-ui, -apple-system, "Segoe UI", roboto, sans-serif;
+        --dextinity-font-family-heading: georgia, "Times New Roman", serif;
+        --dextinity-typography-display-font-size: 2.5rem;
+        --dextinity-typography-display-line-height: 1.1;
+        --dextinity-typography-display-font-weight: 700;
+        --dextinity-typography-display-letter-spacing: -0.01em;
+        --dextinity-typography-heading-1-font-size: 2rem;
+        --dextinity-typography-heading-1-line-height: 1.2;
+        --dextinity-typography-heading-1-font-weight: 700;
+        --dextinity-typography-heading-1-letter-spacing: 0;
+        --dextinity-typography-heading-2-font-size: 1.625rem;
+        --dextinity-typography-heading-2-line-height: 1.25;
+        --dextinity-typography-heading-2-font-weight: 700;
+        --dextinity-typography-heading-2-letter-spacing: 0;
+        --dextinity-typography-heading-3-font-size: 1.375rem;
+        --dextinity-typography-heading-3-line-height: 1.3;
+        --dextinity-typography-heading-3-font-weight: 600;
+        --dextinity-typography-heading-3-letter-spacing: 0;
+        --dextinity-typography-heading-4-font-size: 1.125rem;
+        --dextinity-typography-heading-4-line-height: 1.35;
+        --dextinity-typography-heading-4-font-weight: 600;
+        --dextinity-typography-heading-4-letter-spacing: 0;
+        --dextinity-typography-body-large-font-size: 1.0625rem;
+        --dextinity-typography-body-large-line-height: 1.6;
+        --dextinity-typography-body-large-font-weight: 400;
+        --dextinity-typography-body-large-letter-spacing: 0;
+        --dextinity-typography-body-font-size: 0.9375rem;
+        --dextinity-typography-body-line-height: 1.55;
+        --dextinity-typography-body-font-weight: 400;
+        --dextinity-typography-body-letter-spacing: 0;
+        --dextinity-typography-body-small-font-size: 0.8125rem;
+        --dextinity-typography-body-small-line-height: 1.5;
+        --dextinity-typography-body-small-font-weight: 400;
+        --dextinity-typography-body-small-letter-spacing: 0;
+        --dextinity-typography-label-font-size: 0.8125rem;
+        --dextinity-typography-label-line-height: 1.4;
+        --dextinity-typography-label-font-weight: 500;
+        --dextinity-typography-label-letter-spacing: 0;
+        --dextinity-typography-overline-font-size: 0.6875rem;
+        --dextinity-typography-overline-line-height: 1.4;
+        --dextinity-typography-overline-font-weight: 700;
+        --dextinity-typography-overline-letter-spacing: 0.12em;
+        --dextinity-typography-overline-text-transform: uppercase;
+
+        /* Space */
+        --dextinity-space-xs: 0.25rem;
+        --dextinity-space-sm: 0.375rem;
+        --dextinity-space-md: 0.625rem;
+        --dextinity-space-lg: 0.875rem;
+        --dextinity-space-xl: 1.25rem;
+
+        /* Shape */
+        --dextinity-radius-small: 2px;
+        --dextinity-radius-medium: 3px;
+        --dextinity-radius-large: 6px;
+        --dextinity-radius-full: 9999px;
+
+        /* Elevation */
+        --dextinity-shadow-popup: 0 2px 8px rgb(43 33 24 / 16%);
+        --dextinity-shadow-dialog: 0 4px 24px rgb(43 33 24 / 24%);
+
+        /* Controls */
+        --dextinity-control-height-small: 2rem;
+        --dextinity-control-height-medium: 2.5rem;
+        --dextinity-control-height-large: 3rem;
+        --dextinity-control-padding-inline-small: 0.75rem;
+        --dextinity-control-padding-inline-medium: 1rem;
+        --dextinity-control-padding-inline-large: 1.25rem;
+        --dextinity-control-font-size-small: 0.8125rem;
+        --dextinity-control-font-size-medium: 0.9375rem;
+        --dextinity-control-font-size-large: 1.0625rem;
+        --dextinity-control-border-width: 1px;
+        --dextinity-control-toggle-size: 1.125rem;
+
+        /* State */
+        --dextinity-focus-ring-width: 3px;
+        --dextinity-focus-ring-offset: 1px;
+        --dextinity-opacity-disabled: 0.5;
+        --dextinity-opacity-backdrop: 0.4;
+
+        /* Motion */
+        --dextinity-motion-duration-short: 80ms;
+        --dextinity-motion-duration-medium: 160ms;
+        --dextinity-motion-easing: cubic-bezier(0, 0, 0.2, 1);
+
+        /* Layering */
+        --dextinity-z-index-dialog: 1300;
+        --dextinity-z-index-popup: 1400;
+        --dextinity-z-index-tooltip: 1500;
+
+        /* Button */
+        --dextinity-button-radius: 3px;
+        --dextinity-button-font-weight: 600;
+        --dextinity-button-primary-background: var(--dextinity-color-primary);
+        --dextinity-button-primary-background-hover: var(--dextinity-color-primary-hover);
+        --dextinity-button-primary-foreground: var(--dextinity-color-primary-foreground);
+        --dextinity-button-primary-shadow: none;
+        --dextinity-button-secondary-background: transparent;
+        --dextinity-button-secondary-background-hover: var(--dextinity-color-primary-subtle);
+        --dextinity-button-secondary-foreground: var(--dextinity-color-primary);
+        --dextinity-button-secondary-foreground-hover: var(--dextinity-color-primary-hover);
+        --dextinity-button-secondary-border: var(--dextinity-color-primary);
+        --dextinity-button-ghost-foreground: var(--dextinity-color-primary);
+        --dextinity-button-ghost-background-hover: var(--dextinity-color-primary-subtle);
+
+        /* App bar */
+        --dextinity-app-bar-height: 3.5rem;
+        --dextinity-app-bar-background: #2b2118;
+        --dextinity-app-bar-background-hover: #45382b;
+        --dextinity-app-bar-foreground: #fbf8f3;
+        --dextinity-app-bar-focus-ring: #f2a27e;
+
+        /* Icons: its own set, with thin lines, square line ends and sharp corners, to match the square shapes of the brand */
+        --dextinity-icon-arrow-left: url("./acmeIcons/arrow-left.svg");
+        --dextinity-icon-arrow-right: url("./acmeIcons/arrow-right.svg");
+        --dextinity-icon-bell: url("./acmeIcons/bell.svg");
+        --dextinity-icon-calendar: url("./acmeIcons/calendar.svg");
+        --dextinity-icon-check: url("./acmeIcons/check.svg");
+        --dextinity-icon-chevron-down: url("./acmeIcons/chevron-down.svg");
+        --dextinity-icon-chevron-left: url("./acmeIcons/chevron-left.svg");
+        --dextinity-icon-chevron-right: url("./acmeIcons/chevron-right.svg");
+        --dextinity-icon-chevron-up: url("./acmeIcons/chevron-up.svg");
+        --dextinity-icon-close: url("./acmeIcons/close.svg");
+        --dextinity-icon-copy: url("./acmeIcons/copy.svg");
+        --dextinity-icon-danger: url("./acmeIcons/danger.svg");
+        --dextinity-icon-dashboard: url("./acmeIcons/dashboard.svg");
+        --dextinity-icon-delete: url("./acmeIcons/delete.svg");
+        --dextinity-icon-download: url("./acmeIcons/download.svg");
+        --dextinity-icon-edit: url("./acmeIcons/edit.svg");
+        --dextinity-icon-external-link: url("./acmeIcons/external-link.svg");
+        --dextinity-icon-eye: url("./acmeIcons/eye.svg");
+        --dextinity-icon-eye-off: url("./acmeIcons/eye-off.svg");
+        --dextinity-icon-file: url("./acmeIcons/file.svg");
+        --dextinity-icon-filter: url("./acmeIcons/filter.svg");
+        --dextinity-icon-folder: url("./acmeIcons/folder.svg");
+        --dextinity-icon-globe: url("./acmeIcons/globe.svg");
+        --dextinity-icon-heart: url("./acmeIcons/heart.svg");
+        --dextinity-icon-help: url("./acmeIcons/help.svg");
+        --dextinity-icon-home: url("./acmeIcons/home.svg");
+        --dextinity-icon-image: url("./acmeIcons/image.svg");
+        --dextinity-icon-info: url("./acmeIcons/info.svg");
+        --dextinity-icon-link: url("./acmeIcons/link.svg");
+        --dextinity-icon-lock: url("./acmeIcons/lock.svg");
+        --dextinity-icon-logout: url("./acmeIcons/logout.svg");
+        --dextinity-icon-mail: url("./acmeIcons/mail.svg");
+        --dextinity-icon-menu: url("./acmeIcons/menu.svg");
+        --dextinity-icon-minus: url("./acmeIcons/minus.svg");
+        --dextinity-icon-more: url("./acmeIcons/more.svg");
+        --dextinity-icon-orders: url("./acmeIcons/orders.svg");
+        --dextinity-icon-pages: url("./acmeIcons/pages.svg");
+        --dextinity-icon-plus: url("./acmeIcons/plus.svg");
+        --dextinity-icon-products: url("./acmeIcons/products.svg");
+        --dextinity-icon-refresh: url("./acmeIcons/refresh.svg");
+        --dextinity-icon-search: url("./acmeIcons/search.svg");
+        --dextinity-icon-settings: url("./acmeIcons/settings.svg");
+        --dextinity-icon-star: url("./acmeIcons/star.svg");
+        --dextinity-icon-success: url("./acmeIcons/success.svg");
+        --dextinity-icon-upload: url("./acmeIcons/upload.svg");
+        --dextinity-icon-user: url("./acmeIcons/user.svg");
+        --dextinity-icon-users: url("./acmeIcons/users.svg");
+        --dextinity-icon-warning: url("./acmeIcons/warning.svg");
+    }
+
+    [data-dextinity-theme="acme"][data-dextinity-color-scheme="dark"] {
+        color-scheme: dark;
+
+        /* Color */
+        --dextinity-color-background: #1b1510;
+        --dextinity-color-foreground: #f6efe6;
+        --dextinity-color-foreground-muted: #bfae9c;
+        --dextinity-color-surface: #241c16;
+        --dextinity-color-surface-hover: #322820;
+        --dextinity-color-border: #3d3128;
+        --dextinity-color-border-strong: #7d6c5c;
+        --dextinity-color-border-hover: #bfae9c;
+        --dextinity-color-primary: #f08a5d;
+        --dextinity-color-primary-hover: #f5a983;
+        --dextinity-color-primary-foreground: #2b1307;
+        --dextinity-color-primary-subtle: #4a2414;
+        --dextinity-color-neutral-subtle: #322820;
+        --dextinity-color-success: #8fcf98;
+        --dextinity-color-success-subtle: #1c3320;
+        --dextinity-color-warning: #e8c25a;
+        --dextinity-color-warning-subtle: #3a2e0a;
+        --dextinity-color-danger: #f28b9a;
+        --dextinity-color-danger-subtle: #45161f;
+        --dextinity-color-focus-ring: #f08a5d;
+        --dextinity-color-backdrop: #000;
+    }
+
+    /* After the dark color scheme, so it wins there too. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-dextinity-theme="acme"],
+        [data-dextinity-theme="acme"][data-dextinity-color-scheme="dark"] {
+            --dextinity-motion-duration-short: 0s;
+            --dextinity-motion-duration-medium: 0s;
+        }
+    }
+}

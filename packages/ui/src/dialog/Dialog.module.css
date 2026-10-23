@@ -1,0 +1,144 @@
+@layer dextinity {
+    .backdrop {
+        position: fixed;
+        inset: 0;
+        min-block-size: 100dvh;
+        z-index: var(--dextinity-z-index-dialog);
+        background: var(--dextinity-color-backdrop);
+        opacity: var(--dextinity-opacity-backdrop);
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: opacity;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        /* Covers the whole visible area in iOS Safari, also behind its toolbars. */
+        @supports (-webkit-touch-callout: none) {
+            position: absolute;
+        }
+
+        &[data-starting-style],
+        &[data-ending-style] {
+            opacity: 0;
+        }
+    }
+
+    .viewport {
+        position: fixed;
+        inset: 0;
+        z-index: var(--dextinity-z-index-dialog);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        padding: var(--dextinity-space-xl);
+    }
+
+    .root {
+        --_width: 37.5rem;
+
+        display: grid;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        grid-template-columns: minmax(0, 1fr) auto;
+        box-sizing: border-box;
+        inline-size: var(--_width);
+        max-inline-size: 100%;
+        max-block-size: 100%;
+        padding: var(--dextinity-space-xl);
+        border: 1px solid var(--dextinity-color-border);
+        border-radius: var(--dextinity-radius-large);
+        background: var(--dextinity-color-surface);
+        box-shadow: var(--dextinity-shadow-dialog);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        overflow-wrap: break-word;
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: opacity, transform;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        /* The popup itself only receives focus when it contains nothing focusable; it isn't a control. */
+        &:focus {
+            outline: none;
+        }
+
+        &[data-size="small"] {
+            --_width: 25rem;
+        }
+
+        &[data-size="large"] {
+            --_width: 56.25rem;
+        }
+
+        &[data-starting-style],
+        &[data-ending-style] {
+            opacity: 0;
+            transform: scale(0.96);
+        }
+    }
+
+    .title {
+        grid-area: 1 / 1;
+        margin: 0;
+        font-family: var(--dextinity-font-family-heading);
+        font-size: var(--dextinity-typography-heading-4-font-size);
+        font-weight: var(--dextinity-typography-heading-4-font-weight);
+        line-height: var(--dextinity-typography-heading-4-line-height);
+        letter-spacing: var(--dextinity-typography-heading-4-letter-spacing);
+        overflow-wrap: anywhere;
+        hyphens: auto;
+    }
+
+    .description {
+        grid-area: 2 / 1 / auto / -1;
+        margin: var(--dextinity-space-xs) 0 0;
+        color: var(--dextinity-color-foreground-muted);
+    }
+
+    /* Spans the popup's padding, so the lines around scrolling content and the scrollbar reach the popup's edges. */
+    .body {
+        /* Room for the outline of a focused field at the content's edge, which the scrolling element would cut off. */
+        --_focus-ring-space: calc(var(--dextinity-focus-ring-width) + var(--dextinity-focus-ring-offset));
+
+        grid-area: 3 / 1 / auto / -1;
+        margin-block: calc(var(--dextinity-space-lg) - var(--_focus-ring-space)) calc(var(--_focus-ring-space) * -1);
+        margin-inline: calc(var(--dextinity-space-xl) * -1);
+        padding-block: var(--_focus-ring-space);
+        padding-inline: var(--dextinity-space-xl);
+        overflow: auto;
+        overscroll-behavior: contain;
+
+        /* Keeps the content off the lines. It only makes the content scroll further, so it can't toggle the state. */
+        &[data-scrollable] {
+            margin-block: var(--dextinity-space-lg) 0;
+            padding-block: var(--dextinity-space-lg);
+            border-block: 1px solid var(--dextinity-color-border);
+        }
+
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: calc(var(--dextinity-focus-ring-width) * -1);
+        }
+    }
+
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        justify-content: flex-end;
+        grid-area: 4 / 1 / auto / -1;
+        margin-block-start: var(--dextinity-space-xl);
+    }
+
+    /* Centered on the title's first line without making it taller, and with its icon closer to the corner. */
+    .close {
+        --_title-line-height: calc(var(--dextinity-typography-heading-4-font-size) * var(--dextinity-typography-heading-4-line-height));
+
+        grid-area: 1 / 2;
+        align-self: start;
+        margin-block: calc((var(--_title-line-height) - var(--dextinity-control-height-small)) / 2);
+        margin-inline: var(--dextinity-space-lg) calc(var(--dextinity-space-sm) * -1);
+    }
+}

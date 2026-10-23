@@ -1,0 +1,6 @@
+@layer dextinity {
+    .root {
+        margin-block: var(--dextinity-space-xs);
+        border-block-start: 1px solid var(--dextinity-color-border);
+    }
+}

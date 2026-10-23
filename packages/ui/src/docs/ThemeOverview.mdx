@@ -1,0 +1,58 @@
+import { Meta, Story } from "@storybook/addon-docs/blocks";
+
+import * as ThemeOverviewStories from "./__stories__/ThemeOverview.stories";
+
+<Meta
+    title="Foundations/Theme overview"
+    summary="Swatches and samples of every design token's value in the theme picked in the toolbar, to compare themes."
+/>
+
+# Theme overview
+
+The value of every [design token](?path=/docs/foundations-design-tokens--docs) in the theme picked in the toolbar: the colors in both color schemes, the text styles, the spacing, the shapes and the rest. Switch the theme in the toolbar to compare themes. The values come from the theme stylesheets in `packages/ui/src/themes/`, and the tokens and their descriptions from the design tokens page, so this page always shows the current state.
+
+## Color
+
+<Story of={ThemeOverviewStories.Colors} />
+
+## Typography
+
+<Story of={ThemeOverviewStories.Typography} />
+
+## Space
+
+<Story of={ThemeOverviewStories.Space} />
+
+## Shape
+
+<Story of={ThemeOverviewStories.Shape} />
+
+## Elevation
+
+<Story of={ThemeOverviewStories.Elevation} />
+
+## Controls
+
+<Story of={ThemeOverviewStories.Controls} />
+
+## State
+
+<Story of={ThemeOverviewStories.State} />
+
+## Motion
+
+Themes set the durations to `0s` for users who prefer reduced motion, so this page shows `0s` if your system asks for reduced motion.
+
+<Story of={ThemeOverviewStories.Motion} />
+
+## Layering
+
+<Story of={ThemeOverviewStories.Layering} />
+
+## Button
+
+<Story of={ThemeOverviewStories.Button} />
+
+## App bar
+
+<Story of={ThemeOverviewStories.AppBar} />

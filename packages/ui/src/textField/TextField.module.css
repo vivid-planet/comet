@@ -1,0 +1,59 @@
+@layer dextinity {
+    .root {
+        /* FormField lays out the parts. This rule only gives the root its `dextinityTextField` class. */
+    }
+
+    .input {
+        --_border-color: var(--dextinity-color-border-strong);
+
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: var(--dextinity-control-height-medium);
+        margin: 0;
+        padding-block: 0;
+        padding-inline: var(--dextinity-space-lg);
+        border: var(--dextinity-control-border-width) solid var(--_border-color);
+        border-radius: var(--dextinity-radius-medium);
+        background: var(--dextinity-color-surface);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        appearance: none;
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: border-color;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        &::placeholder {
+            color: var(--dextinity-color-foreground-muted);
+            opacity: 1; /* Firefox dims placeholders by default. */
+        }
+
+        /* `:where()` keeps the hover rule's specificity low, so focus and invalid borders win over it. */
+        @media (hover: hover) {
+            &:hover:where(:not([data-disabled], [readonly])) {
+                --_border-color: var(--dextinity-color-border-hover);
+            }
+        }
+
+        &:focus {
+            --_border-color: var(--dextinity-color-primary);
+        }
+
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: var(--dextinity-focus-ring-offset);
+        }
+
+        &[data-invalid] {
+            --_border-color: var(--dextinity-color-danger);
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+}

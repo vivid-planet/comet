@@ -1,0 +1,17 @@
+@layer dextinity {
+    .root {
+        /* The items lay themselves out. This rule only gives the root its `dextinityMenuGroup` class. */
+    }
+
+    .label {
+        padding-block: var(--dextinity-space-sm) var(--dextinity-space-xs);
+        padding-inline: var(--dextinity-space-lg);
+        color: var(--dextinity-color-foreground-muted);
+        font-size: var(--dextinity-typography-body-small-font-size);
+        font-weight: var(--dextinity-typography-body-small-font-weight);
+        line-height: var(--dextinity-typography-body-small-line-height);
+        letter-spacing: var(--dextinity-typography-body-small-letter-spacing);
+        cursor: default;
+        user-select: none;
+    }
+}

@@ -1,0 +1,33 @@
+.comparison {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 1rem;
+}
+
+.theme {
+    padding: 1.5rem;
+    border: 1px solid var(--dextinity-color-border);
+    border-radius: var(--dextinity-radius-large);
+    background: var(--dextinity-color-background);
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+}
+
+.sample {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}

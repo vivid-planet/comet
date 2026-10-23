@@ -1,0 +1,91 @@
+@layer dextinity {
+    .root {
+        --_label-line-height: calc(var(--dextinity-typography-body-font-size) * var(--dextinity-typography-body-line-height));
+
+        position: relative; /* Contains the hidden input that Base UI positions absolutely next to the control. */
+        display: inline-flex;
+        gap: var(--dextinity-space-md);
+        align-items: flex-start;
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        cursor: pointer;
+
+        @media (hover: hover) {
+            &:hover:not([data-disabled]) .control:not([data-readonly], [data-disabled]) {
+                --_background: var(--dextinity-color-border-hover);
+
+                &[data-checked] {
+                    --_background: var(--dextinity-color-primary-hover);
+                }
+            }
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+
+        /* Disabled by an enclosing Base UI component, such as a disabled Field.Root or CheckboxGroup. */
+        &:has(> .control[data-disabled]) {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .control {
+        --_background: var(--dextinity-color-border-strong);
+        --_thumb-inset: 2px;
+        --_thumb-size: calc(var(--dextinity-control-toggle-size) - 2 * var(--_thumb-inset));
+
+        position: relative;
+        flex: none;
+        box-sizing: border-box;
+        inline-size: calc(2 * var(--dextinity-control-toggle-size));
+        block-size: var(--dextinity-control-toggle-size);
+        margin-block: calc((var(--_label-line-height) - var(--dextinity-control-toggle-size)) / 2);
+        border-radius: var(--dextinity-radius-full);
+        background: var(--_background);
+        transition: background-color var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: var(--dextinity-focus-ring-offset);
+        }
+
+        &[data-checked] {
+            --_background: var(--dextinity-color-primary);
+        }
+    }
+
+    .thumb {
+        position: absolute;
+        inset-block-start: var(--_thumb-inset);
+        inset-inline-start: var(--_thumb-inset);
+        inline-size: var(--_thumb-size);
+        block-size: var(--_thumb-size);
+        border-radius: var(--dextinity-radius-full);
+        background: var(--dextinity-color-surface);
+        transition: inset-inline-start var(--dextinity-motion-duration-medium) var(--dextinity-motion-easing);
+
+        &[data-checked] {
+            inset-inline-start: calc(100% - var(--_thumb-size) - var(--_thumb-inset));
+        }
+    }
+
+    .label {
+        overflow-wrap: anywhere;
+    }
+
+    /* Forced colors replace the backgrounds that draw the track and the thumb, so outline them instead. */
+    @media (forced-colors: active) {
+        .control,
+        .thumb {
+            outline: var(--dextinity-control-border-width) solid currentcolor;
+            outline-offset: calc(-1 * var(--dextinity-control-border-width));
+        }
+    }
+}

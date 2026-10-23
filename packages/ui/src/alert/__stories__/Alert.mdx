@@ -1,0 +1,55 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as AlertStories from "./Alert.stories";
+
+<Meta of={AlertStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the alert itself, the `dextinityAlert` element, which also gets `role` and the props the component doesn't handle, such as `id` and `aria-*`. `slotProps` adjusts the inner parts. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`tone`) that returns them. `render` replaces a slot's element, for example `{ title: { render: <h2 /> } }` for a title that is a heading. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot      | Element  | Class                     | What it is                                                                                                                  |
+| --------- | -------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `icon`    | `<span>` | `dextinityAlert__icon`    | The element around the icon, in the tone's color. Rendered only while the alert shows an icon.                              |
+| `content` | `<div>`  | `dextinityAlert__content` | The element next to the icon that holds the title, the message and the action.                                              |
+| `title`   | `<div>`  | `dextinityAlert__title`   | The `title`. Rendered only when the alert has a title.                                                                      |
+| `message` | `<div>`  | `dextinityAlert__message` | The message, `children`.                                                                                                    |
+| `action`  | `<div>`  | `dextinityAlert__action`  | The `action`, after the message on the same line or, with a title or in a narrow alert, below it. Rendered only when given. |
+
+<Canvas of={AlertStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the alert through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the alert's own: they're shared tokens, which other components can use too. The theme contract guarantees the text color's contrast on every tone's background. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                       | In the alert                                                                                                                                                            |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-color-primary-subtle`                                                                                                                                          | Background of a `tone="info"` alert, the default.                                                                                                                       |
+| `--dextinity-color-primary`                                                                                                                                                 | Icon color of a `tone="info"` alert.                                                                                                                                    |
+| `--dextinity-color-success-subtle`                                                                                                                                          | Background of a `tone="success"` alert.                                                                                                                                 |
+| `--dextinity-color-success`                                                                                                                                                 | Icon color of a `tone="success"` alert.                                                                                                                                 |
+| `--dextinity-color-warning-subtle`                                                                                                                                          | Background of a `tone="warning"` alert.                                                                                                                                 |
+| `--dextinity-color-warning`                                                                                                                                                 | Icon color of a `tone="warning"` alert.                                                                                                                                 |
+| `--dextinity-color-danger-subtle`                                                                                                                                           | Background of a `tone="danger"` alert.                                                                                                                                  |
+| `--dextinity-color-danger`                                                                                                                                                  | Icon color of a `tone="danger"` alert.                                                                                                                                  |
+| `--dextinity-color-foreground`                                                                                                                                              | Text color of the title and the message, in every tone.                                                                                                                 |
+| `--dextinity-font-family-body`                                                                                                                                              | Font family of the title and the message.                                                                                                                               |
+| `--dextinity-typography-body-font-size`, `--dextinity-typography-body-line-height`, `--dextinity-typography-body-font-weight`, `--dextinity-typography-body-letter-spacing` | Size, line height, weight and letter spacing of the message, and of the title except its weight. Icons are 1.25 times as large as the text, centered on its first line. |
+| `--dextinity-typography-label-font-weight`                                                                                                                                  | Weight of the title.                                                                                                                                                    |
+| `--dextinity-radius-medium`                                                                                                                                                 | Corner radius.                                                                                                                                                          |
+| `--dextinity-space-lg`                                                                                                                                                      | Padding, and the gap between the message and an action on the same line.                                                                                                |
+| `--dextinity-space-md`                                                                                                                                                      | Gap between the icon and the text.                                                                                                                                      |
+| `--dextinity-space-xs`                                                                                                                                                      | Gap between the title, the message and an action below them, and the extra space above an action below a title.                                                         |
+| `--dextinity-space-sm`                                                                                                                                                      | Gap between the elements of an action, such as two buttons.                                                                                                             |

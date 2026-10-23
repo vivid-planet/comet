@@ -1,0 +1,169 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ThemingStories from "./__stories__/Theming.stories";
+
+<Meta
+    title="Foundations/Theming"
+    summary="The available themes (the published Dextinity theme and the example themes of this Storybook), how a theme is applied, how to adjust the Dextinity theme, and how to create a theme for another brand."
+/>
+
+# Theming
+
+A theme is a stylesheet that defines the [design tokens](?path=/docs/foundations-design-tokens--docs): CSS custom properties for colors, typography, space, shapes and motion. Components read nothing but these tokens, so a theme changes their look completely without changing their code.
+
+## Available themes
+
+The package publishes the Dextinity theme. This Storybook also shows example themes, which aren't published: they prove that the components follow any theme, and they're starting points for a project's own theme. Every theme has a light and a dark color scheme. Switch between them in the toolbar.
+
+| Theme     | `data-dextinity-theme` | Stylesheet                                                     | What it is                                                                                                                                                                              |
+| --------- | ---------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dextinity | `dextinity`            | `@dextinity/ui/themes/dextinity.css`                           | The Dextinity brand: indigo and teal, the Figtree typeface, pill-shaped buttons with the brand gradient.                                                                                |
+| Sunset    | `sunset`               | Not published, an example: `packages/ui/src/themes/sunset.css` | A color variation of the Dextinity theme: a violet accent, a violet to red-orange button gradient and slightly warm greys.                                                              |
+| Acme      | `acme`                 | Not published, an example: `packages/ui/src/themes/acme.css`   | A fictive brand: warm paper tones with a terracotta accent, serif headings, square corners, a denser layout and its own, thinner icons.                                                 |
+| Volt      | `volt`                 | Not published, an example: `packages/ui/src/themes/volt.css`   | A fictive charging network for electric vehicles: acid lime on deep ink, hot magenta for hover, focus and floating layers, hard poster shadows, tight corners and heavy uppercase type. |
+| Tropic    | `tropic`               | Not published, an example: `packages/ui/src/themes/tropic.css` | A fictive chain of juice bars: coral and tangerine with deep teal and sunshine yellow on warm off-white, generous radii and pill buttons; teal-black with glowing coral in the dark.    |
+| Nova      | `nova`                 | Not published, an example: `packages/ui/src/themes/nova.css`   | A fictive music festival: an ultraviolet-to-magenta gradient, cyan accents and pill buttons on cool near-white, and neon glow on midnight indigo in the dark.                           |
+| Primo     | `primo`                | Not published, an example: `packages/ui/src/themes/primo.css`  | A fictive toy and design studio in the spirit of the Bauhaus: signal red, cobalt and sunflower yellow with black, square corners, thick borders and hard shadows without blur.          |
+
+To use an example theme in an application, copy its stylesheet into the application, for Acme together with the `acmeIcons/` folder next to it, and import it instead of a published theme; see [Creating a theme](#creating-a-theme).
+
+<Canvas of={ThemingStories.Comparison} />
+
+## Applying a theme
+
+Import the component styles and a theme once, at the root of the application:
+
+```tsx
+import "@dextinity/ui/css";
+import "@dextinity/ui/themes/dextinity.css";
+```
+
+Then name the theme and the color scheme on the `<html>` element. A theme applies to the element that names it and everything inside. Use `<html>`, so popups, which render at the end of `<body>`, follow it too.
+
+```html
+<html data-dextinity-theme="dextinity" data-dextinity-color-scheme="light"></html>
+```
+
+In a Next.js application, set them in the root layout:
+
+```tsx
+// src/app/layout.tsx
+import "@dextinity/ui/css";
+import "@dextinity/ui/themes/dextinity.css";
+
+import type { PropsWithChildren } from "react";
+
+export default function RootLayout({ children }: PropsWithChildren) {
+    return (
+        <html lang="en" data-dextinity-theme="dextinity" data-dextinity-color-scheme="light">
+            <body>{children}</body>
+        </html>
+    );
+}
+```
+
+The theme doesn't style the page itself. Give the page the theme's background and text color:
+
+```css
+body {
+    background: var(--dextinity-color-background);
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+}
+```
+
+### Fonts
+
+A theme names its font families, but doesn't load them, because applications load fonts differently. The Dextinity theme uses Figtree, for example through [Fontsource](https://fontsource.org/fonts/figtree):
+
+```tsx
+import "@fontsource-variable/figtree";
+```
+
+### Color schemes
+
+`data-dextinity-color-scheme` is `light` or `dark`. To follow the operating system, resolve its preference in the application and set the attribute. In a server-rendered application, set it before the first paint, for example from a cookie, so the page doesn't flash in the wrong scheme.
+
+### CSS reset and other global styles
+
+All styles of the package and its themes are in the `dextinity` [cascade layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer). Styles outside any layer always win over styles in a layer, whatever their specificity. That lets an application adjust any component with plain CSS, but it also means that an unlayered CSS reset breaks the components: `button { padding: 0; background: none; }` removes a button's padding and background.
+
+Put resets and other element styles into a layer that comes before `dextinity`. The first `@layer` statement sets the order, so put it before any other stylesheet:
+
+```css
+@layer reset, dextinity;
+
+@layer reset {
+    button {
+        padding: 0;
+        border: none;
+        background: none;
+    }
+}
+```
+
+Utility frameworks that use layers, such as Tailwind CSS, must name `dextinity` before their utilities layer, so utility classes can still override a component: `@layer theme, base, dextinity, components, utilities;`.
+
+## Adjusting the Dextinity theme
+
+To change a few tokens, redefine them for the theme in the application's own stylesheet, outside any layer:
+
+```css
+[data-dextinity-theme="dextinity"] {
+    --dextinity-color-primary: #2f6bf2;
+    --dextinity-button-radius: 8px;
+}
+
+[data-dextinity-theme="dextinity"][data-dextinity-color-scheme="dark"] {
+    --dextinity-color-primary: #8fb0ff;
+}
+```
+
+Because these rules are outside any layer, they win over the theme in both color schemes and over its reduced-motion rule. So give every `--dextinity-color-*` token you change a value for the dark color scheme too, as above, and set motion durations inside `@media (prefers-reduced-motion: no-preference) { … }`.
+
+Redefine a token on the element that names the theme, as above. A token that refers to another token, like `--dextinity-button-secondary-background: var(--dextinity-color-surface)`, gets its value there. If you change `--dextinity-color-surface` on an element further inside, the button doesn't follow.
+
+## Nesting themes
+
+To give a part of a page another theme or color scheme, such as a dark sidebar or the preview of a theme, wrap it in a [`ThemeSwitch`](?path=/docs/foundations-themeswitch--docs). Every design token inside gets the value of its theme and color scheme, and theme switches can be nested:
+
+```tsx
+import { ThemeSwitch } from "@dextinity/ui";
+
+<ThemeSwitch theme="dextinity" colorScheme="dark">
+    <Navigation label="Main">…</Navigation>
+</ThemeSwitch>;
+```
+
+Inside a theme switch, another one starts its own theme anew, so the innermost decides:
+
+```tsx
+<ThemeSwitch theme="dextinity" colorScheme="light">
+    <ProductForm />
+    <ThemeSwitch theme="sunset" colorScheme="dark">
+        <Preview />
+        <ThemeSwitch theme="acme" colorScheme="light">
+            <PartnerCard />
+        </ThemeSwitch>
+    </ThemeSwitch>
+</ThemeSwitch>
+```
+
+The [nested theme switches](?path=/story/foundations-themeswitch--nested) story shows seven levels, each with its own colors, shapes and icons.
+
+A theme switch is a `<div>` with the `data-dextinity-theme` and `data-dextinity-color-scheme` attributes, which paints the theme's background. It uses no React context, so it renders on the server, also as a React Server Component. Name both its theme and its color scheme: CSS can't find out the color scheme around it. Popups opened inside it, such as a select's options, follow its theme too, although they render at the end of `<body>`.
+
+## Creating a theme
+
+A theme for another brand is a stylesheet like [`acme.css`](https://github.com/vivid-planet/dextinity/blob/main/packages/ui/src/themes/acme.css):
+
+1. Copy `acme.css` and replace `acme` in its selectors with the name of the theme. Its `--dextinity-icon-*` declarations point to the files in `acmeIcons/`: delete them to keep the package's icons, or copy the folder next to the stylesheet and replace the files.
+2. Define every token listed in [Design tokens](?path=/docs/foundations-design-tokens--docs) for the light color scheme, and every `--dextinity-color-*` token again for the dark color scheme.
+3. Check every color pair the design tokens page names against its contrast requirement.
+4. Set the motion durations to `0s` for users who prefer reduced motion.
+
+For a variation of the Dextinity theme, copy [`dextinity.css`](https://github.com/vivid-planet/dextinity/blob/main/packages/ui/src/themes/dextinity.css) instead and change what differs. [`sunset.css`](https://github.com/vivid-planet/dextinity/blob/main/packages/ui/src/themes/sunset.css) changes only the colors, and keeps the typeface, shapes and spacing.
+
+Inside this repository, a unit test checks steps 2 to 4 for every theme in `packages/ui/src/themes/`: add a theme there, and run `pnpm --filter @dextinity/ui run test:unit`.
+
+Keep the theme's own palette inside the theme file. Components only use the tokens, so a theme is free to name its colors however it likes before assigning them to tokens.

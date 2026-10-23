@@ -1,0 +1,35 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dextinity-space-lg);
+    align-items: center;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dextinity-space-md);
+    margin: 0;
+    padding: 0;
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+    font-size: var(--dextinity-typography-body-font-size);
+    list-style: none;
+}
+
+.person {
+    display: flex;
+    gap: var(--dextinity-space-md);
+    align-items: center;
+}
+
+.ringedAvatar {
+    box-shadow:
+        0 0 0 var(--dextinity-control-border-width) var(--dextinity-color-surface),
+        0 0 0 var(--dextinity-space-xs) var(--dextinity-color-success);
+}
+
+.successFallback {
+    background: var(--dextinity-color-success-subtle);
+    color: var(--dextinity-color-success);
+}

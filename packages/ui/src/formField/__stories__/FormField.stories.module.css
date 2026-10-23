@@ -1,0 +1,28 @@
+.frame {
+    max-inline-size: 24rem;
+}
+
+.control {
+    box-sizing: border-box;
+    min-block-size: 2.5rem;
+    padding-inline: 0.75rem;
+    border: 1px solid var(--dextinity-color-border-strong);
+    border-radius: var(--dextinity-radius-medium);
+    background: var(--dextinity-color-surface);
+    color: var(--dextinity-color-foreground);
+    font: inherit;
+}
+
+.control:focus-visible {
+    outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+    outline-offset: var(--dextinity-focus-ring-offset);
+}
+
+.control[data-invalid] {
+    border-color: var(--dextinity-color-danger);
+}
+
+.rules {
+    margin: 0;
+    padding-inline-start: 1.25em;
+}

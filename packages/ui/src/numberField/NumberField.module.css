@@ -1,0 +1,128 @@
+@layer dextinity {
+    .root {
+        position: relative; /* Contains the hidden input that Base UI positions absolutely to submit the value with a form. */
+    }
+
+    .group {
+        --_border-color: var(--dextinity-color-border-strong);
+        --_button-size: calc(var(--dextinity-control-height-medium) - 2 * var(--dextinity-space-sm));
+
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: var(--dextinity-control-height-medium);
+        padding-inline-end: calc(var(--dextinity-space-sm) - var(--dextinity-control-border-width));
+        border: var(--dextinity-control-border-width) solid var(--_border-color);
+        border-radius: var(--dextinity-radius-medium);
+        background: var(--dextinity-color-surface);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: border-color;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        @media (hover: hover) {
+            /* `:where()` keeps the hover rule's specificity low, so focus and invalid borders win over it. */
+            &:hover:where(:not([data-disabled], [data-readonly])) {
+                --_border-color: var(--dextinity-color-border-hover);
+            }
+
+            & > :is(.decrement, .increment):hover:not([data-disabled]) {
+                background: var(--dextinity-color-surface-hover);
+            }
+        }
+
+        &[data-focused] {
+            --_border-color: var(--dextinity-color-primary);
+        }
+
+        &:has(> .input:focus-visible) {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: var(--dextinity-focus-ring-offset);
+        }
+
+        &[data-invalid] {
+            --_border-color: var(--dextinity-color-danger);
+        }
+
+        & > :is(.decrement, .increment)[data-disabled] {
+            cursor: not-allowed;
+        }
+
+        /* A disabled field dims the whole group, so only a button disabled at `min` or `max` dims itself. */
+        &:not([data-disabled]) > :is(.decrement, .increment)[data-disabled] {
+            opacity: var(--dextinity-opacity-disabled);
+        }
+
+        &[data-readonly] {
+            padding-inline-end: 0;
+
+            & > :is(.decrement, .increment) {
+                display: none;
+            }
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .input {
+        flex: 1;
+        align-self: stretch;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        margin: 0;
+        padding-block: 0;
+        padding-inline: var(--dextinity-space-lg);
+        border: 0;
+        outline: none; /* The group shows the focus ring around the input and the buttons. */
+        background: transparent;
+        color: inherit;
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        font-variant-numeric: tabular-nums;
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        appearance: none;
+
+        &::placeholder {
+            color: var(--dextinity-color-foreground-muted);
+            opacity: 1; /* Firefox dims placeholders by default. */
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+        }
+    }
+
+    .decrement,
+    .increment {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        inline-size: var(--_button-size);
+        block-size: var(--_button-size);
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: var(--dextinity-radius-small);
+        background: transparent;
+        color: inherit;
+        font-size: calc(var(--dextinity-typography-body-font-size) * 1.25);
+        cursor: pointer;
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: background-color;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: calc(-1 * var(--dextinity-focus-ring-width));
+        }
+    }
+}

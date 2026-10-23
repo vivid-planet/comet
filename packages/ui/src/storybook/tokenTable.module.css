@@ -1,0 +1,28 @@
+.valueCell {
+    min-inline-size: 12rem;
+}
+
+.value {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8125em;
+
+    & + & {
+        margin-top: 0.25rem;
+    }
+}
+
+.valueText {
+    overflow-wrap: break-word;
+}
+
+/* A neutral outline that shows white and black swatches on the docs page's background. */
+.swatch {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px rgb(128 128 128 / 45%);
+}

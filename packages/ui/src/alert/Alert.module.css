@@ -1,0 +1,90 @@
+@layer dextinity {
+    .root {
+        --_background: var(--dextinity-color-primary-subtle);
+        --_icon-color: var(--dextinity-color-primary);
+
+        display: flex;
+        gap: var(--dextinity-space-md);
+        align-items: baseline;
+        box-sizing: border-box;
+        padding: var(--dextinity-space-lg);
+        border-radius: var(--dextinity-radius-medium);
+        background: var(--_background);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        overflow-wrap: break-word;
+
+        &[data-tone="success"] {
+            --_background: var(--dextinity-color-success-subtle);
+            --_icon-color: var(--dextinity-color-success);
+        }
+
+        &[data-tone="warning"] {
+            --_background: var(--dextinity-color-warning-subtle);
+            --_icon-color: var(--dextinity-color-warning);
+        }
+
+        &[data-tone="danger"] {
+            --_background: var(--dextinity-color-danger-subtle);
+            --_icon-color: var(--dextinity-color-danger);
+        }
+    }
+
+    .icon {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        color: var(--_icon-color);
+        font-size: 1.25em;
+
+        /* An invisible line of message-sized text gives the icon a baseline, so the root's baseline alignment centers the icon on the first line of the title or the message, also next to a taller action. */
+        &::before {
+            content: "\200b";
+            font-size: 0.8em;
+        }
+
+        & > svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+
+    .content {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        gap: var(--dextinity-space-xs) var(--dextinity-space-lg);
+        align-items: baseline;
+        min-width: 0;
+    }
+
+    /* The resets keep the alert's typography when `render` makes the title a heading or the message a paragraph. */
+    .title {
+        flex-basis: 100%;
+        margin: 0;
+        font: inherit;
+        font-weight: var(--dextinity-typography-label-font-weight);
+    }
+
+    .message {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin: 0;
+    }
+
+    .action {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+    }
+
+    .title ~ .action {
+        flex-basis: 100%;
+        margin-block-start: var(--dextinity-space-xs);
+    }
+}

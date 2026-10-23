@@ -1,0 +1,35 @@
+.frame {
+    max-inline-size: 24rem;
+}
+
+.form {
+    display: grid;
+    gap: var(--dextinity-space-xl);
+    justify-items: start;
+
+    & > :first-child {
+        justify-self: stretch;
+    }
+}
+
+.output {
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+}
+
+.themeSwitch {
+    padding: var(--dextinity-space-lg);
+    border-radius: var(--dextinity-radius-large);
+}
+
+.languageField {
+    max-inline-size: 14rem;
+}
+
+.languageGroup {
+    border-style: dashed;
+}
+
+.languageOption {
+    font-weight: 600;
+}

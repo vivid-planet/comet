@@ -1,0 +1,12 @@
+.frame {
+    max-inline-size: 24rem;
+}
+
+.accentColorField {
+    max-inline-size: 14rem;
+}
+
+.roundSwatch,
+.roundPreset {
+    border-radius: var(--dextinity-radius-full);
+}

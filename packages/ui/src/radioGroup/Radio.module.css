@@ -1,0 +1,85 @@
+@layer dextinity {
+    .root {
+        --_label-line-height: calc(var(--dextinity-typography-body-font-size) * var(--dextinity-typography-body-line-height));
+
+        position: relative; /* Contains the hidden input that Base UI positions absolutely next to the control. */
+        display: inline-flex;
+        gap: var(--dextinity-space-md);
+        align-items: flex-start;
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        cursor: pointer;
+
+        @media (hover: hover) {
+            &:hover:not([data-disabled]) .control:not([data-readonly], [data-invalid]) {
+                --_border-color: var(--dextinity-color-border-hover);
+
+                &[data-checked] {
+                    --_border-color: var(--dextinity-color-primary-hover);
+                    --_dot-color: var(--dextinity-color-primary-hover);
+                }
+            }
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .control {
+        --_border-color: var(--dextinity-color-border-strong);
+        --_dot-color: var(--dextinity-color-primary);
+
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        inline-size: var(--dextinity-control-toggle-size);
+        block-size: var(--dextinity-control-toggle-size);
+        margin-block: calc((var(--_label-line-height) - var(--dextinity-control-toggle-size)) / 2);
+        border: var(--dextinity-control-border-width) solid var(--_border-color);
+        border-radius: var(--dextinity-radius-full);
+        background: var(--dextinity-color-surface);
+        transition: border-color var(--dextinity-motion-duration-short) var(--dextinity-motion-easing);
+
+        &:focus-visible {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: var(--dextinity-focus-ring-offset);
+        }
+
+        &[data-checked] {
+            --_border-color: var(--dextinity-color-primary);
+        }
+
+        &[data-invalid] {
+            --_border-color: var(--dextinity-color-danger);
+        }
+    }
+
+    .indicator {
+        inline-size: 0;
+        block-size: 0;
+
+        /* A border draws the dot, not a background: forced-colors mode removes backgrounds. */
+        border: calc(var(--dextinity-control-toggle-size) / 4) solid var(--_dot-color);
+        border-radius: var(--dextinity-radius-full);
+        transition-duration: var(--dextinity-motion-duration-short);
+        transition-property: border-color, transform;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        &[data-starting-style],
+        &[data-ending-style] {
+            transform: scale(0);
+        }
+    }
+
+    .label {
+        overflow-wrap: anywhere;
+    }
+}

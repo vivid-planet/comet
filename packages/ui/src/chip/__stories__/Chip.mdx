@@ -1,0 +1,43 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as ChipStories from "./Chip.stories";
+
+<Meta of={ChipStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+A chip has no inner parts. `className` and `style` go to its element, `dextinityChip`, and `render` replaces the element, for example with an `<li>` in a list of categories. See [Customization](?path=/docs/foundations-customization--docs).
+
+## Design tokens
+
+A theme styles the chip through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the chip's own: they're shared tokens, which other components can use too. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                                                                                         | In the chip                                                                            |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `--dextinity-color-neutral-subtle`                                                                                                                                                                                                            | Background of a `tone="neutral"` chip, the default.                                    |
+| `--dextinity-color-foreground`                                                                                                                                                                                                                | Text color of a `tone="neutral"` chip.                                                 |
+| `--dextinity-color-primary-subtle`                                                                                                                                                                                                            | Background of a `tone="primary"` chip.                                                 |
+| `--dextinity-color-primary`                                                                                                                                                                                                                   | Text color of a `tone="primary"` chip.                                                 |
+| `--dextinity-color-success-subtle`                                                                                                                                                                                                            | Background of a `tone="success"` chip.                                                 |
+| `--dextinity-color-success`                                                                                                                                                                                                                   | Text color of a `tone="success"` chip.                                                 |
+| `--dextinity-color-warning-subtle`                                                                                                                                                                                                            | Background of a `tone="warning"` chip.                                                 |
+| `--dextinity-color-warning`                                                                                                                                                                                                                   | Text color of a `tone="warning"` chip.                                                 |
+| `--dextinity-color-danger-subtle`                                                                                                                                                                                                             | Background of a `tone="danger"` chip.                                                  |
+| `--dextinity-color-danger`                                                                                                                                                                                                                    | Text color of a `tone="danger"` chip.                                                  |
+| `--dextinity-font-family-body`                                                                                                                                                                                                                | Font family of the text.                                                               |
+| `--dextinity-typography-overline-font-size`, `--dextinity-typography-overline-line-height`, `--dextinity-typography-overline-font-weight`, `--dextinity-typography-overline-letter-spacing`, `--dextinity-typography-overline-text-transform` | Size, line height, weight and letter spacing of the text, and whether it is uppercase. |
+| `--dextinity-space-xs`                                                                                                                                                                                                                        | Vertical padding, and the gap between an icon and the text.                            |
+| `--dextinity-space-sm`                                                                                                                                                                                                                        | Horizontal padding.                                                                    |
+| `--dextinity-radius-small`                                                                                                                                                                                                                    | Corner radius.                                                                         |

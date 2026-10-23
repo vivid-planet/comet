@@ -1,0 +1,54 @@
+@layer dextinity {
+    .root {
+        position: relative; /* Positions the indicator. */
+        display: flex;
+        overflow-x: auto;
+        scrollbar-width: thin;
+
+        /*
+         * The line that separates the tabs from the panels. As a background that scrolls with the tabs, it spans
+         * all of them and lies on the indicator's edge, above a classic scrollbar, so the indicator covers it at
+         * the selected tab. A border would lie below such a scrollbar, and an inset shadow behind it.
+         */
+        background: linear-gradient(var(--dextinity-color-border), var(--dextinity-color-border)) bottom / 100% 1px no-repeat local;
+
+        &[data-orientation="vertical"] {
+            flex-direction: column;
+            overflow-x: visible;
+            background-position: right;
+            background-size: 1px 100%;
+
+            &:dir(rtl) {
+                background-position: left;
+            }
+        }
+    }
+
+    .indicator {
+        position: absolute;
+        bottom: 0;
+        left: 0; /* Base UI measures the tab's position from the left, also in right-to-left text. */
+        box-sizing: content-box;
+        width: var(--active-tab-width);
+        height: 0;
+
+        /* A border draws the line, not a background: forced-colors mode removes backgrounds. */
+        border-block-end: 2px solid var(--dextinity-color-primary);
+        translate: var(--active-tab-left) 0;
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: translate, width, height;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        &[data-orientation="vertical"] {
+            top: 0;
+            bottom: auto;
+            left: auto;
+            inset-inline-end: 0;
+            width: 0;
+            height: var(--active-tab-height);
+            border-block-end: 0;
+            border-inline-end: 2px solid var(--dextinity-color-primary);
+            translate: 0 var(--active-tab-top);
+        }
+    }
+}

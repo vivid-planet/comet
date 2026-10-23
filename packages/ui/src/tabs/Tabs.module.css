@@ -1,0 +1,13 @@
+@layer dextinity {
+    .root {
+        display: flex;
+        flex-direction: column;
+        gap: var(--dextinity-space-lg);
+        min-inline-size: 0; /* Lets the tab list scroll instead of widening a flex or grid parent. */
+
+        &[data-orientation="vertical"] {
+            flex-flow: row wrap; /* Moves the panel below the tabs when it doesn't fit beside them. */
+            align-items: flex-start;
+        }
+    }
+}

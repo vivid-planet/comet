@@ -1,0 +1,51 @@
+@layer dextinity {
+    .root {
+        display: flex;
+        flex-direction: column;
+        gap: var(--dextinity-space-xs);
+        font-family: var(--dextinity-font-family-body);
+        overflow-wrap: anywhere;
+    }
+
+    .label {
+        align-self: flex-start;
+        color: var(--dextinity-color-foreground);
+        font-size: var(--dextinity-typography-label-font-size);
+        font-weight: var(--dextinity-typography-label-font-weight);
+        line-height: var(--dextinity-typography-label-line-height);
+        letter-spacing: var(--dextinity-typography-label-letter-spacing);
+
+        /* Only the label: the description often explains why the field is disabled, so it stays readable. */
+        &[data-disabled] {
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .requiredIndicator {
+        margin-inline-start: var(--dextinity-space-xs);
+        color: var(--dextinity-color-danger);
+    }
+
+    .description,
+    .error {
+        margin: 0;
+        font-size: var(--dextinity-typography-body-small-font-size);
+        font-weight: var(--dextinity-typography-body-small-font-weight);
+        line-height: var(--dextinity-typography-body-small-line-height);
+        letter-spacing: var(--dextinity-typography-body-small-letter-spacing);
+    }
+
+    .description {
+        color: var(--dextinity-color-foreground-muted);
+    }
+
+    .error {
+        color: var(--dextinity-color-danger);
+
+        /* Base UI lists several messages from `validate` in a `<ul>`. */
+        & ul {
+            margin: 0;
+            padding-inline-start: 1.25em;
+        }
+    }
+}

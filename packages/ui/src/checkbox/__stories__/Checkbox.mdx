@@ -1,0 +1,53 @@
+import { Canvas, Controls, Description, Meta, Primary, Stories, Subtitle, Title } from "@storybook/addon-docs/blocks";
+
+import * as CheckboxStories from "./Checkbox.stories";
+
+<Meta of={CheckboxStories} />
+
+<Title />
+
+<Subtitle />
+
+<Description of="meta" />
+
+<Primary />
+
+<Controls />
+
+<Stories />
+
+## Slots
+
+`className` and `style` go to the checkbox's outer element, the `dextinityCheckbox` element. `slotProps` adjusts the inner parts. Each slot takes an element's props, merged with the slot's own, or a function of the owner state (`disabled`) that returns them. `render` replaces a slot's element. See [Customization](?path=/docs/foundations-customization--docs).
+
+| Slot        | Element                                 | Class                          | What it is                                                                                              |
+| ----------- | --------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `control`   | `<span>` (Base UI `Checkbox.Root`)      | `dextinityCheckbox__control`   | The box, which has the `checkbox` role, receives focus and gets the props the component doesn't handle. |
+| `indicator` | `<span>` (Base UI `Checkbox.Indicator`) | `dextinityCheckbox__indicator` | The check mark, or the dash while `indeterminate`. Rendered only while checked or indeterminate.        |
+| `label`     | `<label>`                               | `dextinityCheckbox__label`     | The text, `children`, which names the checkbox. Rendered only when there are `children`.                |
+
+<Canvas of={CheckboxStories.CustomizedThroughSlotProps} />
+
+## Design tokens
+
+A theme styles the checkbox through these [design tokens](?path=/docs/foundations-design-tokens--docs). None of them is the checkbox's own: they're shared tokens, which other components can use too. The values are those of the theme picked in the toolbar; the [theme overview](?path=/docs/foundations-theme-overview--docs) compares the themes.
+
+| Token                                                                                                                                                                       | In the checkbox                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--dextinity-color-surface`                                                                                                                                                 | Background of the unchecked box.                                                                                                                                             |
+| `--dextinity-color-border-strong`                                                                                                                                           | Border color of the unchecked box.                                                                                                                                           |
+| `--dextinity-color-border-hover`                                                                                                                                            | Border color of the unchecked box while the box or its label is hovered. A `readOnly` or invalid box keeps its border.                                                       |
+| `--dextinity-color-primary`                                                                                                                                                 | Background and border color of the checked or indeterminate box. An invalid box keeps its danger border.                                                                     |
+| `--dextinity-color-primary-hover`                                                                                                                                           | Background and border color of the checked or indeterminate box while the box or its label is hovered. A `readOnly` or invalid box keeps its colors.                         |
+| `--dextinity-color-primary-foreground`                                                                                                                                      | Color of the check mark, and of the dash that replaces it while `indeterminate`.                                                                                             |
+| `--dextinity-color-danger`                                                                                                                                                  | Border color of the box when the checkbox is inside an invalid Base UI `Field.Root`, also while checked or hovered. `Checkbox` has no prop of its own that makes it invalid. |
+| `--dextinity-control-toggle-size`                                                                                                                                           | Width and height of the box. The check mark and the dash are 0.6 times as large.                                                                                             |
+| `--dextinity-control-border-width`                                                                                                                                          | Border width of the box.                                                                                                                                                     |
+| `--dextinity-radius-small`                                                                                                                                                  | Corner radius of the box.                                                                                                                                                    |
+| `--dextinity-color-foreground`                                                                                                                                              | Text color of the label.                                                                                                                                                     |
+| `--dextinity-font-family-body`                                                                                                                                              | Font family of the label.                                                                                                                                                    |
+| `--dextinity-typography-body-font-size`, `--dextinity-typography-body-line-height`, `--dextinity-typography-body-font-weight`, `--dextinity-typography-body-letter-spacing` | Text style of the label. The box is centered on the label's first line, and a checkbox without a label is still as tall as one line of label text.                           |
+| `--dextinity-space-md`                                                                                                                                                      | Gap between the box and the label.                                                                                                                                           |
+| `--dextinity-color-focus-ring`, `--dextinity-focus-ring-width`, `--dextinity-focus-ring-offset`                                                                             | Outline of the box focused with the keyboard.                                                                                                                                |
+| `--dextinity-opacity-disabled`                                                                                                                                              | Opacity of a disabled checkbox, the box and its label together, also when an enclosing Base UI `CheckboxGroup`, `Fieldset` or `Field.Root` disables it.                      |
+| `--dextinity-motion-duration-short`, `--dextinity-motion-easing`                                                                                                            | Transition of the box's background and border color, and of the check mark or dash as it fades and grows in.                                                                 |

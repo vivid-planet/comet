@@ -1,0 +1,235 @@
+@layer dextinity {
+    .root {
+        position: relative; /* Contains the hidden input that Base UI positions absolutely, for the browser's validation message. */
+    }
+
+    /* The box draws the input's border, so the buttons sit inside it, like in a text field's input. */
+    .group {
+        --_border-color: var(--dextinity-color-border-strong);
+
+        display: flex;
+        gap: var(--dextinity-space-xs);
+        align-items: center;
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: var(--dextinity-control-height-medium);
+
+        /* The buttons are 2em wide around a 1.25em icon: this puts the chevron where a select's is. */
+        padding-inline: var(--dextinity-space-lg) calc(var(--dextinity-space-lg) - 0.375em);
+        border: var(--dextinity-control-border-width) solid var(--_border-color);
+        border-radius: var(--dextinity-radius-medium);
+        background: var(--dextinity-color-surface);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        cursor: text;
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: border-color;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        /* `:where()` keeps the hover rule's specificity low, so focus, open and invalid borders win over it. */
+        @media (hover: hover) {
+            &:hover:where(:not([data-disabled], [data-readonly])) {
+                --_border-color: var(--dextinity-color-border-hover);
+            }
+        }
+
+        &:focus-within,
+        &[data-popup-open] {
+            --_border-color: var(--dextinity-color-primary);
+        }
+
+        /* A text input shows the focus ring also when it was focused by clicking, like a text field's. */
+        &:focus-within {
+            outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+            outline-offset: var(--dextinity-focus-ring-offset);
+        }
+
+        &[data-invalid] {
+            --_border-color: var(--dextinity-color-danger);
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .input {
+        flex: 1;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        appearance: none;
+
+        &::placeholder {
+            color: var(--dextinity-color-foreground-muted);
+            opacity: 1; /* Firefox dims placeholders by default. */
+        }
+
+        &:focus {
+            outline: none; /* The box around the input shows the focus. */
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+        }
+    }
+
+    .clear,
+    .trigger {
+        --_icon-transform: none;
+
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        inline-size: 2em;
+        block-size: 2em;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: var(--dextinity-radius-small);
+        background: transparent;
+        color: var(--dextinity-color-foreground-muted);
+        font: inherit; /* The box's font, not the browser's for buttons: the button's and icon's sizes build on it. */
+        cursor: pointer;
+        transition-duration: var(--dextinity-motion-duration-medium);
+        transition-property: background-color, color, opacity;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        & > .buttonIcon {
+            font-size: 1.25em;
+            transform: var(--_icon-transform);
+            transition-duration: var(--dextinity-motion-duration-medium);
+            transition-property: transform;
+            transition-timing-function: var(--dextinity-motion-easing);
+        }
+
+        @media (hover: hover) {
+            &:hover:not([data-disabled], [data-readonly]) {
+                background: var(--dextinity-color-surface-hover);
+                color: var(--dextinity-color-foreground);
+            }
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+        }
+    }
+
+    .clear {
+        &[data-starting-style],
+        &[data-ending-style] {
+            opacity: 0;
+        }
+
+        /* Disabled by the field or an enclosing Base UI `Fieldset`: the value can't be cleared then. */
+        &[data-disabled] {
+            display: none;
+        }
+    }
+
+    .trigger {
+        &[data-popup-open] {
+            --_icon-transform: rotate(180deg);
+        }
+
+        &[data-readonly] {
+            cursor: default;
+        }
+    }
+
+    .positioner {
+        z-index: var(--dextinity-z-index-popup);
+    }
+
+    .popup {
+        box-sizing: border-box;
+        inline-size: var(--anchor-width);
+        max-inline-size: var(--available-width);
+        border: 1px solid var(--dextinity-color-border);
+        border-radius: var(--dextinity-radius-medium);
+        background: var(--dextinity-color-surface);
+        box-shadow: var(--dextinity-shadow-popup);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        overflow-wrap: anywhere;
+        transform-origin: var(--transform-origin);
+        transition-duration: var(--dextinity-motion-duration-short);
+        transition-property: opacity, transform;
+        transition-timing-function: var(--dextinity-motion-easing);
+
+        &[data-starting-style],
+        &[data-ending-style] {
+            opacity: 0;
+            transform: scale(0.98);
+        }
+    }
+
+    .list {
+        box-sizing: border-box;
+        max-block-size: min(var(--available-height), 20rem);
+        padding-block: var(--dextinity-space-xs);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scroll-padding-block: var(--dextinity-space-xs);
+
+        &[data-empty] {
+            padding-block: 0;
+        }
+    }
+
+    .option {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 1.25em;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        padding-block: var(--dextinity-space-sm);
+        padding-inline: var(--dextinity-space-lg);
+        cursor: pointer;
+        user-select: none;
+
+        &[data-highlighted] {
+            /* Forced-colors mode removes the background and draws the transparent outline in a system color instead. */
+            outline: var(--dextinity-focus-ring-width) solid transparent;
+            outline-offset: calc(-1 * var(--dextinity-focus-ring-width));
+            background: var(--dextinity-color-surface-hover);
+        }
+
+        &[data-disabled] {
+            cursor: not-allowed;
+            opacity: var(--dextinity-opacity-disabled);
+        }
+    }
+
+    .optionText {
+        grid-column: 1;
+    }
+
+    .optionIndicator {
+        display: inline-flex;
+        grid-column: 2;
+        font-size: 1.25em;
+    }
+
+    .empty:not(:empty) {
+        padding-block: var(--dextinity-space-sm);
+        padding-inline: var(--dextinity-space-lg);
+        color: var(--dextinity-color-foreground-muted);
+    }
+}

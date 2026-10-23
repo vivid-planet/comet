@@ -1,0 +1,63 @@
+@layer dextinity {
+    .root {
+        display: flex;
+        flex-direction: column;
+        gap: var(--dextinity-space-xl);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        padding: var(--dextinity-space-xl);
+        border: 1px solid var(--dextinity-color-border);
+        border-radius: var(--dextinity-radius-large);
+        background: var(--dextinity-color-surface);
+        color: var(--dextinity-color-foreground);
+        font-family: var(--dextinity-font-family-body);
+        font-size: var(--dextinity-typography-body-font-size);
+        font-weight: var(--dextinity-typography-body-font-weight);
+        line-height: var(--dextinity-typography-body-line-height);
+        letter-spacing: var(--dextinity-typography-body-letter-spacing);
+        overflow-wrap: break-word;
+    }
+
+    .header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--dextinity-space-sm) var(--dextinity-space-lg);
+        align-items: center;
+    }
+
+    /* Takes the room beside the actions while 12rem remain for it; otherwise the actions move below it. */
+    .titleGroup {
+        display: flex;
+        flex: 1 1 12rem;
+        flex-direction: column;
+        gap: var(--dextinity-space-xs);
+        max-inline-size: 100%; /* Lets a word longer than the card break instead of widening it. */
+    }
+
+    .title {
+        margin: 0;
+        font-family: var(--dextinity-font-family-heading);
+        font-size: var(--dextinity-typography-heading-4-font-size);
+        font-weight: var(--dextinity-typography-heading-4-font-weight);
+        line-height: var(--dextinity-typography-heading-4-line-height);
+        letter-spacing: var(--dextinity-typography-heading-4-letter-spacing);
+        hyphens: auto;
+    }
+
+    .description {
+        margin: 0;
+        color: var(--dextinity-color-foreground-muted);
+    }
+
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--dextinity-space-sm);
+        align-items: center;
+        margin-inline-start: auto;
+    }
+
+    .body {
+        /* The application lays out the content. This rule only gives the body its `dextinityCard__body` class. */
+    }
+}

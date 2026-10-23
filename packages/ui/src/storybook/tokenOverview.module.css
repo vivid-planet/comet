@@ -1,0 +1,131 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+    font-size: 0.875rem;
+    line-height: 1.4;
+
+    & th,
+    & td {
+        padding: 0.625rem 0.75rem;
+        border-bottom: 1px solid var(--dextinity-color-border);
+        text-align: start;
+        vertical-align: middle;
+    }
+
+    & thead th {
+        color: var(--dextinity-color-foreground-muted);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+}
+
+.valueColumn {
+    width: 32%;
+}
+
+.tokenCell {
+    font-weight: normal;
+}
+
+.tokenName {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.description {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--dextinity-color-foreground-muted);
+}
+
+.value {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    min-height: 2.5rem;
+    overflow-wrap: anywhere;
+}
+
+/* A neutral outline that shows a swatch in the color of the page, in light and dark color schemes. */
+.swatch,
+.shadowSample,
+.radiusSample,
+.focusRingSample {
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    box-sizing: border-box;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgb(128 128 128 / 40%);
+}
+
+.shadowSample {
+    background: var(--dextinity-color-surface);
+}
+
+.radiusSample {
+    width: 3.5rem;
+    border: 2px solid var(--dextinity-color-primary);
+    box-shadow: none;
+}
+
+.focusRingSample {
+    border: 1px solid var(--dextinity-color-border-strong);
+    box-shadow: none;
+    outline: var(--dextinity-focus-ring-width) solid var(--dextinity-color-focus-ring);
+    outline-offset: var(--dextinity-focus-ring-offset);
+}
+
+.textSample {
+    flex-shrink: 0;
+    min-width: 2.5rem;
+    line-height: 1;
+    text-align: center;
+}
+
+.lengthSample {
+    flex-shrink: 0;
+    height: 0.75rem;
+    border-radius: 2px;
+    background: var(--dextinity-color-primary);
+}
+
+.textStyles {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.textStyle {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--dextinity-color-border);
+    color: var(--dextinity-color-foreground);
+    font-family: var(--dextinity-font-family-body);
+    font-size: 0.875rem;
+}
+
+.textStyleHeader {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.textStyleValues {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    color: var(--dextinity-color-foreground-muted);
+}
+
+.textStyleSample {
+    margin: 0.5rem 0;
+    overflow-wrap: anywhere;
+}

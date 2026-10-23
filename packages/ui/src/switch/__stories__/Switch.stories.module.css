@@ -1,0 +1,8 @@
+.squareTrack,
+.squareThumb {
+    border-radius: var(--dextinity-radius-small);
+}
+
+.strongLabel {
+    font-weight: 600;
+}

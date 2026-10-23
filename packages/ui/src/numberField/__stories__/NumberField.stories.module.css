@@ -1,0 +1,11 @@
+.frame {
+    max-inline-size: 24rem;
+}
+
+.priceField {
+    max-inline-size: 12rem;
+}
+
+.priceInput {
+    text-align: end;
+}
