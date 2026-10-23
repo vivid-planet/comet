@@ -62,7 +62,7 @@
         "@nestjs/jwt": "^11.0.2",
         "@nestjs/platform-express": "^11.2.7",
         "@opentelemetry/api": "^1.9.1",
-        "@opentelemetry/auto-instrumentations-node": "^0.75.0",
+        "@opentelemetry/auto-instrumentations-node": "^0.82.0",
         "@opentelemetry/exporter-prometheus": "^0.217.0",
         "@opentelemetry/exporter-trace-otlp-http": "^0.217.0",
         "@opentelemetry/sdk-node": "^0.217.0",
