@@ -62,6 +62,9 @@ async function renderRscPayload(root: ReactNode) {
 
     // The payload is rendered completely before responding, so that notFound() and redirect() can set the status,
     // no matter where in the tree they are called
+    // TODO Stream the payload once pages use Suspense, like Next.js: decide the status only up to the shell, then render
+    // `<meta name="robots" content="noindex">` for notFound() and `<meta http-equiv="refresh">` for redirect() into the
+    // HTML, and catch both in error boundaries around the layouts (not found page in place, client-side redirect)
     const chunks: Uint8Array[] = [];
     const reader = stream.getReader();
     for (let result = await reader.read(); !result.done; result = await reader.read()) {
