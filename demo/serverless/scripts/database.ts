@@ -2,12 +2,15 @@
  * Prepares the local databases: `node scripts/database.ts <sqlite|postgresql> <migrate|seed>`.
  * D1 is migrated with `wrangler d1 migrations apply`, PostgreSQL with Drizzle's migrator.
  */
-import { createD1Database, createPostgresqlDatabase, type Database, type DatabaseDialect } from "@dextinity/serverless-core/server";
+import { createD1Database, createPostgresqlDatabase, type Database, type DatabaseDialect, ScopeColumns } from "@dextinity/serverless-core/server";
+import { createPageTreeSchema } from "@dextinity/serverless-page-tree/server";
 import { createPermissionsSchema } from "@dextinity/serverless-permissions/server";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 import { getPlatformProxy } from "wrangler";
+
+import { ContentScope } from "../shared/content-scope.ts";
 
 const [dialect, command] = process.argv.slice(2) as [DatabaseDialect, "migrate" | "seed"];
 
@@ -16,18 +19,44 @@ const postgresqlOptions = { host: POSTGRESQL_HOST, port: Number(POSTGRESQL_PORT)
 /** A database of its own next to the one of the NestJS demo, whose tables have the same names */
 const postgresqlDatabaseName = `${POSTGRESQL_DB}_serverless`;
 
-/** Grants and roles of the users of the Access emulator (see vite.config.mts). Admins get all permissions by rule. */
+/**
+ * Grants and roles of the users of the Access emulator (see vite.config.mts), admins get all permissions by rule. Adds a home page per
+ * domain if it doesn't exist yet.
+ */
 async function seed(database: Database): Promise<void> {
     const { roles, groupRoles, userRoles, userPermissions } = createPermissionsSchema(database.dialect);
+    const scopeColumns = new ScopeColumns(Object.keys(ContentScope.shape));
+    const { pageTreeNodes } = createPageTreeSchema({ dialect: database.dialect, scopeColumns });
+    const homePages = [
+        { id: "00000000-0000-4000-8000-000000000001", domain: "main" },
+        { id: "00000000-0000-4000-8000-000000000002", domain: "secondary" },
+    ];
+
     await database.batch((db) => [
         db.delete(groupRoles),
         db.delete(userRoles),
         db.delete(userPermissions),
         db.delete(roles),
-        db.insert(roles).values({ id: "dam-editor", name: "DAM editor", permissions: ["dam"] }),
-        // Members of the editors group in the identity provider may use the DAM of the main domain
-        db.insert(groupRoles).values({ group: "editors", roleId: "dam-editor", contentScopes: [{ domain: "main" }] }),
+        db.insert(roles).values({ id: "editor", name: "Editor", permissions: ["dam", "pageTree"] }),
+        // Members of the editors group in the identity provider may edit the main domain
+        db.insert(groupRoles).values({ group: "editors", roleId: "editor", contentScopes: [{ domain: "main" }] }),
         db.insert(userPermissions).values({ userId: "3", permission: "dam", contentScopes: [{ domain: "secondary" }], reason: "Demo grant" }),
+        ...homePages.map(({ id, domain }) =>
+            db
+                .insert(pageTreeNodes)
+                .values({
+                    id,
+                    parentId: null,
+                    pos: 1,
+                    name: "Home",
+                    slug: "home",
+                    visibility: "Published",
+                    documentType: "Page",
+                    category: "mainNavigation",
+                    ...scopeColumns.toValues({ domain }),
+                })
+                .onConflictDoNothing(),
+        ),
     ]);
 }
 

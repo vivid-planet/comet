@@ -4,12 +4,12 @@
 import type { DamRoutes } from "@dextinity/serverless-dam/server";
 import { hc } from "hono/client";
 
-import type { DamScope } from "../api/dam/dam-scope.ts";
+import type { ContentScope } from "../shared/content-scope.ts";
 
-const dam = hc<DamRoutes<typeof DamScope>>("http://localhost/api/dam");
+const dam = hc<DamRoutes<typeof ContentScope>>("http://localhost/api/dam");
 
 export async function checks() {
-    // @ts-expect-error The scope dimension "domain" of the demo's DamScope is required
+    // @ts-expect-error The scope dimension "domain" of the demo's ContentScope is required
     await dam.items.$get({ query: { folderId: "…" } });
 
     // @ts-expect-error Unknown sort column
@@ -20,7 +20,7 @@ export async function checks() {
         const file = await response.json();
         const domain: string = file.scope.domain;
         const urlTemplate: string | undefined = file.image?.urlTemplate;
-        // @ts-expect-error The demo's DamScope has no language
+        // @ts-expect-error The demo's ContentScope has no language
         const language: string = file.scope.language;
         return { domain, urlTemplate, language };
     }

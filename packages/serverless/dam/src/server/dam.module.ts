@@ -1,4 +1,11 @@
-import { type BlobStorage, type Database, type DatabaseDialect, type ImageTransformer, inject } from "@dextinity/serverless-core/server";
+import {
+    type BlobStorage,
+    type Database,
+    type DatabaseDialect,
+    type ImageTransformer,
+    inject,
+    ScopeColumns,
+} from "@dextinity/serverless-core/server";
 import { Hono } from "hono";
 import { createMiddleware } from "hono/factory";
 import { z } from "zod";
@@ -7,7 +14,7 @@ import { damDefaultAcceptedMimetypes } from "./common/dam-default-accepted-mimet
 import { type DamConfig, damDefaultBasePath, type ResolvedDamConfig } from "./dam.config.js";
 import { createDamRouteHelpers, type DamEnv, type DamRouteContext, type DamScopeSchema } from "./dam.context.js";
 import { createDamServices, type DamServiceDependencies } from "./dam.services.js";
-import { createDamSchema, DamScopeColumns } from "./db/dam.schema.js";
+import { createDamSchema } from "./db/dam.schema.js";
 import { createFilesRoutes } from "./files/files.routes.js";
 import { createFoldersRoutes } from "./folders/folders.routes.js";
 import { createImagesRoutes } from "./images/images.routes.js";
@@ -41,8 +48,8 @@ export function createDamModule<TScopeSchema extends DamScopeSchema = z.ZodObjec
         basePath: damConfig.basePath ?? damDefaultBasePath,
         acceptedMimeTypes: damConfig.acceptedMimeTypes ?? damDefaultAcceptedMimetypes,
     };
-    const schema = createDamSchema({ dialect, scopeKeys });
-    const scopeColumns = new DamScopeColumns(scopeKeys);
+    const scopeColumns = new ScopeColumns(scopeKeys);
+    const schema = createDamSchema({ dialect, scopeColumns });
 
     const createServices = (dependencies: Pick<DamServiceDependencies, "database" | "blobStorage" | "imageTransformer">) =>
         createDamServices({ ...dependencies, config, schema, scopeColumns });

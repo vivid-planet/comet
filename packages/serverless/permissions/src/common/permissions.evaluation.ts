@@ -1,11 +1,13 @@
-/** A value per scope dimension, e.g. `{ domain: "main", language: "de" }`. In grants, `"*"` matches every value of a dimension. */
-export type ContentScope = Record<string, string>;
+import type { ContentScope } from "@dextinity/serverless-core/server";
+
+export type { ContentScope };
 
 export interface PermissionGrant {
     permission: string;
     contentScopes: ContentScope[];
 }
 
+/** In grants, `"*"` matches every value of a scope dimension. */
 export const anyScopeValue = "*";
 
 export function isScopeWithin(scope: ContentScope, grantedScope: ContentScope): boolean {

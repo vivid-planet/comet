@@ -120,6 +120,7 @@
         },
         "demo/serverless": {
             "entry": ["scripts/*.ts", "api/db/schema.*.ts", "drizzle.config.*.ts"],
+            "ignore": ["dist/**"],
             "ignoreDependencies": ["@swc/plugin-emotion"]
         }
     }

@@ -3,7 +3,8 @@ import "@fontsource-variable/roboto-flex/full.css";
 import { createDextinityTheme, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@dextinity/admin";
 import { ApiProvider, QueryErrorHandler } from "@dextinity/serverless-core/client";
 import { DamApiProvider, DamPage } from "@dextinity/serverless-dam/client";
-import { CurrentUserProvider, useAllowedContentScopes } from "@dextinity/serverless-permissions/client";
+import { PageTreeApiProvider, PageTreePage } from "@dextinity/serverless-page-tree/client";
+import { CurrentUserProvider, useCan, useCurrentUser } from "@dextinity/serverless-permissions/client";
 import { css, Global } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
@@ -12,6 +13,7 @@ import { Redirect, Route, Switch } from "react-router";
 
 import { MasterHeader } from "./MasterHeader";
 import { MasterMenu } from "./MasterMenu";
+import { pageTreeCategories, pageTreeDocumentTypes } from "./pageTreeConfig";
 
 const theme = createDextinityTheme();
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -40,18 +42,37 @@ export function App() {
 }
 
 function AppContent() {
-    const damScopes = useAllowedContentScopes("dam");
-    const [scope, setScope] = useState(damScopes[0]);
+    const { contentScopes } = useCurrentUser();
+    const [scope, setScope] = useState(contentScopes[0]);
+    const canUseDam = useCan("dam", scope);
+    const canUsePageTree = useCan("pageTree", scope);
 
     return (
-        <MasterLayout headerComponent={() => <MasterHeader scope={scope} scopes={damScopes} onScopeChange={setScope} />} menuComponent={MasterMenu}>
+        <MasterLayout
+            headerComponent={() => <MasterHeader scope={scope} scopes={contentScopes} onScopeChange={setScope} />}
+            menuComponent={MasterMenu}
+        >
             {scope ? (
                 <DamApiProvider scope={scope}>
-                    <Switch>
-                        {/* Remounting on scope change resets the folder navigation, folders don't exist in other scopes */}
-                        <Route path="/assets" render={() => <DamPage key={scope.domain} />} />
-                        <Redirect to="/assets" />
-                    </Switch>
+                    <PageTreeApiProvider scope={scope} categories={pageTreeCategories} documentTypes={pageTreeDocumentTypes}>
+                        {/* Remounting on scope change resets the navigation state, folders and pages don't exist in other scopes */}
+                        <Switch key={scope.domain}>
+                            {canUsePageTree && (
+                                <Route
+                                    path="/pages/:category"
+                                    render={({ match }) =>
+                                        pageTreeCategories.some(({ category }) => category === match.params.category) ? (
+                                            <PageTreePage key={match.params.category} category={match.params.category} />
+                                        ) : (
+                                            <Redirect to="/pages/mainNavigation" />
+                                        )
+                                    }
+                                />
+                            )}
+                            {canUseDam && <Route path="/assets" render={() => <DamPage />} />}
+                            <Redirect to={canUsePageTree ? "/pages/mainNavigation" : "/assets"} />
+                        </Switch>
+                    </PageTreeApiProvider>
                 </DamApiProvider>
             ) : (
                 <FormattedMessage id="app.noPermissions" defaultMessage="You have no permissions in this application." />

@@ -14,13 +14,15 @@ import {
     R2BlobStorage,
 } from "@dextinity/serverless-core/server";
 import { createDamModule } from "@dextinity/serverless-dam/server";
+import { createPageTreeModule } from "@dextinity/serverless-page-tree/server";
 import { createPermissionsModule } from "@dextinity/serverless-permissions/server";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { Hono } from "hono";
 import postgres from "postgres";
 
+import { ContentScope } from "../shared/content-scope";
 import type { Config } from "./config";
-import { DamScope } from "./dam/dam-scope";
+import { pageTreeConfig } from "./page-tree";
 import { contentScopes, permissionRules } from "./permissions";
 
 export interface Bindings {
@@ -59,7 +61,8 @@ function provideDatabase(dialect: DatabaseDialect) {
 export function createApp(config: Config) {
     const dialect = config.databaseDialect;
     const permissions = createPermissionsModule({ dialect, contentScopes, rules: permissionRules });
-    const dam = createDamModule({ dialect, damConfig: config.dam, Scope: DamScope });
+    const dam = createDamModule({ dialect, damConfig: config.dam, Scope: ContentScope });
+    const pageTree = createPageTreeModule({ dialect, config: pageTreeConfig, Scope: ContentScope });
 
     return new Hono<AppEnv>()
         .basePath("/api")
@@ -76,5 +79,6 @@ export function createApp(config: Config) {
         .use(permissions.provider)
         .get("/status", (c) => c.json({ status: "ok", databaseDialect: dialect }))
         .route("/", permissions.routes)
-        .route(`/${dam.config.basePath}`, dam.routes);
+        .route(`/${dam.config.basePath}`, dam.routes)
+        .route("/page-tree", pageTree.routes);
 }

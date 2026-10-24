@@ -1,7 +1,7 @@
-import type { BlobStorage, Database, ImageTransformer } from "@dextinity/serverless-core/server";
+import type { BlobStorage, Database, ImageTransformer, ScopeColumns } from "@dextinity/serverless-core/server";
 
 import type { ResolvedDamConfig } from "./dam.config.js";
-import type { DamSchema, DamScopeColumns } from "./db/dam.schema.js";
+import type { DamSchema } from "./db/dam.schema.js";
 import { FilesService } from "./files/files.service.js";
 import { FoldersService } from "./folders/folders.service.js";
 import { ImagesService } from "./images/images.service.js";
@@ -13,7 +13,7 @@ export interface DamServiceDependencies {
     imageTransformer: ImageTransformer;
     config: ResolvedDamConfig;
     schema: DamSchema;
-    scopeColumns: DamScopeColumns;
+    scopeColumns: ScopeColumns;
 }
 
 export interface DamServices {

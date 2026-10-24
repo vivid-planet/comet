@@ -12,5 +12,5 @@
         "types": ["@cloudflare/workers-types"],
         "verbatimModuleSyntax": true
     },
-    "include": ["api"]
+    "include": ["api", "shared"]
 }

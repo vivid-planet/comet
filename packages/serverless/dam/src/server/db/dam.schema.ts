@@ -1,23 +1,20 @@
-import { type DatabaseDialect, portableColumns } from "@dextinity/serverless-core/server";
-import { and, eq, type SQL } from "drizzle-orm";
-import type { AnySQLiteColumn, SQLiteColumn, SQLiteTable } from "drizzle-orm/sqlite-core";
+import { type ContentScope, type DatabaseDialect, portableColumns, type ScopeColumns } from "@dextinity/serverless-core/server";
+import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 
 import { focalPoints } from "../common/focal-point.js";
 
 export const licenseTypes = ["ROYALTY_FREE", "RIGHTS_MANAGED"] as const;
 export const aiContentTypes = ["Generated", "Modified"] as const;
 
-export type DamScope = Record<string, string>;
-
-const scopeColumnName = (key: string) => `scope_${key}`;
+export type DamScope = ContentScope;
 
 /**
  * The counterpart of `createFileEntity` and `createFolderEntity`: creates the DAM tables for the dialect, with the columns of the
  * application's scope. Folders reference their parent only, ancestors are queried recursively (no PostgreSQL arrays, which D1 lacks).
  *
- * The scope columns aren't part of the table types because they depend on the application. Use `DamScopeColumns` to read and write them.
+ * The scope columns aren't part of the table types because they depend on the application. Use `ScopeColumns` to read and write them.
  */
-export function createDamSchema({ dialect, scopeKeys }: { dialect: DatabaseDialect; scopeKeys: readonly string[] }) {
+export function createDamSchema({ dialect, scopeColumns }: { dialect: DatabaseDialect; scopeColumns: ScopeColumns }) {
     const column = portableColumns(dialect);
 
     const id = () =>
@@ -36,8 +33,6 @@ export function createDamSchema({ dialect, scopeKeys }: { dialect: DatabaseDiale
             .$defaultFn(() => new Date())
             .$onUpdateFn(() => new Date()),
     });
-    // Typed as empty: the columns exist at runtime, but their keys are only known to the application.
-    const scopeColumns = () => Object.fromEntries(scopeKeys.map((key) => [scopeColumnName(key), column.text().notNull()])) as Record<never, never>;
 
     const damFileImages = column.table("DamFileImage", {
         id: id(),
@@ -61,7 +56,7 @@ export function createDamSchema({ dialect, scopeKeys }: { dialect: DatabaseDiale
             archived: column.boolean().notNull().default(false),
             isInboxFromOtherScope: column.boolean().notNull().default(false),
             ...timestamps(),
-            ...scopeColumns(),
+            ...scopeColumns.definitions(column),
         },
         (table) => [column.index("DamFolder_parentId_index").on(table.parentId)],
     );
@@ -92,7 +87,7 @@ export function createDamSchema({ dialect, scopeKeys }: { dialect: DatabaseDiale
             copyOfId: column.uuid().references((): AnySQLiteColumn => damFiles.id, { onDelete: "set null", onUpdate: "cascade" }),
             aiContentType: column.textEnum(aiContentTypes),
             ...timestamps(),
-            ...scopeColumns(),
+            ...scopeColumns.definitions(column),
         },
         (table) => [column.index("DamFile_contentHash_index").on(table.contentHash), column.index("DamFile_folderId_index").on(table.folderId)],
     );
@@ -101,38 +96,3 @@ export function createDamSchema({ dialect, scopeKeys }: { dialect: DatabaseDiale
 }
 
 export type DamSchema = ReturnType<typeof createDamSchema>;
-
-export class DamScopeColumns {
-    constructor(private readonly scopeKeys: readonly string[]) {}
-
-    /**
-     * Use as `.where(scopeColumns.equals(table, scope))`. Without a scope, matches all rows.
-     */
-    equals(table: SQLiteTable, scope: DamScope | undefined): SQL | undefined {
-        if (scope === undefined) {
-            return undefined;
-        }
-        return and(...this.scopeKeys.map((key) => eq(this.column(table, key), scope[key])));
-    }
-
-    toValues(scope: DamScope | undefined): Record<string, string> {
-        return Object.fromEntries(this.scopeKeys.map((key) => [scopeColumnName(key), scope?.[key] as string]));
-    }
-
-    fromRow(row: object): DamScope {
-        return Object.fromEntries(this.scopeKeys.map((key) => [key, (row as Record<string, string>)[scopeColumnName(key)]]));
-    }
-
-    select(table: SQLiteTable): Record<string, SQLiteColumn> {
-        return Object.fromEntries(this.scopeKeys.map((key) => [scopeColumnName(key), this.column(table, key)]));
-    }
-
-    /** The scope dimensions with their columns, for `scopeFilter()` of the permissions module */
-    byDimension(table: SQLiteTable): Record<string, SQLiteColumn> {
-        return Object.fromEntries(this.scopeKeys.map((key) => [key, this.column(table, key)]));
-    }
-
-    private column(table: SQLiteTable, key: string): SQLiteColumn {
-        return (table as unknown as Record<string, SQLiteColumn>)[scopeColumnName(key)];
-    }
-}

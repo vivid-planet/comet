@@ -257,10 +257,20 @@ export default defineConfig({
             waitOn: ["packages/serverless/core/lib/server/index.d.ts", "packages/serverless/permissions/lib/server/index.d.ts"],
         },
         {
+            name: "dextinity-serverless-page-tree",
+            script: "pnpm --filter @dextinity/serverless-page-tree run dev",
+            group: ["demo-serverless", "demo-serverless-postgresql"],
+            waitOn: ["packages/serverless/core/lib/server/index.d.ts", "packages/serverless/permissions/lib/server/index.d.ts"],
+        },
+        {
             name: "demo-serverless",
             script: "pnpm --filter dextinity-demo-serverless run dev",
             group: ["demo-serverless"],
-            waitOn: [...waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"), "packages/serverless/dam/lib/server/index.d.ts"],
+            waitOn: [
+                ...waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"),
+                "packages/serverless/dam/lib/server/index.d.ts",
+                "packages/serverless/page-tree/lib/server/index.d.ts",
+            ],
         },
         {
             name: "demo-serverless-postgresql",
@@ -269,6 +279,7 @@ export default defineConfig({
             waitOn: [
                 ...waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"),
                 "packages/serverless/dam/lib/server/index.d.ts",
+                "packages/serverless/page-tree/lib/server/index.d.ts",
                 "tcp:$POSTGRESQL_PORT",
             ],
         },

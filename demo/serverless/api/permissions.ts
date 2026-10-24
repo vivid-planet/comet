@@ -1,7 +1,7 @@
 import type { AccessIdentity } from "@dextinity/serverless-core/server";
 import type { ContentScope, PermissionGrant } from "@dextinity/serverless-permissions/server";
 
-const availablePermissions = ["dam"];
+const availablePermissions = ["dam", "pageTree"];
 
 export const contentScopes: ContentScope[] = [{ domain: "main" }, { domain: "secondary" }];
 

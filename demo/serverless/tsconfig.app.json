@@ -13,5 +13,5 @@
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
         "types": ["vite/client"]
     },
-    "include": ["src"]
+    "include": ["src", "shared"]
 }

@@ -6,11 +6,12 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import type { DamRoutes } from "@dextinity/serverless-dam/server";
+import type { PageTreeRoutes } from "@dextinity/serverless-page-tree/server";
 import type { PermissionsRoutes } from "@dextinity/serverless-permissions/server";
 import { hc } from "hono/client";
 import sharp, { type Sharp } from "sharp";
 
-import type { DamScope } from "../api/dam/dam-scope.ts";
+import type { ContentScope } from "../shared/content-scope.ts";
 
 const baseUrl = process.argv[2] ?? `http://localhost:${process.env.DEMO_SERVERLESS_PORT}`;
 const scope = { domain: "main" };
@@ -29,12 +30,15 @@ async function login(userId: string): Promise<string> {
     return cookie;
 }
 
-const createDamClient = (headers: Record<string, string> = {}) => hc<DamRoutes<typeof DamScope>>(`${baseUrl}/api/dam`, { headers });
+const createDamClient = (headers: Record<string, string> = {}) => hc<DamRoutes<typeof ContentScope>>(`${baseUrl}/api/dam`, { headers });
 const createPermissionsClient = (headers: Record<string, string> = {}) => hc<PermissionsRoutes>(`${baseUrl}/api`, { headers });
+const createPageTreeClient = (headers: Record<string, string> = {}) =>
+    hc<PageTreeRoutes<typeof ContentScope>>(`${baseUrl}/api/page-tree`, { headers });
 
 const adminCookie = await login("1");
 const api = createDamClient({ cookie: adminCookie });
-const editorApi = createDamClient({ cookie: await login("2") });
+const editorCookie = await login("2");
+const editorApi = createDamClient({ cookie: editorCookie });
 const guestCookie = await login("3");
 const guestApi = createDamClient({ cookie: guestCookie });
 const anonymousApi = createDamClient();
@@ -78,7 +82,17 @@ const imageBytes = await readFile(resolve(import.meta.dirname, "../../api/src/db
 
 await step("get the current user with grants from the rules", async () => {
     const me = await (await expectOk(await createPermissionsClient({ cookie: adminCookie }).me.$get())).json();
-    expectEqual([me.name, me.groups, me.grants], ["Admin", ["admins"], [{ permission: "dam", contentScopes: [{ domain: "*" }] }]]);
+    expectEqual(
+        [me.name, me.groups, me.grants],
+        [
+            "Admin",
+            ["admins"],
+            [
+                { permission: "dam", contentScopes: [{ domain: "*" }] },
+                { permission: "pageTree", contentScopes: [{ domain: "*" }] },
+            ],
+        ],
+    );
     expectEqual(me.contentScopes, [{ domain: "main" }, { domain: "secondary" }], "contentScopes");
 });
 
@@ -271,6 +285,111 @@ await step("delete the folder with its files", async () => {
     expectEqual(deleted, true, "deleted");
     expectEqual((await api.files[":id"].$get({ param: { id: file.id } })).status, 404, "status of the deleted file");
     expectEqual((await fetch(`${baseUrl}/api${file.fileUrl}`)).status, 404, "status of the deleted file's URL");
+});
+
+// Page tree
+const pageTree = createPageTreeClient({ cookie: adminCookie });
+const rootSlug = `smoke-${Date.now()}`;
+const listPages = async (category: "mainNavigation" | "topMenu" = "mainNavigation") =>
+    (await expectOk(await pageTree.nodes.$get({ query: { ...scope, category } }))).json();
+const slugAvailability = async (slug: string, parentId?: string) =>
+    (await (await expectOk(await pageTree["slug-availability"].$get({ query: { ...scope, slug, ...(parentId ? { parentId } : {}) } }))).json())
+        .availability;
+const createPage = async (input: { name: string; slug: string; parentId?: string; pos?: number }) =>
+    (await expectOk(await pageTree.nodes.$post({ json: { scope, category: "mainNavigation", documentType: "Page", ...input } }))).json();
+
+await step("list the page tree with the home page at /", async () => {
+    const home = (await listPages()).find((node) => node.slug === "home");
+    expectEqual([home?.path, home?.visibility], ["/", "Published"], "home page");
+});
+
+const rootPage = await createPage({ name: "Smoke Test", slug: rootSlug });
+const productsPage = await createPage({ name: "Products", slug: "products", parentId: rootPage.id });
+const aboutPage = await createPage({ name: "About", slug: "about", parentId: rootPage.id, pos: 1 });
+console.info(`✔ create pages ${rootPage.path}, ${productsPage.path} and ${aboutPage.path}`);
+
+const childSlugs = async () => (await listPages()).filter((node) => node.parentId === rootPage.id).map((node) => node.slug);
+
+await step("calculate paths and insert at the requested position", async () => {
+    expectEqual([rootPage.path, productsPage.path, rootPage.visibility], [`/${rootSlug}`, `/${rootSlug}/products`, "Unpublished"]);
+    expectEqual(await childSlugs(), ["about", "products"], "children in order");
+});
+
+await step("check slug availability", async () => {
+    expectEqual(await slugAvailability(rootSlug), "Taken", "existing path");
+    expectEqual(await slugAvailability("admin"), "Reserved", "reserved path");
+    expectEqual(await slugAvailability("home", rootPage.id), "Reserved", "home below a page");
+    expectEqual(await slugAvailability("contact", rootPage.id), "Available", "new path");
+});
+
+await step("reject a duplicate path and an invalid slug", async () => {
+    const duplicate = await pageTree.nodes.$post({
+        json: { scope, category: "mainNavigation", documentType: "Page", name: "Dup", slug: "products", parentId: rootPage.id },
+    });
+    expectEqual(duplicate.status, 400, "status of a duplicate");
+    const invalid = await pageTree.nodes.$post({
+        json: { scope, category: "mainNavigation", documentType: "Page", name: "Invalid", slug: "-no spaces" },
+    });
+    expectEqual(invalid.status, 400, "status of an invalid slug");
+});
+
+await step("update name and slug", async () => {
+    const updated = await (
+        await expectOk(await pageTree.nodes[":id"].$patch({ param: { id: productsPage.id }, json: { name: "Shop", slug: "shop" } }))
+    ).json();
+    expectEqual([updated.name, updated.path], ["Shop", `/${rootSlug}/shop`]);
+});
+
+await step("move pages and reject moving a page into itself", async () => {
+    await expectOk(await pageTree.nodes.move.$post({ json: { ids: [productsPage.id], parentId: rootPage.id, pos: 1 } }));
+    expectEqual(await childSlugs(), ["shop", "about"], "children after moving");
+    const intoChild = await pageTree.nodes.move.$post({ json: { ids: [rootPage.id], parentId: aboutPage.id, pos: 1 } });
+    expectEqual(intoChild.status, 400, "status of moving into a subpage");
+});
+
+await step("archive a page with its subpages and restore it", async () => {
+    const setVisibility = async (id: string, visibility: "Published" | "Unpublished" | "Archived") =>
+        (await expectOk(await pageTree.nodes[":id"].visibility.$put({ param: { id }, json: { visibility } }))).json();
+    await setVisibility(rootPage.id, "Published");
+    await setVisibility(rootPage.id, "Archived");
+    const archived = (await listPages()).filter((node) => [rootPage.id, aboutPage.id, productsPage.id].includes(node.id));
+    expectEqual(
+        archived.map((node) => node.visibility),
+        ["Archived", "Archived", "Archived"],
+        "visibility of the subtree",
+    );
+    expectEqual(await slugAvailability(rootSlug), "Available", "path of an archived page");
+    const restored = await setVisibility(rootPage.id, "Unpublished");
+    expectEqual(restored.visibility, "Unpublished", "visibility after restoring");
+    await setVisibility(aboutPage.id, "Unpublished");
+    await setVisibility(productsPage.id, "Unpublished");
+});
+
+await step("move a page with its subpages to another category", async () => {
+    await expectOk(await pageTree.nodes[":id"].category.$put({ param: { id: rootPage.id }, json: { category: "topMenu" } }));
+    const topMenu = await listPages("topMenu");
+    expectEqual(topMenu.filter((node) => [rootPage.id, aboutPage.id, productsPage.id].includes(node.id)).length, 3, "pages in the top menu");
+    expectEqual(
+        (await listPages()).some((node) => node.id === rootPage.id),
+        false,
+        "page left the main navigation",
+    );
+});
+
+await step("allow the page tree for editors (group role) and deny it for guests", async () => {
+    expectEqual((await createPageTreeClient({ cookie: editorCookie }).nodes.$get({ query: scope })).status, 200, "status for editors");
+    expectEqual(
+        (await createPageTreeClient({ cookie: guestCookie }).nodes.$get({ query: { domain: "secondary" } })).status,
+        403,
+        "status for guests",
+    );
+});
+
+await step("keep the home page and delete a page with its subpages", async () => {
+    const home = (await listPages()).find((node) => node.slug === "home");
+    expectEqual((await pageTree.nodes[":id"].$delete({ param: { id: home?.id ?? "" } })).status, 400, "status of deleting the home page");
+    await expectOk(await pageTree.nodes[":id"].$delete({ param: { id: rootPage.id } }));
+    expectEqual((await pageTree.nodes[":id"].$get({ param: { id: aboutPage.id } })).status, 404, "status of a deleted subpage");
 });
 
 if (failures > 0) {

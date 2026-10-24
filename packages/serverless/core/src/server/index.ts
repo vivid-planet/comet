@@ -16,4 +16,6 @@ export { CloudflareImagesTransformer, type ImagesBindingLike } from "./images/cl
 export { DevServerImageTransformer } from "./images/dev-server-image-transformer.js";
 export { type ImageInfo, type ImageOutputFormat, type ImageTransformation, type ImageTransformer } from "./images/image-transformer.js";
 export { inject, provide } from "./provide.js";
+export { type ContentScope, ScopeColumns, scopesAreEqual } from "./scope/scope-columns.js";
+export { createScopedQueryHelpers, type ScopeSchema } from "./scope/scoped-query.js";
 export { zValidator } from "./validator.js";

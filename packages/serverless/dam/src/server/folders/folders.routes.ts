@@ -1,9 +1,9 @@
-import { badRequest, notFound, zValidator } from "@dextinity/serverless-core/server";
+import { badRequest, notFound, scopesAreEqual, zValidator } from "@dextinity/serverless-core/server";
 import { requirePermission } from "@dextinity/serverless-permissions/server";
 import { type Context, Hono } from "hono";
 import { z } from "zod";
 
-import { contentDisposition, scopesAreEqual } from "../common/http.util.js";
+import { contentDisposition } from "../common/http.util.js";
 import type { DamEnv, DamRouteContext, DamRouteHelpers, DamScopeSchema } from "../dam.context.js";
 import { booleanParam, createFolderInput, paginationQuery, sortQuery, updateFolderInput } from "../dam.dto.js";
 import type { DamFolder } from "../dam.types.js";
