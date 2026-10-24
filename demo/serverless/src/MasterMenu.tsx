@@ -1,6 +1,6 @@
 import { MainNavigation, MainNavigationItemRouterLink } from "@dextinity/admin";
 import { Assets } from "@dextinity/admin-icons";
-import { useCan } from "@dextinity/permissions/client";
+import { useCan } from "@dextinity/serverless-permissions/client";
 import { FormattedMessage } from "react-intl";
 
 export function MasterMenu() {

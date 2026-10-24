@@ -1,5 +1,5 @@
 import { Loading } from "@dextinity/admin";
-import { useApi } from "@dextinity/core/client";
+import { useApi } from "@dextinity/serverless-core/client";
 import { useQuery } from "@tanstack/react-query";
 import { hc, type InferResponseType, parseResponse } from "hono/client";
 import { createContext, type PropsWithChildren, useContext, useMemo } from "react";

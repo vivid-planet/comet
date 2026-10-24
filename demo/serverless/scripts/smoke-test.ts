@@ -5,14 +5,14 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-import type { DamRoutes } from "@dextinity/dam/server";
-import type { PermissionsRoutes } from "@dextinity/permissions/server";
+import type { DamRoutes } from "@dextinity/serverless-dam/server";
+import type { PermissionsRoutes } from "@dextinity/serverless-permissions/server";
 import { hc } from "hono/client";
 import sharp, { type Sharp } from "sharp";
 
 import type { DamScope } from "../api/dam/dam-scope.ts";
 
-const baseUrl = process.argv[2] ?? `http://localhost:${process.env.DEMO_WORKERS_PORT}`;
+const baseUrl = process.argv[2] ?? `http://localhost:${process.env.DEMO_SERVERLESS_PORT}`;
 const scope = { domain: "main" };
 
 /** Logs in like a browser and returns the cookie of the Access session */

@@ -1,5 +1,5 @@
-import type { CloudflareAccessConfig } from "@dextinity/core/server";
-import type { DamConfig } from "@dextinity/dam/server";
+import type { CloudflareAccessConfig } from "@dextinity/serverless-core/server";
+import type { DamConfig } from "@dextinity/serverless-dam/server";
 import { z } from "zod";
 
 const environmentVariables = z.object({

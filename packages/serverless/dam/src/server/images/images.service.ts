@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto";
 import { parse } from "node:path";
 
-import { createHashedPath, type ImageOutputFormat, type ImageTransformation, notFound } from "@dextinity/core/server";
+import { createHashedPath, type ImageOutputFormat, type ImageTransformation, notFound } from "@dextinity/serverless-core/server";
 
 import type { FocalPoint } from "../common/focal-point.js";
 import {

@@ -1,4 +1,4 @@
-import { type DatabaseDialect, portableColumns } from "@dextinity/core/server";
+import { type DatabaseDialect, portableColumns } from "@dextinity/serverless-core/server";
 import { and, eq, type SQL } from "drizzle-orm";
 import type { AnySQLiteColumn, SQLiteColumn, SQLiteTable } from "drizzle-orm/sqlite-core";
 

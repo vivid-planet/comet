@@ -1,4 +1,4 @@
-import type { BlobStorage, Database, ImageTransformer } from "@dextinity/core/server";
+import type { BlobStorage, Database, ImageTransformer } from "@dextinity/serverless-core/server";
 
 import type { ResolvedDamConfig } from "./dam.config.js";
 import type { DamSchema, DamScopeColumns } from "./db/dam.schema.js";

@@ -1,5 +1,5 @@
-import { zValidator } from "@dextinity/core/server";
-import { requirePermission } from "@dextinity/permissions/server";
+import { zValidator } from "@dextinity/serverless-core/server";
+import { requirePermission } from "@dextinity/serverless-permissions/server";
 import { Hono } from "hono";
 import { z } from "zod";
 

@@ -1,8 +1,8 @@
-# Architecture decisions: workers (Dextinity on Cloudflare Workers)
+# Architecture decisions: serverless (Dextinity on Cloudflare Workers)
 
 Status: decided in principle, 2026-10-24. Applies to the API and the admin. The site is out of scope.
 
-The decisions are based on prototypes and experiments run in the Workers runtime (workerd, locally). Nothing was deployed to Cloudflare yet. The prototype implements them for the DAM: the packages are in [`packages/workers`](packages/workers) (`@dextinity/core`, `@dextinity/permissions`, `@dextinity/dam`, see its README), the demo in [`demo/workers`](demo/workers).
+The decisions are based on prototypes and experiments run in the Workers runtime (workerd, locally). Nothing was deployed to Cloudflare yet. The prototype implements them for the DAM: the packages are in [`packages/serverless`](packages/serverless) (`@dextinity/serverless-core`, `@dextinity/serverless-permissions`, `@dextinity/serverless-dam`, see its README), the demo in [`demo/serverless`](demo/serverless).
 
 ## Goals
 
@@ -30,7 +30,7 @@ Future direction:
 | Database         | Drizzle; D1 or PostgreSQL (via Hyperdrive) per project; no interactive transactions              |
 | Admin app        | Vite single-page app, no server rendering; `@dextinity/admin` unchanged; TanStack Query for data |
 | Routing          | React Router (client-only); for now v5 as used by `@dextinity/admin`                             |
-| Feature packages | `@dextinity/<feature>` with `./server` and `./client`                                            |
+| Feature packages | `@dextinity/serverless-<feature>` with `./server` and `./client`                                 |
 | Authentication   | Cloudflare Access; dev-only Access emulator for local dev                                        |
 | Authorization    | Dextinity's permission model, ported as its own module                                           |
 | Files            | R2                                                                                               |
@@ -124,7 +124,7 @@ Reasons for Drizzle over Kysely:
 Consequences:
 
 - Library code supports both databases with one definition (implemented in the prototype):
-    - tables are defined once with `portableColumns(dialect)` (`@dextinity/core/server`), which returns SQLite or PostgreSQL column builders, both typed as SQLite;
+    - tables are defined once with `portableColumns(dialect)` (`@dextinity/serverless-core/server`), which returns SQLite or PostgreSQL column builders, both typed as SQLite;
     - services are written once against `database.drizzle`, typed as a SQLite database. Only what both dialects support may be used (no `.get()`/`.all()`/`.run()`), which the types don't enforce; the smoke test runs on both;
     - drizzle-kit generates the migrations per dialect from the same definition. Feature packages ship schema factories, the app generates the migrations, because the scope columns are the app's.
 - D1 has no interactive transactions (only batches):
@@ -169,7 +169,7 @@ Setup:
 
 **Decision:** React Router as the client-side router.
 
-- `@dextinity/admin` stays as it is, so for now React Router v5, which it is built on (`RouterBrowserRouter`, `Stack`, `StackLink`, the unsaved-changes prompt, URL state in `useDataGridRemote`). `demo/workers` runs this way with React 19.
+- `@dextinity/admin` stays as it is, so for now React Router v5, which it is built on (`RouterBrowserRouter`, `Stack`, `StackLink`, the unsaved-changes prompt, URL state in `useDataGridRemote`). `demo/serverless` runs this way with React 19.
 - Moving `@dextinity/admin` to React Router 8 (data mode, needed for `useBlocker`) is a separate, later library change. The main work is `Stack`/`StackSwitch`, which build URLs from v5's `match.url`. 22 files in `@dextinity/admin` use React Router.
 - v5 is no longer developed: technical debt, not a blocker.
 
@@ -186,8 +186,8 @@ Consequences:
     - legacy table components, `useDataGridExcelExport`, generated GraphQL grids and forms.
 - `FinalForm` works without Apollo (it reads it only if present).
 - Shared admin glue goes into new small packages, not into `@dextinity/admin`:
-    - the API client provider and the query error handler: `@dextinity/core/client` (`ApiProvider`, `QueryErrorHandler`);
-    - `useCan`: `@dextinity/permissions/client`;
+    - the API client provider and the query error handler: `@dextinity/serverless-core/client` (`ApiProvider`, `QueryErrorHandler`);
+    - `useCan`: `@dextinity/serverless-permissions/client`;
     - a REST variant of `CrudContextMenu` if needed.
 - `@dextinity/cms-admin` (GraphQL) is replaced module by module and stays for existing projects meanwhile.
 - The admin generator needs new templates (TanStack Query + REST) targeting the same components.
@@ -195,14 +195,14 @@ Consequences:
 
 ## 7. Feature packages
 
-**Decision:** Each feature ships as `@dextinity/<feature>` with two entry points:
+**Decision:** Each feature ships as `@dextinity/serverless-<feature>` with two entry points. The prefix keeps them apart from the packages of the NestJS stack (e.g. `@dextinity/cms-api`) while both exist.
 
 - `./server`: Hono routes, services, Drizzle schema, migrations
 - `./client`: React components and hooks on `@dextinity/admin`, using the typed client
 
 The app mounts the routes and renders the components. This is the module pattern of the DAM prototype (`createDamModule` and `DamPage`). The route types are exported (`DamRoutes`), so clients get typed requests and responses through package boundaries.
 
-Shared building blocks are in `@dextinity/core` (`./server`, `./client`, and `./vite` for the local development services). Both entry points of a package are built with `tsc`, so the client part works without Babel.
+Shared building blocks are in `@dextinity/serverless-core` (`./server`, `./client`, and `./vite` for the local development services). Both entry points of a package are built with `tsc`, so the client part works without Babel.
 
 ## 8. Authentication: Cloudflare Access
 
@@ -232,7 +232,7 @@ Today's features and how they are covered:
 
 Local dev:
 
-- **Access emulator** (daily dev): part of the Vite dev server (`dextinityDevServer()` of `@dextinity/core/vite`). It shows a user picker (the `dev-oidc-provider` users, with groups), signs an Access-format JWT with a local key, sets the `CF_Authorization` cookie, adds the `Cf-Access-Jwt-Assertion` header and serves the certificates and the identity endpoint. The production verification code runs, with a local key instead of Cloudflare's.
+- **Access emulator** (daily dev): part of the Vite dev server (`dextinityDevServer()` of `@dextinity/serverless-core/vite`). It shows a user picker (the `dev-oidc-provider` users, with groups), signs an Access-format JWT with a local key, sets the `CF_Authorization` cookie, adds the `Cf-Access-Jwt-Assertion` header and serves the certificates and the identity endpoint. The production verification code runs, with a local key instead of Cloudflare's.
     - Fail-safe: the emulator is a Vite plugin applied only to `vite dev`, and the Worker selects its configuration (`devAccessConfig`) behind `import.meta.env.DEV`, so neither is in the production build (checked).
     - Production accepts only team domains of `cloudflareaccess.com`; requests without a valid Access JWT have no identity and get a 401 from the permission checks. The public DAM URLs need a bypass policy in Access.
 - **Cloudflare Tunnel** (occasional tests): exposes local dev under a hostname protected by a real Access application, for testing logout, IdP groups and policies.
@@ -244,7 +244,7 @@ Consequences:
 
 ## 9. Authorization: Dextinity's permission model as its own module
 
-**Decision:** Port Dextinity's permission model as `@dextinity/permissions` (`./server`, `./client`). Access policies only gate who may reach the admin.
+**Decision:** Port Dextinity's permission model as `@dextinity/serverless-permissions` (`./server`, `./client`). Access policies only gate who may reach the admin.
 
 Today's model:
 
@@ -314,7 +314,7 @@ Design:
 
 ## Next steps
 
-1. ~~Rework the prototype into the decided shape~~ (done, see [`packages/workers`](packages/workers)):
+1. ~~Rework the prototype into the decided shape~~ (done, see [`packages/serverless`](packages/serverless)):
     - one Vite + Worker project, admin as static assets, API at `/api`;
     - the DAM and the permissions on Drizzle, the same code on D1 and on PostgreSQL (smoke test with 27 steps passes on both);
     - Cloudflare Access verification with the dev emulator;

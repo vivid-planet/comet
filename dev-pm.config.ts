@@ -224,7 +224,7 @@ export default defineConfig({
             // Export the env files so Docker Compose binds the ports from `.env.local` (written by `pnpm run assign-ports`).
             // dev-pm doesn't pass them to scripts, and Compose prefers real env vars over its own `.env` lookup.
             script: "set -a; . ./.env; [ ! -f .env.local ] || . ./.env.local; set +a; docker compose up",
-            group: ["demo-api", "demo", "demo-workers-postgresql"],
+            group: ["demo-api", "demo", "demo-serverless-postgresql"],
         },
         {
             name: "demo-api-generator",
@@ -238,37 +238,37 @@ export default defineConfig({
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@dextinity/cms-api", "@dextinity/brevo-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
-        // group demo-workers (prototype)
+        // group demo-serverless (prototype)
         {
-            name: "dextinity-core",
-            script: "pnpm --filter @dextinity/core run dev",
-            group: ["demo-workers", "demo-workers-postgresql"],
+            name: "dextinity-serverless-core",
+            script: "pnpm --filter @dextinity/serverless-core run dev",
+            group: ["demo-serverless", "demo-serverless-postgresql"],
         },
         {
-            name: "dextinity-permissions",
-            script: "pnpm --filter @dextinity/permissions run dev",
-            group: ["demo-workers", "demo-workers-postgresql"],
-            waitOn: ["packages/workers/core/lib/server/index.d.ts"],
+            name: "dextinity-serverless-permissions",
+            script: "pnpm --filter @dextinity/serverless-permissions run dev",
+            group: ["demo-serverless", "demo-serverless-postgresql"],
+            waitOn: ["packages/serverless/core/lib/server/index.d.ts"],
         },
         {
-            name: "dextinity-dam",
-            script: "pnpm --filter @dextinity/dam run dev",
-            group: ["demo-workers", "demo-workers-postgresql"],
-            waitOn: ["packages/workers/core/lib/server/index.d.ts", "packages/workers/permissions/lib/server/index.d.ts"],
+            name: "dextinity-serverless-dam",
+            script: "pnpm --filter @dextinity/serverless-dam run dev",
+            group: ["demo-serverless", "demo-serverless-postgresql"],
+            waitOn: ["packages/serverless/core/lib/server/index.d.ts", "packages/serverless/permissions/lib/server/index.d.ts"],
         },
         {
-            name: "demo-workers",
-            script: "pnpm --filter dextinity-demo-workers run dev",
-            group: ["demo-workers"],
-            waitOn: [...waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"), "packages/workers/dam/lib/server/index.d.ts"],
+            name: "demo-serverless",
+            script: "pnpm --filter dextinity-demo-serverless run dev",
+            group: ["demo-serverless"],
+            waitOn: [...waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"), "packages/serverless/dam/lib/server/index.d.ts"],
         },
         {
-            name: "demo-workers-postgresql",
-            script: "pnpm --filter dextinity-demo-workers run dev:postgresql",
-            group: ["demo-workers-postgresql"],
+            name: "demo-serverless-postgresql",
+            script: "pnpm --filter dextinity-demo-serverless run dev:postgresql",
+            group: ["demo-serverless-postgresql"],
             waitOn: [
                 ...waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"),
-                "packages/workers/dam/lib/server/index.d.ts",
+                "packages/serverless/dam/lib/server/index.d.ts",
                 "tcp:$POSTGRESQL_PORT",
             ],
         },

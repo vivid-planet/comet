@@ -1,10 +1,10 @@
 {
-    "name": "@dextinity/permissions",
+    "name": "@dextinity/serverless-permissions",
     "version": "10.10.0",
     "private": true,
     "description": "Prototype: Dextinity's permission model (grants per content scope, roles, IdP group mappings) for Hono and the admin",
     "repository": {
-        "directory": "packages/workers/permissions",
+        "directory": "packages/serverless/permissions",
         "type": "git",
         "url": "https://github.com/vivid-planet/dextinity"
     },
@@ -41,7 +41,7 @@
         "lint:tsc": "tsc --noEmit"
     },
     "dependencies": {
-        "@dextinity/core": "workspace:*"
+        "@dextinity/serverless-core": "workspace:*"
     },
     "devDependencies": {
         "@dextinity/admin": "workspace:*",

@@ -1,4 +1,11 @@
-import { type AccessIdentity, type AccessVariables, type Database, type DatabaseDialect, inject, unauthorized } from "@dextinity/core/server";
+import {
+    type AccessIdentity,
+    type AccessVariables,
+    type Database,
+    type DatabaseDialect,
+    inject,
+    unauthorized,
+} from "@dextinity/serverless-core/server";
 import { and, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { Hono } from "hono";
 import { createMiddleware } from "hono/factory";

@@ -12,9 +12,9 @@ import {
     type ImageTransformer,
     provide,
     R2BlobStorage,
-} from "@dextinity/core/server";
-import { createDamModule } from "@dextinity/dam/server";
-import { createPermissionsModule } from "@dextinity/permissions/server";
+} from "@dextinity/serverless-core/server";
+import { createDamModule } from "@dextinity/serverless-dam/server";
+import { createPermissionsModule } from "@dextinity/serverless-permissions/server";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { Hono } from "hono";
 import postgres from "postgres";

@@ -1,6 +1,6 @@
 import { Alert, Button, useSnackbarApi } from "@dextinity/admin";
 import { Upload } from "@dextinity/admin-icons";
-import { getErrorMessage } from "@dextinity/core/client";
+import { getErrorMessage } from "@dextinity/serverless-core/client";
 import { Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useQueryClient } from "@tanstack/react-query";

@@ -1,6 +1,6 @@
-import type { DatabaseDialect } from "@dextinity/core/server";
-import { createDamSchema } from "@dextinity/dam/server";
-import { createPermissionsSchema } from "@dextinity/permissions/server";
+import type { DatabaseDialect } from "@dextinity/serverless-core/server";
+import { createDamSchema } from "@dextinity/serverless-dam/server";
+import { createPermissionsSchema } from "@dextinity/serverless-permissions/server";
 
 import { DamScope } from "../dam/dam-scope";
 

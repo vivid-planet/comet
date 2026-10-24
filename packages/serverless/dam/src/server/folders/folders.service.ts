@@ -1,4 +1,4 @@
-import { badRequest, createHashedPath, notFound } from "@dextinity/core/server";
+import { badRequest, createHashedPath, notFound } from "@dextinity/serverless-core/server";
 import { and, asc, count, desc, eq, inArray, isNull, type SQL, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/sqlite-core";
 import type JSZip from "jszip";

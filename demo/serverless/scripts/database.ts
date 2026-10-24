@@ -2,8 +2,8 @@
  * Prepares the local databases: `node scripts/database.ts <sqlite|postgresql> <migrate|seed>`.
  * D1 is migrated with `wrangler d1 migrations apply`, PostgreSQL with Drizzle's migrator.
  */
-import { createD1Database, createPostgresqlDatabase, type Database, type DatabaseDialect } from "@dextinity/core/server";
-import { createPermissionsSchema } from "@dextinity/permissions/server";
+import { createD1Database, createPostgresqlDatabase, type Database, type DatabaseDialect } from "@dextinity/serverless-core/server";
+import { createPermissionsSchema } from "@dextinity/serverless-permissions/server";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
@@ -14,7 +14,7 @@ const [dialect, command] = process.argv.slice(2) as [DatabaseDialect, "migrate" 
 const { POSTGRESQL_HOST, POSTGRESQL_PORT, POSTGRESQL_USER, POSTGRESQL_PWD_DECODED, POSTGRESQL_DB } = process.env;
 const postgresqlOptions = { host: POSTGRESQL_HOST, port: Number(POSTGRESQL_PORT), user: POSTGRESQL_USER, password: POSTGRESQL_PWD_DECODED };
 /** A database of its own next to the one of the NestJS demo, whose tables have the same names */
-const postgresqlDatabaseName = `${POSTGRESQL_DB}_workers`;
+const postgresqlDatabaseName = `${POSTGRESQL_DB}_serverless`;
 
 /** Grants and roles of the users of the Access emulator (see vite.config.mts). Admins get all permissions by rule. */
 async function seed(database: Database): Promise<void> {

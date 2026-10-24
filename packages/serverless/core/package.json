@@ -1,10 +1,10 @@
 {
-    "name": "@dextinity/core",
+    "name": "@dextinity/serverless-core",
     "version": "10.10.0",
     "private": true,
     "description": "Prototype: Shared server, client and dev tooling for Dextinity feature packages on Cloudflare Workers",
     "repository": {
-        "directory": "packages/workers/core",
+        "directory": "packages/serverless/core",
         "type": "git",
         "url": "https://github.com/vivid-planet/dextinity"
     },

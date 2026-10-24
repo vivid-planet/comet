@@ -1,5 +1,5 @@
-import { badRequest, notFound, withEdgeCache, zValidator } from "@dextinity/core/server";
-import { requirePermission } from "@dextinity/permissions/server";
+import { badRequest, notFound, withEdgeCache, zValidator } from "@dextinity/serverless-core/server";
+import { requirePermission } from "@dextinity/serverless-permissions/server";
 import { type Context, Hono } from "hono";
 import { z } from "zod";
 

@@ -1,9 +1,9 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
 import { createDextinityTheme, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@dextinity/admin";
-import { ApiProvider, QueryErrorHandler } from "@dextinity/core/client";
-import { DamApiProvider, DamPage } from "@dextinity/dam/client";
-import { CurrentUserProvider, useAllowedContentScopes } from "@dextinity/permissions/client";
+import { ApiProvider, QueryErrorHandler } from "@dextinity/serverless-core/client";
+import { DamApiProvider, DamPage } from "@dextinity/serverless-dam/client";
+import { CurrentUserProvider, useAllowedContentScopes } from "@dextinity/serverless-permissions/client";
 import { css, Global } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";

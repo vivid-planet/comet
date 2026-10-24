@@ -1,4 +1,4 @@
-import { useApi } from "@dextinity/core/client";
+import { useApi } from "@dextinity/serverless-core/client";
 import { hc } from "hono/client";
 import { createContext, type PropsWithChildren, useContext, useMemo } from "react";
 

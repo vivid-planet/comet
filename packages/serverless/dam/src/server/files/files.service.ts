@@ -1,7 +1,7 @@
 import { createHash, createHmac } from "node:crypto";
 import { basename, extname } from "node:path";
 
-import { badRequest, createHashedPath, notFound, unprocessableEntity } from "@dextinity/core/server";
+import { badRequest, createHashedPath, notFound, unprocessableEntity } from "@dextinity/serverless-core/server";
 import { and, asc, desc, eq, inArray, isNull, ne, or, type SQL, sql } from "drizzle-orm";
 import slugify from "slugify";
 

@@ -1,4 +1,4 @@
-import { type BlobStorage, type Database, type DatabaseDialect, type ImageTransformer, inject } from "@dextinity/core/server";
+import { type BlobStorage, type Database, type DatabaseDialect, type ImageTransformer, inject } from "@dextinity/serverless-core/server";
 import { Hono } from "hono";
 import { createMiddleware } from "hono/factory";
 import { z } from "zod";

@@ -43,7 +43,7 @@ const identities = new Map<string, Omit<AccessIdentity, "id" | "isServiceToken">
 const maxCachedIdentities = 1000;
 
 /**
- * Configures `cloudflareAccess()` for the Access emulator of the Vite dev server (`dextinityDevServer()` of `@dextinity/core/vite`),
+ * Configures `cloudflareAccess()` for the Access emulator of the Vite dev server (`dextinityDevServer()` of `@dextinity/serverless-core/vite`),
  * which signs the JWTs with a local key. Only use it behind `import.meta.env.DEV`, so Vite removes it from the production build.
  */
 export function devAccessConfig(c: Context): CloudflareAccessConfig & { isDevEmulator: true } {

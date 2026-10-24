@@ -1,5 +1,5 @@
 import { cloudflare } from "@cloudflare/vite-plugin";
-import { dextinityDevServer, type DevAccessUser } from "@dextinity/core/vite";
+import { dextinityDevServer, type DevAccessUser } from "@dextinity/serverless-core/vite";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 
@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => ({
     ],
     server: {
         host: process.env.SERVER_HOST ?? "localhost",
-        port: Number(process.env.DEMO_WORKERS_PORT),
+        port: Number(process.env.DEMO_SERVERLESS_PORT),
         strictPort: true,
     },
     define: {

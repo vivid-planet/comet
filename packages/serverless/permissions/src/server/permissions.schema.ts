@@ -1,4 +1,4 @@
-import { type DatabaseDialect, portableColumns } from "@dextinity/core/server";
+import { type DatabaseDialect, portableColumns } from "@dextinity/serverless-core/server";
 
 import type { ContentScope } from "../common/permissions.evaluation.js";
 

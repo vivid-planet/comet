@@ -2,7 +2,7 @@ import { devServerImagesPath } from "../../dev-server-paths.js";
 import type { ImageInfo, ImageTransformation, ImageTransformer } from "./image-transformer.js";
 
 /**
- * Transforms images with sharp in the Vite dev server (`dextinityDevServer()` of `@dextinity/core/vite`), which runs in Node.js next to
+ * Transforms images with sharp in the Vite dev server (`dextinityDevServer()` of `@dextinity/serverless-core/vite`), which runs in Node.js next to
  * the Worker. Only for local development.
  */
 export class DevServerImageTransformer implements ImageTransformer {

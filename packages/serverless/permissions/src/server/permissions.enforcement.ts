@@ -1,4 +1,4 @@
-import { forbidden, unauthorized } from "@dextinity/core/server";
+import { forbidden, unauthorized } from "@dextinity/serverless-core/server";
 import { and, eq, or, type SQL, sql } from "drizzle-orm";
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import type { Context } from "hono";

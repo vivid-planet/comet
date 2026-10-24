@@ -1,10 +1,10 @@
 {
-    "name": "@dextinity/dam",
+    "name": "@dextinity/serverless-dam",
     "version": "10.10.0",
     "private": true,
     "description": "Prototype: Dextinity DAM (digital asset management) for Hono on Cloudflare Workers and the admin",
     "repository": {
-        "directory": "packages/workers/dam",
+        "directory": "packages/serverless/dam",
         "type": "git",
         "url": "https://github.com/vivid-planet/dextinity"
     },
@@ -42,8 +42,8 @@
     },
     "dependencies": {
         "@dextinity/admin-icons": "workspace:*",
-        "@dextinity/core": "workspace:*",
-        "@dextinity/permissions": "workspace:*",
+        "@dextinity/serverless-core": "workspace:*",
+        "@dextinity/serverless-permissions": "workspace:*",
         "@hapi/accept": "^6.0.3",
         "exifr": "^7.1.3",
         "jszip": "^3.10.2",

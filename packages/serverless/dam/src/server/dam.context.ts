@@ -1,5 +1,5 @@
-import type { AccessVariables, BlobStorage, Database, ImageTransformer } from "@dextinity/core/server";
-import { assertCan, type PermissionsVariables, scopeFilter } from "@dextinity/permissions/server";
+import type { AccessVariables, BlobStorage, Database, ImageTransformer } from "@dextinity/serverless-core/server";
+import { assertCan, type PermissionsVariables, scopeFilter } from "@dextinity/serverless-permissions/server";
 import type { SQL } from "drizzle-orm";
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import type { Context } from "hono";

@@ -1,5 +1,5 @@
-import { badRequest, createHashedPath, DextinityHttpException, notFound, unprocessableEntity, zValidator } from "@dextinity/core/server";
-import { requirePermission } from "@dextinity/permissions/server";
+import { badRequest, createHashedPath, DextinityHttpException, notFound, unprocessableEntity, zValidator } from "@dextinity/serverless-core/server";
+import { requirePermission } from "@dextinity/serverless-permissions/server";
 import { type Context, Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { z } from "zod";
