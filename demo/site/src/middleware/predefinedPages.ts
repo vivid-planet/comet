@@ -1,11 +1,11 @@
 import { gql } from "@dextinity/site-react";
+import { siteRoutes } from "@src/app/router";
 import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
 import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
 import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHost } from "@src/util/siteConfig";
 import { createMiddleware } from "hono/factory";
 
 import { memoryCache } from "./cache";
-import type { MiddlewareEnv } from "./env";
 import type { GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables } from "./predefinedPages.generated";
 
 async function getPredefinedPageRedirect(domain: string, pathname: string): Promise<string | undefined> {
@@ -76,7 +76,7 @@ async function fetchPredefinedPages(domain: string) {
     });
 }
 
-export const predefinedPagesMiddleware = createMiddleware<MiddlewareEnv>(async (c, next) => {
+export const predefinedPagesMiddleware = createMiddleware(async (c, next) => {
     const host = getHostByHeaders(c.req.raw.headers);
     const siteConfig = await getSiteConfigForHost(host);
     if (!siteConfig) {
@@ -89,10 +89,15 @@ export const predefinedPagesMiddleware = createMiddleware<MiddlewareEnv>(async (
         return c.redirect(predefinedPageRedirect, 307);
     }
 
-    const predefinedPageRewrite = await getPredefinedPageRewrite(siteConfig.scope.domain, c.req.path);
+    // Predefined pages are only rendered, so other methods don't need to be rewritten (and their request body forwarded)
+    const predefinedPageRewrite =
+        c.req.method === "GET" || c.req.method === "HEAD" ? await getPredefinedPageRewrite(siteConfig.scope.domain, c.req.path) : undefined;
 
     if (predefinedPageRewrite) {
-        c.set("rewrittenPathname", predefinedPageRewrite);
+        // Hono routes by the original path, so the rewritten request is handed to the site routes directly
+        const url = new URL(c.req.url);
+        url.pathname = predefinedPageRewrite;
+        return siteRoutes.fetch(new Request(url, c.req.raw));
     }
 
     await next();

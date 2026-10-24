@@ -46,9 +46,9 @@ The Next.js demo set `metadataBase: new URL(siteConfig.url)` in the language lay
 
 ## Refactoring
 
-### #8 Replace the `router.fetch()` handoff with Hono route order
+### #8 Replace the `router.fetch()` handoff with Hono route order (done)
 
-Skip middlewares and the site context middleware call `router.fetch()`/`siteRouter.fetch()` and rebuild requests (incl. a `duplex` cast). In Hono, routes registered before a middleware run first: register system routes (block preview, site preview, `/api/render-*`) before the site middleware chain. Only the predefined pages rewrite remains. Files: `src/handler.ts`, `src/app/router.tsx`, `src/middleware/*`. Ref: audi6 `src/app/app.tsx` + `middleware/chain.ts` (`handleRoute`).
+Skip middlewares and the site context middleware handed requests to separate Hono apps (`router.fetch()`/`siteRouter.fetch()`), so whether a route was reachable and which middlewares applied was only defined by the position of the handoff. Now `src/handler.ts` is a single app whose registration order defines both: middlewares only apply to routes registered after them. `status`, `admin` and `dam` are routes in `src/app/`. Only the predefined pages rewrite still calls `siteRoutes.fetch()` (GET/HEAD only), since Hono routes by the original path. Verified by comparing status and headers of 46 requests before/after: identical except `/api` (now the 404 shortcut without CSP like all other `/api/*` paths). Ref: audi6 `src/app/app.tsx` + `middleware/chain.ts` (`handleRoute`).
 
 ### #9 Resolve site config and preview params once per request
 
