@@ -121,6 +121,9 @@
         "demo/api-hono": {
             "entry": ["scripts/*.ts"],
             "ignore": [".wrangler/**", "dist/**"]
+        },
+        "demo/admin-hono": {
+            "ignoreDependencies": ["@swc/plugin-emotion"]
         }
     }
 }

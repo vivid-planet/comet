@@ -75,6 +75,7 @@ export function createDamRouteHelpers<TScopeSchema extends DamScopeSchema>({ sco
                 ...file,
                 scope: file.scope as Scope,
                 fileUrl: c.var.dam.files.createFileUrl(file, { previewDamUrls }),
+                downloadUrl: c.var.dam.files.createFileDownloadUrl(file, { previewDamUrls }),
                 image: file.image && { ...file.image, urlTemplate: c.var.dam.images.createUrlTemplate(file, { previewDamUrls }) },
             };
         },

@@ -11,6 +11,7 @@ const packageFolderMapping = {
     "@dextinity/cms-api": "packages/api/cms-api",
     "@dextinity/brevo-api": "packages/api/brevo-api",
     "@dextinity/cms-hono": "packages/api/cms-hono",
+    "@dextinity/cms-admin-hono": "packages/admin/cms-admin-hono",
     "@dextinity/site-nextjs": "packages/site/site-nextjs",
     "@dextinity/site-react": "packages/site/site-react",
 };
@@ -225,7 +226,7 @@ export default defineConfig({
             // Export the env files so Docker Compose binds the ports from `.env.local` (written by `pnpm run assign-ports`).
             // dev-pm doesn't pass them to scripts, and Compose prefers real env vars over its own `.env` lookup.
             script: "set -a; . ./.env; [ ! -f .env.local ] || . ./.env.local; set +a; docker compose up",
-            group: ["demo-api", "demo"],
+            group: ["demo-api", "demo", "demo-hono"],
         },
         {
             name: "demo-api-generator",
@@ -242,19 +243,31 @@ export default defineConfig({
         {
             name: "cms-hono",
             script: "pnpm --filter @dextinity/cms-hono run dev",
-            group: ["demo-api-hono"],
+            group: ["demo-api-hono", "demo-hono"],
         },
         {
             name: "demo-api-hono",
             script: "pnpm --filter dextinity-demo-api-hono run dev",
-            group: ["demo-api-hono"],
+            group: ["demo-api-hono", "demo-hono"],
             waitOn: [...waitOnPackages("@dextinity/cms-hono"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
         {
             name: "demo-api-hono-worker",
             script: "pnpm --filter dextinity-demo-api-hono run dev:worker",
-            group: ["demo-api-hono"],
+            group: ["demo-api-hono", "demo-hono"],
             waitOn: [...waitOnPackages("@dextinity/cms-hono"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+        },
+        {
+            name: "cms-admin-hono",
+            script: "pnpm --filter @dextinity/cms-admin-hono run start",
+            group: ["demo-admin-hono", "demo-hono"],
+            waitOn: waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"),
+        },
+        {
+            name: "demo-admin-hono",
+            script: "pnpm --filter dextinity-demo-admin-hono run start",
+            group: ["demo-admin-hono", "demo-hono"],
+            waitOn: waitOnPackages("@dextinity/admin", "@dextinity/admin-icons", "@dextinity/cms-admin-hono"),
         },
         {
             name: "demo-api-block-codegen",

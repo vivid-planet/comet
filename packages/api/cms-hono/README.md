@@ -2,12 +2,20 @@
 
 A prototype of the Dextinity CMS API on [Hono](https://hono.dev) instead of NestJS, starting with the DAM. It runs on Node.js and on Cloudflare Workers.
 The demo application is in [`demo/api-hono`](../../../demo/api-hono).
+The admin counterpart is [`@dextinity/cms-admin-hono`](../../admin/cms-admin-hono) with the demo admin in [`demo/admin-hono`](../../../demo/admin-hono).
 
 The prototype works on the same database as `@dextinity/cms-api` (the Drizzle schema maps to the tables of the MikroORM migrations) and generates the same file and image URLs (same HMAC signing), so both APIs can run side by side.
 
 ## Running the prototype
 
-Requires the Postgres and imgproxy containers (`pnpm exec dev-pm start demo-docker`) and the DAM tables (`pnpm --filter dextinity-demo-api db:migrate`).
+Requires the DAM tables (`pnpm --filter dextinity-demo-api db:migrate`) and the builds of `@dextinity/admin` and `@dextinity/admin-icons`.
+
+```bash
+# Postgres, imgproxy, the API on Node.js and as Worker, and the admin on http://localhost:8010
+pnpm exec dev-pm start @demo-hono
+```
+
+Or individually:
 
 ```bash
 pnpm --filter @dextinity/cms-hono build
@@ -23,7 +31,8 @@ pnpm --filter dextinity-demo-api-hono smoke-test                         # Node.
 pnpm --filter dextinity-demo-api-hono smoke-test http://localhost:8787   # Worker
 ```
 
-Requests are authenticated with `Authorization: Bearer $API_HONO_TOKEN` (see `.env`).
+Requests are authenticated with `Authorization: Bearer $API_HONO_TOKEN` (see `.env`). The admin's Vite dev server adds the header when it proxies `/api` to the API, so the token never reaches the browser.
+The admin uses the Node.js API. Set `ADMIN_HONO_API_URL=http://localhost:8787` in `.env.local` to use the Worker. Both share the database but not the blob storage, so files uploaded through one aren't served by the other.
 
 To deploy: create the R2 bucket and the Hyperdrive config, put their IDs into `wrangler.jsonc`, set the secrets (`wrangler secret put DAM_SECRET` etc.), and run `pnpm --filter dextinity-demo-api-hono deploy`.
 imgproxy keeps running as a separate service. It loads images either from R2 through its S3-compatible API (`R2_IMGPROXY_SOURCE_URL_PREFIX=s3://<bucket>/` plus the S3 settings of imgproxy) or from the public DAM URLs of the Worker (`API_HONO_PUBLIC_URL`).
@@ -107,6 +116,13 @@ This is the biggest piece of work, mostly on the admin side:
 - The API generator (`@CrudGenerator`) generates resolvers and services from MikroORM entities. It needs to generate Hono routes and Drizzle queries from the Drizzle tables instead.
 - The demo site fetches pages and their block data through GraphQL (~25 files with GraphQL documents in `demo/site`).
 - GraphQL field resolvers that load relations (e.g. `DamFile.damPath`, `duplicates`) become explicit response fields or separate routes. Keep an eye on N+1 queries.
+
+`@dextinity/cms-admin-hono` shows the pattern for the DAM: the typed client (`hc<DamRoutes<…>>`, types imported from `@dextinity/cms-hono`) with TanStack Query instead of Apollo, `parseResponse()` for errors, and invalidating the `["dam"]` query keys after mutations instead of `refetchQueries`.
+The UI uses `@dextinity/admin` (Stack navigation with breadcrumbs, DataGrid with `useDataGridRemote`, `FinalForm` with `SaveBoundary`, `RowActionsMenu`, `DeleteDialog`). Most of it works without GraphQL, but `@dextinity/admin` itself depends on Apollo:
+
+- `@apollo/client` and `graphql` are required peer dependencies, and Apollo ends up in the admin bundle even when nothing uses it
+- `CrudContextMenu` requires an Apollo client (the prototype uses `RowActionsMenu` instead), `FinalForm` reads it optionally
+- Generated grids and forms, `useDataGridExcelExport`, the error dialog handling (an Apollo link), the legacy table components, and in `@dextinity/cms-admin` the content scope, user permissions and most other features are built on Apollo
 
 Alternative: keep GraphQL on Hono with GraphQL Yoga and Pothos. That spares the admin rewrite, but loses the end-to-end types of Hono RPC and still requires replacing the NestJS GraphQL decorators.
 
