@@ -7,12 +7,13 @@ A prototype of Dextinity on Cloudflare Workers, built along [DECISIONS-SERVERLES
 | [`@dextinity/serverless-core`](core)               | `provide`/`inject`, errors, `zValidator`, portable Drizzle (`portableColumns`, `Database`), R2, image transformer, Access, cache | `ApiProvider`, `QueryErrorHandler`                |
 | [`@dextinity/serverless-permissions`](permissions) | Grants, roles, group roles; `requirePermission`, `assertCan`, `scopeFilter`; `GET /me`                                           | `CurrentUserProvider`, `useCan`, `useCurrentUser` |
 | [`@dextinity/serverless-dam`](dam)                 | Schema, services and routes of the DAM                                                                                           | `DamApiProvider`, `DamPage`                       |
+| [`@dextinity/serverless-page-tree`](page-tree)     | Schema, service and routes of the page tree (without documents)                                                                  | `PageTreeApiProvider`, `PageTreePage`             |
 
 `@dextinity/serverless-core/vite` contains `dextinityDevServer()`, the local development services: an emulator of Cloudflare Access and an image transformer with sharp.
 
 The demo is [`demo/serverless`](../../demo/serverless): one Vite project and one Worker, which serves the admin as static assets and the API at `/api`. It follows the layout of Cloudflare's React template (`create-cloudflare`), with `api/` instead of `worker/`:
 
-- `src/`: the admin, `api/`: the API (the Worker's entry point), `scripts/`: Node.js scripts
+- `src/`: the admin, `api/`: the API (the Worker's entry point), `shared/`: code for both (e.g. the content scope), `scripts/`: Node.js scripts
 - one tsconfig each (`tsconfig.app.json`, `tsconfig.api.json`, `tsconfig.node.json`), referenced from `tsconfig.json` for the editor and `tsc -b`
 - ESLint forbids imports between `src/` and `api/`, values from `@dextinity/*/server` in the admin (types are fine) and `@dextinity/*/client` in the API
 
@@ -36,7 +37,7 @@ pnpm exec dev-pm start @demo-serverless-postgresql
 pnpm --filter dextinity-demo-serverless smoke-test
 ```
 
-The Access emulator shows a login page with three users: Admin (group `admins`, all permissions by rule), Editor (group `editors`, the DAM of `main` through a group role) and Guest (the DAM of `secondary` through a stored grant).
+The Access emulator shows a login page with three users: Admin (group `admins`, all permissions by rule), Editor (group `editors`, the DAM and the page tree of `main` through a group role) and Guest (only the DAM of `secondary`, through a stored grant). The seed adds a home page per domain.
 
 `pnpm --filter dextinity-demo-serverless build` builds the Worker and the admin for production; the emulator and the dev image transformer aren't part of it.
 To deploy, create the D1 database (or the Hyperdrive config), the R2 bucket and an Access application, put their IDs into `wrangler.jsonc`, set the secret (`wrangler secret put DAM_SECRET`), apply the migrations (`wrangler d1 migrations apply DB --remote`) and run `deploy`. The public file and image URLs (`/api/dam/files/<hash>/…`, `/api/dam/images/<hash>/…`) need a bypass policy in Access.
@@ -79,7 +80,8 @@ Rules, because the types don't catch everything:
 ## What the prototype covers
 
 - DAM: files (list, search, get with DAM path and duplicates, update, move, archive, delete), upload and replace, file delivery (hashed public URLs, preview URLs, downloads, ranges), images (focus and smart crops, allowed sizes and aspect ratios, AVIF/WebP negotiation, Cache API), folders (recursive ancestors, move, delete, zip), DAM items, dominant color on upload
-- Permissions: grants with validity, roles, roles per identity provider group, rules in project code, content scopes with `*` wildcards, `scopeFilter` on the DAM lists, `GET /me`, `useCan` in the admin
+- Page tree (without documents, so without content and blocks): nodes per category with name, slug, path, position, visibility, document type and "hide in menu"; add, edit, move (drag and drop, into another category), archive with subpages, restore with a free slug, delete with subpages, slug availability (duplicate and reserved paths); paths are calculated in memory from one query per scope (`PageTreeSnapshot`)
+- Permissions: grants with validity, roles, roles per identity provider group, rules in project code, content scopes with `*` wildcards, `scopeFilter` on the DAM and page tree lists, `GET /me`, `useCan` in the admin
 - Access: JWT verification against the team's keys with `jose`, groups from the identity endpoint (cached per isolate), service tokens, the emulator for local development
 
-Left out for now: impersonation and the admin UI for grants, users stored on first request, DAM dependencies, warnings and media alternatives, SVG validation (DOMPurify needs a DOM), blocks, background jobs, migrating existing projects (the schema no longer maps to the MikroORM tables: no `mpath`, column names without the embeddable prefixes).
+Left out for now: the documents of the page tree (content, blocks) with copy and paste, redirects on slug changes and the read API for the site, impersonation and the admin UI for grants, users stored on first request, DAM dependencies, warnings and media alternatives, SVG validation (DOMPurify needs a DOM), blocks, background jobs, migrating existing projects (the schema no longer maps to the MikroORM tables: no `mpath`, column names without the embeddable prefixes).

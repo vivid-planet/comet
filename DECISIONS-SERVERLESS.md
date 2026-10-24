@@ -316,9 +316,9 @@ Design:
 
 1. ~~Rework the prototype into the decided shape~~ (done, see [`packages/serverless`](packages/serverless)):
     - one Vite + Worker project, admin as static assets, API at `/api`;
-    - the DAM and the permissions on Drizzle, the same code on D1 and on PostgreSQL (smoke test with 27 steps passes on both);
+    - the DAM and the permissions on Drizzle, the same code on D1 and on PostgreSQL (the smoke test passes on both);
     - Cloudflare Access verification with the dev emulator;
     - images through the image transformer instead of imgproxy;
     - the permission module with grants, roles, group roles and rules. Impersonation and the admin UI for grants are still missing.
 2. Deploy it to Cloudflare and measure bundle size, cold starts and request times. Locally built, the Worker is 286 KB gzipped (including postgres.js, exifr and JSZip).
-3. Decide the open questions, then port module by module.
+3. Decide the open questions, then port module by module. Started with the page tree without documents (see the README of [`packages/serverless`](packages/serverless)); next its documents, which need the blocks.
