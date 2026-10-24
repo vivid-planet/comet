@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "lib": ["ES2023"],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "target": "ES2023",
+        "types": ["@cloudflare/workers-types"],
+        "verbatimModuleSyntax": true
+    },
+    "include": ["src/worker/**/*"]
+}

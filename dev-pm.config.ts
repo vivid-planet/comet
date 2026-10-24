@@ -10,8 +10,6 @@ const packageFolderMapping = {
     "@dextinity/brevo-admin": "packages/admin/brevo-admin",
     "@dextinity/cms-api": "packages/api/cms-api",
     "@dextinity/brevo-api": "packages/api/brevo-api",
-    "@dextinity/cms-hono": "packages/api/cms-hono",
-    "@dextinity/cms-admin-hono": "packages/admin/cms-admin-hono",
     "@dextinity/site-nextjs": "packages/site/site-nextjs",
     "@dextinity/site-react": "packages/site/site-react",
 };
@@ -226,7 +224,7 @@ export default defineConfig({
             // Export the env files so Docker Compose binds the ports from `.env.local` (written by `pnpm run assign-ports`).
             // dev-pm doesn't pass them to scripts, and Compose prefers real env vars over its own `.env` lookup.
             script: "set -a; . ./.env; [ ! -f .env.local ] || . ./.env.local; set +a; docker compose up",
-            group: ["demo-api", "demo", "demo-hono"],
+            group: ["demo-api", "demo", "demo-cloudflare-gen-postgresql"],
         },
         {
             name: "demo-api-generator",
@@ -240,34 +238,39 @@ export default defineConfig({
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@dextinity/cms-api", "@dextinity/brevo-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
+        // group demo-cloudflare-gen (prototype)
         {
-            name: "cms-hono",
-            script: "pnpm --filter @dextinity/cms-hono run dev",
-            group: ["demo-api-hono", "demo-hono"],
+            name: "dextinity-core",
+            script: "pnpm --filter @dextinity/core run dev",
+            group: ["demo-cloudflare-gen", "demo-cloudflare-gen-postgresql"],
         },
         {
-            name: "demo-api-hono",
-            script: "pnpm --filter dextinity-demo-api-hono run dev",
-            group: ["demo-api-hono", "demo-hono"],
-            waitOn: [...waitOnPackages("@dextinity/cms-hono"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+            name: "dextinity-permissions",
+            script: "pnpm --filter @dextinity/permissions run dev",
+            group: ["demo-cloudflare-gen", "demo-cloudflare-gen-postgresql"],
+            waitOn: ["packages/cloudflare-gen/core/lib/server/index.d.ts"],
         },
         {
-            name: "demo-api-hono-worker",
-            script: "pnpm --filter dextinity-demo-api-hono run dev:worker",
-            group: ["demo-api-hono", "demo-hono"],
-            waitOn: [...waitOnPackages("@dextinity/cms-hono"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+            name: "dextinity-dam",
+            script: "pnpm --filter @dextinity/dam run dev",
+            group: ["demo-cloudflare-gen", "demo-cloudflare-gen-postgresql"],
+            waitOn: ["packages/cloudflare-gen/core/lib/server/index.d.ts", "packages/cloudflare-gen/permissions/lib/server/index.d.ts"],
         },
         {
-            name: "cms-admin-hono",
-            script: "pnpm --filter @dextinity/cms-admin-hono run start",
-            group: ["demo-admin-hono", "demo-hono"],
-            waitOn: waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"),
+            name: "demo-cloudflare-gen",
+            script: "pnpm --filter dextinity-demo-cloudflare-gen run dev",
+            group: ["demo-cloudflare-gen"],
+            waitOn: [...waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"), "packages/cloudflare-gen/dam/lib/server/index.d.ts"],
         },
         {
-            name: "demo-admin-hono",
-            script: "pnpm --filter dextinity-demo-admin-hono run start",
-            group: ["demo-admin-hono", "demo-hono"],
-            waitOn: waitOnPackages("@dextinity/admin", "@dextinity/admin-icons", "@dextinity/cms-admin-hono"),
+            name: "demo-cloudflare-gen-postgresql",
+            script: "pnpm --filter dextinity-demo-cloudflare-gen run dev:postgresql",
+            group: ["demo-cloudflare-gen-postgresql"],
+            waitOn: [
+                ...waitOnPackages("@dextinity/admin", "@dextinity/admin-icons"),
+                "packages/cloudflare-gen/dam/lib/server/index.d.ts",
+                "tcp:$POSTGRESQL_PORT",
+            ],
         },
         {
             name: "demo-api-block-codegen",

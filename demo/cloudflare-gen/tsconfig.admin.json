@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "jsx": "react-jsx",
+        "jsxImportSource": "@emotion/react",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "module": "preserve",
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "target": "ESNext",
+        "types": ["vite/client"]
+    },
+    "include": ["src/admin/**/*"]
+}

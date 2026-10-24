@@ -1,0 +1,63 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "dextinity-demo-cloudflare-gen",
+    "main": "src/worker/index.ts",
+    "compatibility_date": "2026-10-01",
+    "compatibility_flags": ["nodejs_compat"],
+    // The admin is served as static assets without running the Worker, only /api/* reaches it
+    "assets": {
+        "not_found_handling": "single-page-application",
+        "run_worker_first": ["/api/*"],
+    },
+    // DAM_SECRET is a secret: `wrangler secret put DAM_SECRET`. Locally, it comes from the .env of the repository.
+    "vars": {
+        "DATABASE_DIALECT": "sqlite",
+        "ACCESS_TEAM_DOMAIN": "https://dextinity-demo.cloudflareaccess.com",
+        "ACCESS_AUDIENCE": "the-aud-tag-of-the-access-application",
+    },
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "dextinity-demo",
+            // Create with `wrangler d1 create dextinity-demo`
+            "database_id": "00000000-0000-0000-0000-000000000000",
+            "migrations_dir": "migrations/d1",
+        },
+    ],
+    "r2_buckets": [
+        {
+            "binding": "DAM_FILES",
+            "bucket_name": "dextinity-demo-dam",
+        },
+    ],
+    "images": {
+        "binding": "IMAGES",
+    },
+    "env": {
+        // The same project on PostgreSQL: `CLOUDFLARE_ENV=postgresql vite build`. Bindings and vars aren't inherited by environments.
+        "postgresql": {
+            "vars": {
+                "DATABASE_DIALECT": "postgresql",
+                "ACCESS_TEAM_DOMAIN": "https://dextinity-demo.cloudflareaccess.com",
+                "ACCESS_AUDIENCE": "the-aud-tag-of-the-access-application",
+            },
+            "hyperdrive": [
+                {
+                    "binding": "HYPERDRIVE",
+                    // Create with `wrangler hyperdrive create dextinity-demo --connection-string=...`. Locally, the Vite dev server
+                    // connects to CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE instead, see scripts/dev-postgresql.sh.
+                    "id": "00000000000000000000000000000000",
+                },
+            ],
+            "r2_buckets": [
+                {
+                    "binding": "DAM_FILES",
+                    "bucket_name": "dextinity-demo-dam",
+                },
+            ],
+            "images": {
+                "binding": "IMAGES",
+            },
+        },
+    },
+}
