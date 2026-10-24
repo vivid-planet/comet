@@ -160,6 +160,9 @@ TanStack Start on Workers was tested and works (282 KB gzipped server code, 108 
 Setup:
 
 - One Vite project per app with Cloudflare's Vite plugin; local dev runs on the Workers runtime with real bindings (D1, R2, Hyperdrive)
+- One package (`package.json`) for admin and API, like Cloudflare's React template and the full-stack frameworks: they are built, deployed and versioned together. Separate packages are for separately deployed apps (e.g. the site later).
+    - Layout: the admin in `src/`, the API in `api/`, one tsconfig each, referenced from the root `tsconfig.json`
+    - ESLint forbids imports between them; the admin uses the typed clients of the feature packages
 - Data fetching with TanStack Query through the typed Hono client
 
 ## 5. Routing: React Router (client-only)
