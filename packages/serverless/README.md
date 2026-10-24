@@ -6,8 +6,9 @@ A prototype of Dextinity on Cloudflare Workers, built along [DECISIONS-SERVERLES
 | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | [`@dextinity/serverless-core`](core)               | `provide`/`inject`, errors, `zValidator`, portable Drizzle (`portableColumns`, `Database`), R2, image transformer, Access, cache | `ApiProvider`, `QueryErrorHandler`                |
 | [`@dextinity/serverless-permissions`](permissions) | Grants, roles, group roles; `requirePermission`, `assertCan`, `scopeFilter`; `GET /me`                                           | `CurrentUserProvider`, `useCan`, `useCurrentUser` |
-| [`@dextinity/serverless-dam`](dam)                 | Schema, services and routes of the DAM                                                                                           | `DamApiProvider`, `DamPage`                       |
-| [`@dextinity/serverless-page-tree`](page-tree)     | Schema, service and routes of the page tree (without documents)                                                                  | `PageTreeApiProvider`, `PageTreePage`             |
+| [`@dextinity/serverless-blocks`](blocks)           | Block definitions (name and zod schema of the input) and factories like those of `@dextinity/cms-api`                            | `BlocksProvider`, YouTube and Vimeo factories     |
+| [`@dextinity/serverless-dam`](dam)                 | Schema, services and routes of the DAM; image, video and file download blocks                                                    | `DamApiProvider`, `DamPage`, the same blocks      |
+| [`@dextinity/serverless-page-tree`](page-tree)     | Schema, service and routes of the page tree and its documents; internal link block                                               | `PageTreeApiProvider`, `PageTreePage`, the block  |
 
 `@dextinity/serverless-core/vite` contains `dextinityDevServer()`, the local development services: an emulator of Cloudflare Access and an image transformer with sharp.
 
@@ -19,7 +20,7 @@ The demo is [`demo/serverless`](../../demo/serverless): one Vite project and one
 
 ## Running the demo
 
-Requires the builds of `@dextinity/admin` and `@dextinity/admin-icons`.
+Requires the builds of `@dextinity/admin`, `@dextinity/admin-icons` and `@dextinity/cms-admin`.
 
 ```bash
 # On D1 (local SQLite of wrangler), no Docker needed
@@ -66,6 +67,8 @@ new Hono<{ Bindings: Bindings }>()
 
 In the admin, each module has its own typed client below the `ApiProvider`'s URL (`hc<DamRoutes<…>>("/api/dam")`), so typechecking stays fast and the admin never imports Worker code.
 
+Documents: the API's page tree config has the root blocks of each document type (zod schemas, `{ Page: { rootBlocks: { content: PageContentBlock, … } } }`), the admin's `PageTreeApiProvider` the admin blocks with the same keys. The admin needs `BlocksProvider` below the `ApiProvider`, for the block framework of `@dextinity/cms-admin`, and react-dnd's `DndProvider`, for reordering blocks.
+
 ## Writing code for D1 and PostgreSQL
 
 Tables are defined once with `portableColumns(dialect)`, which returns SQLite or PostgreSQL column builders. Both are typed as SQLite tables, and `database.drizzle` is typed as a SQLite database, so services are written once. drizzle-kit generates the migrations per dialect from the same definition (`pnpm --filter dextinity-demo-serverless db:generate`).
@@ -80,8 +83,10 @@ Rules, because the types don't catch everything:
 ## What the prototype covers
 
 - DAM: files (list, search, get with DAM path and duplicates, update, move, archive, delete), upload and replace, file delivery (hashed public URLs, preview URLs, downloads, ranges), images (focus and smart crops, allowed sizes and aspect ratios, AVIF/WebP negotiation, Cache API), folders (recursive ancestors, move, delete, zip), DAM items, dominant color on upload
-- Page tree (without documents, so without content and blocks): nodes per category with name, slug, path, position, visibility, document type and "hide in menu"; add, edit, move (drag and drop, into another category), archive with subpages, restore with a free slug, delete with subpages, slug availability (duplicate and reserved paths); paths are calculated in memory from one query per scope (`PageTreeSnapshot`)
+- Page tree: nodes per category with name, slug, path, position, visibility, document type and "hide in menu"; add, edit, move (drag and drop, into another category), archive with subpages, restore with a free slug, delete with subpages, slug availability (duplicate and reserved paths); paths are calculated in memory from one query per scope (`PageTreeSnapshot`)
+- Documents: an editor per node with a tab per root block (the demo's pages have content, stage and SEO, links a link), unsaved changes prompt, conflict detection; one document per node and type
+- Blocks: the blocks of the demo's pages, links and stages except TipTap, news, contact form and user groups, see [11. Blocks and documents](../../DECISIONS-SERVERLESS.md#11-blocks-and-documents). The admin uses the block framework of `@dextinity/cms-admin`, the API validates each block with a strict zod schema.
 - Permissions: grants with validity, roles, roles per identity provider group, rules in project code, content scopes with `*` wildcards, `scopeFilter` on the DAM and page tree lists, `GET /me`, `useCan` in the admin
 - Access: JWT verification against the team's keys with `jose`, groups from the identity endpoint (cached per isolate), service tokens, the emulator for local development
 
-Left out for now: the documents of the page tree (content, blocks) with copy and paste, redirects on slug changes and the read API for the site, impersonation and the admin UI for grants, users stored on first request, DAM dependencies, warnings and media alternatives, SVG validation (DOMPurify needs a DOM), blocks, background jobs, migrating existing projects (the schema no longer maps to the MikroORM tables: no `mpath`, column names without the embeddable prefixes).
+Left out for now: the TipTap blocks, copying pages, redirects on slug changes and the read API for the site (block data, dependencies, search texts), impersonation and the admin UI for grants, users stored on first request, DAM dependencies, warnings and media alternatives, SVG validation (DOMPurify needs a DOM), background jobs, migrating existing projects (the schema no longer maps to the MikroORM tables: no `mpath`, column names without the embeddable prefixes).

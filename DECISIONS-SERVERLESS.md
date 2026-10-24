@@ -2,7 +2,7 @@
 
 Status: decided in principle, 2026-10-24. Applies to the API and the admin. The site is out of scope.
 
-The decisions are based on prototypes and experiments run in the Workers runtime (workerd, locally). Nothing was deployed to Cloudflare yet. The prototype implements them for the DAM: the packages are in [`packages/serverless`](packages/serverless) (`@dextinity/serverless-core`, `@dextinity/serverless-permissions`, `@dextinity/serverless-dam`, see its README), the demo in [`demo/serverless`](demo/serverless).
+The decisions are based on prototypes and experiments run in the Workers runtime (workerd, locally). Nothing was deployed to Cloudflare yet. The prototype implements them for the DAM and the page tree with its documents: the packages are in [`packages/serverless`](packages/serverless) (`@dextinity/serverless-core`, `@dextinity/serverless-permissions`, `@dextinity/serverless-dam`, `@dextinity/serverless-page-tree`, `@dextinity/serverless-blocks`, see its README), the demo in [`demo/serverless`](demo/serverless).
 
 ## Goals
 
@@ -35,6 +35,7 @@ Future direction:
 | Authorization    | Dextinity's permission model, ported as its own module                                           |
 | Files            | R2                                                                                               |
 | Images           | Cloudflare Images via the Workers Images binding, replacing imgproxy                             |
+| Blocks           | Admin: the block framework of `@dextinity/cms-admin`; API: zod schemas; documents stored as JSON |
 
 ## 1. Runtime and HTTP framework: Hono on Cloudflare Workers
 
@@ -189,7 +190,7 @@ Consequences:
     - the API client provider and the query error handler: `@dextinity/serverless-core/client` (`ApiProvider`, `QueryErrorHandler`);
     - `useCan`: `@dextinity/serverless-permissions/client`;
     - a REST variant of `CrudContextMenu` if needed.
-- `@dextinity/cms-admin` (GraphQL) is replaced module by module and stays for existing projects meanwhile.
+- `@dextinity/cms-admin` (GraphQL) is replaced module by module and stays for existing projects meanwhile. Its block framework is reused, see [11. Blocks and documents](#11-blocks-and-documents).
 - The admin generator needs new templates (TanStack Query + REST) targeting the same components.
 - The theme, components and the `dextinity-admin-ui` skill stay the same.
 
@@ -303,6 +304,33 @@ Design:
     - Width, height and format on upload come from `info()`.
     - The DAM uses an image transformer interface (`ImageTransformer`), like blob storage: `CloudflareImagesTransformer` with the Images binding in production, `DevServerImageTransformer` in local dev, which calls sharp in the Vite dev server. Wrangler's local emulation of the binding only supports resize and rotate (no `trim`, no `rgb` output), so it would silently ignore crops. To test against the real service, the binding can be used remotely.
 
+## 11. Blocks and documents
+
+**Decision:** The admin reuses the block framework of `@dextinity/cms-admin`. The API validates the blocks with zod and stores the documents as JSON.
+
+Admin:
+
+- The factories and most blocks of `@dextinity/cms-admin` don't use GraphQL: `createBlocksBlock`, `createListBlock`, `createOneOfBlock`, `createOptionalBlock`, `createCompositeBlock`, `createColumnsBlock`, `createRichTextBlock`, `createSeoBlock`, `createTableBlock`, `createTextImageBlock`, the link blocks without internal links, space and anchor. Reusing them keeps the editing UI and the blocks of existing projects; rewriting them would be the largest part of the port.
+- They read their config from `DextinityConfigProvider` and the Apollo client from the context, even when they don't use it. `BlocksProvider` (`@dextinity/serverless-blocks/client`) provides both, with an Apollo client that fails every operation, so a block that still sends one shows up immediately.
+- The blocks that load data through GraphQL get REST variants in their feature packages: `PixelImageBlock`, `SvgImageBlock`, `DamImageBlock`, `DamVideoBlock`, `DamFileDownloadLinkBlock` (with a DAM file chooser) in `@dextinity/serverless-dam/client`, `InternalLinkBlock` (with a page chooser) in `@dextinity/serverless-page-tree/client`. YouTube and Vimeo become factories taking the preview image block (`createYouTubeVideoBlock({ previewImage })`).
+- Documents are loaded with `output2State` from the stored input; the REST blocks load their files and pages there. GraphQL returned the data shape (files resolved by the API) and used `input2State`. `createOneOfBlock`'s `output2State` dropped the link title, which only clipboard paste used until now; fixed in `@dextinity/cms-admin`.
+- The admin bundle grows to 3.9 MB (955 KB gzipped) with `@dextinity/cms-admin` and Draft.js. Draft.js needs `global`, which Vite defines as `globalThis` for the client.
+
+API:
+
+- `@dextinity/serverless-blocks/server` defines a block as a name and a zod schema of its input, which is exactly what the admin's `state2Output` sends. The factories mirror those of `@dextinity/cms-api`.
+- Strict objects: a field the admin sends but the schema doesn't know is rejected (422), not silently dropped.
+- The validated input is stored as it is, there's no data side yet (`transformToPlain`, dependencies, search texts): the site reads documents later, out of scope for now.
+- Referenced files and pages aren't checked. A deleted file leaves an empty image, a deleted page an empty link; the routes that load them check the scope.
+
+Documents:
+
+- One table for the documents of all document types (`PageTreeDocument`): node, type and the input of each root block as JSON (`text` on D1, `jsonb` on PostgreSQL). Changing a node's document type keeps the document of the previous type.
+- `GET`/`PUT /page-tree/nodes/:id/document`. Saving sends the `updatedAt` it loaded; a conditional update makes the check atomic without a transaction, and a concurrent change answers 409.
+- The document types of the API's config have the root blocks (`{ Page: { rootBlocks: { content, seo, stage } } }`); the admin's config has the admin blocks with the same keys, the editor shows a tab for each.
+
+Not ported yet: the TipTap rich text and table blocks (their validation needs a ProseMirror schema in the Worker), the anchors of the target page in internal links, the block preview of the site, the news, contact form and user group blocks of the demo.
+
 ## Open questions
 
 - Background jobs: Queues, Cron Triggers, Workflows (dominant color, cron jobs, builds)
@@ -310,6 +338,7 @@ Design:
 - Migration of existing PostgreSQL projects: the new schema doesn't map to the MikroORM tables any more (no `mpath`, column names without the embeddable prefixes)
 - Porting the admin and API generators
 - Moving `@dextinity/admin` to React Router 8 (later, separate)
+- Moving the block framework out of `@dextinity/cms-admin` into a package without GraphQL
 - Site: out of scope for these decisions
 
 ## Next steps
@@ -321,4 +350,4 @@ Design:
     - images through the image transformer instead of imgproxy;
     - the permission module with grants, roles, group roles and rules. Impersonation and the admin UI for grants are still missing.
 2. Deploy it to Cloudflare and measure bundle size, cold starts and request times. Locally built, the Worker is 286 KB gzipped (including postgres.js, exifr and JSZip).
-3. Decide the open questions, then port module by module. Started with the page tree without documents (see the README of [`packages/serverless`](packages/serverless)); next its documents, which need the blocks.
+3. Decide the open questions, then port module by module. Ported so far: the page tree with its documents and blocks (see the README of [`packages/serverless`](packages/serverless)).
