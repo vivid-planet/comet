@@ -71,7 +71,7 @@ function FilePreview({ file }: { file: DamFileDetails }) {
     return (
         <Card>
             {file.image ? (
-                <CardMedia component="img" image={resolveUrl(createImageUrl(file.image, 640))} alt={file.altText ?? ""} />
+                <CardMedia component="img" image={resolveUrl(createImageUrl(file.image, { width: 640 }))} alt={file.altText ?? ""} />
             ) : (
                 <CardContent>
                     <FileIcon fileType={file.mimetype} fontSize="large" />

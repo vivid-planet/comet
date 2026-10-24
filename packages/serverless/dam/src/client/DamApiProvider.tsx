@@ -9,6 +9,12 @@ export type DamScope = Record<string, string>;
 
 export type DamApiClient = ReturnType<typeof hc<DamRoutes<DamScopeSchema>>>;
 
+/** The typed client of the DAM routes, mounted at `${apiUrl}/dam` (see `ApiProvider`) */
+export function createDamApiClient(apiUrl: string): DamApiClient {
+    // Preview URLs are authenticated, so the admin can show files that aren't published on the site
+    return hc<DamRoutes<DamScopeSchema>>(`${apiUrl}/dam`, { headers: { "x-preview-dam-urls": "1" } });
+}
+
 interface DamApi {
     client: DamApiClient;
     scope: DamScope;
@@ -18,13 +24,12 @@ interface DamApi {
 
 const DamApiContext = createContext<DamApi | undefined>(undefined);
 
-/** Provides the typed client of the DAM routes, mounted at `${apiUrl}/dam` (see `ApiProvider`), and the scope to work in. */
+/** Provides the typed client of the DAM routes and the scope to work in. */
 export function DamApiProvider({ scope, children }: PropsWithChildren<{ scope: DamScope }>) {
     const { apiUrl, resolveUrl } = useApi();
     const value = useMemo<DamApi>(
         () => ({
-            // Preview URLs are authenticated, so the admin can show files that aren't published on the site
-            client: hc<DamRoutes<DamScopeSchema>>(`${apiUrl}/dam`, { headers: { "x-preview-dam-urls": "1" } }),
+            client: createDamApiClient(apiUrl),
             scope,
             resolveUrl,
         }),

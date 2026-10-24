@@ -42,6 +42,7 @@
     },
     "dependencies": {
         "@dextinity/admin-icons": "workspace:*",
+        "@dextinity/serverless-blocks": "workspace:*",
         "@dextinity/serverless-core": "workspace:*",
         "@dextinity/serverless-permissions": "workspace:*",
         "@hapi/accept": "^6.0.3",
@@ -51,7 +52,9 @@
         "slugify": "^1.6.9"
     },
     "devDependencies": {
+        "@apollo/client": "^3.14.1",
         "@dextinity/admin": "workspace:*",
+        "@dextinity/cms-admin": "workspace:*",
         "@dextinity/eslint-config": "workspace:*",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
@@ -65,6 +68,7 @@
         "drizzle-orm": "^0.45.4",
         "eslint": "^9.39.5",
         "final-form": "^4.20.10",
+        "graphql": "^16.14.2",
         "hono": "^4.13.13",
         "npm-run-all2": "^9.0.3",
         "prettier": "^3.9.10",
@@ -77,7 +81,9 @@
         "zod": "^4.6.7"
     },
     "peerDependencies": {
+        "@apollo/client": "^3.7.0",
         "@dextinity/admin": "workspace:*",
+        "@dextinity/cms-admin": "workspace:*",
         "@mui/material": "^7.0.0",
         "@mui/x-data-grid": "^8.0.0",
         "@tanstack/react-query": "^5.0.0",
@@ -90,7 +96,13 @@
         "zod": "^4.0.0"
     },
     "peerDependenciesMeta": {
+        "@apollo/client": {
+            "optional": true
+        },
         "@dextinity/admin": {
+            "optional": true
+        },
+        "@dextinity/cms-admin": {
             "optional": true
         },
         "@mui/material": {

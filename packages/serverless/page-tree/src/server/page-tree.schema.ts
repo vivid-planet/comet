@@ -7,7 +7,7 @@ export type PageTreeNodeVisibility = (typeof pageTreeNodeVisibilities)[number];
 
 /**
  * The counterpart of `PageTreeNodeBase`: one table for the nodes of all categories, with the columns of the application's scope.
- * Nodes reference their parent only, paths are calculated from the slugs.
+ * Nodes reference their parent only, paths are calculated from the slugs. The documents of the nodes are stored as JSON.
  */
 export function createPageTreeSchema({ dialect, scopeColumns }: { dialect: DatabaseDialect; scopeColumns: ScopeColumns }) {
     const column = portableColumns(dialect);
@@ -41,7 +41,34 @@ export function createPageTreeSchema({ dialect, scopeColumns }: { dialect: Datab
         (table) => [column.index("PageTreeNode_parentId_index").on(table.parentId)],
     );
 
-    return { pageTreeNodes };
+    // One document per node and type: changing the type of a node keeps the document of the previous type, changing it back restores it
+    const pageTreeDocuments = column.table(
+        "PageTreeDocument",
+        {
+            id: column
+                .uuid()
+                .primaryKey()
+                .$defaultFn(() => crypto.randomUUID()),
+            pageTreeNodeId: column
+                .uuid()
+                .notNull()
+                .references(() => pageTreeNodes.id, { onDelete: "cascade" }),
+            type: column.text().notNull(),
+            /** The input of each root block, e.g. `{ content: { blocks: […] }, seo: { … } }` */
+            data: column.json<Record<string, unknown>>().notNull(),
+            createdAt: column
+                .timestamp()
+                .notNull()
+                .$defaultFn(() => new Date()),
+            updatedAt: column
+                .timestamp()
+                .notNull()
+                .$defaultFn(() => new Date()),
+        },
+        (table) => [column.uniqueIndex("PageTreeDocument_pageTreeNodeId_type_index").on(table.pageTreeNodeId, table.type)],
+    );
+
+    return { pageTreeNodes, pageTreeDocuments };
 }
 
 export type PageTreeSchema = ReturnType<typeof createPageTreeSchema>;

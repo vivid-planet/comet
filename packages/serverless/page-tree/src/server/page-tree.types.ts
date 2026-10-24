@@ -23,3 +23,9 @@ export interface PageTreeNode extends PageTreeNodeRecord {
 }
 
 export type SlugAvailability = "Available" | "Taken" | "Reserved";
+
+export interface PageTreeDocument {
+    type: string;
+    data: Record<string, unknown>;
+    updatedAt: Date;
+}

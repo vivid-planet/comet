@@ -104,12 +104,14 @@ export function PageTreeRow({
             <div>
                 <PageVisibilityMenu node={node} />
             </div>
-            <PageTreeNodeActions node={node} />
+            <Actions>
+                <PageTreeNodeActions node={node} />
+            </Actions>
         </Row>
     );
 }
 
-export const pageTreeGridColumns = "minmax(0, 1fr) 220px 160px 56px";
+export const pageTreeGridColumns = "minmax(0, 1fr) 220px 160px 96px";
 
 const Row = styled("div", { shouldForwardProp: (prop) => prop !== "dropPlacement" })<{ dropPlacement?: DropPlacement }>`
     display: grid;
@@ -145,6 +147,11 @@ const NameCell = styled("div", { shouldForwardProp: (prop) => prop !== "level" }
 
 const ExpandButton = styled(IconButton, { shouldForwardProp: (prop) => prop !== "isHidden" })<{ isHidden: boolean }>`
     visibility: ${({ isHidden }) => (isHidden ? "hidden" : "visible")};
+`;
+
+const Actions = styled("div")`
+    display: flex;
+    justify-content: flex-end;
 `;
 
 const NameAndPath = styled("div")`

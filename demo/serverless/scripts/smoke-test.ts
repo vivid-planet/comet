@@ -4,6 +4,7 @@
  */
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { isDeepStrictEqual } from "node:util";
 
 import type { DamRoutes } from "@dextinity/serverless-dam/server";
 import type { PageTreeRoutes } from "@dextinity/serverless-page-tree/server";
@@ -56,7 +57,8 @@ async function step(name: string, run: () => Promise<void>): Promise<void> {
 }
 
 function expectEqual<T>(actual: T, expected: T, label = "value"): void {
-    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    // Ignores the order of object keys, which PostgreSQL's jsonb doesn't keep
+    if (!isDeepStrictEqual(actual, expected)) {
         throw new Error(`Expected ${label} to be ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
     }
 }
@@ -385,11 +387,107 @@ await step("allow the page tree for editors (group role) and deny it for guests"
     );
 });
 
+// Documents of the page tree
+const documentRoute = pageTree.nodes[":id"].document;
+const richText = (text: string, link?: object) => ({
+    draftContent: {
+        blocks: [
+            {
+                key: "a1b2c",
+                type: "unstyled",
+                text,
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: link ? [{ key: 0, offset: 0, length: text.length }] : [],
+            },
+        ],
+        entityMap: link ? { 0: { type: "LINK", mutability: "MUTABLE", data: link } } : {},
+    },
+});
+const externalLink = (targetUrl: string) => ({
+    attachedBlocks: [{ type: "external", props: { targetUrl, openInNewWindow: false, noFollow: false } }],
+    activeType: "external",
+});
+const imageFileId = crypto.randomUUID();
+const pageDocument = (text: string, link = externalLink("https://www.dextinity.com")) => ({
+    content: {
+        blocks: [
+            { key: "text", visible: true, type: "richtext", props: { richText: richText(text, link), textAlignment: "left" } },
+            {
+                key: "image",
+                visible: true,
+                type: "image",
+                props: {
+                    attachedBlocks: [{ type: "pixelImage", props: { damFileId: imageFileId, cropArea: { focalPoint: "SMART" } } }],
+                    activeType: "pixelImage",
+                },
+            },
+        ],
+    },
+    seo: { noIndex: false, priority: "0_5", changeFrequency: "weekly", alternativeLinks: [], openGraphImage: { visible: false } },
+    stage: { blocks: [] },
+});
+
+await step("load a page without a document", async () => {
+    const { type, data, updatedAt } = await (await expectOk(await documentRoute.$get({ param: { id: aboutPage.id } }))).json();
+    expectEqual([type, data, updatedAt], ["Page", null, null]);
+});
+
+let savedUpdatedAt = "";
+
+await step("save and load the document of a page", async () => {
+    const saved = await (
+        await expectOk(await documentRoute.$put({ param: { id: aboutPage.id }, json: { data: pageDocument("Hello"), lastUpdatedAt: null } }))
+    ).json();
+    savedUpdatedAt = saved.updatedAt ?? "";
+    const loaded = await (await expectOk(await documentRoute.$get({ param: { id: aboutPage.id } }))).json();
+    expectEqual(loaded.data, pageDocument("Hello"), "loaded document");
+    expectEqual(loaded.updatedAt, savedUpdatedAt, "updatedAt");
+});
+
+await step("reject an invalid document instead of dropping what the schema doesn't know", async () => {
+    const save = (data: object) => documentRoute.$put({ param: { id: aboutPage.id }, json: { data } });
+    const valid = pageDocument("Hello");
+    const unknownBlock = { ...valid, content: { blocks: [{ key: "x", visible: true, type: "newsList", props: {} }] } };
+    const unknownField = { ...valid, seo: { ...valid.seo, keywords: "smoke" } };
+    expectEqual((await save(unknownBlock)).status, 422, "status of an unknown block type");
+    expectEqual((await save(unknownField)).status, 422, "status of an unknown field");
+    expectEqual((await save(pageDocument("Hello", externalLink("javascript:alert(1)")))).status, 422, "status of a javascript: link");
+    expectEqual((await save({ content: valid.content })).status, 422, "status of a missing root block");
+});
+
+await step("reject saving over a document that changed in the meantime", async () => {
+    const save = (lastUpdatedAt: string | null) =>
+        documentRoute.$put({ param: { id: aboutPage.id }, json: { data: pageDocument("Update"), lastUpdatedAt } });
+    const first = await (await expectOk(await save(savedUpdatedAt))).json();
+    expectEqual((await save(savedUpdatedAt)).status, 409, "status of saving with an outdated updatedAt");
+    expectEqual((await save(null)).status, 409, "status of saving as a new document");
+    await expectOk(await save(first.updatedAt));
+});
+
+await step("keep the document of the previous document type", async () => {
+    const setDocumentType = async (documentType: "Page" | "Link") =>
+        expectOk(await pageTree.nodes[":id"].$patch({ param: { id: aboutPage.id }, json: { documentType } }));
+    await setDocumentType("Link");
+    const link = await (await expectOk(await documentRoute.$get({ param: { id: aboutPage.id } }))).json();
+    expectEqual([link.type, link.data], ["Link", null], "document of the link");
+    await expectOk(
+        await documentRoute.$put({
+            param: { id: aboutPage.id },
+            json: { data: { content: { ...externalLink("mailto:office@example.com"), title: "Mail" } } },
+        }),
+    );
+    await setDocumentType("Page");
+    const page = await (await expectOk(await documentRoute.$get({ param: { id: aboutPage.id } }))).json();
+    expectEqual([page.type, page.data], ["Page", pageDocument("Update")], "document of the page");
+});
+
 await step("keep the home page and delete a page with its subpages", async () => {
     const home = (await listPages()).find((node) => node.slug === "home");
     expectEqual((await pageTree.nodes[":id"].$delete({ param: { id: home?.id ?? "" } })).status, 400, "status of deleting the home page");
     await expectOk(await pageTree.nodes[":id"].$delete({ param: { id: rootPage.id } }));
     expectEqual((await pageTree.nodes[":id"].$get({ param: { id: aboutPage.id } })).status, 404, "status of a deleted subpage");
+    expectEqual((await documentRoute.$get({ param: { id: aboutPage.id } })).status, 404, "status of the document of a deleted subpage");
 });
 
 if (failures > 0) {

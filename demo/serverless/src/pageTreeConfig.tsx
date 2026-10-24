@@ -7,6 +7,10 @@ import {
     type PageTreeCategory as Category,
     type pageTreeDocumentTypes as documentTypes,
 } from "../shared/page-tree";
+import { LinkBlock } from "./common/blocks/LinkBlock";
+import { PageContentBlock } from "./documents/pages/blocks/PageContentBlock";
+import { SeoBlock } from "./documents/pages/blocks/SeoBlock";
+import { StageBlock } from "./documents/pages/blocks/StageBlock";
 
 const categoryLabels: Record<Category, PageTreeCategory["label"]> = {
     mainNavigation: <FormattedMessage id="pageTree.category.mainNavigation" defaultMessage="Main navigation" />,
@@ -20,10 +24,18 @@ export const pageTreeDocumentTypes: Record<(typeof documentTypes)[number], PageT
         label: <FormattedMessage id="pageTree.documentType.page" defaultMessage="Page" />,
         icon: <File />,
         hideInMenuIcon: <FileNotMenu />,
+        rootBlocks: {
+            content: { label: <FormattedMessage id="pageTree.page.content" defaultMessage="Blocks" />, block: PageContentBlock },
+            stage: { label: <FormattedMessage id="pageTree.page.stage" defaultMessage="Stage" />, block: StageBlock },
+            seo: { label: <FormattedMessage id="pageTree.page.seo" defaultMessage="Config" />, block: SeoBlock },
+        },
     },
     Link: {
         label: <FormattedMessage id="pageTree.documentType.link" defaultMessage="Link" />,
         icon: <Link />,
         hideInMenuIcon: <LinkNotMenu />,
+        rootBlocks: {
+            content: { label: <FormattedMessage id="pageTree.link.content" defaultMessage="Link" />, block: LinkBlock },
+        },
     },
 };

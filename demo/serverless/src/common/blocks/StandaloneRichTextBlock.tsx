@@ -1,0 +1,33 @@
+import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@dextinity/cms-admin";
+import { FormattedMessage } from "react-intl";
+
+import { RichTextBlock } from "./RichTextBlock";
+
+export const StandaloneRichTextBlock = createCompositeBlock(
+    {
+        name: "StandaloneRichText",
+        displayName: RichTextBlock.displayName,
+        blocks: {
+            richText: {
+                block: RichTextBlock,
+            },
+            textAlignment: {
+                block: createCompositeBlockSelectField({
+                    label: <FormattedMessage id="standaloneRichText.textAlignment" defaultMessage="Text alignment" />,
+                    defaultValue: "left",
+                    options: [
+                        { value: "left", label: <FormattedMessage id="standaloneRichText.textAlignment.left" defaultMessage="left" /> },
+                        { value: "center", label: <FormattedMessage id="standaloneRichText.textAlignment.center" defaultMessage="center" /> },
+                        { value: "right", label: <FormattedMessage id="standaloneRichText.textAlignment.right" defaultMessage="right" /> },
+                        { value: "justify", label: <FormattedMessage id="standaloneRichText.textAlignment.justify" defaultMessage="justify" /> },
+                    ],
+                    required: true,
+                }),
+            },
+        },
+    },
+    (block) => {
+        block.category = BlockCategory.TextAndContent;
+        return block;
+    },
+);

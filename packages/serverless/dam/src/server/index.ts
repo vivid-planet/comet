@@ -1,3 +1,4 @@
+export { DamFileDownloadLinkBlock, DamImageBlock, DamVideoBlock, PixelImageBlock, SvgImageBlock } from "./blocks/dam-blocks.js";
 export { damDefaultAcceptedMimetypes } from "./common/dam-default-accepted-mimetypes.js";
 export { type DamConfig } from "./dam.config.js";
 export { type DamEnv, type DamScopeSchema, type DamVariables } from "./dam.context.js";

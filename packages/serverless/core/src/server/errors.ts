@@ -12,6 +12,7 @@ export const notFound = (message = "Not Found") => new DextinityHttpException(40
 export const badRequest = (message = "Bad Request") => new DextinityHttpException(400, message);
 export const forbidden = (message = "Forbidden") => new DextinityHttpException(403, message);
 export const unauthorized = (message = "Unauthorized") => new DextinityHttpException(401, message);
+export const conflict = (message = "Conflict") => new DextinityHttpException(409, message);
 export const unprocessableEntity = (message = "Unprocessable Entity") => new DextinityHttpException(422, message);
 
 /**

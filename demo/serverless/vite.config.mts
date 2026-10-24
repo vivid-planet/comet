@@ -37,4 +37,8 @@ export default defineConfig(({ mode }) => ({
     define: {
         "process.env.NODE_ENV": mode === "production" ? "'production'" : "'development'",
     },
+    environments: {
+        // Draft.js, the editor of the rich text block, uses Node's global
+        client: { define: { global: "globalThis" } },
+    },
 }));

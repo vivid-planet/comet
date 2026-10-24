@@ -18,7 +18,11 @@ export function DamThumbnail({ item }: { item: DamItem }) {
 
     return (
         <ThumbnailWrapper>
-            {item.image ? <ThumbnailImage src={resolveUrl(createImageUrl(item.image, 96))} alt="" /> : <FileIcon fileType={item.mimetype} />}
+            {item.image ? (
+                <ThumbnailImage src={resolveUrl(createImageUrl(item.image, { width: 96 }))} alt="" />
+            ) : (
+                <FileIcon fileType={item.mimetype} />
+            )}
         </ThumbnailWrapper>
     );
 }

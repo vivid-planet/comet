@@ -2,6 +2,8 @@ import type { CloudflareAccessConfig } from "@dextinity/serverless-core/server";
 import type { DamConfig } from "@dextinity/serverless-dam/server";
 import { z } from "zod";
 
+import { imageAspectRatios } from "../shared/blocks";
+
 const environmentVariables = z.object({
     DATABASE_DIALECT: z.enum(["sqlite", "postgresql"]),
     DAM_SECRET: z.string().min(16),
@@ -24,7 +26,7 @@ export function createConfig(environment: Record<string, unknown>) {
         dam: {
             secret: variables.DAM_SECRET,
             allowedImageSizes: [...imageSizes, ...deviceSizes],
-            allowedAspectRatios: ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16", "1200x630"],
+            allowedAspectRatios: [...imageAspectRatios],
             filesDirectory: "dam-files",
             maxFileSize: 100,
             maxSrcResolution: 70,

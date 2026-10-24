@@ -1,6 +1,7 @@
 import {
     badRequest,
     type BatchQuery,
+    conflict,
     type ContentScope,
     type Database,
     notFound,
@@ -13,7 +14,7 @@ import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import { defaultReservedPaths, homeSlug, type PageTreeConfig } from "./page-tree.config.js";
 import type { PageTreeNodeVisibility, PageTreeSchema } from "./page-tree.schema.js";
 import { PageTreeSnapshot } from "./page-tree.snapshot.js";
-import type { PageTreeNode, SlugAvailability } from "./page-tree.types.js";
+import type { PageTreeDocument, PageTreeNode, SlugAvailability } from "./page-tree.types.js";
 
 export interface PageTreeServiceDependencies {
     database: Database;
@@ -32,6 +33,16 @@ export interface CreatePageTreeNodeInput {
     documentType: string;
     /** Only used for root nodes, subpages get the category of their parent */
     category: string;
+}
+
+export interface SavePageTreeDocumentInput {
+    /** Validated against the root blocks of the node's document type by the caller */
+    data: Record<string, unknown>;
+    /**
+     * The `updatedAt` of the document the editor loaded, `null` for a node without a document. Saving fails if the document changed
+     * since, so concurrent editors don't overwrite each other. Without it, the document is saved anyway.
+     */
+    lastUpdatedAt?: Date | null;
 }
 
 export interface UpdatePageTreeNodeInput {
@@ -75,6 +86,58 @@ export class PageTreeService {
             return null;
         }
         return (await this.loadTree(this.scopeOrNothing(this.deps.scopeColumns.fromRow(row.scope)))).node(id) ?? null;
+    }
+
+    /** The document of the node's current document type */
+    async findDocument(node: PageTreeNode): Promise<PageTreeDocument | null> {
+        const { pageTreeDocuments } = this.deps.schema;
+        const [document] = await this.db
+            .select({ type: pageTreeDocuments.type, data: pageTreeDocuments.data, updatedAt: pageTreeDocuments.updatedAt })
+            .from(pageTreeDocuments)
+            .where(and(eq(pageTreeDocuments.pageTreeNodeId, node.id), eq(pageTreeDocuments.type, node.documentType)));
+        return document ?? null;
+    }
+
+    async saveDocument(node: PageTreeNode, { data, lastUpdatedAt }: SavePageTreeDocumentInput): Promise<PageTreeDocument> {
+        const { pageTreeDocuments } = this.deps.schema;
+        const existingDocument = await this.findDocument(node);
+        const changedConcurrently = () => conflict("The document was changed in the meantime, reload it to see the changes");
+        const returnedColumns = { type: pageTreeDocuments.type, data: pageTreeDocuments.data, updatedAt: pageTreeDocuments.updatedAt };
+
+        if (!existingDocument) {
+            if (lastUpdatedAt) {
+                throw changedConcurrently();
+            }
+            const [document] = await this.db
+                .insert(pageTreeDocuments)
+                .values({ pageTreeNodeId: node.id, type: node.documentType, data })
+                .onConflictDoNothing()
+                .returning(returnedColumns);
+            if (!document) {
+                throw changedConcurrently();
+            }
+            return document;
+        }
+
+        if (lastUpdatedAt === null || (lastUpdatedAt && lastUpdatedAt.getTime() !== existingDocument.updatedAt.getTime())) {
+            throw changedConcurrently();
+        }
+        // The condition on updatedAt makes the check and the update atomic, D1 has no transactions to lock the row with
+        const [document] = await this.db
+            .update(pageTreeDocuments)
+            .set({ data, updatedAt: new Date() })
+            .where(
+                and(
+                    eq(pageTreeDocuments.pageTreeNodeId, node.id),
+                    eq(pageTreeDocuments.type, node.documentType),
+                    eq(pageTreeDocuments.updatedAt, existingDocument.updatedAt),
+                ),
+            )
+            .returning(returnedColumns);
+        if (!document) {
+            throw changedConcurrently();
+        }
+        return document;
     }
 
     async slugAvailability(

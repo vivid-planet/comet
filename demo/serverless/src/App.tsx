@@ -1,6 +1,7 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
 import { createDextinityTheme, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@dextinity/admin";
+import { BlocksProvider } from "@dextinity/serverless-blocks/client";
 import { ApiProvider, QueryErrorHandler } from "@dextinity/serverless-core/client";
 import { DamApiProvider, DamPage } from "@dextinity/serverless-dam/client";
 import { PageTreeApiProvider, PageTreePage } from "@dextinity/serverless-page-tree/client";
@@ -8,9 +9,12 @@ import { CurrentUserProvider, useCan, useCurrentUser } from "@dextinity/serverle
 import { css, Global } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Redirect, Route, Switch } from "react-router";
 
+import { imageAspectRatios } from "../shared/blocks";
 import { MasterHeader } from "./MasterHeader";
 import { MasterMenu } from "./MasterMenu";
 import { pageTreeCategories, pageTreeDocumentTypes } from "./pageTreeConfig";
@@ -28,10 +32,14 @@ export function App() {
                         {/* The admin and the API are served by the same Worker */}
                         <ApiProvider apiUrl="/api">
                             <CurrentUserProvider>
-                                <RouterBrowserRouter>
-                                    <Global styles={globalStyles} />
-                                    <AppContent />
-                                </RouterBrowserRouter>
+                                <BlocksProvider allowedImageAspectRatios={[...imageAspectRatios]}>
+                                    <DndProvider backend={HTML5Backend}>
+                                        <RouterBrowserRouter>
+                                            <Global styles={globalStyles} />
+                                            <AppContent />
+                                        </RouterBrowserRouter>
+                                    </DndProvider>
+                                </BlocksProvider>
                             </CurrentUserProvider>
                         </ApiProvider>
                     </SnackbarProvider>

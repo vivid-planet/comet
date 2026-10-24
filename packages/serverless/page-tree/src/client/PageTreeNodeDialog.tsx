@@ -82,7 +82,7 @@ export function PageTreeNodeDialog({ onClose, category, node, parent = null }: P
             fullWidth
             title={
                 node
-                    ? intl.formatMessage({ id: "dextinity.pageTree.editPage", defaultMessage: "Edit page properties" })
+                    ? intl.formatMessage({ id: "dextinity.pageTree.editPageProperties", defaultMessage: "Edit page properties" })
                     : intl.formatMessage({ id: "dextinity.pageTree.addPage", defaultMessage: "Add page" })
             }
         >

@@ -4,7 +4,10 @@ import {
     FillSpace,
     Loading,
     MainContent,
-    Toolbar,
+    Stack,
+    StackPage,
+    StackSwitch,
+    StackToolbar,
     ToolbarActions,
     ToolbarItem,
     ToolbarTitleItem,
@@ -20,13 +23,35 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { pageTreeQueryKeys } from "./pageTreeApi.types.js";
 import { usePageTreeApi } from "./PageTreeApiProvider.js";
+import { PageTreeDocumentEditor } from "./PageTreeDocumentEditor.js";
 import { PageTreeNodeDialog } from "./PageTreeNodeDialog.js";
 import { type DropPlacement, pageTreeGridColumns, PageTreeRow } from "./PageTreeRow.js";
 import { dropPosition, isDescendantOrSelf, visibleRows } from "./pageTreeRows.js";
 import { usePageTreeMutation } from "./usePageTreeMutation.js";
 
-/** The page tree of one category: pages with their path, document type and visibility, ordered and nested by drag and drop */
+/**
+ * The page tree of one category: pages with their path, document type and visibility, ordered and nested by drag and drop. Editing a
+ * page opens the editor of its document.
+ */
 export function PageTreePage({ category }: { category: string }) {
+    const intl = useIntl();
+    const { categories } = usePageTreeApi();
+
+    return (
+        <Stack topLevelTitle={categories.find((item) => item.category === category)?.label}>
+            <StackSwitch initialPage="tree">
+                <StackPage name="tree">
+                    <PageTree category={category} />
+                </StackPage>
+                <StackPage name="edit" title={intl.formatMessage({ id: "dextinity.pageTree.editPage", defaultMessage: "Edit page" })}>
+                    {(id: string) => <PageTreeDocumentEditor id={id} />}
+                </StackPage>
+            </StackSwitch>
+        </Stack>
+    );
+}
+
+function PageTree({ category }: { category: string }) {
     const intl = useIntl();
     const { client, scope, categories } = usePageTreeApi();
     const [expandedIds, setExpandedIds] = useState<ReadonlySet<string>>(new Set());
@@ -74,7 +99,7 @@ export function PageTreePage({ category }: { category: string }) {
 
     return (
         <>
-            <Toolbar>
+            <StackToolbar>
                 <ToolbarTitleItem>{categoryLabel}</ToolbarTitleItem>
                 <ToolbarItem>
                     <InputBase
@@ -119,7 +144,7 @@ export function PageTreePage({ category }: { category: string }) {
                         <FormattedMessage id="dextinity.pageTree.addPage" defaultMessage="Add page" />
                     </Button>
                 </ToolbarActions>
-            </Toolbar>
+            </StackToolbar>
             <MainContent fullHeight>
                 <TreePaper>
                     <HeaderRow>

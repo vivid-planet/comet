@@ -9,6 +9,7 @@ import {
     ScopeColumns,
     scopesAreEqual,
     type ScopeSchema,
+    unprocessableEntity,
     zValidator,
 } from "@dextinity/serverless-core/server";
 import { assertCan, type PermissionsVariables, requirePermission, scopeFilter } from "@dextinity/serverless-permissions/server";
@@ -19,7 +20,7 @@ import { z } from "zod";
 import type { PageTreeConfig } from "./page-tree.config.js";
 import { createPageTreeSchema, pageTreeNodeVisibilities } from "./page-tree.schema.js";
 import { PageTreeService } from "./page-tree.service.js";
-import type { PageTreeNode } from "./page-tree.types.js";
+import type { PageTreeDocument, PageTreeNode } from "./page-tree.types.js";
 
 export type PageTreeEnv = { Variables: AccessVariables & PermissionsVariables & { database: Database; pageTree: PageTreeService } };
 
@@ -34,7 +35,8 @@ const slug = z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9-_]*$/, "Only letters, digi
 const idParam = z.object({ id: z.uuid() });
 
 /**
- * The page tree without documents (content): nodes with name, slug, path, position, visibility, category and document type.
+ * The page tree: nodes with name, slug, path, position, visibility, category and document type, and the document of each node, which
+ * stores the input of the document type's root blocks.
  *
  * - `schema`: the Drizzle tables for the dialect
  * - `provider`: middleware that provides the service as `c.var.pageTree`
@@ -55,7 +57,13 @@ export function createPageTreeModule<TScopeSchema extends ScopeSchema = z.ZodObj
     const { scopedQuery, splitScopedQuery, nonEmptyScopeOrNothing } = createScopedQueryHelpers(scopeSchema);
 
     const category = z.enum(config.categories as [string, ...string[]]);
-    const documentType = z.enum(config.documentTypes as [string, ...string[]]);
+    const documentType = z.enum(Object.keys(config.documentTypes) as [string, ...string[]]);
+    const documentSchemas = new Map(
+        Object.entries(config.documentTypes).map(([type, { rootBlocks }]) => [
+            type,
+            z.strictObject(Object.fromEntries(Object.entries(rootBlocks).map(([key, block]) => [key, block.schema]))),
+        ]),
+    );
 
     const provider = createMiddleware<PageTreeEnv>(async (c, next) => {
         c.set("pageTree", new PageTreeService({ database: inject<Database>(c, "database", "PageTreeModule"), schema, scopeColumns, config }));
@@ -65,6 +73,11 @@ export function createPageTreeModule<TScopeSchema extends ScopeSchema = z.ZodObj
     const assertScopeAllowed = (c: Context, scope: Scope | Record<string, string> | undefined) =>
         assertCan(c, permission, scopeColumns.hasScope ? scope : undefined);
     const serialize = (node: PageTreeNode) => ({ ...node, scope: node.scope as Scope });
+    const serializeDocument = (node: PageTreeNode, document: PageTreeDocument | null) => ({
+        type: node.documentType,
+        data: document?.data ?? null,
+        updatedAt: document?.updatedAt.toISOString() ?? null,
+    });
 
     async function findNodeOrFail(c: Context<PageTreeEnv>, id: string): Promise<PageTreeNode> {
         const node = await c.var.pageTree.findOneById(id);
@@ -146,6 +159,32 @@ export function createPageTreeModule<TScopeSchema extends ScopeSchema = z.ZodObj
             async (c) => {
                 const node = await findNodeOrFail(c, c.req.valid("param").id);
                 return c.json(serialize(await c.var.pageTree.update(node, c.req.valid("json"))));
+            },
+        )
+        .get("/nodes/:id/document", zValidator("param", idParam), async (c) => {
+            const node = await findNodeOrFail(c, c.req.valid("param").id);
+            return c.json(serializeDocument(node, await c.var.pageTree.findDocument(node)));
+        })
+        .put(
+            "/nodes/:id/document",
+            zValidator("param", idParam),
+            zValidator("json", z.object({ data: z.record(z.string(), z.unknown()), lastUpdatedAt: z.iso.datetime().nullable().optional() })),
+            async (c) => {
+                const node = await findNodeOrFail(c, c.req.valid("param").id);
+                const { data, lastUpdatedAt } = c.req.valid("json");
+                const documentSchema = documentSchemas.get(node.documentType);
+                if (!documentSchema) {
+                    throw unprocessableEntity(`The document type ${node.documentType} isn't configured`);
+                }
+                const result = documentSchema.safeParse(data);
+                if (!result.success) {
+                    throw unprocessableEntity(z.prettifyError(result.error));
+                }
+                const document = await c.var.pageTree.saveDocument(node, {
+                    data: result.data,
+                    lastUpdatedAt: lastUpdatedAt === undefined || lastUpdatedAt === null ? lastUpdatedAt : new Date(lastUpdatedAt),
+                });
+                return c.json(serializeDocument(node, document));
             },
         )
         .put(

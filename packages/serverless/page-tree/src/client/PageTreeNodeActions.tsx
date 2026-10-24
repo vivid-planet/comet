@@ -1,9 +1,9 @@
-import { DeleteDialog, RowActionsItem, RowActionsMenu } from "@dextinity/admin";
-import { Add, Delete, Edit, MovePage } from "@dextinity/admin-icons";
+import { DeleteDialog, RowActionsItem, RowActionsMenu, useStackSwitchApi } from "@dextinity/admin";
+import { Add, Delete, Edit, MovePage, Settings } from "@dextinity/admin-icons";
 import { Divider } from "@mui/material";
 import { parseResponse } from "hono/client";
 import { useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import type { PageTreeNodeItem } from "./pageTreeApi.types.js";
 import { usePageTreeApi } from "./PageTreeApiProvider.js";
@@ -11,10 +11,13 @@ import { PageTreeNodeDialog } from "./PageTreeNodeDialog.js";
 import { usePageTreeMutation } from "./usePageTreeMutation.js";
 
 export function PageTreeNodeActions({ node }: { node: PageTreeNodeItem }) {
+    const intl = useIntl();
     const { client, categories } = usePageTreeApi();
+    const stackSwitchApi = useStackSwitchApi();
     const [dialog, setDialog] = useState<"edit" | "addSubpage" | "delete">();
     const isArchived = node.visibility === "Archived";
     const isHome = node.slug === "home";
+    const editPageLabel = intl.formatMessage({ id: "dextinity.pageTree.editPage", defaultMessage: "Edit page" });
 
     const { mutate: moveToCategory } = usePageTreeMutation((category: string) =>
         parseResponse(client.nodes[":id"].category.$put({ param: { id: node.id }, json: { category } })),
@@ -24,8 +27,16 @@ export function PageTreeNodeActions({ node }: { node: PageTreeNodeItem }) {
     return (
         <>
             <RowActionsMenu>
+                <RowActionsItem
+                    icon={<Edit />}
+                    disabled={isArchived}
+                    onClick={() => stackSwitchApi.activatePage("edit", node.id)}
+                    componentsProps={{ iconButton: { "aria-label": editPageLabel } }}
+                >
+                    {editPageLabel}
+                </RowActionsItem>
                 <RowActionsMenu>
-                    <RowActionsItem icon={<Edit />} disabled={isArchived} onClick={() => setDialog("edit")}>
+                    <RowActionsItem icon={<Settings />} disabled={isArchived} onClick={() => setDialog("edit")}>
                         <FormattedMessage id="dextinity.pageTree.editProperties" defaultMessage="Edit properties" />
                     </RowActionsItem>
                     <RowActionsItem icon={<Add />} disabled={isArchived} onClick={() => setDialog("addSubpage")}>

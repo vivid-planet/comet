@@ -15,14 +15,32 @@ export const damQueryKeys = {
     file: (id: string) => ["dam", "file", id] as const,
 };
 
+type DamImageCropArea = DamImage["cropArea"];
+
+function cropSegment(cropArea: DamImageCropArea): string {
+    return (
+        cropArea.focalPoint === "SMART"
+            ? ["crop", cropArea.focalPoint]
+            : ["crop", cropArea.width, cropArea.height, cropArea.focalPoint, cropArea.x, cropArea.y]
+    ).join(":");
+}
+
 /**
- * Uses the aspect ratio of the image's crop area, which the API accepts for every allowed width.
+ * Uses the aspect ratio of the crop area, which the API accepts for every allowed width.
+ *
+ * `cropArea` overrides the crop area of the file, e.g. the one of an image block. That only works for preview URLs, which the admin
+ * gets (see `createDamApiClient`): the public URLs are signed with the crop area of the file.
  */
-export function createImageUrl(image: Pick<DamImage, "urlTemplate" | "width" | "height" | "cropArea">, width: number): string {
-    const { cropArea } = image;
+export function createImageUrl(
+    image: Pick<DamImage, "urlTemplate" | "width" | "height" | "cropArea">,
+    { width, cropArea = image.cropArea }: { width: number; cropArea?: DamImageCropArea },
+): string {
     const aspectRatio =
         cropArea.focalPoint === "SMART" || !cropArea.width || !cropArea.height
             ? image.width / image.height
             : (cropArea.width * image.width) / (cropArea.height * image.height);
-    return image.urlTemplate.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(Math.ceil(width / aspectRatio)));
+    return image.urlTemplate
+        .replace(/\/crop:[^/]+\//, `/${cropSegment(cropArea)}/`)
+        .replace("$resizeWidth", String(width))
+        .replace("$resizeHeight", String(Math.ceil(width / aspectRatio)));
 }
