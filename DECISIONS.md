@@ -1,0 +1,311 @@
+# Architecture decisions: Dextinity on Cloudflare
+
+Status: decided in principle, 2026-10-24. Applies to the API and the admin. The site is out of scope.
+
+The decisions are based on prototypes and experiments run in the Workers runtime (workerd via `wrangler dev`). Nothing was deployed to Cloudflare yet. The DAM prototype is in [`packages/api/cms-hono`](packages/api/cms-hono), [`packages/admin/cms-admin-hono`](packages/admin/cms-admin-hono), [`demo/api-hono`](demo/api-hono) and [`demo/admin-hono`](demo/admin-hono).
+
+## Goals
+
+1. Works well on Cloudflare: fast and efficient (performance is important)
+2. Flexible database: PostgreSQL **or** Cloudflare D1, chosen per project
+3. Modern and future-proof
+4. Works well for AI and fast coding
+
+Not goals:
+
+- Keeping as much of the existing code as possible (a plus, not a requirement)
+- Keeping GraphQL or MikroORM if they bring no advantage
+
+Future direction:
+
+- Give up the split between API and admin
+- Port all of the repository, starting with the DAM
+
+## Summary
+
+| Area             | Decision                                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------ |
+| Runtime          | Cloudflare Workers, one Worker per project: admin as static assets, API at `/api`                |
+| HTTP / API       | Hono, REST, zod validation, typed client (`hc`) per module                                       |
+| Database         | Drizzle; D1 or PostgreSQL (via Hyperdrive) per project; no interactive transactions              |
+| Admin app        | Vite single-page app, no server rendering; `@dextinity/admin` unchanged; TanStack Query for data |
+| Routing          | React Router (client-only); for now v5 as used by `@dextinity/admin`                             |
+| Feature packages | `@dextinity/<feature>` with `./server` and `./client`                                            |
+| Authentication   | Cloudflare Access; dev-only Access emulator for local dev                                        |
+| Authorization    | Dextinity's permission model, ported as its own module                                           |
+| Files            | R2                                                                                               |
+| Images           | imgproxy as today (Cloudflare's own image resizing still open)                                   |
+
+## 1. Runtime and HTTP framework: Hono on Cloudflare Workers
+
+**Decision:** Hono on Cloudflare Workers. NestJS is dropped.
+
+Options considered:
+
+| Option                                                                      | Result                                                                                                                                                                                                                                                                                                                                                |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| NestJS + Express + Apollo + MikroORM 7 on Workers (via `httpServerHandler`) | Works, but needs workarounds: tsc before bundling (esbuild emits no decorator metadata), aliases for Nest's optional packages, pointing `@nestjs/graphql` at its Node entry (its `browser` export is a shim). 1.6 MB gzipped for a minimal app. Nest rebuilds its dependency graph and GraphQL schema on every new isolate. Not officially supported. |
+| Hono + TypeGraphQL + GraphQL Yoga + MikroORM 7                              | Works. 761 KB gzipped.                                                                                                                                                                                                                                                                                                                                |
+| Hono + REST + Drizzle (prototype)                                           | Works. 330 KB gzipped for the DAM prototype. No startup work.                                                                                                                                                                                                                                                                                         |
+
+Reasons:
+
+- Smallest bundle and no startup work per isolate
+- Built on web standards, officially supported on Workers
+- Well known to AI tools; plain code without decorators and dependency injection
+
+How NestJS concepts map to the prototype:
+
+| NestJS                                            | Hono                                                                           |
+| ------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `Module.register(options)`                        | `createDamModule(options)` returning schema, provider middleware and routes    |
+| Providers, `@Injectable()`, constructor injection | Plain classes wired in a container per request (`createDamServices()`)         |
+| `forwardRef()`                                    | Services reference each other through the container                            |
+| Module imports                                    | Dependencies in the request context: `provide()` / `inject()`                  |
+| Module exports                                    | The provider sets `c.var.dam`                                                  |
+| Request-scoped providers, `onModuleDestroy`       | `provide(key, factory, { dispose })` (Workers require I/O objects per request) |
+| Controllers and resolvers                         | Hono sub-apps mounted with `app.route()`                                       |
+| `ValidationPipe`, class-validator                 | zod with `zValidator`                                                          |
+| `@RequiredPermission`, `@AffectedEntity`          | `requirePermission()` middleware plus checks in the handler                    |
+| Exception filter                                  | `HTTPException` helpers and an error handler with the NestJS error shape       |
+
+## 2. API style: REST with Hono
+
+**Decision:** REST with plain Hono and its typed client (`hc`). No GraphQL, no tRPC.
+
+|                                             | REST (Hono + `hc`)                  | tRPC                       | GraphQL (Hono + Yoga + Pothos)                             |
+| ------------------------------------------- | ----------------------------------- | -------------------------- | ---------------------------------------------------------- |
+| Typed client                                | Inferred, no codegen                | Inferred, no codegen       | Codegen from the schema                                    |
+| Binary endpoints (upload, download, images) | Same framework                      | Second system next to Hono | Second system next to Hono                                 |
+| Feature packages                            | Export a sub-app, mount it (tested) | Export a router, merge it  | Schema stitching                                           |
+| Cost per request on Workers                 | Smallest                            | Small                      | Highest (parse and validate each query, graphql-js bundle) |
+| External consumers                          | OpenAPI via `@hono/zod-openapi`     | Weak                       | Strong                                                     |
+| Concepts                                    | One                                 | Two                        | Three                                                      |
+
+Reasons:
+
+- One concept for JSON, binary endpoints and webhooks
+- Typed end to end without a build step; works from pre-built packages (tested)
+- GraphQL's advantages (field selection, existing queries) don't apply: the admin is rebuilt, and block data is already a JSON scalar in today's schema
+
+Conventions (to be written up as a project skill):
+
+- Resource-style paths
+- A zod schema per route
+- One error shape: `{ statusCode, message }`
+- Paged lists return `{ nodes, totalCount }`
+- One typed client per module (`hc<DamRoutes>`) instead of one for the whole app, to keep typechecking fast
+
+If a public API becomes a product requirement: OpenAPI first (`@hono/zod-openapi`). A GraphQL layer on top of the same services only if field selection is needed.
+
+## 3. Database layer: Drizzle
+
+**Decision:** Drizzle. Each project uses D1 or PostgreSQL (via Hyperdrive).
+
+|                                | Kysely                        | Drizzle                                                      | MikroORM 7                                                         |
+| ------------------------------ | ----------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------ |
+| Bundle on Workers              | 246 KB gzipped (both drivers) | 330 KB (DAM prototype)                                       | 761 KB, plus metadata discovery per new isolate and a compile step |
+| Same code on D1 and PostgreSQL | Yes (measured)                | No: schemas per database, a service for both doesn't compile | Yes, but D1 support is experimental                                |
+| Schema and migrations          | Not included                  | drizzle-kit                                                  | Included                                                           |
+| Relations                      | Manual                        | Relational query API                                         | Richest (Unit of Work, change tracking)                            |
+| AI familiarity                 | Good                          | Best                                                         | Lower                                                              |
+| Future-proof                   | Stable, small                 | Very active; 1.0 in RC                                       | Niche; v7 is a breaking upgrade                                    |
+
+Other options checked:
+
+- Prisma 7: works on D1 (1.2 MB gzipped with the D1 adapter), needs a schema per database, and is being rewritten (Prisma Next, early access).
+- MikroORM 6 (used today) can't run on Workers: it generates code with `new Function`, which Workers forbid.
+
+Reasons for Drizzle over Kysely:
+
+- Most productive day to day; best known to AI tools; standard on Cloudflare
+- Schema, migrations and relational queries included
+
+Consequences:
+
+- Library code that has to support both databases needs a schema per database (`pgTable` and `sqliteTable`) and code that works with both. How to structure that is still open.
+- D1 has no interactive transactions (only batches):
+    - generate IDs in the app;
+    - prefer single statements (e.g. cascading foreign-key deletes);
+    - use batches for multiple writes.
+- Portable SQL only:
+    - recursive queries instead of PostgreSQL arrays (`mpath`);
+    - `lower() LIKE` instead of `ILIKE`;
+    - JSON stored as text;
+    - full-text search needs an implementation per database.
+- D1 limits: about 10 GB per database, writes go through a single SQLite instance. Large or write-heavy projects use PostgreSQL.
+- On D1, migrations go through `wrangler d1 migrations` (Kysely's migrator failed on D1; drizzle-kit output to be checked).
+
+## 4. Admin app: Vite single-page app, no server rendering
+
+**Decision:** A Vite single-page app, served as static assets by the project's Worker. No server rendering.
+
+|                                 | Plain Vite SPA + Hono                            | React Router (framework mode)                    | TanStack Start                                                               |
+| ------------------------------- | ------------------------------------------------ | ------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Worker cost per admin page view | Lowest: assets served without running the Worker | Server rendering per navigation                  | Server rendering, can be switched off per route                              |
+| Library packages                | Natural (Hono routes + components)               | Needs wrappers in the app (expected, not tested) | Server functions don't work from pre-built packages (tested); Hono routes do |
+| Maturity                        | Highest                                          | Very mature                                      | Youngest                                                                     |
+
+Reasons:
+
+- The admin doesn't need server rendering
+- Cheapest on Workers
+- Library packages work without framework compilers
+
+TanStack Start on Workers was tested and works (282 KB gzipped server code, 108 KB client), but its server functions only work from app source, not from pre-built packages.
+
+Setup:
+
+- One Vite project per app with Cloudflare's Vite plugin; local dev runs on the Workers runtime with real bindings (D1, R2, Hyperdrive)
+- Data fetching with TanStack Query through the typed Hono client
+
+## 5. Routing: React Router (client-only)
+
+**Decision:** React Router as the client-side router.
+
+- `@dextinity/admin` stays as it is, so for now React Router v5, which it is built on (`RouterBrowserRouter`, `Stack`, `StackLink`, the unsaved-changes prompt, URL state in `useDataGridRemote`). `demo/admin-hono` runs this way with React 19.
+- Moving `@dextinity/admin` to React Router 8 (data mode, needed for `useBlocker`) is a separate, later library change. The main work is `Stack`/`StackSwitch`, which build URLs from v5's `match.url`. 22 files in `@dextinity/admin` use React Router.
+- v5 is no longer developed: technical debt, not a blocker.
+
+## 6. Admin UI library: `@dextinity/admin` unchanged
+
+**Decision:** Keep `@dextinity/admin` (MUI) as it is.
+
+Consequences:
+
+- `@apollo/client` and `graphql` remain required peer dependencies and end up in the bundle, unused.
+- Avoid the Apollo-bound parts:
+    - `CrudContextMenu`: use `RowActionsMenu` with `DeleteDialog`;
+    - `ErrorDialogHandler` (works through an Apollo link): use a TanStack Query error handler;
+    - legacy table components, `useDataGridExcelExport`, generated GraphQL grids and forms.
+- `FinalForm` works without Apollo (it reads it only if present).
+- Shared admin glue goes into a new small package, not into `@dextinity/admin`:
+    - the API client provider;
+    - the query error handler;
+    - `useCan`;
+    - a REST variant of `CrudContextMenu` if needed.
+- `@dextinity/cms-admin` (GraphQL) is replaced module by module and stays for existing projects meanwhile.
+- The admin generator needs new templates (TanStack Query + REST) targeting the same components.
+- The theme, components and the `dextinity-admin-ui` skill stay the same.
+
+## 7. Feature packages
+
+**Decision:** Each feature ships as `@dextinity/<feature>` with two entry points:
+
+- `./server`: Hono routes, services, Drizzle schema, migrations
+- `./client`: React components and hooks on `@dextinity/admin`, using the typed client
+
+The app mounts the routes and renders the components. This is the module pattern of the DAM prototype (`createDamModule` and `DamPage`). The route types are exported (`DamRoutes`), so clients get typed requests and responses through package boundaries.
+
+## 8. Authentication: Cloudflare Access
+
+**Decision:** Cloudflare Access handles login in front of the Worker. The Worker verifies the `Cf-Access-Jwt-Assertion` header (or the `CF_Authorization` cookie) with `jose` against the team's keys and the application's audience tag.
+
+Options considered:
+
+|                         | Plain OIDC in the Worker (`@hono/oidc-auth`) | better-auth                       | Cloudflare Access         | Hosted (WorkOS, Clerk, Auth0)   |
+| ----------------------- | -------------------------------------------- | --------------------------------- | ------------------------- | ------------------------------- |
+| Enterprise IdP login    | Yes                                          | Yes (SSO plugin, SAML)            | Yes, at the edge, no code | Yes                             |
+| Projects without an IdP | No                                           | Yes (passwords, passkeys, 2FA)    | Email codes only          | Yes                             |
+| Users stored by us      | No                                           | Yes                               | No                        | Vendor                          |
+| Cost on Workers         | Smallest                                     | Small (session lookup, cacheable) | No code                   | Network calls, per-user pricing |
+
+Today's features and how they are covered:
+
+| Today (NestJS)                                       | With Access                                                  |
+| ---------------------------------------------------- | ------------------------------------------------------------ |
+| oauth2-proxy with OIDC in front of admin and API     | Cloudflare Access                                            |
+| JWT verification against the IdP's keys (`jwks-rsa`) | Access JWT verified with `jose`                              |
+| Logout at the IdP                                    | Access logout                                                |
+| Basic auth for the system user (site → API)          | Access service token or our own key check                    |
+| Site-preview cookie                                  | Ours, unchanged (`jose`)                                     |
+| Static user in dev                                   | Dev-only Access emulator                                     |
+| User list via a per-project user service             | Users stored on first request, or a per-project user service |
+| IdP claims mapped to a user (`convertJwtToUser`)     | Access identity, groups via `/cdn-cgi/access/get-identity`   |
+
+Local dev:
+
+- **Access emulator** (daily dev): a dev-only middleware with a user picker (reusing the `dev-oidc-provider` users) that signs an Access-format JWT with a local key. The production verification code runs, with a local key instead of Cloudflare's.
+    - Fail-safe: the emulator is behind `import.meta.env.DEV`, so Vite removes it from the production build.
+    - Production accepts only Cloudflare's keys; requests without a valid Access JWT get a 401.
+- **Cloudflare Tunnel** (occasional tests): exposes local dev under a hostname protected by a real Access application, for testing logout, IdP groups and policies.
+
+Consequences:
+
+- Access gives no user directory: users are stored on their first request, or a per-project user service stays.
+- Cloudflare-only. Verification sits behind a small interface (request → identity), so projects not on Cloudflare can swap in `@hono/oidc-auth`.
+
+## 9. Authorization: Dextinity's permission model as its own module
+
+**Decision:** Port Dextinity's permission model as `@dextinity/permissions` (`./server`, `./client`). Access policies only gate who may reach the admin.
+
+Today's model:
+
+- 14 core permissions; projects add their own through `PermissionOverrides`
+- Grants: permission × content scopes (dimensions with a `*` wildcard), stored per user with validity period, reason, requester, approver and source (manual or by rule)
+- Rules in project code (`getPermissionsForUser`, `getContentScopesForUser`), e.g. `isAdmin` → everything
+- Enforcement:
+    - `@RequiredPermission` (60 uses);
+    - `@AffectedEntity` (76 uses);
+    - `@ScopedEntity`, a declarative entity-scope mapping usable at runtime and as SQL
+- Impersonation only for users with equal or fewer permissions
+- Admin UI for managing grants
+
+Options considered:
+
+| Option                        | Assessment                                                                                                                   |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Own module (port)             | Fits the domain exactly; existing grants, UI and rules carry over; in-process and fast                                       |
+| CASL                          | The only library worth considering (isomorphic, condition-based); we'd still write the Drizzle converter and keep our tables |
+| Cerbos, Oso, Permit.io        | Policy languages, operations or a vendor; often a network call per check                                                     |
+| OpenFGA, SpiceDB              | Separate service; overkill for a CMS                                                                                         |
+| Casbin                        | Domain RBAC fits scopes, but less known in TypeScript                                                                        |
+| Access policies               | Only "may reach the admin"                                                                                                   |
+| PostgreSQL row-level security | Not available on D1                                                                                                          |
+
+Design:
+
+1. **Data (Drizzle, D1 or PostgreSQL):**
+    - grants as today;
+    - new: **roles** (permission bundles);
+    - new: **IdP group → role mappings**, so Access groups grant permissions.
+2. **Evaluation:** pure functions:
+    - `can(user, permission, scope?)`;
+    - `allowedScopes(user, permission)`;
+    - `scopeFilter(table, user, permission)` as a Drizzle `where` condition;
+    - scope definitions per table (the `@ScopedEntity` idea), used by both.
+3. **Enforcement:**
+    - `requirePermission("dam")` per route;
+    - `assertCan(c, "dam", entity)` in handlers;
+    - list routes always filter with `scopeFilter` (fail closed).
+4. **Client:** `/api/me` returns permissions and scopes; `useCan(permission, scope)` hides UI. The server stays the authority.
+5. **Extensibility:** projects add permissions by type declaration and rules through a function in the app config.
+6. **Impersonation:** keeps the "equal or fewer permissions" rule.
+
+`can` and `scopeFilter` stay behind a small interface, so CASL can replace the evaluation later if condition-based rules become common.
+
+## 10. Files and images
+
+- **Files:** R2 (prototype: `R2BlobStorage`; `FileSystemBlobStorage` for Node.js)
+- **Images:** imgproxy as today. It loads originals from R2 through its S3-compatible API or from the Worker's public DAM URLs. Cloudflare's own image resizing is still open (see below).
+
+## Open questions
+
+- Images: imgproxy vs Cloudflare's own image resizing
+- Background jobs: Queues, Cron Triggers, Workflows (dominant color, cron jobs, builds)
+- Drizzle schemas and migrations for D1 and PostgreSQL in library packages: generated from one definition, or maintained twice
+- How projects extend feature schemas (extra columns, scope dimensions on DAM tables)
+- Migration of existing PostgreSQL projects (the prototype already maps to the existing tables)
+- Porting the admin and API generators
+- Moving `@dextinity/admin` to React Router 8 (later, separate)
+- Site: out of scope for these decisions
+
+## Next steps
+
+1. Rework the prototype into the decided shape:
+    - `demo/admin-hono` and `demo/api-hono` merged into one Vite + Worker project;
+    - the DAM on Drizzle, running on D1 and on PostgreSQL;
+    - Cloudflare Access verification with the dev emulator;
+    - the ported permission module.
+2. Deploy it to Cloudflare and measure bundle size, cold starts and request times.
+3. Decide the open questions, then port module by module.
