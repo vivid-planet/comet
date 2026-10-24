@@ -1,6 +1,6 @@
-import { previewParams } from "@dextinity/site-nextjs/server";
 import type { PublicSiteConfig } from "@src/site-configs";
-import { headers } from "next/headers";
+
+import type { PreviewParams } from "./sitePreview";
 
 export function getHostByHeaders(headers: Headers) {
     const host = headers.get("x-forwarded-host") ?? headers.get("host");
@@ -18,10 +18,12 @@ export function getSiteConfigForDomain(domain: string) {
     return siteConfig;
 }
 
-export async function getSiteConfigForHost(host: string) {
-    const sitePreviewParams = await previewParams({ skipDraftModeCheck: true });
-    if (sitePreviewParams?.scope) {
-        const siteConfig = getSiteConfigs().find((siteConfig) => siteConfig.scope.domain === sitePreviewParams.scope.domain);
+/**
+ * @param previewParams In the preview, the site is defined by the scope of the preview instead of the host
+ */
+export function getSiteConfigForHost(host: string, previewParams: PreviewParams | null) {
+    if (previewParams?.scope) {
+        const siteConfig = getSiteConfigs().find((siteConfig) => siteConfig.scope.domain === previewParams.scope.domain);
         if (siteConfig) {
             return siteConfig;
         }
@@ -39,14 +41,4 @@ export function getSiteConfigs() {
         siteConfigs = JSON.parse(atob(json)) as PublicSiteConfig[];
     }
     return siteConfigs;
-}
-
-// Used for getting SiteConfig in server-components where params is not available (e.g. sitemap, not-found - see https://github.com/vercel/next.js/discussions/43179)
-export async function getSiteConfig() {
-    const host = getHostByHeaders(await headers());
-    const siteConfig = await getSiteConfigForHost(host);
-    if (!siteConfig) {
-        throw new Error(`SiteConfig not found for host ${host}`);
-    }
-    return siteConfig;
 }
