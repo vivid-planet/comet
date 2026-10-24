@@ -1,0 +1,46 @@
+{
+    "name": "dextinity-demo-api-hono",
+    "private": true,
+    "description": "Prototype: Dextinity API Demo on Hono (Node.js and Cloudflare Workers)",
+    "type": "module",
+    "exports": {
+        "./client": {
+            "types": "./src/client.ts",
+            "import": "./src/client.ts"
+        }
+    },
+    "scripts": {
+        "build:worker": "wrangler deploy --dry-run --outdir dist",
+        "deploy": "wrangler deploy",
+        "dev": "dotenv -e ../../.env.local -e ../../.env -- node --watch src/node.ts",
+        "dev:worker": "dotenv -e ../../.env.local -e ../../.env -- ./scripts/dev-worker.sh",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:ci": "pnpm run lint",
+        "lint:eslint": "eslint --max-warnings 0 src/ scripts/ '**/*.json' --no-warn-ignored",
+        "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
+        "lint:fix:eslint": "pnpm run lint:eslint --fix",
+        "lint:fix:prettier": "pnpm run lint:prettier --write",
+        "lint:prettier": "pnpm exec prettier --check '*.{ts,js,json,jsonc,md,yml,yaml}'",
+        "lint:tsc": "tsc --noEmit",
+        "smoke-test": "dotenv -e ../../.env.local -e ../../.env -- node scripts/smoke-test.ts"
+    },
+    "dependencies": {
+        "@dextinity/cms-hono": "workspace:*",
+        "@hono/node-server": "^2.1.5",
+        "drizzle-orm": "^0.45.4",
+        "hono": "^4.13.13",
+        "postgres": "^3.4.9",
+        "zod": "^4.6.7"
+    },
+    "devDependencies": {
+        "@cloudflare/workers-types": "^5.20261023.1",
+        "@dextinity/eslint-config": "workspace:*",
+        "@types/node": "^24.19.2",
+        "dotenv-cli": "^11.0.0",
+        "eslint": "^9.39.5",
+        "npm-run-all2": "^9.0.3",
+        "prettier": "^3.9.10",
+        "typescript": "5.9.3",
+        "wrangler": "^4.152.0"
+    }
+}

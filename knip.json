@@ -117,6 +117,10 @@
             "entry": ["./src/**/*.stories.tsx"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["ts-dedent"]
+        },
+        "demo/api-hono": {
+            "entry": ["scripts/*.ts"],
+            "ignore": [".wrangler/**", "dist/**"]
         }
     }
 }

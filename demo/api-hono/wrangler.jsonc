@@ -1,0 +1,21 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "dextinity-demo-api-hono",
+    "main": "src/worker.ts",
+    "compatibility_date": "2026-10-01",
+    "compatibility_flags": ["nodejs_compat"],
+    "hyperdrive": [
+        {
+            "binding": "HYPERDRIVE",
+            // Create with `wrangler hyperdrive create dextinity-demo --connection-string=...`. Locally, wrangler dev connects to
+            // CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE instead.
+            "id": "00000000000000000000000000000000",
+        },
+    ],
+    "r2_buckets": [
+        {
+            "binding": "DAM_FILES",
+            "bucket_name": "dextinity-demo-dam",
+        },
+    ],
+}

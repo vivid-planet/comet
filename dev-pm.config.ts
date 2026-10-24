@@ -10,6 +10,7 @@ const packageFolderMapping = {
     "@dextinity/brevo-admin": "packages/admin/brevo-admin",
     "@dextinity/cms-api": "packages/api/cms-api",
     "@dextinity/brevo-api": "packages/api/brevo-api",
+    "@dextinity/cms-hono": "packages/api/cms-hono",
     "@dextinity/site-nextjs": "packages/site/site-nextjs",
     "@dextinity/site-react": "packages/site/site-react",
 };
@@ -237,6 +238,23 @@ export default defineConfig({
             script: "pnpm --filter dextinity-demo-api run start:dev",
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@dextinity/cms-api", "@dextinity/brevo-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+        },
+        {
+            name: "cms-hono",
+            script: "pnpm --filter @dextinity/cms-hono run dev",
+            group: ["demo-api-hono"],
+        },
+        {
+            name: "demo-api-hono",
+            script: "pnpm --filter dextinity-demo-api-hono run dev",
+            group: ["demo-api-hono"],
+            waitOn: [...waitOnPackages("@dextinity/cms-hono"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+        },
+        {
+            name: "demo-api-hono-worker",
+            script: "pnpm --filter dextinity-demo-api-hono run dev:worker",
+            group: ["demo-api-hono"],
+            waitOn: [...waitOnPackages("@dextinity/cms-hono"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
         {
             name: "demo-api-block-codegen",
