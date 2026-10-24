@@ -15,6 +15,13 @@
       "when": 1792855907591,
       "tag": "0001_page_tree",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792864432041,
+      "tag": "0002_page_tree_documents",
+      "breakpoints": true
     }
   ]
 }
