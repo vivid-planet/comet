@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@src/common/components/breadcrumbs/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/breadcrumbs/Breadcrumbs.fragment";
 import { notFound } from "@src/framework/navigation";
 import type { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { absoluteUrl } from "@src/util/absoluteUrl";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
@@ -132,7 +133,7 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
             {document.seo.openGraphDescription && <meta property="og:description" content={document.seo.openGraphDescription} />}
             <meta property="og:url" content={canonicalUrl} />
             {openGraphImageUrlTemplate && (
-                <meta property="og:image" content={generateImageUrl({ src: openGraphImageUrlTemplate, width: 1200 }, 1200 / 630)} />
+                <meta property="og:image" content={absoluteUrl(generateImageUrl({ src: openGraphImageUrlTemplate, width: 1200 }, 1200 / 630))} />
             )}
             <meta property="og:type" content="website" />
             {structuredData && <JsonLd<Thing> data={structuredData} />}

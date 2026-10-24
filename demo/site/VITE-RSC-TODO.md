@@ -40,9 +40,9 @@ Errors carry a digest (`NOT_FOUND`, `REDIRECT;307;/path`), the RSC payload is bu
 
 `renderPage` sent the public `cacheControl` also with 404; only `server.ts` overrode it, and only in production. Now `renderPage` uses the route's `cacheControl` only for status 200 without errors and `no-store` for everything else. The override in `server.ts` stays for responses that don't go through `renderPage` (see #11). Ref: audi6 `renderPage.tsx` (`status === 200 && !isSitePreview()`).
 
-### #7 Resolve relative metadata URLs against the site URL
+### #7 Resolve relative metadata URLs against the site URL (done)
 
-Since `metadataBase` is gone, a relative `seo.canonicalUrl` (and alternate/og URLs) in `src/documents/pages/Page.tsx` is output as-is. Ref: audi6 `framework/Metadata.tsx` (`baseUrl`).
+The Next.js demo set `metadataBase: new URL(siteConfig.url)` in the language layout, so the relative DAM path of `og:image` became absolute. Since the migration, `og:image` was relative, so share previews had no image. Now `src/util/absoluteUrl.ts` resolves it against the URL of the current site (from the request context). Canonical and alternate URLs are already absolute (`@IsUrl()` in the CMS). The general solution, resolving all URL fields in a Metadata component, comes with #27. Ref: audi6 `framework/Metadata.tsx` (`baseUrl`).
 
 ## Refactoring
 
@@ -135,20 +135,20 @@ Counterpart to `@dextinity/site-nextjs`: re-exports `@dextinity/site-react` and 
 
 ### #21–#32 Move into the package
 
-| #   | What                                                                                                                                                 | From (demo/site)                               | Blocked by   |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ------------ |
-| 21  | RSC, SSR and browser entries (project only provides its Hono app)                                                                                    | `src/framework/entry.{rsc,ssr,browser}.tsx`    | #20          |
-| 22  | `/_rsc` prefix handling                                                                                                                              | `src/framework/rscRequest.ts`, `entry.rsc.tsx` | #20, #4, #38 |
-| 23  | Request context core (request, isRsc, cookies, memo, typed slot for project data)                                                                    | `src/framework/requestContext.ts`              | #20, #9, #12 |
-| 24  | `renderPage`, `notFound()`, `redirect()`                                                                                                             | `src/framework/render.tsx`, `navigation.ts`    | #20, #6      |
-| 25  | Router hooks + `Link` + `useRouter`                                                                                                                  | `src/framework/RouterProvider.tsx`             | #20, #13     |
-| 26  | Error boundary, error and not found handling                                                                                                         | (from #2)                                      | #20, #2      |
-| 27  | `Metadata` component with base URL resolution                                                                                                        | inline in `src/documents/pages/Page.tsx`       | #20, #7      |
-| 28  | Production and dev server (`createServer({ staticDir, securityHeaders, cdnOriginCheckSecret })`, Vite middleware mode in dev, metrics/tracing hooks) | `server.ts`                                    | #20, #11     |
-| 29  | Fetch cache (store interface, Valkey/LRU, stale-while-revalidate, metrics)                                                                           | `src/util/fetchCache.ts`, `fetchCacheStore.ts` | #20, #12     |
-| 30  | `createServerGraphQLFetch({ url, headers })` reading visibility from the context                                                                     | `src/util/graphQLClient.ts`                    | #29          |
-| 31  | Persisted queries Vite plugin (counterpart to site-react's webpack loader)                                                                           | `vitePersistedQueriesPlugin.ts`                | #20, #17     |
-| 32  | `SitePreviewProvider`                                                                                                                                | `src/util/SitePreviewProvider.tsx`             | #25          |
+| #   | What                                                                                                                                                 | From (demo/site)                                                    | Blocked by   |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------ |
+| 21  | RSC, SSR and browser entries (project only provides its Hono app)                                                                                    | `src/framework/entry.{rsc,ssr,browser}.tsx`                         | #20          |
+| 22  | `/_rsc` prefix handling                                                                                                                              | `src/framework/rscRequest.ts`, `entry.rsc.tsx`                      | #20, #4, #38 |
+| 23  | Request context core (request, isRsc, cookies, memo, typed slot for project data)                                                                    | `src/framework/requestContext.ts`                                   | #20, #9, #12 |
+| 24  | `renderPage`, `notFound()`, `redirect()`                                                                                                             | `src/framework/render.tsx`, `navigation.ts`                         | #20, #6      |
+| 25  | Router hooks + `Link` + `useRouter`                                                                                                                  | `src/framework/RouterProvider.tsx`                                  | #20, #13     |
+| 26  | Error boundary, error and not found handling                                                                                                         | (from #2)                                                           | #20, #2      |
+| 27  | `Metadata` component with base URL resolution, replaces `absoluteUrl`                                                                                | inline in `src/documents/pages/Page.tsx`, `src/util/absoluteUrl.ts` | #20, #7      |
+| 28  | Production and dev server (`createServer({ staticDir, securityHeaders, cdnOriginCheckSecret })`, Vite middleware mode in dev, metrics/tracing hooks) | `server.ts`                                                         | #20, #11     |
+| 29  | Fetch cache (store interface, Valkey/LRU, stale-while-revalidate, metrics)                                                                           | `src/util/fetchCache.ts`, `fetchCacheStore.ts`                      | #20, #12     |
+| 30  | `createServerGraphQLFetch({ url, headers })` reading visibility from the context                                                                     | `src/util/graphQLClient.ts`                                         | #29          |
+| 31  | Persisted queries Vite plugin (counterpart to site-react's webpack loader)                                                                           | `vitePersistedQueriesPlugin.ts`                                     | #20, #17     |
+| 32  | `SitePreviewProvider`                                                                                                                                | `src/util/SitePreviewProvider.tsx`                                  | #25          |
 
 ## Library `@dextinity/site-react` (framework-independent, also usable by site-nextjs; needs changesets)
 
