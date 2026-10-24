@@ -28,4 +28,13 @@ describe("createOneOfBlock", () => {
         );
         expect(block.name).toBe(nameOverride);
     });
+
+    it("keeps additional fields, e.g. the title of a link, when converting the output to the state", async () => {
+        const block = createOneOfBlock({ name: "Link", displayName: "Link", supportedBlocks: { title: TestBlock } });
+        const output = { title: "Contact us", attachedBlocks: [{ type: "title", props: {} }], activeType: "title" };
+
+        const state = await block.output2State(output, {} as Parameters<typeof block.output2State>[1]);
+
+        expect(block.state2Output(state)).toEqual(output);
+    });
 });

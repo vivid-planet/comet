@@ -191,6 +191,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
 
         output2State: async ({ attachedBlocks, activeType, ...additionalFields }, context) => {
             const state: OneOfBlockState = {
+                ...additionalFields,
                 attachedBlocks: [],
                 activeType,
             };
