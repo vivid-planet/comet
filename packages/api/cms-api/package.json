@@ -107,6 +107,7 @@
         "@types/node": "^24.19.2",
         "@types/probe-image-size": "^7.2.5",
         "@types/request-ip": "^0.0.41",
+        "ajv": "^8.20.0",
         "aws-sdk-client-mock": "^4.1.0",
         "chokidar-cli": "^3.0.0",
         "class-transformer": "^0.5.1",

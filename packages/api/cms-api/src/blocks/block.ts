@@ -3,6 +3,7 @@ import { type ClassConstructor, instanceToPlain, plainToInstance } from "class-t
 import { Equals } from "class-validator";
 import type { WarningSeverity as WarningSeverityEnum } from "src/warnings/entities/warning-severity.enum";
 
+import type { BlockInputJsonSchemaContext, JsonSchema } from "./block-input-json-schema";
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
@@ -272,6 +273,11 @@ export type Block<BlockType extends BlockDataInterface = BlockDataInterface, Blo
     blockInputFactory: BlockInputFactory<BlockInputType>;
     blockMeta: BlockMetaInterface;
     blockInputMeta: BlockMetaInterface;
+    /**
+     * Describes the block's input as a JSON Schema, for a block whose input the block meta can't
+     * describe. Derived from `blockInputMeta` if left out. See `getBlockInputJsonSchema`.
+     */
+    blockInputJsonSchema?: (context: BlockInputJsonSchemaContext) => JsonSchema;
 };
 
 const blocks: Block[] = [];

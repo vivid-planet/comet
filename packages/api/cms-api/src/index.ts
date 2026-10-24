@@ -49,6 +49,7 @@ export {
     TraversableTransformBlockResponse,
     TraversableTransformBlockResponseArray,
 } from "./blocks/block";
+export { type BlockInputJsonSchemaContext, getBlockInputJsonSchema, type JsonSchema } from "./blocks/block-input-json-schema";
 export { BlocksModule } from "./blocks/blocks.module";
 export { getBlocksMeta } from "./blocks/blocks-meta";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";

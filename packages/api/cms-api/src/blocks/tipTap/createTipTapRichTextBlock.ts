@@ -53,6 +53,7 @@ import {
     type TipTapTextBlock,
     unorderedListName,
 } from "./textBlocks";
+import { buildTipTapContentJsonSchema } from "./tipTapContentJsonSchema";
 import { containsInvalidTextBlock, getListNestingDepth } from "./tipTapValidation";
 
 export type { TipTapTextBlock, TipTapTextBlockStyle, TipTapTextBlockTag } from "./textBlocks";
@@ -847,6 +848,23 @@ export function createTipTapRichTextBlock(
         blockInputFactory: decorateBlockInputFactory,
         blockMeta: new AnnotationBlockMeta(TipTapRichTextBlockData),
         blockInputMeta: new AnnotationBlockMeta(TipTapRichTextBlockInput),
+        blockInputJsonSchema: (context) => ({
+            type: "object",
+            properties: {
+                tipTapContent: buildTipTapContentJsonSchema({
+                    context,
+                    resolvedOptions,
+                    inlineStyles,
+                    placeholders,
+                    childBlocks: childBlocksConfig,
+                    linkBlock: LinkBlock,
+                    maxTextBlocks,
+                    listLevelMax,
+                }),
+            },
+            required: ["tipTapContent"],
+            additionalProperties: false,
+        }),
     };
 
     registerBlock(TipTapRichTextBlock);
