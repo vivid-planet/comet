@@ -32,9 +32,9 @@ Errors carry a digest (`NOT_FOUND`, `REDIRECT;307;/path`), the RSC payload is bu
 
 `framework/entry.rsc.tsx` only prefixes `Location` headers starting with `/`. Goes away with #38; close then.
 
-### #5 Don't store `Set-Cookie` in the fetch cache
+### #5 Don't store `Set-Cookie` in the fetch cache (won't fix)
 
-`src/util/fetchCache.ts` stores all response headers; a cached `Set-Cookie` would be replayed to other users. Drop it and hop-by-hop headers. Ref: audi6 `fetchCache/fetchCache.ts` (`skippedHeaders`).
+`src/util/fetchCache.ts` stores all response headers, including a possible `Set-Cookie`. Decided to keep it: the cached headers never reach the browser (`createGraphQLFetch` only reads status and body), and Next.js does the same (`next/dist/server/lib/patch-fetch.js` stores `Object.fromEntries(res.headers.entries())`, the Next.js demo cached the GraphQL fetches with `force-cache` in Redis). Revisit with #29 if the cache is used for responses that are passed to the browser.
 
 ### #6 Send `no-store` for non-200 page responses from the render
 
@@ -100,7 +100,7 @@ Bootstrap script and inlined RSC payload are inline scripts, so `src/middleware/
 
 ### #18 Add unit tests and HTTP tests against a test app for the framework code (done)
 
-- Unit tests (Vitest, `pnpm test:unit`): `framework/navigation.ts`, `framework/rscRequest.ts`, `framework/requestContext.ts`, `util/fetchCache.ts` (store mocked). Each fix adds its unit tests here (#3, #5, #7, #39).
+- Unit tests (Vitest, `pnpm test:unit`): `framework/navigation.ts`, `framework/rscRequest.ts`, `framework/requestContext.ts`, `util/fetchCache.ts` (store mocked). Each fix adds its unit tests here (#3, #7, #39).
 - HTTP tests (Playwright `request` fixture, no browser, `pnpm test:e2e`, CI job "Test (e2e)"): `e2e/fixture/` is a test app that runs the real framework entries with its own Hono routes (`@src/handler` aliased in `e2e/fixture/vite.config.ts`), against the dev server and the production build (`vite preview`). Covers rendering, request context, `/_rsc`, navigation errors (#1) and error handling (#2). Add a route to `e2e/fixture/handler.tsx` and a test per fix (#3, #4, #6, #38, #39).
 - Still open: router path splitting and sitemap/robots output (need the demo's API), see also #40.
 - Ref: plugin-rsc `e2e/fixture.ts` (`useFixture` with dev/build modes).
@@ -145,7 +145,7 @@ Counterpart to `@dextinity/site-nextjs`: re-exports `@dextinity/site-react` and 
 | 26  | Error boundary, error and not found handling                                                                                                         | (from #2)                                      | #20, #2      |
 | 27  | `Metadata` component with base URL resolution                                                                                                        | inline in `src/documents/pages/Page.tsx`       | #20, #7      |
 | 28  | Production and dev server (`createServer({ staticDir, securityHeaders, cdnOriginCheckSecret })`, Vite middleware mode in dev, metrics/tracing hooks) | `server.ts`                                    | #20, #11     |
-| 29  | Fetch cache (store interface, Valkey/LRU, stale-while-revalidate, metrics)                                                                           | `src/util/fetchCache.ts`, `fetchCacheStore.ts` | #20, #5, #12 |
+| 29  | Fetch cache (store interface, Valkey/LRU, stale-while-revalidate, metrics)                                                                           | `src/util/fetchCache.ts`, `fetchCacheStore.ts` | #20, #12     |
 | 30  | `createServerGraphQLFetch({ url, headers })` reading visibility from the context                                                                     | `src/util/graphQLClient.ts`                    | #29          |
 | 31  | Persisted queries Vite plugin (counterpart to site-react's webpack loader)                                                                           | `vitePersistedQueriesPlugin.ts`                | #20, #17     |
 | 32  | `SitePreviewProvider`                                                                                                                                | `src/util/SitePreviewProvider.tsx`             | #25          |
