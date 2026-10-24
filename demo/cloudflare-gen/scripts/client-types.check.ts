@@ -4,7 +4,7 @@
 import type { DamRoutes } from "@dextinity/dam/server";
 import { hc } from "hono/client";
 
-import type { DamScope } from "../src/worker/dam/dam-scope.ts";
+import type { DamScope } from "../api/dam/dam-scope.ts";
 
 const dam = hc<DamRoutes<typeof DamScope>>("http://localhost/api/dam");
 

@@ -1,7 +1,7 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
     "name": "dextinity-demo-cloudflare-gen",
-    "main": "src/worker/index.ts",
+    "main": "api/index.ts",
     "compatibility_date": "2026-10-01",
     "compatibility_flags": ["nodejs_compat"],
     // The admin is served as static assets without running the Worker, only /api/* reaches it

@@ -10,7 +10,8 @@
         "skipLibCheck": true,
         "strict": true,
         "target": "ESNext",
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
         "types": ["vite/client"]
     },
-    "include": ["src/admin/**/*"]
+    "include": ["src"]
 }

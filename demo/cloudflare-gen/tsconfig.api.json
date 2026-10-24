@@ -8,8 +8,9 @@
         "skipLibCheck": true,
         "strict": true,
         "target": "ES2023",
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.api.tsbuildinfo",
         "types": ["@cloudflare/workers-types"],
         "verbatimModuleSyntax": true
     },
-    "include": ["src/worker/**/*"]
+    "include": ["api"]
 }

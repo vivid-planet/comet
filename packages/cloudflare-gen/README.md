@@ -10,7 +10,11 @@ A prototype of Dextinity on Cloudflare Workers, built along [DECISIONS-CLOUDFLAR
 
 `@dextinity/core/vite` contains `dextinityDevServer()`, the local development services: an emulator of Cloudflare Access and an image transformer with sharp.
 
-The demo is [`demo/cloudflare-gen`](../../demo/cloudflare-gen): one Vite project with the admin (`src/admin`) and the Worker (`src/worker`), which serves the admin as static assets and the API at `/api`.
+The demo is [`demo/cloudflare-gen`](../../demo/cloudflare-gen): one Vite project and one Worker, which serves the admin as static assets and the API at `/api`. It follows the layout of Cloudflare's React template (`create-cloudflare`), with `api/` instead of `worker/`:
+
+- `src/`: the admin, `api/`: the API (the Worker's entry point), `scripts/`: Node.js scripts
+- one tsconfig each (`tsconfig.app.json`, `tsconfig.api.json`, `tsconfig.node.json`), referenced from `tsconfig.json` for the editor and `tsc -b`
+- ESLint forbids imports between `src/` and `api/`, values from `@dextinity/*/server` in the admin (types are fine) and `@dextinity/*/client` in the API
 
 ## Running the demo
 

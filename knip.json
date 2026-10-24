@@ -119,7 +119,7 @@
             "ignoreDependencies": ["ts-dedent"]
         },
         "demo/cloudflare-gen": {
-            "entry": ["scripts/*.ts", "src/worker/db/schema.*.ts", "drizzle.config.*.ts"],
+            "entry": ["scripts/*.ts", "api/db/schema.*.ts", "drizzle.config.*.ts"],
             "ignore": ["dist/**"],
             "ignoreDependencies": ["@swc/plugin-emotion"]
         }

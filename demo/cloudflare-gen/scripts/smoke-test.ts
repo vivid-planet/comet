@@ -10,7 +10,7 @@ import type { PermissionsRoutes } from "@dextinity/permissions/server";
 import { hc } from "hono/client";
 import sharp, { type Sharp } from "sharp";
 
-import type { DamScope } from "../src/worker/dam/dam-scope.ts";
+import type { DamScope } from "../api/dam/dam-scope.ts";
 
 const baseUrl = process.argv[2] ?? `http://localhost:${process.env.CLOUDFLARE_GEN_PORT}`;
 const scope = { domain: "main" };

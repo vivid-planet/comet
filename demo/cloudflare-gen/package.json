@@ -1,7 +1,7 @@
 {
     "name": "dextinity-demo-cloudflare-gen",
     "private": true,
-    "description": "Prototype: Dextinity Demo on Cloudflare Workers (admin and API in one Vite + Worker project, D1 or PostgreSQL)",
+    "description": "Prototype: Dextinity Demo on Cloudflare Workers (admin in src/, API in api/, one Worker, D1 or PostgreSQL)",
     "type": "module",
     "scripts": {
         "build": "vite build",
@@ -16,12 +16,12 @@
         "dev:postgresql": "dotenv -e ../../.env.local -e ../../.env -- ./scripts/dev.sh postgresql",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:ci": "pnpm run lint",
-        "lint:eslint": "eslint --max-warnings 0 src/ scripts/ '**/*.json' --no-warn-ignored",
+        "lint:eslint": "eslint --max-warnings 0 src/ api/ scripts/ '**/*.json' --no-warn-ignored",
         "lint:fix": "run-p lint:fix:eslint lint:fix:prettier",
         "lint:fix:eslint": "pnpm run lint:eslint --fix",
         "lint:fix:prettier": "pnpm run lint:prettier --write",
         "lint:prettier": "pnpm exec prettier --check '*.{ts,mts,js,json,jsonc,md,yml,yaml}'",
-        "lint:tsc": "tsc -p tsconfig.admin.json && tsc -p tsconfig.worker.json && tsc -p tsconfig.node.json",
+        "lint:tsc": "tsc -b",
         "smoke-test": "dotenv -e ../../.env.local -e ../../.env -- node scripts/smoke-test.ts"
     },
     "dependencies": {
