@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 import rsc from "@vitejs/plugin-rsc";
 import { defineConfig } from "vite";
 
-import { persistedQueriesPlugin } from "./vitePersistedQueriesPlugin";
+import { persistedQueriesPlugin } from "./vitePersistedQueriesPlugin.ts";
 
 export default defineConfig({
     // The site doesn't use VITE_* variables, and the .env files of the repository would set NODE_ENV for the build
@@ -28,7 +28,7 @@ export default defineConfig({
     environments: {
         ssr: {
             build: {
-                rollupOptions: {
+                rolldownOptions: {
                     // Loaded by the mail routes in app/router.tsx
                     input: { mails: "./src/app/api/entry.mails.ts" },
                 },
@@ -37,12 +37,11 @@ export default defineConfig({
                 noExternal: [
                     // CommonJS dependencies whose exports aren't detected by Node.js when imported from ESM
                     "prop-types",
-                    "redraft",
                     // Imports React without declaring it as peer dependency, it would get a separate React instance when externalized
                     "swiper",
                 ],
             },
-            optimizeDeps: { include: ["react-focus-lock > prop-types", "redraft"] },
+            optimizeDeps: { include: ["react-focus-lock > prop-types"] },
         },
         client: {
             build: {
