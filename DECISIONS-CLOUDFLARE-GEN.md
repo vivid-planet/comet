@@ -34,7 +34,7 @@ Future direction:
 | Authentication   | Cloudflare Access; dev-only Access emulator for local dev                                        |
 | Authorization    | Dextinity's permission model, ported as its own module                                           |
 | Files            | R2                                                                                               |
-| Images           | imgproxy as today (Cloudflare's own image resizing still open)                                   |
+| Images           | Cloudflare Images via the Workers Images binding, replacing imgproxy                             |
 
 ## 1. Runtime and HTTP framework: Hono on Cloudflare Workers
 
@@ -287,11 +287,17 @@ Design:
 ## 10. Files and images
 
 - **Files:** R2 (prototype: `R2BlobStorage`; `FileSystemBlobStorage` for Node.js)
-- **Images:** imgproxy as today. It loads originals from R2 through its S3-compatible API or from the Worker's public DAM URLs. Cloudflare's own image resizing is still open (see below).
+- **Images:** Cloudflare Images through the Workers Images binding (`env.IMAGES`), replacing imgproxy.
+    - The Worker reads the original from R2 and streams it into the binding. Originals need no public URL, and there is no extra service to run.
+    - The DAM's image URLs stay hashed: the Worker checks the hash before transforming, so only sizes and crops the DAM issued get rendered and billed.
+    - The DAM's crop settings map directly: the crop area becomes `trim`, the focal point becomes `gravity` (`auto` for smart, coordinates for the corners), the size becomes `width`/`height` with `fit: "cover"`. The output format (AVIF, WebP, JPEG) follows the `Accept` header.
+    - Binding results aren't cached automatically. The Worker stores them in the Cache API, keyed by the hashed URL, which also keeps the number of billed transformations down.
+    - Dominant color: a 1×1 transform with `rgb` output returns three bytes, no PNG decoding (today: a 1×1 PNG from imgproxy).
+    - Width, height and format on upload come from `info()`.
+    - The DAM uses an image transformer interface, like blob storage: the Images binding on Workers, sharp on Node.js and in local dev. Wrangler's local emulation of the binding only supports resize and rotate (no `trim`, no `rgb` output), so it would silently ignore crops. To test against the real service, `wrangler dev` can use the binding remotely.
 
 ## Open questions
 
-- Images: imgproxy vs Cloudflare's own image resizing
 - Background jobs: Queues, Cron Triggers, Workflows (dominant color, cron jobs, builds)
 - Drizzle schemas and migrations for D1 and PostgreSQL in library packages: generated from one definition, or maintained twice
 - How projects extend feature schemas (extra columns, scope dimensions on DAM tables)
@@ -306,6 +312,7 @@ Design:
     - `demo/admin-hono` and `demo/api-hono` merged into one Vite + Worker project;
     - the DAM on Drizzle, running on D1 and on PostgreSQL;
     - Cloudflare Access verification with the dev emulator;
+    - images through the Images binding instead of imgproxy;
     - the ported permission module.
 2. Deploy it to Cloudflare and measure bundle size, cold starts and request times.
 3. Decide the open questions, then port module by module.
