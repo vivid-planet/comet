@@ -2,7 +2,7 @@
 
 Status: decided in principle, 2026-10-24. Applies to the API and the admin. The site is out of scope.
 
-The decisions are based on prototypes and experiments run in the Workers runtime (workerd via `wrangler dev`). Nothing was deployed to Cloudflare yet. The DAM prototype is in [`packages/api/cms-hono`](packages/api/cms-hono), [`packages/admin/cms-admin-hono`](packages/admin/cms-admin-hono), [`demo/api-hono`](demo/api-hono) and [`demo/admin-hono`](demo/admin-hono).
+The decisions are based on prototypes and experiments run in the Workers runtime (workerd, locally). Nothing was deployed to Cloudflare yet. The prototype implements them for the DAM: the packages are in [`packages/cloudflare-gen`](packages/cloudflare-gen) (`@dextinity/core`, `@dextinity/permissions`, `@dextinity/dam`, see its README), the demo in [`demo/cloudflare-gen`](demo/cloudflare-gen).
 
 ## Goals
 
@@ -123,7 +123,10 @@ Reasons for Drizzle over Kysely:
 
 Consequences:
 
-- Library code that has to support both databases needs a schema per database (`pgTable` and `sqliteTable`) and code that works with both. How to structure that is still open.
+- Library code supports both databases with one definition (implemented in the prototype):
+    - tables are defined once with `portableColumns(dialect)` (`@dextinity/core/server`), which returns SQLite or PostgreSQL column builders, both typed as SQLite;
+    - services are written once against `database.drizzle`, typed as a SQLite database. Only what both dialects support may be used (no `.get()`/`.all()`/`.run()`), which the types don't enforce; the smoke test runs on both;
+    - drizzle-kit generates the migrations per dialect from the same definition. Feature packages ship schema factories, the app generates the migrations, because the scope columns are the app's.
 - D1 has no interactive transactions (only batches):
     - generate IDs in the app;
     - prefer single statements (e.g. cascading foreign-key deletes);
@@ -134,7 +137,7 @@ Consequences:
     - JSON stored as text;
     - full-text search needs an implementation per database.
 - D1 limits: about 10 GB per database, writes go through a single SQLite instance. Large or write-heavy projects use PostgreSQL.
-- On D1, migrations go through `wrangler d1 migrations` (Kysely's migrator failed on D1; drizzle-kit output to be checked).
+- On D1, migrations go through `wrangler d1 migrations apply`, which applies drizzle-kit's SQL files as they are (Kysely's migrator failed on D1). On PostgreSQL, Drizzle's migrator applies them.
 
 ## 4. Admin app: Vite single-page app, no server rendering
 
@@ -163,7 +166,7 @@ Setup:
 
 **Decision:** React Router as the client-side router.
 
-- `@dextinity/admin` stays as it is, so for now React Router v5, which it is built on (`RouterBrowserRouter`, `Stack`, `StackLink`, the unsaved-changes prompt, URL state in `useDataGridRemote`). `demo/admin-hono` runs this way with React 19.
+- `@dextinity/admin` stays as it is, so for now React Router v5, which it is built on (`RouterBrowserRouter`, `Stack`, `StackLink`, the unsaved-changes prompt, URL state in `useDataGridRemote`). `demo/cloudflare-gen` runs this way with React 19.
 - Moving `@dextinity/admin` to React Router 8 (data mode, needed for `useBlocker`) is a separate, later library change. The main work is `Stack`/`StackSwitch`, which build URLs from v5's `match.url`. 22 files in `@dextinity/admin` use React Router.
 - v5 is no longer developed: technical debt, not a blocker.
 
@@ -179,10 +182,9 @@ Consequences:
     - `ErrorDialogHandler` (works through an Apollo link): use a TanStack Query error handler;
     - legacy table components, `useDataGridExcelExport`, generated GraphQL grids and forms.
 - `FinalForm` works without Apollo (it reads it only if present).
-- Shared admin glue goes into a new small package, not into `@dextinity/admin`:
-    - the API client provider;
-    - the query error handler;
-    - `useCan`;
+- Shared admin glue goes into new small packages, not into `@dextinity/admin`:
+    - the API client provider and the query error handler: `@dextinity/core/client` (`ApiProvider`, `QueryErrorHandler`);
+    - `useCan`: `@dextinity/permissions/client`;
     - a REST variant of `CrudContextMenu` if needed.
 - `@dextinity/cms-admin` (GraphQL) is replaced module by module and stays for existing projects meanwhile.
 - The admin generator needs new templates (TanStack Query + REST) targeting the same components.
@@ -196,6 +198,8 @@ Consequences:
 - `./client`: React components and hooks on `@dextinity/admin`, using the typed client
 
 The app mounts the routes and renders the components. This is the module pattern of the DAM prototype (`createDamModule` and `DamPage`). The route types are exported (`DamRoutes`), so clients get typed requests and responses through package boundaries.
+
+Shared building blocks are in `@dextinity/core` (`./server`, `./client`, and `./vite` for the local development services). Both entry points of a package are built with `tsc`, so the client part works without Babel.
 
 ## 8. Authentication: Cloudflare Access
 
@@ -225,9 +229,9 @@ Today's features and how they are covered:
 
 Local dev:
 
-- **Access emulator** (daily dev): a dev-only middleware with a user picker (reusing the `dev-oidc-provider` users) that signs an Access-format JWT with a local key. The production verification code runs, with a local key instead of Cloudflare's.
-    - Fail-safe: the emulator is behind `import.meta.env.DEV`, so Vite removes it from the production build.
-    - Production accepts only Cloudflare's keys; requests without a valid Access JWT get a 401.
+- **Access emulator** (daily dev): part of the Vite dev server (`dextinityDevServer()` of `@dextinity/core/vite`). It shows a user picker (the `dev-oidc-provider` users, with groups), signs an Access-format JWT with a local key, sets the `CF_Authorization` cookie, adds the `Cf-Access-Jwt-Assertion` header and serves the certificates and the identity endpoint. The production verification code runs, with a local key instead of Cloudflare's.
+    - Fail-safe: the emulator is a Vite plugin applied only to `vite dev`, and the Worker selects its configuration (`devAccessConfig`) behind `import.meta.env.DEV`, so neither is in the production build (checked).
+    - Production accepts only team domains of `cloudflareaccess.com`; requests without a valid Access JWT have no identity and get a 401 from the permission checks. The public DAM URLs need a bypass policy in Access.
 - **Cloudflare Tunnel** (occasional tests): exposes local dev under a hostname protected by a real Access application, for testing logout, IdP groups and policies.
 
 Consequences:
@@ -286,33 +290,32 @@ Design:
 
 ## 10. Files and images
 
-- **Files:** R2 (prototype: `R2BlobStorage`; `FileSystemBlobStorage` for Node.js)
+- **Files:** R2 (`R2BlobStorage`; the prototype no longer runs on Node.js, so the file system storage was dropped)
 - **Images:** Cloudflare Images through the Workers Images binding (`env.IMAGES`), replacing imgproxy.
     - The Worker reads the original from R2 and streams it into the binding. Originals need no public URL, and there is no extra service to run.
     - The DAM's image URLs stay hashed: the Worker checks the hash before transforming, so only sizes and crops the DAM issued get rendered and billed.
-    - The DAM's crop settings map directly: the crop area becomes `trim`, the focal point becomes `gravity` (`auto` for smart, coordinates for the corners), the size becomes `width`/`height` with `fit: "cover"`. The output format (AVIF, WebP, JPEG) follows the `Accept` header.
+    - The DAM's crop settings map directly: the crop area and focal point give the same pixel rectangle as today's imgproxy crop, which becomes `trim`; smart crops become `gravity: "auto"`; the size becomes `width`/`height` with `fit: "cover"`, never enlarged. The output format (AVIF, WebP, JPEG) follows the `Accept` header.
     - Binding results aren't cached automatically. The Worker stores them in the Cache API, keyed by the hashed URL, which also keeps the number of billed transformations down.
     - Dominant color: a 1×1 transform with `rgb` output returns three bytes, no PNG decoding (today: a 1×1 PNG from imgproxy).
     - Width, height and format on upload come from `info()`.
-    - The DAM uses an image transformer interface, like blob storage: the Images binding on Workers, sharp on Node.js and in local dev. Wrangler's local emulation of the binding only supports resize and rotate (no `trim`, no `rgb` output), so it would silently ignore crops. To test against the real service, `wrangler dev` can use the binding remotely.
+    - The DAM uses an image transformer interface (`ImageTransformer`), like blob storage: `CloudflareImagesTransformer` with the Images binding in production, `DevServerImageTransformer` in local dev, which calls sharp in the Vite dev server. Wrangler's local emulation of the binding only supports resize and rotate (no `trim`, no `rgb` output), so it would silently ignore crops. To test against the real service, the binding can be used remotely.
 
 ## Open questions
 
 - Background jobs: Queues, Cron Triggers, Workflows (dominant color, cron jobs, builds)
-- Drizzle schemas and migrations for D1 and PostgreSQL in library packages: generated from one definition, or maintained twice
 - How projects extend feature schemas (extra columns, scope dimensions on DAM tables)
-- Migration of existing PostgreSQL projects (the prototype already maps to the existing tables)
+- Migration of existing PostgreSQL projects: the new schema doesn't map to the MikroORM tables any more (no `mpath`, column names without the embeddable prefixes)
 - Porting the admin and API generators
 - Moving `@dextinity/admin` to React Router 8 (later, separate)
 - Site: out of scope for these decisions
 
 ## Next steps
 
-1. Rework the prototype into the decided shape:
-    - `demo/admin-hono` and `demo/api-hono` merged into one Vite + Worker project;
-    - the DAM on Drizzle, running on D1 and on PostgreSQL;
+1. ~~Rework the prototype into the decided shape~~ (done, see [`packages/cloudflare-gen`](packages/cloudflare-gen)):
+    - one Vite + Worker project, admin as static assets, API at `/api`;
+    - the DAM and the permissions on Drizzle, the same code on D1 and on PostgreSQL (smoke test with 27 steps passes on both);
     - Cloudflare Access verification with the dev emulator;
-    - images through the Images binding instead of imgproxy;
-    - the ported permission module.
-2. Deploy it to Cloudflare and measure bundle size, cold starts and request times.
+    - images through the image transformer instead of imgproxy;
+    - the permission module with grants, roles, group roles and rules. Impersonation and the admin UI for grants are still missing.
+2. Deploy it to Cloudflare and measure bundle size, cold starts and request times. Locally built, the Worker is 286 KB gzipped (including postgres.js, exifr and JSZip).
 3. Decide the open questions, then port module by module.
