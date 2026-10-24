@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { requestTypes } from "./helpers";
+import { noStoreCacheControl, requestTypes } from "./helpers";
 
 for (const { name, prefix, contentType } of requestTypes) {
     test.describe(name, () => {
@@ -9,6 +9,7 @@ for (const { name, prefix, contentType } of requestTypes) {
 
             expect(response.status()).toBe(404);
             expect(response.headers()["content-type"]).toBe(contentType);
+            expect(response.headers()["cache-control"]).toBe(noStoreCacheControl);
             const body = await response.text();
             expect(body).toContain("Not found page");
             expect(body).not.toContain("Content before");
@@ -80,5 +81,6 @@ test("renders the not found page with status 404 when a client component calls n
     const response = await request.get("/not-found-in-client-component");
 
     expect(response.status()).toBe(404);
+    expect(response.headers()["cache-control"]).toBe(noStoreCacheControl);
     expect(await response.text()).toContain("Not found page");
 });

@@ -36,9 +36,9 @@ Errors carry a digest (`NOT_FOUND`, `REDIRECT;307;/path`), the RSC payload is bu
 
 `src/util/fetchCache.ts` stores all response headers, including a possible `Set-Cookie`. Decided to keep it: the cached headers never reach the browser (`createGraphQLFetch` only reads status and body), and Next.js does the same (`next/dist/server/lib/patch-fetch.js` stores `Object.fromEntries(res.headers.entries())`, the Next.js demo cached the GraphQL fetches with `force-cache` in Redis). Revisit with #29 if the cache is used for responses that are passed to the browser.
 
-### #6 Send `no-store` for non-200 page responses from the render
+### #6 Send `no-store` for non-200 page responses from the render (done)
 
-`renderPage` sends the public `cacheControl` also with 404; only `server.ts` overrides it, and only in production. Ref: audi6 `renderPage.tsx` (`status === 200 && !isSitePreview()`).
+`renderPage` sent the public `cacheControl` also with 404; only `server.ts` overrode it, and only in production. Now `renderPage` uses the route's `cacheControl` only for status 200 without errors and `no-store` for everything else. The override in `server.ts` stays for responses that don't go through `renderPage` (see #11). Ref: audi6 `renderPage.tsx` (`status === 200 && !isSitePreview()`).
 
 ### #7 Resolve relative metadata URLs against the site URL
 

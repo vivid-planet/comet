@@ -19,6 +19,7 @@ type RenderPageOptions = {
     notFound: () => ReactNode;
     /** Rendered with status 500 when rendering `root` fails */
     error: () => ReactNode;
+    /** Only used for successful responses, all others aren't cached */
     cacheControl: string;
     status?: number;
 };
@@ -32,7 +33,7 @@ export async function renderPage(c: Context, options: RenderPageOptions): Promis
         </RouterProvider>,
     );
     // Also when an error boundary in the browser handles the errors, they must not be cached
-    const cacheControl = rscPayload.hasError ? noStoreCacheControl : options.cacheControl;
+    const cacheControl = status === 200 && !rscPayload.hasError ? options.cacheControl : noStoreCacheControl;
 
     const result = rscPayload.navigationDigest
         ? { navigationDigest: rscPayload.navigationDigest }
@@ -45,7 +46,7 @@ export async function renderPage(c: Context, options: RenderPageOptions): Promis
         if (status === 500) {
             return c.text("Internal Server Error", 500, { "Cache-Control": noStoreCacheControl });
         }
-        return renderPage(c, { ...options, root: error(), cacheControl: noStoreCacheControl, status: 500 });
+        return renderPage(c, { ...options, root: error(), status: 500 });
     }
 
     const redirect = parseRedirectDigest(result.navigationDigest);
