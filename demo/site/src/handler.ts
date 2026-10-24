@@ -20,7 +20,6 @@ export const app = new Hono();
 app.use(trailingSlashRedirectMiddleware);
 
 app.get("/api/status", statusRoute);
-app.get("/admin", adminRoute);
 app.all("/dam/*", damRoute);
 app.route("/api", mailRoutes);
 // Unknown API routes and missing static files don't need the site middlewares
@@ -32,12 +31,14 @@ app.get("/site-preview", sitePreviewRoute);
 app.route("/block-preview", blockPreviewRoutes);
 app.all("/block-preview/*", renderRootNotFoundPage);
 
-app.use(previewDomainMiddleware, redirectToMainHostMiddleware);
+app.use(siteContextMiddleware, previewDomainMiddleware, redirectToMainHostMiddleware);
 
+// The site context is available from here on
+app.get("/admin", adminRoute);
 // May only be served after the main host redirect
 app.get("/robots.txt", robotsRoute);
 
-app.use(siteContextMiddleware, predefinedPagesMiddleware);
+app.use(predefinedPagesMiddleware);
 
 app.route("/", siteRoutes);
 

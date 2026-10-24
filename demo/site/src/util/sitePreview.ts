@@ -2,7 +2,7 @@ import type { PreviewData } from "@dextinity/site-react";
 import { getCookie, getRequest } from "@src/framework/requestContext";
 import { errors, jwtVerify, SignJWT } from "jose";
 
-type PreviewParams = {
+export type PreviewParams = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     scope: Record<string, any>;
     previewData?: PreviewData;

@@ -1,8 +1,9 @@
-import { getSiteConfig } from "@src/util/siteConfig";
+import { getSiteContext } from "@src/framework/requestContext";
+import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Context } from "hono";
 
-export async function robotsRoute(c: Context) {
-    const siteConfig = await getSiteConfig();
+export function robotsRoute(c: Context) {
+    const siteConfig = getSiteConfigForDomain(getSiteContext().domain);
 
     return c.text(`User-Agent: *\nAllow: /\n\nSitemap: ${siteConfig.url}/sitemap.xml\n`);
 }

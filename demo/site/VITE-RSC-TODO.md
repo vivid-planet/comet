@@ -50,9 +50,9 @@ The Next.js demo set `metadataBase: new URL(siteConfig.url)` in the language lay
 
 Skip middlewares and the site context middleware handed requests to separate Hono apps (`router.fetch()`/`siteRouter.fetch()`), so whether a route was reachable and which middlewares applied was only defined by the position of the handoff. Now `src/handler.ts` is a single app whose registration order defines both: middlewares only apply to routes registered after them. `status`, `admin` and `dam` are routes in `src/app/`. Only the predefined pages rewrite still calls `siteRoutes.fetch()` (GET/HEAD only), since Hono routes by the original path. Verified by comparing status and headers of 46 requests before/after: identical except `/api` (now the 404 shortcut without CSP like all other `/api/*` paths). Ref: audi6 `src/app/app.tsx` + `middleware/chain.ts` (`handleRoute`).
 
-### #9 Resolve site config and preview params once per request
+### #9 Resolve site config and preview params once per request (done)
 
-The preview JWT is verified up to 4 times per request, `getSiteConfigForHost` runs in 4 middlewares. Store both in the request context (`framework/requestContext.ts`). Ref: audi6 `requestContext.ts` (`setRequestSite`), `middleware/domain.ts`.
+The site was resolved from the host in 4 middlewares and the preview JWT verified up to 6 times per request. Now `siteContextMiddleware` runs before `redirectToMainHost`, resolves both once and stores them in the site context (`domain`, `visibility`, `sitePreview`); unknown hosts leave it unset (`hasSiteContext()`), which the preview domain check and the main host redirect use. Everything after reads the site context, `/admin` moved after the main host redirect. Site pages requested with the `x-block-preview` header are no longer cached publicly. Ref: audi6 `requestContext.ts` (`setRequestSite`), `middleware/domain.ts`.
 
 ### #10 Bundle all SSR dependencies and pre-scan client components
 

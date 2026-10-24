@@ -1,4 +1,5 @@
 import { gql } from "@dextinity/site-react";
+import { getSiteContext } from "@src/framework/requestContext";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { Header } from "@src/layout/header/Header";
@@ -13,7 +14,6 @@ import { loadMessages } from "@src/util/loadMessages";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { SiteConfigProvider } from "@src/util/SiteConfigProvider";
-import { getPreviewParams } from "@src/util/sitePreview";
 import { SitePreviewProvider } from "@src/util/SitePreviewProvider";
 import type { PropsWithChildren } from "react";
 
@@ -52,7 +52,7 @@ export default async function Layout({ children, ...params }: PropsWithChildren<
     );
 
     const messages = await loadMessages(language);
-    const isSitePreview = (await getPreviewParams()) !== null;
+    const isSitePreview = getSiteContext().sitePreview !== undefined;
 
     if (footer) {
         footer.content = await recursivelyLoadBlockData({

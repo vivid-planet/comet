@@ -1,19 +1,23 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
+import type { PreviewData } from "@dextinity/site-react";
 import { parse } from "hono/utils/cookie";
 
 export type Visibility = "default" | "invisiblePages" | "invisibleBlocks";
 
 type SiteContext = {
     domain: string;
+    /** From the site preview or the block preview */
     visibility: Visibility;
+    /** Set while the site is opened in the site preview of the admin */
+    sitePreview?: { previewData?: PreviewData };
 };
 
 type RequestContext = {
     /** The request as sent by the browser, before any middleware rewrites */
     request: Request;
     isRscRequest: boolean;
-    /** Set by the site context middleware for site requests */
+    /** Set by the site context middleware for requests to a known site */
     siteContext?: SiteContext;
 };
 
@@ -45,6 +49,10 @@ export function getCookie(name: string): string | undefined {
 
 export function setSiteContext(siteContext: SiteContext) {
     getRequestContext().siteContext = siteContext;
+}
+
+export function hasSiteContext() {
+    return getRequestContext().siteContext !== undefined;
 }
 
 export function getSiteContext() {

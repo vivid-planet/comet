@@ -2,7 +2,6 @@ import { handleError } from "@src/framework/handleError";
 import { noStoreCacheControl, renderPage } from "@src/framework/render";
 import { getSiteContext } from "@src/framework/requestContext";
 import type { ContentScope } from "@src/site-configs";
-import { getPreviewParams } from "@src/util/sitePreview";
 import { type Context, Hono } from "hono";
 import type { ReactNode } from "react";
 
@@ -31,13 +30,12 @@ import { sitemapRoute } from "./sitemap";
 const publicCacheControl = "s-maxage=450, stale-while-revalidate=31535550";
 
 async function renderSitePage(c: Context, renderContent: (params: ContentScope) => ReactNode) {
-    const { domain } = getSiteContext();
+    const { domain, visibility, sitePreview } = getSiteContext();
     const language = c.req.param("language");
     if (!language) {
         throw new Error("Site pages must be routed with a language param");
     }
     const params = { domain, language };
-    const isSitePreview = (await getPreviewParams()) !== null;
 
     return renderPage(c, {
         root: (
@@ -55,7 +53,8 @@ async function renderSitePage(c: Context, renderContent: (params: ContentScope) 
             </RootLayout>
         ),
         error: () => renderErrorPage(getLayoutLanguage(params)),
-        cacheControl: isSitePreview ? noStoreCacheControl : publicCacheControl,
+        // Preview content must not be cached, also from the block preview, which doesn't set `sitePreview`
+        cacheControl: sitePreview || visibility !== "default" ? noStoreCacheControl : publicCacheControl,
     });
 }
 

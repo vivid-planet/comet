@@ -1,10 +1,11 @@
 import { gql } from "@dextinity/site-react";
 import type { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
+import { hasSiteContext } from "@src/framework/requestContext";
 import type { GQLPageTreeNodeScope, GQLRedirectScopeInput } from "@src/graphql.generated";
 import type { PublicSiteConfig } from "@src/site-configs";
 import { createSitePath } from "@src/util/createSitePath";
 import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
-import { getHostByHeaders, getSiteConfigForHost, getSiteConfigs } from "@src/util/siteConfig";
+import { getHostByHeaders, getSiteConfigs } from "@src/util/siteConfig";
 import { createMiddleware } from "hono/factory";
 
 import { memoryCache } from "./cache";
@@ -114,11 +115,8 @@ function getRedirectTargetUrl(block: RedirectsLinkBlockData["block"], targetBase
 }
 
 export const redirectToMainHostMiddleware = createMiddleware(async (c, next) => {
-    const headers = c.req.raw.headers;
-    const host = getHostByHeaders(headers);
-    const siteConfig = await getSiteConfigForHost(host);
-
-    if (!siteConfig) {
+    if (!hasSiteContext()) {
+        const host = getHostByHeaders(c.req.raw.headers);
         const redirectSiteConfig =
             getSiteConfigs().find((siteConfig) => matchesHostWithAdditionalDomain(siteConfig, host)) ||
             getSiteConfigs().find((siteConfig) => matchesHostWithPattern(siteConfig, host));
