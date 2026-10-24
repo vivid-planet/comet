@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => ({
     ],
     server: {
         host: process.env.SERVER_HOST ?? "localhost",
-        port: Number(process.env.CLOUDFLARE_GEN_PORT),
+        port: Number(process.env.DEMO_WORKERS_PORT),
         strictPort: true,
     },
     define: {

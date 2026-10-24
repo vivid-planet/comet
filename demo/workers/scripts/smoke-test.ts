@@ -12,7 +12,7 @@ import sharp, { type Sharp } from "sharp";
 
 import type { DamScope } from "../api/dam/dam-scope.ts";
 
-const baseUrl = process.argv[2] ?? `http://localhost:${process.env.CLOUDFLARE_GEN_PORT}`;
+const baseUrl = process.argv[2] ?? `http://localhost:${process.env.DEMO_WORKERS_PORT}`;
 const scope = { domain: "main" };
 
 /** Logs in like a browser and returns the cookie of the Access session */

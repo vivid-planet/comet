@@ -4,7 +4,7 @@
     "private": true,
     "description": "Prototype: Dextinity DAM (digital asset management) for Hono on Cloudflare Workers and the admin",
     "repository": {
-        "directory": "packages/cloudflare-gen/dam",
+        "directory": "packages/workers/dam",
         "type": "git",
         "url": "https://github.com/vivid-planet/dextinity"
     },

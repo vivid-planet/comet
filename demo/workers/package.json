@@ -1,5 +1,5 @@
 {
-    "name": "dextinity-demo-cloudflare-gen",
+    "name": "dextinity-demo-workers",
     "private": true,
     "description": "Prototype: Dextinity Demo on Cloudflare Workers (admin in src/, API in api/, one Worker, D1 or PostgreSQL)",
     "type": "module",

@@ -118,9 +118,8 @@
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["ts-dedent"]
         },
-        "demo/cloudflare-gen": {
+        "demo/workers": {
             "entry": ["scripts/*.ts", "api/db/schema.*.ts", "drizzle.config.*.ts"],
-            "ignore": ["dist/**"],
             "ignoreDependencies": ["@swc/plugin-emotion"]
         }
     }

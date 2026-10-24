@@ -14,7 +14,7 @@ const [dialect, command] = process.argv.slice(2) as [DatabaseDialect, "migrate" 
 const { POSTGRESQL_HOST, POSTGRESQL_PORT, POSTGRESQL_USER, POSTGRESQL_PWD_DECODED, POSTGRESQL_DB } = process.env;
 const postgresqlOptions = { host: POSTGRESQL_HOST, port: Number(POSTGRESQL_PORT), user: POSTGRESQL_USER, password: POSTGRESQL_PWD_DECODED };
 /** A database of its own next to the one of the NestJS demo, whose tables have the same names */
-const postgresqlDatabaseName = `${POSTGRESQL_DB}_cloudflare_gen`;
+const postgresqlDatabaseName = `${POSTGRESQL_DB}_workers`;
 
 /** Grants and roles of the users of the Access emulator (see vite.config.mts). Admins get all permissions by rule. */
 async function seed(database: Database): Promise<void> {

@@ -1,8 +1,8 @@
-# Architecture decisions: cloudflare-gen (Dextinity on Cloudflare)
+# Architecture decisions: workers (Dextinity on Cloudflare Workers)
 
 Status: decided in principle, 2026-10-24. Applies to the API and the admin. The site is out of scope.
 
-The decisions are based on prototypes and experiments run in the Workers runtime (workerd, locally). Nothing was deployed to Cloudflare yet. The prototype implements them for the DAM: the packages are in [`packages/cloudflare-gen`](packages/cloudflare-gen) (`@dextinity/core`, `@dextinity/permissions`, `@dextinity/dam`, see its README), the demo in [`demo/cloudflare-gen`](demo/cloudflare-gen).
+The decisions are based on prototypes and experiments run in the Workers runtime (workerd, locally). Nothing was deployed to Cloudflare yet. The prototype implements them for the DAM: the packages are in [`packages/workers`](packages/workers) (`@dextinity/core`, `@dextinity/permissions`, `@dextinity/dam`, see its README), the demo in [`demo/workers`](demo/workers).
 
 ## Goals
 
@@ -169,7 +169,7 @@ Setup:
 
 **Decision:** React Router as the client-side router.
 
-- `@dextinity/admin` stays as it is, so for now React Router v5, which it is built on (`RouterBrowserRouter`, `Stack`, `StackLink`, the unsaved-changes prompt, URL state in `useDataGridRemote`). `demo/cloudflare-gen` runs this way with React 19.
+- `@dextinity/admin` stays as it is, so for now React Router v5, which it is built on (`RouterBrowserRouter`, `Stack`, `StackLink`, the unsaved-changes prompt, URL state in `useDataGridRemote`). `demo/workers` runs this way with React 19.
 - Moving `@dextinity/admin` to React Router 8 (data mode, needed for `useBlocker`) is a separate, later library change. The main work is `Stack`/`StackSwitch`, which build URLs from v5's `match.url`. 22 files in `@dextinity/admin` use React Router.
 - v5 is no longer developed: technical debt, not a blocker.
 
@@ -314,7 +314,7 @@ Design:
 
 ## Next steps
 
-1. ~~Rework the prototype into the decided shape~~ (done, see [`packages/cloudflare-gen`](packages/cloudflare-gen)):
+1. ~~Rework the prototype into the decided shape~~ (done, see [`packages/workers`](packages/workers)):
     - one Vite + Worker project, admin as static assets, API at `/api`;
     - the DAM and the permissions on Drizzle, the same code on D1 and on PostgreSQL (smoke test with 27 steps passes on both);
     - Cloudflare Access verification with the dev emulator;
