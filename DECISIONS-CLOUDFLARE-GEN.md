@@ -1,4 +1,4 @@
-# Architecture decisions: Dextinity on Cloudflare
+# Architecture decisions: cloudflare-gen (Dextinity on Cloudflare)
 
 Status: decided in principle, 2026-10-24. Applies to the API and the admin. The site is out of scope.
 
